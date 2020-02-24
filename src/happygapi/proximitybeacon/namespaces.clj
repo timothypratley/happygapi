@@ -1,0 +1,59 @@
+(ns happygapi.proximitybeacon.namespaces
+  "Proximity Beacon API
+  Registers, manages, indexes, and searches beacons.
+  See: https://developers.google.com/beacons/proximity/"
+  (:require [happygapi.util :as util]
+            [clj-http.client :as http]
+            [cheshire.core]))
+
+(defn list$
+  "Required parameters: none
+  
+  Lists all attachment namespaces owned by your Google Developers Console
+  project. Attachment data associated with a beacon must include a
+  namespaced type, and the namespace must be owned by your project.
+  
+  Authenticate using an [OAuth access
+  token](https://developers.google.com/identity/protocols/OAuth2) from a
+  signed-in user with **viewer**, **Is owner** or **Can edit** permissions in
+  the Google Developers Console project."
+  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://proximitybeacon.googleapis.com/"
+     "v1beta1/namespaces"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "Required parameters: namespaceName
+  
+  Updates the information about the specified namespace. Only the namespace
+  visibility can be updated."
+  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"namespaceName"})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://proximitybeacon.googleapis.com/"
+     "v1beta1/{+namespaceName}"
+     #{"namespaceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))

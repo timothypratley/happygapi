@@ -1,0 +1,62 @@
+(ns happygapi.cloudfunctions.operations
+  "Cloud Functions API
+  Manages lightweight user-provided functions executed in response to events.
+  See: https://cloud.google.com/functions"
+  (:require [happygapi.util :as util]
+            [clj-http.client :as http]
+            [cheshire.core]))
+
+(defn list$
+  "Required parameters: none
+  
+  Lists operations that match the specified filter in the request. If the
+  server doesn't support this method, it returns `UNIMPLEMENTED`.
+  
+  NOTE: the `name` binding allows API services to override the binding
+  to use different resource name schemes, such as `users/*/operations`. To
+  override the binding, API services can add a binding such as
+  `\"/v1/{name=users/*}/operations\"` to their service configuration.
+  For backwards compatibility, the default name includes the operations
+  collection id, however overriding users must ensure the name binding
+  is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudfunctions.googleapis.com/"
+     "v1/operations"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "Required parameters: name
+  
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudfunctions.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))

@@ -6,76 +6,6 @@
             [clj-http.client :as http]
             [cheshire.core]))
 
-(defn create$
-  "Required parameters: none
-  
-  Creates a spreadsheet, returning the newly created spreadsheet."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sheets.googleapis.com/"
-     "v4/spreadsheets"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn batchUpdate$
-  "Required parameters: spreadsheetId
-  
-  Applies one or more updates to the spreadsheet.
-  
-  Each request is validated before
-  being applied. If any request is not valid then the entire request will
-  fail and nothing will be applied.
-  
-  Some requests have replies to
-  give you some information about how
-  they are applied. The replies will mirror the requests.  For example,
-  if you applied 4 updates and the 3rd one had a reply, then the
-  response will have 2 empty replies, the actual reply, and another empty
-  reply, in that order.
-  
-  Due to the collaborative nature of spreadsheets, it is not guaranteed that
-  the spreadsheet will reflect exactly your changes after this completes,
-  however it is guaranteed that the updates in the request will be
-  applied together atomically. Your changes may be altered with respect to
-  collaborator changes. If there are no collaborators, the spreadsheet
-  should reflect your changes."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"spreadsheetId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sheets.googleapis.com/"
-     "v4/spreadsheets/{spreadsheetId}:batchUpdate"
-     #{"spreadsheetId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn get$
   "Required parameters: spreadsheetId
   
@@ -157,6 +87,76 @@
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}:getByDataFilter"
+     #{"spreadsheetId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn create$
+  "Required parameters: none
+  
+  Creates a spreadsheet, returning the newly created spreadsheet."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sheets.googleapis.com/"
+     "v4/spreadsheets"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn batchUpdate$
+  "Required parameters: spreadsheetId
+  
+  Applies one or more updates to the spreadsheet.
+  
+  Each request is validated before
+  being applied. If any request is not valid then the entire request will
+  fail and nothing will be applied.
+  
+  Some requests have replies to
+  give you some information about how
+  they are applied. The replies will mirror the requests.  For example,
+  if you applied 4 updates and the 3rd one had a reply, then the
+  response will have 2 empty replies, the actual reply, and another empty
+  reply, in that order.
+  
+  Due to the collaborative nature of spreadsheets, it is not guaranteed that
+  the spreadsheet will reflect exactly your changes after this completes,
+  however it is guaranteed that the updates in the request will be
+  applied together atomically. Your changes may be altered with respect to
+  collaborator changes. If there are no collaborators, the spreadsheet
+  should reflect your changes."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"spreadsheetId"})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sheets.googleapis.com/"
+     "v4/spreadsheets/{spreadsheetId}:batchUpdate"
      #{"spreadsheetId"}
      args)
     (merge-with
@@ -520,7 +520,7 @@
      auth))))
 
 (defn sheets-copyTo$
-  "Required parameters: sheetId,spreadsheetId
+  "Required parameters: spreadsheetId,sheetId
   
   Copies a single sheet from a spreadsheet to another spreadsheet.
   Returns the properties of the newly created sheet."

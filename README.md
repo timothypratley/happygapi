@@ -1,9 +1,17 @@
-# happygapi
+# HappyGAPI
 
-A Clojure library with source generated functions for using Google APIs.
+A Clojure library with source generated functions for using Google APIs (gsheets etc).
 
 
 ## Rationale
+
+Using the Java Client is a painful exercise in object construction.
+Building REST calls manually is time consuming and error prone.
+HappyGAPI generates source code that defines functions for calling GAPI,
+so you don't have to!
+The discovery based approach is inspired by [clj-gapi](https://github.com/ianbarber/clj-gapi).
+
+The advantages of generating source code are:
 
 1. Navigate to source
 2. See all available resources and methods

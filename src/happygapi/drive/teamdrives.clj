@@ -1,0 +1,121 @@
+(ns happygapi.drive.teamdrives
+  "Drive API
+  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  See: https://developers.google.com/drive/"
+  (:require [happygapi.util :as util]
+            [clj-http.client :as http]
+            [cheshire.core]))
+
+(defn create$
+  "Required parameters: requestId
+  
+  Deprecated use drives.create instead."
+  {:scopes ["https://www.googleapis.com/auth/drive"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"requestId"})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/drive/v3/"
+     "teamdrives"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn delete$
+  "Required parameters: teamDriveId
+  
+  Deprecated use drives.delete instead."
+  {:scopes ["https://www.googleapis.com/auth/drive"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"teamDriveId"})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/drive/v3/"
+     "teamdrives/{teamDriveId}"
+     #{"teamDriveId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "Required parameters: teamDriveId
+  
+  Deprecated use drives.get instead."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"teamDriveId"})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/drive/v3/"
+     "teamdrives/{teamDriveId}"
+     #{"teamDriveId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "Required parameters: none
+  
+  Deprecated use drives.list instead."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/drive/v3/"
+     "teamdrives"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "Required parameters: teamDriveId
+  
+  Deprecated use drives.update instead"
+  {:scopes ["https://www.googleapis.com/auth/drive"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"teamDriveId"})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/drive/v3/"
+     "teamdrives/{teamDriveId}"
+     #{"teamDriveId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
