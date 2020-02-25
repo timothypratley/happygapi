@@ -2,12 +2,46 @@
   "Google Classroom API
   Manages classes, rosters, and invitations in Google Classroom.
   See: https://developers.google.com/classroom/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "classroom_schema.edn"))))
+
+(defn delete$
+  "Required parameters: registrationId
+  
+  Optional parameters: none
+  
+  Deletes a `Registration`, causing Classroom to stop sending notifications
+  for that `Registration`."
+  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"registrationId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/registrations/{registrationId}"
+     #{"registrationId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Creates a `Registration`, causing Classroom to start sending notifications
   from the provided `feed` to the destination provided in `cloudPubSubTopic`.
@@ -42,7 +76,8 @@
         not been granted permission to publish to it."
   {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -58,27 +93,4 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn delete$
-  "Required parameters: registrationId
-  
-  Deletes a `Registration`, causing Classroom to stop sending notifications
-  for that `Registration`."
-  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"registrationId"})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/registrations/{registrationId}"
-     #{"registrationId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))

@@ -2,19 +2,28 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
 
 (defn approve$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: none
   
   Approves the specified product and the relevant app permissions, if any. The maximum number of products that you can approve per enterprise customer is 1,000.
   
   To learn how to use managed Google Play to design and create a store layout to display approved products to your users, see Store Layout Design."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,14 +42,17 @@
      auth))))
 
 (defn generateApprovalUrl$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: languageCode
   
   Generates a URL that can be rendered in an iframe to display the permissions (if any) of a product. An enterprise admin must view these permissions and accept them on behalf of their organization in order to approve that product.
   
   Admins should accept the displayed permissions by interacting with a separate UI element in the EMM console, which in turn should trigger the use of this URL as the approvalUrlInfo.approvalUrl property in a Products.approve call to approve the product. This URL can only be used to display permissions for up to 1 day."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -59,12 +71,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: language
   
   Retrieves details of a product for display to an enterprise admin."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -81,12 +96,15 @@
      auth))))
 
 (defn getAppRestrictionsSchema$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: language
   
   Retrieves the schema that defines the configurable properties for this product. All products have a schema, but this schema may be empty if no managed configurations have been defined. This schema can be used to populate a UI that allows an admin to configure the product. To apply a managed configuration based on the schema obtained using this API, see Managed Configurations through Play."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -103,12 +121,15 @@
      auth))))
 
 (defn getPermissions$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: none
   
   Retrieves the Android app permissions required by this app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -127,10 +148,13 @@
 (defn list$
   "Required parameters: enterpriseId
   
+  Optional parameters: approved, language, maxResults, query, token
+  
   Finds approved products that match a query, or all approved products if there is no query."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -147,12 +171,15 @@
      auth))))
 
 (defn unapprove$
-  "Required parameters: enterpriseId,productId
+  "Required parameters: enterpriseId, productId
+  
+  Optional parameters: none
   
   Unapproves the specified product (and the relevant app permissions, if any)"
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

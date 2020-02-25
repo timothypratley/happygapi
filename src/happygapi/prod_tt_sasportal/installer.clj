@@ -2,17 +2,26 @@
   "SAS Portal API (Testing)
   
   See: https://developers.google.com/spectrum-access-system/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "prod_tt_sasportal_schema.edn"))))
 
 (defn generateSecret$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Generates a secret to be used with the ValidateInstaller method"
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +42,13 @@
 (defn validate$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Validates the identity of a Certified Professional Installer (CPI)."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

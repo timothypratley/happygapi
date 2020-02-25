@@ -2,17 +2,26 @@
   "Books API
   Searches for books and manages your Google Books library.
   See: https://developers.google.com/books/docs/v1/getting_started"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "books_schema.edn"))))
 
 (defn get$
-  "Required parameters: shelf,userId
+  "Required parameters: shelf, userId
+  
+  Optional parameters: source
   
   Retrieves metadata for a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"shelf" "userId"})]}
+  {:pre [(util/has-keys? args #{"shelf" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,10 +40,13 @@
 (defn list$
   "Required parameters: userId
   
+  Optional parameters: source
+  
   Retrieves a list of public bookshelves for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -51,12 +63,15 @@
      auth))))
 
 (defn volumes-list$
-  "Required parameters: shelf,userId
+  "Required parameters: shelf, userId
+  
+  Optional parameters: maxResults, showPreorders, source, startIndex
   
   Retrieves volumes in a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"shelf" "userId"})]}
+  {:pre [(util/has-keys? args #{"shelf" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

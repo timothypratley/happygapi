@@ -2,12 +2,19 @@
   "Identity and Access Management (IAM) API
   Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
   See: https://cloud.google.com/iam/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "iam_schema.edn"))))
 
 (defn roles-delete$
   "Required parameters: name
+  
+  Optional parameters: etag
   
   Soft deletes a role. The role is suspended and cannot be used to create new
   IAM Policy Bindings.
@@ -18,7 +25,8 @@
   with the role are removed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -37,10 +45,13 @@
 (defn roles-list$
   "Required parameters: parent
   
+  Optional parameters: showDeleted, pageToken, pageSize, view
+  
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -59,10 +70,13 @@
 (defn roles-create$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Creates a new Role."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -83,10 +97,13 @@
 (defn roles-undelete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Undelete a Role, bringing it back in its previous state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -107,10 +124,13 @@
 (defn roles-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets a Role definition."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -129,10 +149,13 @@
 (defn roles-patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates a Role definition."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url

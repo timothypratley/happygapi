@@ -2,12 +2,20 @@
   "Cloud Vision API
   Integrates Google Vision features, including image labeling, face, logo, and landmark detection, optical character recognition (OCR), and detection of explicit content, into applications.
   See: https://cloud.google.com/vision/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "vision_schema.edn"))))
 
 (defn asyncBatchAnnotate$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Run asynchronous image detection and annotation for a list of generic
   files, such as PDF files, which may contain multiple pages and multiple
@@ -18,7 +26,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -39,6 +48,8 @@
 (defn annotate$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Service that performs image detection and annotation for a batch of files.
   Now only \"application/pdf\", \"image/tiff\" and \"image/gif\" are supported.
   
@@ -49,7 +60,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

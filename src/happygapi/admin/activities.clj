@@ -2,17 +2,26 @@
   "Admin Reports API
   Fetches reports for the administrators of G Suite customers about the usage, collaboration, security, and risk for their users.
   See: /admin-sdk/reports/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "admin_schema.edn"))))
 
 (defn list$
-  "Required parameters: applicationName,userKey
+  "Required parameters: applicationName, userKey
+  
+  Optional parameters: eventName, actorIpAddress, startTime, filters, endTime, orgUnitID, pageToken, customerId, maxResults
   
   Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application. For more information, see the guides for administrator and Google Drive activity reports. For more information about the activity report's parameters, see the activity parameters reference guides."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"applicationName" "userKey"})]}
+  {:pre [(util/has-keys? args #{"applicationName" "userKey"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn watch$
-  "Required parameters: applicationName,userKey
+  "Required parameters: applicationName, userKey
+  
+  Optional parameters: eventName, actorIpAddress, startTime, filters, endTime, orgUnitID, pageToken, customerId, maxResults
   
   Start receiving notifications for account activities. For more information, see Receiving Push Notifications."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"applicationName" "userKey"})]}
+  {:pre [(util/has-keys? args #{"applicationName" "userKey"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

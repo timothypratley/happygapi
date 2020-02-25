@@ -2,17 +2,26 @@
   "Search Ads 360 API
   Reports and modifies your advertising data in DoubleClick Search (for example, campaigns, ad groups, keywords, and conversions).
   See: https://developers.google.com/doubleclick-search/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "doubleclicksearch_schema.edn"))))
 
 (defn list$
-  "Required parameters: advertiserId,agencyId
+  "Required parameters: advertiserId, agencyId
+  
+  Optional parameters: none
   
   Retrieve the list of saved columns for a specified advertiser."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"advertiserId" "agencyId"})]}
+  {:pre [(util/has-keys? args #{"advertiserId" "agencyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

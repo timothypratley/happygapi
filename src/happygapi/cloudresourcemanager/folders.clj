@@ -2,12 +2,21 @@
   "Cloud Resource Manager API
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
   See: https://cloud.google.com/resource-manager"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "cloudresourcemanager_schema.edn"))))
 
 (defn get$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Retrieves a Folder identified by the supplied resource name.
   Valid Folder resource names have the format `folders/{folder_id}`
@@ -17,7 +26,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -36,6 +46,8 @@
 (defn setIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Sets the access control policy on a Folder, replacing any existing policy.
   The `resource` field should be the Folder's resource name, e.g.
   \"folders/1234\".
@@ -43,7 +55,8 @@
   on the identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -64,6 +77,8 @@
 (defn patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates a Folder, changing its display_name.
   Changes to the folder display_name will be rejected if they violate either
   the display_name formatting rules or naming constraints described in
@@ -81,7 +96,8 @@
   in the Status.details field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -100,6 +116,8 @@
 (defn testIamPermissions$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Returns permissions that a caller has on the specified Folder.
   The `resource` field should be the Folder's resource name,
   e.g. \"folders/1234\".
@@ -107,7 +125,8 @@
   There are no permissions required for making this API call."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -127,6 +146,8 @@
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: parent
   
   Creates a Folder in the resource hierarchy.
   Returns an Operation which can be used to track the progress of the
@@ -157,7 +178,8 @@
   identified parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -178,6 +200,8 @@
 (defn move$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Moves a Folder under a new resource parent.
   Returns an Operation which can be used to track the progress of the
   folder move workflow.
@@ -197,7 +221,8 @@
   folder's current and proposed new parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -218,6 +243,8 @@
 (defn delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Requests deletion of a Folder. The Folder is moved into the
   DELETE_REQUESTED state
   immediately, and is deleted approximately 30 days later. This method may
@@ -229,7 +256,8 @@
   identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -248,6 +276,8 @@
 (defn search$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Search for folders that match specific filter criteria.
   Search provides an eventually consistent view of the folders a user has
   access to which meet the specified filter criteria.
@@ -257,7 +287,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -278,6 +309,8 @@
 (defn getIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Gets the access control policy for a Folder. The returned policy may be
   empty if no such policy or resource exists. The `resource` field should
   be the Folder's resource name, e.g. \"folders/1234\".
@@ -286,7 +319,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -307,6 +341,8 @@
 (defn undelete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Cancels the deletion request for a Folder. This method may only be
   called on a Folder in the
   DELETE_REQUESTED state.
@@ -319,7 +355,8 @@
   identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -340,6 +377,8 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: parent, showDeleted, pageToken, pageSize
+  
   Lists the Folders that are direct descendants of supplied parent resource.
   List provides a strongly consistent view of the Folders underneath
   the specified parent resource.
@@ -350,7 +389,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

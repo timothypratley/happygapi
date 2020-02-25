@@ -2,17 +2,26 @@
   "Access Approval API
   An API for controlling access to data by Google personnel.
   See: https://cloud.google.com/access-approval/docs"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "accessapproval_schema.edn"))))
 
 (defn getAccessApprovalSettings$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the settings associated with a project, folder, or organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,6 +40,8 @@
 (defn deleteAccessApprovalSettings$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes the settings associated with a project, folder, or organization.
   This will have the effect of disabling Access Approval for the project,
   folder, or organization, but only if all ancestors also have Access
@@ -39,7 +50,8 @@
   the settings are inherited."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -58,11 +70,14 @@
 (defn updateAccessApprovalSettings$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the settings associated with a project, folder, or organization.
   Settings to update are determined by the value of field_mask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -81,6 +96,8 @@
 (defn approvalRequests-dismiss$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Dismisses a request. Returns the updated ApprovalRequest.
   
   NOTE: This does not deny access to the resource if another request has been
@@ -93,7 +110,8 @@
   state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -114,13 +132,16 @@
 (defn approvalRequests-approve$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Approves a request and returns the updated ApprovalRequest.
   
   Returns NOT_FOUND if the request does not exist. Returns
   FAILED_PRECONDITION if the request exists but is not in a pending state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -141,12 +162,15 @@
 (defn approvalRequests-list$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists approval requests associated with a project, folder, or organization.
   Approval requests can be filtered by state (pending, active, dismissed).
   The order is reverse chronological."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -165,10 +189,13 @@
 (defn approvalRequests-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets an approval request. Returns NOT_FOUND if the request does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

@@ -2,17 +2,26 @@
   "DCM/DFA Reporting And Trafficking API
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
 
 (defn delete$
-  "Required parameters: id,profileId
+  "Required parameters: id, profileId
+  
+  Optional parameters: none
   
   Deletes an existing event tag."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "profileId"})]}
+  {:pre [(util/has-keys? args #{"id" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: id,profileId
+  "Required parameters: id, profileId
+  
+  Optional parameters: none
   
   Gets one event tag by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "profileId"})]}
+  {:pre [(util/has-keys? args #{"id" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -53,10 +65,13 @@
 (defn insert$
   "Required parameters: profileId
   
+  Optional parameters: none
+  
   Inserts a new event tag."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"profileId"})]}
+  {:pre [(util/has-keys? args #{"profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -77,10 +92,13 @@
 (defn list$
   "Required parameters: profileId
   
+  Optional parameters: adId, campaignId, ids, searchString, eventTagTypes, sortField, definitionsOnly, advertiserId, sortOrder, enabled
+  
   Retrieves a list of event tags, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"profileId"})]}
+  {:pre [(util/has-keys? args #{"profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -97,12 +115,15 @@
      auth))))
 
 (defn patch$
-  "Required parameters: id,profileId
+  "Required parameters: id, profileId
+  
+  Optional parameters: none
   
   Updates an existing event tag. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "profileId"})]}
+  {:pre [(util/has-keys? args #{"id" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -121,10 +142,13 @@
 (defn update$
   "Required parameters: profileId
   
+  Optional parameters: none
+  
   Updates an existing event tag."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"profileId"})]}
+  {:pre [(util/has-keys? args #{"profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

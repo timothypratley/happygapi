@@ -1,0 +1,30 @@
+{:UrlNotificationMetadata {:description "Summary of the most recent Indexing API notifications successfully received,\nfor a given URL.",
+                           :type "object",
+                           :properties {:url {:description "URL to which this metadata refers.",
+                                              :type "string"},
+                                        :latestRemove {:$ref "UrlNotification",
+                                                       :description "Latest notification received with type `URL_REMOVED`."},
+                                        :latestUpdate {:description "Latest notification received with type `URL_UPDATED`.",
+                                                       :$ref "UrlNotification"}},
+                           :id "UrlNotificationMetadata"},
+ :UrlNotification {:description "`UrlNotification` is the resource used in all Indexing API calls.\nIt describes one event in the life cycle of a Web Document.",
+                   :type "object",
+                   :properties {:type {:type "string",
+                                       :enumDescriptions ["Unspecified."
+                                                          "The given URL (Web document) has been updated."
+                                                          "The given URL (Web document) has been deleted."],
+                                       :enum ["URL_NOTIFICATION_TYPE_UNSPECIFIED"
+                                              "URL_UPDATED"
+                                              "URL_DELETED"],
+                                       :description "The URL life cycle event that Google is being notified about."},
+                                :url {:type "string",
+                                      :description "The object of this notification. The URL must be owned by the publisher\nof this notification and, in case of `URL_UPDATED` notifications, it _must_\nbe crawlable by Google."},
+                                :notifyTime {:description "Creation timestamp for this notification.\nUsers should _not_ specify it, the field is ignored at the request time.",
+                                             :format "google-datetime",
+                                             :type "string"}},
+                   :id "UrlNotification"},
+ :PublishUrlNotificationResponse {:id "PublishUrlNotificationResponse",
+                                  :description "Output for PublishUrlNotification",
+                                  :type "object",
+                                  :properties {:urlNotificationMetadata {:$ref "UrlNotificationMetadata",
+                                                                         :description "Description of the notification events received for this URL."}}}}

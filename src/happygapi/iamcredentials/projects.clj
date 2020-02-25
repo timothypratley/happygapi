@@ -2,41 +2,26 @@
   "IAM Service Account Credentials API
   Creates short-lived, limited-privilege credentials for IAM service accounts.
   See: https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentials"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn serviceAccounts-generateAccessToken$
-  "Required parameters: name
-  
-  Generates an OAuth 2.0 access token for a service account."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://iamcredentials.googleapis.com/"
-     "v1/{+name}:generateAccessToken"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
+(def schemas
+  (edn/read-string (slurp (io/resource "iamcredentials_schema.edn"))))
 
 (defn serviceAccounts-generateIdToken$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Generates an OpenID Connect ID token for a service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -57,10 +42,13 @@
 (defn serviceAccounts-signBlob$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Signs a blob using a service account's system-managed private key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -81,15 +69,45 @@
 (defn serviceAccounts-signJwt$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Signs a JWT using a service account's system-managed private key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://iamcredentials.googleapis.com/"
      "v1/{+name}:signJwt"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn serviceAccounts-generateAccessToken$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Generates an OAuth 2.0 access token for a service account."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iamcredentials.googleapis.com/"
+     "v1/{+name}:generateAccessToken"
      #{"name"}
      args)
     (merge-with

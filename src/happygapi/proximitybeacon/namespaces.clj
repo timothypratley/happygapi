@@ -2,12 +2,20 @@
   "Proximity Beacon API
   Registers, manages, indexes, and searches beacons.
   See: https://developers.google.com/beacons/proximity/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "proximitybeacon_schema.edn"))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: projectId
   
   Lists all attachment namespaces owned by your Google Developers Console
   project. Attachment data associated with a beacon must include a
@@ -19,7 +27,8 @@
   the Google Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,11 +47,14 @@
 (defn update$
   "Required parameters: namespaceName
   
+  Optional parameters: projectId
+  
   Updates the information about the specified namespace. Only the namespace
   visibility can be updated."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"namespaceName"})]}
+  {:pre [(util/has-keys? args #{"namespaceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

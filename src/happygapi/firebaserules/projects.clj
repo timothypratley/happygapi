@@ -3,12 +3,20 @@
   Creates and manages rules that determine when a Firebase Rules-enabled service should permit a request.
   
   See: https://firebase.google.com/docs/storage/security"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "firebaserules_schema.edn"))))
 
 (defn test$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Test `Source` for syntactic and semantic correctness. Issues present, if
   any, will be returned to the caller with a description, severity, and
@@ -36,7 +44,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -57,13 +66,16 @@
 (defn rulesets-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Delete a `Ruleset` by resource name.
   
   If the `Ruleset` is referenced by a `Release` the operation will fail."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -82,12 +94,15 @@
 (defn rulesets-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Get a `Ruleset` by name including the full `Source` contents."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -106,6 +121,8 @@
 (defn rulesets-list$
   "Required parameters: name
   
+  Optional parameters: pageToken, pageSize, filter
+  
   List `Ruleset` metadata only and optionally filter the results by `Ruleset`
   name.
   
@@ -115,7 +132,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -134,6 +152,8 @@
 (defn rulesets-create$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Create a `Ruleset` from `Source`.
   
   The `Ruleset` is given a unique generated name which is returned to the
@@ -143,7 +163,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -161,8 +182,63 @@
       :body body}
      auth))))
 
+(defn releases-getExecutable$
+  "Required parameters: name
+  
+  Optional parameters: executableVersion
+  
+  Get the `Release` executable to use when enforcing rules."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebaserules.googleapis.com/"
+     "v1/{+name}:getExecutable"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn releases-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete a `Release` by resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firebaserules.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn releases-list$
   "Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
   
   List the `Release` values for a project. This list may optionally be
   filtered by `Release` name, `Ruleset` name, `TestSuite` name, or any
@@ -171,7 +247,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -189,6 +266,8 @@
 
 (defn releases-create$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Create a `Release`.
   
@@ -215,7 +294,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -233,8 +313,37 @@
       :body body}
      auth))))
 
+(defn releases-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Get a `Release` by name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebaserules.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn releases-patch$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Update a `Release` via PATCH.
   
@@ -244,80 +353,10 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
-    (util/get-url
-     "https://firebaserules.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn releases-get$
-  "Required parameters: name
-  
-  Get a `Release` by name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebaserules.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn releases-getExecutable$
-  "Required parameters: name
-  
-  Get the `Release` executable to use when enforcing rules."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebaserules.googleapis.com/"
-     "v1/{+name}:getExecutable"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn releases-delete$
-  "Required parameters: name
-  
-  Delete a `Release` by resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://firebaserules.googleapis.com/"
      "v1/{+name}"

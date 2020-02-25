@@ -3,12 +3,20 @@
   Examines the call stack and variables of a running application without stopping or slowing it down.
   
   See: https://cloud.google.com/debugger"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "clouddebugger_schema.edn"))))
 
 (defn debuggees-register$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Registers the debuggee with the controller service.
   
@@ -23,7 +31,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -44,6 +53,8 @@
 (defn debuggees-breakpoints-list$
   "Required parameters: debuggeeId
   
+  Optional parameters: successOnTimeout, waitToken
+  
   Returns the list of all active breakpoints for the debuggee.
   
   The breakpoint specification (`location`, `condition`, and `expressions`
@@ -60,7 +71,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"debuggeeId"})]}
+  {:pre [(util/has-keys? args #{"debuggeeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -77,7 +89,9 @@
      auth))))
 
 (defn debuggees-breakpoints-update$
-  "Required parameters: debuggeeId,id
+  "Required parameters: debuggeeId, id
+  
+  Optional parameters: none
   
   Updates the breakpoint state or mutable fields.
   The entire Breakpoint message must be sent back to the controller service.
@@ -90,7 +104,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "debuggeeId"})]}
+  {:pre [(util/has-keys? args #{"id" "debuggeeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

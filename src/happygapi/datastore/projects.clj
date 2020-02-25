@@ -3,18 +3,27 @@
   Accesses the schemaless NoSQL database to provide fully managed, robust, scalable storage for your application.
   
   See: https://cloud.google.com/datastore/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "datastore_schema.edn"))))
 
 (defn rollback$
   "Required parameters: projectId
+  
+  Optional parameters: none
   
   Rolls back a transaction."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -35,12 +44,15 @@
 (defn reserveIds$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Prevents the supplied keys' IDs from being auto-allocated by Cloud
   Datastore."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -61,11 +73,14 @@
 (defn lookup$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Looks up entities by key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -86,11 +101,14 @@
 (defn runQuery$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Queries for entities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -111,6 +129,8 @@
 (defn export$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Exports a copy of all or a subset of entities from Google Cloud Datastore
   to another storage system, such as Google Cloud Storage. Recent updates to
   entities may not be reflected in the export. The export occurs in the
@@ -122,7 +142,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -143,11 +164,14 @@
 (defn beginTransaction$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Begins a new transaction."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -168,12 +192,15 @@
 (defn commit$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Commits a transaction, optionally creating, deleting or modifying some
   entities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -194,12 +221,15 @@
 (defn allocateIds$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Allocates IDs for the given keys, which is useful for referencing an entity
   before it is inserted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -220,6 +250,8 @@
 (defn import$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Imports entities into Google Cloud Datastore. Existing entities with the
   same key are overwritten. The import occurs in the background and its
   progress can be monitored and managed via the Operation resource that is
@@ -228,7 +260,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -246,45 +279,10 @@
       :body body}
      auth))))
 
-(defn indexes-create$
-  "Required parameters: projectId
-  
-  Creates the specified index.
-  A newly created index's initial state is `CREATING`. On completion of the
-  returned google.longrunning.Operation, the state will be `READY`.
-  If the index already exists, the call will return an `ALREADY_EXISTS`
-  status.
-  
-  During index creation, the process could result in an error, in which
-  case the index will move to the `ERROR` state. The process can be recovered
-  by fixing the data that caused the error, removing the index with
-  delete, then
-  re-creating the index with create.
-  
-  Indexes with a single property cannot be created."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/projects/{projectId}/indexes"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn indexes-delete$
-  "Required parameters: projectId,indexId
+  "Required parameters: projectId, indexId
+  
+  Optional parameters: none
   
   Deletes an existing index.
   An index can only be deleted if it is in a `READY` or `ERROR` state. On
@@ -299,7 +297,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"indexId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"indexId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -316,13 +315,16 @@
      auth))))
 
 (defn indexes-get$
-  "Required parameters: projectId,indexId
+  "Required parameters: indexId, projectId
+  
+  Optional parameters: none
   
   Gets an index."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"indexId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"indexId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -341,13 +343,16 @@
 (defn indexes-list$
   "Required parameters: projectId
   
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists the indexes that match the specified filters.  Datastore uses an
   eventually consistent query to fetch the list of indexes and may
   occasionally return stale results."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -363,8 +368,50 @@
       :as :json}
      auth))))
 
+(defn indexes-create$
+  "Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Creates the specified index.
+  A newly created index's initial state is `CREATING`. On completion of the
+  returned google.longrunning.Operation, the state will be `READY`.
+  If the index already exists, the call will return an `ALREADY_EXISTS`
+  status.
+  
+  During index creation, the process could result in an error, in which
+  case the index will move to the `ERROR` state. The process can be recovered
+  by fixing the data that caused the error, removing the index with
+  delete, then
+  re-creating the index with create.
+  
+  Indexes with a single property cannot be created."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/projects/{projectId}/indexes"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn operations-cancel$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
@@ -379,7 +426,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -400,6 +448,8 @@
 (defn operations-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -407,7 +457,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -426,6 +477,8 @@
 (defn operations-list$
   "Required parameters: name
   
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -439,7 +492,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -458,13 +512,16 @@
 (defn operations-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

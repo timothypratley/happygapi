@@ -2,12 +2,21 @@
   "Remote Build Execution API
   Supplies a Remote Execution API service for tools such as bazel.
   See: https://cloud.google.com/remote-build-execution/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "remotebuildexecution_schema.edn"))))
 
 (defn get$
-  "Required parameters: hash,sizeBytes,instanceName
+  "Required parameters: sizeBytes, instanceName, hash
+  
+  Optional parameters: inlineStdout, inlineStderr, inlineOutputFiles
   
   Retrieve a cached execution result.
   
@@ -23,7 +32,8 @@
   * `NOT_FOUND`: The requested `ActionResult` is not in the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})]}
+  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -40,7 +50,9 @@
      auth))))
 
 (defn update$
-  "Required parameters: sizeBytes,instanceName,hash
+  "Required parameters: sizeBytes, instanceName, hash
+  
+  Optional parameters: resultsCachePolicy.priority
   
   Upload a new execution result.
   
@@ -60,7 +72,8 @@
     entry to the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})]}
+  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

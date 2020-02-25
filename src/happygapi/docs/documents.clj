@@ -2,12 +2,20 @@
   "Google Docs API
   Reads and writes Google Docs documents.
   See: https://developers.google.com/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "docs_schema.edn"))))
 
 (defn get$
   "Required parameters: documentId
+  
+  Optional parameters: suggestionsViewMode
   
   Gets the latest version of the specified document."
   {:scopes ["https://www.googleapis.com/auth/documents"
@@ -16,7 +24,8 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"documentId"})]}
+  {:pre [(util/has-keys? args #{"documentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -35,6 +44,8 @@
 (defn create$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Creates a blank document using the title given in the request. Other fields
   in the request, including any provided content, are ignored.
   
@@ -43,7 +54,8 @@
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -63,6 +75,8 @@
 
 (defn batchUpdate$
   "Required parameters: documentId
+  
+  Optional parameters: none
   
   Applies one or more updates to the document.
   
@@ -89,7 +103,8 @@
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"documentId"})]}
+  {:pre [(util/has-keys? args #{"documentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

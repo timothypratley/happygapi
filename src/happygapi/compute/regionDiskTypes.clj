@@ -2,19 +2,28 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
 
 (defn get$
-  "Required parameters: diskType,project,region
+  "Required parameters: diskType, project, region
+  
+  Optional parameters: none
   
   Returns the specified regional disk type. Gets a list of available disk types by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region" "diskType"})]}
+  {:pre [(util/has-keys? args #{"project" "region" "diskType"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,14 +40,17 @@
      auth))))
 
 (defn list$
-  "Required parameters: project,region
+  "Required parameters: project, region
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken
   
   Retrieves a list of regional disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

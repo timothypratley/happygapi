@@ -2,12 +2,20 @@
   "G Suite Vault API
   Archiving and eDiscovery for G Suite.
   See: https://developers.google.com/vault"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "vault_schema.edn"))))
 
 (defn delete$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
@@ -15,7 +23,8 @@
   `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url

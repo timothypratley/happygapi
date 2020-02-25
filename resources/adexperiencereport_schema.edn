@@ -1,0 +1,61 @@
+{:PlatformSummary {:type "object",
+                   :properties {:filterStatus {:description "The site's [enforcement\nstatus](https://support.google.com/webtools/answer/7308033) on this\nplatform.",
+                                               :type "string",
+                                               :enumDescriptions ["N/A."
+                                                                  "Ad filtering is on."
+                                                                  "Ad filtering is off."
+                                                                  "Ad filtering is paused."
+                                                                  "Ad filtering is pending."],
+                                               :enum ["UNKNOWN"
+                                                      "ON"
+                                                      "OFF"
+                                                      "PAUSED"
+                                                      "PENDING"]},
+                                :underReview {:description "Whether the site is currently under review on this platform.",
+                                              :type "boolean"},
+                                :reportUrl {:description "A link to the full Ad Experience Report for the site on this platform..\n\nNot set in\nViolatingSitesResponse.\n\nNote that you must complete the [Search Console verification\nprocess](https://support.google.com/webmasters/answer/9008080) for the site\nbefore you can access the full report.",
+                                            :type "string"},
+                                :lastChangeTime {:description "The time at which the site's status last changed on this platform.",
+                                                 :format "google-datetime",
+                                                 :type "string"},
+                                :betterAdsStatus {:description "The site's Ad Experience Report status on this platform.",
+                                                  :type "string",
+                                                  :enumDescriptions ["Not reviewed."
+                                                                     "Passing."
+                                                                     "Warning. No longer a possible status."
+                                                                     "Failing."],
+                                                  :enum ["UNKNOWN"
+                                                         "PASSING"
+                                                         "WARNING"
+                                                         "FAILING"]},
+                                :region {:description "The site's regions on this platform.\n\nNo longer populated, because there is no longer any semantic difference\nbetween sites in different regions.",
+                                         :type "array",
+                                         :items {:type "string",
+                                                 :enum ["REGION_UNKNOWN"
+                                                        "REGION_A"
+                                                        "REGION_B"
+                                                        "REGION_C"]},
+                                         :enumDescriptions ["Ad standard not yet defined for your region."
+                                                            "Region A."
+                                                            "Region B."
+                                                            "Region C."]},
+                                :enforcementTime {:type "string",
+                                                  :description "The time at which\n[enforcement](https://support.google.com/webtools/answer/7308033) against\nthe site began or will begin on this platform.\n\nNot set when the\nfilter_status\nis OFF.",
+                                                  :format "google-datetime"}},
+                   :id "PlatformSummary",
+                   :description "A site's Ad Experience Report summary on a single platform."},
+ :ViolatingSitesResponse {:description "Response message for ListViolatingSites.",
+                          :type "object",
+                          :properties {:violatingSites {:type "array",
+                                                        :items {:$ref "SiteSummaryResponse"},
+                                                        :description "The list of violating sites."}},
+                          :id "ViolatingSitesResponse"},
+ :SiteSummaryResponse {:description "Response message for GetSiteSummary.",
+                       :type "object",
+                       :properties {:mobileSummary {:$ref "PlatformSummary",
+                                                    :description "The site's Ad Experience Report summary on mobile."},
+                                    :reviewedSite {:type "string",
+                                                   :description "The name of the reviewed site, e.g. `google.com`."},
+                                    :desktopSummary {:$ref "PlatformSummary",
+                                                     :description "The site's Ad Experience Report summary on desktop."}},
+                       :id "SiteSummaryResponse"}}

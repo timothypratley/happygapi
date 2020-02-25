@@ -2,17 +2,27 @@
   "Service Consumer Management API
   Manages the service consumers of a Service Infrastructure service.
   See: https://cloud.google.com/service-consumer-management/docs/overview"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "serviceconsumermanagement_schema.edn"))))
 
 (defn search$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize, query
+  
   Search tenancy units for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,6 +41,8 @@
 (defn tenancyUnits-addProject$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Add a new tenant project to the tenancy unit.
   There can be a maximum of 512 tenant projects in a tenancy unit.
   If there are previously failed `AddTenantProject` calls, you might need to
@@ -39,7 +51,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -60,6 +73,8 @@
 (defn tenancyUnits-deleteProject$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes the specified project resource identified by a tenant resource tag.
   The mothod removes a project lien with a 'TenantManager' origin if that was
   added. It will then attempt to delete the project. If that operation fails,
@@ -72,7 +87,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -93,6 +109,8 @@
 (defn tenancyUnits-applyProjectConfig$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Apply a configuration to an existing tenant project.
   This project must exist in an active state and have the original owner
   account. The caller must have permission to add a project to the given
@@ -112,7 +130,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -133,6 +152,8 @@
 (defn tenancyUnits-create$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Creates a tenancy unit with no tenant resources.
   If tenancy unit already exists, it will be returned,
   however, in this case, returned TenancyUnit does not have tenant_resources
@@ -140,7 +161,8 @@
   TenancyUnit with all fields populated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -161,12 +183,15 @@
 (defn tenancyUnits-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Delete a tenancy unit. Before you delete the tenancy unit, there should be
   no tenant resources in it that aren't in a DELETED state.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -185,6 +210,8 @@
 (defn tenancyUnits-list$
   "Required parameters: parent
   
+  Optional parameters: filter, pageToken, pageSize
+  
   Find the tenancy unit for a managed service and service consumer.
   This method shouldn't be used in a service producer's runtime path, for
   example to find the tenant project number when creating VMs. Service
@@ -192,7 +219,8 @@
   is created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -211,6 +239,8 @@
 (defn tenancyUnits-attachProject$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Attach an existing project to the tenancy unit as a new tenant
   resource. The project could either be the tenant project reserved by
   calling `AddTenantProject` under a tenancy unit of a service producer's
@@ -224,7 +254,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -245,6 +276,8 @@
 (defn tenancyUnits-removeProject$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Removes the specified project resource identified by a tenant resource tag.
   The method removes the project lien with 'TenantManager' origin if that
   was added. It then attempts to delete the project. If that operation
@@ -255,7 +288,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -276,6 +310,8 @@
 (defn tenancyUnits-undeleteProject$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Attempts to undelete a previously deleted tenant project. The project must
   be in a DELETED state.
   There are no guarantees that an undeleted project will be in
@@ -285,7 +321,8 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

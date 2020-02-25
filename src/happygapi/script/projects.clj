@@ -3,18 +3,27 @@
   Manages and executes Google Apps Script projects.
   
   See: https://developers.google.com/apps-script/api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "script_schema.edn"))))
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Creates a new, empty script project with no script files and a base
   manifest file."
   {:scopes ["https://www.googleapis.com/auth/script.projects"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -35,12 +44,15 @@
 (defn getContent$
   "Required parameters: scriptId
   
+  Optional parameters: versionNumber
+  
   Gets the content of the script project, including the code source and
   metadata for each script file."
   {:scopes ["https://www.googleapis.com/auth/script.projects"
             "https://www.googleapis.com/auth/script.projects.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -59,11 +71,14 @@
 (defn getMetrics$
   "Required parameters: scriptId
   
+  Optional parameters: metricsGranularity, metricsFilter.deploymentId
+  
   Get metrics data for scripts, such as number of executions and
   active users."
   {:scopes ["https://www.googleapis.com/auth/script.metrics"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -82,11 +97,14 @@
 (defn get$
   "Required parameters: scriptId
   
+  Optional parameters: none
+  
   Gets a script project's metadata."
   {:scopes ["https://www.googleapis.com/auth/script.projects"
             "https://www.googleapis.com/auth/script.projects.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -105,6 +123,8 @@
 (defn updateContent$
   "Required parameters: scriptId
   
+  Optional parameters: none
+  
   Updates the content of the specified script project.
   This content is stored as the HEAD version, and is used when the script is
   executed as a trigger, in the script editor, in add-on preview mode, or as
@@ -112,7 +132,8 @@
   existing files in the project."
   {:scopes ["https://www.googleapis.com/auth/script.projects"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -128,37 +149,16 @@
       :as :json}
      auth))))
 
-(defn deployments-create$
-  "Required parameters: scriptId
-  
-  Creates a deployment of an Apps Script project."
-  {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/deployments"
-     #{"scriptId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn deployments-delete$
-  "Required parameters: scriptId,deploymentId
+  "Required parameters: scriptId, deploymentId
+  
+  Optional parameters: none
   
   Deletes a deployment of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})]}
+  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -175,13 +175,16 @@
      auth))))
 
 (defn deployments-get$
-  "Required parameters: deploymentId,scriptId
+  "Required parameters: scriptId, deploymentId
+  
+  Optional parameters: none
   
   Gets a deployment of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"
             "https://www.googleapis.com/auth/script.deployments.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})]}
+  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -200,11 +203,14 @@
 (defn deployments-list$
   "Required parameters: scriptId
   
+  Optional parameters: pageSize, pageToken
+  
   Lists the deployments of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"
             "https://www.googleapis.com/auth/script.deployments.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -221,12 +227,15 @@
      auth))))
 
 (defn deployments-update$
-  "Required parameters: deploymentId,scriptId
+  "Required parameters: scriptId, deploymentId
+  
+  Optional parameters: none
   
   Updates a deployment of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})]}
+  {:pre [(util/has-keys? args #{"deploymentId" "scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -242,14 +251,44 @@
       :as :json}
      auth))))
 
+(defn deployments-create$
+  "Required parameters: scriptId
+  
+  Optional parameters: none
+  
+  Creates a deployment of an Apps Script project."
+  {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://script.googleapis.com/"
+     "v1/projects/{scriptId}/deployments"
+     #{"scriptId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn versions-get$
-  "Required parameters: versionNumber,scriptId
+  "Required parameters: scriptId, versionNumber
+  
+  Optional parameters: none
   
   Gets a version of a script project."
   {:scopes ["https://www.googleapis.com/auth/script.projects"
             "https://www.googleapis.com/auth/script.projects.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId" "versionNumber"})]}
+  {:pre [(util/has-keys? args #{"scriptId" "versionNumber"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -268,11 +307,14 @@
 (defn versions-list$
   "Required parameters: scriptId
   
+  Optional parameters: pageToken, pageSize
+  
   List the versions of a script project."
   {:scopes ["https://www.googleapis.com/auth/script.projects"
             "https://www.googleapis.com/auth/script.projects.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -291,11 +333,14 @@
 (defn versions-create$
   "Required parameters: scriptId
   
+  Optional parameters: none
+  
   Creates a new immutable version using the current code, with a unique
   version number."
   {:scopes ["https://www.googleapis.com/auth/script.projects"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

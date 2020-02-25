@@ -2,17 +2,26 @@
   "Ad Exchange Buyer API
   Accesses your bidding-account information, submits creatives for validation, finds available direct deals, and retrieves performance reports.
   See: https://developers.google.com/ad-exchange/buyer-rest"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "adexchangebuyer_schema.edn"))))
 
 (defn get$
   "Required parameters: accountId
   
+  Optional parameters: none
+  
   Returns the billing information for one account specified by account ID."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,10 +40,13 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Retrieves a list of billing information for all accounts of the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

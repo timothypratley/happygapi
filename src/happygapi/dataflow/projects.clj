@@ -2,12 +2,20 @@
   "Dataflow API
   Manages Google Cloud Dataflow projects on Google Cloud Platform.
   See: https://cloud.google.com/dataflow"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dataflow_schema.edn"))))
 
 (defn workerMessages$
   "Required parameters: projectId
+  
+  Optional parameters: none
   
   Send a worker_message to the service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -15,7 +23,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,8 +42,40 @@
       :body body}
      auth))))
 
+(defn templates-launch$
+  "Required parameters: projectId
+  
+  Optional parameters: location, dynamicTemplate.gcsPath, dynamicTemplate.stagingLocation, validateOnly, gcsPath
+  
+  Launch a template."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/templates:launch"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn templates-get$
   "Required parameters: projectId
+  
+  Optional parameters: location, view, gcsPath
   
   Get the template associated with a template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -42,7 +83,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -61,13 +103,16 @@
 (defn templates-create$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Creates a Cloud Dataflow job from a template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -85,35 +130,10 @@
       :body body}
      auth))))
 
-(defn templates-launch$
-  "Required parameters: projectId
-  
-  Launch a template."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/templates:launch"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn locations-workerMessages$
-  "Required parameters: location,projectId
+  "Required parameters: projectId, location
+  
+  Optional parameters: none
   
   Send a worker_message to the service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -121,7 +141,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -139,8 +160,40 @@
       :body body}
      auth))))
 
+(defn locations-flexTemplates-launch$
+  "Required parameters: location, projectId
+  
+  Optional parameters: none
+  
+  Launch a job with a FlexTemplate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/locations/{location}/flexTemplates:launch"
+     #{"location" "projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn locations-sql-validate$
-  "Required parameters: location,projectId
+  "Required parameters: location, projectId
+  
+  Optional parameters: query
   
   Validates a GoogleSQL query for Cloud Dataflow syntax. Will always
   confirm the given query parses correctly, and if able to look up
@@ -149,7 +202,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -166,7 +220,9 @@
      auth))))
 
 (defn locations-templates-get$
-  "Required parameters: location,projectId
+  "Required parameters: projectId, location
+  
+  Optional parameters: view, gcsPath
   
   Get the template associated with a template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -174,7 +230,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -191,7 +248,9 @@
      auth))))
 
 (defn locations-templates-create$
-  "Required parameters: location,projectId
+  "Required parameters: location, projectId
+  
+  Optional parameters: none
   
   Creates a Cloud Dataflow job from a template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -199,7 +258,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -218,7 +278,9 @@
      auth))))
 
 (defn locations-templates-launch$
-  "Required parameters: projectId,location
+  "Required parameters: projectId, location
+  
+  Optional parameters: dynamicTemplate.stagingLocation, validateOnly, gcsPath, dynamicTemplate.gcsPath
   
   Launch a template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -226,7 +288,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -244,39 +307,10 @@
       :body body}
      auth))))
 
-(defn locations-jobs-getMetrics$
-  "Required parameters: projectId,jobId,location
-  
-  Request the job status.
-  
-  To request the status of a job, we recommend using
-  `projects.locations.jobs.getMetrics` with a [regional endpoint]
-  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-  `projects.jobs.getMetrics` is not recommended, as you can only request the
-  status of jobs that are running in `us-central1`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/locations/{location}/jobs/{jobId}/metrics"
-     #{"location" "projectId" "jobId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-jobs-get$
-  "Required parameters: projectId,jobId,location
+  "Required parameters: projectId, jobId, location
+  
+  Optional parameters: view
   
   Gets the state of the specified Cloud Dataflow job.
   
@@ -290,7 +324,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -307,7 +342,9 @@
      auth))))
 
 (defn locations-jobs-list$
-  "Required parameters: location,projectId
+  "Required parameters: location, projectId
+  
+  Optional parameters: pageToken, pageSize, view, filter
   
   List the jobs of a project.
   
@@ -322,7 +359,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -339,7 +377,9 @@
      auth))))
 
 (defn locations-jobs-update$
-  "Required parameters: projectId,jobId,location
+  "Required parameters: projectId, jobId, location
+  
+  Optional parameters: none
   
   Updates the state of an existing Cloud Dataflow job.
   
@@ -353,7 +393,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -370,7 +411,9 @@
      auth))))
 
 (defn locations-jobs-create$
-  "Required parameters: projectId,location
+  "Required parameters: projectId, location
+  
+  Optional parameters: view, replaceJobId
   
   Creates a Cloud Dataflow job.
   
@@ -384,7 +427,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -402,8 +446,44 @@
       :body body}
      auth))))
 
+(defn locations-jobs-getMetrics$
+  "Required parameters: projectId, jobId, location
+  
+  Optional parameters: startTime
+  
+  Request the job status.
+  
+  To request the status of a job, we recommend using
+  `projects.locations.jobs.getMetrics` with a [regional endpoint]
+  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+  `projects.jobs.getMetrics` is not recommended, as you can only request the
+  status of jobs that are running in `us-central1`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/locations/{location}/jobs/{jobId}/metrics"
+     #{"location" "projectId" "jobId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-jobs-debug-getConfig$
-  "Required parameters: location,projectId,jobId
+  "Required parameters: projectId, jobId, location
+  
+  Optional parameters: none
   
   Get encoded debug configuration for component. Not cacheable."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -411,7 +491,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -430,7 +511,9 @@
      auth))))
 
 (defn locations-jobs-debug-sendCapture$
-  "Required parameters: location,projectId,jobId
+  "Required parameters: location, projectId, jobId
+  
+  Optional parameters: none
   
   Send encoded debug capture data for component."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -438,7 +521,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -456,35 +540,10 @@
       :body body}
      auth))))
 
-(defn locations-jobs-workItems-reportStatus$
-  "Required parameters: projectId,jobId,location
-  
-  Reports the status of dataflow WorkItems leased by a worker."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/locations/{location}/jobs/{jobId}/workItems:reportStatus"
-     #{"location" "projectId" "jobId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn locations-jobs-workItems-lease$
-  "Required parameters: projectId,jobId,location
+  "Required parameters: projectId, jobId, location
+  
+  Optional parameters: none
   
   Leases a dataflow WorkItem to run."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -492,7 +551,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -510,8 +570,40 @@
       :body body}
      auth))))
 
+(defn locations-jobs-workItems-reportStatus$
+  "Required parameters: location, projectId, jobId
+  
+  Optional parameters: none
+  
+  Reports the status of dataflow WorkItems leased by a worker."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/locations/{location}/jobs/{jobId}/workItems:reportStatus"
+     #{"location" "projectId" "jobId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn locations-jobs-messages-list$
-  "Required parameters: jobId,projectId,location
+  "Required parameters: jobId, projectId, location
+  
+  Optional parameters: endTime, startTime, pageToken, pageSize, minimumImportance
   
   Request the job status.
   
@@ -525,7 +617,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"location" "projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -541,99 +634,10 @@
       :as :json}
      auth))))
 
-(defn locations-flexTemplates-launch$
-  "Required parameters: projectId,location
-  
-  Launch a job with a FlexTemplate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"location" "projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/locations/{location}/flexTemplates:launch"
-     #{"location" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobs-create$
-  "Required parameters: projectId
-  
-  Creates a Cloud Dataflow job.
-  
-  To create a job, we recommend using `projects.locations.jobs.create` with a
-  [regional endpoint]
-  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-  `projects.jobs.create` is not recommended, as your job will always start
-  in `us-central1`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/jobs"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobs-getMetrics$
-  "Required parameters: projectId,jobId
-  
-  Request the job status.
-  
-  To request the status of a job, we recommend using
-  `projects.locations.jobs.getMetrics` with a [regional endpoint]
-  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-  `projects.jobs.getMetrics` is not recommended, as you can only request the
-  status of jobs that are running in `us-central1`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/jobs/{jobId}/metrics"
-     #{"projectId" "jobId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn jobs-get$
-  "Required parameters: projectId,jobId
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: location, view
   
   Gets the state of the specified Cloud Dataflow job.
   
@@ -647,7 +651,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -664,7 +669,9 @@
      auth))))
 
 (defn jobs-update$
-  "Required parameters: projectId,jobId
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: location
   
   Updates the state of an existing Cloud Dataflow job.
   
@@ -678,7 +685,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -697,13 +705,16 @@
 (defn jobs-aggregated$
   "Required parameters: projectId
   
+  Optional parameters: filter, location, pageToken, pageSize, view
+  
   List the jobs of a project across all regions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -722,6 +733,8 @@
 (defn jobs-list$
   "Required parameters: projectId
   
+  Optional parameters: filter, location, pageToken, pageSize, view
+  
   List the jobs of a project.
   
   To list the jobs of a project in a region, we recommend using
@@ -735,7 +748,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -751,8 +765,114 @@
       :as :json}
      auth))))
 
+(defn jobs-create$
+  "Required parameters: projectId
+  
+  Optional parameters: location, replaceJobId, view
+  
+  Creates a Cloud Dataflow job.
+  
+  To create a job, we recommend using `projects.locations.jobs.create` with a
+  [regional endpoint]
+  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+  `projects.jobs.create` is not recommended, as your job will always start
+  in `us-central1`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/jobs"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn jobs-getMetrics$
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: startTime, location
+  
+  Request the job status.
+  
+  To request the status of a job, we recommend using
+  `projects.locations.jobs.getMetrics` with a [regional endpoint]
+  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+  `projects.jobs.getMetrics` is not recommended, as you can only request the
+  status of jobs that are running in `us-central1`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/jobs/{jobId}/metrics"
+     #{"projectId" "jobId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn jobs-messages-list$
+  "Required parameters: jobId, projectId
+  
+  Optional parameters: location, endTime, startTime, pageToken, pageSize, minimumImportance
+  
+  Request the job status.
+  
+  To request the status of a job, we recommend using
+  `projects.locations.jobs.messages.list` with a [regional endpoint]
+  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+  `projects.jobs.messages.list` is not recommended, as you can only request
+  the status of jobs that are running in `us-central1`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"
+            "https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataflow.googleapis.com/"
+     "v1b3/projects/{projectId}/jobs/{jobId}/messages"
+     #{"projectId" "jobId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn jobs-debug-getConfig$
-  "Required parameters: projectId,jobId
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: none
   
   Get encoded debug configuration for component. Not cacheable."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -760,7 +880,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -779,7 +900,9 @@
      auth))))
 
 (defn jobs-debug-sendCapture$
-  "Required parameters: projectId,jobId
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: none
   
   Send encoded debug capture data for component."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -787,7 +910,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -805,35 +929,10 @@
       :body body}
      auth))))
 
-(defn jobs-workItems-reportStatus$
-  "Required parameters: projectId,jobId
-  
-  Reports the status of dataflow WorkItems leased by a worker."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"
-            "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/jobs/{jobId}/workItems:reportStatus"
-     #{"projectId" "jobId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn jobs-workItems-lease$
-  "Required parameters: projectId,jobId
+  "Required parameters: projectId, jobId
+  
+  Optional parameters: none
   
   Leases a dataflow WorkItem to run."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -841,7 +940,8 @@
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -859,27 +959,24 @@
       :body body}
      auth))))
 
-(defn jobs-messages-list$
-  "Required parameters: projectId,jobId
+(defn jobs-workItems-reportStatus$
+  "Required parameters: projectId, jobId
   
-  Request the job status.
+  Optional parameters: none
   
-  To request the status of a job, we recommend using
-  `projects.locations.jobs.messages.list` with a [regional endpoint]
-  (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-  `projects.jobs.messages.list` is not recommended, as you can only request
-  the status of jobs that are running in `us-central1`."
+  Reports the status of dataflow WorkItems leased by a worker."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"
             "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://dataflow.googleapis.com/"
-     "v1b3/projects/{projectId}/jobs/{jobId}/messages"
+     "v1b3/projects/{projectId}/jobs/{jobId}/workItems:reportStatus"
      #{"projectId" "jobId"}
      args)
     (merge-with
@@ -887,5 +984,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body body}
      auth))))

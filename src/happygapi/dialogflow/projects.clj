@@ -2,18 +2,27 @@
   "Dialogflow API
   Builds conversational interfaces (for example, chatbots, and voice-powered apps and devices).
   See: https://cloud.google.com/dialogflow/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dialogflow_schema.edn"))))
 
 (defn agent$
   "Required parameters: parent
+  
+  Optional parameters: updateMask
   
   Creates/updates the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -34,11 +43,14 @@
 (defn getAgent$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Retrieves the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,11 +69,14 @@
 (defn deleteAgent$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Deletes the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -80,13 +95,16 @@
 (defn agent-export$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Exports the specified agent to a ZIP file.
   
   Operation <response: ExportAgentResponse>"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -107,6 +125,8 @@
 (defn agent-restore$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Restores the specified agent from a ZIP file.
   
   Replaces the current agent version with a new one. All the intents and
@@ -116,7 +136,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -134,43 +155,17 @@
       :body body}
      auth))))
 
-(defn agent-search$
-  "Required parameters: parent
-  
-  Returns the list of agents.
-  
-  Since there is at most one conversational agent per project, this method is
-  useful primarily for listing all agents across projects the caller has
-  access to. One can achieve that with a wildcard project collection id \"-\".
-  Refer to [List
-  Sub-Collections](https://cloud.google.com/apis/design/design_patterns#list_sub-collections)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/agent:search"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn agent-updateFulfillment$
   "Required parameters: name
+  
+  Optional parameters: updateMask
   
   Updates the fulfillment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -186,8 +181,42 @@
       :as :json}
      auth))))
 
+(defn agent-search$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Returns the list of agents.
+  
+  Since there is at most one conversational agent per project, this method is
+  useful primarily for listing all agents across projects the caller has
+  access to. One can achieve that with a wildcard project collection id \"-\".
+  Refer to [List
+  Sub-Collections](https://cloud.google.com/apis/design/design_patterns#list_sub-collections)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+parent}/agent:search"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn agent-train$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Trains the specified agent.
   
@@ -195,7 +224,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -216,12 +246,15 @@
 (defn agent-getValidationResult$
   "Required parameters: parent
   
+  Optional parameters: languageCode
+  
   Gets agent validation result. Agent validation is performed during
   training time and is updated automatically when training is completed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -240,6 +273,8 @@
 (defn agent-import$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Imports the specified agent from a ZIP file.
   
   Uploads new intents and entity types without deleting the existing ones.
@@ -250,7 +285,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -271,11 +307,14 @@
 (defn agent-getFulfillment$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Retrieves the fulfillment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -294,11 +333,14 @@
 (defn agent-sessions-deleteContexts$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Deletes all active contexts in the specified session."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -317,6 +359,8 @@
 (defn agent-sessions-detectIntent$
   "Required parameters: session
   
+  Optional parameters: none
+  
   Processes a natural language query and returns structured, actionable data
   as a result. This method is not idempotent, because it may cause contexts
   and session entity types to be updated, which in turn might affect
@@ -324,7 +368,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})]}
+  {:pre [(util/has-keys? args #{"session"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -342,154 +387,17 @@
       :body body}
      auth))))
 
-(defn agent-sessions-entityTypes-create$
-  "Required parameters: parent
-  
-  Creates a session entity type.
-  
-  If the specified session entity type already exists, overrides the session
-  entity type.
-  
-  This method doesn't work with Google Assistant integration.
-  Contact Dialogflow support if you need to use session entities
-  with Google Assistant integration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/entityTypes"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn agent-sessions-entityTypes-delete$
-  "Required parameters: name
-  
-  Deletes the specified session entity type.
-  
-  This method doesn't work with Google Assistant integration.
-  Contact Dialogflow support if you need to use session entities
-  with Google Assistant integration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-sessions-entityTypes-list$
-  "Required parameters: parent
-  
-  Returns the list of all session entity types in the specified session.
-  
-  This method doesn't work with Google Assistant integration.
-  Contact Dialogflow support if you need to use session entities
-  with Google Assistant integration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/entityTypes"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-sessions-entityTypes-get$
-  "Required parameters: name
-  
-  Retrieves the specified session entity type.
-  
-  This method doesn't work with Google Assistant integration.
-  Contact Dialogflow support if you need to use session entities
-  with Google Assistant integration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-sessions-entityTypes-patch$
-  "Required parameters: name
-  
-  Updates the specified session entity type.
-  
-  This method doesn't work with Google Assistant integration.
-  Contact Dialogflow support if you need to use session entities
-  with Google Assistant integration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn agent-sessions-contexts-delete$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Deletes the specified context."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -508,11 +416,14 @@
 (defn agent-sessions-contexts-list$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   Returns the list of all contexts in the specified session."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -531,11 +442,14 @@
 (defn agent-sessions-contexts-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Retrieves the specified context."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -554,11 +468,14 @@
 (defn agent-sessions-contexts-patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the specified context."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -577,13 +494,16 @@
 (defn agent-sessions-contexts-create$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Creates a context.
   
   If the specified context already exists, overrides the context."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -601,19 +521,149 @@
       :body body}
      auth))))
 
-(defn agent-versions-create$
+(defn agent-sessions-entityTypes-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified session entity type.
+  
+  This method doesn't work with Google Assistant integration.
+  Contact Dialogflow support if you need to use session entities
+  with Google Assistant integration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-sessions-entityTypes-list$
   "Required parameters: parent
   
-  Creates an agent version."
+  Optional parameters: pageToken, pageSize
+  
+  Returns the list of all session entity types in the specified session.
+  
+  This method doesn't work with Google Assistant integration.
+  Contact Dialogflow support if you need to use session entities
+  with Google Assistant integration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+parent}/entityTypes"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-sessions-entityTypes-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified session entity type.
+  
+  This method doesn't work with Google Assistant integration.
+  Contact Dialogflow support if you need to use session entities
+  with Google Assistant integration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-sessions-entityTypes-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Updates the specified session entity type.
+  
+  This method doesn't work with Google Assistant integration.
+  Contact Dialogflow support if you need to use session entities
+  with Google Assistant integration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-sessions-entityTypes-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a session entity type.
+  
+  If the specified session entity type already exists, overrides the session
+  entity type.
+  
+  This method doesn't work with Google Assistant integration.
+  Contact Dialogflow support if you need to use session entities
+  with Google Assistant integration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/versions"
+     "v2/{+parent}/entityTypes"
      #{"parent"}
      args)
     (merge-with
@@ -629,11 +679,14 @@
 (defn agent-versions-list$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   Returns the list of all versions of the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -652,11 +705,14 @@
 (defn agent-versions-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Retrieves the specified agent version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -675,6 +731,8 @@
 (defn agent-versions-patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the specified agent version.
   
   Note that this method does not allow you to update the state of the agent
@@ -683,7 +741,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -699,44 +758,22 @@
       :as :json}
      auth))))
 
-(defn agent-intents-list$
+(defn agent-versions-create$
   "Required parameters: parent
   
-  Returns the list of all intents in the specified agent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/intents"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-intents-batchDelete$
-  "Required parameters: parent
+  Optional parameters: none
   
-  Deletes intents in the specified agent.
-  
-  Operation <response: google.protobuf.Empty>"
+  Creates an agent version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/intents:batchDelete"
+     "v2/{+parent}/versions"
      #{"parent"}
      args)
     (merge-with
@@ -747,81 +784,12 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn agent-intents-create$
-  "Required parameters: parent
-  
-  Creates an intent in the specified agent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/intents"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn agent-intents-get$
-  "Required parameters: name
-  
-  Retrieves the specified intent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-intents-patch$
-  "Required parameters: name
-  
-  Updates the specified intent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))
 
 (defn agent-intents-batchUpdate$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Updates/Creates multiple intents in the specified agent.
   
@@ -829,7 +797,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -850,13 +819,204 @@
 (defn agent-intents-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes the specified intent and its direct or indirect followup intents."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-intents-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, intentView, languageCode
+  
+  Returns the list of all intents in the specified agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+parent}/intents"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-intents-batchDelete$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Deletes intents in the specified agent.
+  
+  Operation <response: google.protobuf.Empty>"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+parent}/intents:batchDelete"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn agent-intents-create$
+  "Required parameters: parent
+  
+  Optional parameters: intentView, languageCode
+  
+  Creates an intent in the specified agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+parent}/intents"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn agent-intents-patch$
+  "Required parameters: name
+  
+  Optional parameters: intentView, languageCode, updateMask
+  
+  Updates the specified intent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-intents-get$
+  "Required parameters: name
+  
+  Optional parameters: languageCode, intentView
+  
+  Retrieves the specified intent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-entityTypes-patch$
+  "Required parameters: name
+  
+  Optional parameters: languageCode, updateMask
+  
+  Updates the specified entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn agent-entityTypes-get$
+  "Required parameters: name
+  
+  Optional parameters: languageCode
+  
+  Retrieves the specified entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://dialogflow.googleapis.com/"
      "v2/{+name}"
@@ -873,13 +1033,16 @@
 (defn agent-entityTypes-batchUpdate$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Updates/Creates multiple entity types in the specified agent.
   
   Operation <response: BatchUpdateEntityTypesResponse>"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -900,11 +1063,14 @@
 (defn agent-entityTypes-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes the specified entity type."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -923,11 +1089,14 @@
 (defn agent-entityTypes-list$
   "Required parameters: parent
   
+  Optional parameters: languageCode, pageToken, pageSize
+  
   Returns the list of all entity types in the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -943,33 +1112,10 @@
       :as :json}
      auth))))
 
-(defn agent-entityTypes-create$
-  "Required parameters: parent
-  
-  Creates an entity type in the specified agent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+parent}/entityTypes"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn agent-entityTypes-batchDelete$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Deletes entity types in the specified agent.
   
@@ -977,7 +1123,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -995,54 +1142,38 @@
       :body body}
      auth))))
 
-(defn agent-entityTypes-get$
-  "Required parameters: name
+(defn agent-entityTypes-create$
+  "Required parameters: parent
   
-  Retrieves the specified entity type."
+  Optional parameters: languageCode
+  
+  Creates an entity type in the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
+     "v2/{+parent}/entityTypes"
+     #{"parent"}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
-     auth))))
-
-(defn agent-entityTypes-patch$
-  "Required parameters: name
-  
-  Updates the specified entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body body}
      auth))))
 
 (defn agent-entityTypes-entities-batchUpdate$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Updates or creates multiple entities in the specified entity type. This
   method does not affect entities in the entity type that aren't explicitly
@@ -1053,7 +1184,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1074,6 +1206,8 @@
 (defn agent-entityTypes-entities-batchDelete$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Deletes entities in the specified entity type.
   
   
@@ -1081,7 +1215,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1102,13 +1237,16 @@
 (defn agent-entityTypes-entities-batchCreate$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Creates multiple new entities in the specified entity type.
   
   Operation <response: google.protobuf.Empty>"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1129,11 +1267,14 @@
 (defn agent-environments-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Retrieves the specified agent environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1152,6 +1293,8 @@
 (defn agent-environments-patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the specified agent environment.
   
   This method allows you to deploy new agent versions into the environment.
@@ -1163,7 +1306,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -1182,11 +1326,14 @@
 (defn agent-environments-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes the specified agent environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1205,11 +1352,14 @@
 (defn agent-environments-list$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   Returns the list of all environments of the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1228,11 +1378,14 @@
 (defn agent-environments-getHistory$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   Gets the history of the specified environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1251,11 +1404,14 @@
 (defn agent-environments-create$
   "Required parameters: parent
   
+  Optional parameters: environmentId
+  
   Creates an agent environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1273,42 +1429,10 @@
       :body body}
      auth))))
 
-(defn operations-cancel$
-  "Required parameters: name
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v2/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn operations-list$
   "Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -1323,7 +1447,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1342,13 +1467,16 @@
 (defn operations-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1364,8 +1492,10 @@
       :as :json}
      auth))))
 
-(defn locations-operations-cancel$
+(defn operations-cancel$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
@@ -1380,7 +1510,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1401,6 +1532,8 @@
 (defn locations-operations-list$
   "Required parameters: name
   
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -1414,7 +1547,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1433,13 +1567,16 @@
 (defn locations-operations-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1453,4 +1590,41 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v2/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
      auth))))

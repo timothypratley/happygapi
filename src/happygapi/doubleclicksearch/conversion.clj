@@ -2,12 +2,20 @@
   "Search Ads 360 API
   Reports and modifies your advertising data in DoubleClick Search (for example, campaigns, ad groups, keywords, and conversions).
   See: https://developers.google.com/doubleclick-search/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "doubleclicksearch_schema.edn"))))
 
 (defn get$
-  "Required parameters: startDate,endDate,engineAccountId,advertiserId,startRow,agencyId,rowCount
+  "Required parameters: startDate, endDate, engineAccountId, advertiserId, startRow, agencyId, rowCount
+  
+  Optional parameters: adId, adGroupId, campaignId, criterionId
   
   Retrieves a list of conversions from a DoubleClick Search engine account."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -20,7 +28,8 @@
             "agencyId"
             "startRow"
             "endDate"
-            "engineAccountId"})]}
+            "engineAccountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -39,10 +48,13 @@
 (defn insert$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Inserts a batch of new conversions into DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -61,7 +73,9 @@
      auth))))
 
 (defn patch$
-  "Required parameters: advertiserId,agencyId,endDate,engineAccountId,rowCount,startDate,startRow
+  "Required parameters: advertiserId, agencyId, endDate, engineAccountId, rowCount, startDate, startRow
+  
+  Optional parameters: none
   
   Updates a batch of conversions in DoubleClick Search. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -74,7 +88,8 @@
             "agencyId"
             "startRow"
             "endDate"
-            "engineAccountId"})]}
+            "engineAccountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -93,10 +108,13 @@
 (defn update$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Updates a batch of conversions in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -115,10 +133,13 @@
 (defn updateAvailability$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

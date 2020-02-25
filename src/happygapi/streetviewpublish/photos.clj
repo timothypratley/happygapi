@@ -3,12 +3,60 @@
   Publishes 360 photos to Google Maps, along with position, orientation, and connectivity metadata. Apps can offer an interface for positioning, connecting, and uploading user-generated Street View images.
   
   See: https://developers.google.com/streetview/publish/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "streetviewpublish_schema.edn"))))
+
+(defn batchGet$
+  "Required parameters: none
+  
+  Optional parameters: view, languageCode, photoIds
+  
+  Gets the metadata of the specified
+  Photo batch.
+  
+  Note that if
+  BatchGetPhotos
+  fails, either critical fields are missing or there is an authentication
+  error. Even if
+  BatchGetPhotos
+  succeeds, individual photos in the batch may have failures.
+  These failures are specified in each
+  PhotoResponse.status
+  in
+  BatchGetPhotosResponse.results.
+  See
+  GetPhoto
+  for specific failures that can occur per photo."
+  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://streetviewpublish.googleapis.com/"
+     "v1/photos:batchGet"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: filter, languageCode, pageToken, pageSize, view
   
   Lists all the Photos that belong to
   the user.
@@ -17,7 +65,8 @@
   being indexed are not returned in the response.</aside>"
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -35,6 +84,8 @@
 
 (defn batchUpdate$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Updates the metadata of Photos, such
   as pose, place association, connections, etc. Changing the pixels of photos
@@ -71,7 +122,8 @@
   filled as well. Otherwise, the request will fail.</aside>"
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -92,6 +144,8 @@
 (defn batchDelete$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Deletes a list of Photos and their
   metadata.
   
@@ -110,7 +164,8 @@
   for specific failures that can occur per photo."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -126,41 +181,4 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn batchGet$
-  "Required parameters: none
-  
-  Gets the metadata of the specified
-  Photo batch.
-  
-  Note that if
-  BatchGetPhotos
-  fails, either critical fields are missing or there is an authentication
-  error. Even if
-  BatchGetPhotos
-  succeeds, individual photos in the batch may have failures.
-  These failures are specified in each
-  PhotoResponse.status
-  in
-  BatchGetPhotosResponse.results.
-  See
-  GetPhoto
-  for specific failures that can occur per photo."
-  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://streetviewpublish.googleapis.com/"
-     "v1/photos:batchGet"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))

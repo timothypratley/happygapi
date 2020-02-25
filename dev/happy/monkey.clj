@@ -37,30 +37,30 @@
   [params]
   (match-params params :required))
 
+(defn- get-optional-params
+  "Return a vector of optional parameter names"
+  [params]
+  (match-params params (complement :required)))
+
 (defn method-name
   "To avoid collisions with clojure.core, methods are named like `get$`.
   Where they are a sub-resource, they are named like `parent-get$`"
   [id]
   (str (str/join \- (drop 2 (str/split id #"\."))) \$))
 
-(comment
- ;; TODO
- (defmethod call-params :oauth [state params]
-   ;; TODO: check for expired auth token and call refresh if possible
-   (let [headers (if (params :headers) (params :headers) {})]
-     (assoc params :headers (assoc headers "Authorization" (str "Bearer " (@state :token))))))
-
-
- (defmethod call-params :simple [state, params]
-   (assoc params :query-params (assoc (params :query-params) "key" (@state :api_key)))))
-
 (defn extract-methods [base-url resource]
   (for [[_ {:keys [id path parameters description scopes httpMethod]}] (:methods resource)
         :let [required-parameters (get-required-params parameters)
+              optional-parameters (get-optional-params parameters)
               post? (= httpMethod "POST")]]
     `(~'defn ~(symbol (method-name id))
       ~(str "Required parameters: " (if (seq required-parameters)
-                                      (str/join "," required-parameters)
+                                      (str/join ", " required-parameters)
+                                      "none")
+            \newline \newline
+            ;; TODO: show the full parameter definition types/enums/etc
+            "Optional parameters: " (if (seq optional-parameters)
+                                      (str/join ", " optional-parameters)
                                       "none")
             \newline \newline
             description)
@@ -68,7 +68,9 @@
       ~(if post?
          '[auth args body]
          '[auth args])
-      {:pre [(~'util/has-keys? ~'args ~(set required-parameters))]}
+      {:pre [(~'util/has-keys? ~'args ~(set required-parameters))
+             ;; TODO: schema validation should be optional if it is slow... time complicated validations
+             (~'json-schema/validate ~'schemas ~'args)]}
       (~'util/get-response
        (~(symbol "http" (str/lower-case httpMethod))
         (~'util/get-url ~base-url ~path ~(set (get-path-params parameters)) ~'args)

@@ -2,19 +2,28 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
 
 (defn get$
-  "Required parameters: image,project
+  "Required parameters: image, project
+  
+  Optional parameters: none
   
   Returns the specified image. Gets a list of available images by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"image" "project"})]}
+  {:pre [(util/has-keys? args #{"image" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,13 +40,16 @@
      auth))))
 
 (defn setIamPolicy$
-  "Required parameters: project,resource
+  "Required parameters: project, resource
+  
+  Optional parameters: none
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project"})]}
+  {:pre [(util/has-keys? args #{"resource" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -58,6 +70,8 @@
 (defn insert$
   "Required parameters: project
   
+  Optional parameters: forceCreate, requestId
+  
   Creates an image in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
@@ -65,7 +79,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -84,14 +99,17 @@
      auth))))
 
 (defn getFromFamily$
-  "Required parameters: family,project
+  "Required parameters: family, project
+  
+  Optional parameters: none
   
   Returns the latest image that is part of an image family and is not deprecated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "family"})]}
+  {:pre [(util/has-keys? args #{"project" "family"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -108,14 +126,17 @@
      auth))))
 
 (defn testIamPermissions$
-  "Required parameters: project,resource
+  "Required parameters: project, resource
+  
+  Optional parameters: none
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project"})]}
+  {:pre [(util/has-keys? args #{"resource" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -134,13 +155,16 @@
      auth))))
 
 (defn setLabels$
-  "Required parameters: project,resource
+  "Required parameters: project, resource
+  
+  Optional parameters: none
   
   Sets the labels on an image. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project"})]}
+  {:pre [(util/has-keys? args #{"resource" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -159,13 +183,16 @@
      auth))))
 
 (defn delete$
-  "Required parameters: image,project
+  "Required parameters: image, project
+  
+  Optional parameters: requestId
   
   Deletes the specified image."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"image" "project"})]}
+  {:pre [(util/has-keys? args #{"image" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -182,14 +209,17 @@
      auth))))
 
 (defn getIamPolicy$
-  "Required parameters: project,resource
+  "Required parameters: project, resource
+  
+  Optional parameters: none
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resource" "project"})]}
+  {:pre [(util/has-keys? args #{"resource" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -208,12 +238,15 @@
 (defn list$
   "Required parameters: project
   
+  Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of custom images available to the specified project. Custom images are images you create that belong to your project. This method does not get any images that belong to other projects, including publicly-available images, like Debian 8. If you want to get a list of publicly-available images, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -230,7 +263,9 @@
      auth))))
 
 (defn deprecate$
-  "Required parameters: image,project
+  "Required parameters: image, project
+  
+  Optional parameters: requestId
   
   Sets the deprecation status of an image.
   
@@ -238,7 +273,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"image" "project"})]}
+  {:pre [(util/has-keys? args #{"image" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

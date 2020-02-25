@@ -1,0 +1,7 @@
+{:CustomApp {:id "CustomApp",
+             :type "object",
+             :description "This resource represents a custom app.",
+             :properties {:languageCode {:type "string",
+                                         :description "Default listing language in BCP 47 format."},
+                          :title {:type "string",
+                                  :description "Title for the Android app."}}}}

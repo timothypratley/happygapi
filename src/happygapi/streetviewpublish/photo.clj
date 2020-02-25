@@ -3,82 +3,20 @@
   Publishes 360 photos to Google Maps, along with position, orientation, and connectivity metadata. Apps can offer an interface for positioning, connecting, and uploading user-generated Street View images.
   
   See: https://developers.google.com/streetview/publish/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn get$
-  "Required parameters: photoId
-  
-  Gets the metadata of the specified
-  Photo.
-  
-  This method returns the following error codes:
-  
-  * google.rpc.Code.PERMISSION_DENIED if the requesting user did not
-  create the requested Photo.
-  * google.rpc.Code.NOT_FOUND if the requested
-  Photo does not exist.
-  * google.rpc.Code.UNAVAILABLE if the requested
-  Photo is still being indexed."
-  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"photoId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://streetviewpublish.googleapis.com/"
-     "v1/photo/{photoId}"
-     #{"photoId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "Required parameters: id
-  
-  Updates the metadata of a Photo, such
-  as pose, place association, connections, etc. Changing the pixels of a
-  photo is not supported.
-  
-  Only the fields specified in the
-  updateMask
-  field are used. If `updateMask` is not present, the update applies to all
-  fields.
-  
-  This method returns the following error codes:
-  
-  * google.rpc.Code.PERMISSION_DENIED if the requesting user did not
-  create the requested photo.
-  * google.rpc.Code.INVALID_ARGUMENT if the request is malformed.
-  * google.rpc.Code.NOT_FOUND if the requested photo does not exist.
-  * google.rpc.Code.UNAVAILABLE if the requested
-  Photo is still being indexed."
-  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"id"})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://streetviewpublish.googleapis.com/"
-     "v1/photo/{id}"
-     #{"id"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+(def schemas
+  (edn/read-string (slurp (io/resource "streetviewpublish_schema.edn"))))
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: none
   
   After the client finishes uploading the photo with the returned
   UploadRef,
@@ -101,7 +39,8 @@
   storage limit."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -121,6 +60,8 @@
 
 (defn startUpload$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Creates an upload session to start uploading photo bytes.  The method uses
   the upload URL of the returned
@@ -144,7 +85,8 @@
   to create the Photo object entry."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -165,6 +107,8 @@
 (defn delete$
   "Required parameters: photoId
   
+  Optional parameters: none
+  
   Deletes a Photo and its metadata.
   
   This method returns the following error codes:
@@ -174,13 +118,90 @@
   * google.rpc.Code.NOT_FOUND if the photo ID does not exist."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"photoId"})]}
+  {:pre [(util/has-keys? args #{"photoId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{photoId}"
      #{"photoId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "Required parameters: photoId
+  
+  Optional parameters: view, languageCode
+  
+  Gets the metadata of the specified
+  Photo.
+  
+  This method returns the following error codes:
+  
+  * google.rpc.Code.PERMISSION_DENIED if the requesting user did not
+  create the requested Photo.
+  * google.rpc.Code.NOT_FOUND if the requested
+  Photo does not exist.
+  * google.rpc.Code.UNAVAILABLE if the requested
+  Photo is still being indexed."
+  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"photoId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://streetviewpublish.googleapis.com/"
+     "v1/photo/{photoId}"
+     #{"photoId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "Required parameters: id
+  
+  Optional parameters: updateMask
+  
+  Updates the metadata of a Photo, such
+  as pose, place association, connections, etc. Changing the pixels of a
+  photo is not supported.
+  
+  Only the fields specified in the
+  updateMask
+  field are used. If `updateMask` is not present, the update applies to all
+  fields.
+  
+  This method returns the following error codes:
+  
+  * google.rpc.Code.PERMISSION_DENIED if the requesting user did not
+  create the requested photo.
+  * google.rpc.Code.INVALID_ARGUMENT if the request is malformed.
+  * google.rpc.Code.NOT_FOUND if the requested photo does not exist.
+  * google.rpc.Code.UNAVAILABLE if the requested
+  Photo is still being indexed."
+  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"id"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://streetviewpublish.googleapis.com/"
+     "v1/photo/{id}"
+     #{"id"}
      args)
     (merge-with
      merge

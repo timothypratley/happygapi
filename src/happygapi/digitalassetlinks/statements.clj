@@ -2,12 +2,20 @@
   "Digital Asset Links API
   Discovers relationships between online assets such as websites or mobile apps.
   See: https://developers.google.com/digital-asset-links/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "digitalassetlinks_schema.edn"))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: relation, source.web.site, source.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint
   
   Retrieves a list of all statements from a given source that match the
   specified target and statement string.
@@ -28,7 +36,8 @@
   site or Google+ profile."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

@@ -2,12 +2,50 @@
   "HomeGraph API
   
   See: https://developers.google.com/actions/smarthome/create-app#request-sync"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "homegraph_schema.edn"))))
+
+(defn query$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Gets the device states for the devices in QueryRequest.
+  The third-party user's identity is passed in as `agent_user_id`. The agent
+  is identified by the JWT signed by the third-party partner's service
+  account."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://homegraph.googleapis.com/"
+     "v1/devices:query"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
 
 (defn sync$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Gets all the devices associated with the given third-party user.
   The third-party user's identity is passed in as `agent_user_id`. The agent
@@ -15,7 +53,8 @@
   account."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -36,6 +75,8 @@
 (defn reportStateAndNotification$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Reports device state and optionally sends device notifications. Called by
   an agent when the device state of a third-party changes or the agent wants
   to send a notification about the device. See
@@ -53,7 +94,8 @@
   The agent is identified by the JWT signed by the partner's service account."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -74,6 +116,8 @@
 (defn requestSync$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Requests a `SYNC` call from Google to a 3p partner's home control agent for
   a user.
   
@@ -84,39 +128,13 @@
   service account."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:requestSync"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn query$
-  "Required parameters: none
-  
-  Gets the device states for the devices in QueryRequest.
-  The third-party user's identity is passed in as `agent_user_id`. The agent
-  is identified by the JWT signed by the third-party partner's service
-  account."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://homegraph.googleapis.com/"
-     "v1/devices:query"
      #{}
      args)
     (merge-with

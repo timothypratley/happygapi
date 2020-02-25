@@ -2,12 +2,20 @@
   "Cloud Search API
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
 
 (defn datasources-updateSchema$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Updates the schema of a data source. This method does not perform
   incremental updates to the schema. Instead, this method updates the schema
@@ -18,7 +26,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -37,6 +46,8 @@
 (defn datasources-deleteSchema$
   "Required parameters: name
   
+  Optional parameters: debugOptions.enableDebugging
+  
   Deletes the schema of a data source.
   
   **Note:** This API requires an admin or service account to execute."
@@ -44,7 +55,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -63,6 +75,8 @@
 (defn datasources-getSchema$
   "Required parameters: name
   
+  Optional parameters: debugOptions.enableDebugging
+  
   Gets the schema of a data source.
   
   **Note:** This API requires an admin or service account to execute."
@@ -70,7 +84,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -89,6 +104,8 @@
 (defn datasources-items-get$
   "Required parameters: name
   
+  Optional parameters: connectorName, debugOptions.enableDebugging
+  
   Gets Item resource by item name.
   
   This API requires an admin or service account to execute.  The service
@@ -96,7 +113,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -115,6 +133,8 @@
 (defn datasources-items-push$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Pushes an item onto a queue for later polling and updating.
   
   This API requires an admin or service account to execute. The service
@@ -122,7 +142,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -143,6 +164,8 @@
 (defn datasources-items-index$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Updates Item ACL, metadata, and
   content. It will insert the Item if it
   does not exist.
@@ -154,7 +177,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -175,6 +199,8 @@
 (defn datasources-items-delete$
   "Required parameters: name
   
+  Optional parameters: connectorName, version, debugOptions.enableDebugging, mode
+  
   Deletes Item resource for the
   specified resource name. This API requires an admin or service account
   to execute. The service account used is the one whitelisted in the
@@ -182,7 +208,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -201,6 +228,8 @@
 (defn datasources-items-deleteQueueItems$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes all items in a queue. This method is useful for deleting stale
   items.
   
@@ -209,7 +238,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -229,6 +259,8 @@
 
 (defn datasources-items-poll$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Polls for unreserved items from the indexing queue and marks a
   set as reserved, starting with items that have
@@ -261,7 +293,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -282,6 +315,8 @@
 (defn datasources-items-list$
   "Required parameters: name
   
+  Optional parameters: connectorName, brief, pageToken, pageSize, debugOptions.enableDebugging
+  
   Lists all or a subset of Item resources.
   
   This API requires an admin or service account to execute. The service
@@ -289,7 +324,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -308,6 +344,8 @@
 (defn datasources-items-unreserve$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Unreserves all items from a queue, making them all eligible to be
   polled.  This method is useful for resetting the indexing queue
   after a connector has been restarted.
@@ -317,7 +355,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -338,6 +377,8 @@
 (defn datasources-items-upload$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Creates an upload session for uploading item content. For items smaller
   than 100 KB, it's easier to embed the content
   inline within
@@ -348,7 +389,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

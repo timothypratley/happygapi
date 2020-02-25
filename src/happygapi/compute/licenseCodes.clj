@@ -2,19 +2,28 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
 
 (defn get$
-  "Required parameters: licenseCode,project
+  "Required parameters: licenseCode, project
+  
+  Optional parameters: none
   
   Return a specified license code. License codes are mirrored across all projects that have permissions to read the License Code."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "licenseCode"})]}
+  {:pre [(util/has-keys? args #{"project" "licenseCode"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,14 +40,17 @@
      auth))))
 
 (defn testIamPermissions$
-  "Required parameters: project,resource
+  "Required parameters: project, resource
+  
+  Optional parameters: none
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project"})]}
+  {:pre [(util/has-keys? args #{"resource" "project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

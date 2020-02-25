@@ -2,18 +2,28 @@
   "Policy Troubleshooter API
   
   See: https://cloud.google.com/iam/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "policytroubleshooter_schema.edn"))))
 
 (defn troubleshoot$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Checks whether a member has a specific permission for a specific resource,
   and explains why the member does or does not have that permission."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

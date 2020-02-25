@@ -1,0 +1,134 @@
+{:Environment {:type "object",
+               :properties {:webPorts {:description "Output only. Ports to which clients can connect to initiate HTTPS or WSS\nconnections with the environment.",
+                                       :type "array",
+                                       :items {:format "int32",
+                                               :type "integer"}},
+                            :publicKeys {:type "array",
+                                         :items {:$ref "PublicKey"},
+                                         :description "Output only. Public keys associated with the environment. Clients can\nconnect to this environment via SSH only if they possess a private key\ncorresponding to at least one of these public keys. Keys can be added to or\nremoved from the environment using the CreatePublicKey and DeletePublicKey\nmethods."},
+                            :name {:type "string",
+                                   :description "Output only. Full name of this resource, in the format\n`users/{owner_email}/environments/{environment_id}`. `{owner_email}` is the\nemail address of the user to whom this environment belongs, and\n`{environment_id}` is the identifier of this environment. For example,\n`users/someone@example.com/environments/default`."},
+                            :dockerImage {:description "Required. Full path to the Docker image used to run this environment, e.g.\n\"gcr.io/dev-con/cloud-devshell:latest\".",
+                                          :type "string"},
+                            :sshHost {:type "string",
+                                      :description "Output only. Host to which clients can connect to initiate SSH sessions\nwith the environment."},
+                            :state {:type "string",
+                                    :enumDescriptions ["The environment's states is unknown."
+                                                       "The environment is not running and can't be connected to. Starting the\nenvironment will transition it to the STARTING state."
+                                                       "The environment is being started but is not yet ready to accept\nconnections."
+                                                       "The environment is running and ready to accept connections. It will\nautomatically transition back to DISABLED after a period of inactivity or\nif another environment is started."],
+                                    :enum ["STATE_UNSPECIFIED"
+                                           "DISABLED"
+                                           "STARTING"
+                                           "RUNNING"],
+                                    :description "Output only. Current execution state of this environment."},
+                            :sshPort {:description "Output only. Port to which clients can connect to initiate SSH sessions\nwith the environment.",
+                                      :format "int32",
+                                      :type "integer"},
+                            :sshUsername {:type "string",
+                                          :description "Output only. Username that clients should use when initiating SSH sessions\nwith the environment."},
+                            :size {:enumDescriptions ["The VM size is unknown."
+                                                      "The default VM size."
+                                                      "The boosted VM size."],
+                                   :enum ["VM_SIZE_UNSPECIFIED"
+                                          "DEFAULT"
+                                          "BOOSTED"],
+                                   :description "Indicates the size of the backing VM running the environment.  If set to\nsomething other than DEFAULT, it will be reverted to the default VM size\nafter vm_size_expire_time.",
+                                   :type "string"},
+                            :id {:description "Output only. The environment's identifier, unique among the user's\nenvironments.",
+                                 :type "string"},
+                            :vmSizeExpireTime {:description "Output only. The time when the Environment will expire back to the default\nVM size.",
+                                               :format "google-datetime",
+                                               :type "string"},
+                            :webHost {:description "Output only. Host to which clients can connect to initiate HTTPS or WSS\nconnections with the environment.",
+                                      :type "string"}},
+               :id "Environment",
+               :description "A Cloud Shell environment, which is defined as the combination of a Docker\nimage specifying what is installed on the environment and a home directory\ncontaining the user's data that will remain across sessions. Each user has a\nsingle environment with the ID \"default\"."},
+ :Operation {:description "This resource represents a long-running operation that is the result of a\nnetwork API call.",
+             :type "object",
+             :properties {:response {:additionalProperties {:type "any",
+                                                            :description "Properties of the object. Contains field @type with type URL."},
+                                     :description "The normal response of the operation in case of success.  If the original\nmethod returns no data on success, such as `Delete`, the response is\n`google.protobuf.Empty`.  If the original method is standard\n`Get`/`Create`/`Update`, the response should be the resource.  For other\nmethods, the response should have the type `XxxResponse`, where `Xxx`\nis the original method name.  For example, if the original method name\nis `TakeSnapshot()`, the inferred response type is\n`TakeSnapshotResponse`.",
+                                     :type "object"},
+                          :name {:description "The server-assigned name, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`name` should be a resource name ending with `operations/{unique_id}`.",
+                                 :type "string"},
+                          :error {:$ref "Status",
+                                  :description "The error result of the operation in case of failure or cancellation."},
+                          :metadata {:description "Service-specific metadata associated with the operation.  It typically\ncontains progress information and common metadata such as create time.\nSome services might not provide such metadata.  Any method that returns a\nlong-running operation should document the metadata type, if any.",
+                                     :type "object",
+                                     :additionalProperties {:type "any",
+                                                            :description "Properties of the object. Contains field @type with type URL."}},
+                          :done {:description "If the value is `false`, it means the operation is still in progress.\nIf `true`, the operation is completed, and either `error` or `response` is\navailable.",
+                                 :type "boolean"}},
+             :id "Operation"},
+ :CancelOperationRequest {:id "CancelOperationRequest",
+                          :description "The request message for Operations.CancelOperation.",
+                          :type "object",
+                          :properties {}},
+ :StartEnvironmentMetadata {:id "StartEnvironmentMetadata",
+                            :description "Message included in the metadata field of operations returned from\nStartEnvironment.",
+                            :type "object",
+                            :properties {:state {:description "Current state of the environment being started.",
+                                                 :type "string",
+                                                 :enumDescriptions ["The environment's start state is unknown."
+                                                                    "The environment is in the process of being started, but no additional\ndetails are available."
+                                                                    "Startup is waiting for the user's disk to be unarchived. This can happen\nwhen the user returns to Cloud Shell after not having used it for a\nwhile, and suggests that startup will take longer than normal."
+                                                                    "Startup is waiting for a VM to be assigned to the environment. This\nshould normally happen very quickly, but an environment might stay in\nthis state for an extended period of time if the system is experiencing\nheavy load."
+                                                                    "Startup is complete and the user should be able to establish an SSH\nconnection to their environment."],
+                                                 :enum ["STATE_UNSPECIFIED"
+                                                        "STARTING"
+                                                        "UNARCHIVING_DISK"
+                                                        "AWAITING_VM"
+                                                        "FINISHED"]}}},
+ :Empty {:description "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+         :type "object",
+         :properties {},
+         :id "Empty"},
+ :StartEnvironmentResponse {:description "Message included in the response field of operations returned from\nStartEnvironment once the\noperation is complete.",
+                            :type "object",
+                            :properties {:environment {:$ref "Environment",
+                                                       :description "Environment that was started."}},
+                            :id "StartEnvironmentResponse"},
+ :PublicKey {:type "object",
+             :properties {:name {:type "string",
+                                 :description "Output only. Full name of this resource, in the format\n`users/{owner_email}/environments/{environment_id}/publicKeys/{key_id}`.\n`{owner_email}` is the email address of the user to whom the key belongs.\n`{environment_id}` is the identifier of the environment to which the key\ngrants access. `{key_id}` is the unique identifier of the key. For example,\n`users/someone@example.com/environments/default/publicKeys/myKey`."},
+                          :key {:description "Required. Content of this key.",
+                                :format "byte",
+                                :type "string"},
+                          :format {:enum ["FORMAT_UNSPECIFIED"
+                                          "SSH_DSS"
+                                          "SSH_RSA"
+                                          "ECDSA_SHA2_NISTP256"
+                                          "ECDSA_SHA2_NISTP384"
+                                          "ECDSA_SHA2_NISTP521"],
+                                   :description "Required. Format of this key's content.",
+                                   :type "string",
+                                   :enumDescriptions ["Unknown format. Do not use."
+                                                      "`ssh-dss` key format (see RFC4253)."
+                                                      "`ssh-rsa` key format (see RFC4253)."
+                                                      "`ecdsa-sha2-nistp256` key format (see RFC5656)."
+                                                      "`ecdsa-sha2-nistp384` key format (see RFC5656)."
+                                                      "`ecdsa-sha2-nistp521` key format (see RFC5656)."]}},
+             :id "PublicKey",
+             :description "A public SSH key, corresponding to a private SSH key held by the client."},
+ :ListOperationsResponse {:description "The response message for Operations.ListOperations.",
+                          :type "object",
+                          :properties {:operations {:description "A list of operations that matches the specified filter in the request.",
+                                                    :type "array",
+                                                    :items {:$ref "Operation"}},
+                                       :nextPageToken {:description "The standard List next-page token.",
+                                                       :type "string"}},
+                          :id "ListOperationsResponse"},
+ :Status {:type "object",
+          :properties {:message {:description "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\ngoogle.rpc.Status.details field, or localized by the client.",
+                                 :type "string"},
+                       :details {:description "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use.",
+                                 :type "array",
+                                 :items {:type "object",
+                                         :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                                                :type "any"}}},
+                       :code {:type "integer",
+                              :description "The status code, which should be an enum value of google.rpc.Code.",
+                              :format "int32"}},
+          :id "Status",
+          :description "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors)."}}

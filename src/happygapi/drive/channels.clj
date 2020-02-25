@@ -2,12 +2,20 @@
   "Drive API
   Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
   See: https://developers.google.com/drive/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "drive_schema.edn"))))
 
 (defn stop$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Stop watching resources through this channel"
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -18,7 +26,8 @@
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

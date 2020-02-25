@@ -2,17 +2,26 @@
   "Books API
   Searches for books and manages your Google Books library.
   See: https://developers.google.com/books/docs/v1/getting_started"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "books_schema.edn"))))
 
 (defn addBook$
   "Required parameters: none
   
+  Optional parameters: drive_document_id, mime_type, name, upload_client_token
+  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +42,13 @@
 (defn deleteBook$
   "Required parameters: volumeId
   
+  Optional parameters: none
+  
   Remove the book and its contents"
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"volumeId"})]}
+  {:pre [(util/has-keys? args #{"volumeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -57,10 +69,13 @@
 (defn updateBook$
   "Required parameters: none
   
+  Optional parameters: none
+  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

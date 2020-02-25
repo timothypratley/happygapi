@@ -2,12 +2,20 @@
   "Firebase Management API
   The Firebase Management API enables programmatic setup and management of Firebase projects, including a project's Firebase resources and Firebase apps.
   See: https://firebase.google.com"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "firebase_schema.edn"))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: pageToken, pageSize
   
   Returns a list of [Google Cloud Platform (GCP) `Projects`]
   (https://cloud.google.com/resource-manager/reference/rest/v1/projects)
@@ -27,7 +35,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

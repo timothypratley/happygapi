@@ -2,12 +2,19 @@
   "Identity and Access Management (IAM) API
   Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
   See: https://cloud.google.com/iam/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "iam_schema.edn"))))
 
 (defn serviceAccounts-disable$
   "Required parameters: name
+  
+  Optional parameters: none
   
   DisableServiceAccount is currently in the alpha launch stage.
   
@@ -29,7 +36,8 @@
   are no unintended consequences, and then delete the service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -50,10 +58,13 @@
 (defn serviceAccounts-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -71,6 +82,8 @@
 
 (defn serviceAccounts-setIamPolicy$
   "Required parameters: resource
+  
+  Optional parameters: none
   
   Sets the Cloud IAM access control policy for a
   ServiceAccount.
@@ -90,7 +103,8 @@
   method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -111,6 +125,8 @@
 (defn serviceAccounts-enable$
   "Required parameters: name
   
+  Optional parameters: none
+  
   EnableServiceAccount is currently in the alpha launch stage.
   
    Restores a disabled ServiceAccount
@@ -123,7 +139,8 @@
    effect."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -144,6 +161,8 @@
 (defn serviceAccounts-patch$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Patches a ServiceAccount.
   
   Currently, only the following fields are updatable:
@@ -155,7 +174,8 @@
   Note: The field mask is required."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -174,11 +194,14 @@
 (defn serviceAccounts-testIamPermissions$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Tests the specified permissions against the IAM access control policy
   for a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -199,11 +222,14 @@
 (defn serviceAccounts-create$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Creates a ServiceAccount
   and returns it."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -224,6 +250,8 @@
 (defn serviceAccounts-update$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Note: This method is in the process of being deprecated. Use
   PatchServiceAccount instead.
   
@@ -233,7 +261,8 @@
   `display_name` and `description`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -252,10 +281,13 @@
 (defn serviceAccounts-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -274,6 +306,8 @@
 (defn serviceAccounts-getIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: options.requestedPolicyVersion
+  
   Returns the Cloud IAM access control policy for a
   ServiceAccount.
   
@@ -291,7 +325,8 @@
   method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -312,12 +347,15 @@
 (defn serviceAccounts-undelete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Restores a deleted ServiceAccount.
   This is to be used as an action of last resort.  A service account may
   not always be restorable."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -338,10 +376,13 @@
 (defn serviceAccounts-list$
   "Required parameters: name
   
+  Optional parameters: pageSize, pageToken
+  
   Lists ServiceAccounts for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -360,6 +401,8 @@
 (defn serviceAccounts-signJwt$
   "Required parameters: name
   
+  Optional parameters: none
+  
   **Note**: This method is in the process of being deprecated. Call the
   [`signJwt()`](/iam/credentials/reference/rest/v1/projects.serviceAccounts/signJwt)
   method of the Cloud IAM Service Account Credentials API instead.
@@ -371,7 +414,8 @@
   more than one hour, the request will fail."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -392,6 +436,8 @@
 (defn serviceAccounts-signBlob$
   "Required parameters: name
   
+  Optional parameters: none
+  
   **Note**: This method is in the process of being deprecated. Call the
   [`signBlob()`](/iam/credentials/reference/rest/v1/projects.serviceAccounts/signBlob)
   method of the Cloud IAM Service Account Credentials API instead.
@@ -399,7 +445,8 @@
   Signs a blob using a service account's system-managed private key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -420,10 +467,13 @@
 (defn serviceAccounts-keys-delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes a ServiceAccountKey."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -442,10 +492,13 @@
 (defn serviceAccounts-keys-list$
   "Required parameters: name
   
+  Optional parameters: keyTypes
+  
   Lists ServiceAccountKeys."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -464,11 +517,14 @@
 (defn serviceAccounts-keys-get$
   "Required parameters: name
   
+  Optional parameters: publicKeyType
+  
   Gets the ServiceAccountKey
   by key id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -487,11 +543,14 @@
 (defn serviceAccounts-keys-create$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Creates a ServiceAccountKey
   and returns it."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -512,13 +571,16 @@
 (defn serviceAccounts-keys-upload$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Upload public key for a given service account.
   This rpc will create a
   ServiceAccountKey that has the
   provided public key and returns it."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -539,10 +601,13 @@
 (defn roles-create$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   Creates a new Role."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -560,13 +625,41 @@
       :body body}
      auth))))
 
+(defn roles-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Updates a Role definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn roles-undelete$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Undelete a Role, bringing it back in its previous state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -587,34 +680,15 @@
 (defn roles-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets a Role definition."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-patch$
-  "Required parameters: name
-  
-  Updates a Role definition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
@@ -631,6 +705,8 @@
 (defn roles-delete$
   "Required parameters: name
   
+  Optional parameters: etag
+  
   Soft deletes a role. The role is suspended and cannot be used to create new
   IAM Policy Bindings.
   The Role will not be included in `ListRoles()` unless `show_deleted` is set
@@ -640,7 +716,8 @@
   with the role are removed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -659,10 +736,13 @@
 (defn roles-list$
   "Required parameters: parent
   
+  Optional parameters: showDeleted, pageToken, pageSize, view
+  
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

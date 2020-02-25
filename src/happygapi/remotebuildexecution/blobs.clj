@@ -2,54 +2,21 @@
   "Remote Build Execution API
   Supplies a Remote Execution API service for tools such as bazel.
   See: https://cloud.google.com/remote-build-execution/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn getTree$
-  "Required parameters: sizeBytes,instanceName,hash
-  
-  Fetch the entire directory tree rooted at a node.
-  
-  This request must be targeted at a
-  Directory stored in the
-  ContentAddressableStorage
-  (CAS). The server will enumerate the `Directory` tree recursively and
-  return every node descended from the root.
-  
-  The GetTreeRequest.page_token parameter can be used to skip ahead in
-  the stream (e.g. when retrying a partially completed and aborted request),
-  by setting it to a value taken from GetTreeResponse.next_page_token of the
-  last successfully processed GetTreeResponse).
-  
-  The exact traversal order is unspecified and, unless retrieving subsequent
-  pages from an earlier request, is not guaranteed to be stable across
-  multiple invocations of `GetTree`.
-  
-  If part of the tree is missing from the CAS, the server will return the
-  portion present and omit the rest.
-  
-  * `NOT_FOUND`: The requested tree root is not present in the CAS."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://remotebuildexecution.googleapis.com/"
-     "v2/{+instanceName}/blobs/{hash}/{sizeBytes}:getTree"
-     #{"instanceName" "hash" "sizeBytes"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "remotebuildexecution_schema.edn"))))
 
 (defn findMissing$
   "Required parameters: instanceName
+  
+  Optional parameters: none
   
   Determine if blobs are present in the CAS.
   
@@ -59,7 +26,8 @@
   There are no method-specific errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})]}
+  {:pre [(util/has-keys? args #{"instanceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -79,6 +47,8 @@
 
 (defn batchUpdate$
   "Required parameters: instanceName
+  
+  Optional parameters: none
   
   Upload many blobs at once.
   
@@ -106,7 +76,8 @@
   provided data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})]}
+  {:pre [(util/has-keys? args #{"instanceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -126,6 +97,8 @@
 
 (defn batchRead$
   "Required parameters: instanceName
+  
+  Optional parameters: none
   
   Download many blobs at once.
   
@@ -149,7 +122,8 @@
   status."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})]}
+  {:pre [(util/has-keys? args #{"instanceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -165,4 +139,49 @@
       :as :json,
       :content-type :json,
       :body body}
+     auth))))
+
+(defn getTree$
+  "Required parameters: sizeBytes, instanceName, hash
+  
+  Optional parameters: pageToken, pageSize
+  
+  Fetch the entire directory tree rooted at a node.
+  
+  This request must be targeted at a
+  Directory stored in the
+  ContentAddressableStorage
+  (CAS). The server will enumerate the `Directory` tree recursively and
+  return every node descended from the root.
+  
+  The GetTreeRequest.page_token parameter can be used to skip ahead in
+  the stream (e.g. when retrying a partially completed and aborted request),
+  by setting it to a value taken from GetTreeResponse.next_page_token of the
+  last successfully processed GetTreeResponse).
+  
+  The exact traversal order is unspecified and, unless retrieving subsequent
+  pages from an earlier request, is not guaranteed to be stable across
+  multiple invocations of `GetTree`.
+  
+  If part of the tree is missing from the CAS, the server will return the
+  portion present and omit the rest.
+  
+  * `NOT_FOUND`: The requested tree root is not present in the CAS."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://remotebuildexecution.googleapis.com/"
+     "v2/{+instanceName}/blobs/{hash}/{sizeBytes}:getTree"
+     #{"instanceName" "hash" "sizeBytes"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

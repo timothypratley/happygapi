@@ -2,12 +2,21 @@
   "BigQuery Reservation API
   A service to modify your BigQuery flat-rate reservations.
   See: https://cloud.google.com/bigquery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "bigqueryreservation_schema.edn"))))
 
 (defn delete$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
@@ -16,7 +25,8 @@
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -35,6 +45,8 @@
 (defn list$
   "Required parameters: name
   
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -48,7 +60,8 @@
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

@@ -2,12 +2,21 @@
   "Firebase Dynamic Links API
   Programmatically creates and manages Firebase Dynamic Links.
   See: https://firebase.google.com/docs/dynamic-links/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "firebasedynamiclinks_schema.edn"))))
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Creates a managed short Dynamic Link given either a valid long Dynamic Link
   or details such as Dynamic Link domain, Android and iOS app information.
@@ -24,7 +33,8 @@
   Firebase project."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

@@ -2,12 +2,20 @@
   "Firebase Management API
   The Firebase Management API enables programmatic setup and management of Firebase projects, including a project's Firebase resources and Firebase apps.
   See: https://firebase.google.com"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "firebase_schema.edn"))))
 
 (defn get$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Gets the FirebaseProject identified by the specified resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -15,7 +23,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -34,6 +43,8 @@
 (defn patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the attributes of the FirebaseProject identified by the
   specified resource name.
   <br>
@@ -41,7 +52,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -60,6 +72,8 @@
 (defn getAnalyticsDetails$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the Google Analytics details currently associated with a
   FirebaseProject.
   <br>
@@ -70,7 +84,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -88,6 +103,8 @@
 
 (defn addFirebase$
   "Required parameters: project
+  
+  Optional parameters: none
   
   Adds Firebase resources to the specified existing
   [Google Cloud Platform (GCP) `Project`]
@@ -118,7 +135,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -138,6 +156,8 @@
 
 (defn removeAnalytics$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Unlinks the specified `FirebaseProject` from its Google Analytics account.
   <br>
@@ -159,7 +179,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -180,6 +201,8 @@
 (defn searchApps$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   A convenience method that lists all available Apps for the specified
   FirebaseProject.
   <br>
@@ -191,7 +214,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -209,6 +233,8 @@
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: pageToken, pageSize
   
   Lists each FirebaseProject accessible to the caller.
   <br>
@@ -229,7 +255,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -248,6 +275,8 @@
 (defn getAdminSdkConfig$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the configuration artifact used by servers to simplify initialization.
   <br>
   <br>Typically, this configuration is used with the Firebase Admin SDK
@@ -258,7 +287,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -276,6 +306,8 @@
 
 (defn addGoogleAnalytics$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Links a FirebaseProject with an existing
   [Google Analytics account](http://www.google.com/analytics/).
@@ -333,7 +365,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -351,8 +384,434 @@
       :body body}
      auth))))
 
+(defn androidApps-getConfig$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified
+  AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the AndroidApp identified by the specified resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists each AndroidApp associated with the specified parent Project.
+  <br>
+  <br>The elements are returned in no particular order, but will be a
+  consistent view of the Apps when additional requests are made with a
+  `pageToken`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/androidApps"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Updates the attributes of the AndroidApp identified by the specified
+  resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Requests that a new AndroidApp be created.
+  <br>
+  <br>The result of this call is an `Operation` which can be used to track
+  the provisioning process. The `Operation` is automatically deleted after
+  completion, so there is no need to call `DeleteOperation`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/androidApps"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn androidApps-sha-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Removes a SHA certificate from the specified AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-sha-list$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Returns the list of SHA-1 and SHA-256 certificates for the specified
+  AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/sha"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-sha-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Adds a SHA certificate to the specified AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/sha"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn availableLocations-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Returns a list of valid Google Cloud Platform (GCP) resource locations for
+  the specified Project (including a FirebaseProject).
+  <br>
+  <br>One of these locations can be selected as the Project's [_default_ GCP
+  resource location](https://firebase.google.com/docs/projects/locations),
+  which is the geographical location where project resources, such as Cloud
+  Firestore, will be provisioned by default. However, if the default GCP
+  resource location has already been set for the Project, then this setting
+  cannot be changed.
+  <br>
+  <br>This call checks for any location restrictions for the specified
+  Project and, thus, might return a subset of all possible GCP resource
+  locations. To list all GCP resource locations (regardless of any
+  restrictions), call the endpoint without specifying a `projectId` (that is,
+  `/v1beta1/{parent=projects/-}/listAvailableLocations`).
+  <br>
+  <br>To call `ListAvailableLocations` with a specified project, a member
+  must be at minimum a Viewer of the project. Calls without a specified
+  project do not require any specific project permissions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/availableLocations"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-getConfig$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified WebApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the WebApp identified by the specified resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists each WebApp associated with the specified parent Project.
+  <br>
+  <br>The elements are returned in no particular order, but will be a
+  consistent view of the Apps when additional requests are made with a
+  `pageToken`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/webApps"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Updates the attributes of the WebApp identified by the specified
+  resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Requests that a new WebApp be created.
+  <br>
+  <br>The result of this call is an `Operation` which can be used to track
+  the provisioning process. The `Operation` is automatically deleted after
+  completion, so there is no need to call `DeleteOperation`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/webApps"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn defaultLocation-finalize$
   "Required parameters: parent
+  
+  Optional parameters: none
   
   Sets the default Google Cloud Platform (GCP) resource location for the
   specified FirebaseProject.
@@ -395,7 +854,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -413,37 +873,10 @@
       :body body}
      auth))))
 
-(defn iosApps-create$
-  "Required parameters: parent
-  
-  Requests that a new IosApp be created.
-  <br>
-  <br>The result of this call is an `Operation` which can be used to track
-  the provisioning process. The `Operation` is automatically deleted after
-  completion, so there is no need to call `DeleteOperation`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/iosApps"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn iosApps-getConfig$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Gets the configuration artifact associated with the specified IosApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -451,7 +884,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -470,13 +904,16 @@
 (defn iosApps-get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Gets the IosApp identified by the specified resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -495,6 +932,8 @@
 (defn iosApps-list$
   "Required parameters: parent
   
+  Optional parameters: pageToken, pageSize
+  
   Lists each IosApp associated with the specified parent Project.
   <br>
   <br>The elements are returned in no particular order, but will be a
@@ -505,7 +944,8 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -524,12 +964,15 @@
 (defn iosApps-patch$
   "Required parameters: name
   
+  Optional parameters: updateMask
+  
   Updates the attributes of the IosApp identified by the specified
   resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -545,88 +988,12 @@
       :as :json}
      auth))))
 
-(defn androidApps-get$
-  "Required parameters: name
-  
-  Gets the AndroidApp identified by the specified resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn androidApps-list$
+(defn iosApps-create$
   "Required parameters: parent
   
-  Lists each AndroidApp associated with the specified parent Project.
-  <br>
-  <br>The elements are returned in no particular order, but will be a
-  consistent view of the Apps when additional requests are made with a
-  `pageToken`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/androidApps"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn androidApps-patch$
-  "Required parameters: name
+  Optional parameters: none
   
-  Updates the attributes of the AndroidApp identified by the specified
-  resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn androidApps-create$
-  "Required parameters: parent
-  
-  Requests that a new AndroidApp be created.
+  Requests that a new IosApp be created.
   <br>
   <br>The result of this call is an `Operation` which can be used to track
   the provisioning process. The `Operation` is automatically deleted after
@@ -634,12 +1001,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/androidApps"
+     "v1beta1/{+parent}/iosApps"
      #{"parent"}
      args)
     (merge-with
@@ -650,279 +1018,4 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn androidApps-getConfig$
-  "Required parameters: name
-  
-  Gets the configuration artifact associated with the specified
-  AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn androidApps-sha-create$
-  "Required parameters: parent
-  
-  Adds a SHA certificate to the specified AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/sha"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn androidApps-sha-delete$
-  "Required parameters: name
-  
-  Removes a SHA certificate from the specified AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn androidApps-sha-list$
-  "Required parameters: parent
-  
-  Returns the list of SHA-1 and SHA-256 certificates for the specified
-  AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/sha"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn availableLocations-list$
-  "Required parameters: parent
-  
-  Returns a list of valid Google Cloud Platform (GCP) resource locations for
-  the specified Project (including a FirebaseProject).
-  <br>
-  <br>One of these locations can be selected as the Project's [_default_ GCP
-  resource location](https://firebase.google.com/docs/projects/locations),
-  which is the geographical location where project resources, such as Cloud
-  Firestore, will be provisioned by default. However, if the default GCP
-  resource location has already been set for the Project, then this setting
-  cannot be changed.
-  <br>
-  <br>This call checks for any location restrictions for the specified
-  Project and, thus, might return a subset of all possible GCP resource
-  locations. To list all GCP resource locations (regardless of any
-  restrictions), call the endpoint without specifying a `projectId` (that is,
-  `/v1beta1/{parent=projects/-}/listAvailableLocations`).
-  <br>
-  <br>To call `ListAvailableLocations` with a specified project, a member
-  must be at minimum a Viewer of the project. Calls without a specified
-  project do not require any specific project permissions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/availableLocations"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-get$
-  "Required parameters: name
-  
-  Gets the WebApp identified by the specified resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-list$
-  "Required parameters: parent
-  
-  Lists each WebApp associated with the specified parent Project.
-  <br>
-  <br>The elements are returned in no particular order, but will be a
-  consistent view of the Apps when additional requests are made with a
-  `pageToken`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/webApps"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-patch$
-  "Required parameters: name
-  
-  Updates the attributes of the WebApp identified by the specified
-  resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-create$
-  "Required parameters: parent
-  
-  Requests that a new WebApp be created.
-  <br>
-  <br>The result of this call is an `Operation` which can be used to track
-  the provisioning process. The `Operation` is automatically deleted after
-  completion, so there is no need to call `DeleteOperation`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/webApps"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn webApps-getConfig$
-  "Required parameters: name
-  
-  Gets the configuration artifact associated with the specified WebApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))

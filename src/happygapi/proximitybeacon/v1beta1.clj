@@ -2,12 +2,20 @@
   "Proximity Beacon API
   Registers, manages, indexes, and searches beacons.
   See: https://developers.google.com/beacons/proximity/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "proximitybeacon_schema.edn"))))
 
 (defn $
   "Required parameters: none
+  
+  Optional parameters: none
   
   Gets the Proximity Beacon API's current public key and associated
   parameters used to initiate the Diffie-Hellman key exchange required to
@@ -18,7 +26,8 @@
   Eddystone-EID beacon."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

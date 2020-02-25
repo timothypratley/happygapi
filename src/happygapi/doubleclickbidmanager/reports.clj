@@ -2,17 +2,27 @@
   "DoubleClick Bid Manager API
   API for viewing and managing your reports in DoubleClick Bid Manager.
   See: https://developers.google.com/bid-manager/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "doubleclickbidmanager_schema.edn"))))
 
 (defn listreports$
   "Required parameters: queryId
   
+  Optional parameters: pageSize, pageToken
+  
   Retrieves stored reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"queryId"})]}
+  {:pre [(util/has-keys? args #{"queryId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

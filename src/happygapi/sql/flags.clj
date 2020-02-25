@@ -2,18 +2,26 @@
   "Cloud SQL Admin API
   API for Cloud SQL database instance management
   See: https://developers.google.com/cloud-sql/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "sql_schema.edn"))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: databaseVersion
   
   List all available database flags for Cloud SQL instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

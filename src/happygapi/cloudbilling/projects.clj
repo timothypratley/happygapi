@@ -3,12 +3,20 @@
   Allows developers to manage billing for their Google Cloud Platform projects
       programmatically.
   See: https://cloud.google.com/billing/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudbilling_schema.edn"))))
 
 (defn getBillingInfo$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Gets the billing information for a project. The current authenticated user
   must have [permission to view the
@@ -16,7 +24,8 @@
   )."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -34,6 +43,8 @@
 
 (defn updateBillingInfo$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Sets or updates the billing account associated with a project. You specify
   the new billing account by setting the `billing_account_name` in the
@@ -68,7 +79,8 @@
   *open* billing account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

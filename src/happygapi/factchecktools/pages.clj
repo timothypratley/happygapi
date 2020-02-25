@@ -2,17 +2,51 @@
   "Fact Check Tools API
   
   See: https://developers.google.com/fact-check/tools/api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "factchecktools_schema.edn"))))
+
+(defn delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete all `ClaimReview` markup on a page."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://factchecktools.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn get$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Get all `ClaimReview` markup on a page."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,11 +65,14 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: offset, pageToken, organization, pageSize, url
+  
   List the `ClaimReview` markup pages for a specific URL or for an
   organization."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -54,6 +91,8 @@
 (defn update$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Update for all `ClaimReview` markup on a page
   
   Note that this is a full update. To retain the existing `ClaimReview`
@@ -62,7 +101,8 @@
   body."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -81,10 +121,13 @@
 (defn create$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Create `ClaimReview` markup on a page."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -100,26 +143,4 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Delete all `ClaimReview` markup on a page."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://factchecktools.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))

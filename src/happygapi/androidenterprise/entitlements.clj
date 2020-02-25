@@ -2,19 +2,28 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
 
 (defn delete$
-  "Required parameters: enterpriseId,entitlementId,userId
+  "Required parameters: enterpriseId, entitlementId, userId
+  
+  Optional parameters: none
   
   Removes an entitlement to an app for a user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId" "userId" "entitlementId"})]}
+          #{"enterpriseId" "userId" "entitlementId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -31,14 +40,17 @@
      auth))))
 
 (defn get$
-  "Required parameters: enterpriseId,entitlementId,userId
+  "Required parameters: enterpriseId, entitlementId, userId
+  
+  Optional parameters: none
   
   Retrieves details of an entitlement."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId" "userId" "entitlementId"})]}
+          #{"enterpriseId" "userId" "entitlementId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,12 +67,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: enterpriseId,userId
+  "Required parameters: enterpriseId, userId
+  
+  Optional parameters: none
   
   Lists all entitlements for the specified user. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -77,14 +92,17 @@
      auth))))
 
 (defn update$
-  "Required parameters: enterpriseId,entitlementId,userId
+  "Required parameters: enterpriseId, entitlementId, userId
+  
+  Optional parameters: install
   
   Adds or updates an entitlement to an app for a user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId" "userId" "entitlementId"})]}
+          #{"enterpriseId" "userId" "entitlementId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

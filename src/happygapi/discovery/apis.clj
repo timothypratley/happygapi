@@ -2,17 +2,26 @@
   "API Discovery Service
   Provides information about other Google APIs, such as what APIs are available, the resource, and method details for each API.
   See: https://developers.google.com/discovery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "discovery_schema.edn"))))
 
 (defn getRest$
-  "Required parameters: api,version
+  "Required parameters: api, version
+  
+  Optional parameters: none
   
   Retrieve the description of a particular version of an api."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{"api" "version"})]}
+  {:pre [(util/has-keys? args #{"api" "version"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,10 +40,13 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: name, preferred
+  
   Retrieve the list of APIs supported at this endpoint."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

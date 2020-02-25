@@ -2,17 +2,26 @@
   "DCM/DFA Reporting And Trafficking API
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
 
 (defn get$
-  "Required parameters: id,profileId,projectId
+  "Required parameters: id, profileId, projectId
+  
+  Optional parameters: none
   
   Gets one inventory item by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "projectId" "profileId"})]}
+  {:pre [(util/has-keys? args #{"id" "projectId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: profileId,projectId
+  "Required parameters: profileId, projectId
+  
+  Optional parameters: siteId, inPlan, ids, type, pageToken, sortField, sortOrder, maxResults, orderId
   
   Retrieves a list of inventory items, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "profileId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

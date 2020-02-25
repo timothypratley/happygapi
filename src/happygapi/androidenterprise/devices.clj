@@ -2,17 +2,26 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
 
 (defn forceReportUpload$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: none
   
   Uploads a report containing any changes in app states on the device since the last report was generated. You can call this method up to 3 times every 24 hours for a given device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,12 +40,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: none
   
   Retrieves the details of a device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -53,12 +65,15 @@
      auth))))
 
 (defn getState$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: none
   
   Retrieves whether a device's access to Google services is enabled or disabled. The device state takes effect only if enforcing EMM policies on Android devices is enabled in the Google Admin Console. Otherwise, the device state is ignored and all devices are allowed access to Google services. This is only supported for Google-managed users."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -75,12 +90,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: enterpriseId,userId
+  "Required parameters: enterpriseId, userId
+  
+  Optional parameters: none
   
   Retrieves the IDs of all of a user's devices."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -97,12 +115,15 @@
      auth))))
 
 (defn setState$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: none
   
   Sets whether a device's access to Google services is enabled or disabled. The device state takes effect only if enforcing EMM policies on Android devices is enabled in the Google Admin Console. Otherwise, the device state is ignored and all devices are allowed access to Google services. This is only supported for Google-managed users."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -119,12 +140,15 @@
      auth))))
 
 (defn update$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: updateMask
   
   Updates the device policy"
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

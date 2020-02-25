@@ -2,18 +2,28 @@
   "Analytics Reporting API
   Accesses Analytics report data.
   See: https://developers.google.com/analytics/devguides/reporting/core/v4/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "analyticsreporting_schema.edn"))))
 
 (defn batchGet$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Returns the Analytics data."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

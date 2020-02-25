@@ -2,17 +2,26 @@
   "Google Analytics API
   Views and manages your Google Analytics data.
   See: https://developers.google.com/analytics/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "analytics_schema.edn"))))
 
 (defn userDeletionRequest-upsert$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Insert or update a user deletion requests."
   {:scopes ["https://www.googleapis.com/auth/analytics.user.deletion"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

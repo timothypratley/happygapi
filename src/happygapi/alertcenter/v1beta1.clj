@@ -2,19 +2,28 @@
   "G Suite Alert Center API
   Manages alerts on issues affecting your domain.
   See: https://developers.google.com/admin-sdk/alertcenter/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "alertcenter_schema.edn"))))
 
 (defn $
   "Required parameters: none
   
-  Returns customer-level settings."
+  Optional parameters: customerId
+  
+  Updates the customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://alertcenter.googleapis.com/"
      "v1beta1/settings"
@@ -31,12 +40,15 @@
 (defn $
   "Required parameters: none
   
-  Updates the customer-level settings."
+  Optional parameters: customerId
+  
+  Returns customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://alertcenter.googleapis.com/"
      "v1beta1/settings"

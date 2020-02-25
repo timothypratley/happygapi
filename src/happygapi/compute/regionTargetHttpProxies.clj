@@ -2,18 +2,27 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
 
 (defn delete$
-  "Required parameters: project,region,targetHttpProxy
+  "Required parameters: project, region, targetHttpProxy
+  
+  Optional parameters: requestId
   
   Deletes the specified TargetHttpProxy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -30,14 +39,17 @@
      auth))))
 
 (defn get$
-  "Required parameters: project,region,targetHttpProxy
+  "Required parameters: project, region, targetHttpProxy
+  
+  Optional parameters: none
   
   Returns the specified TargetHttpProxy resource in the specified region. Gets a list of available target HTTP proxies by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -54,13 +66,16 @@
      auth))))
 
 (defn insert$
-  "Required parameters: project,region
+  "Required parameters: project, region
+  
+  Optional parameters: requestId
   
   Creates a TargetHttpProxy resource in the specified project and region using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -79,14 +94,17 @@
      auth))))
 
 (defn list$
-  "Required parameters: project,region
+  "Required parameters: project, region
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken
   
   Retrieves the list of TargetHttpProxy resources available to the specified project in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -103,13 +121,16 @@
      auth))))
 
 (defn setUrlMap$
-  "Required parameters: project,region,targetHttpProxy
+  "Required parameters: project, region, targetHttpProxy
+  
+  Optional parameters: requestId
   
   Changes the URL map for TargetHttpProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy" "region"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

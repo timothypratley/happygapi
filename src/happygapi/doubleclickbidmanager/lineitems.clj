@@ -2,17 +2,27 @@
   "DoubleClick Bid Manager API
   API for viewing and managing your reports in DoubleClick Bid Manager.
   See: https://developers.google.com/bid-manager/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "doubleclickbidmanager_schema.edn"))))
 
 (defn downloadlineitems$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Retrieves line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +43,13 @@
 (defn uploadlineitems$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Uploads line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

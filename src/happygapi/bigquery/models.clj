@@ -2,18 +2,27 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
 
 (defn delete$
-  "Required parameters: datasetId,modelId,projectId
+  "Required parameters: projectId, datasetId, modelId
+  
+  Optional parameters: none
   
   Deletes the model specified by modelId from the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -30,7 +39,9 @@
      auth))))
 
 (defn get$
-  "Required parameters: projectId,datasetId,modelId
+  "Required parameters: projectId, datasetId, modelId
+  
+  Optional parameters: none
   
   Gets the specified model resource by model ID."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -38,7 +49,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,7 +67,9 @@
      auth))))
 
 (defn list$
-  "Required parameters: datasetId,projectId
+  "Required parameters: datasetId, projectId
+  
+  Optional parameters: pageToken, maxResults
   
   Lists all models in the specified dataset. Requires the READER dataset
   role."
@@ -64,7 +78,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -81,13 +96,16 @@
      auth))))
 
 (defn patch$
-  "Required parameters: projectId,datasetId,modelId
+  "Required parameters: projectId, datasetId, modelId
+  
+  Optional parameters: none
   
   Patch specific fields in the specified model."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"modelId" "datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url

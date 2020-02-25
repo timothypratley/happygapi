@@ -2,19 +2,28 @@
   "YouTube Data API
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
   See: https://developers.google.com/youtube/v3"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
 
 (defn list$
   "Required parameters: part
+  
+  Optional parameters: hl, maxResults, pageToken
   
   Lists Super Chat events for a channel."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

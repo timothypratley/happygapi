@@ -2,12 +2,20 @@
   "Service Control API
   Provides control plane functionality to managed services, such as logging, monitoring, and status checks.
   See: https://cloud.google.com/service-control/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "servicecontrol_schema.edn"))))
 
 (defn report$
   "Required parameters: serviceName
+  
+  Optional parameters: none
   
   Reports operation results to Google Service Control, such as logs and
   metrics. It should be called after an operation is completed.
@@ -27,7 +35,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -48,6 +57,8 @@
 (defn allocateQuota$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Attempts to allocate quota for the specified consumer. It should be called
   before the operation is executed.
   
@@ -62,7 +73,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -83,6 +95,8 @@
 (defn check$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Checks whether an operation on a service should be allowed to proceed
   based on the configuration of the service and related policies. It must be
   called before the operation is executed.
@@ -102,7 +116,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

@@ -2,17 +2,26 @@
   "Google Play Developer API
   Accesses Android application developers' Google Play accounts.
   See: https://developers.google.com/android-publisher"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidpublisher_schema.edn"))))
 
 (defn refund$
-  "Required parameters: orderId,packageName
+  "Required parameters: orderId, packageName
+  
+  Optional parameters: revoke
   
   Refund a user's subscription or in-app purchase order."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"packageName" "orderId"})]}
+  {:pre [(util/has-keys? args #{"packageName" "orderId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

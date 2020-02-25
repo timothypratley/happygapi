@@ -2,19 +2,28 @@
   "Ad Exchange Buyer API
   Accesses your bidding-account information, submits creatives for validation, finds available direct deals, and retrieves performance reports.
   See: https://developers.google.com/ad-exchange/buyer-rest"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "adexchangebuyer_schema.edn"))))
 
 (defn addDeal$
-  "Required parameters: accountId,buyerCreativeId,dealId
+  "Required parameters: accountId, buyerCreativeId, dealId
+  
+  Optional parameters: none
   
   Add a deal id association for the creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "buyerCreativeId" "dealId"})]}
+          #{"accountId" "buyerCreativeId" "dealId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,12 +42,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: accountId,buyerCreativeId
+  "Required parameters: accountId, buyerCreativeId
+  
+  Optional parameters: none
   
   Gets the status for a single creative. A creative will be available 30-40 minutes after submission."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "buyerCreativeId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "buyerCreativeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,10 +69,13 @@
 (defn insert$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Submit a new creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -81,10 +96,13 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: accountId, buyerCreativeId, dealsStatusFilter, maxResults, openAuctionStatusFilter, pageToken
+  
   Retrieves a list of the authenticated user's active creatives. A creative will be available 30-40 minutes after submission."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -101,12 +119,15 @@
      auth))))
 
 (defn listDeals$
-  "Required parameters: accountId,buyerCreativeId
+  "Required parameters: accountId, buyerCreativeId
+  
+  Optional parameters: none
   
   Lists the external deal ids associated with the creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "buyerCreativeId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "buyerCreativeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -123,14 +144,17 @@
      auth))))
 
 (defn removeDeal$
-  "Required parameters: accountId,buyerCreativeId,dealId
+  "Required parameters: accountId, buyerCreativeId, dealId
+  
+  Optional parameters: none
   
   Remove a deal id associated with the creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "buyerCreativeId" "dealId"})]}
+          #{"accountId" "buyerCreativeId" "dealId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

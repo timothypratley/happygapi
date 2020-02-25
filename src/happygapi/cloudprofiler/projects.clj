@@ -2,12 +2,20 @@
   "Stackdriver Profiler API
   Manages continuous profiling information.
   See: https://cloud.google.com/profiler/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudprofiler_schema.edn"))))
 
 (defn profiles-patch$
   "Required parameters: name
+  
+  Optional parameters: updateMask
   
   UpdateProfile updates the profile bytes and labels on the profile resource
   created in the online mode. Updating the bytes for profiles created in the
@@ -17,7 +25,8 @@
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -36,6 +45,8 @@
 (defn profiles-create$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   CreateProfile creates a new profile resource in the online mode.
   
   The server ensures that the new profiles are created at a constant rate per
@@ -53,7 +64,8 @@
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -74,6 +86,8 @@
 (defn profiles-createOffline$
   "Required parameters: parent
   
+  Optional parameters: none
+  
   CreateOfflineProfile creates a new profile resource in the offline mode.
   The client provides the profile to create along with the profile bytes, the
   server records it."
@@ -81,7 +95,8 @@
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

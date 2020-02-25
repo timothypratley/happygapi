@@ -2,17 +2,26 @@
   "Search Ads 360 API
   Reports and modifies your advertising data in DoubleClick Search (for example, campaigns, ad groups, keywords, and conversions).
   See: https://developers.google.com/doubleclick-search/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "doubleclicksearch_schema.edn"))))
 
 (defn generate$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Generates and returns a report immediately."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +42,13 @@
 (defn get$
   "Required parameters: reportId
   
+  Optional parameters: none
+  
   Polls for the status of a report request."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"reportId"})]}
+  {:pre [(util/has-keys? args #{"reportId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -53,12 +65,15 @@
      auth))))
 
 (defn getFile$
-  "Required parameters: reportFragment,reportId
+  "Required parameters: reportFragment, reportId
+  
+  Optional parameters: none
   
   Downloads a report file encoded in UTF-8."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"reportId" "reportFragment"})]}
+  {:pre [(util/has-keys? args #{"reportId" "reportFragment"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -77,10 +92,13 @@
 (defn request$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Inserts a report request into the reporting system."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

@@ -2,17 +2,26 @@
   "Admin Reports API
   Fetches reports for the administrators of G Suite customers about the usage, collaboration, security, and risk for their users.
   See: /admin-sdk/reports/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "admin_schema.edn"))))
 
 (defn stop$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Stop watching resources through this channel"
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

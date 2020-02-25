@@ -2,18 +2,27 @@
   "Blogger API
   API for access to the data within Blogger.
   See: https://developers.google.com/blogger/docs/3.0/getting_started"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "blogger_schema.edn"))))
 
 (defn get$
   "Required parameters: blogId
+  
+  Optional parameters: maxPosts, view
   
   Gets one blog by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"blogId"})]}
+  {:pre [(util/has-keys? args #{"blogId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -32,11 +41,14 @@
 (defn getByUrl$
   "Required parameters: url
   
+  Optional parameters: view
+  
   Retrieve a Blog by URL."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"url"})]}
+  {:pre [(util/has-keys? args #{"url"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,11 +67,14 @@
 (defn listByUser$
   "Required parameters: userId
   
+  Optional parameters: fetchUserInfo, role, status, view
+  
   Retrieves a list of blogs, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

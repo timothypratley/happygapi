@@ -2,19 +2,28 @@
   "Calendar API
   Manipulates events and other calendar data.
   See: https://developers.google.com/google-apps/calendar/firstapp"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "calendar_schema.edn"))))
 
 (defn get$
   "Required parameters: setting
+  
+  Optional parameters: none
   
   Returns a single user setting."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"setting"})]}
+  {:pre [(util/has-keys? args #{"setting"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -33,12 +42,15 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: maxResults, pageToken, syncToken
+  
   Returns all user settings for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,12 +69,15 @@
 (defn watch$
   "Required parameters: none
   
+  Optional parameters: maxResults, pageToken, syncToken
+  
   Watch for changes to Settings resources."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

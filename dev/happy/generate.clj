@@ -19,9 +19,15 @@
                 description \newline
                 "See: " documentationLink)
            '(:require
-             [happygapi.util :as util]
+             [cheshire.core]
              [clj-http.client :as http]
-             [cheshire.core])))
+             [clojure.edn :as edn]
+             [clojure.java.io :as io]
+             [happy.util :as util]
+             [json-schema.core :as json-schema])))
+    \newline
+    (pprint-str
+     (list 'def 'schemas (list 'edn/read-string (list 'slurp (list 'io/resource (str (:name api) "_schema.edn"))))))
     \newline
     (str/join \newline (map pprint-str methods)))
    #"\\n"
@@ -29,6 +35,8 @@
 
 (defn write-api-ns [api]
   (println "Writing" (:name api) (:version api))
+  (spit (io/file "resources" (str (:name api) "_schema.edn"))
+        (pprint-str (:schemas api)))
   (doseq [[k methods] (monkey/build-methods api)
           :let [dir (io/file "src" out-ns (:name api))
                 resource-name (name k)]]

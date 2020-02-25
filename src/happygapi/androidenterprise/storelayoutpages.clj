@@ -2,17 +2,26 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
 
 (defn delete$
-  "Required parameters: enterpriseId,pageId
+  "Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
   
   Deletes a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: enterpriseId,pageId
+  "Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
   
   Retrieves details of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -53,10 +65,13 @@
 (defn insert$
   "Required parameters: enterpriseId
   
+  Optional parameters: none
+  
   Inserts a new store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -77,10 +92,13 @@
 (defn list$
   "Required parameters: enterpriseId
   
+  Optional parameters: none
+  
   Retrieves the details of all pages in the store."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -97,12 +115,15 @@
      auth))))
 
 (defn update$
-  "Required parameters: enterpriseId,pageId
+  "Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
   
   Updates the content of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})]}
+  {:pre [(util/has-keys? args #{"pageId" "enterpriseId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

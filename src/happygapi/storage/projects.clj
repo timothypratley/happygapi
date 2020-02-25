@@ -2,18 +2,27 @@
   "Cloud Storage JSON API
   Stores and retrieves potentially large, immutable data objects.
   See: https://developers.google.com/storage/docs/json_api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "storage_schema.edn"))))
 
 (defn hmacKeys-create$
-  "Required parameters: projectId,serviceAccountEmail
+  "Required parameters: projectId, serviceAccountEmail
+  
+  Optional parameters: userProject
   
   Creates a new HMAC key for the specified service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceAccountEmail" "projectId"})]}
+  {:pre [(util/has-keys? args #{"serviceAccountEmail" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -32,14 +41,17 @@
      auth))))
 
 (defn hmacKeys-delete$
-  "Required parameters: accessId,projectId
+  "Required parameters: accessId, projectId
+  
+  Optional parameters: userProject
   
   Deletes an HMAC key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accessId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"accessId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -56,7 +68,9 @@
      auth))))
 
 (defn hmacKeys-get$
-  "Required parameters: accessId,projectId
+  "Required parameters: accessId, projectId
+  
+  Optional parameters: userProject
   
   Retrieves an HMAC key's metadata"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -64,7 +78,8 @@
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accessId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"accessId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -83,13 +98,16 @@
 (defn hmacKeys-list$
   "Required parameters: projectId
   
+  Optional parameters: maxResults, pageToken, serviceAccountEmail, showDeletedKeys, userProject
+  
   Retrieves a list of HMAC keys matching the criteria."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -106,13 +124,16 @@
      auth))))
 
 (defn hmacKeys-update$
-  "Required parameters: accessId,projectId
+  "Required parameters: accessId, projectId
+  
+  Optional parameters: userProject
   
   Updates the state of an HMAC key. See the HMAC Key resource descriptor for valid states."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accessId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"accessId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -131,6 +152,8 @@
 (defn serviceAccount-get$
   "Required parameters: projectId
   
+  Optional parameters: provisionalUserProject, userProject
+  
   Get the email address of this project's Google Cloud Storage service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
@@ -138,7 +161,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

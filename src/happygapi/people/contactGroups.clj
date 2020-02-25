@@ -2,66 +2,28 @@
   "People API
   Provides access to information about profiles and contacts.
   See: https://developers.google.com/people/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn get$
-  "Required parameters: resourceName
-  
-  Get a specific contact group owned by the authenticated user by specifying
-  a contact group resource name."
-  {:scopes ["https://www.googleapis.com/auth/contacts"
-            "https://www.googleapis.com/auth/contacts.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}"
-     #{"resourceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "Required parameters: resourceName
-  
-  Update the name of an existing contact group owned by the authenticated
-  user."
-  {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}"
-     #{"resourceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+(def schemas
+  (edn/read-string (slurp (io/resource "people_schema.edn"))))
 
 (defn batchGet$
   "Required parameters: none
+  
+  Optional parameters: resourceNames, maxMembers
   
   Get a list of contact groups owned by the authenticated user by specifying
   a list of contact group resource names."
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -80,11 +42,14 @@
 (defn delete$
   "Required parameters: resourceName
   
+  Optional parameters: deleteContacts
+  
   Delete an existing contact group owned by the authenticated user by
   specifying a contact group resource name."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -103,12 +68,15 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: pageToken, pageSize, syncToken
+  
   List all contact groups owned by the authenticated user. Members of the
   contact groups are not populated."
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -127,10 +95,13 @@
 (defn create$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Create a new contact group owned by the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -148,8 +119,63 @@
       :body body}
      auth))))
 
+(defn get$
+  "Required parameters: resourceName
+  
+  Optional parameters: maxMembers
+  
+  Get a specific contact group owned by the authenticated user by specifying
+  a contact group resource name."
+  {:scopes ["https://www.googleapis.com/auth/contacts"
+            "https://www.googleapis.com/auth/contacts.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}"
+     #{"resourceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "Required parameters: resourceName
+  
+  Optional parameters: none
+  
+  Update the name of an existing contact group owned by the authenticated
+  user."
+  {:scopes ["https://www.googleapis.com/auth/contacts"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}"
+     #{"resourceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn members-modify$
   "Required parameters: resourceName
+  
+  Optional parameters: none
   
   Modify the members of a contact group owned by the authenticated user.
   
@@ -158,7 +184,8 @@
   contact groups are deprecated and can only have contacts removed."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

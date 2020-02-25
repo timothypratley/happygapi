@@ -2,19 +2,28 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
 
 (defn aggregatedList$
   "Required parameters: project
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken
   
   Retrieves the list of all TargetHttpProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,13 +40,16 @@
      auth))))
 
 (defn delete$
-  "Required parameters: project,targetHttpProxy
+  "Required parameters: project, targetHttpProxy
+  
+  Optional parameters: requestId
   
   Deletes the specified TargetHttpProxy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -54,14 +66,17 @@
      auth))))
 
 (defn get$
-  "Required parameters: project,targetHttpProxy
+  "Required parameters: project, targetHttpProxy
+  
+  Optional parameters: none
   
   Returns the specified TargetHttpProxy resource. Gets a list of available target HTTP proxies by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -80,11 +95,14 @@
 (defn insert$
   "Required parameters: project
   
+  Optional parameters: requestId
+  
   Creates a TargetHttpProxy resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -105,12 +123,15 @@
 (defn list$
   "Required parameters: project
   
+  Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of TargetHttpProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})]}
+  {:pre [(util/has-keys? args #{"project"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -127,13 +148,16 @@
      auth))))
 
 (defn setUrlMap$
-  "Required parameters: project,targetHttpProxy
+  "Required parameters: project, targetHttpProxy
+  
+  Optional parameters: requestId
   
   Changes the URL map for TargetHttpProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})]}
+  {:pre [(util/has-keys? args #{"project" "targetHttpProxy"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

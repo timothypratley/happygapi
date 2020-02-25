@@ -2,12 +2,20 @@
   "Cloud Search API
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
 
 (defn datasources-delete$
   "Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
   
   Deletes a datasource.
   
@@ -16,7 +24,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -35,6 +44,8 @@
 (defn datasources-get$
   "Required parameters: name
   
+  Optional parameters: debugOptions.enableDebugging
+  
   Gets a datasource.
   
   **Note:** This API requires an admin account to execute."
@@ -42,7 +53,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -61,6 +73,8 @@
 (defn datasources-list$
   "Required parameters: none
   
+  Optional parameters: pageSize, debugOptions.enableDebugging, pageToken
+  
   Lists datasources.
   
   **Note:** This API requires an admin account to execute."
@@ -68,7 +82,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -87,6 +102,8 @@
 (defn datasources-update$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Updates a datasource.
   
   **Note:** This API requires an admin account to execute."
@@ -94,7 +111,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -113,6 +131,8 @@
 (defn datasources-create$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Creates a datasource.
   
   **Note:** This API requires an admin account to execute."
@@ -120,7 +140,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -138,8 +159,41 @@
       :body body}
      auth))))
 
+(defn searchapplications-create$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Creates a search application.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.query"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/searchapplications"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn searchapplications-get$
   "Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
   
   Gets the specified search application.
   
@@ -148,7 +202,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -167,6 +222,8 @@
 (defn searchapplications-update$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Updates a search application.
   
   **Note:** This API requires an admin account to execute."
@@ -174,7 +231,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -193,6 +251,8 @@
 (defn searchapplications-delete$
   "Required parameters: name
   
+  Optional parameters: debugOptions.enableDebugging
+  
   Deletes a search application.
   
   **Note:** This API requires an admin account to execute."
@@ -200,7 +260,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -219,6 +280,8 @@
 (defn searchapplications-reset$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Resets a search application to default settings. This will return an empty
   response.
   
@@ -227,7 +290,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -248,6 +312,8 @@
 (defn searchapplications-list$
   "Required parameters: none
   
+  Optional parameters: pageToken, pageSize, debugOptions.enableDebugging
+  
   Lists all search applications.
   
   **Note:** This API requires an admin account to execute."
@@ -255,7 +321,8 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -269,32 +336,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn searchapplications-create$
-  "Required parameters: none
-  
-  Creates a search application.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/searchapplications"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

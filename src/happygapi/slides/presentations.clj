@@ -2,12 +2,49 @@
   "Google Slides API
   Reads and writes Google Slides presentations.
   See: https://developers.google.com/slides/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "slides_schema.edn"))))
+
+(defn get$
+  "Required parameters: presentationId
+  
+  Optional parameters: none
+  
+  Gets the latest version of the specified presentation."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/presentations"
+            "https://www.googleapis.com/auth/presentations.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"presentationId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://slides.googleapis.com/"
+     "v1/presentations/{+presentationId}"
+     #{"presentationId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn create$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Creates a blank presentation using the title given in the request. If a
   `presentationId` is provided, it is used as the ID of the new presentation.
@@ -18,7 +55,8 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/presentations"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -38,6 +76,8 @@
 
 (defn batchUpdate$
   "Required parameters: presentationId
+  
+  Optional parameters: none
   
   Applies one or more updates to the presentation.
   
@@ -67,7 +107,8 @@
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/spreadsheets.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"presentationId"})]}
+  {:pre [(util/has-keys? args #{"presentationId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -85,60 +126,10 @@
       :body body}
      auth))))
 
-(defn get$
-  "Required parameters: presentationId
-  
-  Gets the latest version of the specified presentation."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/drive.readonly"
-            "https://www.googleapis.com/auth/presentations"
-            "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"presentationId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://slides.googleapis.com/"
-     "v1/presentations/{+presentationId}"
-     #{"presentationId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn pages-get$
-  "Required parameters: pageObjectId,presentationId
-  
-  Gets the latest version of the specified page in the presentation."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/drive.readonly"
-            "https://www.googleapis.com/auth/presentations"
-            "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://slides.googleapis.com/"
-     "v1/presentations/{presentationId}/pages/{pageObjectId}"
-     #{"presentationId" "pageObjectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn pages-getThumbnail$
-  "Required parameters: presentationId,pageObjectId
+  "Required parameters: presentationId, pageObjectId
+  
+  Optional parameters: thumbnailProperties.mimeType, thumbnailProperties.thumbnailSize
   
   Generates a thumbnail of the latest version of the specified page in the
   presentation and returns a URL to the thumbnail image.
@@ -151,12 +142,42 @@
             "https://www.googleapis.com/auth/presentations"
             "https://www.googleapis.com/auth/presentations.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})]}
+  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations/{presentationId}/pages/{pageObjectId}/thumbnail"
+     #{"presentationId" "pageObjectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn pages-get$
+  "Required parameters: presentationId, pageObjectId
+  
+  Optional parameters: none
+  
+  Gets the latest version of the specified page in the presentation."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/presentations"
+            "https://www.googleapis.com/auth/presentations.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://slides.googleapis.com/"
+     "v1/presentations/{presentationId}/pages/{pageObjectId}"
      #{"presentationId" "pageObjectId"}
      args)
     (merge-with

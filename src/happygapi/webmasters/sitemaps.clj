@@ -2,17 +2,26 @@
   "Search Console API
   View Google Search Console data for your verified sites.
   See: https://developers.google.com/webmaster-tools/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "webmasters_schema.edn"))))
 
 (defn delete$
-  "Required parameters: feedpath,siteUrl
+  "Required parameters: feedpath, siteUrl
+  
+  Optional parameters: none
   
   Deletes a sitemap from this site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})]}
+  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -29,13 +38,16 @@
      auth))))
 
 (defn get$
-  "Required parameters: feedpath,siteUrl
+  "Required parameters: feedpath, siteUrl
+  
+  Optional parameters: none
   
   Retrieves information about a specific sitemap."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})]}
+  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -54,11 +66,14 @@
 (defn list$
   "Required parameters: siteUrl
   
+  Optional parameters: sitemapIndex
+  
   Lists the sitemaps-entries submitted for this site, or included in the sitemap index file (if sitemapIndex is specified in the request)."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"siteUrl"})]}
+  {:pre [(util/has-keys? args #{"siteUrl"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -75,12 +90,15 @@
      auth))))
 
 (defn submit$
-  "Required parameters: feedpath,siteUrl
+  "Required parameters: feedpath, siteUrl
+  
+  Optional parameters: none
   
   Submits a sitemap for a site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})]}
+  {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

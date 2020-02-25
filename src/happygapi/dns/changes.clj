@@ -2,18 +2,26 @@
   "Google Cloud DNS API
   Configures and serves authoritative DNS records.
   See: https://developers.google.com/cloud-dns"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "dns_schema.edn"))))
 
 (defn create$
-  "Required parameters: managedZone,project
+  "Required parameters: managedZone, project
+  
+  Optional parameters: clientOperationId
   
   Atomically update the ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "managedZone"})]}
+  {:pre [(util/has-keys? args #{"project" "managedZone"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -32,7 +40,9 @@
      auth))))
 
 (defn get$
-  "Required parameters: changeId,managedZone,project
+  "Required parameters: changeId, managedZone, project
+  
+  Optional parameters: clientOperationId
   
   Fetch the representation of an existing Change."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -40,7 +50,8 @@
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "managedZone" "changeId"})]}
+  {:pre [(util/has-keys? args #{"project" "managedZone" "changeId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,7 +68,9 @@
      auth))))
 
 (defn list$
-  "Required parameters: managedZone,project
+  "Required parameters: managedZone, project
+  
+  Optional parameters: maxResults, pageToken, sortBy, sortOrder
   
   Enumerate Changes to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -65,7 +78,8 @@
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "managedZone"})]}
+  {:pre [(util/has-keys? args #{"project" "managedZone"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

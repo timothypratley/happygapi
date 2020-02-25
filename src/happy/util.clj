@@ -1,7 +1,8 @@
-(ns happygapi.util
+(ns happy.util
   "The generated functions use these convenience functions"
   (:require [clojure.set :as set]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cheshire.core :as json]))
 
 (defn get-url
   "Replace URL path parameters with their values"
@@ -22,4 +23,4 @@
   [{:keys [status body]}]
   (if (= status 200)
     body
-    (throw (ex-info (str "HappyGAPI status: " status) body))))
+    (throw (ex-info (str "HappyGAPI status: " status) (json/parse-string body)))))

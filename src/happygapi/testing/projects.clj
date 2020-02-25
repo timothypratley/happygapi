@@ -2,12 +2,20 @@
   "Cloud Testing API
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
   See: https://developers.google.com/cloud-test-lab/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "testing_schema.edn"))))
 
 (defn testMatrices-get$
-  "Required parameters: projectId,testMatrixId
+  "Required parameters: projectId, testMatrixId
+  
+  Optional parameters: none
   
   Checks the status of a test matrix.
   
@@ -19,7 +27,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"testMatrixId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"testMatrixId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,6 +47,8 @@
 (defn testMatrices-create$
   "Required parameters: projectId
   
+  Optional parameters: requestId
+  
   Creates and runs a matrix of tests according to the given specifications.
   Unsupported environments will be returned in the state UNSUPPORTED.
   Matrices are limited to at most 200 supported executions.
@@ -49,7 +60,8 @@
                        to more than 200 supported executions"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -68,7 +80,9 @@
      auth))))
 
 (defn testMatrices-cancel$
-  "Required parameters: projectId,testMatrixId
+  "Required parameters: projectId, testMatrixId
+  
+  Optional parameters: none
   
   Cancels unfinished test executions in a test matrix.
   This call returns immediately and cancellation proceeds asychronously.
@@ -81,7 +95,8 @@
   - NOT_FOUND - if the Test Matrix does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"testMatrixId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"testMatrixId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

@@ -2,19 +2,28 @@
   "Ad Exchange Buyer API
   Accesses your bidding-account information, submits creatives for validation, finds available direct deals, and retrieves performance reports.
   See: https://developers.google.com/ad-exchange/buyer-rest"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "adexchangebuyer_schema.edn"))))
 
 (defn list$
-  "Required parameters: accountId,endDateTime,startDateTime
+  "Required parameters: accountId, endDateTime, startDateTime
+  
+  Optional parameters: maxResults, pageToken
   
   Retrieves the authenticated user's list of performance metrics."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"endDateTime" "accountId" "startDateTime"})]}
+          #{"endDateTime" "accountId" "startDateTime"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

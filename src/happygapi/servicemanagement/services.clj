@@ -2,12 +2,20 @@
   "Service Management API
   Google Service Management allows service producers to publish their services on Google Cloud Platform so that they can be discovered and used by service consumers.
   See: https://cloud.google.com/service-management/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "servicemanagement_schema.edn"))))
 
 (defn disable$
   "Required parameters: serviceName
+  
+  Optional parameters: none
   
   Disables a service for a project, so it can no longer be
   be used for the project. It prevents accidental usage that may cause
@@ -17,7 +25,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -38,6 +47,8 @@
 (defn get$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Gets a managed service. Authentication is required unless the service is
   public."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -45,7 +56,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -64,6 +76,8 @@
 (defn setIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Sets the access control policy on the specified resource. Replaces any
   existing policy.
   
@@ -71,7 +85,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -92,6 +107,8 @@
 (defn generateConfigReport$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Generates and returns a report (errors, warnings and changes from
   existing configurations) associated with
   GenerateConfigReportRequest.new_value
@@ -106,7 +123,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -127,6 +145,8 @@
 (defn enable$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Enables a service for a project, so it can be used
   for the project. See
   [Cloud Auth Guide](https://cloud.google.com/docs/authentication) for
@@ -136,7 +156,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -157,6 +178,8 @@
 (defn testIamPermissions$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Returns permissions that a caller has on the specified resource.
   If the resource does not exist, this will return an empty set of
   permissions, not a NOT_FOUND error.
@@ -169,7 +192,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -190,6 +214,8 @@
 (defn create$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Creates a new managed service.
   Please note one producer project can own no more than 20 services.
   
@@ -197,7 +223,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -218,6 +245,8 @@
 (defn delete$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Deletes a managed service. This method will change the service to the
   `Soft-Delete` state for 30 days. Within this period, service producers may
   call UndeleteService to restore the service.
@@ -227,7 +256,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -246,6 +276,8 @@
 (defn getIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Gets the access control policy for a resource.
   Returns an empty policy if the resource exists and does not have a policy
   set."
@@ -254,7 +286,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -275,6 +308,8 @@
 (defn undelete$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Revives a previously deleted managed service. The method restores the
   service using the configuration at the time the service was deleted.
   The target service must exist and must have been deleted within the
@@ -284,7 +319,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -305,13 +341,16 @@
 (defn getConfig$
   "Required parameters: serviceName
   
+  Optional parameters: configId, view
+  
   Gets a service configuration (version) for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -330,6 +369,8 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: producerProjectId, consumerId, pageToken, pageSize
+  
   Lists managed services.
   
   Returns all public services. For authenticated users, also returns all
@@ -344,7 +385,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -360,8 +402,50 @@
       :as :json}
      auth))))
 
+(defn configs-submit$
+  "Required parameters: serviceName
+  
+  Optional parameters: none
+  
+  Creates a new service configuration (version) for a managed service based
+  on
+  user-supplied configuration source files (for example: OpenAPI
+  Specification). This method stores the source configurations as well as the
+  generated service configuration. To rollout the service configuration to
+  other services,
+  please call CreateServiceRollout.
+  
+  Only the 100 most recent configuration sources and ones referenced by
+  existing service configurtions are kept for each service. The rest will be
+  deleted eventually.
+  
+  Operation<response: SubmitConfigSourceResponse>"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/configs:submit"
+     #{"serviceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
 (defn configs-list$
   "Required parameters: serviceName
+  
+  Optional parameters: pageToken, pageSize
   
   Lists the history of the service configuration for a managed service,
   from the newest to the oldest."
@@ -370,7 +454,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -387,7 +472,9 @@
      auth))))
 
 (defn configs-get$
-  "Required parameters: configId,serviceName
+  "Required parameters: serviceName, configId
+  
+  Optional parameters: view
   
   Gets a service configuration (version) for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -395,7 +482,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"configId" "serviceName"})]}
+  {:pre [(util/has-keys? args #{"configId" "serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -414,6 +502,8 @@
 (defn configs-create$
   "Required parameters: serviceName
   
+  Optional parameters: none
+  
   Creates a new service configuration (version) for a managed service.
   This method only stores the service configuration. To roll out the service
   configuration to backend systems please call
@@ -425,7 +515,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -443,45 +534,10 @@
       :body body}
      auth))))
 
-(defn configs-submit$
-  "Required parameters: serviceName
-  
-  Creates a new service configuration (version) for a managed service based
-  on
-  user-supplied configuration source files (for example: OpenAPI
-  Specification). This method stores the source configurations as well as the
-  generated service configuration. To rollout the service configuration to
-  other services,
-  please call CreateServiceRollout.
-  
-  Only the 100 most recent configuration sources and ones referenced by
-  existing service configurtions are kept for each service. The rest will be
-  deleted eventually.
-  
-  Operation<response: SubmitConfigSourceResponse>"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/configs:submit"
-     #{"serviceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn consumers-getIamPolicy$
   "Required parameters: resource
+  
+  Optional parameters: none
   
   Gets the access control policy for a resource.
   Returns an empty policy if the resource exists and does not have a policy
@@ -491,7 +547,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -512,6 +569,8 @@
 (defn consumers-setIamPolicy$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Sets the access control policy on the specified resource. Replaces any
   existing policy.
   
@@ -519,7 +578,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -540,6 +600,8 @@
 (defn consumers-testIamPermissions$
   "Required parameters: resource
   
+  Optional parameters: none
+  
   Returns permissions that a caller has on the specified resource.
   If the resource does not exist, this will return an empty set of
   permissions, not a NOT_FOUND error.
@@ -552,7 +614,8 @@
             "https://www.googleapis.com/auth/service.management"
             "https://www.googleapis.com/auth/service.management.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})]}
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -570,8 +633,67 @@
       :body body}
      auth))))
 
+(defn rollouts-list$
+  "Required parameters: serviceName
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists the history of the service configuration rollouts for a managed
+  service, from the newest to the oldest."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/rollouts"
+     #{"serviceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn rollouts-get$
+  "Required parameters: serviceName, rolloutId
+  
+  Optional parameters: none
+  
+  Gets a service configuration rollout."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"rolloutId" "serviceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/rollouts/{rolloutId}"
+     #{"rolloutId" "serviceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn rollouts-create$
   "Required parameters: serviceName
+  
+  Optional parameters: none
   
   Creates a new service configuration rollout. Based on rollout, the
   Google Service Management will roll out the service configurations to
@@ -590,7 +712,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
+  {:pre [(util/has-keys? args #{"serviceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -606,55 +729,4 @@
       :as :json,
       :content-type :json,
       :body body}
-     auth))))
-
-(defn rollouts-list$
-  "Required parameters: serviceName
-  
-  Lists the history of the service configuration rollouts for a managed
-  service, from the newest to the oldest."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"serviceName"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/rollouts"
-     #{"serviceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn rollouts-get$
-  "Required parameters: serviceName,rolloutId
-  
-  Gets a service configuration rollout."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"rolloutId" "serviceName"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/rollouts/{rolloutId}"
-     #{"rolloutId" "serviceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
      auth))))

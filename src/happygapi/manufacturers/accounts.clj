@@ -2,17 +2,51 @@
   "Manufacturer Center API
   Public API for managing Manufacturer Center related data.
   See: https://developers.google.com/manufacturers/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "manufacturers_schema.edn"))))
+
+(defn products-delete$
+  "Required parameters: name, parent
+  
+  Optional parameters: none
+  
+  Deletes the product from a Manufacturer Center account."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent" "name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products/{+name}"
+     #{"parent" "name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn products-list$
   "Required parameters: parent
   
+  Optional parameters: pageSize, include, pageToken
+  
   Lists all the products in a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -29,7 +63,9 @@
      auth))))
 
 (defn products-get$
-  "Required parameters: name,parent
+  "Required parameters: parent, name
+  
+  Optional parameters: include
   
   Gets the product from a Manufacturer Center account, including product
   issues.
@@ -40,7 +76,8 @@
   to appear."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent" "name"})]}
+  {:pre [(util/has-keys? args #{"parent" "name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,7 +94,9 @@
      auth))))
 
 (defn products-update$
-  "Required parameters: parent,name
+  "Required parameters: parent, name
+  
+  Optional parameters: none
   
   Inserts or updates the attributes of the product in a Manufacturer Center
   account.
@@ -76,31 +115,10 @@
   product."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent" "name"})]}
+  {:pre [(util/has-keys? args #{"parent" "name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products/{+name}"
-     #{"parent" "name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn products-delete$
-  "Required parameters: parent,name
-  
-  Deletes the product from a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent" "name"})]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"

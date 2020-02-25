@@ -2,18 +2,27 @@
   "Drive Activity API
   Provides a historical view of activity in Google Drive.
   See: https://developers.google.com/drive/activity/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "driveactivity_schema.edn"))))
 
 (defn query$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Query past activity in Google Drive."
   {:scopes ["https://www.googleapis.com/auth/drive.activity"
             "https://www.googleapis.com/auth/drive.activity.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

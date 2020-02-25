@@ -2,17 +2,26 @@
   "Google Play Developer API
   Accesses Android application developers' Google Play accounts.
   See: https://developers.google.com/android-publisher"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidpublisher_schema.edn"))))
 
 (defn get$
-  "Required parameters: packageName,reviewId
+  "Required parameters: packageName, reviewId
+  
+  Optional parameters: translationLanguage
   
   Returns a single review."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"reviewId" "packageName"})]}
+  {:pre [(util/has-keys? args #{"reviewId" "packageName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,10 +40,13 @@
 (defn list$
   "Required parameters: packageName
   
+  Optional parameters: maxResults, startIndex, token, translationLanguage
+  
   Returns a list of reviews. Only reviews from last week will be returned."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"packageName"})]}
+  {:pre [(util/has-keys? args #{"packageName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -51,12 +63,15 @@
      auth))))
 
 (defn reply$
-  "Required parameters: packageName,reviewId
+  "Required parameters: packageName, reviewId
+  
+  Optional parameters: none
   
   Reply to a single review, or update an existing reply."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"reviewId" "packageName"})]}
+  {:pre [(util/has-keys? args #{"reviewId" "packageName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

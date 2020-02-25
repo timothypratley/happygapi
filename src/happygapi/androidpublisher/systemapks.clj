@@ -2,17 +2,26 @@
   "Google Play Developer API
   Accesses Android application developers' Google Play accounts.
   See: https://developers.google.com/android-publisher"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidpublisher_schema.edn"))))
 
 (defn variants-create$
-  "Required parameters: packageName,versionCode
+  "Required parameters: packageName, versionCode
+  
+  Optional parameters: none
   
   Creates a new variant of APK which is suitable for inclusion in a system image."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"packageName" "versionCode"})]}
+  {:pre [(util/has-keys? args #{"packageName" "versionCode"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,14 +40,17 @@
      auth))))
 
 (defn variants-download$
-  "Required parameters: packageName,variantId,versionCode
+  "Required parameters: packageName, variantId, versionCode
+  
+  Optional parameters: none
   
   Download a previously created APK which is suitable for inclusion in a system image."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"packageName" "versionCode" "variantId"})]}
+          #{"packageName" "versionCode" "variantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,14 +67,17 @@
      auth))))
 
 (defn variants-get$
-  "Required parameters: packageName,variantId,versionCode
+  "Required parameters: packageName, variantId, versionCode
+  
+  Optional parameters: none
   
   Returns a previously created system APK variant."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"packageName" "versionCode" "variantId"})]}
+          #{"packageName" "versionCode" "variantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -79,12 +94,15 @@
      auth))))
 
 (defn variants-list$
-  "Required parameters: packageName,versionCode
+  "Required parameters: packageName, versionCode
+  
+  Optional parameters: none
   
   Returns the list of previously created system APK variants."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"packageName" "versionCode"})]}
+  {:pre [(util/has-keys? args #{"packageName" "versionCode"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

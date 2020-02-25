@@ -2,17 +2,26 @@
   "Content API for Shopping
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
   See: https://developers.google.com/shopping-content"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "content_schema.edn"))))
 
 (defn createtestorder$
   "Required parameters: merchantId
   
+  Optional parameters: none
+  
   Sandbox only. Creates a test order."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"merchantId"})]}
+  {:pre [(util/has-keys? args #{"merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,12 +40,15 @@
      auth))))
 
 (defn updatelineitemshippingdetails$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Updates ship by and delivery by dates for a line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -55,12 +67,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Retrieves an order from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -77,12 +92,15 @@
      auth))))
 
 (defn acknowledge$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Marks an order as acknowledged."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -101,12 +119,15 @@
      auth))))
 
 (defn setlineitemmetadata$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Sets (or overrides if it already exists) merchant provided annotations in the form of key-value pairs. A common use case would be to supply us with additional structured information about a line item that cannot be provided via other methods. Submitted key-value pairs can be retrieved as part of the orders resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -125,12 +146,15 @@
      auth))))
 
 (defn createtestreturn$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Sandbox only. Creates a test return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -149,12 +173,15 @@
      auth))))
 
 (defn cancellineitem$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Cancels a line item, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -173,12 +200,15 @@
      auth))))
 
 (defn updateshipment$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Updates a shipment's status, carrier, and/or tracking ID."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -197,12 +227,15 @@
      auth))))
 
 (defn rejectreturnlineitem$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Rejects return on an line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -221,13 +254,16 @@
      auth))))
 
 (defn instorerefundlineitem$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (e.g. cash refund done in store).
   Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding via Google then via an in-store return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -248,10 +284,13 @@
 (defn list$
   "Required parameters: merchantId
   
+  Optional parameters: acknowledged, maxResults, orderBy, pageToken, placedDateEnd, placedDateStart, statuses
+  
   Lists the orders in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId"})]}
+  {:pre [(util/has-keys? args #{"merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -268,12 +307,15 @@
      auth))))
 
 (defn shiplineitems$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Marks line item(s) as shipped."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -292,12 +334,15 @@
      auth))))
 
 (defn gettestordertemplate$
-  "Required parameters: merchantId,templateName
+  "Required parameters: merchantId, templateName
+  
+  Optional parameters: country
   
   Sandbox only. Retrieves an order template that can be used to quickly create a new order in sandbox."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"templateName" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"templateName" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -314,12 +359,15 @@
      auth))))
 
 (defn getbymerchantorderid$
-  "Required parameters: merchantId,merchantOrderId
+  "Required parameters: merchantId, merchantOrderId
+  
+  Optional parameters: none
   
   Retrieves an order using merchant order ID."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId" "merchantOrderId"})]}
+  {:pre [(util/has-keys? args #{"merchantId" "merchantOrderId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -336,12 +384,15 @@
      auth))))
 
 (defn cancel$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Cancels all line items in an order, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -360,12 +411,15 @@
      auth))))
 
 (defn advancetestorder$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Sandbox only. Moves a test order from state \"inProgress\" to state \"pendingShipment\"."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -384,12 +438,15 @@
      auth))))
 
 (defn returnrefundlineitem$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Returns and refunds a line item. Note that this method can only be called on fully shipped orders."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -408,12 +465,15 @@
      auth))))
 
 (defn canceltestorderbycustomer$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Sandbox only. Cancels a test order for customer-initiated cancellation."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -432,12 +492,15 @@
      auth))))
 
 (defn updatemerchantorderid$
-  "Required parameters: merchantId,orderId
+  "Required parameters: merchantId, orderId
+  
+  Optional parameters: none
   
   Updates the merchant order ID for a given order."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"orderId" "merchantId"})]}
+  {:pre [(util/has-keys? args #{"orderId" "merchantId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

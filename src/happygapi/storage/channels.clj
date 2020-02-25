@@ -2,12 +2,20 @@
   "Cloud Storage JSON API
   Stores and retrieves potentially large, immutable data objects.
   See: https://developers.google.com/storage/docs/json_api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "storage_schema.edn"))))
 
 (defn stop$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Stop watching resources through this channel"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -16,7 +24,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

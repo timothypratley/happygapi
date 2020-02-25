@@ -2,12 +2,20 @@
   "Fitness
   Stores and accesses user data in the fitness store from apps on any platform.
   See: https://developers.google.com/fit/rest/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "fitness_schema.edn"))))
 
 (defn dataSources-create$
   "Required parameters: userId
+  
+  Optional parameters: none
   
   A data source is a unique source of sensor data. Data sources can expose raw data coming from hardware sensors on local or companion devices. They can also expose derived data, created by transforming or merging other data sources. Multiple data sources can exist for the same data type. Every data point in every dataset inserted into or read from the Fitness API has an associated data source.
   
@@ -28,7 +36,8 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -47,7 +56,9 @@
      auth))))
 
 (defn dataSources-delete$
-  "Required parameters: dataSourceId,userId
+  "Required parameters: dataSourceId, userId
+  
+  Optional parameters: none
   
   Deletes the specified data source. The request will fail if the data source contains any data points."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
@@ -60,7 +71,8 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -77,7 +89,9 @@
      auth))))
 
 (defn dataSources-get$
-  "Required parameters: dataSourceId,userId
+  "Required parameters: dataSourceId, userId
+  
+  Optional parameters: none
   
   Returns the specified data source."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -99,7 +113,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -117,6 +132,8 @@
 
 (defn dataSources-list$
   "Required parameters: userId
+  
+  Optional parameters: dataTypeName
   
   Lists all data sources that are visible to the developer, using the OAuth scopes provided. The list is not exhaustive; the user may have private data sources that are only visible to other developers, or calls using other scopes."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -138,7 +155,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -155,7 +173,9 @@
      auth))))
 
 (defn dataSources-update$
-  "Required parameters: dataSourceId,userId
+  "Required parameters: dataSourceId, userId
+  
+  Optional parameters: none
   
   Updates the specified data source. The dataStreamId, dataType, type, dataStreamName, and device properties with the exception of version, cannot be modified.
   
@@ -170,7 +190,8 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -187,7 +208,9 @@
      auth))))
 
 (defn dataSources-dataPointChanges-list$
-  "Required parameters: dataSourceId,userId
+  "Required parameters: dataSourceId, userId
+  
+  Optional parameters: limit, pageToken
   
   Queries for user's data point changes for a particular data source."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -209,7 +232,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -226,7 +250,9 @@
      auth))))
 
 (defn dataSources-datasets-delete$
-  "Required parameters: dataSourceId,datasetId,userId
+  "Required parameters: dataSourceId, datasetId, userId
+  
+  Optional parameters: currentTimeMillis, modifiedTimeMillis
   
   Performs an inclusive delete of all data points whose start and end times have any overlap with the time range specified by the dataset ID. For most data types, the entire data point will be deleted. For data types where the time span represents a consistent value (such as com.google.activity.segment), and a data point straddles either end point of the dataset, only the overlapping portion of the data point will be deleted."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
@@ -239,7 +265,8 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -256,7 +283,9 @@
      auth))))
 
 (defn dataSources-datasets-get$
-  "Required parameters: dataSourceId,datasetId,userId
+  "Required parameters: dataSourceId, datasetId, userId
+  
+  Optional parameters: limit, pageToken
   
   Returns a dataset containing all data points whose start and end times overlap with the specified range of the dataset minimum start time and maximum end time. Specifically, any data point whose start time is less than or equal to the dataset end time and whose end time is greater than or equal to the dataset start time."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -278,7 +307,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -295,7 +325,9 @@
      auth))))
 
 (defn dataSources-datasets-patch$
-  "Required parameters: dataSourceId,datasetId,userId
+  "Required parameters: dataSourceId, datasetId, userId
+  
+  Optional parameters: currentTimeMillis
   
   Adds data points to a dataset. The dataset need not be previously created. All points within the given dataset will be returned with subsquent calls to retrieve this dataset. Data points can belong to more than one dataset. This method does not use patch semantics."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
@@ -308,7 +340,8 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})]}
+  {:pre [(util/has-keys? args #{"dataSourceId" "userId" "datasetId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -326,6 +359,8 @@
 
 (defn dataset-aggregate$
   "Required parameters: userId
+  
+  Optional parameters: none
   
   Aggregates data of a certain type or stream into buckets divided by a given type of boundary. Multiple data sets of multiple types and from multiple sources can be aggregated into exactly one bucket type per request."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -347,7 +382,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -366,12 +402,15 @@
      auth))))
 
 (defn sessions-delete$
-  "Required parameters: sessionId,userId
+  "Required parameters: sessionId, userId
+  
+  Optional parameters: currentTimeMillis
   
   Deletes a session specified by the given session ID."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"sessionId" "userId"})]}
+  {:pre [(util/has-keys? args #{"sessionId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -389,6 +428,8 @@
 
 (defn sessions-list$
   "Required parameters: userId
+  
+  Optional parameters: activityType, endTime, includeDeleted, pageToken, startTime
   
   Lists sessions previously created."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -410,7 +451,8 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"userId"})]}
+  {:pre [(util/has-keys? args #{"userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -427,12 +469,15 @@
      auth))))
 
 (defn sessions-update$
-  "Required parameters: sessionId,userId
+  "Required parameters: sessionId, userId
+  
+  Optional parameters: currentTimeMillis
   
   Updates or insert a given session."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"sessionId" "userId"})]}
+  {:pre [(util/has-keys? args #{"sessionId" "userId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

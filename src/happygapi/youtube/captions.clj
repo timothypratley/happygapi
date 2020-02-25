@@ -2,18 +2,27 @@
   "YouTube Data API
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
   See: https://developers.google.com/youtube/v3"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
 
 (defn delete$
   "Required parameters: id
+  
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner
   
   Deletes a specified caption track."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})]}
+  {:pre [(util/has-keys? args #{"id"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -32,11 +41,14 @@
 (defn download$
   "Required parameters: id
   
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner, tfmt, tlang
+  
   Downloads a caption track. The caption track is returned in its original format unless the request specifies a value for the tfmt parameter and in its original language unless the request specifies a value for the tlang parameter."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})]}
+  {:pre [(util/has-keys? args #{"id"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,11 +67,14 @@
 (defn insert$
   "Required parameters: part
   
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner, sync
+  
   Uploads a caption track."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -78,13 +93,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: part,videoId
+  "Required parameters: part, videoId
+  
+  Optional parameters: id, onBehalfOf, onBehalfOfContentOwner
   
   Returns a list of caption tracks that are associated with a specified video. Note that the API response does not contain the actual captions and that the captions.download method provides the ability to retrieve a caption track."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"videoId" "part"})]}
+  {:pre [(util/has-keys? args #{"videoId" "part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -103,11 +121,14 @@
 (defn update$
   "Required parameters: part
   
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner, sync
+  
   Updates a caption track. When updating a caption track, you can change the track's draft status, upload a new caption file for the track, or both."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

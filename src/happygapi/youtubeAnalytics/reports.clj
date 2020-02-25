@@ -2,12 +2,20 @@
   "YouTube Analytics API
   Retrieves your YouTube Analytics data.
   See: https://developers.google.com/youtube/analytics"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtubeAnalytics_schema.edn"))))
 
 (defn query$
   "Required parameters: none
+  
+  Optional parameters: filters, startDate, ids, dimensions, currency, includeHistoricalChannelData, endDate, startIndex, metrics, sort, maxResults
   
   Retrieve your YouTube Analytics reports."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -16,7 +24,8 @@
             "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

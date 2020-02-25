@@ -2,12 +2,20 @@
   "Cloud Bigtable Admin API
   Administer your Cloud Bigtable tables and instances.
   See: https://cloud.google.com/bigtable/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "bigtableadmin_schema.edn"))))
 
 (defn get$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
@@ -20,7 +28,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -39,6 +48,8 @@
 (defn cancel$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -56,7 +67,8 @@
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -77,6 +89,8 @@
 (defn delete$
   "Required parameters: name
   
+  Optional parameters: none
+  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -88,7 +102,8 @@
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -106,6 +121,8 @@
 
 (defn projects-operations-list$
   "Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -125,7 +142,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

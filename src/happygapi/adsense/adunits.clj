@@ -2,18 +2,27 @@
   "AdSense Management API
   Accesses AdSense publishers' inventory and generates performance reports.
   See: https://developers.google.com/adsense/management/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
 
 (defn get$
-  "Required parameters: adClientId,adUnitId
+  "Required parameters: adClientId, adUnitId
+  
+  Optional parameters: none
   
   Gets the specified ad unit in the specified ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -30,13 +39,16 @@
      auth))))
 
 (defn getAdCode$
-  "Required parameters: adClientId,adUnitId
+  "Required parameters: adClientId, adUnitId
+  
+  Optional parameters: none
   
   Get ad code for the specified ad unit."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,11 +67,14 @@
 (defn list$
   "Required parameters: adClientId
   
+  Optional parameters: includeInactive, maxResults, pageToken
+  
   List all ad units in the specified ad client for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adClientId"})]}
+  {:pre [(util/has-keys? args #{"adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -76,13 +91,16 @@
      auth))))
 
 (defn customchannels-list$
-  "Required parameters: adClientId,adUnitId
+  "Required parameters: adClientId, adUnitId
+  
+  Optional parameters: maxResults, pageToken
   
   List all custom channels which the specified ad unit belongs to."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

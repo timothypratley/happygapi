@@ -2,50 +2,26 @@
   "People API
   Provides access to information about profiles and contacts.
   See: https://developers.google.com/people/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn get$
-  "Required parameters: resourceName
-  
-  Provides information about a person by specifying a resource name. Use
-  `people/me` to indicate the authenticated user.
-  
-  The request throws a 400 error if 'personFields' is not specified."
-  {:scopes ["https://www.googleapis.com/auth/contacts"
-            "https://www.googleapis.com/auth/contacts.readonly"
-            "https://www.googleapis.com/auth/user.addresses.read"
-            "https://www.googleapis.com/auth/user.birthday.read"
-            "https://www.googleapis.com/auth/user.emails.read"
-            "https://www.googleapis.com/auth/user.organization.read"
-            "https://www.googleapis.com/auth/user.phonenumbers.read"
-            "https://www.googleapis.com/auth/userinfo.email"
-            "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}"
-     #{"resourceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+(def schemas
+  (edn/read-string (slurp (io/resource "people_schema.edn"))))
 
 (defn deleteContact$
   "Required parameters: resourceName
   
+  Optional parameters: none
+  
   Delete a contact person. Any non-contact data will not be deleted."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -64,6 +40,8 @@
 (defn getBatchGet$
   "Required parameters: none
   
+  Optional parameters: personFields, requestMask.includeField, resourceNames
+  
   Provides information about a list of specific people by specifying a list
   of requested resource names. Use `people/me` to indicate the authenticated
   user.
@@ -79,7 +57,8 @@
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -98,10 +77,13 @@
 (defn updateContactPhoto$
   "Required parameters: resourceName
   
+  Optional parameters: none
+  
   Update a contact's photo."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -120,10 +102,13 @@
 (defn deleteContactPhoto$
   "Required parameters: resourceName
   
+  Optional parameters: personFields
+  
   Delete a contact's photo."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -142,6 +127,8 @@
 (defn updateContact$
   "Required parameters: resourceName
   
+  Optional parameters: updatePersonFields
+  
   Update contact data for an existing contact person. Any non-contact data
   will not be modified.
   
@@ -157,7 +144,8 @@
   to the latest person."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -176,10 +164,13 @@
 (defn createContact$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Create a new contact and return the person resource for that contact."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -197,8 +188,46 @@
       :body body}
      auth))))
 
+(defn get$
+  "Required parameters: resourceName
+  
+  Optional parameters: personFields, requestMask.includeField
+  
+  Provides information about a person by specifying a resource name. Use
+  `people/me` to indicate the authenticated user.
+  
+  The request throws a 400 error if 'personFields' is not specified."
+  {:scopes ["https://www.googleapis.com/auth/contacts"
+            "https://www.googleapis.com/auth/contacts.readonly"
+            "https://www.googleapis.com/auth/user.addresses.read"
+            "https://www.googleapis.com/auth/user.birthday.read"
+            "https://www.googleapis.com/auth/user.emails.read"
+            "https://www.googleapis.com/auth/user.organization.read"
+            "https://www.googleapis.com/auth/user.phonenumbers.read"
+            "https://www.googleapis.com/auth/userinfo.email"
+            "https://www.googleapis.com/auth/userinfo.profile"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}"
+     #{"resourceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn connections-list$
   "Required parameters: resourceName
+  
+  Optional parameters: syncToken, personFields, sortOrder, requestSyncToken, pageToken, requestMask.includeField, pageSize
   
   Provides a list of the authenticated user's contacts merged with any
   connected profiles.
@@ -207,7 +236,8 @@
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

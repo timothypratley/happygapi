@@ -3,12 +3,20 @@
   The Poly API provides read access to assets hosted on <a href=\"https://poly.google.com\">poly.google.com</a> to all, and upload access to <a href=\"https://poly.google.com\">poly.google.com</a> for whitelisted accounts.
   
   See: https://developers.google.com/poly/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "poly_schema.edn"))))
 
 (defn get$
   "Required parameters: name
+  
+  Optional parameters: none
   
   Returns detailed information about an asset given its name.
   PRIVATE assets are returned only if
@@ -16,7 +24,8 @@
    asset."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})]}
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -35,12 +44,15 @@
 (defn list$
   "Required parameters: none
   
+  Optional parameters: maxComplexity, pageToken, pageSize, keywords, orderBy, format, curated, category
+  
   Lists all public, remixable assets. These are assets with an access level
   of PUBLIC and published under the
   CC-By license."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url "https://poly.googleapis.com/" "v1/assets" #{} args)

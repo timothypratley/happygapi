@@ -2,17 +2,26 @@
   "Google Play Game Services API
   The API for Google Play Game Services.
   See: https://developers.google.com/games/services/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "games_schema.edn"))))
 
 (defn check$
   "Required parameters: clientRevision
   
+  Optional parameters: none
+  
   Checks whether the games client is out of date."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"clientRevision"})]}
+  {:pre [(util/has-keys? args #{"clientRevision"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

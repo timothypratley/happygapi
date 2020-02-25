@@ -2,17 +2,26 @@
   "AdSense Host API
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
   See: https://developers.google.com/adsense/host/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "adsensehost_schema.edn"))))
 
 (defn get$
   "Required parameters: accountId
   
+  Optional parameters: none
+  
   Get information about the selected associated AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,10 +40,13 @@
 (defn list$
   "Required parameters: filterAdClientId
   
+  Optional parameters: none
+  
   List hosted accounts associated with this AdSense account by ad client id."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"filterAdClientId"})]}
+  {:pre [(util/has-keys? args #{"filterAdClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -51,12 +63,15 @@
      auth))))
 
 (defn adclients-get$
-  "Required parameters: accountId,adClientId
+  "Required parameters: accountId, adClientId
+  
+  Optional parameters: none
   
   Get information about one of the ad clients in the specified publisher's AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -75,10 +90,13 @@
 (defn adclients-list$
   "Required parameters: accountId
   
+  Optional parameters: maxResults, pageToken
+  
   List all hosted ad clients in the specified hosted account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -95,12 +113,15 @@
      auth))))
 
 (defn adunits-delete$
-  "Required parameters: accountId,adClientId,adUnitId
+  "Required parameters: accountId, adClientId, adUnitId
+  
+  Optional parameters: none
   
   Delete the specified ad unit from the specified publisher AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -117,12 +138,15 @@
      auth))))
 
 (defn adunits-get$
-  "Required parameters: accountId,adClientId,adUnitId
+  "Required parameters: accountId, adClientId, adUnitId
+  
+  Optional parameters: none
   
   Get the specified host ad unit in this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -139,12 +163,15 @@
      auth))))
 
 (defn adunits-getAdCode$
-  "Required parameters: accountId,adClientId,adUnitId
+  "Required parameters: accountId, adClientId, adUnitId
+  
+  Optional parameters: hostCustomChannelId
   
   Get ad code for the specified ad unit, attaching the specified host custom channels."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -161,12 +188,15 @@
      auth))))
 
 (defn adunits-insert$
-  "Required parameters: accountId,adClientId
+  "Required parameters: accountId, adClientId
+  
+  Optional parameters: none
   
   Insert the supplied ad unit into the specified publisher AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -185,12 +215,15 @@
      auth))))
 
 (defn adunits-list$
-  "Required parameters: accountId,adClientId
+  "Required parameters: accountId, adClientId
+  
+  Optional parameters: includeInactive, maxResults, pageToken
   
   List all ad units in the specified publisher's AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -207,12 +240,15 @@
      auth))))
 
 (defn adunits-patch$
-  "Required parameters: accountId,adClientId,adUnitId
+  "Required parameters: accountId, adClientId, adUnitId
+  
+  Optional parameters: none
   
   Update the supplied ad unit in the specified publisher AdSense account. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -229,12 +265,15 @@
      auth))))
 
 (defn adunits-update$
-  "Required parameters: accountId,adClientId
+  "Required parameters: accountId, adClientId
+  
+  Optional parameters: none
   
   Update the supplied ad unit in the specified publisher AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -251,12 +290,15 @@
      auth))))
 
 (defn reports-generate$
-  "Required parameters: startDate,endDate,accountId
+  "Required parameters: startDate, endDate, accountId
+  
+  Optional parameters: locale, filter, dimension, startIndex, metric, sort, maxResults
   
   Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"startDate" "accountId" "endDate"})]}
+  {:pre [(util/has-keys? args #{"startDate" "accountId" "endDate"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

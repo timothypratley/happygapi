@@ -2,12 +2,20 @@
   "Cloud Search API
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
 
 (defn upload$
   "Required parameters: resourceName
+  
+  Optional parameters: none
   
   Uploads media for indexing.
   
@@ -34,7 +42,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resourceName"})]}
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

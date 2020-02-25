@@ -2,17 +2,26 @@
   "Licensing API
   Licensing API to view and manage licenses for your domain
   See: https://developers.google.com/admin-sdk/licensing/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "licensing_schema.edn"))))
 
 (defn delete$
-  "Required parameters: productId,skuId,userId
+  "Required parameters: productId, skuId, userId
+  
+  Optional parameters: none
   
   Revoke a license."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn get$
-  "Required parameters: productId,skuId,userId
+  "Required parameters: productId, skuId, userId
+  
+  Optional parameters: none
   
   Get a specific user's license by product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -51,12 +63,15 @@
      auth))))
 
 (defn insert$
-  "Required parameters: productId,skuId
+  "Required parameters: productId, skuId
+  
+  Optional parameters: none
   
   Assign a license."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"productId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -75,12 +90,15 @@
      auth))))
 
 (defn listForProduct$
-  "Required parameters: customerId,productId
+  "Required parameters: customerId, productId
+  
+  Optional parameters: maxResults, pageToken
   
   List all users assigned licenses for a specific product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "customerId"})]}
+  {:pre [(util/has-keys? args #{"productId" "customerId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -97,12 +115,15 @@
      auth))))
 
 (defn listForProductAndSku$
-  "Required parameters: customerId,productId,skuId
+  "Required parameters: customerId, productId, skuId
+  
+  Optional parameters: maxResults, pageToken
   
   List all users assigned licenses for a specific product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "customerId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "customerId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -119,12 +140,15 @@
      auth))))
 
 (defn patch$
-  "Required parameters: productId,skuId,userId
+  "Required parameters: productId, skuId, userId
+  
+  Optional parameters: none
   
   Reassign a user's product SKU with a different SKU in the same product. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -141,12 +165,15 @@
      auth))))
 
 (defn update$
-  "Required parameters: productId,skuId,userId
+  "Required parameters: productId, skuId, userId
+  
+  Optional parameters: none
   
   Reassign a user's product SKU with a different SKU in the same product."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})]}
+  {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

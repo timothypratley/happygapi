@@ -23,31 +23,46 @@ The advantages of generating source code are:
 
 This library is alpha, expect changes.
 
-### Dependencies
+### Add as a Dependency
 
-Add `happygapi` as a dependency.
-You will also need `clj-http` and `cheshire`,
-which are not included but necessary.
-
-```clj
+```clojure
 [happygapi]
-[clj-http]
-[cheshire]
+```
+
+### Require the resources you wish to access
+
+```clojure
+(ns my.ns
+  (:require [happygapi.sheets.spreadsheets :as gsheets]))
 ```
 
 ### Authorization
 
 The `auth` argument can be one of:
-```clj
-{}
-{:query-params {"key" api-key}}
-{:headers {"Authorization" (str "Bearer " token)}}
+```clojure
+{}                                                   ; anonymous
+{:query-params {"key" api-key}}                      ; api-key
+{:headers {"Authorization" (str "Bearer " token)}}   ; oauth2 token
 ```
+
+The `auth` argument is merged into the request,
+you can also specify other request options if you want to.
 
 Oauth2 mechanisms to get a token are not included in this library,
 however under `/test` there is an oauth2 namespace that demonstrates one approach.
 Follow the "Getting started" Google API instructions to create an App.
 To run the test you need to download `secret.json` from the Google console.
+
+### Call stuff
+
+```clojure
+(gsheets/get$ auth {"spreadsheetId" "xyz"})
+```
+
+
+## Contributing
+
+Issues, pull requests, and suggestions are all welcome.
 
 
 ## License

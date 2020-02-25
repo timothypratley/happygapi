@@ -2,12 +2,20 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
 
 (defn query$
   "Required parameters: projectId
+  
+  Optional parameters: none
   
   Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -15,7 +23,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -36,13 +45,16 @@
 (defn list$
   "Required parameters: projectId
   
+  Optional parameters: allUsers, maxCreationTime, pageToken, parentJobId, stateFilter, projection, maxResults, minCreationTime
+  
   Lists all jobs that you started in the specified project. Job information is available for a six month period after creation. The job list is sorted in reverse chronological order, by job creation time. Requires the Can View project role, or the Is Owner project role if you set the allUsers property."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -59,7 +71,9 @@
      auth))))
 
 (defn getQueryResults$
-  "Required parameters: jobId,projectId
+  "Required parameters: jobId, projectId
+  
+  Optional parameters: startIndex, location, pageToken, timeoutMs, maxResults
   
   Retrieves the results of a query job."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -67,7 +81,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -84,13 +99,16 @@
      auth))))
 
 (defn cancel$
-  "Required parameters: jobId,projectId
+  "Required parameters: jobId, projectId
+  
+  Optional parameters: location
   
   Requests that a job be cancelled. This call will return immediately, and the client will need to poll for the job status to see if the cancel completed successfully. Cancelled jobs may still incur costs."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -111,6 +129,8 @@
 (defn insert$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Starts a new asynchronous job. Requires the Can View project role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"
@@ -118,7 +138,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -137,7 +158,9 @@
      auth))))
 
 (defn get$
-  "Required parameters: jobId,projectId
+  "Required parameters: jobId, projectId
+  
+  Optional parameters: location
   
   Returns information about a specific job. Job information is available for a six month period after creation. Requires that you're the person who ran the job, or have the Is Owner project role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -145,7 +168,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "jobId"})]}
+  {:pre [(util/has-keys? args #{"projectId" "jobId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

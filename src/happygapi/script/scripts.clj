@@ -3,12 +3,20 @@
   Manages and executes Google Apps Script projects.
   
   See: https://developers.google.com/apps-script/api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "script_schema.edn"))))
 
 (defn run$
   "Required parameters: scriptId
+  
+  Optional parameters: none
   
   Runs a function in an Apps Script project. The script project must be
   deployed for use with the Apps Script API and the calling application must
@@ -38,7 +46,8 @@
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"scriptId"})]}
+  {:pre [(util/has-keys? args #{"scriptId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

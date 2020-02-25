@@ -2,12 +2,20 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
 
 (defn list$
-  "Required parameters: tableId,datasetId,projectId
+  "Required parameters: datasetId, projectId, tableId
+  
+  Optional parameters: maxResults, selectedFields, startIndex, pageToken
   
   Retrieves table data from a specified set of rows. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -15,7 +23,8 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"tableId" "datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"tableId" "datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -32,14 +41,17 @@
      auth))))
 
 (defn insertAll$
-  "Required parameters: tableId,projectId,datasetId
+  "Required parameters: tableId, projectId, datasetId
+  
+  Optional parameters: none
   
   Streams data into BigQuery one record at a time without needing to run a load job. Requires the WRITER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.insertdata"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"tableId" "datasetId" "projectId"})]}
+  {:pre [(util/has-keys? args #{"tableId" "datasetId" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

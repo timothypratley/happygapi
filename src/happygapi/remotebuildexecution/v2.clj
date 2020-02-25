@@ -2,12 +2,21 @@
   "Remote Build Execution API
   Supplies a Remote Execution API service for tools such as bazel.
   See: https://cloud.google.com/remote-build-execution/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "remotebuildexecution_schema.edn"))))
 
 (defn $
   "Required parameters: instanceName
+  
+  Optional parameters: none
   
   GetCapabilities returns the server capabilities configuration of the
   remote endpoint.
@@ -19,7 +28,8 @@
   * CAS + Action Cache only endpoints should return CacheCapabilities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"instanceName"})]}
+  {:pre [(util/has-keys? args #{"instanceName"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

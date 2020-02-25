@@ -2,12 +2,20 @@
   "YouTube Data API
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
   See: https://developers.google.com/youtube/v3"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
 
 (defn insert$
   "Required parameters: part
+  
+  Optional parameters: none
   
   Posts a bulletin for a specific channel. (The user submitting the request must be authorized to act on the channel's behalf.)
   
@@ -15,7 +23,8 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -36,12 +45,15 @@
 (defn list$
   "Required parameters: part
   
+  Optional parameters: publishedBefore, home, channelId, pageToken, mine, regionCode, publishedAfter, maxResults
+  
   Returns a list of channel activity events that match the request criteria. For example, you can retrieve events associated with a particular channel, events associated with the user's subscriptions and Google+ friends, or the YouTube home page feed, which is customized for each user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

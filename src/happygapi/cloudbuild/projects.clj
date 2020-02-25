@@ -2,182 +2,20 @@
   "Cloud Build API
   Creates and manages builds on Google Cloud Platform.
   See: https://cloud.google.com/cloud-build/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn triggers-create$
-  "Required parameters: projectId
-  
-  Creates a new `BuildTrigger`.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn triggers-run$
-  "Required parameters: projectId,triggerId
-  
-  Runs a `BuildTrigger` at a particular source revision."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId" "triggerId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}:run"
-     #{"projectId" "triggerId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn triggers-get$
-  "Required parameters: triggerId,projectId
-  
-  Returns information about a `BuildTrigger`.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "triggerId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{"projectId" "triggerId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-patch$
-  "Required parameters: projectId,triggerId
-  
-  Updates a `BuildTrigger` by its project ID and trigger ID.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "triggerId"})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{"projectId" "triggerId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-delete$
-  "Required parameters: triggerId,projectId
-  
-  Deletes a `BuildTrigger` by its project ID and trigger ID.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "triggerId"})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{"projectId" "triggerId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-list$
-  "Required parameters: projectId
-  
-  Lists existing `BuildTrigger`s.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn builds-cancel$
-  "Required parameters: projectId,id
-  
-  Cancels a build in progress."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"id" "projectId"})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/builds/{id}:cancel"
-     #{"id" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudbuild_schema.edn"))))
 
 (defn builds-retry$
-  "Required parameters: projectId,id
+  "Required parameters: projectId, id
+  
+  Optional parameters: none
   
   Creates a new build based on the specified build.
   
@@ -208,7 +46,8 @@
   lifecycle management settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"id" "projectId"})]}
+  {:pre [(util/has-keys? args #{"id" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -227,7 +66,9 @@
      auth))))
 
 (defn builds-get$
-  "Required parameters: id,projectId
+  "Required parameters: id, projectId
+  
+  Optional parameters: none
   
   Returns information about a previously requested build.
   
@@ -235,7 +76,8 @@
   `FAILURE`, or `WORKING`), and timing information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "projectId"})]}
+  {:pre [(util/has-keys? args #{"id" "projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -254,13 +96,16 @@
 (defn builds-list$
   "Required parameters: projectId
   
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists previously requested builds.
   
   Previously requested builds may still be in-progress, or may have finished
   successfully or unsuccessfully."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -279,6 +124,8 @@
 (defn builds-create$
   "Required parameters: projectId
   
+  Optional parameters: none
+  
   Starts a build with the specified configuration.
   
   This method returns a long-running `Operation`, which includes the build
@@ -286,7 +133,8 @@
   `SUCCESS` or `FAILURE`)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -302,4 +150,195 @@
       :as :json,
       :content-type :json,
       :body body}
+     auth))))
+
+(defn builds-cancel$
+  "Required parameters: projectId, id
+  
+  Optional parameters: none
+  
+  Cancels a build in progress."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"id" "projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/builds/{id}:cancel"
+     #{"id" "projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn triggers-create$
+  "Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Creates a new `BuildTrigger`.
+  
+  This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn triggers-run$
+  "Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Runs a `BuildTrigger` at a particular source revision."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId" "triggerId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}:run"
+     #{"projectId" "triggerId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body body}
+     auth))))
+
+(defn triggers-patch$
+  "Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Updates a `BuildTrigger` by its project ID and trigger ID.
+  
+  This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId" "triggerId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{"projectId" "triggerId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-get$
+  "Required parameters: projectId, triggerId
+  
+  Optional parameters: none
+  
+  Returns information about a `BuildTrigger`.
+  
+  This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId" "triggerId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{"projectId" "triggerId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-delete$
+  "Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Deletes a `BuildTrigger` by its project ID and trigger ID.
+  
+  This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId" "triggerId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{"projectId" "triggerId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-list$
+  "Required parameters: projectId
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists existing `BuildTrigger`s.
+  
+  This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

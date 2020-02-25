@@ -2,18 +2,26 @@
   "Cloud SQL Admin API
   API for Cloud SQL database instance management
   See: https://developers.google.com/cloud-sql/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "sql_schema.edn"))))
 
 (defn delete$
-  "Required parameters: instance,project,id
+  "Required parameters: instance, project, id
+  
+  Optional parameters: resourceName
   
   Deletes the backup taken by a backup run."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "id" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "id" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -30,14 +38,17 @@
      auth))))
 
 (defn insert$
-  "Required parameters: instance,project
+  "Required parameters: project, instance
+  
+  Optional parameters: parent
   
   Creates a new backup run on demand. This method is applicable only to
   Second Generation instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -56,13 +67,16 @@
      auth))))
 
 (defn get$
-  "Required parameters: instance,project,id
+  "Required parameters: instance, project, id
+  
+  Optional parameters: resourceName
   
   Retrieves a resource containing information about a backup run."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "id" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "id" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -79,14 +93,17 @@
      auth))))
 
 (defn list$
-  "Required parameters: instance,project
+  "Required parameters: project, instance
+  
+  Optional parameters: maxResults, parent, pageToken
   
   Lists all backup runs associated with a given instance and configuration in
   the reverse chronological order of the backup initiation time."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

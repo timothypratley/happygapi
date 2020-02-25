@@ -2,12 +2,19 @@
   "Cloud SQL Admin API
   API for Cloud SQL database instance management
   See: https://developers.google.com/cloud-sql/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas (edn/read-string (slurp (io/resource "sql_schema.edn"))))
 
 (defn get$
-  "Required parameters: instance,project,sha1Fingerprint
+  "Required parameters: project, sha1Fingerprint, instance
+  
+  Optional parameters: resourceName
   
   Retrieves a particular SSL certificate.  Does not include the private key
   (required for usage).  The private key must be saved from the response to
@@ -17,7 +24,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"project" "sha1Fingerprint" "instance"})]}
+          #{"project" "sha1Fingerprint" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -34,13 +42,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: instance,project
+  "Required parameters: project, instance
+  
+  Optional parameters: parent
   
   Lists all of the current SSL certificates for the instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,7 +68,9 @@
      auth))))
 
 (defn createEphemeral$
-  "Required parameters: project,instance
+  "Required parameters: instance, project
+  
+  Optional parameters: parent
   
   Generates a short-lived X509 certificate containing the provided public key
   and signed by a private key specific to the target instance. Users may use
@@ -66,7 +79,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -85,7 +99,9 @@
      auth))))
 
 (defn delete$
-  "Required parameters: instance,project,sha1Fingerprint
+  "Required parameters: instance, project, sha1Fingerprint
+  
+  Optional parameters: resourceName
   
   Deletes the SSL certificate. For First Generation instances, the
   certificate remains valid until the instance is restarted."
@@ -94,7 +110,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"project" "sha1Fingerprint" "instance"})]}
+          #{"project" "sha1Fingerprint" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -111,7 +128,9 @@
      auth))))
 
 (defn insert$
-  "Required parameters: instance,project
+  "Required parameters: instance, project
+  
+  Optional parameters: parent
   
   Creates an SSL certificate and returns it along with the private key and
   server certificate authority.  The new certificate will not be usable until
@@ -119,7 +138,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})]}
+  {:pre [(util/has-keys? args #{"project" "instance"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

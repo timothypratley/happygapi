@@ -2,12 +2,20 @@
   "Cloud Testing API
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
   See: https://developers.google.com/cloud-test-lab/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "testing_schema.edn"))))
 
 (defn get$
   "Required parameters: environmentType
+  
+  Optional parameters: projectId
   
   Gets the catalog of supported test environments.
   
@@ -19,7 +27,8 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"environmentType"})]}
+  {:pre [(util/has-keys? args #{"environmentType"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

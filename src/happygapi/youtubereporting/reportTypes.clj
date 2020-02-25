@@ -2,18 +2,27 @@
   "YouTube Reporting API
   Schedules reporting jobs containing your YouTube Analytics data and downloads the resulting bulk data reports in the form of CSV files.
   See: https://developers.google.com/youtube/reporting/v1/reports/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtubereporting_schema.edn"))))
 
 (defn list$
   "Required parameters: none
+  
+  Optional parameters: pageToken, includeSystemManaged, pageSize, onBehalfOfContentOwner
   
   Lists report types."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

@@ -2,12 +2,20 @@
   "Cloud Storage JSON API
   Stores and retrieves potentially large, immutable data objects.
   See: https://developers.google.com/storage/docs/json_api/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "storage_schema.edn"))))
 
 (defn compose$
-  "Required parameters: destinationBucket,destinationObject
+  "Required parameters: destinationBucket, destinationObject
+  
+  Optional parameters: destinationPredefinedAcl, ifGenerationMatch, ifMetagenerationMatch, kmsKeyName, provisionalUserProject, userProject
   
   Concatenates a list of existing objects into a new object in the same bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -16,7 +24,8 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"destinationBucket" "destinationObject"})]}
+          #{"destinationBucket" "destinationObject"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -37,6 +46,8 @@
 (defn watchAll$
   "Required parameters: bucket
   
+  Optional parameters: prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  
   Watch for changes on all objects in a bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
@@ -44,7 +55,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"bucket"})]}
+  {:pre [(util/has-keys? args #{"bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -63,7 +75,9 @@
      auth))))
 
 (defn get$
-  "Required parameters: object,bucket
+  "Required parameters: object, bucket
+  
+  Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
   
   Retrieves an object or its metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -72,7 +86,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -89,7 +104,9 @@
      auth))))
 
 (defn copy$
-  "Required parameters: destinationBucket,sourceBucket,destinationObject,sourceObject
+  "Required parameters: destinationBucket, sourceBucket, destinationObject, sourceObject
+  
+  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
   
   Copies a source object to a destination object. Optionally overrides metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -101,7 +118,8 @@
           #{"destinationBucket"
             "destinationObject"
             "sourceBucket"
-            "sourceObject"})]}
+            "sourceObject"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -123,14 +141,17 @@
      auth))))
 
 (defn setIamPolicy$
-  "Required parameters: bucket,object
+  "Required parameters: bucket, object
+  
+  Optional parameters: generation, provisionalUserProject, userProject
   
   Updates an IAM policy for the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -149,12 +170,15 @@
 (defn insert$
   "Required parameters: bucket
   
+  Optional parameters: contentEncoding, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, name, ifGenerationNotMatch, ifMetagenerationMatch, kmsKeyName, userProject, provisionalUserProject, projection
+  
   Stores a new object and metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"bucket"})]}
+  {:pre [(util/has-keys? args #{"bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -173,13 +197,16 @@
      auth))))
 
 (defn patch$
-  "Required parameters: object,bucket
+  "Required parameters: object, bucket
+  
+  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
   
   Patches an object's metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -196,7 +223,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "Required parameters: bucket,object,permissions
+  "Required parameters: bucket, object, permissions
+  
+  Optional parameters: generation, provisionalUserProject, userProject
   
   Tests a set of permissions on the given object to see which, if any, are held by the caller."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -205,7 +234,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"permissions" "object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"permissions" "object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -222,13 +252,16 @@
      auth))))
 
 (defn update$
-  "Required parameters: object,bucket
+  "Required parameters: object, bucket
+  
+  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
   
   Updates an object's metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -245,14 +278,17 @@
      auth))))
 
 (defn delete$
-  "Required parameters: object,bucket
+  "Required parameters: object, bucket
+  
+  Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject
   
   Deletes an object and its metadata. Deletions are permanent if versioning is not enabled for the bucket, or if the generation parameter is used."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -269,7 +305,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "Required parameters: bucket,object
+  "Required parameters: bucket, object
+  
+  Optional parameters: generation, provisionalUserProject, userProject
   
   Returns an IAM policy for the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -278,7 +316,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"object" "bucket"})]}
+  {:pre [(util/has-keys? args #{"object" "bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -297,6 +336,8 @@
 (defn list$
   "Required parameters: bucket
   
+  Optional parameters: prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  
   Retrieves a list of objects matching the criteria."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
@@ -304,7 +345,8 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"bucket"})]}
+  {:pre [(util/has-keys? args #{"bucket"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -321,7 +363,9 @@
      auth))))
 
 (defn rewrite$
-  "Required parameters: destinationBucket,sourceBucket,destinationObject,sourceObject
+  "Required parameters: destinationBucket, sourceBucket, destinationObject, sourceObject
+  
+  Optional parameters: ifGenerationMatch, maxBytesRewrittenPerCall, ifMetagenerationNotMatch, rewriteToken, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
   
   Rewrites a source object to a destination object. Optionally overrides metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -333,7 +377,8 @@
           #{"destinationBucket"
             "destinationObject"
             "sourceBucket"
-            "sourceObject"})]}
+            "sourceObject"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

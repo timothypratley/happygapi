@@ -2,17 +2,26 @@
   "DCM/DFA Reporting And Trafficking API
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
 
 (defn get$
-  "Required parameters: id,profileId
+  "Required parameters: id, profileId
+  
+  Optional parameters: none
   
   Gets one remarketing list by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "profileId"})]}
+  {:pre [(util/has-keys? args #{"id" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -29,12 +38,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: advertiserId,profileId
+  "Required parameters: advertiserId, profileId
+  
+  Optional parameters: active, maxResults, name, pageToken, sortField, sortOrder
   
   Retrieves a list of targetable remarketing lists, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"advertiserId" "profileId"})]}
+  {:pre [(util/has-keys? args #{"advertiserId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

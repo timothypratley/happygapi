@@ -2,12 +2,20 @@
   "Proximity Beacon API
   Registers, manages, indexes, and searches beacons.
   See: https://developers.google.com/beacons/proximity/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "proximitybeacon_schema.edn"))))
 
 (defn getforobserved$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Given one or more beacon observations, returns any beacon information
   and attachments accessible to your application. Authorize by using the
@@ -16,7 +24,8 @@
   for the application."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

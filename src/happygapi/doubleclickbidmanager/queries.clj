@@ -2,17 +2,27 @@
   "DoubleClick Bid Manager API
   API for viewing and managing your reports in DoubleClick Bid Manager.
   See: https://developers.google.com/bid-manager/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string
+   (slurp (io/resource "doubleclickbidmanager_schema.edn"))))
 
 (defn createquery$
   "Required parameters: none
   
+  Optional parameters: none
+  
   Creates a query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +43,13 @@
 (defn deletequery$
   "Required parameters: queryId
   
+  Optional parameters: none
+  
   Deletes a stored query as well as the associated stored reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"queryId"})]}
+  {:pre [(util/has-keys? args #{"queryId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -55,10 +68,13 @@
 (defn getquery$
   "Required parameters: queryId
   
+  Optional parameters: none
+  
   Retrieves a stored query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"queryId"})]}
+  {:pre [(util/has-keys? args #{"queryId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -77,10 +93,13 @@
 (defn listqueries$
   "Required parameters: none
   
+  Optional parameters: pageSize, pageToken
+  
   Retrieves stored queries."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -99,10 +118,13 @@
 (defn runquery$
   "Required parameters: queryId
   
+  Optional parameters: none
+  
   Runs a stored query to generate a report."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"queryId"})]}
+  {:pre [(util/has-keys? args #{"queryId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

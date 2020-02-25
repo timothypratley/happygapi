@@ -2,18 +2,27 @@
   "Calendar API
   Manipulates events and other calendar data.
   See: https://developers.google.com/google-apps/calendar/firstapp"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "calendar_schema.edn"))))
 
 (defn get$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Returns the color definitions for calendars and events."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

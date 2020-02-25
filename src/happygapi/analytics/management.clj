@@ -2,18 +2,27 @@
   "Google Analytics API
   Views and manages your Google Analytics data.
   See: https://developers.google.com/analytics/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "analytics_schema.edn"))))
 
 (defn clientId-hashClientId$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Hashes the given Client ID."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -32,7 +41,9 @@
      auth))))
 
 (defn goals-get$
-  "Required parameters: accountId,goalId,profileId,webPropertyId
+  "Required parameters: accountId, goalId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Gets a goal to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -40,7 +51,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "goalId"})]}
+          #{"accountId" "webPropertyId" "profileId" "goalId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -57,14 +69,17 @@
      auth))))
 
 (defn goals-insert$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new goal."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -83,7 +98,9 @@
      auth))))
 
 (defn goals-list$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists goals to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -92,7 +109,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -109,14 +127,17 @@
      auth))))
 
 (defn goals-patch$
-  "Required parameters: accountId,goalId,profileId,webPropertyId
+  "Required parameters: accountId, goalId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing goal. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "goalId"})]}
+          #{"accountId" "webPropertyId" "profileId" "goalId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -133,14 +154,17 @@
      auth))))
 
 (defn goals-update$
-  "Required parameters: accountId,goalId,profileId,webPropertyId
+  "Required parameters: accountId, goalId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing goal."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "goalId"})]}
+          #{"accountId" "webPropertyId" "profileId" "goalId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -157,7 +181,9 @@
      auth))))
 
 (defn experiments-delete$
-  "Required parameters: accountId,experimentId,profileId,webPropertyId
+  "Required parameters: accountId, experimentId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Delete an experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -165,7 +191,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "experimentId"})]}
+          #{"accountId" "webPropertyId" "profileId" "experimentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -182,7 +209,9 @@
      auth))))
 
 (defn experiments-get$
-  "Required parameters: accountId,experimentId,profileId,webPropertyId
+  "Required parameters: accountId, experimentId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Returns an experiment to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -191,7 +220,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "experimentId"})]}
+          #{"accountId" "webPropertyId" "profileId" "experimentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -208,7 +238,9 @@
      auth))))
 
 (defn experiments-insert$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -216,7 +248,8 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -235,7 +268,9 @@
      auth))))
 
 (defn experiments-list$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists experiments to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -244,7 +279,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -261,7 +297,9 @@
      auth))))
 
 (defn experiments-patch$
-  "Required parameters: accountId,experimentId,profileId,webPropertyId
+  "Required parameters: accountId, experimentId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Update an existing experiment. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -269,7 +307,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "experimentId"})]}
+          #{"accountId" "webPropertyId" "profileId" "experimentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -286,7 +325,9 @@
      auth))))
 
 (defn experiments-update$
-  "Required parameters: accountId,experimentId,profileId,webPropertyId
+  "Required parameters: accountId, experimentId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Update an existing experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -294,7 +335,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId" "experimentId"})]}
+          #{"accountId" "webPropertyId" "profileId" "experimentId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -311,14 +353,17 @@
      auth))))
 
 (defn profileFilterLinks-delete$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Delete a profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -335,7 +380,9 @@
      auth))))
 
 (defn profileFilterLinks-get$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Returns a single profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -343,7 +390,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -360,14 +408,17 @@
      auth))))
 
 (defn profileFilterLinks-insert$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -386,7 +437,9 @@
      auth))))
 
 (defn profileFilterLinks-list$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists all profile filter links for a profile."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -394,7 +447,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -411,14 +465,17 @@
      auth))))
 
 (defn profileFilterLinks-patch$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Update an existing profile filter link. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -435,14 +492,17 @@
      auth))))
 
 (defn profileFilterLinks-update$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Update an existing profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -459,12 +519,15 @@
      auth))))
 
 (defn filters-delete$
-  "Required parameters: accountId,filterId
+  "Required parameters: accountId, filterId
+  
+  Optional parameters: none
   
   Delete a filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "filterId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "filterId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -481,13 +544,16 @@
      auth))))
 
 (defn filters-get$
-  "Required parameters: accountId,filterId
+  "Required parameters: accountId, filterId
+  
+  Optional parameters: none
   
   Returns filters to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "filterId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "filterId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -506,10 +572,13 @@
 (defn filters-insert$
   "Required parameters: accountId
   
+  Optional parameters: none
+  
   Create a new filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -530,11 +599,14 @@
 (defn filters-list$
   "Required parameters: accountId
   
+  Optional parameters: max-results, start-index
+  
   Lists all filters for an account"
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -551,12 +623,15 @@
      auth))))
 
 (defn filters-patch$
-  "Required parameters: accountId,filterId
+  "Required parameters: accountId, filterId
+  
+  Optional parameters: none
   
   Updates an existing filter. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "filterId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "filterId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -573,12 +648,15 @@
      auth))))
 
 (defn filters-update$
-  "Required parameters: accountId,filterId
+  "Required parameters: accountId, filterId
+  
+  Optional parameters: none
   
   Updates an existing filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "filterId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "filterId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -595,7 +673,9 @@
      auth))))
 
 (defn customMetrics-get$
-  "Required parameters: accountId,customMetricId,webPropertyId
+  "Required parameters: accountId, customMetricId, webPropertyId
+  
+  Optional parameters: none
   
   Get a custom metric to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -603,7 +683,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "customMetricId" "webPropertyId"})]}
+          #{"accountId" "customMetricId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -620,12 +701,15 @@
      auth))))
 
 (defn customMetrics-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new custom metric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -644,13 +728,16 @@
      auth))))
 
 (defn customMetrics-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists custom metrics to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -667,14 +754,17 @@
      auth))))
 
 (defn customMetrics-patch$
-  "Required parameters: accountId,customMetricId,webPropertyId
+  "Required parameters: accountId, customMetricId, webPropertyId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
   
   Updates an existing custom metric. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "customMetricId" "webPropertyId"})]}
+          #{"accountId" "customMetricId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -691,14 +781,17 @@
      auth))))
 
 (defn customMetrics-update$
-  "Required parameters: accountId,customMetricId,webPropertyId
+  "Required parameters: accountId, customMetricId, webPropertyId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
   
   Updates an existing custom metric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "customMetricId" "webPropertyId"})]}
+          #{"accountId" "customMetricId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -715,12 +808,15 @@
      auth))))
 
 (defn webpropertyUserLinks-delete$
-  "Required parameters: accountId,linkId,webPropertyId
+  "Required parameters: accountId, linkId, webPropertyId
+  
+  Optional parameters: none
   
   Removes a user from the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId" "linkId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId" "linkId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -737,12 +833,15 @@
      auth))))
 
 (defn webpropertyUserLinks-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Adds a new user to the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -761,13 +860,16 @@
      auth))))
 
 (defn webpropertyUserLinks-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists webProperty-user links for a given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
             "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -784,12 +886,15 @@
      auth))))
 
 (defn webpropertyUserLinks-update$
-  "Required parameters: accountId,linkId,webPropertyId
+  "Required parameters: accountId, linkId, webPropertyId
+  
+  Optional parameters: none
   
   Updates permissions for an existing user on the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId" "linkId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId" "linkId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -806,14 +911,17 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-delete$
-  "Required parameters: accountId,webPropertyAdWordsLinkId,webPropertyId
+  "Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
+  
+  Optional parameters: none
   
   Deletes a web property-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})]}
+          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -830,7 +938,9 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-get$
-  "Required parameters: accountId,webPropertyAdWordsLinkId,webPropertyId
+  "Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
+  
+  Optional parameters: none
   
   Returns a web property-Google Ads link to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -838,7 +948,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})]}
+          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -855,12 +966,15 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Creates a webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -879,13 +993,16 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists webProperty-Google Ads links for a given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -902,14 +1019,17 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-patch$
-  "Required parameters: accountId,webPropertyAdWordsLinkId,webPropertyId
+  "Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing webProperty-Google Ads link. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})]}
+          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -926,14 +1046,17 @@
      auth))))
 
 (defn webPropertyAdWordsLinks-update$
-  "Required parameters: accountId,webPropertyAdWordsLinkId,webPropertyId
+  "Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})]}
+          #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -950,13 +1073,16 @@
      auth))))
 
 (defn webproperties-get$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Gets a web property to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -975,10 +1101,13 @@
 (defn webproperties-insert$
   "Required parameters: accountId
   
+  Optional parameters: none
+  
   Create a new property if the account has fewer than 20 properties. Web properties are visible in the Google Analytics interface only if they have at least one profile."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -999,12 +1128,15 @@
 (defn webproperties-list$
   "Required parameters: accountId
   
+  Optional parameters: max-results, start-index
+  
   Lists web properties to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1021,12 +1153,15 @@
      auth))))
 
 (defn webproperties-patch$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing web property. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -1043,12 +1178,15 @@
      auth))))
 
 (defn webproperties-update$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1065,7 +1203,9 @@
      auth))))
 
 (defn customDimensions-get$
-  "Required parameters: accountId,customDimensionId,webPropertyId
+  "Required parameters: accountId, customDimensionId, webPropertyId
+  
+  Optional parameters: none
   
   Get a custom dimension to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -1073,7 +1213,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "customDimensionId"})]}
+          #{"accountId" "webPropertyId" "customDimensionId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1090,12 +1231,15 @@
      auth))))
 
 (defn customDimensions-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new custom dimension."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1114,13 +1258,16 @@
      auth))))
 
 (defn customDimensions-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists custom dimensions to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1137,14 +1284,17 @@
      auth))))
 
 (defn customDimensions-patch$
-  "Required parameters: accountId,customDimensionId,webPropertyId
+  "Required parameters: accountId, customDimensionId, webPropertyId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
   
   Updates an existing custom dimension. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "customDimensionId"})]}
+          #{"accountId" "webPropertyId" "customDimensionId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -1161,14 +1311,17 @@
      auth))))
 
 (defn customDimensions-update$
-  "Required parameters: accountId,customDimensionId,webPropertyId
+  "Required parameters: accountId, customDimensionId, webPropertyId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
   
   Updates an existing custom dimension."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "customDimensionId"})]}
+          #{"accountId" "webPropertyId" "customDimensionId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1187,12 +1340,15 @@
 (defn segments-list$
   "Required parameters: none
   
+  Optional parameters: max-results, start-index
+  
   Lists segments to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1211,11 +1367,14 @@
 (defn accountSummaries-list$
   "Required parameters: none
   
+  Optional parameters: max-results, start-index
+  
   Lists account summaries (lightweight tree comprised of accounts/properties/profiles) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1232,12 +1391,15 @@
      auth))))
 
 (defn accountUserLinks-delete$
-  "Required parameters: accountId,linkId
+  "Required parameters: accountId, linkId
+  
+  Optional parameters: none
   
   Removes a user from the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "linkId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "linkId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1256,10 +1418,13 @@
 (defn accountUserLinks-insert$
   "Required parameters: accountId
   
+  Optional parameters: none
+  
   Adds a new user to the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1280,11 +1445,14 @@
 (defn accountUserLinks-list$
   "Required parameters: accountId
   
+  Optional parameters: max-results, start-index
+  
   Lists account-user links for a given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
             "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})]}
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1301,12 +1469,15 @@
      auth))))
 
 (defn accountUserLinks-update$
-  "Required parameters: accountId,linkId
+  "Required parameters: accountId, linkId
+  
+  Optional parameters: none
   
   Updates permissions for an existing user on the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "linkId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "linkId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1323,14 +1494,17 @@
      auth))))
 
 (defn profileUserLinks-delete$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Removes a user from the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1347,14 +1521,17 @@
      auth))))
 
 (defn profileUserLinks-insert$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Adds a new user to the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1373,7 +1550,9 @@
      auth))))
 
 (defn profileUserLinks-list$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists profile-user links for a given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
@@ -1381,7 +1560,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1398,14 +1578,17 @@
      auth))))
 
 (defn profileUserLinks-update$
-  "Required parameters: accountId,linkId,profileId,webPropertyId
+  "Required parameters: accountId, linkId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Updates permissions for an existing user on the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "linkId" "profileId"})]}
+          #{"accountId" "webPropertyId" "linkId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1422,7 +1605,9 @@
      auth))))
 
 (defn uploads-deleteUploadData$
-  "Required parameters: accountId,customDataSourceId,webPropertyId
+  "Required parameters: accountId, customDataSourceId, webPropertyId
+  
+  Optional parameters: none
   
   Delete data associated with a previous upload."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1430,7 +1615,8 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"customDataSourceId" "accountId" "webPropertyId"})]}
+          #{"customDataSourceId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1449,7 +1635,9 @@
      auth))))
 
 (defn uploads-get$
-  "Required parameters: accountId,customDataSourceId,uploadId,webPropertyId
+  "Required parameters: accountId, customDataSourceId, uploadId, webPropertyId
+  
+  Optional parameters: none
   
   List uploads to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1461,7 +1649,8 @@
           #{"customDataSourceId"
             "accountId"
             "uploadId"
-            "webPropertyId"})]}
+            "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1478,7 +1667,9 @@
      auth))))
 
 (defn uploads-list$
-  "Required parameters: accountId,customDataSourceId,webPropertyId
+  "Required parameters: accountId, customDataSourceId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   List uploads to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1487,7 +1678,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"customDataSourceId" "accountId" "webPropertyId"})]}
+          #{"customDataSourceId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1504,7 +1696,9 @@
      auth))))
 
 (defn uploads-uploadData$
-  "Required parameters: accountId,customDataSourceId,webPropertyId
+  "Required parameters: accountId, customDataSourceId, webPropertyId
+  
+  Optional parameters: none
   
   Upload data for a custom data source."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1512,7 +1706,8 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"customDataSourceId" "accountId" "webPropertyId"})]}
+          #{"customDataSourceId" "accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1531,14 +1726,17 @@
      auth))))
 
 (defn customDataSources-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   List custom data sources to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1555,14 +1753,17 @@
      auth))))
 
 (defn profiles-delete$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Deletes a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1579,7 +1780,9 @@
      auth))))
 
 (defn profiles-get$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Gets a view (profile) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -1587,7 +1790,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1604,12 +1808,15 @@
      auth))))
 
 (defn profiles-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1628,14 +1835,17 @@
      auth))))
 
 (defn profiles-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists views (profiles) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1652,14 +1862,17 @@
      auth))))
 
 (defn profiles-patch$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing view (profile). This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -1676,14 +1889,17 @@
      auth))))
 
 (defn profiles-update$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1700,14 +1916,17 @@
      auth))))
 
 (defn remarketingAudience-delete$
-  "Required parameters: accountId,remarketingAudienceId,webPropertyId
+  "Required parameters: accountId, remarketingAudienceId, webPropertyId
+  
+  Optional parameters: none
   
   Delete a remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "remarketingAudienceId" "webPropertyId"})]}
+          #{"accountId" "remarketingAudienceId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1724,7 +1943,9 @@
      auth))))
 
 (defn remarketingAudience-get$
-  "Required parameters: accountId,remarketingAudienceId,webPropertyId
+  "Required parameters: accountId, remarketingAudienceId, webPropertyId
+  
+  Optional parameters: none
   
   Gets a remarketing audience to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -1732,7 +1953,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "remarketingAudienceId" "webPropertyId"})]}
+          #{"accountId" "remarketingAudienceId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1749,12 +1971,15 @@
      auth))))
 
 (defn remarketingAudience-insert$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
   
   Creates a new remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1773,13 +1998,16 @@
      auth))))
 
 (defn remarketingAudience-list$
-  "Required parameters: accountId,webPropertyId
+  "Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index, type
   
   Lists remarketing audiences to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})]}
+  {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1796,14 +2024,17 @@
      auth))))
 
 (defn remarketingAudience-patch$
-  "Required parameters: accountId,remarketingAudienceId,webPropertyId
+  "Required parameters: accountId, remarketingAudienceId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing remarketing audience. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "remarketingAudienceId" "webPropertyId"})]}
+          #{"accountId" "remarketingAudienceId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -1820,14 +2051,17 @@
      auth))))
 
 (defn remarketingAudience-update$
-  "Required parameters: accountId,remarketingAudienceId,webPropertyId
+  "Required parameters: accountId, remarketingAudienceId, webPropertyId
+  
+  Optional parameters: none
   
   Updates an existing remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "remarketingAudienceId" "webPropertyId"})]}
+          #{"accountId" "remarketingAudienceId" "webPropertyId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url
@@ -1846,12 +2080,15 @@
 (defn accounts-list$
   "Required parameters: none
   
+  Optional parameters: max-results, start-index
+  
   Lists all accounts to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1868,7 +2105,9 @@
      auth))))
 
 (defn unsampledReports-delete$
-  "Required parameters: accountId,profileId,unsampledReportId,webPropertyId
+  "Required parameters: accountId, profileId, unsampledReportId, webPropertyId
+  
+  Optional parameters: none
   
   Deletes an unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
@@ -1878,7 +2117,8 @@
           #{"accountId"
             "unsampledReportId"
             "webPropertyId"
-            "profileId"})]}
+            "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -1895,7 +2135,9 @@
      auth))))
 
 (defn unsampledReports-get$
-  "Required parameters: accountId,profileId,unsampledReportId,webPropertyId
+  "Required parameters: accountId, profileId, unsampledReportId, webPropertyId
+  
+  Optional parameters: none
   
   Returns a single unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1907,7 +2149,8 @@
           #{"accountId"
             "unsampledReportId"
             "webPropertyId"
-            "profileId"})]}
+            "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -1924,7 +2167,9 @@
      auth))))
 
 (defn unsampledReports-insert$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: none
   
   Create a new unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1932,7 +2177,8 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -1951,7 +2197,9 @@
      auth))))
 
 (defn unsampledReports-list$
-  "Required parameters: accountId,profileId,webPropertyId
+  "Required parameters: accountId, profileId, webPropertyId
+  
+  Optional parameters: max-results, start-index
   
   Lists unsampled reports to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -1960,7 +2208,8 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "webPropertyId" "profileId"})]}
+          #{"accountId" "webPropertyId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

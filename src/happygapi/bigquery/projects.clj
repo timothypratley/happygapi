@@ -2,26 +2,35 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
 
-(defn getServiceAccount$
-  "Required parameters: projectId
+(def schemas
+  (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
+
+(defn list$
+  "Required parameters: none
   
-  Returns the email address of the service account for your project used for interactions with Google Cloud KMS."
+  Optional parameters: pageToken, maxResults
+  
+  Lists all projects to which you have been granted any project role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/serviceAccount"
-     #{"projectId"}
+     "projects"
+     #{}
      args)
     (merge-with
      merge
@@ -31,22 +40,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "Required parameters: none
+(defn getServiceAccount$
+  "Required parameters: projectId
   
-  Lists all projects to which you have been granted any project role."
+  Optional parameters: none
+  
+  Returns the email address of the service account for your project used for interactions with Google Cloud KMS."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects"
-     #{}
+     "projects/{projectId}/serviceAccount"
+     #{"projectId"}
      args)
     (merge-with
      merge

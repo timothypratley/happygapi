@@ -3,12 +3,20 @@
   A fully managed and highly scalable data discovery and metadata management service.
   
   See: https://cloud.google.com/data-catalog/docs/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "datacatalog_schema.edn"))))
 
 (defn search$
   "Required parameters: none
+  
+  Optional parameters: none
   
   Searches Data Catalog for multiple resources like entries, tags that
   match a query.
@@ -27,7 +35,8 @@
   Syntax](/data-catalog/docs/how-to/search-reference) for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

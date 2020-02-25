@@ -2,17 +2,26 @@
   "YouTube Data API
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
   See: https://developers.google.com/youtube/v3"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
 
 (defn insert$
   "Required parameters: part
   
+  Optional parameters: none
+  
   Creates a new top-level comment. To add a reply to an existing comment, use the comments.insert method instead."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +42,13 @@
 (defn list$
   "Required parameters: part
   
+  Optional parameters: textFormat, channelId, allThreadsRelatedToChannelId, pageToken, id, videoId, order, searchTerms, moderationStatus, maxResults
+  
   Returns a list of comment threads that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -55,10 +67,13 @@
 (defn update$
   "Required parameters: part
   
+  Optional parameters: none
+  
   Modifies the top-level comment in a comment thread."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})]}
+  {:pre [(util/has-keys? args #{"part"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

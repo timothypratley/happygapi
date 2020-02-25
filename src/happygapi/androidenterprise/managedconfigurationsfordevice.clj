@@ -2,12 +2,20 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
 
 (defn delete$
-  "Required parameters: deviceId,enterpriseId,managedConfigurationForDeviceId,userId
+  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  
+  Optional parameters: none
   
   Removes a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -17,7 +25,8 @@
           #{"enterpriseId"
             "userId"
             "managedConfigurationForDeviceId"
-            "deviceId"})]}
+            "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -37,7 +46,9 @@
      auth))))
 
 (defn get$
-  "Required parameters: deviceId,enterpriseId,managedConfigurationForDeviceId,userId
+  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  
+  Optional parameters: none
   
   Retrieves details of a per-device managed configuration."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -47,7 +58,8 @@
           #{"enterpriseId"
             "userId"
             "managedConfigurationForDeviceId"
-            "deviceId"})]}
+            "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -67,12 +79,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: deviceId,enterpriseId,userId
+  "Required parameters: deviceId, enterpriseId, userId
+  
+  Optional parameters: none
   
   Lists all the per-device managed configurations for the specified device. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})]}
+  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -89,7 +104,9 @@
      auth))))
 
 (defn update$
-  "Required parameters: deviceId,enterpriseId,managedConfigurationForDeviceId,userId
+  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  
+  Optional parameters: none
   
   Adds or updates a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -99,7 +116,8 @@
           #{"enterpriseId"
             "userId"
             "managedConfigurationForDeviceId"
-            "deviceId"})]}
+            "deviceId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
     (util/get-url

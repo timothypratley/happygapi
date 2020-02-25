@@ -3,17 +3,26 @@
   Allows developers to manage billing for their Google Cloud Platform projects
       programmatically.
   See: https://cloud.google.com/billing/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "cloudbilling_schema.edn"))))
 
 (defn list$
   "Required parameters: none
   
+  Optional parameters: pageToken, pageSize
+  
   Lists all public cloud services."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url
@@ -32,10 +41,13 @@
 (defn skus-list$
   "Required parameters: parent
   
+  Optional parameters: endTime, pageToken, startTime, pageSize, currencyCode
+  
   Lists all publicly available SKUs for a given cloud service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})]}
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
     (util/get-url

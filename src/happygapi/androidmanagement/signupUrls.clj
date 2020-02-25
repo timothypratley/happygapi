@@ -2,17 +2,26 @@
   "Android Management API
   The Android Management API provides remote enterprise management of Android devices and apps.
   See: https://developers.google.com/android/management"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "androidmanagement_schema.edn"))))
 
 (defn create$
   "Required parameters: none
   
+  Optional parameters: callbackUrl, projectId
+  
   Creates an enterprise signup URL."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url

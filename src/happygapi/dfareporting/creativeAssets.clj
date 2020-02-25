@@ -2,17 +2,26 @@
   "DCM/DFA Reporting And Trafficking API
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/"
-  (:require [happygapi.util :as util]
+  (:require [cheshire.core]
             [clj-http.client :as http]
-            [cheshire.core]))
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [happy.util :as util]
+            [json-schema.core :as json-schema]))
+
+(def schemas
+  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
 
 (defn insert$
-  "Required parameters: advertiserId,profileId
+  "Required parameters: advertiserId, profileId
+  
+  Optional parameters: none
   
   Inserts a new creative asset."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"advertiserId" "profileId"})]}
+  {:pre [(util/has-keys? args #{"advertiserId" "profileId"})
+         (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
