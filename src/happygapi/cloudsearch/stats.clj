@@ -2,7 +2,7 @@
   "Cloud Search API
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -44,7 +44,7 @@
 (defn getSession$
   "Required parameters: none
   
-  Optional parameters: toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year, toDate.day
+  Optional parameters: toDate.year, fromDate.month, fromDate.day, fromDate.year, toDate.day, toDate.month
   
   Get the # of search sessions, % of successful sessions with a click query
   statistics for customer.
@@ -74,7 +74,7 @@
 (defn getUser$
   "Required parameters: none
   
-  Optional parameters: toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.year, toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day
   
   Get the users statistics for customer.
   
@@ -103,7 +103,7 @@
 (defn getIndex$
   "Required parameters: none
   
-  Optional parameters: fromDate.year, toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day
+  Optional parameters: fromDate.month, fromDate.day, fromDate.year, toDate.day, toDate.month, toDate.year
   
   Gets indexed item statistics aggreggated across all data sources. This
   API only returns statistics for previous dates; it doesn't return
@@ -134,7 +134,7 @@
 (defn query-searchapplications-get$
   "Required parameters: name
   
-  Optional parameters: fromDate.month, fromDate.day, fromDate.year, toDate.day, toDate.month, toDate.year
+  Optional parameters: toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year
   
   Get the query statistics for search application.
   
@@ -163,7 +163,7 @@
 (defn index-datasources-get$
   "Required parameters: name
   
-  Optional parameters: toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.month, fromDate.day, fromDate.year, toDate.day, toDate.month, toDate.year
   
   Gets indexed item statistics for a single data source.
   
@@ -192,7 +192,7 @@
 (defn session-searchapplications-get$
   "Required parameters: name
   
-  Optional parameters: fromDate.year, toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day
+  Optional parameters: toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year
   
   Get the # of search sessions, % of successful sessions with a click query
   statistics for search application.
@@ -222,7 +222,7 @@
 (defn user-searchapplications-get$
   "Required parameters: name
   
-  Optional parameters: toDate.day, toDate.month, toDate.year, fromDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.month, fromDate.day, fromDate.year, toDate.day, toDate.month, toDate.year
   
   Get the users statistics for search application.
   

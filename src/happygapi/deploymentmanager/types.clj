@@ -2,7 +2,7 @@
   "Google Cloud Deployment Manager API
   Declares, configures, and deploys complex solutions on Google Cloud Platform.
   See: https://cloud.google.com/deployment-manager/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

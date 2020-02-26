@@ -2,7 +2,7 @@
   "Cloud Bigtable Admin API
   Administer your Cloud Bigtable tables and instances.
   See: https://cloud.google.com/bigtable/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,68 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "bigtableadmin_schema.edn"))))
-
-(defn locations-list$
-  "Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}/locations"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about a location."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn instances-get$
   "Required parameters: name
@@ -135,7 +73,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-testIamPermissions$
@@ -167,7 +105,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-create$
@@ -199,7 +137,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-update$
@@ -216,7 +154,7 @@
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -231,7 +169,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-delete$
@@ -294,7 +234,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-list$
@@ -463,7 +403,7 @@
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -478,7 +418,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-clusters-create$
@@ -510,39 +452,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn instances-clusters-backups-setIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Sets the access control policy on a Table or Backup resource.
-  Replaces any existing policy."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+resource}:setIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-clusters-backups-getIamPolicy$
@@ -575,13 +485,45 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn instances-clusters-backups-setIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Sets the access control policy on a Table or Backup resource.
+  Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:setIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-appProfiles-create$
   "Required parameters: parent
   
-  Optional parameters: ignoreWarnings, appProfileId
+  Optional parameters: appProfileId, ignoreWarnings
   
   Creates an app profile within an instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -607,7 +549,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-appProfiles-delete$
@@ -704,7 +646,7 @@
 (defn instances-appProfiles-patch$
   "Required parameters: name
   
-  Optional parameters: updateMask, ignoreWarnings
+  Optional parameters: ignoreWarnings, updateMask
   
   Updates an app profile within an instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -790,7 +732,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-testIamPermissions$
@@ -821,7 +763,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-generateConsistencyToken$
@@ -855,7 +797,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-create$
@@ -888,7 +830,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-modifyColumnFamilies$
@@ -922,7 +864,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-delete$
@@ -984,7 +926,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-dropRowRange$
@@ -1017,7 +959,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-checkConsistency$
@@ -1050,13 +992,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn instances-tables-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, view
+  Optional parameters: view, pageToken, pageSize
   
   Lists all tables served from a specified instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -1074,6 +1016,68 @@
      "https://bigtableadmin.googleapis.com/"
      "v2/{+parent}/tables"
      #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}/locations"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
      args)
     (merge-with
      merge

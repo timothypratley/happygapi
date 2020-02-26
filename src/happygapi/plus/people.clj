@@ -2,7 +2,7 @@
   "Google+ API
   Builds on top of the Google+ platform.
   See: https://developers.google.com/+/api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

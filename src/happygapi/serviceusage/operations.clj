@@ -2,7 +2,7 @@
   "Service Usage API
   Enables services that service consumers want to use on Google Cloud Platform, lists the available or enabled services, or disables services that service consumers no longer use.
   See: https://cloud.google.com/service-usage/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -46,7 +46,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -81,7 +81,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: pageSize, filter, name, pageToken
+  Optional parameters: name, pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.

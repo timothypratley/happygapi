@@ -2,7 +2,7 @@
   "Digital Asset Links API
   Discovers relationships between online assets such as websites or mobile apps.
   See: https://developers.google.com/digital-asset-links/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn check$
   "Required parameters: none
   
-  Optional parameters: target.androidApp.certificate.sha256Fingerprint, source.androidApp.packageName, source.web.site, target.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation, target.web.site
+  Optional parameters: source.androidApp.certificate.sha256Fingerprint, relation, target.web.site, target.androidApp.certificate.sha256Fingerprint, source.web.site, source.androidApp.packageName, target.androidApp.packageName
   
   Determines whether the specified (directional) relationship exists between
   the specified source and target assets.

@@ -2,7 +2,7 @@
   "HomeGraph API
   
   See: https://developers.google.com/actions/smarthome/create-app#request-sync"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,40 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "homegraph_schema.edn"))))
+
+(defn requestSync$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Requests a `SYNC` call from Google to a 3p partner's home control agent for
+  a user.
+  
+  
+  The third-party user's identity is passed in as `agent_user_id`
+  (see RequestSyncDevicesRequest) and forwarded back to the agent.
+  The agent is identified by the API key or JWT signed by the partner's
+  service account."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://homegraph.googleapis.com/"
+     "v1/devices:requestSync"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn query$
   "Required parameters: none
@@ -39,7 +73,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sync$
@@ -69,7 +103,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn reportStateAndNotification$
@@ -110,39 +144,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn requestSync$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Requests a `SYNC` call from Google to a 3p partner's home control agent for
-  a user.
-  
-  
-  The third-party user's identity is passed in as `agent_user_id`
-  (see RequestSyncDevicesRequest) and forwarded back to the agent.
-  The agent is identified by the API key or JWT signed by the partner's
-  service account."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://homegraph.googleapis.com/"
-     "v1/devices:requestSync"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

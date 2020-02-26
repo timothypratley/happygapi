@@ -2,7 +2,7 @@
   "Enterprise Apps Reseller API
   Creates and manages your customers and their subscriptions.
   See: https://developers.google.com/google-apps/reseller/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,7 +62,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn changeRenewalSettings$
@@ -89,7 +89,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -143,7 +143,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -196,7 +196,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn changeSeats$
@@ -223,7 +223,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn activate$
@@ -250,7 +250,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn startPaidService$
@@ -277,5 +277,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "Cloud Video Intelligence API
   Detects objects, explicit content, and scene changes in videos. It also specifies the region for annotation and transcribes speech to text. Supports both asynchronous API and streaming API.
   See: https://cloud.google.com/video-intelligence/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,42 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "videointelligence_schema.edn"))))
+
+(defn locations-operations-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://videointelligence.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn locations-operations-delete$
   "Required parameters: name
@@ -43,7 +79,7 @@
 (defn locations-operations-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -99,40 +135,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://videointelligence.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

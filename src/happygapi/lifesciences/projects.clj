@@ -2,7 +2,7 @@
   "Cloud Life Sciences API
   Cloud Life Sciences is a suite of services and tools for managing, processing, and transforming life sciences data.
   See: https://cloud.google.com/life-sciences"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,6 +62,48 @@
       :as :json}
      auth))))
 
+(defn locations-pipelines-run$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Runs a pipeline.  The returned Operation's metadata field will contain a
+  google.cloud.lifesciences.v2beta.Metadata object describing the status
+  of the pipeline execution. The
+  response field will contain a
+  google.cloud.lifesciences.v2beta.RunPipelineResponse object if the
+  pipeline completes successfully.
+  
+  **Note:** Before you can use this method, the *Life Sciences Service Agent*
+  must have access to your project. This is done automatically when the
+  Cloud Life Sciences API is first enabled, but if you delete this permission
+  you must disable and re-enable the API to grant the Life Sciences
+  Service Agent the required permissions.
+  Authorization requires the following [Google
+  IAM](https://cloud.google.com/iam/) permission:
+  
+  * `lifesciences.workflows.run`"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://lifesciences.googleapis.com/"
+     "v2beta/{+parent}/pipelines:run"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn locations-operations-cancel$
   "Required parameters: name
   
@@ -94,7 +136,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-operations-list$
@@ -153,46 +195,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-pipelines-run$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Runs a pipeline.  The returned Operation's metadata field will contain a
-  google.cloud.lifesciences.v2beta.Metadata object describing the status
-  of the pipeline execution. The
-  response field will contain a
-  google.cloud.lifesciences.v2beta.RunPipelineResponse object if the
-  pipeline completes successfully.
-  
-  **Note:** Before you can use this method, the *Life Sciences Service Agent*
-  must have access to your project. This is done automatically when the
-  Cloud Life Sciences API is first enabled, but if you delete this permission
-  you must disable and re-enable the API to grant the Life Sciences
-  Service Agent the required permissions.
-  Authorization requires the following [Google
-  IAM](https://cloud.google.com/iam/) permission:
-  
-  * `lifesciences.workflows.run`"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://lifesciences.googleapis.com/"
-     "v2beta/{+parent}/pipelines:run"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

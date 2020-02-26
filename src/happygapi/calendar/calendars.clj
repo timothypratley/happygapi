@@ -2,7 +2,7 @@
   "Calendar API
   Manipulates events and other calendar data.
   See: https://developers.google.com/google-apps/calendar/firstapp"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -114,7 +114,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -149,7 +149,7 @@
   
   Updates metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"calendarId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -164,5 +164,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

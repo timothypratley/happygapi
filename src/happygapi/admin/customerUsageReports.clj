@@ -2,7 +2,7 @@
   "Admin Reports API
   Fetches reports for the administrators of G Suite customers about the usage, collaboration, security, and risk for their users.
   See: /admin-sdk/reports/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

@@ -2,7 +2,7 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -67,7 +67,7 @@
      auth))))
 
 (defn list$
-  "Required parameters: datasetId, projectId
+  "Required parameters: projectId, datasetId
   
   Optional parameters: pageToken, maxResults
   

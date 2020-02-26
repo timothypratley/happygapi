@@ -2,7 +2,7 @@
   "Android Device Provisioning Partner API
   Automates Android zero-touch enrollment for device resellers, customers, and EMMs.
   See: https://developers.google.com/zero-touch/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,6 +36,171 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn devices-applyConfiguration$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Applies a Configuration to the device to register the device for zero-touch
+  enrollment. After applying a configuration to a device, the device
+  automatically provisions itself on first boot, or next factory reset."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/devices:applyConfiguration"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn devices-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists a customer's devices."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/devices"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the details of a device."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-unclaim$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Unclaims a device from a customer and removes it from zero-touch
+  enrollment.
+  
+  After removing a device, a customer must contact their reseller to register
+  the device into zero-touch enrollment again."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/devices:unclaim"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn devices-removeConfiguration$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Removes a configuration from device."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/devices:removeConfiguration"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn configurations-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a new configuration. Once created, a customer can apply the
+  configuration to devices."
+  {:scopes nil}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/configurations"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn configurations-delete$
@@ -139,34 +304,6 @@
       :as :json}
      auth))))
 
-(defn configurations-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a new configuration. Once created, a customer can apply the
-  configuration to devices."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/configurations"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn dpcs-list$
   "Required parameters: parent
   
@@ -191,141 +328,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn devices-applyConfiguration$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Applies a Configuration to the device to register the device for zero-touch
-  enrollment. After applying a configuration to a device, the device
-  automatically provisions itself on first boot, or next factory reset."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/devices:applyConfiguration"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn devices-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists a customer's devices."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/devices"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the details of a device."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-unclaim$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Unclaims a device from a customer and removes it from zero-touch
-  enrollment.
-  
-  After removing a device, a customer must contact their reseller to register
-  the device into zero-touch enrollment again."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/devices:unclaim"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn devices-removeConfiguration$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Removes a configuration from device."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/devices:removeConfiguration"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

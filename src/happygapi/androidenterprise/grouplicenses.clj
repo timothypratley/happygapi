@@ -2,7 +2,7 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

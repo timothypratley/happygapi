@@ -2,7 +2,7 @@
   "Stackdriver Logging API
   Writes log entries and manages your Stackdriver Logging configuration. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the <a href=https://cloud.google.com/logging/docs>Stackdriver Logging documentation</a>.
   See: https://cloud.google.com/logging/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,34 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "logging_schema.edn"))))
+
+(defn buckets-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a bucket (Beta)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn locations-buckets-list$
   "Required parameters: parent
@@ -66,34 +94,6 @@
       :as :json}
      auth))))
 
-(defn sinks-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists sinks."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/sinks"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn sinks-create$
   "Required parameters: parent
   
@@ -119,7 +119,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sinks-get$
@@ -184,7 +184,7 @@
   Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"sinkName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -199,7 +199,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn sinks-delete$
@@ -219,6 +221,34 @@
      "https://logging.googleapis.com/"
      "v2/{+sinkName}"
      #{"sinkName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sinks-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists sinks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/sinks"
+     #{"parent"}
      args)
     (merge-with
      merge
@@ -415,33 +445,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn buckets-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a bucket (Beta)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

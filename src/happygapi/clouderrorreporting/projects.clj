@@ -3,7 +3,7 @@
   Groups and counts similar errors from cloud services and applications, reports new errors, and provides access to error groups and their associated errors.
   
   See: https://cloud.google.com/error-reporting/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -42,7 +42,7 @@
 (defn events-list$
   "Required parameters: projectName
   
-  Optional parameters: serviceFilter.service, pageToken, pageSize, serviceFilter.version, serviceFilter.resourceType, timeRange.period, groupId
+  Optional parameters: serviceFilter.resourceType, timeRange.period, groupId, pageToken, serviceFilter.service, pageSize, serviceFilter.version
   
   Lists the specified events."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -96,7 +96,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn groups-get$
@@ -132,7 +132,7 @@
   Replace the data for the specified group.
   Fails if the group does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -147,7 +147,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn groupStats-list$

@@ -2,7 +2,7 @@
   "Cloud Private Catalog Producer API
   Enables cloud users to manage and share enterprise catalogs intheir organizations.
   See: https://cloud.google.com/private-catalog/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,7 +62,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -114,7 +114,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn create$
@@ -141,7 +141,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -222,7 +222,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -251,6 +251,108 @@
       :as :json}
      auth))))
 
+(defn associations-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the given Association."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn associations-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the requested Association resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn associations-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists all Association resources under a catalog."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+parent}/associations"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn associations-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates an Association instance under a given Catalog."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+parent}/associations"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn products-copy$
   "Required parameters: name
   
@@ -275,7 +377,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn products-get$
@@ -403,7 +505,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn products-icons-upload$
@@ -435,7 +537,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn products-versions-delete$
@@ -563,107 +665,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn associations-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the given Association."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn associations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns the requested Association resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn associations-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists all Association resources under a catalog."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+parent}/associations"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn associations-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates an Association instance under a given Catalog."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+parent}/associations"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

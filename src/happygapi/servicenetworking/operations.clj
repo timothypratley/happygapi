@@ -2,7 +2,7 @@
   "Service Networking API
   Provides automatic management of network configurations necessary for certain services.
   See: https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,10 +12,39 @@
 (def schemas
   (edn/read-string (slurp (io/resource "servicenetworking_schema.edn"))))
 
+(defn delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://servicenetworking.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -109,34 +138,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://servicenetworking.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

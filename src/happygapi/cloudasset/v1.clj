@@ -2,7 +2,7 @@
   "Cloud Asset API
   The cloud asset API manages the history and inventory of cloud resources.
   See: https://cloud.google.com/asset-inventory/docs/quickstart"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,36 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "cloudasset_schema.edn"))))
+
+(defn $
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Exports assets with time and resource types to a given Cloud Storage
+  location. The output format is newline-delimited JSON.
+  This API implements the google.longrunning.Operation API allowing you
+  to keep track of the export."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudasset.googleapis.com/"
+     "v1/{+parent}:exportAssets"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn $
   "Required parameters: parent
@@ -41,34 +71,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn $
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Exports assets with time and resource types to a given Cloud Storage
-  location. The output format is newline-delimited JSON.
-  This API implements the google.longrunning.Operation API allowing you
-  to keep track of the export."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudasset.googleapis.com/"
-     "v1/{+parent}:exportAssets"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

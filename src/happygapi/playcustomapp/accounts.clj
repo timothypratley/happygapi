@@ -2,7 +2,7 @@
   "Google Play Custom App Publishing API
   An API to publish custom Android apps.
   See: https://developers.google.com/android/work/play/custom-app-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,5 +36,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

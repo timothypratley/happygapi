@@ -2,7 +2,7 @@
   "Cloud Resource Manager API
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
   See: https://cloud.google.com/resource-manager"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

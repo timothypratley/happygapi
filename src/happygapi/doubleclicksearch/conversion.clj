@@ -2,7 +2,7 @@
   "Search Ads 360 API
   Reports and modifies your advertising data in DoubleClick Search (for example, campaigns, ad groups, keywords, and conversions).
   See: https://developers.google.com/doubleclick-search/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -69,7 +69,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -112,7 +112,7 @@
   
   Updates a batch of conversions in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -127,7 +127,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn updateAvailability$
@@ -154,5 +156,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

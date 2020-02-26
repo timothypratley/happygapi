@@ -2,7 +2,7 @@
   "SAS Portal API
   
   See: https://developers.google.com/spectrum-access-system/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -111,7 +111,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-createSigned$
@@ -139,7 +139,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-create$
@@ -166,7 +166,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-move$
@@ -193,7 +193,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-delete$
@@ -224,7 +224,7 @@
 (defn devices-list$
   "Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Lists devices under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -270,32 +270,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn nodes-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns a requested node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn nodes-patch$
@@ -310,6 +285,31 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a requested node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/{+name}"
@@ -347,7 +347,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn nodes-delete$
@@ -424,5 +424,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

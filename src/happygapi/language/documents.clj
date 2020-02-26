@@ -2,7 +2,7 @@
   "Cloud Natural Language API
   Provides natural language understanding technologies, such as sentiment analysis, entity recognition, entity sentiment analysis, and other text annotations, to developers.
   See: https://cloud.google.com/natural-language/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,91 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "language_schema.edn"))))
-
-(defn annotateText$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  A convenience method that provides all the features that analyzeSentiment,
-  analyzeEntities, and analyzeSyntax provide in one call."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:annotateText"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn classifyText$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Classifies a document into categories."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:classifyText"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn analyzeSentiment$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Analyzes the sentiment of the provided text."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:analyzeSentiment"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
 
 (defn analyzeEntitySentiment$
   "Required parameters: none
@@ -123,7 +38,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn analyzeEntities$
@@ -153,7 +68,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn analyzeSyntax$
@@ -183,5 +98,90 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn annotateText$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  A convenience method that provides all the features that analyzeSentiment,
+  analyzeEntities, and analyzeSyntax provide in one call."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:annotateText"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn classifyText$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Classifies a document into categories."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:classifyText"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn analyzeSentiment$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Analyzes the sentiment of the provided text."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:analyzeSentiment"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

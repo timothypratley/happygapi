@@ -2,7 +2,7 @@
   "Blogger API
   API for access to the data within Blogger.
   See: https://developers.google.com/blogger/docs/3.0/getting_started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -87,7 +87,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -165,7 +165,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn revert$
@@ -192,7 +192,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
@@ -202,7 +202,7 @@
   
   Update a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"pageId" "blogId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -217,5 +217,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

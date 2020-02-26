@@ -2,7 +2,7 @@
   "Cloud Filestore API
   The Cloud Filestore API is used for creating and managing cloud file servers.
   See: https://cloud.google.com/filestore/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn locations-list$
   "Required parameters: name
   
-  Optional parameters: pageSize, filter, includeUnrevealedLocations, pageToken
+  Optional parameters: filter, includeUnrevealedLocations, pageToken, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -60,42 +60,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://file.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn locations-operations-delete$
@@ -187,22 +151,31 @@
       :as :json}
      auth))))
 
-(defn locations-instances-create$
-  "Required parameters: parent
+(defn locations-operations-cancel$
+  "Required parameters: name
   
-  Optional parameters: instanceId
+  Optional parameters: none
   
-  Creates an instance."
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
+  {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://file.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{"parent"}
+     "v1/{+name}:cancel"
+     #{"name"}
      args)
     (merge-with
      merge
@@ -211,7 +184,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-instances-delete$
@@ -242,7 +215,7 @@
 (defn locations-instances-list$
   "Required parameters: parent
   
-  Optional parameters: filter, pageToken, orderBy, pageSize
+  Optional parameters: pageToken, orderBy, pageSize, filter
   
   Lists all instances in a project for either a specified location
   or for all locations."
@@ -313,4 +286,31 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-instances-create$
+  "Required parameters: parent
+  
+  Optional parameters: instanceId
+  
+  Creates an instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://file.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "API Discovery Service
   Provides information about other Google APIs, such as what APIs are available, the resource, and method details for each API.
   See: https://developers.google.com/discovery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

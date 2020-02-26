@@ -2,7 +2,7 @@
   "DCM/DFA Reporting And Trafficking API
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -86,7 +86,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -146,7 +146,7 @@
   
   Updates an existing creative field."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"profileId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -161,5 +161,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

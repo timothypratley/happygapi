@@ -2,7 +2,7 @@
   "SAS Portal API (Testing)
   
   See: https://developers.google.com/spectrum-access-system/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,33 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "prod_tt_sasportal_schema.edn"))))
-
-(defn generateSecret$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Generates a secret to be used with the ValidateInstaller method"
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/installer:generateSecret"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
 
 (defn validate$
   "Required parameters: none
@@ -63,5 +36,32 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn generateSecret$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Generates a secret to be used with the ValidateInstaller method"
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/installer:generateSecret"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

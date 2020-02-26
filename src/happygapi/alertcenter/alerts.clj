@@ -2,7 +2,7 @@
   "G Suite Alert Center API
   Manages alerts on issues affecting your domain.
   See: https://developers.google.com/admin-sdk/alertcenter/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,58 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "alertcenter_schema.edn"))))
-
-(defn list$
-  "Required parameters: none
-  
-  Optional parameters: filter, pageToken, orderBy, customerId, pageSize
-  
-  Lists the alerts."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn batchDelete$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Performs batch delete operation on alerts."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts:batchDelete"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
 
 (defn batchUndelete$
   "Required parameters: none
@@ -88,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -145,7 +93,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn getMetadata$
@@ -203,10 +151,62 @@
       :as :json}
      auth))))
 
+(defn list$
+  "Required parameters: none
+  
+  Optional parameters: customerId, pageSize, filter, pageToken, orderBy
+  
+  Lists the alerts."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn batchDelete$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Performs batch delete operation on alerts."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts:batchDelete"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn feedback-list$
   "Required parameters: alertId
   
-  Optional parameters: filter, customerId
+  Optional parameters: customerId, filter
   
   Lists all the feedback for an alert. Attempting to list feedbacks for
   a non-existent alert returns `NOT_FOUND` error."
@@ -256,5 +256,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

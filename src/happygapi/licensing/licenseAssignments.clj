@@ -2,7 +2,7 @@
   "Licensing API
   Licensing API to view and manage licenses for your domain
   See: https://developers.google.com/admin-sdk/licensing/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -86,7 +86,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn listForProduct$
@@ -171,7 +171,7 @@
   
   Reassign a user's product SKU with a different SKU in the same product."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"productId" "userId" "skuId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -186,5 +186,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

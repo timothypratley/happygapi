@@ -2,7 +2,7 @@
   "Ad Exchange Buyer API II
   Accesses the latest features for managing Authorized Buyers accounts, Real-Time Bidding configurations and auction metrics, and Marketplace programmatic deals.
   See: https://developers.google.com/authorized-buyers/apis/reference/rest/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,33 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "adexchangebuyer2_schema.edn"))))
+
+(defn finalizedProposals-list$
+  "Required parameters: accountId
+  
+  Optional parameters: pageToken, pageSize, filterSyntax, filter
+  
+  List finalized proposals, regardless if a proposal is being renegotiated.
+  A filter expression (PQL query) may be specified to filter the results.
+  The notes will not be returned."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"accountId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/finalizedProposals"
+     #{"accountId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn proposals-get$
   "Required parameters: accountId, proposalId
@@ -63,7 +90,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-update$
@@ -85,7 +112,7 @@
   Any existing deals not present in the passed-in proposal will be deleted.
   It is an error to pass in a deal with a `deal_id` not present at head."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "proposalId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -100,7 +127,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-completeSetup$
@@ -132,13 +161,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-list$
   "Required parameters: accountId
   
-  Optional parameters: filterSyntax, filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filterSyntax, filter
   
   List proposals. A filter expression (PQL query) may be specified to
   filter the results. To retrieve all finalized proposals, regardless if a
@@ -192,7 +221,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-cancelNegotiation$
@@ -221,7 +250,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-pause$
@@ -255,7 +284,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-resume$
@@ -292,7 +321,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn proposals-accept$
@@ -322,7 +351,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn clients-get$
@@ -382,7 +411,7 @@
   
   Updates an existing client buyer."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "clientAccountId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -397,7 +426,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn clients-create$
@@ -424,7 +455,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn clients-invitations-get$
@@ -505,7 +536,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn clients-users-list$
@@ -535,7 +566,7 @@
      auth))))
 
 (defn clients-users-get$
-  "Required parameters: userId, accountId, clientAccountId
+  "Required parameters: clientAccountId, userId, accountId
   
   Optional parameters: none
   
@@ -569,7 +600,7 @@
   Updates an existing client user.
   Only the user status can be changed on update."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "userId" "clientAccountId"})
@@ -586,11 +617,13 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn publisherProfiles-get$
-  "Required parameters: accountId, publisherProfileId
+  "Required parameters: publisherProfileId, accountId
   
   Optional parameters: none
   
@@ -617,7 +650,7 @@
 (defn publisherProfiles-list$
   "Required parameters: accountId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   List all publisher profiles visible to the buyer"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -688,7 +721,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn creatives-stopWatching$
@@ -716,7 +749,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn creatives-get$
@@ -745,7 +778,7 @@
      auth))))
 
 (defn creatives-watch$
-  "Required parameters: accountId, creativeId
+  "Required parameters: creativeId, accountId
   
   Optional parameters: none
   
@@ -769,7 +802,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn creatives-update$
@@ -779,7 +812,7 @@
   
   Updates a creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "creativeId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -794,7 +827,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn creatives-dealAssociations-list$
@@ -846,11 +881,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn creatives-dealAssociations-remove$
-  "Required parameters: creativeId, accountId
+  "Required parameters: accountId, creativeId
   
   Optional parameters: none
   
@@ -873,7 +908,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn products-get$
@@ -904,7 +939,7 @@
 (defn products-list$
   "Required parameters: accountId
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageToken, pageSize, filter
   
   List all products visible to the buyer (optionally filtered by the
   specified PQL query)."
@@ -917,33 +952,6 @@
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
      "v2beta1/accounts/{accountId}/products"
-     #{"accountId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn finalizedProposals-list$
-  "Required parameters: accountId
-  
-  Optional parameters: filterSyntax, filter, pageToken, pageSize
-  
-  List finalized proposals, regardless if a proposal is being renegotiated.
-  A filter expression (PQL query) may be specified to filter the results.
-  The notes will not be returned."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/finalizedProposals"
      #{"accountId"}
      args)
     (merge-with

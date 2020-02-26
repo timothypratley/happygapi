@@ -2,7 +2,7 @@
   "Web Security Scanner API
   Scans your Compute and App Engine apps for common web vulnerabilities.
   See: https://cloud.google.com/security-scanner/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,7 +37,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn scanConfigs-delete$
@@ -114,7 +114,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn scanConfigs-get$
@@ -242,57 +242,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn scanConfigs-scanRuns-findings-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a Finding."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://websecurityscanner.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn scanConfigs-scanRuns-findings-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  List Findings under a given ScanRun."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://websecurityscanner.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn scanConfigs-scanRuns-crawledUrls-list$
@@ -335,6 +285,56 @@
     (util/get-url
      "https://websecurityscanner.googleapis.com/"
      "v1/{+parent}/findingTypeStats"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-scanRuns-findings-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a Finding."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://websecurityscanner.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-scanRuns-findings-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  List Findings under a given ScanRun."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://websecurityscanner.googleapis.com/"
+     "v1/{+parent}/findings"
      #{"parent"}
      args)
     (merge-with

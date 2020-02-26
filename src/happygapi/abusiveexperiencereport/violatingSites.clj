@@ -2,7 +2,7 @@
   "Abusive Experience Report API
   Views Abusive Experience Report data, and gets a list of sites that have a significant number of abusive experiences.
   See: https://developers.google.com/abusive-experience-report/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

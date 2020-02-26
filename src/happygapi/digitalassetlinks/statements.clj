@@ -2,7 +2,7 @@
   "Digital Asset Links API
   Discovers relationships between online assets such as websites or mobile apps.
   See: https://developers.google.com/digital-asset-links/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: relation, source.web.site, source.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint
+  Optional parameters: source.web.site, source.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation
   
   Retrieves a list of all statements from a given source that match the
   specified target and statement string.

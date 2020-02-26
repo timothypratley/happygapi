@@ -2,7 +2,7 @@
   "Cloud Functions API
   Manages lightweight user-provided functions executed in response to events.
   See: https://cloud.google.com/functions"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: filter, name, pageToken, pageSize
+  Optional parameters: pageSize, filter, name, pageToken
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.

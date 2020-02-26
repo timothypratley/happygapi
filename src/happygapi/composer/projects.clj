@@ -2,7 +2,7 @@
   "Cloud Composer API
   Manages Apache Airflow environments on Google Cloud Platform.
   See: https://cloud.google.com/composer/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,56 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "composer_schema.edn"))))
-
-(defn locations-imageVersions-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  List ImageVersions for provided location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://composer.googleapis.com/"
-     "v1/{+parent}/imageVersions"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-environments-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Delete an environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://composer.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn locations-environments-get$
   "Required parameters: name
@@ -161,13 +111,66 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-environments-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete an environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://composer.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://composer.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn locations-operations-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -225,25 +228,22 @@
       :as :json}
      auth))))
 
-(defn locations-operations-delete$
-  "Required parameters: name
+(defn locations-imageVersions-list$
+  "Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize
   
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  List ImageVersions for provided location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
+  {:pre [(util/has-keys? args #{"parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://composer.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
+     "v1/{+parent}/imageVersions"
+     #{"parent"}
      args)
     (merge-with
      merge

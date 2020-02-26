@@ -2,7 +2,7 @@
   "Cloud Functions API
   Manages lightweight user-provided functions executed in response to events.
   See: https://cloud.google.com/functions"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -87,7 +87,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-patch$
@@ -142,7 +142,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-call$
@@ -172,7 +172,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-create$
@@ -201,7 +201,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-generateUploadUrl$
@@ -252,7 +252,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-delete$
@@ -337,13 +337,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-functions-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Returns a list of functions that belong to the requested project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

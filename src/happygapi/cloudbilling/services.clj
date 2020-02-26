@@ -3,7 +3,7 @@
   Allows developers to manage billing for their Google Cloud Platform projects
       programmatically.
   See: https://cloud.google.com/billing/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

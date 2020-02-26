@@ -2,7 +2,7 @@
   "Storage Transfer API
   Transfers data from external data sources to a Google Cloud Storage bucket or between Google Cloud Storage buckets.
   See: https://cloud.google.com/storage-transfer/docs"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -119,5 +119,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

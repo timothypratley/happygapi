@@ -2,7 +2,7 @@
   "Blogger API
   API for access to the data within Blogger.
   See: https://developers.google.com/blogger/docs/3.0/getting_started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

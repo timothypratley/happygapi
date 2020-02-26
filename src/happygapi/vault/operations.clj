@@ -2,7 +2,7 @@
   "G Suite Vault API
   Archiving and eDiscovery for G Suite.
   See: https://developers.google.com/vault"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

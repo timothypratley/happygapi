@@ -3,7 +3,7 @@
   Accesses the schemaless NoSQL database to provide fully managed, robust, scalable storage for your application.
   
   See: https://cloud.google.com/datastore/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -38,7 +38,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn reserveIds$
@@ -67,7 +67,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn lookup$
@@ -95,7 +95,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn runQuery$
@@ -123,7 +123,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn export$
@@ -158,7 +158,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn beginTransaction$
@@ -186,7 +186,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn commit$
@@ -215,7 +215,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn allocateIds$
@@ -244,7 +244,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn import$
@@ -276,7 +276,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn indexes-delete$
@@ -315,7 +315,7 @@
      auth))))
 
 (defn indexes-get$
-  "Required parameters: indexId, projectId
+  "Required parameters: projectId, indexId
   
   Optional parameters: none
   
@@ -343,7 +343,7 @@
 (defn indexes-list$
   "Required parameters: projectId
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists the indexes that match the specified filters.  Datastore uses an
   eventually consistent query to fetch the list of indexes and may
@@ -405,79 +405,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn operations-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn operations-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn operations-list$
   "Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -524,6 +458,72 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn operations-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/{+name}"

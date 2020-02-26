@@ -2,7 +2,7 @@
   "Container Analysis API
   An implementation of the Grafeas API, which stores, and enables querying and retrieval of critical metadata about all of your software artifacts.
   See: https://cloud.google.com/container-analysis/api/reference/rest/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -63,7 +63,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn occurrences-get$
@@ -126,7 +126,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn occurrences-patch$
@@ -185,7 +185,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn occurrences-create$
@@ -213,7 +213,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn occurrences-delete$
@@ -301,13 +301,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn occurrences-list$
   "Required parameters: parent
   
-  Optional parameters: name, filter, pageToken, kind, pageSize
+  Optional parameters: filter, pageToken, kind, pageSize, name
   
   Lists active `Occurrences` for a given project matching the filters."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -354,71 +354,6 @@
       :as :json}
      auth))))
 
-(defn notes-create$
-  "Required parameters: parent
-  
-  Optional parameters: noteId, name
-  
-  Creates a new `Note`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+parent}/notes"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn notes-setIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Sets the access control policy on the specified `Note` or `Occurrence`.
-  Requires `containeranalysis.notes.setIamPolicy` or
-  `containeranalysis.occurrences.setIamPolicy` permission if the resource is
-  a `Note` or an `Occurrence`, respectively.
-  Attempting to call this method without these permissions will result in a `
-  `PERMISSION_DENIED` error.
-  Attempting to call this method on a non-existent resource will result in a
-  `NOT_FOUND` error if the user has `containeranalysis.notes.list` permission
-  on a `Note` or `containeranalysis.occurrences.list` on an `Occurrence`, or
-  a `PERMISSION_DENIED` error otherwise. The resource takes the following
-  formats: `projects/{projectid}/occurrences/{occurrenceid}` for occurrences
-  and projects/{projectid}/notes/{noteid} for notes"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+resource}:setIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn notes-getIamPolicy$
   "Required parameters: resource
   
@@ -453,32 +388,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn notes-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns the requested `Note`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn notes-patch$
@@ -493,6 +403,31 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the requested `Note`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
@@ -537,7 +472,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn notes-delete$
@@ -568,7 +503,7 @@
 (defn notes-list$
   "Required parameters: parent
   
-  Optional parameters: name, pageToken, pageSize, filter
+  Optional parameters: filter, name, pageToken, pageSize
   
   Lists all `Notes` for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -588,6 +523,71 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn notes-setIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Sets the access control policy on the specified `Note` or `Occurrence`.
+  Requires `containeranalysis.notes.setIamPolicy` or
+  `containeranalysis.occurrences.setIamPolicy` permission if the resource is
+  a `Note` or an `Occurrence`, respectively.
+  Attempting to call this method without these permissions will result in a `
+  `PERMISSION_DENIED` error.
+  Attempting to call this method on a non-existent resource will result in a
+  `NOT_FOUND` error if the user has `containeranalysis.notes.list` permission
+  on a `Note` or `containeranalysis.occurrences.list` on an `Occurrence`, or
+  a `PERMISSION_DENIED` error otherwise. The resource takes the following
+  formats: `projects/{projectid}/occurrences/{occurrenceid}` for occurrences
+  and projects/{projectid}/notes/{noteid} for notes"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+resource}:setIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn notes-create$
+  "Required parameters: parent
+  
+  Optional parameters: noteId, name
+  
+  Creates a new `Note`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+parent}/notes"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn notes-occurrences-list$

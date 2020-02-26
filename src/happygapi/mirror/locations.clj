@@ -2,7 +2,7 @@
   "Google Mirror API
   Interacts with Glass users via the timeline.
   See: https://developers.google.com/glass"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

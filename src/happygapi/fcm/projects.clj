@@ -2,7 +2,7 @@
   "Firebase Cloud Messaging API
   FCM send API that provides a cross-platform messaging solution to reliably deliver messages at no cost.
   See: https://firebase.google.com/docs/cloud-messaging"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,5 +36,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

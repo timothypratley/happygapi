@@ -2,7 +2,7 @@
   "BigQuery Connection API
   Allows users to manage BigQuery connections to external data sources.
   See: https://cloud.google.com/bigquery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -67,7 +67,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-connections-patch$
@@ -128,7 +128,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-connections-create$
@@ -156,7 +156,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-connections-delete$
@@ -212,7 +212,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-connections-updateCredential$

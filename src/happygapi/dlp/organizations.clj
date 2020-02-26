@@ -2,7 +2,7 @@
   "Cloud Data Loss Prevention (DLP) API
   Provides methods for detection, risk analysis, and de-identification of privacy-sensitive fragments in text, images, and Google Cloud Platform storage repositories.
   See: https://cloud.google.com/dlp/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -10,6 +10,32 @@
             [json-schema.core :as json-schema]))
 
 (def schemas (edn/read-string (slurp (io/resource "dlp_schema.edn"))))
+
+(defn inspectTemplates-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an InspectTemplate.
+  See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn inspectTemplates-patch$
   "Required parameters: name
@@ -115,63 +141,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn inspectTemplates-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an InspectTemplate.
-  See https://cloud.google.com/dlp/docs/creating-templates to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-deidentifyTemplates-create$
-  "Required parameters: locationId, parent
-  
-  Optional parameters: none
-  
-  Creates a DeidentifyTemplate for re-using frequently used configuration
-  for de-identifying content, images, and storage.
-  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
-  more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"locationId" "parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/locations/{locationId}/deidentifyTemplates"
-     #{"locationId" "parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-deidentifyTemplates-delete$
@@ -280,6 +250,36 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-deidentifyTemplates-create$
+  "Required parameters: locationId, parent
+  
+  Optional parameters: none
+  
+  Creates a DeidentifyTemplate for re-using frequently used configuration
+  for de-identifying content, images, and storage.
+  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
+  more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"locationId" "parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/locations/{locationId}/deidentifyTemplates"
+     #{"locationId" "parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-storedInfoTypes-delete$
@@ -392,7 +392,7 @@
      auth))))
 
 (defn locations-storedInfoTypes-create$
-  "Required parameters: parent, locationId
+  "Required parameters: locationId, parent
   
   Optional parameters: none
   
@@ -417,7 +417,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-inspectTemplates-delete$
@@ -499,7 +499,7 @@
      auth))))
 
 (defn locations-inspectTemplates-list$
-  "Required parameters: parent, locationId
+  "Required parameters: locationId, parent
   
   Optional parameters: pageToken, orderBy, pageSize
   
@@ -550,7 +550,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn deidentifyTemplates-create$
@@ -580,7 +580,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn deidentifyTemplates-delete$
@@ -667,7 +667,7 @@
 (defn deidentifyTemplates-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, locationId, pageToken, orderBy
+  Optional parameters: pageToken, orderBy, pageSize, locationId
   
   Lists DeidentifyTemplates.
   See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
@@ -776,7 +776,7 @@
 (defn storedInfoTypes-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, locationId, pageToken, orderBy
+  Optional parameters: pageToken, orderBy, pageSize, locationId
   
   Lists stored infoTypes.
   See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
@@ -826,5 +826,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

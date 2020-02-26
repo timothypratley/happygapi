@@ -2,7 +2,7 @@
   "Cloud SQL Admin API
   API for Cloud SQL database instance management
   See: https://developers.google.com/cloud-sql/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

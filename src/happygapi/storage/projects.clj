@@ -2,7 +2,7 @@
   "Cloud Storage JSON API
   Stores and retrieves potentially large, immutable data objects.
   See: https://developers.google.com/storage/docs/json_api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,7 +37,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn hmacKeys-delete$
@@ -131,7 +131,7 @@
   Updates the state of an HMAC key. See the HMAC Key resource descriptor for valid states."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accessId" "projectId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -146,7 +146,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccount-get$

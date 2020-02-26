@@ -2,7 +2,7 @@
   "Knowledge Graph Search API
   Searches the Google Knowledge Graph for entities.
   See: https://developers.google.com/knowledge-graph/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn search$
   "Required parameters: none
   
-  Optional parameters: limit, prefix, query, types, indent, languages, ids
+  Optional parameters: types, indent, languages, ids, limit, prefix, query
   
   Searches Knowledge Graph for entities that match the constraints.
   A list of matched entities will be returned in response, which will be in

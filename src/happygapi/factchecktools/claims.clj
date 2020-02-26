@@ -2,7 +2,7 @@
   "Fact Check Tools API
   
   See: https://developers.google.com/fact-check/tools/api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn search$
   "Required parameters: none
   
-  Optional parameters: maxAgeDays, offset, pageToken, reviewPublisherSiteFilter, pageSize, query, languageCode
+  Optional parameters: offset, pageToken, reviewPublisherSiteFilter, pageSize, query, languageCode, maxAgeDays
   
   Search through fact-checked claims."
   {:scopes nil}

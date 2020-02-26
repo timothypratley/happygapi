@@ -3,7 +3,7 @@
   A fully managed and highly scalable data discovery and metadata management service.
   
   See: https://cloud.google.com/data-catalog/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,6 +12,79 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "datacatalog_schema.edn"))))
+
+(defn locations-entryGroups-setIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Sets the access control policy for a resource. Replaces any existing
+  policy.
+  Supported resources are:
+    - Tag templates.
+    - Entries.
+    - Entry groups.
+  Note, this method cannot be used to manage policies for BigQuery, Cloud
+  Pub/Sub and any external Google Cloud Platform resources synced to Cloud
+  Data Catalog.
+  
+  Callers must have following Google IAM permission
+    - `datacatalog.tagTemplates.setIamPolicy` to set policies on tag
+      templates.
+    - `datacatalog.entries.setIamPolicy` to set policies on entries.
+    - `datacatalog.entryGroups.setIamPolicy` to set policies on entry groups."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+resource}:setIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-entryGroups-create$
+  "Required parameters: parent
+  
+  Optional parameters: entryGroupId
+  
+  A maximum of 10,000 entry groups may be created per organization across all
+  locations.
+  
+  Users should enable the Data Catalog API in the project identified by
+  the `parent` parameter (see [Data Catalog Resource Project]
+  (/data-catalog/docs/concepts/resource-project) for more information)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/entryGroups"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn locations-entryGroups-getIamPolicy$
   "Required parameters: resource
@@ -53,7 +126,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-entryGroups-patch$
@@ -146,7 +219,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-entryGroups-delete$
@@ -177,168 +250,17 @@
       :as :json}
      auth))))
 
-(defn locations-entryGroups-setIamPolicy$
-  "Required parameters: resource
+(defn locations-entryGroups-entries-delete$
+  "Required parameters: name
   
   Optional parameters: none
   
-  Sets the access control policy for a resource. Replaces any existing
-  policy.
-  Supported resources are:
-    - Tag templates.
-    - Entries.
-    - Entry groups.
-  Note, this method cannot be used to manage policies for BigQuery, Cloud
-  Pub/Sub and any external Google Cloud Platform resources synced to Cloud
-  Data Catalog.
-  
-  Callers must have following Google IAM permission
-    - `datacatalog.tagTemplates.setIamPolicy` to set policies on tag
-      templates.
-    - `datacatalog.entries.setIamPolicy` to set policies on entries.
-    - `datacatalog.entryGroups.setIamPolicy` to set policies on entry groups."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-entryGroups-create$
-  "Required parameters: parent
-  
-  Optional parameters: entryGroupId
-  
-  A maximum of 10,000 entry groups may be created per organization across all
-  locations.
-  
+  Deletes an existing entry. Only entries created through
+  CreateEntry
+  method can be deleted.
   Users should enable the Data Catalog API in the project identified by
-  the `parent` parameter (see [Data Catalog Resource Project]
+  the `name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/entryGroups"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-entryGroups-tags-patch$
-  "Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Updates an existing tag."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-tags-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the tags on an Entry."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/tags"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-tags-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a tag on an Entry.
-  Note: The project identified by the `parent` parameter for the
-  [tag](/data-catalog/docs/reference/rest/v1beta1/projects.locations.entryGroups.entries.tags/create#path-parameters)
-  and the
-  [tag
-  template](/data-catalog/docs/reference/rest/v1beta1/projects.locations.tagTemplates/create#path-parameters)
-  used to create the tag must be from the same organization."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/tags"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-entryGroups-tags-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -356,6 +278,65 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-entryGroups-entries-list$
+  "Required parameters: parent
+  
+  Optional parameters: readMask, pageToken, pageSize
+  
+  Lists entries."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/entries"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-entries-create$
+  "Required parameters: parent
+  
+  Optional parameters: entryId
+  
+  Creates an entry. Only entries of 'FILESET' type or user-specified type can
+  be created.
+  
+  Users should enable the Data Catalog API in the project identified by
+  the `parent` parameter (see [Data Catalog Resource Project]
+  (/data-catalog/docs/concepts/resource-project) for more information).
+  
+  A maximum of 100,000 entries may be created per entry group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/entries"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-entryGroups-entries-getIamPolicy$
@@ -398,7 +379,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-entryGroups-entries-patch$
@@ -491,20 +472,48 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-entryGroups-entries-delete$
+(defn locations-entryGroups-entries-tags-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a tag on an Entry.
+  Note: The project identified by the `parent` parameter for the
+  [tag](/data-catalog/docs/reference/rest/v1beta1/projects.locations.entryGroups.entries.tags/create#path-parameters)
+  and the
+  [tag
+  template](/data-catalog/docs/reference/rest/v1beta1/projects.locations.tagTemplates/create#path-parameters)
+  used to create the tag must be from the same organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/tags"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-entryGroups-entries-tags-delete$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes an existing entry. Only entries created through
-  CreateEntry
-  method can be deleted.
-  Users should enable the Data Catalog API in the project identified by
-  the `name` parameter (see [Data Catalog Resource Project]
-  (/data-catalog/docs/concepts/resource-project) for more information)."
+  Deletes a tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -522,65 +531,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-entryGroups-entries-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, readMask
-  
-  Lists entries."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/entries"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-entries-create$
-  "Required parameters: parent
-  
-  Optional parameters: entryId
-  
-  Creates an entry. Only entries of 'FILESET' type or user-specified type can
-  be created.
-  
-  Users should enable the Data Catalog API in the project identified by
-  the `parent` parameter (see [Data Catalog Resource Project]
-  (/data-catalog/docs/concepts/resource-project) for more information).
-  
-  A maximum of 100,000 entries may be created per entry group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/entries"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn locations-entryGroups-entries-tags-patch$
@@ -633,7 +583,7 @@
       :as :json}
      auth))))
 
-(defn locations-entryGroups-entries-tags-create$
+(defn locations-entryGroups-tags-create$
   "Required parameters: parent
   
   Optional parameters: none
@@ -663,10 +613,10 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-entryGroups-entries-tags-delete$
+(defn locations-entryGroups-tags-delete$
   "Required parameters: name
   
   Optional parameters: none
@@ -691,25 +641,47 @@
       :as :json}
      auth))))
 
-(defn locations-tagTemplates-delete$
+(defn locations-entryGroups-tags-patch$
   "Required parameters: name
   
-  Optional parameters: force
+  Optional parameters: updateMask
   
-  Deletes a tag template and all tags using the template.
-  Users should enable the Data Catalog API in the project identified by
-  the `name` parameter (see [Data Catalog Resource Project]
-  (/data-catalog/docs/concepts/resource-project) for more information)."
+  Updates an existing tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/delete
+   (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-tags-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the tags on an Entry."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/tags"
+     #{"parent"}
      args)
     (merge-with
      merge
@@ -746,7 +718,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-tagTemplates-setIamPolicy$
@@ -787,7 +759,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-tagTemplates-getIamPolicy$
@@ -830,7 +802,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-tagTemplates-get$
@@ -925,38 +897,35 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-tagTemplates-fields-create$
-  "Required parameters: parent
+(defn locations-tagTemplates-delete$
+  "Required parameters: name
   
-  Optional parameters: tagTemplateFieldId
+  Optional parameters: force
   
-  Creates a field in a tag template. The user should enable the Data Catalog
-  API in the project identified by the `parent` parameter (see
-  [Data Catalog Resource
-  Project](/data-catalog/docs/concepts/resource-project) for more
-  information)."
+  Deletes a tag template and all tags using the template.
+  Users should enable the Data Catalog API in the project identified by
+  the `name` parameter (see [Data Catalog Resource Project]
+  (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/fields"
-     #{"parent"}
+     "v1beta1/{+name}"
+     #{"name"}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :as :json}
      auth))))
 
 (defn locations-tagTemplates-fields-delete$
@@ -1042,7 +1011,38 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-tagTemplates-fields-create$
+  "Required parameters: parent
+  
+  Optional parameters: tagTemplateFieldId
+  
+  Creates a field in a tag template. The user should enable the Data Catalog
+  API in the project identified by the `parent` parameter (see
+  [Data Catalog Resource
+  Project](/data-catalog/docs/concepts/resource-project) for more
+  information)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/fields"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-get$
@@ -1094,7 +1094,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-patch$
@@ -1147,7 +1147,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-create$
@@ -1174,7 +1174,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-delete$
@@ -1255,7 +1255,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-list$
@@ -1312,7 +1312,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-policyTags-list$
@@ -1364,7 +1364,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-policyTags-setIamPolicy$
@@ -1391,7 +1391,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-policyTags-getIamPolicy$
@@ -1418,7 +1418,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-policyTags-patch$
@@ -1496,7 +1496,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-taxonomies-policyTags-delete$

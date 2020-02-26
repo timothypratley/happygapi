@@ -2,7 +2,7 @@
   "Android Device Provisioning Partner API
   Automates Android zero-touch enrollment for device resellers, customers, and EMMs.
   See: https://developers.google.com/zero-touch/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,56 +12,6 @@
 (def schemas
   (edn/read-string
    (slurp (io/resource "androiddeviceprovisioning_schema.edn"))))
-
-(defn vendors-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the vendors of the partner."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/vendors"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn vendors-customers-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the customers of the vendor."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/customers"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn devices-get$
   "Required parameters: name
@@ -115,7 +65,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-findByIdentifier$
@@ -142,7 +92,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-unclaim$
@@ -170,7 +120,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-claimAsync$
@@ -199,7 +149,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-updateMetadataAsync$
@@ -229,7 +179,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-unclaimAsync$
@@ -258,7 +208,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-metadata$
@@ -285,7 +235,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-claim$
@@ -313,7 +263,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn customers-list$
@@ -371,5 +321,55 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn vendors-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the vendors of the partner."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/vendors"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn vendors-customers-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the customers of the vendor."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/customers"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

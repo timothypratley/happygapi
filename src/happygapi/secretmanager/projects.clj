@@ -3,7 +3,7 @@
   Stores and manages access to application secrets. Provides convenience while improving security.
   
   See: https://cloud.google.com/secret-manager/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,56 +12,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "secretmanager_schema.edn"))))
-
-(defn locations-list$
-  "Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://secretmanager.googleapis.com/"
-     "v1/{+name}/locations"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about a location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://secretmanager.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn secrets-get$
   "Required parameters: name
@@ -116,7 +66,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-patch$
@@ -174,7 +124,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-create$
@@ -201,7 +151,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-addVersion$
@@ -229,7 +179,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-delete$
@@ -308,6 +258,62 @@
       :as :json}
      auth))))
 
+(defn secrets-versions-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets metadata for a SecretVersion.
+  
+  `projects/*/secrets/*/versions/latest` is an alias to the `latest`
+  SecretVersion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://secretmanager.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn secrets-versions-access$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Accesses a SecretVersion. This call returns the secret data.
+  
+  `projects/*/secrets/*/versions/latest` is an alias to the `latest`
+  SecretVersion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://secretmanager.googleapis.com/"
+     "v1/{+name}:access"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn secrets-versions-enable$
   "Required parameters: name
   
@@ -335,7 +341,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-versions-list$
@@ -392,7 +398,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn secrets-versions-disable$
@@ -422,18 +428,15 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn secrets-versions-get$
+(defn locations-list$
   "Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize, filter
   
-  Gets metadata for a SecretVersion.
-  
-  `projects/*/secrets/*/versions/latest` is an alias to the `latest`
-  SecretVersion."
+  Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -442,7 +445,7 @@
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}/locations"
      #{"name"}
      args)
     (merge-with
@@ -453,15 +456,12 @@
       :as :json}
      auth))))
 
-(defn secrets-versions-access$
+(defn locations-get$
   "Required parameters: name
   
   Optional parameters: none
   
-  Accesses a SecretVersion. This call returns the secret data.
-  
-  `projects/*/secrets/*/versions/latest` is an alias to the `latest`
-  SecretVersion."
+  Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -470,7 +470,7 @@
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
-     "v1/{+name}:access"
+     "v1/{+name}"
      #{"name"}
      args)
     (merge-with

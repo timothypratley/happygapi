@@ -2,7 +2,7 @@
   "Google Civic Information API
   Provides polling places, early vote locations, contest data, election officials, and government representatives for U.S. residential addresses.
   See: https://developers.google.com/civic-information"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

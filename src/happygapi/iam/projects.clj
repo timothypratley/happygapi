@@ -2,7 +2,7 @@
   "Identity and Access Management (IAM) API
   Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
   See: https://cloud.google.com/iam/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -52,7 +52,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-get$
@@ -119,7 +119,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-enable$
@@ -155,7 +155,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-patch$
@@ -216,7 +216,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-create$
@@ -244,7 +244,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-update$
@@ -260,7 +260,7 @@
   Currently, only the following fields are updatable:
   `display_name` and `description`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -275,7 +275,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-delete$
@@ -341,7 +343,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-undelete$
@@ -370,13 +372,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-list$
   "Required parameters: name
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists ServiceAccounts for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -430,7 +432,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-signBlob$
@@ -461,7 +463,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-keys-delete$
@@ -565,7 +567,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn serviceAccounts-keys-upload$
@@ -595,59 +597,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn roles-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a new Role."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+parent}/roles"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn roles-patch$
-  "Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Updates a Role definition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn roles-undelete$
@@ -674,7 +624,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn roles-get$
@@ -689,6 +639,31 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Updates a Role definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
@@ -736,7 +711,7 @@
 (defn roles-list$
   "Required parameters: parent
   
-  Optional parameters: showDeleted, pageToken, pageSize, view
+  Optional parameters: pageToken, pageSize, view, showDeleted
   
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -756,4 +731,31 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn roles-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a new Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/roles"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

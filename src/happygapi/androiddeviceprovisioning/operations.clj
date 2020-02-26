@@ -2,7 +2,7 @@
   "Android Device Provisioning Partner API
   Automates Android zero-touch enrollment for device resellers, customers, and EMMs.
   See: https://developers.google.com/zero-touch/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

@@ -2,7 +2,7 @@
   "Remote Build Execution API
   Supplies a Remote Execution API service for tools such as bazel.
   See: https://cloud.google.com/remote-build-execution/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
 (defn get$
   "Required parameters: sizeBytes, instanceName, hash
   
-  Optional parameters: inlineStdout, inlineStderr, inlineOutputFiles
+  Optional parameters: inlineStderr, inlineOutputFiles, inlineStdout
   
   Retrieve a cached execution result.
   
@@ -71,7 +71,7 @@
   * `RESOURCE_EXHAUSTED`: There is insufficient storage space to add the
     entry to the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -86,5 +86,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

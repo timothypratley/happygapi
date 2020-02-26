@@ -2,7 +2,7 @@
   "Access Context Manager API
   An API for setting attribute based access control to requests to GCP services.
   See: https://cloud.google.com/access-context-manager/docs/reference/rest/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,6 +12,37 @@
 (def schemas
   (edn/read-string
    (slurp (io/resource "accesscontextmanager_schema.edn"))))
+
+(defn create$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Create an `AccessPolicy`. Fails if this organization already has a
+  `AccessPolicy`. The longrunning Operation will have a successful status
+  once the `AccessPolicy` has propagated to long-lasting storage.
+  Syntactic and basic semantic errors will be returned in `metadata` as a
+  BadRequest proto."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/accessPolicies"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn delete$
   "Required parameters: name
@@ -121,26 +152,26 @@
       :as :json}
      auth))))
 
-(defn create$
-  "Required parameters: none
+(defn servicePerimeters-create$
+  "Required parameters: parent
   
   Optional parameters: none
   
-  Create an `AccessPolicy`. Fails if this organization already has a
-  `AccessPolicy`. The longrunning Operation will have a successful status
-  once the `AccessPolicy` has propagated to long-lasting storage.
-  Syntactic and basic semantic errors will be returned in `metadata` as a
-  BadRequest proto."
+  Create an Service Perimeter. The
+  longrunning operation from this RPC will have a successful status once the
+  Service Perimeter has
+  propagated to long-lasting storage. Service Perimeters containing
+  errors will result in an error response for the first error encountered."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
+  {:pre [(util/has-keys? args #{"parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/accessPolicies"
-     #{}
+     "v1/{+parent}/servicePerimeters"
+     #{"parent"}
      args)
     (merge-with
      merge
@@ -149,7 +180,62 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn servicePerimeters-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Get an Service Perimeter by resource
+  name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn servicePerimeters-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Update an Service Perimeter. The
+  longrunning operation from this RPC will have a successful status once the
+  changes to the Service Perimeter have
+  propagated to long-lasting storage. Service Perimeter containing
+  errors will result in an error response for the first error encountered."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn servicePerimeters-replaceAll$
@@ -184,7 +270,35 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn servicePerimeters-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete an Service Perimeter by resource
+  name. The longrunning operation from this RPC will have a successful status
+  once the Service Perimeter has been
+  removed from long-lasting storage."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn servicePerimeters-commit$
@@ -222,35 +336,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn servicePerimeters-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Delete an Service Perimeter by resource
-  name. The longrunning operation from this RPC will have a successful status
-  once the Service Perimeter has been
-  removed from long-lasting storage."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn servicePerimeters-list$
@@ -279,46 +365,15 @@
       :as :json}
      auth))))
 
-(defn servicePerimeters-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Create an Service Perimeter. The
-  longrunning operation from this RPC will have a successful status once the
-  Service Perimeter has
-  propagated to long-lasting storage. Service Perimeters containing
-  errors will result in an error response for the first error encountered."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/servicePerimeters"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn servicePerimeters-patch$
+(defn accessLevels-patch$
   "Required parameters: name
   
   Optional parameters: updateMask
   
-  Update an Service Perimeter. The
-  longrunning operation from this RPC will have a successful status once the
-  changes to the Service Perimeter have
-  propagated to long-lasting storage. Service Perimeter containing
+  Update an Access Level. The longrunning
+  operation from this RPC will have a successful status once the changes to
+  the Access Level have propagated
+  to long-lasting storage. Access Levels containing
   errors will result in an error response for the first error encountered."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
@@ -326,32 +381,6 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn servicePerimeters-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Get an Service Perimeter by resource
-  name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}"
@@ -378,35 +407,6 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn accessLevels-patch$
-  "Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Update an Access Level. The longrunning
-  operation from this RPC will have a successful status once the changes to
-  the Access Level have propagated
-  to long-lasting storage. Access Levels containing
-  errors will result in an error response for the first error encountered."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}"
@@ -454,7 +454,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn accessLevels-delete$
@@ -539,5 +539,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

@@ -1,7 +1,8 @@
 (ns happy.monkey
   "Discovers Google APIs and produces defn forms to call them"
   (:require [clj-http.client :as http]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cheshire.core :as json]))
 
 (def discovery-url "https://www.googleapis.com/discovery/v1/apis")
 
@@ -52,7 +53,7 @@
   (for [[_ {:keys [id path parameters description scopes httpMethod]}] (:methods resource)
         :let [required-parameters (get-required-params parameters)
               optional-parameters (get-optional-params parameters)
-              post? (= httpMethod "POST")]]
+              body? (#{"POST" "PUT"} httpMethod)]]
     `(~'defn ~(symbol (method-name id))
       ~(str "Required parameters: " (if (seq required-parameters)
                                       (str/join ", " required-parameters)
@@ -65,7 +66,7 @@
             \newline \newline
             description)
       {:scopes ~scopes}
-      ~(if post?
+      ~(if body?
          '[auth args body]
          '[auth args])
       {:pre [(~'util/has-keys? ~'args ~(set required-parameters))
@@ -80,8 +81,8 @@
              :query-params args
              :accept :json
              :as :json}
-           post? (merge '{:content-type :json
-                          :body body}))
+           body? (merge '{:content-type :json
+                          :body (json/generate-string body)}))
          ~'auth))))))
 
 (defn extract-all-methods [baseUrl resources]

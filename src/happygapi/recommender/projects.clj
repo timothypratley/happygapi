@@ -2,7 +2,7 @@
   "Recommender API
   
   See: https://cloud.google.com/recommender/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,84 +12,10 @@
 (def schemas
   (edn/read-string (slurp (io/resource "recommender_schema.edn"))))
 
-(defn locations-recommenders-recommendations-markSucceeded$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Marks the Recommendation State as Succeeded. Users can use this method to
-  indicate to the Recommender API that they have applied the recommendation
-  themselves, and the operation was successful. This stops the recommendation
-  content from being updated. Associated insights are frozen and placed in
-  the ACCEPTED state.
-  
-  MarkRecommendationSucceeded can be applied to recommendations in ACTIVE,
-  CLAIMED, SUCCEEDED, or FAILED state.
-  
-  Requires the recommender.*.update IAM permission for the specified
-  recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1beta1/{+name}:markSucceeded"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-recommenders-recommendations-markFailed$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Marks the Recommendation State as Failed. Users can use this method to
-  indicate to the Recommender API that they have applied the recommendation
-  themselves, and the operation failed. This stops the recommendation content
-  from being updated. Associated insights are frozen and placed in the
-  ACCEPTED state.
-  
-  MarkRecommendationFailed can be applied to recommendations in ACTIVE,
-  CLAIMED, SUCCEEDED, or FAILED state.
-  
-  Requires the recommender.*.update IAM permission for the specified
-  recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1beta1/{+name}:markFailed"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn locations-recommenders-recommendations-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists recommendations for a Cloud project. Requires the recommender.*.list
   IAM permission for the specified recommender."
@@ -171,5 +97,79 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-recommenders-recommendations-markSucceeded$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Marks the Recommendation State as Succeeded. Users can use this method to
+  indicate to the Recommender API that they have applied the recommendation
+  themselves, and the operation was successful. This stops the recommendation
+  content from being updated. Associated insights are frozen and placed in
+  the ACCEPTED state.
+  
+  MarkRecommendationSucceeded can be applied to recommendations in ACTIVE,
+  CLAIMED, SUCCEEDED, or FAILED state.
+  
+  Requires the recommender.*.update IAM permission for the specified
+  recommender."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1beta1/{+name}:markSucceeded"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-recommenders-recommendations-markFailed$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Marks the Recommendation State as Failed. Users can use this method to
+  indicate to the Recommender API that they have applied the recommendation
+  themselves, and the operation failed. This stops the recommendation content
+  from being updated. Associated insights are frozen and placed in the
+  ACCEPTED state.
+  
+  MarkRecommendationFailed can be applied to recommendations in ACTIVE,
+  CLAIMED, SUCCEEDED, or FAILED state.
+  
+  Requires the recommender.*.update IAM permission for the specified
+  recommender."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1beta1/{+name}:markFailed"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

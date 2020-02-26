@@ -2,7 +2,7 @@
   "BigQuery Reservation API
   A service to modify your BigQuery flat-rate reservations.
   See: https://cloud.google.com/bigquery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -45,7 +45,7 @@
 (defn list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.

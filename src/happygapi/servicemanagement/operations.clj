@@ -2,7 +2,7 @@
   "Service Management API
   Google Service Management allows service producers to publish their services on Google Cloud Platform so that they can be discovered and used by service consumers.
   See: https://cloud.google.com/service-management/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: name, pageToken, pageSize, filter
+  Optional parameters: filter, name, pageToken, pageSize
   
   Lists service operations that match the specified filter in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

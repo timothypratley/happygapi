@@ -2,7 +2,7 @@
   "Cloud Vision API
   Integrates Google Vision features, including image labeling, face, logo, and landmark detection, optical character recognition (OCR), and detection of explicit content, into applications.
   See: https://cloud.google.com/vision/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -42,7 +42,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn files-annotate$
@@ -76,7 +76,35 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn images-annotate$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Run image detection and annotation for a batch of images."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/images:annotate"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn images-asyncBatchAnnotate$
@@ -112,35 +140,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn images-annotate$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Run image detection and annotation for a batch of images."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/images:annotate"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn operations-get$
@@ -169,6 +169,422 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-productSets-create$
+  "Required parameters: parent
+  
+  Optional parameters: productSetId
+  
+  Creates and returns a new ProductSet resource.
+  
+  Possible errors:
+  
+  * Returns INVALID_ARGUMENT if display_name is missing, or is longer than
+    4096 characters."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/productSets"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-productSets-removeProduct$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Removes a Product from the specified ProductSet."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}:removeProduct"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-productSets-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information associated with a ProductSet.
+  
+  Possible errors:
+  
+  * Returns NOT_FOUND if the ProductSet does not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-productSets-patch$
+  "Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Makes changes to a ProductSet resource.
+  Only display_name can be updated currently.
+  
+  Possible errors:
+  
+  * Returns NOT_FOUND if the ProductSet does not exist.
+  * Returns INVALID_ARGUMENT if display_name is present in update_mask but
+    missing from the request or longer than 4096 characters."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-productSets-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Permanently deletes a ProductSet. Products and ReferenceImages in the
+  ProductSet are not deleted.
+  
+  The actual image files are not deleted from Google Cloud Storage."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-productSets-import$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Asynchronous API that imports a list of reference images to specified
+  product sets based on a list of image information.
+  
+  The google.longrunning.Operation API can be used to keep track of the
+  progress and results of the request.
+  `Operation.metadata` contains `BatchOperationMetadata`. (progress)
+  `Operation.response` contains `ImportProductSetsResponse`. (results)
+  
+  The input source of this method is a csv file on Google Cloud Storage.
+  For the format of the csv file please see
+  ImportProductSetsGcsSource.csv_file_uri."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/productSets:import"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-productSets-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists ProductSets in an unspecified order.
+  
+  Possible errors:
+  
+  * Returns INVALID_ARGUMENT if page_size is greater than 100, or less
+    than 1."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/productSets"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-productSets-addProduct$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Adds a Product to the specified ProductSet. If the Product is already
+  present, no change is made.
+  
+  One Product can be added to at most 100 ProductSets.
+  
+  Possible errors:
+  
+  * Returns NOT_FOUND if the Product or the ProductSet doesn't exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}:addProduct"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-productSets-products-list$
+  "Required parameters: name
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the Products in a ProductSet, in an unspecified order. If the
+  ProductSet does not exist, the products field of the response will be
+  empty.
+  
+  Possible errors:
+  
+  * Returns INVALID_ARGUMENT if page_size is greater than 100 or less than 1."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}/products"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-images-asyncBatchAnnotate$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Run asynchronous image detection and annotation for a list of images.
+  
+  Progress and results can be retrieved through the
+  `google.longrunning.Operations` interface.
+  `Operation.metadata` contains `OperationMetadata` (metadata).
+  `Operation.response` contains `AsyncBatchAnnotateImagesResponse` (results).
+  
+  This service will write image annotation outputs to json files in customer
+  GCS bucket, each json file containing BatchAnnotateImagesResponse proto."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/images:asyncBatchAnnotate"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-images-annotate$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Run image detection and annotation for a batch of images."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/images:annotate"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-operations-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-products-create$
+  "Required parameters: parent
+  
+  Optional parameters: productId
+  
+  Creates and returns a new product resource.
+  
+  Possible errors:
+  
+  * Returns INVALID_ARGUMENT if display_name is missing or longer than 4096
+    characters.
+  * Returns INVALID_ARGUMENT if description is longer than 4096 characters.
+  * Returns INVALID_ARGUMENT if product_category is missing or invalid."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/products"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-products-get$
@@ -289,7 +705,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-products-delete$
@@ -352,123 +768,10 @@
       :as :json}
      auth))))
 
-(defn locations-products-create$
-  "Required parameters: parent
-  
-  Optional parameters: productId
-  
-  Creates and returns a new product resource.
-  
-  Possible errors:
-  
-  * Returns INVALID_ARGUMENT if display_name is missing or longer than 4096
-    characters.
-  * Returns INVALID_ARGUMENT if description is longer than 4096 characters.
-  * Returns INVALID_ARGUMENT if product_category is missing or invalid."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/products"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-products-referenceImages-create$
-  "Required parameters: parent
-  
-  Optional parameters: referenceImageId
-  
-  Creates and returns a new ReferenceImage resource.
-  
-  The `bounding_poly` field is optional. If `bounding_poly` is not specified,
-  the system will try to detect regions of interest in the image that are
-  compatible with the product_category on the parent product. If it is
-  specified, detection is ALWAYS skipped. The system converts polygons into
-  non-rotated rectangles.
-  
-  Note that the pipeline will resize the image if the image resolution is too
-  large to process (above 50MP).
-  
-  Possible errors:
-  
-  * Returns INVALID_ARGUMENT if the image_uri is missing or longer than 4096
-    characters.
-  * Returns INVALID_ARGUMENT if the product does not exist.
-  * Returns INVALID_ARGUMENT if bounding_poly is not provided, and nothing
-    compatible with the parent product's product_category is detected.
-  * Returns INVALID_ARGUMENT if bounding_poly contains more than 10 polygons."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/referenceImages"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-products-referenceImages-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Permanently deletes a reference image.
-  
-  The image metadata will be deleted right away, but search queries
-  against ProductSets containing the image may still work until all related
-  caches are refreshed.
-  
-  The actual image files are not deleted from Google Cloud Storage."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-products-referenceImages-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists reference images.
   
@@ -527,6 +830,84 @@
       :as :json}
      auth))))
 
+(defn locations-products-referenceImages-create$
+  "Required parameters: parent
+  
+  Optional parameters: referenceImageId
+  
+  Creates and returns a new ReferenceImage resource.
+  
+  The `bounding_poly` field is optional. If `bounding_poly` is not specified,
+  the system will try to detect regions of interest in the image that are
+  compatible with the product_category on the parent product. If it is
+  specified, detection is ALWAYS skipped. The system converts polygons into
+  non-rotated rectangles.
+  
+  Note that the pipeline will resize the image if the image resolution is too
+  large to process (above 50MP).
+  
+  Possible errors:
+  
+  * Returns INVALID_ARGUMENT if the image_uri is missing or longer than 4096
+    characters.
+  * Returns INVALID_ARGUMENT if the product does not exist.
+  * Returns INVALID_ARGUMENT if bounding_poly is not provided, and nothing
+    compatible with the parent product's product_category is detected.
+  * Returns INVALID_ARGUMENT if bounding_poly contains more than 10 polygons."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+parent}/referenceImages"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-products-referenceImages-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Permanently deletes a reference image.
+  
+  The image metadata will be deleted right away, but search queries
+  against ProductSets containing the image may still work until all related
+  caches are refreshed.
+  
+  The actual image files are not deleted from Google Cloud Storage."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-vision"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://vision.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-files-asyncBatchAnnotate$
   "Required parameters: parent
   
@@ -557,7 +938,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-files-annotate$
@@ -591,386 +972,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-productSets-import$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Asynchronous API that imports a list of reference images to specified
-  product sets based on a list of image information.
-  
-  The google.longrunning.Operation API can be used to keep track of the
-  progress and results of the request.
-  `Operation.metadata` contains `BatchOperationMetadata`. (progress)
-  `Operation.response` contains `ImportProductSetsResponse`. (results)
-  
-  The input source of this method is a csv file on Google Cloud Storage.
-  For the format of the csv file please see
-  ImportProductSetsGcsSource.csv_file_uri."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/productSets:import"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-productSets-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Permanently deletes a ProductSet. Products and ReferenceImages in the
-  ProductSet are not deleted.
-  
-  The actual image files are not deleted from Google Cloud Storage."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-productSets-addProduct$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Adds a Product to the specified ProductSet. If the Product is already
-  present, no change is made.
-  
-  One Product can be added to at most 100 ProductSets.
-  
-  Possible errors:
-  
-  * Returns NOT_FOUND if the Product or the ProductSet doesn't exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}:addProduct"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-productSets-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists ProductSets in an unspecified order.
-  
-  Possible errors:
-  
-  * Returns INVALID_ARGUMENT if page_size is greater than 100, or less
-    than 1."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/productSets"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-productSets-create$
-  "Required parameters: parent
-  
-  Optional parameters: productSetId
-  
-  Creates and returns a new ProductSet resource.
-  
-  Possible errors:
-  
-  * Returns INVALID_ARGUMENT if display_name is missing, or is longer than
-    4096 characters."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/productSets"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-productSets-removeProduct$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Removes a Product from the specified ProductSet."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}:removeProduct"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-productSets-patch$
-  "Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Makes changes to a ProductSet resource.
-  Only display_name can be updated currently.
-  
-  Possible errors:
-  
-  * Returns NOT_FOUND if the ProductSet does not exist.
-  * Returns INVALID_ARGUMENT if display_name is present in update_mask but
-    missing from the request or longer than 4096 characters."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-productSets-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information associated with a ProductSet.
-  
-  Possible errors:
-  
-  * Returns NOT_FOUND if the ProductSet does not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-productSets-products-list$
-  "Required parameters: name
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the Products in a ProductSet, in an unspecified order. If the
-  ProductSet does not exist, the products field of the response will be
-  empty.
-  
-  Possible errors:
-  
-  * Returns INVALID_ARGUMENT if page_size is greater than 100 or less than 1."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}/products"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-images-asyncBatchAnnotate$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Run asynchronous image detection and annotation for a list of images.
-  
-  Progress and results can be retrieved through the
-  `google.longrunning.Operations` interface.
-  `Operation.metadata` contains `OperationMetadata` (metadata).
-  `Operation.response` contains `AsyncBatchAnnotateImagesResponse` (results).
-  
-  This service will write image annotation outputs to json files in customer
-  GCS bucket, each json file containing BatchAnnotateImagesResponse proto."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/images:asyncBatchAnnotate"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-images-annotate$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Run image detection and annotation for a batch of images."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+parent}/images:annotate"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-operations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vision.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

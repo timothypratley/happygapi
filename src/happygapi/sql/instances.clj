@@ -2,7 +2,7 @@
   "Cloud SQL Admin API
   API for Cloud SQL database instance management
   See: https://developers.google.com/cloud-sql/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,11 +36,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
-  "Required parameters: project, instance
+  "Required parameters: instance, project
   
   Optional parameters: resourceName
   
@@ -90,11 +90,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn demoteMaster$
-  "Required parameters: instance, project
+  "Required parameters: project, instance
   
   Optional parameters: parent
   
@@ -119,11 +119,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn restart$
-  "Required parameters: instance, project
+  "Required parameters: project, instance
   
   Optional parameters: parent
   
@@ -147,11 +147,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
-  "Required parameters: instance, project
+  "Required parameters: project, instance
   
   Optional parameters: resourceName
   
@@ -178,7 +178,7 @@
      auth))))
 
 (defn addServerCa$
-  "Required parameters: instance, project
+  "Required parameters: project, instance
   
   Optional parameters: parent
   
@@ -206,7 +206,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn stopReplica$
@@ -234,18 +234,18 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
-  "Required parameters: project, instance
+  "Required parameters: instance, project
   
   Optional parameters: resourceName
   
   Updates settings of a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"project" "instance"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -260,7 +260,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -314,7 +316,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn listServerCas$
@@ -372,11 +374,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn resetSslConfig$
-  "Required parameters: project, instance
+  "Required parameters: instance, project
   
   Optional parameters: parent
   
@@ -401,7 +403,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -431,7 +433,7 @@
      auth))))
 
 (defn clone$
-  "Required parameters: project, instance
+  "Required parameters: instance, project
   
   Optional parameters: parent
   
@@ -455,7 +457,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn restoreBackup$
@@ -483,11 +485,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn startReplica$
-  "Required parameters: instance, project
+  "Required parameters: project, instance
   
   Optional parameters: parent
   
@@ -511,7 +513,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn rotateServerCa$
@@ -540,7 +542,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn truncateLog$
@@ -568,7 +570,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn import$
@@ -596,5 +598,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

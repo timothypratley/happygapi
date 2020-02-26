@@ -2,7 +2,7 @@
   "Cloud Healthcare API
   Manage, store, and access healthcare data in Google Cloud Platform.
   See: https://cloud.google.com/healthcare"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn locations-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -114,7 +114,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-patch$
@@ -172,7 +172,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-create$
@@ -205,7 +205,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-delete$
@@ -297,7 +297,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-list$
@@ -323,96 +323,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-datasets-annotationStores-testIamPermissions$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-datasets-annotationStores-getIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-annotationStores-setIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn locations-datasets-fhirStores-get$
@@ -467,7 +377,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-patch$
@@ -525,7 +435,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-create$
@@ -552,7 +462,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-delete$
@@ -618,7 +528,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-getIamPolicy$
@@ -682,13 +592,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists the FHIR stores in the given dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -803,7 +713,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-capabilities$
@@ -877,7 +787,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-conditionalUpdate$
-  "Required parameters: parent, type
+  "Required parameters: type, parent
   
   Optional parameters: none
   
@@ -912,7 +822,7 @@
   request cannot be mapped to a valid API method on a FHIR store, a generic
   GCP error might be returned instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"parent" "type"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -927,7 +837,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-read$
@@ -1018,7 +930,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-create$
-  "Required parameters: parent, type
+  "Required parameters: type, parent
   
   Optional parameters: none
   
@@ -1066,7 +978,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-history$
@@ -1137,7 +1049,7 @@
   request cannot be mapped to a valid API method on a FHIR store, a generic
   GCP error might be returned instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1152,7 +1064,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-delete$
@@ -1195,7 +1109,7 @@
 (defn locations-datasets-fhirStores-fhir-Patient-everything$
   "Required parameters: name
   
-  Optional parameters: _page_token, end, _count, start
+  Optional parameters: start, _page_token, end, _count
   
   On success, the response body will contain a JSON-encoded representation
   of a `Bundle` resource of type `searchset`, containing the results of the
@@ -1305,7 +1219,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-executeBundle$
@@ -1360,7 +1274,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-vread$
@@ -1512,7 +1426,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-conditionalDelete$
-  "Required parameters: type, parent
+  "Required parameters: parent, type
   
   Optional parameters: none
   
@@ -1639,7 +1553,7 @@
      auth))))
 
 (defn locations-datasets-dicomStores-searchForSeries$
-  "Required parameters: parent, dicomWebPath
+  "Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -1691,7 +1605,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-patch$
@@ -1749,7 +1663,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-create$
@@ -1776,7 +1690,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-delete$
@@ -1858,7 +1772,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-getIamPolicy$
@@ -1948,7 +1862,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-list$
@@ -2007,7 +1921,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-storeInstances$
@@ -2036,7 +1950,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-studies-retrieveMetadata$
@@ -2092,7 +2006,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-dicomStores-studies-delete$
@@ -2122,7 +2036,7 @@
      auth))))
 
 (defn locations-datasets-dicomStores-studies-retrieveStudy$
-  "Required parameters: parent, dicomWebPath
+  "Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -2200,7 +2114,7 @@
      auth))))
 
 (defn locations-datasets-dicomStores-studies-series-retrieveMetadata$
-  "Required parameters: parent, dicomWebPath
+  "Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -2227,7 +2141,7 @@
      auth))))
 
 (defn locations-datasets-dicomStores-studies-series-retrieveSeries$
-  "Required parameters: dicomWebPath, parent
+  "Required parameters: parent, dicomWebPath
   
   Optional parameters: none
   
@@ -2305,36 +2219,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
-  "Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveInstanceMetadata returns instance associated with the given study,
-  series, and SOP Instance UID presented as metadata with the bulk data
-  removed. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent" "dicomWebPath"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{"parent" "dicomWebPath"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-datasets-dicomStores-studies-series-instances-delete$
-  "Required parameters: parent, dicomWebPath
+  "Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -2388,12 +2274,40 @@
      auth))))
 
 (defn locations-datasets-dicomStores-studies-series-instances-retrieveInstance$
-  "Required parameters: dicomWebPath, parent
+  "Required parameters: parent, dicomWebPath
   
   Optional parameters: none
   
   RetrieveInstance returns instance associated with the given study, series,
   and SOP Instance UID. See
+  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent" "dicomWebPath"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{"parent" "dicomWebPath"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
+  "Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveInstanceMetadata returns instance associated with the given study,
+  series, and SOP Instance UID presented as metadata with the bulk data
+  removed. See
   http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
@@ -2442,7 +2356,7 @@
      auth))))
 
 (defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveRendered$
-  "Required parameters: parent, dicomWebPath
+  "Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -2469,132 +2383,22 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-delete$
+(defn locations-datasets-hl7V2Stores-get$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes the specified HL7v2 store and removes all messages that are
-  contained within it."
+  Gets the specified HL7v2 store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
      "v1beta1/{+name}"
      #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-list$
-  "Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists the HL7v2 stores in the given dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/hl7V2Stores"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-create$
-  "Required parameters: parent
-  
-  Optional parameters: hl7V2StoreId
-  
-  Creates a new HL7v2 store within the parent dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/hl7V2Stores"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-setIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-getIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
-     #{"resource"}
      args)
     (merge-with
      merge
@@ -2616,31 +2420,6 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the specified HL7v2 store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
      "v1beta1/{+name}"
@@ -2684,7 +2463,142 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified HL7v2 store and removes all messages that are
+  contained within it."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists the HL7v2 stores in the given dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+parent}/hl7V2Stores"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-setIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Sets the access control policy on the specified resource. Replaces any
+  existing policy.
+  
+  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+resource}:setIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-create$
+  "Required parameters: parent
+  
+  Optional parameters: hl7V2StoreId
+  
+  Creates a new HL7v2 store within the parent dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+parent}/hl7V2Stores"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-getIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource.
+  Returns an empty policy if the resource exists and does not have a policy
+  set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+resource}:getIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn locations-datasets-hl7V2Stores-messages-delete$
@@ -2715,7 +2629,7 @@
 (defn locations-datasets-hl7V2Stores-messages-list$
   "Required parameters: parent
   
-  Optional parameters: orderBy, filter, pageToken, pageSize, view
+  Optional parameters: pageToken, pageSize, view, orderBy, filter
   
   Lists all the messages in the given HL7v2 store with support for filtering.
   
@@ -2770,7 +2684,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-hl7V2Stores-messages-ingest$
@@ -2799,7 +2713,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-datasets-hl7V2Stores-messages-patch$
@@ -2849,6 +2763,96 @@
      "https://healthcare.googleapis.com/"
      "v1beta1/{+name}"
      #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-annotationStores-setIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Sets the access control policy on the specified resource. Replaces any
+  existing policy.
+  
+  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+resource}:setIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-datasets-annotationStores-testIamPermissions$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Returns permissions that a caller has on the specified resource.
+  If the resource does not exist, this will return an empty set of
+  permissions, not a NOT_FOUND error.
+  
+  Note: This operation is designed to be used for building permission-aware
+  UIs and command-line tools, not for authorization checking. This operation
+  may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+resource}:testIamPermissions"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-datasets-annotationStores-getIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource.
+  Returns an empty policy if the resource exists and does not have a policy
+  set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1beta1/{+resource}:getIamPolicy"
+     #{"resource"}
      args)
     (merge-with
      merge

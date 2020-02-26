@@ -2,7 +2,7 @@
   "Books API
   Searches for books and manages your Google Books library.
   See: https://developers.google.com/books/docs/v1/getting_started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -61,7 +61,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn annotations-list$
@@ -113,7 +113,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn annotations-update$
@@ -123,7 +123,7 @@
   
   Updates an existing annotation."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"annotationId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -138,7 +138,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn bookshelves-addVolume$
@@ -165,7 +167,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn bookshelves-clearVolumes$
@@ -192,7 +194,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn bookshelves-get$
@@ -269,7 +271,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn bookshelves-removeVolume$
@@ -296,7 +298,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn bookshelves-volumes-list$
@@ -373,5 +375,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

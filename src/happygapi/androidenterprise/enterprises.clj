@@ -2,7 +2,7 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -19,7 +19,7 @@
   
   Sets the account that will be used to authenticate to the API as the enterprise."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -34,7 +34,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn getStoreLayout$
@@ -111,7 +113,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn generateSignupUrl$
@@ -138,7 +140,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn unenroll$
@@ -165,7 +167,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn completeSignup$
@@ -192,7 +194,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn setStoreLayout$
@@ -202,7 +204,7 @@
   
   Sets the store layout for the enterprise. By default, storeLayoutType is set to \"basic\" and the basic store layout is enabled. The basic layout only contains apps approved by the admin, and that have been added to the available product set for a user (using the  setAvailableProductSet call). Apps on the page are sorted in order of their product ID value. If you create a custom store layout (by setting storeLayoutType = \"custom\" and setting a homepage), the basic store layout is disabled."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -217,7 +219,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn acknowledgeNotificationSet$
@@ -244,7 +248,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn pullNotificationSet$
@@ -275,7 +279,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -327,7 +331,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn getServiceAccount$
@@ -385,5 +389,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

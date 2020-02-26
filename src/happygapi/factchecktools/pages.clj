@@ -2,7 +2,7 @@
   "Fact Check Tools API
   
   See: https://developers.google.com/fact-check/tools/api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,33 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "factchecktools_schema.edn"))))
+
+(defn create$
+  "Required parameters: none
+  
+  Optional parameters: none
+  
+  Create `ClaimReview` markup on a page."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://factchecktools.googleapis.com/"
+     "v1alpha1/pages"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn delete$
   "Required parameters: name
@@ -65,7 +92,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: offset, pageToken, organization, pageSize, url
+  Optional parameters: pageToken, organization, pageSize, url, offset
   
   List the `ClaimReview` markup pages for a specific URL or for an
   organization."
@@ -100,7 +127,7 @@
   markup, and finally call Update with the entire `ClaimReview` markup as the
   body."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -115,32 +142,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Create `ClaimReview` markup on a page."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://factchecktools.googleapis.com/"
-     "v1alpha1/pages"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

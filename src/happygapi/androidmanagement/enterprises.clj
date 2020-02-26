@@ -2,7 +2,7 @@
   "Android Management API
   The Android Management API provides remote enterprise management of Android devices and apps.
   See: https://developers.google.com/android/management"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -65,7 +65,7 @@
 (defn create$
   "Required parameters: none
   
-  Optional parameters: projectId, enterpriseToken, signupUrlName
+  Optional parameters: signupUrlName, projectId, enterpriseToken
   
   Creates an enterprise. This is the last step in the enterprise signup flow."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
@@ -86,7 +86,59 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn enrollmentTokens-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates an enrollment token for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/enrollmentTokens"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn enrollmentTokens-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an enrollment token. This operation invalidates the token, preventing its future use."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn applications-get$
@@ -101,6 +153,31 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-delete$
+  "Required parameters: name
+  
+  Optional parameters: wipeDataFlags, wipeReasonMessage
+  
+  Deletes a device. This operation wipes the device."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://androidmanagement.googleapis.com/"
      "v1/{+name}"
@@ -213,32 +290,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn devices-delete$
-  "Required parameters: name
-  
-  Optional parameters: wipeDataFlags, wipeReasonMessage
-  
-  Deletes a device. This operation wipes the device."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-operations-cancel$
@@ -265,7 +317,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn devices-operations-delete$
@@ -367,7 +419,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn policies-delete$
@@ -457,31 +509,6 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a web app."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://androidmanagement.googleapis.com/"
      "v1/{+name}"
@@ -594,15 +621,15 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn enrollmentTokens-delete$
+(defn webApps-delete$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes an enrollment token. This operation invalidates the token, preventing its future use."
+  Deletes a web app."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -620,31 +647,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn enrollmentTokens-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates an enrollment token for a given enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/enrollmentTokens"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

@@ -2,7 +2,7 @@
   "Service Networking API
   Provides automatic management of network configurations necessary for certain services.
   See: https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -40,7 +40,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn disableVpcServiceControls$
@@ -102,7 +102,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn searchRange$
@@ -137,7 +137,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn enableVpcServiceControls$
@@ -164,42 +164,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn connections-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a private connection that establishes a VPC Network Peering
-  connection to a VPC network in the service producer's organization.
-  The administrator of the service consumer's VPC network invokes this
-  method. The administrator must assign one or more allocated IP ranges for
-  provisioning subnetworks in the service producer's VPC network. This
-  connection is used for all supported services in the service producer's
-  organization, so it only needs to be invoked once. The response from the
-  `get` operation will be of type `Connection` if the operation successfully
-  completes."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicenetworking.googleapis.com/"
-     "v1/{+parent}/connections"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn connections-list$
@@ -255,4 +219,40 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn connections-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a private connection that establishes a VPC Network Peering
+  connection to a VPC network in the service producer's organization.
+  The administrator of the service consumer's VPC network invokes this
+  method. The administrator must assign one or more allocated IP ranges for
+  provisioning subnetworks in the service producer's VPC network. This
+  connection is used for all supported services in the service producer's
+  organization, so it only needs to be invoked once. The response from the
+  `get` operation will be of type `Connection` if the operation successfully
+  completes."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicenetworking.googleapis.com/"
+     "v1/{+parent}/connections"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

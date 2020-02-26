@@ -2,7 +2,7 @@
   "AdSense Host API
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
   See: https://developers.google.com/adsense/host/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

@@ -2,7 +2,7 @@
   "Drive Activity API
   Provides a historical view of activity.
   See: https://developers.google.com/google-apps/activity/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

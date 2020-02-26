@@ -2,7 +2,7 @@
   "Groups Settings API
   Manages permission levels and related settings of a group.
   See: https://developers.google.com/google-apps/groups-settings/get_started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -69,7 +69,7 @@
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"groupUniqueId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -84,5 +84,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

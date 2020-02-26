@@ -2,7 +2,7 @@
   "Google Classroom API
   Manages classes, rosters, and invitations in Google Classroom.
   See: https://developers.google.com/classroom/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,32 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "classroom_schema.edn"))))
-
-(defn delete$
-  "Required parameters: registrationId
-  
-  Optional parameters: none
-  
-  Deletes a `Registration`, causing Classroom to stop sending notifications
-  for that `Registration`."
-  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"registrationId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/registrations/{registrationId}"
-     #{"registrationId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn create$
   "Required parameters: none
@@ -92,5 +66,31 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn delete$
+  "Required parameters: registrationId
+  
+  Optional parameters: none
+  
+  Deletes a `Registration`, causing Classroom to stop sending notifications
+  for that `Registration`."
+  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"registrationId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/registrations/{registrationId}"
+     #{"registrationId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

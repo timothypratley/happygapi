@@ -2,7 +2,7 @@
   "Google Play Developer API
   Accesses Android application developers' Google Play accounts.
   See: https://developers.google.com/android-publisher"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -113,7 +113,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn validate$
@@ -140,7 +140,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn bundles-list$
@@ -192,7 +192,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn images-delete$
@@ -302,7 +302,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tracks-get$
@@ -387,7 +387,7 @@
   
   Updates the track configuration for the specified track type."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"track" "editId" "packageName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -402,7 +402,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn deobfuscationfiles-upload$
@@ -437,7 +439,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn apks-addexternallyhosted$
@@ -464,7 +466,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn apks-list$
@@ -516,7 +518,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn details-get$
@@ -576,7 +578,7 @@
   
   Updates app details for this edit."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"editId" "packageName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -591,7 +593,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn testers-get$
@@ -651,7 +655,7 @@
   
   "
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"track" "editId" "packageName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -666,7 +670,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn listings-delete$
@@ -801,7 +807,7 @@
   
   Creates or updates a localized store listing."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"editId" "packageName" "language"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -816,7 +822,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn expansionfiles-get$
@@ -886,7 +894,7 @@
   
   Updates the APK's Expansion File configuration to reference another APK's Expansion Files. To add a new Expansion File use the Upload method."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"apkVersionCode"
@@ -906,7 +914,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn expansionfiles-upload$
@@ -938,5 +948,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

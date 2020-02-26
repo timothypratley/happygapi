@@ -2,7 +2,7 @@
   "Books API
   Searches for books and manages your Google Books library.
   See: https://developers.google.com/books/docs/v1/getting_started"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

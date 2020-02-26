@@ -2,7 +2,7 @@
   "Manufacturer Center API
   Public API for managing Manufacturer Center related data.
   See: https://developers.google.com/manufacturers/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,35 +12,10 @@
 (def schemas
   (edn/read-string (slurp (io/resource "manufacturers_schema.edn"))))
 
-(defn products-delete$
-  "Required parameters: name, parent
-  
-  Optional parameters: none
-  
-  Deletes the product from a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent" "name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products/{+name}"
-     #{"parent" "name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn products-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, include, pageToken
+  Optional parameters: include, pageToken, pageSize
   
   Lists all the products in a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
@@ -63,7 +38,7 @@
      auth))))
 
 (defn products-get$
-  "Required parameters: parent, name
+  "Required parameters: name, parent
   
   Optional parameters: include
   
@@ -114,11 +89,38 @@
   of previously uploaded products will return the original state of the
   product."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"parent" "name"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/put
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products/{+name}"
+     #{"parent" "name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn products-delete$
+  "Required parameters: parent, name
+  
+  Optional parameters: none
+  
+  Deletes the product from a Manufacturer Center account."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent" "name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"

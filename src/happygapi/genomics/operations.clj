@@ -2,7 +2,7 @@
   "Genomics API
   Uploads, processes, queries, and searches Genomics data in the cloud.
   See: https://cloud.google.com/genomics"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request.
   Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
@@ -105,5 +105,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

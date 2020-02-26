@@ -2,7 +2,7 @@
   "Cloud Asset API
   The cloud asset API manages the history and inventory of cloud resources.
   See: https://cloud.google.com/asset-inventory/docs/quickstart"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,31 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "cloudasset_schema.edn"))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an asset feed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudasset.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn get$
   "Required parameters: name
@@ -137,5 +112,30 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an asset feed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudasset.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

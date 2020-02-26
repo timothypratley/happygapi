@@ -2,7 +2,7 @@
   "Identity and Access Management (IAM) API
   Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
   See: https://cloud.google.com/iam/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -10,37 +10,6 @@
             [json-schema.core :as json-schema]))
 
 (def schemas (edn/read-string (slurp (io/resource "iam_schema.edn"))))
-
-(defn roles-delete$
-  "Required parameters: name
-  
-  Optional parameters: etag
-  
-  Soft deletes a role. The role is suspended and cannot be used to create new
-  IAM Policy Bindings.
-  The Role will not be included in `ListRoles()` unless `show_deleted` is set
-  in the `ListRolesRequest`. The Role contains the deleted boolean set.
-  Existing Bindings remains, but are inactive. The Role can be undeleted
-  within 7 days. After 7 days the Role is deleted and all Bindings associated
-  with the role are removed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn roles-list$
   "Required parameters: parent
@@ -91,7 +60,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn roles-undelete$
@@ -118,7 +87,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn roles-get$
@@ -158,6 +127,37 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-delete$
+  "Required parameters: name
+  
+  Optional parameters: etag
+  
+  Soft deletes a role. The role is suspended and cannot be used to create new
+  IAM Policy Bindings.
+  The Role will not be included in `ListRoles()` unless `show_deleted` is set
+  in the `ListRolesRequest`. The Role contains the deleted boolean set.
+  Existing Bindings remains, but are inactive. The Role can be undeleted
+  within 7 days. After 7 days the Role is deleted and all Bindings associated
+  with the role are removed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"

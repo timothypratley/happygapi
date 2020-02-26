@@ -2,7 +2,7 @@
   "Content API for Shopping
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
   See: https://developers.google.com/shopping-content"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -88,7 +88,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -140,7 +140,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -175,7 +175,7 @@
   
   Updates a datafeed configuration of your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"datafeedId" "merchantId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -190,5 +190,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,34 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
+
+(defn list$
+  "Required parameters: projectId
+  
+  Optional parameters: pageToken, maxResults, all, filter
+  
+  Lists all datasets in the specified project to which you have been granted the READER dataset role."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/datasets"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn insert$
   "Required parameters: projectId
@@ -37,7 +65,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -69,7 +97,7 @@
      auth))))
 
 (defn patch$
-  "Required parameters: projectId, datasetId
+  "Required parameters: datasetId, projectId
   
   Optional parameters: none
   
@@ -102,7 +130,7 @@
   Updates information in an existing dataset. The update method replaces the entire dataset resource, whereas the patch method only replaces fields that are provided in the submitted dataset resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"datasetId" "projectId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -117,11 +145,13 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
-  "Required parameters: projectId, datasetId
+  "Required parameters: datasetId, projectId
   
   Optional parameters: deleteContents
   
@@ -137,34 +167,6 @@
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{projectId}/datasets/{datasetId}"
      #{"datasetId" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "Required parameters: projectId
-  
-  Optional parameters: pageToken, maxResults, all, filter
-  
-  Lists all datasets in the specified project to which you have been granted the READER dataset role."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"projectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets"
-     #{"projectId"}
      args)
     (merge-with
      merge

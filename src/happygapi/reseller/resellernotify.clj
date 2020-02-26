@@ -2,7 +2,7 @@
   "Enterprise Apps Reseller API
   Creates and manages your customers and their subscriptions.
   See: https://developers.google.com/google-apps/reseller/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,7 +62,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn unregister$
@@ -89,5 +89,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "Google Play Game Services API
   The API for Google Play Game Services.
   See: https://developers.google.com/games/services/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
@@ -46,7 +46,7 @@
   
   Registers a push token for the current user and application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -61,5 +61,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

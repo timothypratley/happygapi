@@ -2,7 +2,7 @@
   "Cloud Text-to-Speech API
   Synthesizes natural-sounding speech by applying powerful neural network models.
   See: https://cloud.google.com/text-to-speech/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

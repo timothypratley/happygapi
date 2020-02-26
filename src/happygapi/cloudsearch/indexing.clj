@@ -2,7 +2,7 @@
   "Cloud Search API
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -25,7 +25,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -40,7 +40,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-deleteSchema$
@@ -158,7 +160,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-items-index$
@@ -193,7 +195,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-items-delete$
@@ -254,7 +256,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-items-poll$
@@ -309,13 +311,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-items-list$
   "Required parameters: name
   
-  Optional parameters: connectorName, brief, pageToken, pageSize, debugOptions.enableDebugging
+  Optional parameters: debugOptions.enableDebugging, connectorName, brief, pageToken, pageSize
   
   Lists all or a subset of Item resources.
   
@@ -371,7 +373,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn datasources-items-upload$
@@ -405,5 +407,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

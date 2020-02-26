@@ -3,7 +3,7 @@
   The management interface for Binary Authorization, a system providing policy control for images deployed to Kubernetes Engine clusters.
   
   See: https://cloud.google.com/binary-authorization/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -25,7 +25,7 @@
   requests. Returns NOT_FOUND if the project does not exist, INVALID_ARGUMENT
   if the request is malformed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -40,7 +40,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn getPolicy$
@@ -65,33 +67,6 @@
      "https://binaryauthorization.googleapis.com/"
      "v1/{+name}"
      #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policy-getIamPolicy$
-  "Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{"resource"}
      args)
     (merge-with
      merge
@@ -128,7 +103,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn policy-testIamPermissions$
@@ -161,7 +136,121 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn policy-getIamPolicy$
+  "Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource.
+  Returns an empty policy if the resource exists and does not have a policy
+  set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn attestors-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an attestor.
+  Returns NOT_FOUND if the attestor does not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn attestors-update$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Updates an attestor.
+  Returns NOT_FOUND if the attestor does not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn attestors-testIamPermissions$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Returns permissions that a caller has on the specified resource.
+  If the resource does not exist, this will return an empty set of
+  permissions, not a NOT_FOUND error.
+  
+  Note: This operation is designed to be used for building permission-aware
+  UIs and command-line tools, not for authorization checking. This operation
+  may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn attestors-delete$
@@ -243,7 +332,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn attestors-create$
@@ -273,7 +362,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn attestors-getIamPolicy$
@@ -301,89 +390,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn attestors-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets an attestor.
-  Returns NOT_FOUND if the attestor does not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn attestors-update$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Updates an attestor.
-  Returns NOT_FOUND if the attestor does not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn attestors-testIamPermissions$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

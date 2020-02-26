@@ -2,7 +2,7 @@
   "Cloud Testing API
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
   See: https://developers.google.com/cloud-test-lab/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,5 +36,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

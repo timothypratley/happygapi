@@ -2,7 +2,7 @@
   "Google Search Console URL Testing Tools API
   Provides tools for running validation tests against single URLs
   See: https://developers.google.com/webmaster-tools/search-console-api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,5 +36,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

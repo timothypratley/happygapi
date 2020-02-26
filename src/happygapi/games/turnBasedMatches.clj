@@ -2,7 +2,7 @@
   "Google Play Game Services API
   The API for Google Play Game Services.
   See: https://developers.google.com/games/services/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -61,7 +61,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn dismiss$
@@ -71,7 +71,7 @@
   
   Dismiss a turn-based match from the match list. The match will no longer show up in the list and will not generate notifications."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -86,7 +86,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn decline$
@@ -96,7 +98,7 @@
   
   Decline an invitation to play a turn-based match."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -111,7 +113,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn sync$
@@ -146,7 +150,7 @@
   
   Leave a turn-based match during the current player's turn, without canceling the match."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId" "matchVersion"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -161,7 +165,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn finish$
@@ -171,7 +177,7 @@
   
   Finish a turn-based match. Each player should make this call once, after all results are in. Only the player whose turn it is may make the first call to Finish, and can pass in the final match state."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -186,7 +192,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -221,7 +229,7 @@
   
   Leave a turn-based match when it is not the current player's turn, without canceling the match."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -236,7 +244,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn takeTurn$
@@ -246,7 +256,7 @@
   
   Commit the results of a player turn."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -261,7 +271,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn rematch$
@@ -288,7 +300,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn cancel$
@@ -298,7 +310,7 @@
   
   Cancel a turn-based match."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -313,7 +325,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn join$
@@ -323,7 +337,7 @@
   
   Join a turn-based match."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"matchId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -338,5 +352,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

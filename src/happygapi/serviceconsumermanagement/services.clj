@@ -2,7 +2,7 @@
   "Service Consumer Management API
   Manages the service consumers of a Service Infrastructure service.
   See: https://cloud.google.com/service-consumer-management/docs/overview"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
 (defn search$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, query
+  Optional parameters: query, pageToken, pageSize
   
   Search tenancy units for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -67,7 +67,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-deleteProject$
@@ -103,7 +103,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-applyProjectConfig$
@@ -146,7 +146,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-create$
@@ -177,7 +177,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-delete$
@@ -210,7 +210,7 @@
 (defn tenancyUnits-list$
   "Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Find the tenancy unit for a managed service and service consumer.
   This method shouldn't be used in a service producer's runtime path, for
@@ -270,7 +270,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-removeProject$
@@ -304,7 +304,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn tenancyUnits-undeleteProject$
@@ -337,5 +337,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

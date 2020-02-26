@@ -2,7 +2,7 @@
   "Google Fonts Developer API
   Accesses the metadata for all families served by Google Fonts, providing a list of families currently available (including available styles and a list of supported script subsets).
   See: https://developers.google.com/fonts/docs/developer_api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

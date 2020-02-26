@@ -3,7 +3,7 @@
   The Poly API provides read access to assets hosted on <a href=\"https://poly.google.com\">poly.google.com</a> to all, and upload access to <a href=\"https://poly.google.com\">poly.google.com</a> for whitelisted accounts.
   
   See: https://developers.google.com/poly/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -44,7 +44,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: maxComplexity, pageToken, pageSize, keywords, orderBy, format, curated, category
+  Optional parameters: orderBy, format, curated, category, maxComplexity, pageToken, pageSize, keywords
   
   Lists all public, remixable assets. These are assets with an access level
   of PUBLIC and published under the

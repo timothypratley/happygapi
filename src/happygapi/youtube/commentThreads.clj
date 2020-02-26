@@ -2,7 +2,7 @@
   "YouTube Data API
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
   See: https://developers.google.com/youtube/v3"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -71,7 +71,7 @@
   
   Modifies the top-level comment in a comment thread."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"part"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -86,5 +86,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

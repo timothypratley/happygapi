@@ -2,7 +2,7 @@
   "Google Analytics API
   Views and manages your Google Analytics data.
   See: https://developers.google.com/analytics/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,7 +37,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn goals-get$
@@ -94,7 +94,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn goals-list$
@@ -160,7 +160,7 @@
   
   Updates an existing goal."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "profileId" "goalId"})
@@ -177,7 +177,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn experiments-delete$
@@ -264,7 +266,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn experiments-list$
@@ -332,7 +334,7 @@
   Update an existing experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "profileId" "experimentId"})
@@ -349,7 +351,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn profileFilterLinks-delete$
@@ -433,7 +437,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn profileFilterLinks-list$
@@ -498,7 +502,7 @@
   
   Update an existing profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "linkId" "profileId"})
@@ -515,7 +519,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn filters-delete$
@@ -593,7 +599,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn filters-list$
@@ -654,7 +660,7 @@
   
   Updates an existing filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "filterId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -669,7 +675,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn customMetrics-get$
@@ -724,7 +732,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn customMetrics-list$
@@ -787,7 +795,7 @@
   
   Updates an existing custom metric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "customMetricId" "webPropertyId"})
@@ -804,7 +812,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn webpropertyUserLinks-delete$
@@ -856,7 +866,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn webpropertyUserLinks-list$
@@ -892,7 +902,7 @@
   
   Updates permissions for an existing user on the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "webPropertyId" "linkId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -907,7 +917,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn webPropertyAdWordsLinks-delete$
@@ -989,7 +1001,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn webPropertyAdWordsLinks-list$
@@ -1052,7 +1064,7 @@
   
   Updates an existing webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"webPropertyAdWordsLinkId" "accountId" "webPropertyId"})
@@ -1069,7 +1081,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn webproperties-get$
@@ -1122,7 +1136,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn webproperties-list$
@@ -1184,7 +1198,7 @@
   
   Updates an existing web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "webPropertyId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1199,7 +1213,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn customDimensions-get$
@@ -1254,7 +1270,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn customDimensions-list$
@@ -1317,7 +1333,7 @@
   
   Updates an existing custom dimension."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "customDimensionId"})
@@ -1334,7 +1350,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn segments-list$
@@ -1439,7 +1457,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn accountUserLinks-list$
@@ -1475,7 +1493,7 @@
   
   Updates permissions for an existing user on the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"accountId" "linkId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1490,7 +1508,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn profileUserLinks-delete$
@@ -1546,7 +1566,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn profileUserLinks-list$
@@ -1584,7 +1604,7 @@
   
   Updates permissions for an existing user on the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "linkId" "profileId"})
@@ -1601,7 +1621,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn uploads-deleteUploadData$
@@ -1631,7 +1653,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn uploads-get$
@@ -1722,7 +1744,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn customDataSources-list$
@@ -1831,7 +1853,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn profiles-list$
@@ -1895,7 +1917,7 @@
   
   Updates an existing view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "webPropertyId" "profileId"})
@@ -1912,7 +1934,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn remarketingAudience-delete$
@@ -1994,7 +2018,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn remarketingAudience-list$
@@ -2057,7 +2081,7 @@
   
   Updates an existing remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"accountId" "remarketingAudienceId" "webPropertyId"})
@@ -2074,7 +2098,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn accounts-list$
@@ -2193,7 +2219,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn unsampledReports-list$

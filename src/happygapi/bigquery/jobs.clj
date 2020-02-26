@@ -2,7 +2,7 @@
   "BigQuery API
   A data platform for customers to create, manage, share and query data.
   See: https://cloud.google.com/bigquery/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,36 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "bigquery_schema.edn"))))
-
-(defn query$
-  "Required parameters: projectId
-  
-  Optional parameters: none
-  
-  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"projectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/queries"
-     #{"projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
 
 (defn list$
   "Required parameters: projectId
@@ -73,7 +43,7 @@
 (defn getQueryResults$
   "Required parameters: jobId, projectId
   
-  Optional parameters: startIndex, location, pageToken, timeoutMs, maxResults
+  Optional parameters: location, startIndex, pageToken, timeoutMs, maxResults
   
   Retrieves the results of a query job."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -123,7 +93,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn insert$
@@ -154,7 +124,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -183,4 +153,34 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn query$
+  "Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/queries"
+     #{"projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

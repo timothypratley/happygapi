@@ -2,7 +2,7 @@
   "People API
   Provides access to information about profiles and contacts.
   See: https://developers.google.com/people/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,32 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "people_schema.edn"))))
+
+(defn delete$
+  "Required parameters: resourceName
+  
+  Optional parameters: deleteContacts
+  
+  Delete an existing contact group owned by the authenticated user by
+  specifying a contact group resource name."
+  {:scopes ["https://www.googleapis.com/auth/contacts"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"resourceName"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}"
+     #{"resourceName"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn batchGet$
   "Required parameters: none
@@ -39,36 +65,10 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "Required parameters: resourceName
-  
-  Optional parameters: deleteContacts
-  
-  Delete an existing contact group owned by the authenticated user by
-  specifying a contact group resource name."
-  {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"resourceName"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}"
-     #{"resourceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "Required parameters: none
   
-  Optional parameters: pageToken, pageSize, syncToken
+  Optional parameters: syncToken, pageToken, pageSize
   
   List all contact groups owned by the authenticated user. Members of the
   contact groups are not populated."
@@ -116,7 +116,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -154,7 +154,7 @@
   Update the name of an existing contact group owned by the authenticated
   user."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"resourceName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -169,7 +169,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn members-modify$
@@ -200,5 +202,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

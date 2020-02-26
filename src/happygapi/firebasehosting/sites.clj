@@ -2,7 +2,7 @@
   "Firebase Hosting API
   The Firebase Hosting REST API enables programmatic and customizable deployments to your Firebase-hosted sites. Use this REST API to deploy new or updated hosting configurations and content files.
   See: https://firebase.google.com/docs/hosting/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -120,7 +120,59 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn versions-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified version."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn versions-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists the versions that have been created on the specified site.
+  Will include filtering in the future."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+parent}/versions"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn versions-create$
@@ -148,7 +200,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn versions-clone$
@@ -176,7 +228,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn versions-patch$
@@ -235,65 +287,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn versions-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn versions-list$
-  "Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists the versions that have been created on the specified site.
-  Will include filtering in the future."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+parent}/versions"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn versions-files-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, status
+  Optional parameters: status, pageToken, pageSize
   
   Lists the remaining files to be uploaded for the specified version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -309,6 +309,32 @@
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/files"
      #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn domains-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the existing domain mapping on the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
      args)
     (merge-with
      merge
@@ -383,7 +409,7 @@
   not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -398,7 +424,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn domains-create$
@@ -426,31 +454,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn domains-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the existing domain mapping on the specified site."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

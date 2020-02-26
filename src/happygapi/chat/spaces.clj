@@ -2,7 +2,7 @@
   "Hangouts Chat API
   Enables bots to fetch information and perform actions in Hangouts Chat.
   See: https://developers.google.com/hangouts/chat"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -58,18 +58,43 @@
       :as :json}
      auth))))
 
-(defn messages-delete$
+(defn members-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists human memberships in a space."
+  {:scopes nil}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chat.googleapis.com/"
+     "v1/{+parent}/members"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn members-get$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes a message."
+  Returns a membership."
   {:scopes nil}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://chat.googleapis.com/"
      "v1/{+name}"
@@ -115,7 +140,7 @@
   
   Updates a message."
   {:scopes nil}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -130,7 +155,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-create$
@@ -157,46 +184,21 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn members-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists human memberships in a space."
-  {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chat.googleapis.com/"
-     "v1/{+parent}/members"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn members-get$
+(defn messages-delete$
   "Required parameters: name
   
   Optional parameters: none
   
-  Returns a membership."
+  Deletes a message."
   {:scopes nil}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://chat.googleapis.com/"
      "v1/{+name}"

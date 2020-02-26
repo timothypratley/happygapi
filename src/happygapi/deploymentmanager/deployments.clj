@@ -2,7 +2,7 @@
   "Google Cloud Deployment Manager API
   Declares, configures, and deploys complex solutions on Google Cloud Platform.
   See: https://cloud.google.com/deployment-manager/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,7 +37,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -93,7 +93,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn insert$
@@ -121,7 +121,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -175,7 +175,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
@@ -186,7 +186,7 @@
   Updates a deployment and all of the resources described by the deployment manifest."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.cloudman"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"project" "deployment"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -201,7 +201,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -281,7 +283,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$

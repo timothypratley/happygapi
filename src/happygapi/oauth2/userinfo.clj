@@ -2,7 +2,7 @@
   "Google OAuth2 API
   Obtains end-user authorization grants for use with other Google APIs.
   See: https://developers.google.com/accounts/docs/OAuth2"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

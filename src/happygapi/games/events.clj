@@ -2,7 +2,7 @@
   "Google Play Game Services API
   The API for Google Play Game Services.
   See: https://developers.google.com/games/services/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -86,5 +86,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

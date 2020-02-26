@@ -2,7 +2,7 @@
   "Stackdriver Monitoring API
   Manages your Stackdriver Monitoring data and configurations. Most projects must be associated with a Stackdriver account, with a few exceptions as noted on the individual method pages. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the Stackdriver Monitoring documentation.
   See: https://cloud.google.com/monitoring/api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn notificationChannelDescriptors-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the descriptors for supported channel types. The use of descriptors makes it possible for new channel types to be dynamically added."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -66,35 +66,6 @@
       :as :json}
      auth))))
 
-(defn timeSeries-create$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Creates or adds data to one or more time series. The response is empty if all time series in the request were written. If any time series could not be written, a corresponding failure message is included in the error response."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/timeSeries"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn timeSeries-list$
   "Required parameters: name
   
@@ -122,10 +93,39 @@
       :as :json}
      auth))))
 
+(defn timeSeries-create$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Creates or adds data to one or more time series. The response is empty if all time series in the request were written. If any time series could not be written, a corresponding failure message is included in the error response."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.write"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/timeSeries"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn monitoredResourceDescriptors-list$
   "Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Lists monitored resource descriptors that match a filter. This method does not require a Stackdriver account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -309,35 +309,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn uptimeCheckConfigs-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a new Uptime check configuration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+parent}/uptimeCheckConfigs"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn uptimeCheckConfigs-delete$
@@ -446,24 +418,23 @@
       :as :json}
      auth))))
 
-(defn metricDescriptors-create$
-  "Required parameters: name
+(defn uptimeCheckConfigs-create$
+  "Required parameters: parent
   
   Optional parameters: none
   
-  Creates a new metric descriptor. User-created metric descriptors define custom metrics (https://cloud.google.com/monitoring/custom-metrics)."
+  Creates a new Uptime check configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.write"]}
+            "https://www.googleapis.com/auth/monitoring"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
+  {:pre [(util/has-keys? args #{"parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}/metricDescriptors"
-     #{"name"}
+     "v3/{+parent}/uptimeCheckConfigs"
+     #{"parent"}
      args)
     (merge-with
      merge
@@ -472,7 +443,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn metricDescriptors-delete$
@@ -557,6 +528,35 @@
       :as :json}
      auth))))
 
+(defn metricDescriptors-create$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Creates a new metric descriptor. User-created metric descriptors define custom metrics (https://cloud.google.com/monitoring/custom-metrics)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.write"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/metricDescriptors"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn collectdTimeSeries-create$
   "Required parameters: name
   
@@ -583,7 +583,33 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn groups-delete$
+  "Required parameters: name
+  
+  Optional parameters: recursive
+  
+  Deletes an existing group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn groups-list$
@@ -648,7 +674,7 @@
   Updates an existing group. You can change any group attributes except name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -663,7 +689,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn groups-create$
@@ -691,39 +719,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn groups-delete$
-  "Required parameters: name
-  
-  Optional parameters: recursive
-  
-  Deletes an existing group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn groups-members-list$
   "Required parameters: name
   
-  Optional parameters: interval.endTime, filter, pageToken, interval.startTime, pageSize
+  Optional parameters: filter, pageToken, pageSize, interval.startTime, interval.endTime
   
   Lists the monitored resources that are members of a group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -747,10 +749,64 @@
       :as :json}
      auth))))
 
+(defn notificationChannels-getVerificationCode$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Requests a verification code for an already verified channel that can then be used in a call to VerifyNotificationChannel() on a different channel with an equivalent identity in the same or in a different project. This makes it possible to copy a channel between projects without requiring manual reverification of the channel. If the channel is not in the verified state, this method will fail (in other words, this may only be used if the SendNotificationChannelVerificationCode and VerifyNotificationChannel paths have already been used to put the given channel into the verified state).There is no guarantee that the verification codes returned by this method will be of a similar structure or form as the ones that are delivered to the channel via SendNotificationChannelVerificationCode; while VerifyNotificationChannel() will recognize both the codes delivered via SendNotificationChannelVerificationCode() and returned from GetNotificationChannelVerificationCode(), it is typically the case that the verification codes delivered via SendNotificationChannelVerificationCode() will be shorter and also have a shorter expiration (e.g. codes such as \"G-123456\") whereas GetVerificationCode() will typically return a much longer, websafe base 64 encoded string that has a longer expiration time."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}:getVerificationCode"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn notificationChannels-delete$
+  "Required parameters: name
+  
+  Optional parameters: force
+  
+  Deletes a notification channel."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn notificationChannels-list$
   "Required parameters: name
   
-  Optional parameters: filter, orderBy, pageToken, pageSize
+  Optional parameters: orderBy, pageToken, pageSize, filter
   
   Lists the notification channels that have been created for the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -799,7 +855,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn notificationChannels-verify$
@@ -827,25 +883,25 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn notificationChannels-sendVerificationCode$
+(defn notificationChannels-patch$
   "Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
-  Causes a verification code to be delivered to the channel. The code can then be supplied in VerifyNotificationChannel to verify the channel."
+  Updates a notification channel. Fields not specified in the field mask remain unchanged."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
-  [auth args body]
+  [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}:sendVerificationCode"
+     "v3/{+name}"
      #{"name"}
      args)
     (merge-with
@@ -853,9 +909,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :as :json}
      auth))))
 
 (defn notificationChannels-get$
@@ -885,38 +939,12 @@
       :as :json}
      auth))))
 
-(defn notificationChannels-patch$
-  "Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Updates a notification channel. Fields not specified in the field mask remain unchanged."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationChannels-getVerificationCode$
+(defn notificationChannels-sendVerificationCode$
   "Required parameters: name
   
   Optional parameters: none
   
-  Requests a verification code for an already verified channel that can then be used in a call to VerifyNotificationChannel() on a different channel with an equivalent identity in the same or in a different project. This makes it possible to copy a channel between projects without requiring manual reverification of the channel. If the channel is not in the verified state, this method will fail (in other words, this may only be used if the SendNotificationChannelVerificationCode and VerifyNotificationChannel paths have already been used to put the given channel into the verified state).There is no guarantee that the verification codes returned by this method will be of a similar structure or form as the ones that are delivered to the channel via SendNotificationChannelVerificationCode; while VerifyNotificationChannel() will recognize both the codes delivered via SendNotificationChannelVerificationCode() and returned from GetNotificationChannelVerificationCode(), it is typically the case that the verification codes delivered via SendNotificationChannelVerificationCode() will be shorter and also have a shorter expiration (e.g. codes such as \"G-123456\") whereas GetVerificationCode() will typically return a much longer, websafe base 64 encoded string that has a longer expiration time."
+  Causes a verification code to be delivered to the channel. The code can then be supplied in VerifyNotificationChannel to verify the channel."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
   [auth args body]
@@ -926,7 +954,7 @@
    (http/post
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}:getVerificationCode"
+     "v3/{+name}:sendVerificationCode"
      #{"name"}
      args)
     (merge-with
@@ -936,31 +964,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn notificationChannels-delete$
-  "Required parameters: name
-  
-  Optional parameters: force
-  
-  Deletes a notification channel."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "Google Slides API
   Reads and writes Google Slides presentations.
   See: https://developers.google.com/slides/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -71,7 +71,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn batchUpdate$
@@ -123,40 +123,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn pages-getThumbnail$
-  "Required parameters: presentationId, pageObjectId
-  
-  Optional parameters: thumbnailProperties.mimeType, thumbnailProperties.thumbnailSize
-  
-  Generates a thumbnail of the latest version of the specified page in the
-  presentation and returns a URL to the thumbnail image.
-  
-  This request counts as an [expensive read request](/slides/limits) for
-  quota purposes."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/drive.readonly"
-            "https://www.googleapis.com/auth/presentations"
-            "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://slides.googleapis.com/"
-     "v1/presentations/{presentationId}/pages/{pageObjectId}/thumbnail"
-     #{"presentationId" "pageObjectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn pages-get$
@@ -178,6 +145,39 @@
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations/{presentationId}/pages/{pageObjectId}"
+     #{"presentationId" "pageObjectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn pages-getThumbnail$
+  "Required parameters: pageObjectId, presentationId
+  
+  Optional parameters: thumbnailProperties.mimeType, thumbnailProperties.thumbnailSize
+  
+  Generates a thumbnail of the latest version of the specified page in the
+  presentation and returns a URL to the thumbnail image.
+  
+  This request counts as an [expensive read request](/slides/limits) for
+  quota purposes."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/presentations"
+            "https://www.googleapis.com/auth/presentations.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"presentationId" "pageObjectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://slides.googleapis.com/"
+     "v1/presentations/{presentationId}/pages/{pageObjectId}/thumbnail"
      #{"presentationId" "pageObjectId"}
      args)
     (merge-with

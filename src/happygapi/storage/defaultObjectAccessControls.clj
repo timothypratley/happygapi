@@ -2,7 +2,7 @@
   "Cloud Storage JSON API
   Stores and retrieves potentially large, immutable data objects.
   See: https://developers.google.com/storage/docs/json_api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -89,7 +89,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -152,7 +152,7 @@
   Updates a default object ACL entry on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"bucket" "entity"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -167,5 +167,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

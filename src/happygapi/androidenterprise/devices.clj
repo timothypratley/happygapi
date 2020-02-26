@@ -2,7 +2,7 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -121,7 +121,7 @@
   
   Sets whether a device's access to Google services is enabled or disabled. The device state takes effect only if enforcing EMM policies on Android devices is enabled in the Google Admin Console. Otherwise, the device state is ignored and all devices are allowed access to Google services. This is only supported for Google-managed users."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -136,7 +136,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
@@ -146,7 +148,7 @@
   
   Updates the device policy"
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -161,5 +163,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

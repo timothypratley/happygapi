@@ -3,7 +3,7 @@
   Cloud Talent Solution provides the capability to create, read, update, and delete job postings, as well as search jobs based on keywords and filters.
   
   See: https://cloud.google.com/talent-solution/job-search/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
 (defn complete$
   "Required parameters: name
   
-  Optional parameters: companyName, scope, pageSize, query, languageCode, type, languageCodes
+  Optional parameters: languageCodes, scope, companyName, pageSize, query, languageCode, type
   
   Completes the specified prefix with keyword suggestions.
   Intended for use by a job search auto-complete search box."
@@ -172,7 +172,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn clientEvents-create$
@@ -206,7 +206,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn jobs-delete$
@@ -241,7 +241,7 @@
 (defn jobs-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, filter, jobView, pageToken
+  Optional parameters: filter, jobView, pageToken, pageSize
   
   Lists jobs by filter."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -289,7 +289,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn jobs-create$
@@ -320,7 +320,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn jobs-search$
@@ -352,34 +352,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobs-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified job, whose status is OPEN or recently EXPIRED
-  within the last 90 days."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/jobs"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://jobs.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn jobs-patch$
@@ -398,6 +371,33 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/patch
+    (util/get-url
+     "https://jobs.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn jobs-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified job, whose status is OPEN or recently EXPIRED
+  within the last 90 days."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/jobs"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://jobs.googleapis.com/"
      "v3/{+name}"
@@ -445,5 +445,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

@@ -3,7 +3,7 @@
   Provides reliable, many-to-many, asynchronous messaging between applications.
   
   See: https://cloud.google.com/pubsub/docs"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -67,7 +67,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-acknowledge$
@@ -101,7 +101,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-patch$
@@ -162,7 +162,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-create$
@@ -185,7 +185,7 @@
   for REST API requests, you must specify a name in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -200,7 +200,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-modifyAckDeadline$
@@ -232,7 +234,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-delete$
@@ -323,7 +325,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-list$
@@ -384,7 +386,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn subscriptions-pull$
@@ -414,102 +416,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn snapshots-patch$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Updates an existing snapshot. Snapshots are used in
-  <a href=\"https://cloud.google.com/pubsub/docs/replay-overview\">Seek</a>
-  operations, which allow
-  you to manage message acknowledgments in bulk. That is, you can set the
-  acknowledgment state of messages in an existing subscription to the state
-  captured by a snapshot."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/pubsub"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://pubsub.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn snapshots-get$
-  "Required parameters: snapshot
-  
-  Optional parameters: none
-  
-  Gets the configuration details of a snapshot. Snapshots are used in
-  <a href=\"https://cloud.google.com/pubsub/docs/replay-overview\">Seek</a>
-  operations, which allow you to manage message acknowledgments in bulk. That
-  is, you can set the acknowledgment state of messages in an existing
-  subscription to the state captured by a snapshot."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/pubsub"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"snapshot"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://pubsub.googleapis.com/"
-     "v1/{+snapshot}"
-     #{"snapshot"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn snapshots-testIamPermissions$
-  "Required parameters: resource
-  
-  Optional parameters: none
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/pubsub"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://pubsub.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{"resource"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn snapshots-delete$
@@ -606,7 +513,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn snapshots-create$
@@ -634,7 +541,7 @@
   REST API requests, you must specify a name in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -649,7 +556,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn snapshots-getIamPolicy$
@@ -678,6 +587,101 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn snapshots-patch$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Updates an existing snapshot. Snapshots are used in
+  <a href=\"https://cloud.google.com/pubsub/docs/replay-overview\">Seek</a>
+  operations, which allow
+  you to manage message acknowledgments in bulk. That is, you can set the
+  acknowledgment state of messages in an existing subscription to the state
+  captured by a snapshot."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn snapshots-get$
+  "Required parameters: snapshot
+  
+  Optional parameters: none
+  
+  Gets the configuration details of a snapshot. Snapshots are used in
+  <a href=\"https://cloud.google.com/pubsub/docs/replay-overview\">Seek</a>
+  operations, which allow you to manage message acknowledgments in bulk. That
+  is, you can set the acknowledgment state of messages in an existing
+  subscription to the state captured by a snapshot."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"snapshot"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+snapshot}"
+     #{"snapshot"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn snapshots-testIamPermissions$
+  "Required parameters: resource
+  
+  Optional parameters: none
+  
+  Returns permissions that a caller has on the specified resource.
+  If the resource does not exist, this will return an empty set of
+  permissions, not a NOT_FOUND error.
+  
+  Note: This operation is designed to be used for building permission-aware
+  UIs and command-line tools, not for authorization checking. This operation
+  may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"resource"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{"resource"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn topics-get$
@@ -734,7 +738,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn topics-patch$
@@ -795,7 +799,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn topics-create$
@@ -808,7 +812,7 @@
   resource name rules</a>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -823,7 +827,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn topics-delete$
@@ -936,7 +942,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn topics-subscriptions-list$

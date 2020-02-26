@@ -2,7 +2,7 @@
   "Kubernetes Engine API
   Builds and manages container-based applications, powered by the open source Kubernetes technology.
   See: https://cloud.google.com/container-engine/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -35,83 +35,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-operations-list$
-  "Required parameters: parent
-  
-  Optional parameters: projectId, zone
-  
-  Lists all operations in a project in a specific zone or all zones."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+parent}/operations"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "Required parameters: name
-  
-  Optional parameters: projectId, zone, operationId
-  
-  Gets the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Cancels the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn locations-clusters-getJwks$
@@ -166,13 +89,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-get$
   "Required parameters: name
   
-  Optional parameters: clusterId, projectId, zone
+  Optional parameters: projectId, zone, clusterId
   
   Gets the details of a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -218,7 +141,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-create$
@@ -257,7 +180,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setAddons$
@@ -284,7 +207,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-update$
@@ -294,7 +217,7 @@
   
   Updates the settings of a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -309,7 +232,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-delete$
@@ -369,7 +294,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setMasterAuth$
@@ -398,7 +323,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-list$
@@ -451,7 +376,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setMonitoring$
@@ -478,7 +403,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-startIpRotation$
@@ -505,7 +430,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-completeIpRotation$
@@ -532,7 +457,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setLocations$
@@ -562,7 +487,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setLegacyAbac$
@@ -589,7 +514,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-setMaintenancePolicy$
@@ -616,7 +541,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-well-known-getOpenid-configuration$
@@ -675,7 +600,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-get$
@@ -727,7 +652,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-setAutoscaling$
@@ -754,7 +679,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-setManagement$
@@ -781,7 +706,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-update$
@@ -791,7 +716,7 @@
   
   Updates the version and/or image type for the specified node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -806,7 +731,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-delete$
@@ -858,7 +785,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-clusters-nodePools-list$
@@ -884,6 +811,83 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "Required parameters: parent
+  
+  Optional parameters: projectId, zone
+  
+  Lists all operations in a project in a specific zone or all zones."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+parent}/operations"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "Required parameters: name
+  
+  Optional parameters: operationId, projectId, zone
+  
+  Gets the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Cancels the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn aggregated-usableSubnetworks-list$
@@ -936,85 +940,8 @@
       :as :json}
      auth))))
 
-(defn zones-operations-cancel$
-  "Required parameters: operationId, projectId, zone
-  
-  Optional parameters: none
-  
-  Cancels the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"operationId" "zone" "projectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}:cancel"
-     #{"operationId" "zone" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn zones-operations-list$
-  "Required parameters: projectId, zone
-  
-  Optional parameters: parent
-  
-  Lists all operations in a project in a specific zone or all zones."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"zone" "projectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations"
-     #{"zone" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn zones-operations-get$
-  "Required parameters: projectId, zone, operationId
-  
-  Optional parameters: name
-  
-  Gets the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"operationId" "zone" "projectId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}"
-     #{"operationId" "zone" "projectId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn zones-clusters-monitoring$
-  "Required parameters: clusterId, projectId, zone
+  "Required parameters: projectId, zone, clusterId
   
   Optional parameters: none
   
@@ -1037,7 +964,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-get$
@@ -1101,7 +1028,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-update$
@@ -1111,7 +1038,7 @@
   
   Updates the settings of a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"clusterId" "zone" "projectId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1126,7 +1053,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-delete$
@@ -1186,7 +1115,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-locations$
@@ -1216,7 +1145,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-logging$
@@ -1243,7 +1172,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-resourceLabels$
@@ -1270,7 +1199,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-setMasterAuth$
@@ -1299,7 +1228,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-list$
@@ -1352,7 +1281,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-addons$
@@ -1379,7 +1308,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-startIpRotation$
@@ -1406,7 +1335,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-completeIpRotation$
@@ -1433,7 +1362,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-master$
@@ -1460,7 +1389,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-setMaintenancePolicy$
@@ -1487,7 +1416,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-rollback$
@@ -1517,7 +1446,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-get$
@@ -1573,7 +1502,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-create$
@@ -1600,7 +1529,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-setManagement$
@@ -1629,7 +1558,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-update$
@@ -1658,11 +1587,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-delete$
-  "Required parameters: projectId, zone, clusterId, nodePoolId
+  "Required parameters: clusterId, nodePoolId, projectId, zone
   
   Optional parameters: name
   
@@ -1714,7 +1643,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn zones-clusters-nodePools-list$
@@ -1733,6 +1662,83 @@
      "https://container.googleapis.com/"
      "v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/nodePools"
      #{"clusterId" "zone" "projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn zones-operations-cancel$
+  "Required parameters: operationId, projectId, zone
+  
+  Optional parameters: none
+  
+  Cancels the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"operationId" "zone" "projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}:cancel"
+     #{"operationId" "zone" "projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn zones-operations-list$
+  "Required parameters: projectId, zone
+  
+  Optional parameters: parent
+  
+  Lists all operations in a project in a specific zone or all zones."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"zone" "projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations"
+     #{"zone" "projectId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn zones-operations-get$
+  "Required parameters: projectId, zone, operationId
+  
+  Optional parameters: name
+  
+  Gets the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"operationId" "zone" "projectId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}"
+     #{"operationId" "zone" "projectId"}
      args)
     (merge-with
      merge

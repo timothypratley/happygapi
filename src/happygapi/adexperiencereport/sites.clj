@@ -2,7 +2,7 @@
   "Ad Experience Report API
   Views Ad Experience Report data, and gets a list of sites that have a significant number of annoying ads.
   See: https://developers.google.com/ad-experience-report/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

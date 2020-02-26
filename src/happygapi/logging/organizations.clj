@@ -2,7 +2,7 @@
   "Stackdriver Logging API
   Writes log entries and manages your Stackdriver Logging configuration. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the <a href=https://cloud.google.com/logging/docs>Stackdriver Logging documentation</a>.
   See: https://cloud.google.com/logging/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -148,6 +148,34 @@
       :as :json}
      auth))))
 
+(defn sinks-create$
+  "Required parameters: parent
+  
+  Optional parameters: uniqueWriterIdentity
+  
+  Creates a sink that exports specified log entries to a destination. The export of newly-ingested log entries begins immediately, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/sinks"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn sinks-get$
   "Required parameters: sinkName
   
@@ -210,7 +238,7 @@
   Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"sinkName"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -225,7 +253,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn sinks-delete$
@@ -282,34 +312,6 @@
       :as :json}
      auth))))
 
-(defn sinks-create$
-  "Required parameters: parent
-  
-  Optional parameters: uniqueWriterIdentity
-  
-  Creates a sink that exports specified log entries to a destination. The export of newly-ingested log entries begins immediately, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/sinks"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn logs-delete$
   "Required parameters: logName
   
@@ -362,34 +364,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn exclusions-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/exclusions"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn exclusions-delete$
@@ -498,4 +472,32 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn exclusions-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/exclusions"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

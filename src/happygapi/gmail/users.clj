@@ -2,7 +2,7 @@
   "Gmail API
   Access Gmail mailboxes including sending user email.
   See: https://developers.google.com/gmail/api/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -68,7 +68,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn watch$
@@ -98,7 +98,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn drafts-create$
@@ -128,7 +128,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn drafts-delete$
@@ -240,7 +240,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn drafts-update$
@@ -252,7 +252,7 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"id" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -267,7 +267,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn history-list$
@@ -324,7 +326,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn labels-delete$
@@ -448,7 +450,7 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"id" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -463,7 +465,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-get$
@@ -523,7 +527,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-untrash$
@@ -551,7 +555,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-delete$
@@ -603,7 +607,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-batchModify$
@@ -631,7 +635,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-list$
@@ -690,7 +694,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-import$
@@ -719,7 +723,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-modify$
@@ -747,7 +751,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-trash$
@@ -775,7 +779,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn messages-attachments-get$
@@ -842,7 +846,7 @@
   
   Updates IMAP settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -857,7 +861,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-getVacation$
@@ -925,7 +931,7 @@
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -940,7 +946,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-updateVacation$
@@ -950,7 +958,7 @@
   
   Updates vacation responder settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -965,7 +973,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-updateLanguage$
@@ -977,7 +987,7 @@
   
   If successful, the return object contains the displayLanguage that was saved for the user, which may differ from the value passed into the request. This is because the requested displayLanguage may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -992,7 +1002,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-getImap$
@@ -1058,7 +1070,7 @@
   
   Updates POP settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1073,7 +1085,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-delegates-create$
@@ -1108,7 +1122,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-delegates-delete$
@@ -1226,7 +1240,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-filters-delete$
@@ -1336,7 +1350,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-forwardingAddresses-delete$
@@ -1448,7 +1462,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-sendAs-delete$
@@ -1572,7 +1586,7 @@
   Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"userId" "sendAsEmail"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -1587,7 +1601,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-sendAs-verify$
@@ -1616,7 +1632,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-sendAs-smimeInfo-delete$
@@ -1699,7 +1715,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn settings-sendAs-smimeInfo-list$
@@ -1756,7 +1772,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn threads-delete$
@@ -1868,7 +1884,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn threads-trash$
@@ -1896,7 +1912,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn threads-untrash$
@@ -1924,5 +1940,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

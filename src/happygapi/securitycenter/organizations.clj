@@ -2,7 +2,7 @@
   "Cloud Security Command Center API
   Cloud Security Command Center API provides access to temporal views of assets and findings within an organization.
   See: https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overview"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,34 +62,6 @@
       :as :json}
      auth))))
 
-(defn assets-group$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Filters an organization's assets and  groups them by their specified
-  properties."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/assets:group"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn assets-list$
   "Required parameters: parent
   
@@ -144,13 +116,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn assets-updateSecurityMarks$
   "Required parameters: name
   
-  Optional parameters: updateMask, startTime
+  Optional parameters: startTime, updateMask
   
   Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -170,6 +142,34 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn assets-group$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Filters an organization's assets and  groups them by their specified
+  properties."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/assets:group"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-list$
@@ -221,7 +221,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-setIamPolicy$
@@ -248,7 +248,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-getIamPolicy$
@@ -275,7 +275,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-get$
@@ -352,7 +352,35 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn sources-findings-create$
+  "Required parameters: parent
+  
+  Optional parameters: findingId
+  
+  Creates a finding. The corresponding source must exist for finding creation
+  to succeed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/findings"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-findings-group$
@@ -383,7 +411,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sources-findings-patch$
@@ -393,31 +421,6 @@
   
   Creates or updates a finding. The corresponding source must exist for a
   finding creation to succeed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-updateSecurityMarks$
-  "Required parameters: name
-  
-  Optional parameters: startTime, updateMask
-  
-  Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -461,13 +464,38 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn sources-findings-updateSecurityMarks$
+  "Required parameters: name
+  
+  Optional parameters: startTime, updateMask
+  
+  Updates security marks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn sources-findings-list$
   "Required parameters: parent
   
-  Optional parameters: fieldMask, pageToken, pageSize, orderBy, readTime, compareDuration, filter
+  Optional parameters: orderBy, readTime, compareDuration, filter, fieldMask, pageToken, pageSize
   
   Lists an organization or source's findings.
   
@@ -490,34 +518,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn sources-findings-create$
-  "Required parameters: parent
-  
-  Optional parameters: findingId
-  
-  Creates a finding. The corresponding source must exist for finding creation
-  to succeed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn operations-cancel$
@@ -553,7 +553,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn operations-delete$
@@ -587,7 +587,7 @@
 (defn operations-list$
   "Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.

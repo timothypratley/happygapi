@@ -2,7 +2,7 @@
   "Access Approval API
   An API for controlling access to data by Google personnel.
   See: https://cloud.google.com/access-approval/docs"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -96,7 +96,7 @@
 (defn approvalRequests-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists approval requests associated with a project, folder, or organization.
   Approval requests can be filtered by state (pending, active, dismissed).
@@ -178,7 +178,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn approvalRequests-approve$
@@ -208,5 +208,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

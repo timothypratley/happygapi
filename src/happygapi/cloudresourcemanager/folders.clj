@@ -2,7 +2,7 @@
   "Cloud Resource Manager API
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
   See: https://cloud.google.com/resource-manager"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -71,7 +71,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -141,7 +141,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn create$
@@ -194,7 +194,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn move$
@@ -237,7 +237,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -303,7 +303,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn getIamPolicy$
@@ -335,7 +335,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn undelete$
@@ -371,13 +371,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
   "Required parameters: none
   
-  Optional parameters: parent, showDeleted, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, parent, showDeleted
   
   Lists the Folders that are direct descendants of supplied parent resource.
   List provides a strongly consistent view of the Folders underneath

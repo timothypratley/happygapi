@@ -2,7 +2,7 @@
   "Cloud Translation API
   Integrates text translation into your website or application.
   See: https://cloud.google.com/translate/docs/quickstarts"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,7 +37,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn getSupportedLanguages$
@@ -91,87 +91,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-list$
-  "Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+name}/locations"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-translateText$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Translates input text and returns translated text."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+parent}:translateText"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-getSupportedLanguages$
-  "Required parameters: parent
-  
-  Optional parameters: displayLanguageCode, model
-  
-  Returns a list of supported languages for translation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+parent}/supportedLanguages"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-detectLanguage$
@@ -199,7 +119,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-get$
@@ -258,71 +178,15 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-glossaries-delete$
+(defn locations-list$
   "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a glossary, or cancels glossary construction
-  if the glossary isn't created yet.
-  Returns NOT_FOUND, if the glossary doesn't exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-glossaries-list$
-  "Required parameters: parent
   
   Optional parameters: filter, pageToken, pageSize
   
-  Lists glossaries in a project. Returns NOT_FOUND, if the project doesn't
-  exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+parent}/glossaries"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-glossaries-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a glossary. Returns NOT_FOUND, if the glossary doesn't
-  exist."
+  Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
   [auth args]
@@ -332,7 +196,7 @@
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
-     "v3/{+name}"
+     "v3/{+name}/locations"
      #{"name"}
      args)
     (merge-with
@@ -343,14 +207,14 @@
       :as :json}
      auth))))
 
-(defn locations-glossaries-create$
+(defn locations-translateText$
   "Required parameters: parent
   
   Optional parameters: none
   
-  Creates a glossary and returns the long-running operation. Returns
-  NOT_FOUND, if the project doesn't exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Translates input text and returns translated text."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
   [auth args body]
   {:pre [(util/has-keys? args #{"parent"})
          (json-schema/validate schemas args)]}
@@ -358,7 +222,7 @@
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
-     "v3/{+parent}/glossaries"
+     "v3/{+parent}:translateText"
      #{"parent"}
      args)
     (merge-with
@@ -368,66 +232,26 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-operations-cancel$
-  "Required parameters: name
+(defn locations-getSupportedLanguages$
+  "Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: model, displayLanguageCode
   
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-operations-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  Returns a list of supported languages for translation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
+  {:pre [(util/has-keys? args #{"parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://translation.googleapis.com/"
-     "v3/{+name}"
-     #{"name"}
+     "v3/{+parent}/supportedLanguages"
+     #{"parent"}
      args)
     (merge-with
      merge
@@ -440,7 +264,7 @@
 (defn locations-operations-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -533,5 +357,181 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-operations-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-operations-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-glossaries-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a glossary, or cancels glossary construction
+  if the glossary isn't created yet.
+  Returns NOT_FOUND, if the glossary doesn't exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-glossaries-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists glossaries in a project. Returns NOT_FOUND, if the project doesn't
+  exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+parent}/glossaries"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-glossaries-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a glossary. Returns NOT_FOUND, if the glossary doesn't
+  exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-glossaries-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a glossary and returns the long-running operation. Returns
+  NOT_FOUND, if the project doesn't exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+parent}/glossaries"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

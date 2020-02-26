@@ -2,7 +2,7 @@
   "YouTube Analytics API
   Retrieves your YouTube Analytics data.
   See: https://developers.google.com/youtube/analytics"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

@@ -3,7 +3,7 @@
   Examines the call stack and variables of a running application without stopping or slowing it down.
   
   See: https://cloud.google.com/debugger"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
 (defn debuggees-list$
   "Required parameters: none
   
-  Optional parameters: project, clientVersion, includeInactive
+  Optional parameters: clientVersion, includeInactive, project
   
   Lists all the debuggees that the user has access to."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -64,11 +64,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn debuggees-breakpoints-delete$
-  "Required parameters: breakpointId, debuggeeId
+  "Required parameters: debuggeeId, breakpointId
   
   Optional parameters: clientVersion
   
@@ -122,7 +122,7 @@
 (defn debuggees-breakpoints-list$
   "Required parameters: debuggeeId
   
-  Optional parameters: waitToken, clientVersion, action.value, includeInactive, includeAllUsers, stripResults
+  Optional parameters: includeAllUsers, includeInactive, stripResults, waitToken, action.value, clientVersion
   
   Lists all breakpoints for the debuggee."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

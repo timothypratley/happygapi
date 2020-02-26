@@ -2,7 +2,7 @@
   "Google Cloud Memorystore for Redis API
   Creates and manages Redis instances on the Google Cloud Platform.
   See: https://cloud.google.com/memorystore/docs/redis/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -95,7 +95,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-operations-delete$
@@ -129,7 +129,7 @@
 (defn locations-operations-list$
   "Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -187,77 +187,6 @@
       :as :json}
      auth))))
 
-(defn locations-instances-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists all Redis instances owned by a project in either the specified
-  location (region) or all locations.
-  
-  The location should have the following format:
-  
-  * `projects/{project_id}/locations/{location_id}`
-  
-  If `location_id` is specified as `-` (wildcard), then all regions
-  available to the project are queried, and the results are aggregated."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://redis.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-instances-create$
-  "Required parameters: parent
-  
-  Optional parameters: instanceId
-  
-  Creates a Redis instance based on the specified tier and memory size.
-  
-  By default, the instance is accessible from the project's
-  [default network](/compute/docs/networks-and-firewalls#networks).
-  
-  The creation is executed asynchronously and callers may check the returned
-  operation to track its progress. Once the operation is completed the Redis
-  instance will be fully functional. Completed longrunning.Operation will
-  contain the new instance object in the response field.
-  
-  The returned operation is automatically deleted after a few hours, so there
-  is no need to call DeleteOperation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://redis.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn locations-instances-export$
   "Required parameters: name
   
@@ -287,7 +216,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-instances-get$
@@ -401,7 +330,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-instances-failover$
@@ -429,5 +358,76 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-instances-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists all Redis instances owned by a project in either the specified
+  location (region) or all locations.
+  
+  The location should have the following format:
+  
+  * `projects/{project_id}/locations/{location_id}`
+  
+  If `location_id` is specified as `-` (wildcard), then all regions
+  available to the project are queried, and the results are aggregated."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://redis.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-instances-create$
+  "Required parameters: parent
+  
+  Optional parameters: instanceId
+  
+  Creates a Redis instance based on the specified tier and memory size.
+  
+  By default, the instance is accessible from the project's
+  [default network](/compute/docs/networks-and-firewalls#networks).
+  
+  The creation is executed asynchronously and callers may check the returned
+  operation to track its progress. Once the operation is completed the Redis
+  instance will be fully functional. Completed longrunning.Operation will
+  contain the new instance object in the response field.
+  
+  The returned operation is automatically deleted after a few hours, so there
+  is no need to call DeleteOperation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://redis.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

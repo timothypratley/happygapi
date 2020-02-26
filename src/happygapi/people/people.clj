@@ -2,7 +2,7 @@
   "People API
   Provides access to information about profiles and contacts.
   See: https://developers.google.com/people/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -185,7 +185,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn get$
@@ -227,7 +227,7 @@
 (defn connections-list$
   "Required parameters: resourceName
   
-  Optional parameters: syncToken, personFields, sortOrder, requestSyncToken, pageToken, requestMask.includeField, pageSize
+  Optional parameters: personFields, sortOrder, requestSyncToken, pageToken, pageSize, requestMask.includeField, syncToken
   
   Provides a list of the authenticated user's contacts merged with any
   connected profiles.

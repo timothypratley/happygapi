@@ -2,7 +2,7 @@
   "Google Sheets API
   Reads and writes Google Sheets.
   See: https://developers.google.com/sheets/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -108,7 +108,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn create$
@@ -137,7 +137,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn batchUpdate$
@@ -184,7 +184,99 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn sheets-copyTo$
+  "Required parameters: spreadsheetId, sheetId
+  
+  Optional parameters: none
+  
+  Copies a single sheet from a spreadsheet to another spreadsheet.
+  Returns the properties of the newly created sheet."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"sheetId" "spreadsheetId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sheets.googleapis.com/"
+     "v4/spreadsheets/{spreadsheetId}/sheets/{sheetId}:copyTo"
+     #{"sheetId" "spreadsheetId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn developerMetadata-search$
+  "Required parameters: spreadsheetId
+  
+  Optional parameters: none
+  
+  Returns all developer metadata matching the specified DataFilter.
+  If the provided DataFilter represents a DeveloperMetadataLookup object,
+  this will return all DeveloperMetadata entries selected by it. If the
+  DataFilter represents a location in a spreadsheet, this will return all
+  developer metadata associated with locations intersecting that region."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"spreadsheetId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sheets.googleapis.com/"
+     "v4/spreadsheets/{spreadsheetId}/developerMetadata:search"
+     #{"spreadsheetId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn developerMetadata-get$
+  "Required parameters: spreadsheetId, metadataId
+  
+  Optional parameters: none
+  
+  Returns the developer metadata with the specified ID.
+  The caller must specify the spreadsheet ID and the developer metadata's
+  unique metadataId."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"metadataId" "spreadsheetId"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sheets.googleapis.com/"
+     "v4/spreadsheets/{spreadsheetId}/developerMetadata/{metadataId}"
+     #{"metadataId" "spreadsheetId"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn values-batchGetByDataFilter$
@@ -216,13 +308,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-get$
-  "Required parameters: range, spreadsheetId
+  "Required parameters: spreadsheetId, range
   
-  Optional parameters: valueRenderOption, dateTimeRenderOption, majorDimension
+  Optional parameters: majorDimension, valueRenderOption, dateTimeRenderOption
   
   Returns a range of values from a spreadsheet.
   The caller must specify the spreadsheet ID and a range."
@@ -278,7 +370,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-batchGet$
@@ -341,11 +433,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-append$
-  "Required parameters: range, spreadsheetId
+  "Required parameters: spreadsheetId, range
   
   Optional parameters: responseValueRenderOption, insertDataOption, valueInputOption, responseDateTimeRenderOption, includeValuesInResponse
   
@@ -383,7 +475,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-update$
@@ -397,7 +489,7 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"range" "spreadsheetId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -412,7 +504,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-batchUpdateByDataFilter$
@@ -444,7 +538,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-batchClear$
@@ -476,7 +570,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn values-clear$
@@ -508,97 +602,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn sheets-copyTo$
-  "Required parameters: spreadsheetId, sheetId
-  
-  Optional parameters: none
-  
-  Copies a single sheet from a spreadsheet to another spreadsheet.
-  Returns the properties of the newly created sheet."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"sheetId" "spreadsheetId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sheets.googleapis.com/"
-     "v4/spreadsheets/{spreadsheetId}/sheets/{sheetId}:copyTo"
-     #{"sheetId" "spreadsheetId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn developerMetadata-search$
-  "Required parameters: spreadsheetId
-  
-  Optional parameters: none
-  
-  Returns all developer metadata matching the specified DataFilter.
-  If the provided DataFilter represents a DeveloperMetadataLookup object,
-  this will return all DeveloperMetadata entries selected by it. If the
-  DataFilter represents a location in a spreadsheet, this will return all
-  developer metadata associated with locations intersecting that region."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"spreadsheetId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sheets.googleapis.com/"
-     "v4/spreadsheets/{spreadsheetId}/developerMetadata:search"
-     #{"spreadsheetId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn developerMetadata-get$
-  "Required parameters: spreadsheetId, metadataId
-  
-  Optional parameters: none
-  
-  Returns the developer metadata with the specified ID.
-  The caller must specify the spreadsheet ID and the developer metadata's
-  unique metadataId."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"metadataId" "spreadsheetId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sheets.googleapis.com/"
-     "v4/spreadsheets/{spreadsheetId}/developerMetadata/{metadataId}"
-     #{"metadataId" "spreadsheetId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))

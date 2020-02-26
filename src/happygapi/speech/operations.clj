@@ -2,7 +2,7 @@
   "Cloud Speech-to-Text API
   Converts audio to text by applying powerful neural network models.
   See: https://cloud.google.com/speech-to-text/docs/quickstart-protocol"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: name, pageToken, pageSize, filter
+  Optional parameters: filter, name, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.

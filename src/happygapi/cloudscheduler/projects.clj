@@ -2,7 +2,7 @@
   "Cloud Scheduler API
   Creates and manages jobs run on a regular recurring schedule.
   See: https://cloud.google.com/scheduler/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn locations-list$
   "Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -60,6 +60,39 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn locations-jobs-pause$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Pauses a job.
+  
+  If a job is paused then the system will stop executing the job
+  until it is re-enabled via ResumeJob. The
+  state of the job is stored in state; if paused it
+  will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED
+  to be paused."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+name}:pause"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobs-delete$
@@ -136,7 +169,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobs-run$
@@ -166,7 +199,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobs-resume$
@@ -198,7 +231,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobs-get$
@@ -257,37 +290,4 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-jobs-pause$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Pauses a job.
-  
-  If a job is paused then the system will stop executing the job
-  until it is re-enabled via ResumeJob. The
-  state of the job is stored in state; if paused it
-  will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED
-  to be paused."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+name}:pause"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))

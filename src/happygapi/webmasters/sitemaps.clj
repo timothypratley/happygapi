@@ -2,7 +2,7 @@
   "Search Console API
   View Google Search Console data for your verified sites.
   See: https://developers.google.com/webmaster-tools/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -96,7 +96,7 @@
   
   Submits a sitemap for a site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"feedpath" "siteUrl"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -111,5 +111,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

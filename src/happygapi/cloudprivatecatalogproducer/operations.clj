@@ -2,7 +2,7 @@
   "Cloud Private Catalog Producer API
   Enables cloud users to manage and share enterprise catalogs intheir organizations.
   See: https://cloud.google.com/private-catalog/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -13,38 +13,10 @@
   (edn/read-string
    (slurp (io/resource "cloudprivatecatalogproducer_schema.edn"))))
 
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "Required parameters: none
   
-  Optional parameters: filter, name, pageToken, pageSize
+  Optional parameters: name, pageToken, pageSize, filter
   
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
@@ -135,5 +107,33 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

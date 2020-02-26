@@ -2,7 +2,7 @@
   "Tasks API
   Manages your tasks and task lists.
   See: https://developers.google.com/google-apps/tasks/firstapp"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -36,7 +36,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -114,7 +114,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -167,7 +167,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -202,7 +202,7 @@
   
   Updates the specified task."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"tasklist" "task"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -217,5 +217,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

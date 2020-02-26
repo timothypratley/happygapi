@@ -2,7 +2,7 @@
   "Cloud OS Login API
   You can use OS Login to manage access to your VM instances using IAM roles.
   See: https://cloud.google.com/compute/docs/oslogin/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,33 +11,6 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "oslogin_schema.edn"))))
-
-(defn getLoginProfile$
-  "Required parameters: name
-  
-  Optional parameters: projectId, systemId
-  
-  Retrieves the profile information used for logging in to a virtual machine
-  on Google Compute Engine."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://oslogin.googleapis.com/"
-     "v1/{+name}/loginProfile"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn importSshPublicKey$
   "Required parameters: parent
@@ -66,7 +39,34 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn getLoginProfile$
+  "Required parameters: name
+  
+  Optional parameters: projectId, systemId
+  
+  Retrieves the profile information used for logging in to a virtual machine
+  on Google Compute Engine."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://oslogin.googleapis.com/"
+     "v1/{+name}/loginProfile"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn sshPublicKeys-delete$

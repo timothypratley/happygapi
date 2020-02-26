@@ -2,7 +2,7 @@
   "Cloud Identity-Aware Proxy API
   Controls access to cloud applications running on Google Cloud Platform.
   See: https://cloud.google.com/iap"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -10,39 +10,6 @@
             [json-schema.core :as json-schema]))
 
 (def schemas (edn/read-string (slurp (io/resource "iap_schema.edn"))))
-
-(defn brands-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Constructs a new OAuth brand for the project if one does not exist.
-  The created brand is \"internal only\", meaning that OAuth clients created
-  under it only accept requests from users who belong to the same G Suite
-  organization as the project. The brand is created in an un-reviewed status.
-  NOTE: The \"internal only\" status can be manually changed in the Google
-  Cloud console. Requires that a brand does not already exist for the
-  project, and that the specified support email is owned by the caller."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://iap.googleapis.com/"
-     "v1/{+parent}/brands"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
 
 (defn brands-list$
   "Required parameters: parent
@@ -94,6 +61,39 @@
       :as :json}
      auth))))
 
+(defn brands-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Constructs a new OAuth brand for the project if one does not exist.
+  The created brand is \"internal only\", meaning that OAuth clients created
+  under it only accept requests from users who belong to the same G Suite
+  organization as the project. The brand is created in an un-reviewed status.
+  NOTE: The \"internal only\" status can be manually changed in the Google
+  Cloud console. Requires that a brand does not already exist for the
+  project, and that the specified support email is owned by the caller."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iap.googleapis.com/"
+     "v1/{+parent}/brands"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
 (defn brands-identityAwareProxyClients-resetSecret$
   "Required parameters: name
   
@@ -119,7 +119,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn brands-identityAwareProxyClients-delete$
@@ -226,5 +226,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

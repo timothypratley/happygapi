@@ -2,7 +2,7 @@
   "Compute Engine API
   Creates and runs virtual machines on Google Cloud Platform.
   See: https://developers.google.com/compute/docs/reference/latest/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -91,7 +91,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn insert$
@@ -119,7 +119,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -183,7 +183,7 @@
   Updates the specified regional BackendService resource with the data included in the request. There are several restrictions and guidelines to keep in mind when updating a backend service. Read  Restrictions and Guidelines for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"project" "region" "backendService"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -198,5 +198,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

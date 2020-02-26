@@ -3,7 +3,7 @@
   Publishes 360 photos to Google Maps, along with position, orientation, and connectivity metadata. Apps can offer an interface for positioning, connecting, and uploading user-generated Street View images.
   
   See: https://developers.google.com/streetview/publish/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -16,7 +16,7 @@
 (defn batchGet$
   "Required parameters: none
   
-  Optional parameters: view, languageCode, photoIds
+  Optional parameters: languageCode, photoIds, view
   
   Gets the metadata of the specified
   Photo batch.
@@ -56,7 +56,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: filter, languageCode, pageToken, pageSize, view
+  Optional parameters: view, filter, languageCode, pageToken, pageSize
   
   Lists all the Photos that belong to
   the user.
@@ -138,7 +138,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn batchDelete$
@@ -180,5 +180,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

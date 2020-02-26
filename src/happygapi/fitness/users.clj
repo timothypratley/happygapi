@@ -2,7 +2,7 @@
   "Fitness
   Stores and accesses user data in the fitness store from apps on any platform.
   See: https://developers.google.com/fit/rest/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -52,7 +52,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn dataSources-delete$
@@ -189,7 +189,7 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"dataSourceId" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -204,7 +204,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn dataSources-dataPointChanges-list$
@@ -398,7 +400,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn sessions-delete$
@@ -475,7 +477,7 @@
   
   Updates or insert a given session."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"sessionId" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -490,5 +492,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

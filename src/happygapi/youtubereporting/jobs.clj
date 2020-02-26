@@ -2,7 +2,7 @@
   "YouTube Reporting API
   Schedules reporting jobs containing your YouTube Analytics data and downloads the resulting bulk data reports in the form of CSV files.
   See: https://developers.google.com/youtube/reporting/v1/reports/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -11,6 +11,34 @@
 
 (def schemas
   (edn/read-string (slurp (io/resource "youtubereporting_schema.edn"))))
+
+(defn create$
+  "Required parameters: none
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Creates a job and returns it."
+  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtubereporting.googleapis.com/"
+     "v1/jobs"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
 
 (defn delete$
   "Required parameters: jobId
@@ -90,38 +118,10 @@
       :as :json}
      auth))))
 
-(defn create$
-  "Required parameters: none
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Creates a job and returns it."
-  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtubereporting.googleapis.com/"
-     "v1/jobs"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
 (defn reports-list$
   "Required parameters: jobId
   
-  Optional parameters: pageSize, onBehalfOfContentOwner, startTimeBefore, createdAfter, startTimeAtOrAfter, pageToken
+  Optional parameters: createdAfter, startTimeAtOrAfter, pageToken, pageSize, onBehalfOfContentOwner, startTimeBefore
   
   Lists reports created by a specific job.
   Returns NOT_FOUND if the job does not exist."
@@ -146,7 +146,7 @@
      auth))))
 
 (defn reports-get$
-  "Required parameters: reportId, jobId
+  "Required parameters: jobId, reportId
   
   Optional parameters: onBehalfOfContentOwner
   

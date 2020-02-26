@@ -2,7 +2,7 @@
   "Google Site Verification API
   Verifies ownership of websites or domains with Google.
   See: https://developers.google.com/site-verification/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -87,7 +87,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn insert$
@@ -115,7 +115,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -175,7 +175,7 @@
   
   Modify the list of owners for your website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"id"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -190,5 +190,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

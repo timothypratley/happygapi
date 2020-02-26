@@ -2,7 +2,7 @@
   "Firebase Dynamic Links API
   Programmatically creates and manages Firebase Dynamic Links.
   See: https://firebase.google.com/docs/dynamic-links/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -64,7 +64,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn $
@@ -91,5 +91,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

@@ -2,7 +2,7 @@
   "AdSense Host API
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
   See: https://developers.google.com/adsense/host/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -86,7 +86,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
@@ -146,7 +146,7 @@
   
   Update a custom channel in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"adClientId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -161,5 +161,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

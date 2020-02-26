@@ -2,7 +2,7 @@
   "Cloud Speech-to-Text API
   Converts audio to text by applying powerful neural network models.
   See: https://cloud.google.com/speech-to-text/docs/quickstart-protocol"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -41,7 +41,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn recognize$
@@ -69,5 +69,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))

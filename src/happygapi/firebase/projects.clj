@@ -2,7 +2,7 @@
   "Firebase Management API
   The Firebase Management API enables programmatic setup and management of Firebase projects, including a project's Firebase resources and Firebase apps.
   See: https://firebase.google.com"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -151,7 +151,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn removeAnalytics$
@@ -195,7 +195,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn searchApps$
@@ -381,36 +381,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn androidApps-getConfig$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the configuration artifact associated with the specified
-  AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn androidApps-get$
@@ -444,7 +415,7 @@
 (defn androidApps-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists each AndroidApp associated with the specified parent Project.
   <br>
@@ -529,7 +500,64 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn androidApps-getConfig$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified
+  AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-sha-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Adds a SHA certificate to the specified AndroidApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/sha"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn androidApps-sha-delete$
@@ -585,34 +613,6 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn androidApps-sha-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Adds a SHA certificate to the specified AndroidApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/sha"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
      auth))))
 
 (defn availableLocations-list$
@@ -805,7 +805,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn defaultLocation-finalize$
@@ -870,35 +870,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn iosApps-getConfig$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the configuration artifact associated with the specified IosApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
+      :body (json/generate-string body)}
      auth))))
 
 (defn iosApps-get$
@@ -1017,5 +989,33 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn iosApps-getConfig$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified IosApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

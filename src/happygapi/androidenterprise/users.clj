@@ -2,7 +2,7 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -64,7 +64,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn generateToken$
@@ -93,7 +93,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn generateAuthenticationToken$
@@ -124,7 +124,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn update$
@@ -136,7 +136,7 @@
   
   Can be used with EMM-managed users only (not Google managed users). Pass the new details in the Users resource in the request body. Only the displayName field can be changed. Other fields must either be unset or have the currently active value."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -151,7 +151,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn delete$
@@ -288,7 +290,7 @@
   
   Modifies the set of products that a user is entitled to access (referred to as whitelisted products). Only products that are approved or products that were previously approved (products with revoked approval) can be whitelisted."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"enterpriseId" "userId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -303,5 +305,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

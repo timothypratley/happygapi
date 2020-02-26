@@ -2,7 +2,7 @@
   "CustomSearch API
   Searches over a website or collection of websites
   See: https://developers.google.com/custom-search/v1/using_rest"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

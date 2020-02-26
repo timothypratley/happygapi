@@ -2,7 +2,7 @@
   "Domains RDAP API
   Read-only public API that lets users search for information about domain names.
   See: https://developers.google.com/domains/rdap/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

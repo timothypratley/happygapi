@@ -2,7 +2,7 @@
   "Cloud Data Loss Prevention (DLP) API
   Provides methods for detection, risk analysis, and de-identification of privacy-sensitive fragments in text, images, and Google Cloud Platform storage repositories.
   See: https://cloud.google.com/dlp/docs/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -10,6 +10,144 @@
             [json-schema.core :as json-schema]))
 
 (def schemas (edn/read-string (slurp (io/resource "dlp_schema.edn"))))
+
+(defn storedInfoTypes-patch$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Updates the stored infoType by creating a new version. The existing version
+  will continue to be used until the new version is ready.
+  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
+  learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn storedInfoTypes-get$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a stored infoType.
+  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
+  learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn storedInfoTypes-list$
+  "Required parameters: parent
+  
+  Optional parameters: pageToken, orderBy, pageSize, locationId
+  
+  Lists stored infoTypes.
+  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
+  learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/storedInfoTypes"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn storedInfoTypes-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a pre-built stored infoType to be used for inspection.
+  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
+  learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/storedInfoTypes"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn storedInfoTypes-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a stored infoType.
+  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
+  learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn deidentifyTemplates-delete$
   "Required parameters: name
@@ -146,7 +284,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn image-redact$
@@ -180,13 +318,106 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn dlpJobs-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a new job to inspect storage or calculate risk metrics.
+  See https://cloud.google.com/dlp/docs/inspecting-storage and
+  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more.
+  
+  When no InfoTypes or CustomInfoTypes are specified in inspect jobs, the
+  system will automatically choose what detectors to run. By default this may
+  be all types, but may change over time as detectors are updated."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/dlpJobs"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn dlpJobs-cancel$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running DlpJob. The server
+  makes a best effort to cancel the DlpJob, but success is not
+  guaranteed.
+  See https://cloud.google.com/dlp/docs/inspecting-storage and
+  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}:cancel"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn dlpJobs-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running DlpJob. This method indicates that the client is
+  no longer interested in the DlpJob result. The job will be cancelled if
+  possible.
+  See https://cloud.google.com/dlp/docs/inspecting-storage and
+  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn dlpJobs-list$
   "Required parameters: parent
   
-  Optional parameters: filter, pageToken, locationId, pageSize, orderBy, type
+  Optional parameters: pageToken, locationId, pageSize, orderBy, type, filter
   
   Lists DlpJobs that match the specified filter in the request.
   See https://cloud.google.com/dlp/docs/inspecting-storage and
@@ -224,99 +455,6 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dlpJobs-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a new job to inspect storage or calculate risk metrics.
-  See https://cloud.google.com/dlp/docs/inspecting-storage and
-  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more.
-  
-  When no InfoTypes or CustomInfoTypes are specified in inspect jobs, the
-  system will automatically choose what detectors to run. By default this may
-  be all types, but may change over time as detectors are updated."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/dlpJobs"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn dlpJobs-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running DlpJob. The server
-  makes a best effort to cancel the DlpJob, but success is not
-  guaranteed.
-  See https://cloud.google.com/dlp/docs/inspecting-storage and
-  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn dlpJobs-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running DlpJob. This method indicates that the client is
-  no longer interested in the DlpJob result. The job will be cancelled if
-  possible.
-  See https://cloud.google.com/dlp/docs/inspecting-storage and
-  https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://dlp.googleapis.com/"
      "v2/{+name}"
@@ -411,7 +549,7 @@
 (defn inspectTemplates-list$
   "Required parameters: parent
   
-  Optional parameters: pageSize, locationId, pageToken, orderBy
+  Optional parameters: pageToken, orderBy, pageSize, locationId
   
   Lists InspectTemplates.
   See https://cloud.google.com/dlp/docs/creating-templates to learn more."
@@ -460,7 +598,71 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
+     auth))))
+
+(defn content-reidentify$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Re-identifies content that has been de-identified.
+  See
+  https://cloud.google.com/dlp/docs/pseudonymization#re-identification_in_free_text_code_example
+  to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/content:reidentify"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn content-deidentify$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  De-identifies potentially sensitive info from a ContentItem.
+  This method has limits on input size and output size.
+  See https://cloud.google.com/dlp/docs/deidentify-sensitive-data to
+  learn more.
+  
+  When no InfoTypes or CustomInfoTypes are specified in this request, the
+  system will automatically choose what detectors to run. By default this may
+  be all types, but may change over time as detectors are updated."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/content:deidentify"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn content-inspect$
@@ -495,28 +697,28 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn content-reidentify$
-  "Required parameters: parent
+(defn locations-deidentifyTemplates-create$
+  "Required parameters: locationId, parent
   
   Optional parameters: none
   
-  Re-identifies content that has been de-identified.
-  See
-  https://cloud.google.com/dlp/docs/pseudonymization#re-identification_in_free_text_code_example
-  to learn more."
+  Creates a DeidentifyTemplate for re-using frequently used configuration
+  for de-identifying content, images, and storage.
+  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
+  more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
+  {:pre [(util/has-keys? args #{"locationId" "parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+parent}/content:reidentify"
-     #{"parent"}
+     "v2/{+parent}/locations/{locationId}/deidentifyTemplates"
+     #{"locationId" "parent"}
      args)
     (merge-with
      merge
@@ -525,191 +727,23 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn content-deidentify$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  De-identifies potentially sensitive info from a ContentItem.
-  This method has limits on input size and output size.
-  See https://cloud.google.com/dlp/docs/deidentify-sensitive-data to
-  learn more.
-  
-  When no InfoTypes or CustomInfoTypes are specified in this request, the
-  system will automatically choose what detectors to run. By default this may
-  be all types, but may change over time as detectors are updated."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/content:deidentify"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobTriggers-delete$
+(defn locations-deidentifyTemplates-delete$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes a job trigger.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  Deletes a DeidentifyTemplate.
+  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
+  more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn jobTriggers-list$
-  "Required parameters: parent
-  
-  Optional parameters: orderBy, filter, pageToken, pageSize, locationId
-  
-  Lists job triggers.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/jobTriggers"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn jobTriggers-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a job trigger to run DLP actions such as scanning storage for
-  sensitive information on a set schedule.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/jobTriggers"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobTriggers-activate$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Activate a job trigger. Causes the immediate execute of a trigger
-  instead of waiting on the trigger event to occur."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}:activate"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn jobTriggers-patch$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Updates a job trigger.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn jobTriggers-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a job trigger.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
      "v2/{+name}"
@@ -778,7 +812,7 @@
      auth))))
 
 (defn locations-deidentifyTemplates-list$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
   Optional parameters: pageToken, orderBy, pageSize
   
@@ -804,65 +838,8 @@
       :as :json}
      auth))))
 
-(defn locations-deidentifyTemplates-create$
-  "Required parameters: parent, locationId
-  
-  Optional parameters: none
-  
-  Creates a DeidentifyTemplate for re-using frequently used configuration
-  for de-identifying content, images, and storage.
-  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
-  more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"locationId" "parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/locations/{locationId}/deidentifyTemplates"
-     #{"locationId" "parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-deidentifyTemplates-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a DeidentifyTemplate.
-  See https://cloud.google.com/dlp/docs/creating-templates-deid to learn
-  more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-image-redact$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
   Optional parameters: none
   
@@ -892,7 +869,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-dlpJobs-create$
@@ -925,7 +902,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-dlpJobs-cancel$
@@ -956,7 +933,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-dlpJobs-delete$
@@ -991,7 +968,7 @@
 (defn locations-dlpJobs-list$
   "Required parameters: locationId, parent
   
-  Optional parameters: type, filter, pageToken, pageSize, orderBy
+  Optional parameters: pageToken, pageSize, orderBy, type, filter
   
   Lists DlpJobs that match the specified filter in the request.
   See https://cloud.google.com/dlp/docs/inspecting-storage and
@@ -1121,9 +1098,9 @@
      auth))))
 
 (defn locations-inspectTemplates-list$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
-  Optional parameters: pageSize, pageToken, orderBy
+  Optional parameters: pageToken, orderBy, pageSize
   
   Lists InspectTemplates.
   See https://cloud.google.com/dlp/docs/creating-templates to learn more."
@@ -1147,7 +1124,7 @@
      auth))))
 
 (defn locations-inspectTemplates-create$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
   Optional parameters: none
   
@@ -1172,75 +1149,11 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-content-reidentify$
-  "Required parameters: locationId, parent
-  
-  Optional parameters: none
-  
-  Re-identifies content that has been de-identified.
-  See
-  https://cloud.google.com/dlp/docs/pseudonymization#re-identification_in_free_text_code_example
-  to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"locationId" "parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/locations/{locationId}/content:reidentify"
-     #{"locationId" "parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn locations-content-deidentify$
-  "Required parameters: parent, locationId
-  
-  Optional parameters: none
-  
-  De-identifies potentially sensitive info from a ContentItem.
-  This method has limits on input size and output size.
-  See https://cloud.google.com/dlp/docs/deidentify-sensitive-data to
-  learn more.
-  
-  When no InfoTypes or CustomInfoTypes are specified in this request, the
-  system will automatically choose what detectors to run. By default this may
-  be all types, but may change over time as detectors are updated."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"locationId" "parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/locations/{locationId}/content:deidentify"
-     #{"locationId" "parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-content-inspect$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
   Optional parameters: none
   
@@ -1271,33 +1184,71 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn locations-jobTriggers-patch$
-  "Required parameters: name
+(defn locations-content-reidentify$
+  "Required parameters: locationId, parent
   
   Optional parameters: none
   
-  Updates a job trigger.
-  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  Re-identifies content that has been de-identified.
+  See
+  https://cloud.google.com/dlp/docs/pseudonymization#re-identification_in_free_text_code_example
+  to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
+  [auth args body]
+  {:pre [(util/has-keys? args #{"locationId" "parent"})
          (json-schema/validate schemas args)]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
+     "v2/{+parent}/locations/{locationId}/content:reidentify"
+     #{"locationId" "parent"}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn locations-content-deidentify$
+  "Required parameters: locationId, parent
+  
+  Optional parameters: none
+  
+  De-identifies potentially sensitive info from a ContentItem.
+  This method has limits on input size and output size.
+  See https://cloud.google.com/dlp/docs/deidentify-sensitive-data to
+  learn more.
+  
+  When no InfoTypes or CustomInfoTypes are specified in this request, the
+  system will automatically choose what detectors to run. By default this may
+  be all types, but may change over time as detectors are updated."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"locationId" "parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/locations/{locationId}/content:deidentify"
+     #{"locationId" "parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobTriggers-get$
@@ -1313,6 +1264,32 @@
          (json-schema/validate schemas args)]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobTriggers-patch$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Updates a job trigger.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/patch
     (util/get-url
      "https://dlp.googleapis.com/"
      "v2/{+name}"
@@ -1353,7 +1330,7 @@
      auth))))
 
 (defn locations-jobTriggers-list$
-  "Required parameters: parent, locationId
+  "Required parameters: locationId, parent
   
   Optional parameters: orderBy, filter, pageToken, pageSize
   
@@ -1379,7 +1356,7 @@
      auth))))
 
 (defn locations-jobTriggers-create$
-  "Required parameters: parent, locationId
+  "Required parameters: locationId, parent
   
   Optional parameters: none
   
@@ -1404,7 +1381,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobTriggers-activate$
@@ -1432,7 +1409,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn locations-storedInfoTypes-delete$
@@ -1545,7 +1522,7 @@
      auth))))
 
 (defn locations-storedInfoTypes-create$
-  "Required parameters: locationId, parent
+  "Required parameters: parent, locationId
   
   Optional parameters: none
   
@@ -1570,74 +1547,16 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
-(defn storedInfoTypes-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a pre-built stored infoType to be used for inspection.
-  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
-  learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/storedInfoTypes"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body body}
-     auth))))
-
-(defn storedInfoTypes-delete$
+(defn jobTriggers-patch$
   "Required parameters: name
   
   Optional parameters: none
   
-  Deletes a stored infoType.
-  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
-  learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn storedInfoTypes-patch$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Updates the stored infoType by creating a new version. The existing version
-  will continue to be used until the new version is ready.
-  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
-  learn more."
+  Updates a job trigger.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -1657,14 +1576,13 @@
       :as :json}
      auth))))
 
-(defn storedInfoTypes-get$
+(defn jobTriggers-get$
   "Required parameters: name
   
   Optional parameters: none
   
-  Gets a stored infoType.
-  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
-  learn more."
+  Gets a job trigger.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"name"})
@@ -1684,14 +1602,39 @@
       :as :json}
      auth))))
 
-(defn storedInfoTypes-list$
+(defn jobTriggers-delete$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a job trigger.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn jobTriggers-list$
   "Required parameters: parent
   
-  Optional parameters: pageToken, orderBy, pageSize, locationId
+  Optional parameters: filter, pageToken, locationId, pageSize, orderBy
   
-  Lists stored infoTypes.
-  See https://cloud.google.com/dlp/docs/creating-stored-infotypes to
-  learn more."
+  Lists job triggers.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
   {:pre [(util/has-keys? args #{"parent"})
@@ -1700,7 +1643,7 @@
    (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+parent}/storedInfoTypes"
+     "v2/{+parent}/jobTriggers"
      #{"parent"}
      args)
     (merge-with
@@ -1709,4 +1652,61 @@
       :query-params args,
       :accept :json,
       :as :json}
+     auth))))
+
+(defn jobTriggers-create$
+  "Required parameters: parent
+  
+  Optional parameters: none
+  
+  Creates a job trigger to run DLP actions such as scanning storage for
+  sensitive information on a set schedule.
+  See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"parent"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/jobTriggers"
+     #{"parent"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
+     auth))))
+
+(defn jobTriggers-activate$
+  "Required parameters: name
+  
+  Optional parameters: none
+  
+  Activate a job trigger. Causes the immediate execute of a trigger
+  instead of waiting on the trigger event to occur."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{"name"})
+         (json-schema/validate schemas args)]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}:activate"
+     #{"name"}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

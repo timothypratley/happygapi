@@ -2,7 +2,7 @@
   "YouTube Reporting API
   Schedules reporting jobs containing your YouTube Analytics data and downloads the resulting bulk data reports in the form of CSV files.
   See: https://developers.google.com/youtube/reporting/v1/reports/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -15,7 +15,7 @@
 (defn list$
   "Required parameters: none
   
-  Optional parameters: pageToken, includeSystemManaged, pageSize, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, pageToken, includeSystemManaged, pageSize
   
   Lists report types."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"

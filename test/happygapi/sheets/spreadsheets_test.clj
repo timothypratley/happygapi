@@ -5,6 +5,6 @@
 
 (deftest get$-test
   (is (= {} (gsheets/get$ (oauth2/auth)
-                          {"spreaddsheetId" "1NbGRyCRMoOT_MLhnubC5900JNwiQq_uqvdKwbqZOfyM"}))))
+                          {"spreadsheetId" "1NbGRyCRMoOT_MLhnubC5900JNwiQq_uqvdKwbqZOfyM"}))))
 
 ;; TODO: test schema validation

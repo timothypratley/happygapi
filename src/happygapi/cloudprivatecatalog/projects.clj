@@ -2,7 +2,7 @@
   "Cloud Private Catalog API
   Enable cloud users to discover enterprise catalogs and products in their organizations.
   See: https://cloud.google.com/private-catalog/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -68,7 +68,7 @@
 (defn products-search$
   "Required parameters: resource
   
-  Optional parameters: pageToken, pageSize, query
+  Optional parameters: query, pageToken, pageSize
   
   Search Product resources that consumers have access to, within the
   scope of the consumer cloud resource hierarchy context."

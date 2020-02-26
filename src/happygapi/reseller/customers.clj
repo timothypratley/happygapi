@@ -2,7 +2,7 @@
   "Enterprise Apps Reseller API
   Creates and manages your customers and their subscriptions.
   See: https://developers.google.com/google-apps/reseller/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -62,7 +62,7 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn patch$
@@ -97,7 +97,7 @@
   
   Update a customer account's settings."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"customerId"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -112,5 +112,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

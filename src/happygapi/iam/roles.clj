@@ -2,7 +2,7 @@
   "Identity and Access Management (IAM) API
   Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
   See: https://cloud.google.com/iam/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -37,13 +37,13 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
 
 (defn list$
   "Required parameters: none
   
-  Optional parameters: parent, showDeleted, pageToken, pageSize, view
+  Optional parameters: pageSize, view, parent, showDeleted, pageToken
   
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

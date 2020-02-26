@@ -2,7 +2,7 @@
   "Google Play EMM API
   Manages the deployment of apps to Android for Work users.
   See: https://developers.google.com/android/work/play/emm-api"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -98,7 +98,7 @@
   
   Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
           #{"installId" "enterpriseId" "userId" "deviceId"})
@@ -115,5 +115,7 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))

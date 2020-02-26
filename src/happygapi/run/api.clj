@@ -2,7 +2,7 @@
   "Cloud Run API
   Deploy and manage user provided container images that scale automatically based on HTTP traffic.
   See: https://cloud.google.com/run/"
-  (:require [cheshire.core]
+  (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -50,7 +50,7 @@
   May provide metadata.resourceVersion to enforce update from last read for
   optimistic concurrency control."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys? args #{"name"})
          (json-schema/validate schemas args)]}
   (util/get-response
@@ -65,7 +65,9 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json}
+      :as :json,
+      :content-type :json,
+      :body (json/generate-string body)}
      auth))))
 
 (defn v1-namespaces-secrets-create$
@@ -92,5 +94,5 @@
       :accept :json,
       :as :json,
       :content-type :json,
-      :body body}
+      :body (json/generate-string body)}
      auth))))
