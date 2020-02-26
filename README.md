@@ -26,7 +26,7 @@ This library is alpha, expect changes.
 ### Add as a Dependency
 
 ```clojure
-[happygapi]
+[happygapi "0.1.0"]
 ```
 
 ### Require the resources you wish to access
