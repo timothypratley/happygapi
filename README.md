@@ -53,6 +53,7 @@ Functions are generated according to this pattern:
 Where `auth` is a map to apply to the request, `params` and `body` align with REST documentation.
 For example see [batchUpdate](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdate).
 
+The json-schema files are written as edn to resources.
 I plan to add json-schema validation to the body soon.
 
 
