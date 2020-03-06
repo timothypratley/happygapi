@@ -18,8 +18,7 @@
 
 (defn summarize-schema [schema request depth]
   (m/rewrite request
-    {:as                   ?foo
-     :type                 "object"
+    {:type                 "object"
      :id                   ?id
      :additionalProperties ?ap
      :properties           (m/seqable [!property !item] ...)}
