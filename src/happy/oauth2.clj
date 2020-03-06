@@ -10,7 +10,7 @@
 
 (def default-config
   {:tokens-directory "tokens"
-   :secrets-file     "secret.json"
+   :secret-file      (io/file "secret.json")
    :scopes           ["https://www.googleapis.com/auth/spreadsheets"
                       "https://www.googleapis.com/auth/drive"]
    :port             8888})
@@ -20,12 +20,12 @@
 (defn start*
   "Creates a new, running authorization system.
   Use this to compose with system management."
-  [{:keys [scopes secrets-file tokens-directory port]}]
-  {:pre [(.exists (io/file secrets-file))]}
+  [{:keys [scopes secret-file tokens-directory port]}]
+  {:pre [(.exists (io/file secret-file))]}
   (doto (io/file tokens-directory) (.mkdirs))
   (let [json-factory (JacksonFactory/getDefaultInstance)
         transport (GoogleNetHttpTransport/newTrustedTransport)
-        secrets (with-open [r (io/reader (io/file secrets-file))]
+        secrets (with-open [r (io/reader (io/file secret-file))]
                   (GoogleClientSecrets/load json-factory r))
         flow (-> (GoogleAuthorizationCodeFlow$Builder. transport json-factory secrets scopes)
                  (.setDataStoreFactory (FileDataStoreFactory. (io/file tokens-directory)))
