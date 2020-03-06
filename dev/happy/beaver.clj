@@ -62,7 +62,6 @@
                                       (str/join ", " (map name !required-parameters))
                                       "none")
             \newline \newline
-            ;; TODO: show the full parameter definition types/enums/etc
             "Optional parameters: " (if (seq !optional-parameters)
                                       (str/join ", " (map name !optional-parameters))
                                       "none")
