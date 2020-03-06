@@ -19,13 +19,9 @@ HappyGAPI accepts data instead of an objects.
 
 ## Usage
 
-This library is alpha, expect changes.
-
 Add the dependency to the project file:
 
-```clojure
-[happygapi "0.1.0"]
-```
+![](https://clojars.org/happygapi/latest-version.svg)
 
 Require `happygapi.<api>.<resource>` in the code:
 
