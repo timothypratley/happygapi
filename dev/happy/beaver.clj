@@ -40,24 +40,6 @@
        (symbol ?ref)
        (summarize-schema schema (get schema (keyword ?ref)) (inc depth)))))
 
-
-(defn expand-refs
-  ([schema request] (expand-refs schema request 1))
-  ([schema request depth]
-   (m/match request
-     (m/$ ?context {:$ref (m/pred string? ?type)})
-     (let [r (?context (get schema (keyword ?type)))]
-       (if (< depth 1000)
-         (expand-refs schema r (inc depth))
-         r))
-     _else request)))
-
-(expand-refs {:TypeA {:properties {:a {:$ref "TypeB"}}}
-              :TypeB {:properties {:b {:$ref "TypeC"}}}
-              :TypeC {}}
-             ["a" {:$ref "TypeA"}
-              "b" {:$ref "TypeB"}])
-
 (def extract-method
   (s/rewrite
     [{:baseUrl ?base-url
