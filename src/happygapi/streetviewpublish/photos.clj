@@ -1,23 +1,18 @@
 (ns happygapi.streetviewpublish.photos
-  "Street View Publish API
+  "Street View Publish API: photos.
   Publishes 360 photos to Google Maps, along with position, orientation, and connectivity metadata. Apps can offer an interface for positioning, connecting, and uploading user-generated Street View images.
   
-  See: https://developers.google.com/streetview/publish/"
+  See: https://developers.google.com/streetview/publish/api/reference/rest/v1/photos"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "streetviewpublish_schema.edn"))))
+            [happy.util :as util]))
 
 (defn batchGet$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchGet
   
-  Optional parameters: languageCode, photoIds, view
+  Required parameters: none
   
+  Optional parameters: view, languageCode, photoIds
   Gets the metadata of the specified
   Photo batch.
   
@@ -36,8 +31,7 @@
   for specific failures that can occur per photo."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -54,10 +48,11 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/list
   
-  Optional parameters: view, filter, languageCode, pageToken, pageSize
+  Required parameters: none
   
+  Optional parameters: pageToken, pageSize, view, filter, languageCode
   Lists all the Photos that belong to
   the user.
   
@@ -65,8 +60,7 @@
   being indexed are not returned in the response.</aside>"
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -83,9 +77,15 @@
      auth))))
 
 (defn batchUpdate$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchUpdate
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:updatePhotoRequests [{:photo Photo, :updateMask string}]}
   
   Updates the metadata of Photos, such
   as pose, place association, connections, etc. Changing the pixels of photos
@@ -122,8 +122,7 @@
   filled as well. Otherwise, the request will fail.</aside>"
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -133,18 +132,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn batchDelete$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchDelete
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:photoIds [string]}
   
   Deletes a list of Photos and their
   metadata.
@@ -164,8 +169,7 @@
   for specific failures that can occur per photo."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -175,10 +179,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,34 +1,28 @@
 (ns happygapi.adsense.customchannels
-  "AdSense Management API
+  "AdSense Management API: customchannels.
   Accesses AdSense publishers' inventory and generates performance reports.
-  See: https://developers.google.com/adsense/management/"
+  See: https://developers.google.com/adsense/management/api/reference/rest/v1.4/customchannels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: adClientId, customChannelId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/customchannels/get
+  
+  Required parameters: adClientId, customChannelId
   
   Optional parameters: none
-  
   Get the specified custom channel from the specified ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels/{customChannelId}"
-     #{"customChannelId" "adClientId"}
+     #{:adClientId :customChannelId}
      args)
     (merge-with
      merge
@@ -39,22 +33,22 @@
      auth))))
 
 (defn list$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/customchannels/list
+  
+  Required parameters: adClientId
   
   Optional parameters: maxResults, pageToken
-  
   List all custom channels in the specified ad client for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge
@@ -65,22 +59,22 @@
      auth))))
 
 (defn adunits-list$
-  "Required parameters: adClientId, customChannelId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/customchannels/adunits/list
+  
+  Required parameters: adClientId, customChannelId
   
   Optional parameters: includeInactive, maxResults, pageToken
-  
   List all ad units in the specified custom channel."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels/{customChannelId}/adunits"
-     #{"customChannelId" "adClientId"}
+     #{:adClientId :customChannelId}
      args)
     (merge-with
      merge

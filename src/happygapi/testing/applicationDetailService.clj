@@ -1,27 +1,26 @@
 (ns happygapi.testing.applicationDetailService
-  "Cloud Testing API
+  "Cloud Testing API: applicationDetailService.
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
-  See: https://developers.google.com/cloud-test-lab/"
+  See: https://developers.google.com/cloud-test-lab/api/reference/rest/v1/applicationDetailService"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "testing_schema.edn"))))
+            [happy.util :as util]))
 
 (defn getApkDetails$
-  "Required parameters: none
+  "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/applicationDetailService/getApkDetails
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:gcsPath string}
   
   Gets the details of an Android application APK."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,10 +30,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

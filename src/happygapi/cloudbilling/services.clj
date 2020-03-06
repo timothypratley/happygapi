@@ -1,28 +1,22 @@
 (ns happygapi.cloudbilling.services
-  "Cloud Billing API
+  "Cloud Billing API: services.
   Allows developers to manage billing for their Google Cloud Platform projects
       programmatically.
-  See: https://cloud.google.com/billing/"
+  See: https://cloud.google.com/billing/api/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudbilling_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://cloud.google.com/billing/api/reference/rest/v1/services/list
+  
+  Required parameters: none
   
   Optional parameters: pageToken, pageSize
-  
   Lists all public cloud services."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -39,21 +33,21 @@
      auth))))
 
 (defn skus-list$
-  "Required parameters: parent
+  "https://cloud.google.com/billing/api/reference/rest/v1/services/skus/list
   
-  Optional parameters: endTime, pageToken, startTime, pageSize, currencyCode
+  Required parameters: parent
   
+  Optional parameters: currencyCode, endTime, pageToken, startTime, pageSize
   Lists all publicly available SKUs for a given cloud service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+parent}/skus"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge

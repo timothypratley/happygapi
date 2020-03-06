@@ -1,22 +1,21 @@
 (ns happygapi.accesscontextmanager.operations
-  "Access Context Manager API
+  "Access Context Manager API: operations.
   An API for setting attribute based access control to requests to GCP services.
-  See: https://cloud.google.com/access-context-manager/docs/reference/rest/"
+  See: https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "accesscontextmanager_schema.edn"))))
+            [happy.util :as util]))
 
 (defn cancel$
-  "Required parameters: name
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
@@ -30,44 +29,43 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: name
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
   `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -78,10 +76,11 @@
      auth))))
 
 (defn list$
-  "Required parameters: name
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/operations/list
+  
+  Required parameters: name
   
   Optional parameters: pageToken, pageSize, filter
-  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -94,14 +93,13 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -112,23 +110,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: name
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

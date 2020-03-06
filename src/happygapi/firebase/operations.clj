@@ -1,22 +1,17 @@
 (ns happygapi.firebase.operations
-  "Firebase Management API
+  "Firebase Management API: operations.
   The Firebase Management API enables programmatic setup and management of Firebase projects, including a project's Firebase resources and Firebase apps.
-  See: https://firebase.google.com"
+  See: https://firebase.google.comapi/reference/rest/v1beta1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "firebase_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: name
+  "https://firebase.google.comapi/reference/rest/v1beta1/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
@@ -25,14 +20,13 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebase.googleapis.com/"
      "v1beta1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

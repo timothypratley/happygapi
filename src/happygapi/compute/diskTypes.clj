@@ -1,35 +1,29 @@
 (ns happygapi.compute.diskTypes
-  "Compute Engine API
+  "Compute Engine API: diskTypes.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/diskTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn aggregatedList$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/diskTypes/aggregatedList
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves an aggregated list of disk types."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/diskTypes"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -40,23 +34,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: diskType, project, zone
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/diskTypes/get
+  
+  Required parameters: diskType, project, zone
   
   Optional parameters: none
-  
   Returns the specified disk type. Gets a list of available disk types by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "diskType" "zone"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:zone :project :diskType})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/diskTypes/{diskType}"
-     #{"project" "diskType" "zone"}
+     #{:zone :project :diskType}
      args)
     (merge-with
      merge
@@ -67,23 +61,23 @@
      auth))))
 
 (defn list$
-  "Required parameters: project, zone
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/diskTypes/list
+  
+  Required parameters: project, zone
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves a list of disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "zone"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/diskTypes"
-     #{"project" "zone"}
+     #{:zone :project}
      args)
     (merge-with
      merge

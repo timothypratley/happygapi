@@ -1,40 +1,39 @@
 (ns happygapi.playcustomapp.accounts
-  "Google Play Custom App Publishing API
+  "Google Play Custom App Publishing API: accounts.
   An API to publish custom Android apps.
-  See: https://developers.google.com/android/work/play/custom-app-api"
+  See: https://developers.google.com/android/work/play/custom-app-apiapi/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "playcustomapp_schema.edn"))))
+            [happy.util :as util]))
 
 (defn customApps-create$
-  "Required parameters: account
+  "https://developers.google.com/android/work/play/custom-app-apiapi/reference/rest/v1/accounts/customApps/create
+  
+  Required parameters: account
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:languageCode string, :title string}
   
   Create and publish a new custom app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"account"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:account})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/playcustomapp/v1/accounts/"
      "{account}/customApps"
-     #{"account"}
+     #{:account}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

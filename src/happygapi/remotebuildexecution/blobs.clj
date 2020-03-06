@@ -1,69 +1,17 @@
 (ns happygapi.remotebuildexecution.blobs
-  "Remote Build Execution API
+  "Remote Build Execution API: blobs.
   Supplies a Remote Execution API service for tools such as bazel.
-  See: https://cloud.google.com/remote-build-execution/docs/"
+  See: https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/blobs"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "remotebuildexecution_schema.edn"))))
-
-(defn batchRead$
-  "Required parameters: instanceName
-  
-  Optional parameters: none
-  
-  Download many blobs at once.
-  
-  The server may enforce a limit of the combined total size of blobs
-  to be downloaded using this API. This limit may be obtained using the
-  Capabilities API.
-  Requests exceeding the limit should either be split into smaller
-  chunks or downloaded using the
-  ByteStream API, as appropriate.
-  
-  This request is equivalent to calling a Bytestream `Read` request
-  on each individual blob, in parallel. The requests may succeed or fail
-  independently.
-  
-  Errors:
-  
-  * `INVALID_ARGUMENT`: The client attempted to read more than the
-    server supported limit.
-  
-  Every error on individual read will be returned in the corresponding digest
-  status."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://remotebuildexecution.googleapis.com/"
-     "v2/{+instanceName}/blobs:batchRead"
-     #{"instanceName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
+            [happy.util :as util]))
 
 (defn getTree$
-  "Required parameters: sizeBytes, instanceName, hash
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/blobs/getTree
+  
+  Required parameters: sizeBytes, instanceName, hash
   
   Optional parameters: pageToken, pageSize
-  
   Fetch the entire directory tree rooted at a node.
   
   This request must be targeted at a
@@ -87,14 +35,13 @@
   * `NOT_FOUND`: The requested tree root is not present in the CAS."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:hash :instanceName :sizeBytes})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/blobs/{hash}/{sizeBytes}:getTree"
-     #{"instanceName" "hash" "sizeBytes"}
+     #{:hash :instanceName :sizeBytes}
      args)
     (merge-with
      merge
@@ -105,9 +52,15 @@
      auth))))
 
 (defn findMissing$
-  "Required parameters: instanceName
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/blobs/findMissing
+  
+  Required parameters: instanceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:blobDigests [{:hash string, :sizeBytes string}]}
   
   Determine if blobs are present in the CAS.
   
@@ -117,29 +70,34 @@
   There are no method-specific errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instanceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/blobs:findMissing"
-     #{"instanceName"}
+     #{:instanceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn batchUpdate$
-  "Required parameters: instanceName
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/blobs/batchUpdate
+  
+  Required parameters: instanceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:data string, :digest BuildBazelRemoteExecutionV2Digest}]}
   
   Upload many blobs at once.
   
@@ -167,21 +125,71 @@
   provided data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instanceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/blobs:batchUpdate"
-     #{"instanceName"}
+     #{:instanceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn batchRead$
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/blobs/batchRead
+  
+  Required parameters: instanceName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:digests [{:hash string, :sizeBytes string}]}
+  
+  Download many blobs at once.
+  
+  The server may enforce a limit of the combined total size of blobs
+  to be downloaded using this API. This limit may be obtained using the
+  Capabilities API.
+  Requests exceeding the limit should either be split into smaller
+  chunks or downloaded using the
+  ByteStream API, as appropriate.
+  
+  This request is equivalent to calling a Bytestream `Read` request
+  on each individual blob, in parallel. The requests may succeed or fail
+  independently.
+  
+  Errors:
+  
+  * `INVALID_ARGUMENT`: The client attempted to read more than the
+    server supported limit.
+  
+  Every error on individual read will be returned in the corresponding digest
+  status."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:instanceName})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://remotebuildexecution.googleapis.com/"
+     "v2/{+instanceName}/blobs:batchRead"
+     #{:instanceName}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

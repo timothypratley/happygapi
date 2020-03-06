@@ -1,30 +1,28 @@
 (ns happygapi.acceleratedmobilepageurl.ampUrls
-  "Accelerated Mobile Pages (AMP) URL API
+  "Accelerated Mobile Pages (AMP) URL API: ampUrls.
   Retrieves the list of AMP URLs (and equivalent AMP Cache URLs) for a given list of public URL(s).
   
-  See: https://developers.google.com/amp/cache/"
+  See: https://developers.google.com/amp/cache/api/reference/rest/v1/ampUrls"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "acceleratedmobilepageurl_schema.edn"))))
+            [happy.util :as util]))
 
 (defn batchGet$
-  "Required parameters: none
+  "https://developers.google.com/amp/cache/api/reference/rest/v1/ampUrls/batchGet
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:urls [string], :lookupStrategy string}
   
   Returns AMP URL(s) and equivalent
   [AMP Cache URL(s)](/amp/cache/overview#amp-cache-url-format)."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -34,10 +32,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

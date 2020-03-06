@@ -1,22 +1,17 @@
 (ns happygapi.firebase.availableProjects
-  "Firebase Management API
+  "Firebase Management API: availableProjects.
   The Firebase Management API enables programmatic setup and management of Firebase projects, including a project's Firebase resources and Firebase apps.
-  See: https://firebase.google.com"
+  See: https://firebase.google.comapi/reference/rest/v1beta1/availableProjects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "firebase_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://firebase.google.comapi/reference/rest/v1beta1/availableProjects/list
+  
+  Required parameters: none
   
   Optional parameters: pageToken, pageSize
-  
   Returns a list of [Google Cloud Platform (GCP) `Projects`]
   (https://cloud.google.com/resource-manager/reference/rest/v1/projects)
   that are available to have Firebase resources added to them.
@@ -35,8 +30,7 @@
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

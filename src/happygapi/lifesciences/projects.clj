@@ -1,33 +1,27 @@
 (ns happygapi.lifesciences.projects
-  "Cloud Life Sciences API
+  "Cloud Life Sciences API: projects.
   Cloud Life Sciences is a suite of services and tools for managing, processing, and transforming life sciences data.
-  See: https://cloud.google.com/life-sciences"
+  See: https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "lifesciences_schema.edn"))))
+            [happy.util :as util]))
 
 (defn locations-list$
-  "Required parameters: name
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/list
   
-  Optional parameters: pageSize, filter, pageToken
+  Required parameters: name
   
+  Optional parameters: pageToken, pageSize, filter
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://lifesciences.googleapis.com/"
      "v2beta/{+name}/locations"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn locations-get$
-  "Required parameters: name
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://lifesciences.googleapis.com/"
      "v2beta/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -63,9 +57,19 @@
      auth))))
 
 (defn locations-pipelines-run$
-  "Required parameters: parent
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/pipelines/run
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:labels {},
+   :pipeline {:actions [Action],
+              :environment {},
+              :timeout string,
+              :resources Resources}}
   
   Runs a pipeline.  The returned Operation's metadata field will contain a
   google.cloud.lifesciences.v2beta.Metadata object describing the status
@@ -85,29 +89,92 @@
   * `lifesciences.workflows.run`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://lifesciences.googleapis.com/"
      "v2beta/{+parent}/pipelines:run"
-     #{"parent"}
+     #{:parent}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  Lists operations that match the specified filter in the request.
+  Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
+  
+  * `lifesciences.operations.list`"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://lifesciences.googleapis.com/"
+     "v2beta/{+name}/operations"
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Gets the latest state of a long-running operation.
+  Clients can use this method to poll the operation result at intervals as
+  recommended by the API service.
+  Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
+  
+  * `lifesciences.operations.get`"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://lifesciences.googleapis.com/"
+     "v2beta/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn locations-operations-cancel$
-  "Required parameters: name
+  "https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects/locations/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Starts asynchronous cancellation on a long-running operation.
   The server makes a best effort to cancel the operation, but success is not
@@ -120,78 +187,19 @@
   * `lifesciences.operations.cancel`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://lifesciences.googleapis.com/"
      "v2beta/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-operations-list$
-  "Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists operations that match the specified filter in the request.
-  Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
-  
-  * `lifesciences.operations.list`"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://lifesciences.googleapis.com/"
-     "v2beta/{+name}/operations"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation.
-  Clients can use this method to poll the operation result at intervals as
-  recommended by the API service.
-  Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
-  
-  * `lifesciences.operations.get`"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://lifesciences.googleapis.com/"
-     "v2beta/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

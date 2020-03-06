@@ -1,29 +1,44 @@
 (ns happygapi.analyticsreporting.reports
-  "Analytics Reporting API
+  "Analytics Reporting API: reports.
   Accesses Analytics report data.
-  See: https://developers.google.com/analytics/devguides/reporting/core/v4/"
+  See: https://developers.google.com/analytics/devguides/reporting/core/v4/api/reference/rest/v4/reports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "analyticsreporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn batchGet$
-  "Required parameters: none
+  "https://developers.google.com/analytics/devguides/reporting/core/v4/api/reference/rest/v4/reports/batchGet
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:useResourceQuotas boolean,
+   :reportRequests [{:filtersExpression string,
+                     :hideTotals boolean,
+                     :viewId string,
+                     :dimensionFilterClauses [DimensionFilterClause],
+                     :cohortGroup CohortGroup,
+                     :segments [Segment],
+                     :dimensions [Dimension],
+                     :pageToken string,
+                     :hideValueRanges boolean,
+                     :pageSize integer,
+                     :metricFilterClauses [MetricFilterClause],
+                     :includeEmptyRows boolean,
+                     :samplingLevel string,
+                     :pivots [Pivot],
+                     :dateRanges [DateRange],
+                     :orderBys [OrderBy],
+                     :metrics [Metric]}]}
   
   Returns the Analytics data."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +48,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

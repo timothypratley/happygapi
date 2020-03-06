@@ -1,52 +1,50 @@
 (ns happygapi.compute.regionInstanceGroupManagers
-  "Compute Engine API
+  "Compute Engine API: regionInstanceGroupManagers.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn listManagedInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/listManagedInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: filter, maxResults, order_by, pageToken
-  
   Lists the instances in the managed instance group and instances that are scheduled to be created. The list includes any current actions that the group has scheduled for its instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
+  [auth args]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/listManagedInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn setInstanceTemplate$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/setInstanceTemplate
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:instanceTemplate string}
   
   Sets the instance template to use when creating new instances or recreating instances in this group. Existing instances are not affected."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -54,30 +52,30 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/setInstanceTemplate"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn get$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/get
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: none
-  
   Returns all of the details about the specified managed instance group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
@@ -85,14 +83,13 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
@@ -103,9 +100,50 @@
      auth))))
 
 (defn insert$
-  "Required parameters: project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/insert
+  
+  Required parameters: project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :updatePolicy {:instanceRedistributionType string,
+                  :maxSurge FixedOrPercent,
+                  :maxUnavailable FixedOrPercent,
+                  :minimalAction string,
+                  :type string},
+   :creationTimestamp string,
+   :zone string,
+   :name string,
+   :selfLink string,
+   :targetPools [string],
+   :region string,
+   :currentActions {:recreating integer,
+                    :restarting integer,
+                    :creating integer,
+                    :deleting integer,
+                    :refreshing integer,
+                    :abandoning integer,
+                    :verifying integer,
+                    :none integer,
+                    :creatingWithoutRetries integer},
+   :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
+   :status {:isStable boolean,
+            :versionTarget InstanceGroupManagerStatusVersionTarget},
+   :instanceGroup string,
+   :id string,
+   :kind string,
+   :distributionPolicy {:zones [DistributionPolicyZoneConfiguration]},
+   :baseInstanceName string,
+   :versions [{:instanceTemplate string,
+               :name string,
+               :targetSize FixedOrPercent}],
+   :targetSize integer,
+   :instanceTemplate string,
+   :fingerprint string,
+   :namedPorts [{:name string, :port integer}]}
   
   Creates a managed instance group using the information that you specify in the request. After the group is created, instances in the group are created using the specified instance template. This operation is marked as DONE when the group is created even if the instances in the group have not yet been created. You must separately verify the status of the individual instances with the listmanagedinstances method.
   
@@ -113,29 +151,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers"
-     #{"project" "region"}
+     #{:region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn abandonInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/abandonInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:instances [string]}
   
   Flags the specified instances to be immediately removed from the managed instance group. Abandoning an instance does not delete the instance, but it does remove the instance from any target pools that are applied by the managed instance group. This method reduces the targetSize of the managed instance group by the number of instances that you abandon. This operation is marked as DONE when the action is scheduled even if the instances have not yet been removed from the group. You must separately verify the status of the abandoning action with the listmanagedinstances method.
   
@@ -147,29 +190,34 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/abandonInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn recreateInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/recreateInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:instances [string]}
   
   Flags the specified instances in the managed instance group to be immediately recreated. The instances are deleted and recreated using the current instance template for the managed instance group. This operation is marked as DONE when the flag is set even if the instances have not yet been recreated. You must separately verify the status of the recreating action with the listmanagedinstances method.
   
@@ -181,29 +229,36 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/recreateInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn applyUpdatesToInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/applyUpdatesToInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:instances [string],
+   :minimalAction string,
+   :mostDisruptiveAllowedAction string}
   
   Apply updates to selected instances the managed instance group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -211,72 +266,113 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/applyUpdatesToInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn patch$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/patch
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :updatePolicy {:instanceRedistributionType string,
+                  :maxSurge FixedOrPercent,
+                  :maxUnavailable FixedOrPercent,
+                  :minimalAction string,
+                  :type string},
+   :creationTimestamp string,
+   :zone string,
+   :name string,
+   :selfLink string,
+   :targetPools [string],
+   :region string,
+   :currentActions {:recreating integer,
+                    :restarting integer,
+                    :creating integer,
+                    :deleting integer,
+                    :refreshing integer,
+                    :abandoning integer,
+                    :verifying integer,
+                    :none integer,
+                    :creatingWithoutRetries integer},
+   :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
+   :status {:isStable boolean,
+            :versionTarget InstanceGroupManagerStatusVersionTarget},
+   :instanceGroup string,
+   :id string,
+   :kind string,
+   :distributionPolicy {:zones [DistributionPolicyZoneConfiguration]},
+   :baseInstanceName string,
+   :versions [{:instanceTemplate string,
+               :name string,
+               :targetSize FixedOrPercent}],
+   :targetSize integer,
+   :instanceTemplate string,
+   :fingerprint string,
+   :namedPorts [{:name string, :port integer}]}
   
   Updates a managed instance group using the information that you specify in the request. This operation is marked as DONE when the group is patched even if the instances in the group are still in the process of being patched. You must separately verify the status of the individual instances with the listmanagedinstances method. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
+  [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/delete
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
-  
   Deletes the specified managed instance group and all of the instances in that group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
@@ -287,10 +383,11 @@
      auth))))
 
 (defn resize$
-  "Required parameters: instanceGroupManager, project, region, size
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/resize
+  
+  Required parameters: instanceGroupManager, project, region, size
   
   Optional parameters: requestId
-  
   Changes the intended size of the managed instance group. If you increase the size, the group creates new instances using the current instance template. If you decrease the size, the group deletes one or more instances.
   
   The resize operation is marked DONE if the resize request is successful. The underlying actions take additional time. You must separately verify the status of the creating or deleting actions with the listmanagedinstances method.
@@ -298,32 +395,35 @@
   If the group is part of a backend service that has enabled connection draining, it can take up to 60 seconds after the connection draining duration has elapsed before the VM instance is removed or deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
+  [auth args]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region" "size"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :size :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/resize"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :size :region :project}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn setTargetPools$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/setTargetPools
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:fingerprint string, :targetPools [string]}
   
   Modifies the target pools to which all new instances in this group are assigned. Existing instances in the group are not affected."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -331,43 +431,42 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/setTargetPools"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/list
+  
+  Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves the list of managed instance groups that are contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers"
-     #{"project" "region"}
+     #{:region :project}
      args)
     (merge-with
      merge
@@ -378,9 +477,15 @@
      auth))))
 
 (defn createInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/createInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:instances [{:fingerprint string, :name string}]}
   
   Creates instances with per-instance configs in this regional managed instance group. Instances are created using the current instance template. The create instances operation is marked DONE if the createInstances request is successful. The underlying actions take additional time. You must separately verify the status of the creating or actions with the listmanagedinstances method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -388,29 +493,34 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/createInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn deleteInstances$
-  "Required parameters: instanceGroupManager, project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/deleteInstances
+  
+  Required parameters: instanceGroupManager, project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:instances [string]}
   
   Flags the specified instances in the managed instance group to be immediately deleted. The instances are also removed from any target pools of which they were a member. This method reduces the targetSize of the managed instance group by the number of instances that you delete. The deleteInstances operation is marked DONE if the deleteInstances request is successful. The underlying actions take additional time. You must separately verify the status of the deleting action with the listmanagedinstances method.
   
@@ -422,21 +532,20 @@
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"instanceGroupManager" "project" "region"})
-         (json-schema/validate schemas args)]}
+          #{:instanceGroupManager :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/deleteInstances"
-     #{"instanceGroupManager" "project" "region"}
+     #{:instanceGroupManager :region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

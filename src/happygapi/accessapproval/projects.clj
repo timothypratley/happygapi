@@ -1,33 +1,27 @@
 (ns happygapi.accessapproval.projects
-  "Access Approval API
+  "Access Approval API: projects.
   An API for controlling access to data by Google personnel.
-  See: https://cloud.google.com/access-approval/docs"
+  See: https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "accessapproval_schema.edn"))))
+            [happy.util :as util]))
 
 (defn getAccessApprovalSettings$
-  "Required parameters: name
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/getAccessApprovalSettings
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the settings associated with a project, folder, or organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -38,10 +32,11 @@
      auth))))
 
 (defn deleteAccessApprovalSettings$
-  "Required parameters: name
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/deleteAccessApprovalSettings
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes the settings associated with a project, folder, or organization.
   This will have the effect of disabling Access Approval for the project,
   folder, or organization, but only if all ancestors also have Access
@@ -50,14 +45,13 @@
   the settings are inherited."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -68,49 +62,94 @@
      auth))))
 
 (defn updateAccessApprovalSettings$
-  "Required parameters: name
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/updateAccessApprovalSettings
+  
+  Required parameters: name
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:notificationEmails [string],
+   :name string,
+   :enrolledAncestor boolean,
+   :enrolledServices [{:enrollmentLevel string, :cloudProduct string}]}
   
   Updates the settings associated with a project, folder, or organization.
   Settings to update are determined by the value of field_mask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn approvalRequests-approve$
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/approvalRequests/approve
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:expireTime string}
+  
+  Approves a request and returns the updated ApprovalRequest.
+  
+  Returns NOT_FOUND if the request does not exist. Returns
+  FAILED_PRECONDITION if the request exists but is not in a pending state."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://accessapproval.googleapis.com/"
+     "v1/{+name}:approve"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn approvalRequests-list$
-  "Required parameters: parent
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/approvalRequests/list
+  
+  Required parameters: parent
   
   Optional parameters: filter, pageToken, pageSize
-  
   Lists approval requests associated with a project, folder, or organization.
   Approval requests can be filtered by state (pending, active, dismissed).
   The order is reverse chronological."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+parent}/approvalRequests"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -121,21 +160,21 @@
      auth))))
 
 (defn approvalRequests-get$
-  "Required parameters: name
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/approvalRequests/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets an approval request. Returns NOT_FOUND if the request does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -146,9 +185,15 @@
      auth))))
 
 (defn approvalRequests-dismiss$
-  "Required parameters: name
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/projects/approvalRequests/dismiss
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Dismisses a request. Returns the updated ApprovalRequest.
   
@@ -162,51 +207,20 @@
   state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}:dismiss"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn approvalRequests-approve$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Approves a request and returns the updated ApprovalRequest.
-  
-  Returns NOT_FOUND if the request does not exist. Returns
-  FAILED_PRECONDITION if the request exists but is not in a pending state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://accessapproval.googleapis.com/"
-     "v1/{+name}:approve"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

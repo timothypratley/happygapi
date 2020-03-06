@@ -8,7 +8,8 @@
   "Replace URL path parameters with their values"
   [base-url path params args]
   (str base-url
-       (reduce #(str/replace %1 (str "{" %2 "}") (args %2))
+       (reduce (fn [path param]
+                 (str/replace path (str "{" (name param) "}") (get args param)))
                path
                params)))
 
@@ -23,4 +24,6 @@
   [{:keys [status body]}]
   (if (= status 200)
     body
-    (throw (ex-info (str "HappyGAPI status: " status) (json/parse-string body)))))
+    (let [{{:keys [code status message]} :error :as body} (json/parse-string body true)]
+      (throw (ex-info (str "HappyGAPI " code ": " status " " message)
+                      (or body {}))))))

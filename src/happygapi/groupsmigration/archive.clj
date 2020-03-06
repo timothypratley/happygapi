@@ -1,40 +1,32 @@
 (ns happygapi.groupsmigration.archive
-  "Groups Migration API
+  "Groups Migration API: archive.
   Groups Migration Api.
-  See: https://developers.google.com/google-apps/groups-migration/"
+  See: https://developers.google.com/google-apps/groups-migration/api/reference/rest/v1/archive"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "groupsmigration_schema.edn"))))
+            [happy.util :as util]))
 
 (defn insert$
-  "Required parameters: groupId
+  "https://developers.google.com/google-apps/groups-migration/api/reference/rest/v1/archive/insert
+  
+  Required parameters: groupId
   
   Optional parameters: none
-  
   Inserts a new mail into the archive of the Google group."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.migration"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"groupId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:groupId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/groups/v1/groups/"
      "{groupId}/archive"
-     #{"groupId"}
+     #{:groupId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,28 +1,22 @@
 (ns happygapi.adsense.metadata
-  "AdSense Management API
+  "AdSense Management API: metadata.
   Accesses AdSense publishers' inventory and generates performance reports.
-  See: https://developers.google.com/adsense/management/"
+  See: https://developers.google.com/adsense/management/api/reference/rest/v1.4/metadata"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
+            [happy.util :as util]))
 
 (defn dimensions-list$
-  "Required parameters: none
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/metadata/dimensions/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   List the metadata for the dimensions available to this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -39,16 +33,16 @@
      auth))))
 
 (defn metrics-list$
-  "Required parameters: none
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/metadata/metrics/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   List the metadata for the metrics available to this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

@@ -1,23 +1,45 @@
 (ns happygapi.cloudprivatecatalogproducer.operations
-  "Cloud Private Catalog Producer API
+  "Cloud Private Catalog Producer API: operations.
   Enables cloud users to manage and share enterprise catalogs intheir organizations.
-  See: https://cloud.google.com/private-catalog/"
+  See: https://cloud.google.com/private-catalog/api/reference/rest/v1beta1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
+            [happy.util :as util]))
 
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "cloudprivatecatalogproducer_schema.edn"))))
+(defn delete$
+  "https://cloud.google.com/private-catalog/api/reference/rest/v1beta1/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudprivatecatalogproducer.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://cloud.google.com/private-catalog/api/reference/rest/v1beta1/operations/list
   
-  Optional parameters: name, pageToken, pageSize, filter
+  Required parameters: none
   
+  Optional parameters: filter, name, pageToken, pageSize
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -30,8 +52,7 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -48,23 +69,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: name
+  "https://cloud.google.com/private-catalog/api/reference/rest/v1beta1/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudprivatecatalogproducer.googleapis.com/"
      "v1beta1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -75,9 +96,15 @@
      auth))))
 
 (defn cancel$
-  "Required parameters: name
+  "https://cloud.google.com/private-catalog/api/reference/rest/v1beta1/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
@@ -91,48 +118,19 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudprivatecatalogproducer.googleapis.com/"
      "v1beta1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudprivatecatalogproducer.googleapis.com/"
-     "v1beta1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

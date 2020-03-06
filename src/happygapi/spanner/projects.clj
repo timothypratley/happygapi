@@ -1,47 +1,21 @@
 (ns happygapi.spanner.projects
-  "Cloud Spanner API
+  "Cloud Spanner API: projects.
   Cloud Spanner is a managed, mission-critical, globally consistent and scalable relational database service.
-  See: https://cloud.google.com/spanner/"
+  See: https://cloud.google.com/spanner/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "spanner_schema.edn"))))
-
-(defn instances-list$
-  "Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists all instances in the given project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+            [happy.util :as util]))
 
 (defn instances-setIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/setIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:bindings [Binding], :etag string, :version integer}}
   
   Sets the access control policy on an instance resource. Replaces any
   existing policy.
@@ -51,29 +25,41 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-create$
-  "Required parameters: parent
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:instanceId string,
+   :instance {:displayName string,
+              :endpointUris [string],
+              :nodeCount integer,
+              :labels {},
+              :config string,
+              :state string,
+              :name string}}
   
   Creates an instance and begins preparing it to begin serving. The
   returned long-running operation
@@ -112,29 +98,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+parent}/instances"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-getIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/getIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
   
   Gets the access control policy for an instance resource. Returns an empty
   policy if an instance exists but does not have a policy set.
@@ -144,29 +135,41 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-patch$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/patch
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:instance {:displayName string,
+              :endpointUris [string],
+              :nodeCount integer,
+              :labels {},
+              :config string,
+              :state string,
+              :name string},
+   :fieldMask string}
   
   Updates an instance, and begins allocating or releasing resources
   as requested. The returned long-running
@@ -210,41 +213,42 @@
   resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn instances-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/get
+  
+  Required parameters: name
   
   Optional parameters: fieldMask
-  
   Gets information about a particular instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -255,9 +259,15 @@
      auth))))
 
 (defn instances-testIamPermissions$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/testIamPermissions
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
   
   Returns permissions that the caller has on the specified instance resource.
   
@@ -268,30 +278,30 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-delete$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes an instance.
   
   Immediately upon completion of the request:
@@ -306,14 +316,39 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  Lists all instances in the given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{:parent}
      args)
     (merge-with
      merge
@@ -324,24 +359,24 @@
      auth))))
 
 (defn instances-databases-getDdl$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/getDdl
+  
+  Required parameters: database
   
   Optional parameters: none
-  
   Returns the schema of a Cloud Spanner database as a list of formatted
   DDL statements. This method does not show pending schema updates, those may
   be queried using the Operations API."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}/ddl"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
@@ -352,22 +387,22 @@
      auth))))
 
 (defn instances-databases-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the state of a Cloud Spanner database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -378,9 +413,15 @@
      auth))))
 
 (defn instances-databases-setIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/setIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:bindings [Binding], :etag string, :version integer}}
   
   Sets the access control policy on a database resource.
   Replaces any existing policy.
@@ -390,29 +431,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-testIamPermissions$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/testIamPermissions
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
   
   Returns permissions that the caller has on the specified database resource.
   
@@ -423,29 +469,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-create$
-  "Required parameters: parent
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:createStatement string, :extraStatements [string]}
   
   Creates a new Cloud Spanner database and starts to prepare it for serving.
   The returned long-running operation will
@@ -458,29 +509,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+parent}/databases"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-updateDdl$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/updateDdl
+  
+  Required parameters: database
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:statements [string], :operationId string}
   
   Updates the schema of a Cloud Spanner database by
   creating/altering/dropping tables, columns, indexes, etc. The returned
@@ -491,28 +547,35 @@
   UpdateDatabaseDdlMetadata.  The operation has no response."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}/ddl"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn instances-databases-getIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/getIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
   
   Gets the access control policy for a database resource.
   Returns an empty policy if a database exists but does
@@ -523,42 +586,41 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-list$
-  "Required parameters: parent
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/list
+  
+  Required parameters: parent
   
   Optional parameters: pageToken, pageSize
-  
   Lists Cloud Spanner databases."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+parent}/databases"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -569,22 +631,22 @@
      auth))))
 
 (defn instances-databases-dropDatabase$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/dropDatabase
+  
+  Required parameters: database
   
   Optional parameters: none
-  
   Drops (aka deletes) a Cloud Spanner database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
@@ -594,48 +656,12 @@
       :as :json}
      auth))))
 
-(defn instances-databases-operations-cancel$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
 (defn instances-databases-operations-delete$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -643,14 +669,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -661,10 +686,11 @@
      auth))))
 
 (defn instances-databases-operations-list$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/list
   
-  Optional parameters: filter, pageToken, pageSize
+  Required parameters: name
   
+  Optional parameters: pageToken, pageSize, filter
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -678,14 +704,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -696,24 +721,59 @@
      auth))))
 
 (defn instances-databases-operations-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-databases-operations-cancel$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
      args)
     (merge-with
      merge
@@ -724,9 +784,15 @@
      auth))))
 
 (defn instances-databases-sessions-rollback$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/rollback
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:transactionId string}
   
   Rolls back a transaction, releasing any locks it holds. It is a good
   idea to call this for any transaction that includes one or more
@@ -739,29 +805,44 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:rollback"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-executeStreamingSql$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/executeStreamingSql
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:queryMode string,
+   :params {},
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :partitionToken string,
+   :seqno string,
+   :paramTypes {},
+   :sql string,
+   :resumeToken string,
+   :queryOptions {:optimizerVersion string}}
   
   Like ExecuteSql, except returns the result
   set as a stream. Unlike ExecuteSql, there
@@ -771,44 +852,43 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:executeStreamingSql"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets a session. Returns `NOT_FOUND` if the session does not exist.
   This is mainly useful for determining whether a session is still
   alive."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -819,9 +899,25 @@
      auth))))
 
 (defn instances-databases-sessions-executeSql$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/executeSql
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:queryMode string,
+   :params {},
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :partitionToken string,
+   :seqno string,
+   :paramTypes {},
+   :sql string,
+   :resumeToken string,
+   :queryOptions {:optimizerVersion string}}
   
   Executes an SQL statement, returning all results in a single reply. This
   method cannot be used to return a result set larger than 10 MiB;
@@ -837,29 +933,43 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:executeSql"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-read$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/read
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:limit string,
+   :index string,
+   :keySet {:ranges [KeyRange], :keys [[any]], :all boolean},
+   :columns [string],
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :resumeToken string,
+   :partitionToken string,
+   :table string}
   
   Reads rows from the database using key lookups and scans, as a
   simple key/value style alternative to
@@ -877,29 +987,41 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:read"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-partitionRead$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/partitionRead
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:keySet {:ranges [KeyRange], :keys [[any]], :all boolean},
+   :columns [string],
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :table string,
+   :partitionOptions {:maxPartitions string, :partitionSizeBytes string},
+   :index string}
   
   Creates a set of partition tokens that can be used to execute a read
   operation in parallel.  Each of the returned partition tokens can be used
@@ -917,29 +1039,37 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:partitionRead"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-create$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/create
+  
+  Required parameters: database
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:session {:name string,
+             :approximateLastUseTime string,
+             :labels {},
+             :createTime string}}
   
   Creates a new session. A session can be used to perform
   transactions that read and/or modify data in a Cloud Spanner database.
@@ -963,29 +1093,38 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}/sessions"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-batchCreate$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/batchCreate
+  
+  Required parameters: database
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:sessionCount integer,
+   :sessionTemplate {:name string,
+                     :approximateLastUseTime string,
+                     :labels {},
+                     :createTime string}}
   
   Creates multiple new sessions.
   
@@ -994,44 +1133,43 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}/sessions:batchCreate"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-delete$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Ends a session, releasing server resources associated with it. This will
   asynchronously trigger cancellation of any operations that are running with
   this session."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -1042,9 +1180,21 @@
      auth))))
 
 (defn instances-databases-sessions-partitionQuery$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/partitionQuery
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:sql string,
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :partitionOptions {:maxPartitions string, :partitionSizeBytes string},
+   :params {},
+   :paramTypes {}}
   
   Creates a set of partition tokens that can be used to execute a query
   operation in parallel.  Each of the returned partition tokens can be used
@@ -1060,29 +1210,36 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:partitionQuery"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-beginTransaction$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/beginTransaction
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:options {:partitionedDml PartitionedDml,
+             :readWrite ReadWrite,
+             :readOnly ReadOnly}}
   
   Begins a new transaction. This step can often be skipped:
   Read, ExecuteSql and
@@ -1091,42 +1248,41 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:beginTransaction"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-list$
-  "Required parameters: database
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: database
   
+  Optional parameters: filter, pageToken, pageSize
   Lists all sessions in a given database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"database"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:database})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+database}/sessions"
-     #{"database"}
+     #{:database}
      args)
     (merge-with
      merge
@@ -1137,9 +1293,23 @@
      auth))))
 
 (defn instances-databases-sessions-commit$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/commit
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:singleUseTransaction {:partitionedDml PartitionedDml,
+                          :readWrite ReadWrite,
+                          :readOnly ReadOnly},
+   :mutations [{:delete Delete,
+                :insert Write,
+                :insertOrUpdate Write,
+                :update Write,
+                :replace Write}],
+   :transactionId string}
   
   Commits a transaction. The request includes the mutations to be
   applied to rows in the database.
@@ -1152,29 +1322,38 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:commit"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-executeBatchDml$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/executeBatchDml
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:seqno string,
+   :statements [{:sql string, :params {}, :paramTypes {}}],
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions}}
   
   Executes a batch of SQL DML statements. This method allows many statements
   to be run with lower latency than submitting them sequentially with
@@ -1190,29 +1369,43 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:executeBatchDml"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-databases-sessions-streamingRead$
-  "Required parameters: session
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/sessions/streamingRead
+  
+  Required parameters: session
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:limit string,
+   :index string,
+   :keySet {:ranges [KeyRange], :keys [[any]], :all boolean},
+   :columns [string],
+   :transaction {:begin TransactionOptions,
+                 :id string,
+                 :singleUse TransactionOptions},
+   :resumeToken string,
+   :partitionToken string,
+   :table string}
   
   Like Read, except returns the result set as a
   stream. Unlike Read, there is no limit on the
@@ -1222,30 +1415,30 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"session"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:session})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+session}:streamingRead"
-     #{"session"}
+     #{:session}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-operations-cancel$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -1258,31 +1451,29 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-operations-delete$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -1290,14 +1481,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -1308,10 +1498,11 @@
      auth))))
 
 (defn instances-operations-list$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: name
   
+  Optional parameters: filter, pageToken, pageSize
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -1325,14 +1516,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -1343,24 +1533,24 @@
      auth))))
 
 (defn instances-operations-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -1371,9 +1561,15 @@
      auth))))
 
 (defn instances-backups-setIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/setIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:bindings [Binding], :etag string, :version integer}}
   
   Sets the access control policy on a database resource.
   Replaces any existing policy.
@@ -1383,29 +1579,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-backups-testIamPermissions$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/testIamPermissions
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
   
   Returns permissions that the caller has on the specified database resource.
   
@@ -1416,29 +1617,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-backups-getIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/getIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
   
   Gets the access control policy for a database resource.
   Returns an empty policy if a database exists but does
@@ -1449,122 +1655,30 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn instances-backups-operations-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-backups-operations-list$
-  "Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-backups-operations-get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn instances-backups-operations-cancel$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -1577,43 +1691,132 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn instances-backups-operations-delete$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-operations-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  Lists operations that match the specified filter in the request. If the
+  server doesn't support this method, it returns `UNIMPLEMENTED`.
+  
+  NOTE: the `name` binding allows API services to override the binding
+  to use different resource name schemes, such as `users/*/operations`. To
+  override the binding, API services can add a binding such as
+  `\"/v1/{name=users/*}/operations\"` to their service configuration.
+  For backwards compatibility, the default name includes the operations
+  collection id, however overriding users must ensure the name binding
+  is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-operations-get$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn instanceConfigs-list$
-  "Required parameters: parent
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instanceConfigs/list
+  
+  Required parameters: parent
   
   Optional parameters: pageToken, pageSize
-  
   Lists the supported instance configurations for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+parent}/instanceConfigs"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -1624,22 +1827,22 @@
      auth))))
 
 (defn instanceConfigs-get$
-  "Required parameters: name
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instanceConfigs/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets information about a particular instance configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

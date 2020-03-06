@@ -1,21 +1,21 @@
 (ns happygapi.cloudsearch.media
-  "Cloud Search API
+  "Cloud Search API: media.
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
-  See: https://developers.google.com/cloud-search/docs/guides/"
+  See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
+            [happy.util :as util]))
 
 (defn upload$
-  "Required parameters: resourceName
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/media/upload
+  
+  Required parameters: resourceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:resourceName string}
   
   Uploads media for indexing.
   
@@ -42,21 +42,20 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resourceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resourceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/media/{+resourceName}"
-     #{"resourceName"}
+     #{:resourceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

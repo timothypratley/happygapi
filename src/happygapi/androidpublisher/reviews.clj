@@ -1,33 +1,27 @@
 (ns happygapi.androidpublisher.reviews
-  "Google Play Developer API
+  "Google Play Developer API: reviews.
   Accesses Android application developers' Google Play accounts.
-  See: https://developers.google.com/android-publisher"
+  See: https://developers.google.com/android-publisherapi/reference/rest/v3/reviews"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "androidpublisher_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: packageName, reviewId
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/get
+  
+  Required parameters: packageName, reviewId
   
   Optional parameters: translationLanguage
-  
   Returns a single review."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"reviewId" "packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName :reviewId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews/{reviewId}"
-     #{"reviewId" "packageName"}
+     #{:packageName :reviewId}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: packageName
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/list
+  
+  Required parameters: packageName
   
   Optional parameters: maxResults, startIndex, token, translationLanguage
-  
   Returns a list of reviews. Only reviews from last week will be returned."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews"
-     #{"packageName"}
+     #{:packageName}
      args)
     (merge-with
      merge
@@ -63,28 +57,33 @@
      auth))))
 
 (defn reply$
-  "Required parameters: packageName, reviewId
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/reply
+  
+  Required parameters: packageName, reviewId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:replyText string}
   
   Reply to a single review, or update an existing reply."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"reviewId" "packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName :reviewId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews/{reviewId}:reply"
-     #{"reviewId" "packageName"}
+     #{:packageName :reviewId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

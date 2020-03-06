@@ -1,33 +1,27 @@
 (ns happygapi.content.liasettings
-  "Content API for Shopping
+  "Content API for Shopping: liasettings.
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-content"
+  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "content_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/get
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
-  
   Retrieves the LIA settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -38,136 +32,148 @@
      auth))))
 
 (defn setinventoryverificationcontact$
-  "Required parameters: accountId, contactEmail, contactName, country, language, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/setinventoryverificationcontact
+  
+  Required parameters: accountId, contactEmail, contactName, country, language, merchantId
   
   Optional parameters: none
-  
   Sets the inventory verification contract for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
+  [auth args]
   {:pre [(util/has-keys?
           args
-          #{"country"
-            "accountId"
-            "contactEmail"
-            "contactName"
-            "merchantId"
-            "language"})
-         (json-schema/validate schemas args)]}
+          #{:contactName
+            :contactEmail
+            :language
+            :accountId
+            :country
+            :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/setinventoryverificationcontact"
-     #{"accountId" "merchantId"}
+     #{:contactName
+       :contactEmail
+       :language
+       :accountId
+       :country
+       :merchantId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn requestinventoryverification$
-  "Required parameters: accountId, country, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/requestinventoryverification
+  
+  Required parameters: accountId, country, merchantId
   
   Optional parameters: none
-  
   Requests inventory validation for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"country" "accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:accountId :country :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/requestinventoryverification/{country}"
-     #{"country" "accountId" "merchantId"}
+     #{:accountId :country :merchantId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/update
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:accountId string,
+   :countrySettings [{:about LiaAboutPageSettings,
+                      :country string,
+                      :hostedLocalStorefrontActive boolean,
+                      :inventory LiaInventorySettings,
+                      :onDisplayToOrder LiaOnDisplayToOrderSettings,
+                      :posDataProvider LiaPosDataProvider,
+                      :storePickupActive boolean}],
+   :kind string}
   
   Updates the LIA settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn requestgmbaccess$
-  "Required parameters: accountId, gmbEmail, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/requestgmbaccess
+  
+  Required parameters: accountId, gmbEmail, merchantId
   
   Optional parameters: none
-  
   Requests access to a specified Google My Business account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "gmbEmail" "merchantId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:gmbEmail :accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/requestgmbaccess"
-     #{"accountId" "merchantId"}
+     #{:gmbEmail :accountId :merchantId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/list
+  
+  Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
-  
   Lists the LIA settings of the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge
@@ -178,42 +184,40 @@
      auth))))
 
 (defn setposdataprovider$
-  "Required parameters: accountId, country, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/setposdataprovider
+  
+  Required parameters: accountId, country, merchantId
   
   Optional parameters: posDataProviderId, posExternalAccountId
-  
   Sets the POS data provider for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"country" "accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:accountId :country :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/setposdataprovider"
-     #{"accountId" "merchantId"}
+     #{:accountId :country :merchantId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn listposdataproviders$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/listposdataproviders
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Retrieves the list of POS data providers that have active settings for the all eiligible countries."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -230,21 +234,21 @@
      auth))))
 
 (defn getaccessiblegmbaccounts$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/getaccessiblegmbaccounts
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
-  
   Retrieves the list of accessible Google My Business accounts."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/accessiblegmbaccounts"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -255,15 +259,30 @@
      auth))))
 
 (defn custombatch$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/liasettings/custombatch
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:contactName string,
+              :posDataProviderId string,
+              :method string,
+              :gmbEmail string,
+              :posExternalAccountId string,
+              :contactEmail string,
+              :batchId integer,
+              :accountId string,
+              :country string,
+              :merchantId string,
+              :liaSettings LiaSettings}]}
   
   Retrieves and/or updates the LIA settings of multiple accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -273,10 +292,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

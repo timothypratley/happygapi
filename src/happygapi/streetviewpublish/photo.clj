@@ -1,23 +1,18 @@
 (ns happygapi.streetviewpublish.photo
-  "Street View Publish API
+  "Street View Publish API: photo.
   Publishes 360 photos to Google Maps, along with position, orientation, and connectivity metadata. Apps can offer an interface for positioning, connecting, and uploading user-generated Street View images.
   
-  See: https://developers.google.com/streetview/publish/"
+  See: https://developers.google.com/streetview/publish/api/reference/rest/v1/photo"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "streetviewpublish_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: photoId
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photo/delete
+  
+  Required parameters: photoId
   
   Optional parameters: none
-  
   Deletes a Photo and its metadata.
   
   This method returns the following error codes:
@@ -27,14 +22,13 @@
   * google.rpc.Code.NOT_FOUND if the photo ID does not exist."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"photoId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:photoId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{photoId}"
-     #{"photoId"}
+     #{:photoId}
      args)
     (merge-with
      merge
@@ -45,10 +39,11 @@
      auth))))
 
 (defn get$
-  "Required parameters: photoId
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photo/get
   
-  Optional parameters: view, languageCode
+  Required parameters: photoId
   
+  Optional parameters: languageCode, view
   Gets the metadata of the specified
   Photo.
   
@@ -62,14 +57,13 @@
   Photo is still being indexed."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"photoId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:photoId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{photoId}"
-     #{"photoId"}
+     #{:photoId}
      args)
     (merge-with
      merge
@@ -80,9 +74,32 @@
      auth))))
 
 (defn update$
-  "Required parameters: id
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photo/update
+  
+  Required parameters: id
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:captureTime string,
+   :thumbnailUrl string,
+   :uploadReference {:uploadUrl string},
+   :viewCount string,
+   :transferStatus string,
+   :pose {:pitch number,
+          :latLngPair LatLng,
+          :roll number,
+          :accuracyMeters number,
+          :level Level,
+          :heading number,
+          :altitude number},
+   :shareLink string,
+   :mapsPublishStatus string,
+   :downloadUrl string,
+   :connections [{:target PhotoId}],
+   :places [{:languageCode string, :name string, :placeId string}],
+   :photoId {:id string}}
   
   Updates the metadata of a Photo, such
   as pose, place association, connections, etc. Changing the pixels of a
@@ -103,29 +120,51 @@
   Photo is still being indexed."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photo/create
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:captureTime string,
+   :thumbnailUrl string,
+   :uploadReference {:uploadUrl string},
+   :viewCount string,
+   :transferStatus string,
+   :pose {:pitch number,
+          :latLngPair LatLng,
+          :roll number,
+          :accuracyMeters number,
+          :level Level,
+          :heading number,
+          :altitude number},
+   :shareLink string,
+   :mapsPublishStatus string,
+   :downloadUrl string,
+   :connections [{:target PhotoId}],
+   :places [{:languageCode string, :name string, :placeId string}],
+   :photoId {:id string}}
   
   After the client finishes uploading the photo with the returned
   UploadRef,
@@ -148,8 +187,7 @@
   storage limit."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -159,18 +197,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn startUpload$
-  "Required parameters: none
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photo/startUpload
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Creates an upload session to start uploading photo bytes.  The method uses
   the upload URL of the returned
@@ -194,8 +238,7 @@
   to create the Photo object entry."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -205,10 +248,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

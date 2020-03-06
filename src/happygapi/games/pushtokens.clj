@@ -1,27 +1,27 @@
 (ns happygapi.games.pushtokens
-  "Google Play Game Services API
+  "Google Play Game Services API: pushtokens.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/pushtokens"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn remove$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/pushtokens/remove
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:ios {:apns_device_token string, :apns_environment string},
+   :kind string}
   
   Removes a push token for the current user and application. Removing a non-existent push token will report success."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,24 +31,33 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/pushtokens/update
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:clientRevision string,
+   :id {:ios {:apns_device_token string, :apns_environment string},
+        :kind string},
+   :kind string,
+   :language string}
   
   Registers a push token for the current user and application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/put
     (util/get-url
@@ -58,10 +67,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,22 +1,21 @@
 (ns happygapi.remotebuildexecution.operations
-  "Remote Build Execution API
+  "Remote Build Execution API: operations.
   Supplies a Remote Execution API service for tools such as bazel.
-  See: https://cloud.google.com/remote-build-execution/docs/"
+  See: https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "remotebuildexecution_schema.edn"))))
+            [happy.util :as util]))
 
 (defn waitExecution$
-  "Required parameters: name
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/operations/waitExecution
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Wait for an execution operation to complete. When the client initially
   makes the request, the server immediately responds with the current status
@@ -26,21 +25,20 @@
   such as to provide an update as to the state of the execution."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+name}:waitExecution"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

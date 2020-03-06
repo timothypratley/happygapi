@@ -1,60 +1,52 @@
 (ns happygapi.blogger.comments
-  "Blogger API
+  "Blogger API: comments.
   API for access to the data within Blogger.
-  See: https://developers.google.com/blogger/docs/3.0/getting_started"
+  See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "blogger_schema.edn"))))
+            [happy.util :as util]))
 
 (defn approve$
-  "Required parameters: blogId, commentId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/approve
+  
+  Required parameters: blogId, commentId, postId
   
   Optional parameters: none
-  
   Marks a comment as not spam."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"postId" "blogId" "commentId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:blogId :postId :commentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments/{commentId}/approve"
-     #{"postId" "blogId" "commentId"}
+     #{:blogId :postId :commentId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: blogId, commentId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/delete
+  
+  Required parameters: blogId, commentId, postId
   
   Optional parameters: none
-  
   Delete a comment by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"postId" "blogId" "commentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :postId :commentId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments/{commentId}"
-     #{"postId" "blogId" "commentId"}
+     #{:blogId :postId :commentId}
      args)
     (merge-with
      merge
@@ -65,22 +57,22 @@
      auth))))
 
 (defn get$
-  "Required parameters: blogId, commentId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/get
+  
+  Required parameters: blogId, commentId, postId
   
   Optional parameters: view
-  
   Gets one comment by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"postId" "blogId" "commentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :postId :commentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments/{commentId}"
-     #{"postId" "blogId" "commentId"}
+     #{:blogId :postId :commentId}
      args)
     (merge-with
      merge
@@ -91,22 +83,22 @@
      auth))))
 
 (defn list$
-  "Required parameters: blogId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/list
+  
+  Required parameters: blogId, postId
   
   Optional parameters: startDate, pageToken, endDate, fetchBodies, status, maxResults, view
-  
   Retrieves the comments for a post, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"postId" "blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :postId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments"
-     #{"postId" "blogId"}
+     #{:blogId :postId}
      args)
     (merge-with
      merge
@@ -117,22 +109,22 @@
      auth))))
 
 (defn listByBlog$
-  "Required parameters: blogId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/listByBlog
+  
+  Required parameters: blogId
   
   Optional parameters: endDate, fetchBodies, maxResults, pageToken, startDate, status
-  
   Retrieves the comments for a blog, across all posts, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/comments"
-     #{"blogId"}
+     #{:blogId}
      args)
     (merge-with
      merge
@@ -143,55 +135,51 @@
      auth))))
 
 (defn markAsSpam$
-  "Required parameters: blogId, commentId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/markAsSpam
+  
+  Required parameters: blogId, commentId, postId
   
   Optional parameters: none
-  
   Marks a comment as spam."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"postId" "blogId" "commentId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:blogId :postId :commentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments/{commentId}/spam"
-     #{"postId" "blogId" "commentId"}
+     #{:blogId :postId :commentId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn removeContent$
-  "Required parameters: blogId, commentId, postId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/comments/removeContent
+  
+  Required parameters: blogId, commentId, postId
   
   Optional parameters: none
-  
   Removes the content of a comment."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"postId" "blogId" "commentId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:blogId :postId :commentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/comments/{commentId}/removecontent"
-     #{"postId" "blogId" "commentId"}
+     #{:blogId :postId :commentId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

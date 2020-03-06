@@ -1,33 +1,27 @@
 (ns happygapi.admin.activities
-  "Admin Reports API
+  "Admin Reports API: activities.
   Fetches reports for the administrators of G Suite customers about the usage, collaboration, security, and risk for their users.
-  See: /admin-sdk/reports/"
+  See: /admin-sdk/reports/api/reference/rest/reports_v1/activities"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "admin_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: applicationName, userKey
+  "/admin-sdk/reports/api/reference/rest/reports_v1/activities/list
+  
+  Required parameters: applicationName, userKey
   
   Optional parameters: eventName, actorIpAddress, startTime, filters, endTime, orgUnitID, pageToken, customerId, maxResults
-  
   Retrieves a list of activities for a specific customer's account and application such as the Admin console application or the Google Drive application. For more information, see the guides for administrator and Google Drive activity reports. For more information about the activity report's parameters, see the activity parameters reference guides."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"applicationName" "userKey"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:applicationName :userKey})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/admin/reports/v1/"
      "activity/users/{userKey}/applications/{applicationName}"
-     #{"applicationName" "userKey"}
+     #{:applicationName :userKey}
      args)
     (merge-with
      merge
@@ -38,28 +32,42 @@
      auth))))
 
 (defn watch$
-  "Required parameters: applicationName, userKey
+  "/admin-sdk/reports/api/reference/rest/reports_v1/activities/watch
+  
+  Required parameters: applicationName, userKey
   
   Optional parameters: eventName, actorIpAddress, startTime, filters, endTime, orgUnitID, pageToken, customerId, maxResults
+  
+  Body: 
+  
+  {:address string,
+   :resourceUri string,
+   :payload boolean,
+   :expiration string,
+   :params {},
+   :type string,
+   :resourceId string,
+   :token string,
+   :id string,
+   :kind string}
   
   Start receiving notifications for account activities. For more information, see Receiving Push Notifications."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"applicationName" "userKey"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:applicationName :userKey})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/admin/reports/v1/"
      "activity/users/{userKey}/applications/{applicationName}/watch"
-     #{"applicationName" "userKey"}
+     #{:applicationName :userKey}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

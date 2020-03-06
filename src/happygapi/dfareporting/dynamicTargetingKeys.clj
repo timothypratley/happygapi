@@ -1,35 +1,29 @@
 (ns happygapi.dfareporting.dynamicTargetingKeys
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: dynamicTargetingKeys.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: name, objectId, objectType, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/delete
+  
+  Required parameters: name, objectId, objectType, profileId
   
   Optional parameters: none
-  
   Deletes an existing dynamic targeting key."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"objectId" "name" "profileId" "objectType"})
-         (json-schema/validate schemas args)]}
+          #{:name :objectId :objectType :profileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/dynamicTargetingKeys/{objectId}"
-     #{"objectId" "profileId"}
+     #{:name :objectId :objectType :profileId}
      args)
     (merge-with
      merge
@@ -40,48 +34,53 @@
      auth))))
 
 (defn insert$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/insert
+  
+  Required parameters: profileId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:kind string, :name string, :objectId string, :objectType string}
   
   Inserts a new dynamic targeting key. Keys must be created at the advertiser level before being assigned to the advertiser's ads, creatives, or placements. There is a maximum of 1000 keys per advertiser, out of which a maximum of 20 keys can be assigned per ad, creative, or placement."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/dynamicTargetingKeys"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/list
+  
+  Required parameters: profileId
   
   Optional parameters: advertiserId, names, objectId, objectType
-  
   Retrieves a list of dynamic targeting keys."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/dynamicTargetingKeys"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge

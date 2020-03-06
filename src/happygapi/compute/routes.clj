@@ -1,34 +1,28 @@
 (ns happygapi.compute.routes
-  "Compute Engine API
+  "Compute Engine API: routes.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: project, route
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/delete
+  
+  Required parameters: project, route
   
   Optional parameters: requestId
-  
   Deletes the specified Route resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "route"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:route :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/routes/{route}"
-     #{"project" "route"}
+     #{:route :project}
      args)
     (merge-with
      merge
@@ -39,23 +33,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: project, route
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/get
+  
+  Required parameters: project, route
   
   Optional parameters: none
-  
   Returns the specified Route resource. Gets a list of available routes by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "route"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:route :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/routes/{route}"
-     #{"project" "route"}
+     #{:route :project}
      args)
     (merge-with
      merge
@@ -66,51 +60,75 @@
      auth))))
 
 (defn insert$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/insert
+  
+  Required parameters: project
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:nextHopIp string,
+   :description string,
+   :tags [string],
+   :nextHopNetwork string,
+   :nextHopInstance string,
+   :creationTimestamp string,
+   :nextHopPeering string,
+   :nextHopIlb string,
+   :name string,
+   :selfLink string,
+   :warnings [{:code string,
+               :data [{:key string, :value string}],
+               :message string}],
+   :nextHopVpnTunnel string,
+   :priority integer,
+   :id string,
+   :kind string,
+   :network string,
+   :nextHopGateway string,
+   :destRange string}
   
   Creates a Route resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/routes"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/list
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves the list of Route resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/routes"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge

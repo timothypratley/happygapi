@@ -1,27 +1,30 @@
 (ns happygapi.content.returnaddress
-  "Content API for Shopping
+  "Content API for Shopping: returnaddress.
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-content"
+  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "content_schema.edn"))))
+            [happy.util :as util]))
 
 (defn custombatch$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress/custombatch
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :method string,
+              :returnAddress ReturnAddress,
+              :returnAddressId string}]}
   
   Batches multiple return address related calls in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,30 +34,30 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: merchantId, returnAddressId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress/delete
+  
+  Required parameters: merchantId, returnAddressId
   
   Optional parameters: none
-  
   Deletes a return address for the given Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"returnAddressId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:returnAddressId :merchantId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnaddress/{returnAddressId}"
-     #{"returnAddressId" "merchantId"}
+     #{:returnAddressId :merchantId}
      args)
     (merge-with
      merge
@@ -65,21 +68,21 @@
      auth))))
 
 (defn get$
-  "Required parameters: merchantId, returnAddressId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress/get
+  
+  Required parameters: merchantId, returnAddressId
   
   Optional parameters: none
-  
   Gets a return address of the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"returnAddressId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:returnAddressId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnaddress/{returnAddressId}"
-     #{"returnAddressId" "merchantId"}
+     #{:returnAddressId :merchantId}
      args)
     (merge-with
      merge
@@ -90,48 +93,63 @@
      auth))))
 
 (defn insert$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress/insert
+  
+  Required parameters: merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:address {:country string,
+             :locality string,
+             :postalCode string,
+             :recipientName string,
+             :region string,
+             :streetAddress [string]},
+   :country string,
+   :kind string,
+   :label string,
+   :phoneNumber string,
+   :returnAddressId string}
   
   Inserts a return address for the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnaddress"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/returnaddress/list
+  
+  Required parameters: merchantId
   
   Optional parameters: country, maxResults, pageToken
-  
   Lists the return addresses of the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnaddress"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge

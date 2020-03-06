@@ -1,35 +1,29 @@
 (ns happygapi.compute.globalOperations
-  "Compute Engine API
+  "Compute Engine API: globalOperations.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn aggregatedList$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations/aggregatedList
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves an aggregated list of all operations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/operations"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -40,22 +34,22 @@
      auth))))
 
 (defn delete$
-  "Required parameters: operation, project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations/delete
+  
+  Required parameters: operation, project
   
   Optional parameters: none
-  
   Deletes the specified Operations resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "operation"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:operation :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/operations/{operation}"
-     #{"project" "operation"}
+     #{:operation :project}
      args)
     (merge-with
      merge
@@ -66,23 +60,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: operation, project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations/get
+  
+  Required parameters: operation, project
   
   Optional parameters: none
-  
   Retrieves the specified Operations resource. Gets a list of operations by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "operation"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:operation :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/operations/{operation}"
-     #{"project" "operation"}
+     #{:operation :project}
      args)
     (merge-with
      merge
@@ -93,23 +87,23 @@
      auth))))
 
 (defn list$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations/list
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves a list of Operation resources contained within the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/operations"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -120,10 +114,11 @@
      auth))))
 
 (defn wait$
-  "Required parameters: operation, project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalOperations/wait
+  
+  Required parameters: operation, project
   
   Optional parameters: none
-  
   Waits for the specified Operation resource to return as DONE or for the request to approach the 2 minute deadline, and retrieves the specified Operation resource. This method differs from the GET method in that it waits for no more than the default deadline (2 minutes) and then returns the current state of the operation, which might be DONE or still in progress.
   
   This method is called on a best-effort basis. Specifically:  
@@ -132,22 +127,19 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"project" "operation"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:operation :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/operations/{operation}/wait"
-     #{"project" "operation"}
+     #{:operation :project}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

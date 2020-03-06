@@ -1,33 +1,27 @@
 (ns happygapi.adsensehost.urlchannels
-  "AdSense Host API
+  "AdSense Host API: urlchannels.
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
-  See: https://developers.google.com/adsense/host/"
+  See: https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsensehost_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: adClientId, urlChannelId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/delete
+  
+  Required parameters: adClientId, urlChannelId
   
   Optional parameters: none
-  
   Delete a URL channel from the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"urlChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:urlChannelId :adClientId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels/{urlChannelId}"
-     #{"urlChannelId" "adClientId"}
+     #{:urlChannelId :adClientId}
      args)
     (merge-with
      merge
@@ -38,48 +32,53 @@
      auth))))
 
 (defn insert$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/insert
+  
+  Required parameters: adClientId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :kind string, :urlPattern string}
   
   Add a new URL channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/list
+  
+  Required parameters: adClientId
   
   Optional parameters: maxResults, pageToken
-  
   List all host URL channels in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge

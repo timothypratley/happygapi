@@ -1,23 +1,17 @@
 (ns happygapi.cloudresourcemanager.folders
-  "Cloud Resource Manager API
+  "Cloud Resource Manager API: folders.
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
-  See: https://cloud.google.com/resource-manager"
+  See: https://cloud.google.com/resource-managerapi/reference/rest/v2/folders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "cloudresourcemanager_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: name
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Retrieves a Folder identified by the supplied resource name.
   Valid Folder resource names have the format `folders/{folder_id}`
   (for example, `folders/1234`).
@@ -26,14 +20,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -44,9 +37,19 @@
      auth))))
 
 (defn setIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/setIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:etag string,
+            :version integer,
+            :auditConfigs [AuditConfig],
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on a Folder, replacing any existing policy.
   The `resource` field should be the Folder's resource name, e.g.
@@ -55,29 +58,38 @@
   on the identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+resource}:setIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn patch$
-  "Required parameters: name
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :parent string,
+   :createTime string,
+   :lifecycleState string}
   
   Updates a Folder, changing its display_name.
   Changes to the folder display_name will be rejected if they violate either
@@ -95,28 +107,35 @@
   PreconditionFailure explaining this violation will be returned
   in the Status.details field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn testIamPermissions$
-  "Required parameters: resource
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/testIamPermissions
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
   
   Returns permissions that a caller has on the specified Folder.
   The `resource` field should be the Folder's resource name,
@@ -125,29 +144,38 @@
   There are no permissions required for making this API call."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+resource}:testIamPermissions"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn create$
-  "Required parameters: none
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/create
+  
+  Required parameters: none
   
   Optional parameters: parent
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :parent string,
+   :createTime string,
+   :lifecycleState string}
   
   Creates a Folder in the resource hierarchy.
   Returns an Operation which can be used to track the progress of the
@@ -178,8 +206,7 @@
   identified parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -189,18 +216,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn move$
-  "Required parameters: name
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/move
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:destinationParent string}
   
   Moves a Folder under a new resource parent.
   Returns an Operation which can be used to track the progress of the
@@ -221,30 +254,30 @@
   folder's current and proposed new parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+name}:move"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: name
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Requests deletion of a Folder. The Folder is moved into the
   DELETE_REQUESTED state
   immediately, and is deleted approximately 30 days later. This method may
@@ -256,14 +289,13 @@
   identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -274,9 +306,15 @@
      auth))))
 
 (defn search$
-  "Required parameters: none
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/search
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:pageToken string, :pageSize integer, :query string}
   
   Search for folders that match specific filter criteria.
   Search provides an eventually consistent view of the folders a user has
@@ -287,8 +325,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -298,18 +335,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getIamPolicy$
-  "Required parameters: resource
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/getIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
   
   Gets the access control policy for a Folder. The returned policy may be
   empty if no such policy or resource exists. The `resource` field should
@@ -319,29 +362,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+resource}:getIamPolicy"
-     #{"resource"}
+     #{:resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn undelete$
-  "Required parameters: name
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/undelete
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Cancels the deletion request for a Folder. This method may only be
   called on a Folder in the
@@ -355,30 +403,30 @@
   identified folder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v2/{+name}:undelete"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://cloud.google.com/resource-managerapi/reference/rest/v2/folders/list
   
-  Optional parameters: pageToken, pageSize, parent, showDeleted
+  Required parameters: none
   
+  Optional parameters: showDeleted, pageToken, pageSize, parent
   Lists the Folders that are direct descendants of supplied parent resource.
   List provides a strongly consistent view of the Folders underneath
   the specified parent resource.
@@ -389,8 +437,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

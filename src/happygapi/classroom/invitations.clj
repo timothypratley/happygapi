@@ -1,87 +1,21 @@
 (ns happygapi.classroom.invitations
-  "Google Classroom API
+  "Google Classroom API: invitations.
   Manages classes, rosters, and invitations in Google Classroom.
-  See: https://developers.google.com/classroom/"
+  See: https://developers.google.com/classroom/api/reference/rest/v1/invitations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "classroom_schema.edn"))))
-
-(defn get$
-  "Required parameters: id
-  
-  Optional parameters: none
-  
-  Returns an invitation.
-  
-  This method returns the following error codes:
-  
-  * `PERMISSION_DENIED` if the requesting user is not permitted to view the
-  requested invitation or for access errors.
-  * `NOT_FOUND` if no invitation exists with the requested ID."
-  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
-            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/invitations/{id}"
-     #{"id"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "Required parameters: none
-  
-  Optional parameters: pageSize, courseId, userId, pageToken
-  
-  Returns a list of invitations that the requesting user is permitted to
-  view, restricted to those that match the list request.
-  
-  *Note:* At least one of `user_id` or `course_id` must be supplied. Both
-  fields can be supplied.
-  
-  This method returns the following error codes:
-  
-  * `PERMISSION_DENIED` for access errors."
-  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
-            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/invitations"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+            [happy.util :as util]))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/create
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:role string, :userId string, :courseId string, :id string}
   
   Creates an invitation. Only one invitation for a user and course may exist
   at a time. Delete and re-create an invitation to make changes.
@@ -97,8 +31,7 @@
   already exists."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -108,19 +41,20 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn accept$
-  "Required parameters: id
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/accept
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Accepts an invitation, removing it and adding the invited user to the
   teachers or students (as appropriate) of the specified course. Only the
   invited user may accept an invitation.
@@ -136,31 +70,29 @@
       * UserGroupsMembershipLimitReached
   * `NOT_FOUND` if no invitation exists with the requested ID."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/invitations/{id}:accept"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: id
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/delete
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Deletes an invitation.
   
   This method returns the following error codes:
@@ -170,14 +102,79 @@
   * `NOT_FOUND` if no invitation exists with the requested ID."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/invitations/{id}"
-     #{"id"}
+     #{:id}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/get
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  Returns an invitation.
+  
+  This method returns the following error codes:
+  
+  * `PERMISSION_DENIED` if the requesting user is not permitted to view the
+  requested invitation or for access errors.
+  * `NOT_FOUND` if no invitation exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
+            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:id})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/invitations/{id}"
+     #{:id}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/list
+  
+  Required parameters: none
+  
+  Optional parameters: userId, pageToken, pageSize, courseId
+  Returns a list of invitations that the requesting user is permitted to
+  view, restricted to those that match the list request.
+  
+  *Note:* At least one of `user_id` or `course_id` must be supplied. Both
+  fields can be supplied.
+  
+  This method returns the following error codes:
+  
+  * `PERMISSION_DENIED` for access errors."
+  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
+            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/invitations"
+     #{}
      args)
     (merge-with
      merge

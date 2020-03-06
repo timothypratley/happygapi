@@ -1,36 +1,30 @@
 (ns happygapi.youtube.guideCategories
-  "YouTube Data API
+  "YouTube Data API: guideCategories.
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3"
+  See: https://developers.google.com/youtube/v3api/reference/rest/v3/guideCategories"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/guideCategories/list
+  
+  Required parameters: part
   
   Optional parameters: hl, id, regionCode
-  
   Returns a list of categories that can be associated with YouTube channels."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "guideCategories"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge

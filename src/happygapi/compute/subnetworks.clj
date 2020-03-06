@@ -1,35 +1,29 @@
 (ns happygapi.compute.subnetworks
-  "Compute Engine API
+  "Compute Engine API: subnetworks.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: project, region, subnetwork
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/get
+  
+  Required parameters: project, region, subnetwork
   
   Optional parameters: none
-  
   Returns the specified subnetwork. Gets a list of available subnetworks list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region" "subnetwork"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :subnetwork})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{subnetwork}"
-     #{"project" "region" "subnetwork"}
+     #{:region :project :subnetwork}
      args)
     (merge-with
      merge
@@ -40,79 +34,116 @@
      auth))))
 
 (defn setIamPolicy$
-  "Required parameters: project, region, resource
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/setIamPolicy
+  
+  Required parameters: project, region, resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:bindings [{:condition Expr, :members [string], :role string}],
+   :etag string,
+   :policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :etag string,
+            :iamOwned boolean,
+            :rules [Rule],
+            :version integer}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{resource}/setIamPolicy"
-     #{"resource" "project" "region"}
+     #{:region :project :resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn insert$
-  "Required parameters: project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/insert
+  
+  Required parameters: project, region
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:role string,
+   :description string,
+   :privateIpGoogleAccess boolean,
+   :creationTimestamp string,
+   :purpose string,
+   :name string,
+   :ipCidrRange string,
+   :selfLink string,
+   :state string,
+   :region string,
+   :gatewayAddress string,
+   :id string,
+   :kind string,
+   :enableFlowLogs boolean,
+   :network string,
+   :secondaryIpRanges [{:ipCidrRange string, :rangeName string}],
+   :logConfig {:aggregationInterval string,
+               :enable boolean,
+               :flowSampling number,
+               :metadata string},
+   :fingerprint string}
   
   Creates a subnetwork in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks"
-     #{"project" "region"}
+     #{:region :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn listUsable$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/listUsable
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves an aggregated list of all usable subnetworks in the project. The list contains all of the subnetworks in the project and the subnetworks that were shared by a Shared VPC host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/subnetworks/listUsable"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -123,78 +154,110 @@
      auth))))
 
 (defn patch$
-  "Required parameters: project, region, subnetwork
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/patch
+  
+  Required parameters: project, region, subnetwork
   
   Optional parameters: drainTimeoutSeconds, requestId
+  
+  Body: 
+  
+  {:role string,
+   :description string,
+   :privateIpGoogleAccess boolean,
+   :creationTimestamp string,
+   :purpose string,
+   :name string,
+   :ipCidrRange string,
+   :selfLink string,
+   :state string,
+   :region string,
+   :gatewayAddress string,
+   :id string,
+   :kind string,
+   :enableFlowLogs boolean,
+   :network string,
+   :secondaryIpRanges [{:ipCidrRange string, :rangeName string}],
+   :logConfig {:aggregationInterval string,
+               :enable boolean,
+               :flowSampling number,
+               :metadata string},
+   :fingerprint string}
   
   Patches the specified subnetwork with the data included in the request. Only certain fields can up updated with a patch request as indicated in the field descriptions. You must specify the current fingeprint of the subnetwork resource being patched."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"project" "region" "subnetwork"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:region :project :subnetwork})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{subnetwork}"
-     #{"project" "region" "subnetwork"}
+     #{:region :project :subnetwork}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn testIamPermissions$
-  "Required parameters: project, region, resource
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/testIamPermissions
+  
+  Required parameters: project, region, resource
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"resource" "project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{resource}/testIamPermissions"
-     #{"resource" "project" "region"}
+     #{:region :project :resource}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn aggregatedList$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/aggregatedList
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves an aggregated list of subnetworks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/subnetworks"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -205,22 +268,22 @@
      auth))))
 
 (defn delete$
-  "Required parameters: project, region, subnetwork
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/delete
+  
+  Required parameters: project, region, subnetwork
   
   Optional parameters: requestId
-  
   Deletes the specified subnetwork."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region" "subnetwork"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :subnetwork})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{subnetwork}"
-     #{"project" "region" "subnetwork"}
+     #{:region :project :subnetwork}
      args)
     (merge-with
      merge
@@ -231,51 +294,56 @@
      auth))))
 
 (defn setPrivateIpGoogleAccess$
-  "Required parameters: project, region, subnetwork
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/setPrivateIpGoogleAccess
+  
+  Required parameters: project, region, subnetwork
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:privateIpGoogleAccess boolean}
   
   Set whether VMs in this subnet can access Google services without assigning external IP addresses through Private Google Access."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "region" "subnetwork"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :subnetwork})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{subnetwork}/setPrivateIpGoogleAccess"
-     #{"project" "region" "subnetwork"}
+     #{:region :project :subnetwork}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getIamPolicy$
-  "Required parameters: project, region, resource
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/getIamPolicy
+  
+  Required parameters: project, region, resource
   
   Optional parameters: none
-  
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"resource" "project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{resource}/getIamPolicy"
-     #{"resource" "project" "region"}
+     #{:region :project :resource}
      args)
     (merge-with
      merge
@@ -286,51 +354,56 @@
      auth))))
 
 (defn expandIpCidrRange$
-  "Required parameters: project, region, subnetwork
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/expandIpCidrRange
+  
+  Required parameters: project, region, subnetwork
   
   Optional parameters: requestId
+  
+  Body: 
+  
+  {:ipCidrRange string}
   
   Expands the IP CIDR range of the subnetwork to a specified value."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "region" "subnetwork"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project :subnetwork})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks/{subnetwork}/expandIpCidrRange"
-     #{"project" "region" "subnetwork"}
+     #{:region :project :subnetwork}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: project, region
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/subnetworks/list
+  
+  Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves a list of subnetworks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "region"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/subnetworks"
-     #{"project" "region"}
+     #{:region :project}
      args)
     (merge-with
      merge

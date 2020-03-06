@@ -1,22 +1,17 @@
 (ns happygapi.genomics.operations
-  "Genomics API
+  "Genomics API: operations.
   Uploads, processes, queries, and searches Genomics data in the cloud.
-  See: https://cloud.google.com/genomics"
+  See: https://cloud.google.com/genomicsapi/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "genomics_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: name
+  "https://cloud.google.com/genomicsapi/reference/rest/v1/operations/list
+  
+  Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
-  
   Lists operations that match the specified filter in the request.
   Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission&#58;
   
@@ -24,14 +19,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/genomics"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://genomics.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -42,10 +36,11 @@
      auth))))
 
 (defn get$
-  "Required parameters: name
+  "https://cloud.google.com/genomicsapi/reference/rest/v1/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.
   Clients can use this method to poll the operation result at intervals as
   recommended by the API service.
@@ -55,14 +50,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/genomics"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://genomics.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -73,9 +67,15 @@
      auth))))
 
 (defn cancel$
-  "Required parameters: name
+  "https://cloud.google.com/genomicsapi/reference/rest/v1/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Starts asynchronous cancellation on a long-running operation.
   The server makes a best effort to cancel the operation, but success is not
@@ -89,21 +89,20 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/genomics"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://genomics.googleapis.com/"
      "v1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

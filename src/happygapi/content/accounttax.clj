@@ -1,27 +1,30 @@
 (ns happygapi.content.accounttax
-  "Content API for Shopping
+  "Content API for Shopping: accounttax.
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-content"
+  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounttax"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "content_schema.edn"))))
+            [happy.util :as util]))
 
 (defn custombatch$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounttax/custombatch
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:accountId string,
+              :accountTax AccountTax,
+              :batchId integer,
+              :merchantId string,
+              :method string}]}
   
   Retrieves and updates tax settings of multiple accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,30 +34,30 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn get$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounttax/get
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
-  
   Retrieves the tax settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounttax/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -65,21 +68,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounttax/list
+  
+  Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
-  
   Lists the tax settings of the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounttax"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge
@@ -90,28 +93,39 @@
      auth))))
 
 (defn update$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounttax/update
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:accountId string,
+   :kind string,
+   :rules [{:country string,
+            :locationId string,
+            :ratePercent string,
+            :shippingTaxed boolean,
+            :useGlobalRate boolean}]}
   
   Updates the tax settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounttax/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

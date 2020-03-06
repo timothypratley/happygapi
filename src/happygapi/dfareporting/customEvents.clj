@@ -1,40 +1,47 @@
 (ns happygapi.dfareporting.customEvents
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: customEvents.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/customEvents"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn batchinsert$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/customEvents/batchinsert
+  
+  Required parameters: profileId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:customEvents [{:annotateClickEvent CustomEventClickAnnotation,
+                   :customVariables [CustomVariable],
+                   :eventType string,
+                   :floodlightConfigurationId string,
+                   :insertEvent CustomEventInsert,
+                   :kind string,
+                   :ordinal string,
+                   :timestampMicros string}],
+   :kind string}
   
   Inserts custom events."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/customEvents/batchinsert"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

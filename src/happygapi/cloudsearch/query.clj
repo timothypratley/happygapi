@@ -1,21 +1,27 @@
 (ns happygapi.cloudsearch.query
-  "Cloud Search API
+  "Cloud Search API: query.
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
-  See: https://developers.google.com/cloud-search/docs/guides/"
+  See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
+            [happy.util :as util]))
 
 (defn suggest$
-  "Required parameters: none
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/suggest
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:requestOptions {:debugOptions DebugOptions,
+                    :searchApplicationId string,
+                    :languageCode string,
+                    :timeZone string},
+   :query string,
+   :dataSourceRestrictions [{:filterOptions [FilterOptions],
+                             :source Source}]}
   
   Provides suggestions for autocompleting the query.
   
@@ -27,8 +33,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.query"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -38,18 +43,39 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn search$
-  "Required parameters: none
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/search
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:queryInterpretationOptions {:disableNlInterpretation boolean,
+                                :enableVerbatimMode boolean},
+   :requestOptions {:debugOptions DebugOptions,
+                    :searchApplicationId string,
+                    :languageCode string,
+                    :timeZone string},
+   :dataSourceRestrictions [{:filterOptions [FilterOptions],
+                             :source Source}],
+   :facetOptions [{:sourceName string,
+                   :numFacetBuckets integer,
+                   :operatorName string,
+                   :objectType string}],
+   :sortOptions {:operatorName string, :sortOrder string},
+   :pageSize integer,
+   :query string,
+   :start integer}
   
   The Cloud Search Query API provides the search method, which returns
   the most relevant results from a user query.  The results can come from
@@ -64,8 +90,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.query"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -75,19 +100,20 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn sources-list$
-  "Required parameters: none
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/sources/list
+  
+  Required parameters: none
   
   Optional parameters: requestOptions.searchApplicationId, requestOptions.timeZone, pageToken, requestOptions.debugOptions.enableDebugging, requestOptions.languageCode
-  
   Returns list of sources that user can use for Search and Suggest APIs.
   
   **Note:** This API requires a standard end user account to execute.
@@ -98,8 +124,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.query"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

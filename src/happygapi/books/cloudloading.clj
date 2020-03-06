@@ -1,27 +1,21 @@
 (ns happygapi.books.cloudloading
-  "Books API
+  "Books API: cloudloading.
   Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_started"
+  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/cloudloading"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "books_schema.edn"))))
+            [happy.util :as util]))
 
 (defn addBook$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/cloudloading/addBook
+  
+  Required parameters: none
   
   Optional parameters: drive_document_id, mime_type, name, upload_client_token
-  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -34,48 +28,52 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn deleteBook$
-  "Required parameters: volumeId
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/cloudloading/deleteBook
+  
+  Required parameters: volumeId
   
   Optional parameters: none
-  
   Remove the book and its contents"
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"volumeId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:volumeId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "cloudloading/deleteBook"
-     #{}
+     #{:volumeId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn updateBook$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/cloudloading/updateBook
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:author string,
+   :processingState string,
+   :title string,
+   :volumeId string}
   
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -85,10 +83,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

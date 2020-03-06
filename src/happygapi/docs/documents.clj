@@ -1,22 +1,17 @@
 (ns happygapi.docs.documents
-  "Google Docs API
+  "Google Docs API: documents.
   Reads and writes Google Docs documents.
-  See: https://developers.google.com/docs/"
+  See: https://developers.google.com/docs/api/reference/rest/v1/documents"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "docs_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: documentId
+  "https://developers.google.com/docs/api/reference/rest/v1/documents/get
+  
+  Required parameters: documentId
   
   Optional parameters: suggestionsViewMode
-  
   Gets the latest version of the specified document."
   {:scopes ["https://www.googleapis.com/auth/documents"
             "https://www.googleapis.com/auth/documents.readonly"
@@ -24,14 +19,13 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"documentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:documentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://docs.googleapis.com/"
      "v1/documents/{documentId}"
-     #{"documentId"}
+     #{:documentId}
      args)
     (merge-with
      merge
@@ -42,9 +36,47 @@
      auth))))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/docs/api/reference/rest/v1/documents/create
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:suggestedDocumentStyleChanges {},
+   :footnotes {},
+   :lists {},
+   :positionedObjects {},
+   :footers {},
+   :inlineObjects {},
+   :namedRanges {},
+   :revisionId string,
+   :namedStyles {:styles [NamedStyle]},
+   :suggestedNamedStylesChanges {},
+   :documentStyle {:defaultHeaderId string,
+                   :marginLeft Dimension,
+                   :evenPageFooterId string,
+                   :useFirstPageHeaderFooter boolean,
+                   :useCustomHeaderFooterMargins boolean,
+                   :background Background,
+                   :marginTop Dimension,
+                   :pageNumberStart integer,
+                   :firstPageHeaderId string,
+                   :defaultFooterId string,
+                   :firstPageFooterId string,
+                   :pageSize Size,
+                   :evenPageHeaderId string,
+                   :marginBottom Dimension,
+                   :marginHeader Dimension,
+                   :useEvenPageHeaderFooter boolean,
+                   :marginFooter Dimension,
+                   :marginRight Dimension},
+   :title string,
+   :suggestionsViewMode string,
+   :headers {},
+   :documentId string,
+   :body {:content [StructuralElement]}}
   
   Creates a blank document using the title given in the request. Other fields
   in the request, including any provided content, are ignored.
@@ -54,8 +86,7 @@
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -65,18 +96,56 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn batchUpdate$
-  "Required parameters: documentId
+  "https://developers.google.com/docs/api/reference/rest/v1/documents/batchUpdate
+  
+  Required parameters: documentId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:updateSectionStyle UpdateSectionStyleRequest,
+               :deletePositionedObject DeletePositionedObjectRequest,
+               :createNamedRange CreateNamedRangeRequest,
+               :replaceNamedRangeContent ReplaceNamedRangeContentRequest,
+               :deleteContentRange DeleteContentRangeRequest,
+               :createFooter CreateFooterRequest,
+               :insertTable InsertTableRequest,
+               :deleteTableRow DeleteTableRowRequest,
+               :insertTableColumn InsertTableColumnRequest,
+               :updateTextStyle UpdateTextStyleRequest,
+               :replaceAllText ReplaceAllTextRequest,
+               :updateTableCellStyle UpdateTableCellStyleRequest,
+               :insertInlineImage InsertInlineImageRequest,
+               :updateDocumentStyle UpdateDocumentStyleRequest,
+               :deleteHeader DeleteHeaderRequest,
+               :mergeTableCells MergeTableCellsRequest,
+               :updateTableColumnProperties UpdateTableColumnPropertiesRequest,
+               :createHeader CreateHeaderRequest,
+               :updateTableRowStyle UpdateTableRowStyleRequest,
+               :updateParagraphStyle UpdateParagraphStyleRequest,
+               :replaceImage ReplaceImageRequest,
+               :deleteFooter DeleteFooterRequest,
+               :insertPageBreak InsertPageBreakRequest,
+               :insertText InsertTextRequest,
+               :deleteParagraphBullets DeleteParagraphBulletsRequest,
+               :deleteNamedRange DeleteNamedRangeRequest,
+               :createParagraphBullets CreateParagraphBulletsRequest,
+               :deleteTableColumn DeleteTableColumnRequest,
+               :unmergeTableCells UnmergeTableCellsRequest,
+               :createFootnote CreateFootnoteRequest,
+               :insertTableRow InsertTableRowRequest,
+               :insertSectionBreak InsertSectionBreakRequest}],
+   :writeControl {:targetRevisionId string, :requiredRevisionId string}}
   
   Applies one or more updates to the document.
   
@@ -103,21 +172,20 @@
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"documentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:documentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://docs.googleapis.com/"
      "v1/documents/{documentId}:batchUpdate"
-     #{"documentId"}
+     #{:documentId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

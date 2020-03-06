@@ -1,42 +1,42 @@
 (ns happygapi.mirror.accounts
-  "Google Mirror API
+  "Google Mirror API: accounts.
   Interacts with Glass users via the timeline.
-  See: https://developers.google.com/glass"
+  See: https://developers.google.com/glassapi/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "mirror_schema.edn"))))
+            [happy.util :as util]))
 
 (defn insert$
-  "Required parameters: accountName, accountType, userToken
+  "https://developers.google.com/glassapi/reference/rest/v1/accounts/insert
+  
+  Required parameters: accountName, accountType, userToken
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:authTokens [{:authToken string, :type string}],
+   :features [string],
+   :password string,
+   :userData [{:key string, :value string}]}
   
   Inserts a new account for a user"
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys?
-          args
-          #{"accountName" "userToken" "accountType"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:userToken :accountName :accountType})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "accounts/{userToken}/{accountType}/{accountName}"
-     #{"accountName" "userToken" "accountType"}
+     #{:userToken :accountName :accountType}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

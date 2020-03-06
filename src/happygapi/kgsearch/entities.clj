@@ -1,29 +1,23 @@
 (ns happygapi.kgsearch.entities
-  "Knowledge Graph Search API
+  "Knowledge Graph Search API: entities.
   Searches the Google Knowledge Graph for entities.
-  See: https://developers.google.com/knowledge-graph/"
+  See: https://developers.google.com/knowledge-graph/api/reference/rest/v1/entities"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "kgsearch_schema.edn"))))
+            [happy.util :as util]))
 
 (defn search$
-  "Required parameters: none
+  "https://developers.google.com/knowledge-graph/api/reference/rest/v1/entities/search
   
-  Optional parameters: types, indent, languages, ids, limit, prefix, query
+  Required parameters: none
   
+  Optional parameters: limit, prefix, query, types, indent, languages, ids
   Searches Knowledge Graph for entities that match the constraints.
   A list of matched entities will be returned in response, which will be in
   JSON-LD format and compatible with http://schema.org"
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

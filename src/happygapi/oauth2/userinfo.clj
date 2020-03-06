@@ -1,29 +1,23 @@
 (ns happygapi.oauth2.userinfo
-  "Google OAuth2 API
+  "Google OAuth2 API: userinfo.
   Obtains end-user authorization grants for use with other Google APIs.
-  See: https://developers.google.com/accounts/docs/OAuth2"
+  See: https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "oauth2_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: none
+  "https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo/get
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   "
   {:scopes ["https://www.googleapis.com/auth/plus.me"
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -40,17 +34,17 @@
      auth))))
 
 (defn v2-me-get$
-  "Required parameters: none
+  "https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo/v2/me/get
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   "
   {:scopes ["https://www.googleapis.com/auth/plus.me"
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

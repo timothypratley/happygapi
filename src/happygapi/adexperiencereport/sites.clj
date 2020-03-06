@@ -1,34 +1,27 @@
 (ns happygapi.adexperiencereport.sites
-  "Ad Experience Report API
+  "Ad Experience Report API: sites.
   Views Ad Experience Report data, and gets a list of sites that have a significant number of annoying ads.
-  See: https://developers.google.com/ad-experience-report/"
+  See: https://developers.google.com/ad-experience-report/api/reference/rest/v1/sites"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "adexperiencereport_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: name
+  "https://developers.google.com/ad-experience-report/api/reference/rest/v1/sites/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets a site's Ad Experience Report summary."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adexperiencereport.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

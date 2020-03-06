@@ -1,33 +1,27 @@
 (ns happygapi.cloudscheduler.projects
-  "Cloud Scheduler API
+  "Cloud Scheduler API: projects.
   Creates and manages jobs run on a regular recurring schedule.
-  See: https://cloud.google.com/scheduler/"
+  See: https://cloud.google.com/scheduler/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudscheduler_schema.edn"))))
+            [happy.util :as util]))
 
 (defn locations-list$
-  "Required parameters: name
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: name
   
+  Optional parameters: filter, pageToken, pageSize
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudscheduler.googleapis.com/"
      "v1/{+name}/locations"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn locations-get$
-  "Required parameters: name
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudscheduler.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -60,196 +54,24 @@
       :query-params args,
       :accept :json,
       :as :json}
-     auth))))
-
-(defn locations-jobs-pause$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Pauses a job.
-  
-  If a job is paused then the system will stop executing the job
-  until it is re-enabled via ResumeJob. The
-  state of the job is stored in state; if paused it
-  will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED
-  to be paused."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+name}:pause"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-jobs-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a job."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobs-list$
-  "Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists jobs."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+parent}/jobs"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobs-create$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  Creates a job."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+parent}/jobs"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-jobs-run$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Forces a job to run now.
-  
-  When this method is called, Cloud Scheduler will dispatch the job, even
-  if the job is already running."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+name}:run"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-jobs-resume$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Resume a job.
-  
-  This method reenables a job after it has been Job.State.PAUSED. The
-  state of a job is stored in Job.state; after calling this method it
-  will be set to Job.State.ENABLED. A job must be in
-  Job.State.PAUSED to be resumed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudscheduler.googleapis.com/"
-     "v1/{+name}:resume"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
      auth))))
 
 (defn locations-jobs-get$
-  "Required parameters: name
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets a job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudscheduler.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -260,9 +82,41 @@
      auth))))
 
 (defn locations-jobs-patch$
-  "Required parameters: name
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :httpTarget {:oidcToken OidcToken,
+                :httpMethod string,
+                :body string,
+                :oauthToken OAuthToken,
+                :uri string,
+                :headers {}},
+   :timeZone string,
+   :schedule string,
+   :userUpdateTime string,
+   :name string,
+   :scheduleTime string,
+   :lastAttemptTime string,
+   :state string,
+   :attemptDeadline string,
+   :status {:code integer, :message string, :details [{}]},
+   :retryConfig {:retryCount integer,
+                 :maxDoublings integer,
+                 :minBackoffDuration string,
+                 :maxBackoffDuration string,
+                 :maxRetryDuration string},
+   :pubsubTarget {:attributes {}, :topicName string, :data string},
+   :appEngineHttpTarget {:relativeUri string,
+                         :headers {},
+                         :appEngineRouting AppEngineRouting,
+                         :httpMethod string,
+                         :body string}}
   
   Updates a job.
   
@@ -274,19 +128,238 @@
   not be executed. If this happens, retry the UpdateJob request
   until a successful response is received."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudscheduler.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-pause$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/pause
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Pauses a job.
+  
+  If a job is paused then the system will stop executing the job
+  until it is re-enabled via ResumeJob. The
+  state of the job is stored in state; if paused it
+  will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED
+  to be paused."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+name}:pause"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-delete$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Deletes a job."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-list$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  Lists jobs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+parent}/jobs"
+     #{:parent}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-create$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :httpTarget {:oidcToken OidcToken,
+                :httpMethod string,
+                :body string,
+                :oauthToken OAuthToken,
+                :uri string,
+                :headers {}},
+   :timeZone string,
+   :schedule string,
+   :userUpdateTime string,
+   :name string,
+   :scheduleTime string,
+   :lastAttemptTime string,
+   :state string,
+   :attemptDeadline string,
+   :status {:code integer, :message string, :details [{}]},
+   :retryConfig {:retryCount integer,
+                 :maxDoublings integer,
+                 :minBackoffDuration string,
+                 :maxBackoffDuration string,
+                 :maxRetryDuration string},
+   :pubsubTarget {:attributes {}, :topicName string, :data string},
+   :appEngineHttpTarget {:relativeUri string,
+                         :headers {},
+                         :appEngineRouting AppEngineRouting,
+                         :httpMethod string,
+                         :body string}}
+  
+  Creates a job."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+parent}/jobs"
+     #{:parent}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-run$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/run
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Forces a job to run now.
+  
+  When this method is called, Cloud Scheduler will dispatch the job, even
+  if the job is already running."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+name}:run"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-resume$
+  "https://cloud.google.com/scheduler/api/reference/rest/v1/projects/locations/jobs/resume
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Resume a job.
+  
+  This method reenables a job after it has been Job.State.PAUSED. The
+  state of a job is stored in Job.state; after calling this method it
+  will be set to Job.State.ENABLED. A job must be in
+  Job.State.PAUSED to be resumed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudscheduler.googleapis.com/"
+     "v1/{+name}:resume"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

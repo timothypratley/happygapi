@@ -1,22 +1,28 @@
 (ns happygapi.datacatalog.catalog
-  "Google Cloud Data Catalog API
+  "Google Cloud Data Catalog API: catalog.
   A fully managed and highly scalable data discovery and metadata management service.
   
-  See: https://cloud.google.com/data-catalog/docs/"
+  See: https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/catalog"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "datacatalog_schema.edn"))))
+            [happy.util :as util]))
 
 (defn search$
-  "Required parameters: none
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/catalog/search
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:scope {:includeGcpPublicDatasets boolean,
+           :includeProjectIds [string],
+           :includeOrgIds [string]},
+   :pageToken string,
+   :orderBy string,
+   :pageSize integer,
+   :query string}
   
   Searches Data Catalog for multiple resources like entries, tags that
   match a query.
@@ -35,8 +41,7 @@
   Syntax](/data-catalog/docs/how-to/search-reference) for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -46,10 +51,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

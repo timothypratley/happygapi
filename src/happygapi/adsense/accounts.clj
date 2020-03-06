@@ -1,34 +1,28 @@
 (ns happygapi.adsense.accounts
-  "AdSense Management API
+  "AdSense Management API: accounts.
   Accesses AdSense publishers' inventory and generates performance reports.
-  See: https://developers.google.com/adsense/management/"
+  See: https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/get
+  
+  Required parameters: accountId
   
   Optional parameters: tree
-  
   Get information about the selected AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -39,16 +33,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/list
+  
+  Required parameters: none
   
   Optional parameters: maxResults, pageToken
-  
   List all accounts available to this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -65,22 +59,22 @@
      auth))))
 
 (defn adclients-getAdCode$
-  "Required parameters: accountId, adClientId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adclients/getAdCode
+  
+  Required parameters: accountId, adClientId
   
   Optional parameters: none
-  
   Get Auto ad code for a given ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/adcode"
-     #{"accountId" "adClientId"}
+     #{:adClientId :accountId}
      args)
     (merge-with
      merge
@@ -91,22 +85,22 @@
      auth))))
 
 (defn adclients-list$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adclients/list
+  
+  Required parameters: accountId
   
   Optional parameters: maxResults, pageToken
-  
   List all ad clients in the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -117,22 +111,22 @@
      auth))))
 
 (defn adunits-get$
-  "Required parameters: accountId, adClientId, adUnitId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adunits/get
+  
+  Required parameters: accountId, adClientId, adUnitId
   
   Optional parameters: none
-  
   Gets the specified ad unit in the specified ad client for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adUnitId :adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}"
-     #{"accountId" "adUnitId" "adClientId"}
+     #{:adUnitId :adClientId :accountId}
      args)
     (merge-with
      merge
@@ -143,22 +137,22 @@
      auth))))
 
 (defn adunits-getAdCode$
-  "Required parameters: accountId, adClientId, adUnitId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adunits/getAdCode
+  
+  Required parameters: accountId, adClientId, adUnitId
   
   Optional parameters: none
-  
   Get ad code for the specified ad unit."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adUnitId :adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/adcode"
-     #{"accountId" "adUnitId" "adClientId"}
+     #{:adUnitId :adClientId :accountId}
      args)
     (merge-with
      merge
@@ -169,22 +163,22 @@
      auth))))
 
 (defn adunits-list$
-  "Required parameters: accountId, adClientId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adunits/list
+  
+  Required parameters: accountId, adClientId
   
   Optional parameters: includeInactive, maxResults, pageToken
-  
   List all ad units in the specified ad client for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/adunits"
-     #{"accountId" "adClientId"}
+     #{:adClientId :accountId}
      args)
     (merge-with
      merge
@@ -195,22 +189,22 @@
      auth))))
 
 (defn adunits-customchannels-list$
-  "Required parameters: accountId, adClientId, adUnitId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/adunits/customchannels/list
+  
+  Required parameters: accountId, adClientId, adUnitId
   
   Optional parameters: maxResults, pageToken
-  
   List all custom channels which the specified ad unit belongs to."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adUnitId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adUnitId :adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/customchannels"
-     #{"accountId" "adUnitId" "adClientId"}
+     #{:adUnitId :adClientId :accountId}
      args)
     (merge-with
      merge
@@ -221,21 +215,21 @@
      auth))))
 
 (defn alerts-delete$
-  "Required parameters: accountId, alertId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/alerts/delete
+  
+  Required parameters: accountId, alertId
   
   Optional parameters: none
-  
   Dismiss (delete) the specified alert from the specified publisher AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "alertId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :alertId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/alerts/{alertId}"
-     #{"accountId" "alertId"}
+     #{:accountId :alertId}
      args)
     (merge-with
      merge
@@ -246,22 +240,22 @@
      auth))))
 
 (defn alerts-list$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/alerts/list
+  
+  Required parameters: accountId
   
   Optional parameters: locale
-  
   List the alerts for the specified AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/alerts"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -272,24 +266,24 @@
      auth))))
 
 (defn customchannels-get$
-  "Required parameters: accountId, adClientId, customChannelId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/customchannels/get
+  
+  Required parameters: accountId, adClientId, customChannelId
   
   Optional parameters: none
-  
   Get the specified custom channel from the specified ad client for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+          #{:adClientId :customChannelId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}"
-     #{"accountId" "customChannelId" "adClientId"}
+     #{:adClientId :customChannelId :accountId}
      args)
     (merge-with
      merge
@@ -300,22 +294,22 @@
      auth))))
 
 (defn customchannels-list$
-  "Required parameters: accountId, adClientId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/customchannels/list
+  
+  Required parameters: accountId, adClientId
   
   Optional parameters: maxResults, pageToken
-  
   List all custom channels in the specified ad client for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/customchannels"
-     #{"accountId" "adClientId"}
+     #{:adClientId :accountId}
      args)
     (merge-with
      merge
@@ -326,24 +320,24 @@
      auth))))
 
 (defn customchannels-adunits-list$
-  "Required parameters: accountId, adClientId, customChannelId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/customchannels/adunits/list
+  
+  Required parameters: accountId, adClientId, customChannelId
   
   Optional parameters: includeInactive, maxResults, pageToken
-  
   List all ad units in the specified custom channel."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"accountId" "customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+          #{:adClientId :customChannelId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}/adunits"
-     #{"accountId" "customChannelId" "adClientId"}
+     #{:adClientId :customChannelId :accountId}
      args)
     (merge-with
      merge
@@ -354,22 +348,22 @@
      auth))))
 
 (defn payments-list$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/payments/list
+  
+  Required parameters: accountId
   
   Optional parameters: none
-  
   List the payments for the specified AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/payments"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -380,22 +374,22 @@
      auth))))
 
 (defn reports-generate$
-  "Required parameters: startDate, endDate, accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/reports/generate
+  
+  Required parameters: startDate, endDate, accountId
   
   Optional parameters: locale, currency, filter, dimension, startIndex, metric, sort, useTimezoneReporting, maxResults
-  
   Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"startDate" "accountId" "endDate"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:startDate :endDate :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/reports"
-     #{"accountId"}
+     #{:startDate :endDate :accountId}
      args)
     (merge-with
      merge
@@ -406,22 +400,22 @@
      auth))))
 
 (defn reports-saved-generate$
-  "Required parameters: accountId, savedReportId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/reports/saved/generate
+  
+  Required parameters: accountId, savedReportId
   
   Optional parameters: locale, maxResults, startIndex
-  
   Generate an AdSense report based on the saved report ID sent in the query parameters."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "savedReportId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :savedReportId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/reports/{savedReportId}"
-     #{"accountId" "savedReportId"}
+     #{:accountId :savedReportId}
      args)
     (merge-with
      merge
@@ -432,22 +426,22 @@
      auth))))
 
 (defn reports-saved-list$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/reports/saved/list
+  
+  Required parameters: accountId
   
   Optional parameters: maxResults, pageToken
-  
   List all saved reports in the specified AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/reports/saved"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -458,22 +452,22 @@
      auth))))
 
 (defn savedadstyles-get$
-  "Required parameters: accountId, savedAdStyleId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/savedadstyles/get
+  
+  Required parameters: accountId, savedAdStyleId
   
   Optional parameters: none
-  
   List a specific saved ad style for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "savedAdStyleId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:savedAdStyleId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/savedadstyles/{savedAdStyleId}"
-     #{"accountId" "savedAdStyleId"}
+     #{:savedAdStyleId :accountId}
      args)
     (merge-with
      merge
@@ -484,22 +478,22 @@
      auth))))
 
 (defn savedadstyles-list$
-  "Required parameters: accountId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/savedadstyles/list
+  
+  Required parameters: accountId
   
   Optional parameters: maxResults, pageToken
-  
   List all saved ad styles in the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/savedadstyles"
-     #{"accountId"}
+     #{:accountId}
      args)
     (merge-with
      merge
@@ -510,22 +504,22 @@
      auth))))
 
 (defn urlchannels-list$
-  "Required parameters: accountId, adClientId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/accounts/urlchannels/list
+  
+  Required parameters: accountId, adClientId
   
   Optional parameters: maxResults, pageToken
-  
   List all URL channels in the specified ad client for the specified account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "accounts/{accountId}/adclients/{adClientId}/urlchannels"
-     #{"accountId" "adClientId"}
+     #{:adClientId :accountId}
      args)
     (merge-with
      merge

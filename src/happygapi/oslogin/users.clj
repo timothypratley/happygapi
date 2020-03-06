@@ -1,21 +1,24 @@
 (ns happygapi.oslogin.users
-  "Cloud OS Login API
+  "Cloud OS Login API: users.
   You can use OS Login to manage access to your VM instances using IAM roles.
-  See: https://cloud.google.com/compute/docs/oslogin/"
+  See: https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "oslogin_schema.edn"))))
+            [happy.util :as util]))
 
 (defn importSshPublicKey$
-  "Required parameters: parent
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/importSshPublicKey
+  
+  Required parameters: parent
   
   Optional parameters: projectId
+  
+  Body: 
+  
+  {:key string,
+   :name string,
+   :expirationTimeUsec string,
+   :fingerprint string}
   
   Adds an SSH public key and returns the profile information. Default POSIX
   account information is set when no username and UID exist as part of the
@@ -23,43 +26,42 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+parent}:importSshPublicKey"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getLoginProfile$
-  "Required parameters: name
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/getLoginProfile
+  
+  Required parameters: name
   
   Optional parameters: projectId, systemId
-  
   Retrieves the profile information used for logging in to a virtual machine
   on Google Compute Engine."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}/loginProfile"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -70,22 +72,22 @@
      auth))))
 
 (defn sshPublicKeys-delete$
-  "Required parameters: name
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes an SSH public key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -96,22 +98,22 @@
      auth))))
 
 (defn sshPublicKeys-get$
-  "Required parameters: name
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Retrieves an SSH public key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -122,49 +124,59 @@
      auth))))
 
 (defn sshPublicKeys-patch$
-  "Required parameters: name
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:key string,
+   :name string,
+   :expirationTimeUsec string,
+   :fingerprint string}
   
   Updates an SSH public key and returns the profile information. This method
   supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn projects-delete$
-  "Required parameters: name
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/projects/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a POSIX account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

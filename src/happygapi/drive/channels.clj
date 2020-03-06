@@ -1,21 +1,30 @@
 (ns happygapi.drive.channels
-  "Drive API
+  "Drive API: channels.
   Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
-  See: https://developers.google.com/drive/"
+  See: https://developers.google.com/drive/api/reference/rest/v3/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "drive_schema.edn"))))
+            [happy.util :as util]))
 
 (defn stop$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/channels/stop
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:address string,
+   :resourceUri string,
+   :payload boolean,
+   :expiration string,
+   :params {},
+   :type string,
+   :resourceId string,
+   :token string,
+   :id string,
+   :kind string}
   
   Stop watching resources through this channel"
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -26,8 +35,7 @@
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -37,10 +45,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

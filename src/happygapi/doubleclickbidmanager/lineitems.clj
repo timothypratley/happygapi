@@ -1,28 +1,29 @@
 (ns happygapi.doubleclickbidmanager.lineitems
-  "DoubleClick Bid Manager API
+  "DoubleClick Bid Manager API: lineitems.
   API for viewing and managing your reports in DoubleClick Bid Manager.
-  See: https://developers.google.com/bid-manager/"
+  See: https://developers.google.com/bid-manager/api/reference/rest/v1.1/lineitems"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "doubleclickbidmanager_schema.edn"))))
+            [happy.util :as util]))
 
 (defn downloadlineitems$
-  "Required parameters: none
+  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/lineitems/downloadlineitems
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:fileSpec string,
+   :filterIds [string],
+   :filterType string,
+   :format string}
   
   Retrieves line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -32,24 +33,29 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn uploadlineitems$
-  "Required parameters: none
+  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/lineitems/uploadlineitems
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:dryRun boolean, :format string, :lineItems string}
   
   Uploads line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -59,10 +65,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

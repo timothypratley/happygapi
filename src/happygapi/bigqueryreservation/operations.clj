@@ -1,23 +1,17 @@
 (ns happygapi.bigqueryreservation.operations
-  "BigQuery Reservation API
+  "BigQuery Reservation API: operations.
   A service to modify your BigQuery flat-rate reservations.
-  See: https://cloud.google.com/bigquery/"
+  See: https://cloud.google.com/bigquery/api/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "bigqueryreservation_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: name
+  "https://cloud.google.com/bigquery/api/reference/rest/v1/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -25,14 +19,13 @@
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://bigqueryreservation.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -43,10 +36,11 @@
      auth))))
 
 (defn list$
-  "Required parameters: name
+  "https://cloud.google.com/bigquery/api/reference/rest/v1/operations/list
+  
+  Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
-  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -60,14 +54,13 @@
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigqueryreservation.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

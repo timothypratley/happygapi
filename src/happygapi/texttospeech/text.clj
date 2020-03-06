@@ -1,28 +1,34 @@
 (ns happygapi.texttospeech.text
-  "Cloud Text-to-Speech API
+  "Cloud Text-to-Speech API: text.
   Synthesizes natural-sounding speech by applying powerful neural network models.
-  See: https://cloud.google.com/text-to-speech/"
+  See: https://cloud.google.com/text-to-speech/api/reference/rest/v1/text"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "texttospeech_schema.edn"))))
+            [happy.util :as util]))
 
 (defn synthesize$
-  "Required parameters: none
+  "https://cloud.google.com/text-to-speech/api/reference/rest/v1/text/synthesize
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:input {:ssml string, :text string},
+   :voice {:languageCode string, :name string, :ssmlGender string},
+   :audioConfig {:audioEncoding string,
+                 :effectsProfileId [string],
+                 :volumeGainDb number,
+                 :sampleRateHertz integer,
+                 :pitch number,
+                 :speakingRate number}}
   
   Synthesizes speech synchronously: receive results after all text input
   has been processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -32,10 +38,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

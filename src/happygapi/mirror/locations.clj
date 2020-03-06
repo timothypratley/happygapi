@@ -1,34 +1,28 @@
 (ns happygapi.mirror.locations
-  "Google Mirror API
+  "Google Mirror API: locations.
   Interacts with Glass users via the timeline.
-  See: https://developers.google.com/glass"
+  See: https://developers.google.com/glassapi/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "mirror_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/locations/get
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Gets a single location by ID."
   {:scopes ["https://www.googleapis.com/auth/glass.location"
             "https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "locations/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
@@ -39,16 +33,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/glassapi/reference/rest/v1/locations/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Retrieves a list of locations for the user."
   {:scopes ["https://www.googleapis.com/auth/glass.location"
             "https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

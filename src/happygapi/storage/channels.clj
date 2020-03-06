@@ -1,21 +1,30 @@
 (ns happygapi.storage.channels
-  "Cloud Storage JSON API
+  "Cloud Storage JSON API: channels.
   Stores and retrieves potentially large, immutable data objects.
-  See: https://developers.google.com/storage/docs/json_api/"
+  See: https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "storage_schema.edn"))))
+            [happy.util :as util]))
 
 (defn stop$
-  "Required parameters: none
+  "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/channels/stop
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:address string,
+   :resourceUri string,
+   :payload boolean,
+   :expiration string,
+   :params {},
+   :type string,
+   :resourceId string,
+   :token string,
+   :id string,
+   :kind string}
   
   Stop watching resources through this channel"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -24,8 +33,7 @@
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -35,10 +43,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,27 +1,21 @@
 (ns happygapi.androidmanagement.signupUrls
-  "Android Management API
+  "Android Management API: signupUrls.
   The Android Management API provides remote enterprise management of Android devices and apps.
-  See: https://developers.google.com/android/management"
+  See: https://developers.google.com/android/managementapi/reference/rest/v1/signupUrls"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "androidmanagement_schema.edn"))))
+            [happy.util :as util]))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/android/managementapi/reference/rest/v1/signupUrls/create
   
-  Optional parameters: callbackUrl, projectId
+  Required parameters: none
   
+  Optional parameters: projectId, callbackUrl
   Creates an enterprise signup URL."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -34,7 +28,5 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,33 +1,27 @@
 (ns happygapi.mirror.subscriptions
-  "Google Mirror API
+  "Google Mirror API: subscriptions.
   Interacts with Glass users via the timeline.
-  See: https://developers.google.com/glass"
+  See: https://developers.google.com/glassapi/reference/rest/v1/subscriptions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "mirror_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/subscriptions/delete
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Deletes a subscription."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
@@ -38,15 +32,33 @@
      auth))))
 
 (defn insert$
-  "Required parameters: none
+  "https://developers.google.com/glassapi/reference/rest/v1/subscriptions/insert
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:userToken string,
+   :callbackUrl string,
+   :verifyToken string,
+   :notification {:collection string,
+                  :itemId string,
+                  :operation string,
+                  :userActions [UserAction],
+                  :userToken string,
+                  :verifyToken string},
+   :updated string,
+   :operation [string],
+   :id string,
+   :kind string,
+   :collection string}
   
   Creates a new subscription."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -56,24 +68,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/glassapi/reference/rest/v1/subscriptions/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Retrieves a list of subscriptions for the authenticated user and service."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -90,28 +102,46 @@
      auth))))
 
 (defn update$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/subscriptions/update
+  
+  Required parameters: id
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:userToken string,
+   :callbackUrl string,
+   :verifyToken string,
+   :notification {:collection string,
+                  :itemId string,
+                  :operation string,
+                  :userActions [UserAction],
+                  :userToken string,
+                  :verifyToken string},
+   :updated string,
+   :operation [string],
+   :id string,
+   :kind string,
+   :collection string}
   
   Updates an existing subscription in place."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

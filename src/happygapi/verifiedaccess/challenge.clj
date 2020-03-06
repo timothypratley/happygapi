@@ -1,54 +1,27 @@
 (ns happygapi.verifiedaccess.challenge
-  "Verified Access API
+  "Verified Access API: challenge.
   API for Verified Access chrome extension to provide credential verification for chrome devices connecting to an enterprise network
-  See: https://www.google.com/work/chrome/"
+  See: https://www.google.com/work/chrome/api/reference/rest/v1/challenge"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "verifiedaccess_schema.edn"))))
-
-(defn create$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  CreateChallenge API"
-  {:scopes ["https://www.googleapis.com/auth/verifiedaccess"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://verifiedaccess.googleapis.com/"
-     "v1/challenge"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
+            [happy.util :as util]))
 
 (defn verify$
-  "Required parameters: none
+  "https://www.google.com/work/chrome/api/reference/rest/v1/challenge/verify
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:challengeResponse {:signature string, :data string},
+   :expectedIdentity string}
   
   VerifyChallengeResponse API"
   {:scopes ["https://www.googleapis.com/auth/verifiedaccess"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -58,10 +31,42 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn create$
+  "https://www.google.com/work/chrome/api/reference/rest/v1/challenge/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  CreateChallenge API"
+  {:scopes ["https://www.googleapis.com/auth/verifiedaccess"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://verifiedaccess.googleapis.com/"
+     "v1/challenge"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

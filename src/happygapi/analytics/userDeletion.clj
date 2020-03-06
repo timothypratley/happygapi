@@ -1,27 +1,31 @@
 (ns happygapi.analytics.userDeletion
-  "Google Analytics API
+  "Google Analytics API: userDeletion.
   Views and manages your Google Analytics data.
-  See: https://developers.google.com/analytics/"
+  See: https://developers.google.com/analytics/api/reference/rest/v3/userDeletion"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "analytics_schema.edn"))))
+            [happy.util :as util]))
 
 (defn userDeletionRequest-upsert$
-  "Required parameters: none
+  "https://developers.google.com/analytics/api/reference/rest/v3/userDeletion/userDeletionRequest/upsert
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:deletionRequestTime string,
+   :firebaseProjectId string,
+   :id {:type string, :userId string},
+   :kind string,
+   :propertyId string,
+   :webPropertyId string}
   
   Insert or update a user deletion requests."
   {:scopes ["https://www.googleapis.com/auth/analytics.user.deletion"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,10 +35,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,27 +1,30 @@
 (ns happygapi.content.regionalinventory
-  "Content API for Shopping
+  "Content API for Shopping: regionalinventory.
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-content"
+  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "content_schema.edn"))))
+            [happy.util :as util]))
 
 (defn custombatch$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory/custombatch
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :method string,
+              :productId string,
+              :regionalInventory RegionalInventory}]}
   
   Updates regional inventory for multiple products or regions in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,37 +34,50 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn insert$
-  "Required parameters: merchantId, productId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory/insert
+  
+  Required parameters: merchantId, productId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:availability string,
+   :customAttributes [{:groupValues [CustomAttribute],
+                       :name string,
+                       :value string}],
+   :kind string,
+   :price {:currency string, :value string},
+   :regionId string,
+   :salePrice {:currency string, :value string},
+   :salePriceEffectiveDate string}
   
   Update the regional inventory of a product in your Merchant Center account. If a regional inventory with the same region ID already exists, this method updates that entry."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"productId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:productId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/products/{productId}/regionalinventory"
-     #{"productId" "merchantId"}
+     #{:productId :merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

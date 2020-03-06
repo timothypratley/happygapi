@@ -1,27 +1,26 @@
 (ns happygapi.searchconsole.urlTestingTools
-  "Google Search Console URL Testing Tools API
+  "Google Search Console URL Testing Tools API: urlTestingTools.
   Provides tools for running validation tests against single URLs
-  See: https://developers.google.com/webmaster-tools/search-console-api/"
+  See: https://developers.google.com/webmaster-tools/search-console-api/api/reference/rest/v1/urlTestingTools"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "searchconsole_schema.edn"))))
+            [happy.util :as util]))
 
 (defn mobileFriendlyTest-run$
-  "Required parameters: none
+  "https://developers.google.com/webmaster-tools/search-console-api/api/reference/rest/v1/urlTestingTools/mobileFriendlyTest/run
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:url string, :requestScreenshot boolean}
   
   Runs Mobile-Friendly Test for a given URL."
   {:scopes nil}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,10 +30,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

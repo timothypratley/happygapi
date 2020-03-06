@@ -1,62 +1,29 @@
 (ns happygapi.appengine.apps
-  "App Engine Admin API
+  "App Engine Admin API: apps.
   Provisions and manages developers' App Engine applications.
-  See: https://cloud.google.com/appengine/docs/admin-api/"
+  See: https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "appengine_schema.edn"))))
-
-(defn repair$
-  "Required parameters: appsId
-  
-  Optional parameters: none
-  
-  Recreates the required App Engine features for the specified App Engine application, for example a Cloud Storage bucket or App Engine service account. Use this method if you receive an error message about a missing feature, for example, Error retrieving the App Engine service account. If you have deleted your App Engine service account, this will not be able to recreate it. Instead, you should attempt to use the IAM undelete API if possible at https://cloud.google.com/iam/reference/rest/v1/projects.serviceAccounts/undelete?apix_params=%7B\"name\"%3A\"projects%2F-%2FserviceAccounts%2Funique_id\"%2C\"resource\"%3A%7B%7D%7D . If the deletion was recent, the numeric ID can be found in the Cloud Console Activity Log."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}:repair"
-     #{"appsId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/get
+  
+  Required parameters: appsId
   
   Optional parameters: none
-  
   Gets information about an application."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -67,44 +34,88 @@
      auth))))
 
 (defn patch$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/patch
+  
+  Required parameters: appsId
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:gcrDomain string,
+   :defaultBucket string,
+   :codeBucket string,
+   :locationId string,
+   :servingStatus string,
+   :name string,
+   :authDomain string,
+   :dispatchRules [{:path string, :domain string, :service string}],
+   :defaultHostname string,
+   :iap {:oauth2ClientId string,
+         :oauth2ClientSecretSha256 string,
+         :enabled boolean,
+         :oauth2ClientSecret string},
+   :id string,
+   :featureSettings {:useContainerOptimizedOs boolean,
+                     :splitHealthChecks boolean},
+   :defaultCookieExpiration string}
   
   Updates the specified Application resource. You can update the following fields:
   auth_domain - Google authentication domain for controlling user access to the application.
   default_cookie_expiration - Cookie expiration policy for the application."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn create$
-  "Required parameters: none
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/create
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:gcrDomain string,
+   :defaultBucket string,
+   :codeBucket string,
+   :locationId string,
+   :servingStatus string,
+   :name string,
+   :authDomain string,
+   :dispatchRules [{:path string, :domain string, :service string}],
+   :defaultHostname string,
+   :iap {:oauth2ClientId string,
+         :oauth2ClientSecretSha256 string,
+         :enabled boolean,
+         :oauth2ClientSecret string},
+   :id string,
+   :featureSettings {:useContainerOptimizedOs boolean,
+                     :splitHealthChecks boolean},
+   :defaultCookieExpiration string}
   
   Creates an App Engine application for a Google Cloud Platform project. Required fields:
   id - The ID of the target Cloud Platform project.
   location - The region (https://cloud.google.com/appengine/docs/locations) where you want the App Engine application located.For more information about App Engine applications, see Managing Projects, Applications, and Billing (https://cloud.google.com/appengine/docs/standard/python/console/)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -114,59 +125,64 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn authorizedDomains-list$
-  "Required parameters: appsId
+(defn repair$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/repair
   
-  Optional parameters: pageToken, pageSize
+  Required parameters: appsId
   
-  Lists all domains the user is authorized to administer."
-  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Recreates the required App Engine features for the specified App Engine application, for example a Cloud Storage bucket or App Engine service account. Use this method if you receive an error message about a missing feature, for example, Error retrieving the App Engine service account. If you have deleted your App Engine service account, this will not be able to recreate it. Instead, you should attempt to use the IAM undelete API if possible at https://cloud.google.com/iam/reference/rest/v1/projects.serviceAccounts/undelete?apix_params=%7B\"name\"%3A\"projects%2F-%2FserviceAccounts%2Funique_id\"%2C\"resource\"%3A%7B%7D%7D . If the deletion was recent, the numeric ID can be found in the Cloud Console Activity Log."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/authorizedDomains"
-     #{"appsId"}
+     "v1/apps/{appsId}:repair"
+     #{:appsId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn operations-list$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/operations/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: appsId
   
+  Optional parameters: filter, pageToken, pageSize
   Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.NOTE: the name binding allows API services to override the binding to use different resource name schemes, such as users/*/operations. To override the binding, API services can add a binding such as \"/v1/{name=users/*}/operations\" to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/operations"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -177,127 +193,23 @@
      auth))))
 
 (defn operations-get$
-  "Required parameters: operationsId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/operations/get
+  
+  Required parameters: appsId, operationsId
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "operationsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :operationsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/operations/{operationsId}"
-     #{"appsId" "operationsId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domainMappings-delete$
-  "Required parameters: appsId, domainMappingsId
-  
-  Optional parameters: none
-  
-  Deletes the specified domain mapping. A user must be authorized to administer the associated domain in order to delete a DomainMapping resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "domainMappingsId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
-     #{"appsId" "domainMappingsId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domainMappings-list$
-  "Required parameters: appsId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the domain mappings on an application."
-  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/domainMappings"
-     #{"appsId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domainMappings-get$
-  "Required parameters: appsId, domainMappingsId
-  
-  Optional parameters: none
-  
-  Gets the specified domain mapping."
-  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "domainMappingsId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
-     #{"appsId" "domainMappingsId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domainMappings-patch$
-  "Required parameters: appsId, domainMappingsId
-  
-  Optional parameters: updateMask
-  
-  Updates the specified domain mapping. To map an SSL certificate to a domain mapping, update certificate_id to point to an AuthorizedCertificate resource. A user must be authorized to administer the associated domain in order to update a DomainMapping resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "domainMappingsId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
-     #{"appsId" "domainMappingsId"}
+     #{:appsId :operationsId}
      args)
     (merge-with
      merge
@@ -308,48 +220,58 @@
      auth))))
 
 (defn domainMappings-create$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/domainMappings/create
+  
+  Required parameters: appsId
   
   Optional parameters: overrideStrategy
+  
+  Body: 
+  
+  {:name string,
+   :sslSettings {:pendingManagedCertificateId string,
+                 :certificateId string,
+                 :sslManagementType string},
+   :id string,
+   :resourceRecords [{:type string, :rrdata string, :name string}]}
   
   Maps a domain to an application. A user must be authorized to administer a domain in order to map it to an application. For a list of available authorized domains, see AuthorizedDomains.ListAuthorizedDomains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/domainMappings"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn firewall-ingressRules-delete$
-  "Required parameters: appsId, ingressRulesId
+(defn domainMappings-delete$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/domainMappings/delete
+  
+  Required parameters: appsId, domainMappingsId
   
   Optional parameters: none
-  
-  Deletes the specified firewall rule."
+  Deletes the specified domain mapping. A user must be authorized to administer the associated domain in order to delete a DomainMapping resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "ingressRulesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :domainMappingsId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/firewall/ingressRules/{ingressRulesId}"
-     #{"appsId" "ingressRulesId"}
+     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
+     #{:appsId :domainMappingsId}
      args)
     (merge-with
      merge
@@ -359,24 +281,24 @@
       :as :json}
      auth))))
 
-(defn firewall-ingressRules-list$
-  "Required parameters: appsId
+(defn domainMappings-list$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/domainMappings/list
   
-  Optional parameters: matchingAddress, pageToken, pageSize
+  Required parameters: appsId
   
-  Lists the firewall rules of an application."
+  Optional parameters: pageToken, pageSize
+  Lists the domain mappings on an application."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/firewall/ingressRules"
-     #{"appsId"}
+     "v1/apps/{appsId}/domainMappings"
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -386,51 +308,88 @@
       :as :json}
      auth))))
 
-(defn firewall-ingressRules-create$
-  "Required parameters: appsId
+(defn domainMappings-get$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/domainMappings/get
+  
+  Required parameters: appsId, domainMappingsId
   
   Optional parameters: none
-  
-  Creates a firewall rule for the application."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  Gets the specified domain mapping."
+  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:appsId :domainMappingsId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/firewall/ingressRules"
-     #{"appsId"}
+     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
+     #{:appsId :domainMappingsId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn domainMappings-patch$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/domainMappings/patch
+  
+  Required parameters: appsId, domainMappingsId
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :sslSettings {:pendingManagedCertificateId string,
+                 :certificateId string,
+                 :sslManagementType string},
+   :id string,
+   :resourceRecords [{:type string, :rrdata string, :name string}]}
+  
+  Updates the specified domain mapping. To map an SSL certificate to a domain mapping, update certificate_id to point to an AuthorizedCertificate resource. A user must be authorized to administer the associated domain in order to update a DomainMapping resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId :domainMappingsId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/domainMappings/{domainMappingsId}"
+     #{:appsId :domainMappingsId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn firewall-ingressRules-get$
-  "Required parameters: appsId, ingressRulesId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/get
+  
+  Required parameters: appsId, ingressRulesId
   
   Optional parameters: none
-  
   Gets the specified firewall rule."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "ingressRulesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:ingressRulesId :appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/firewall/ingressRules/{ingressRulesId}"
-     #{"appsId" "ingressRulesId"}
+     #{:ingressRulesId :appsId}
      args)
     (merge-with
      merge
@@ -441,21 +400,91 @@
      auth))))
 
 (defn firewall-ingressRules-patch$
-  "Required parameters: appsId, ingressRulesId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/patch
+  
+  Required parameters: ingressRulesId, appsId
   
   Optional parameters: updateMask
   
+  Body: 
+  
+  {:sourceRange string,
+   :priority integer,
+   :action string,
+   :description string}
+  
   Updates the specified firewall rule."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "ingressRulesId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:ingressRulesId :appsId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/firewall/ingressRules/{ingressRulesId}"
-     #{"appsId" "ingressRulesId"}
+     #{:ingressRulesId :appsId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewall-ingressRules-batchUpdate$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/batchUpdate
+  
+  Required parameters: appsId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:ingressRules [{:sourceRange string,
+                   :priority integer,
+                   :action string,
+                   :description string}]}
+  
+  Replaces the entire firewall ruleset in one bulk operation. This overrides and replaces the rules of an existing firewall with the new rules.If the final rule does not match traffic with the '*' wildcard IP range, then an \"allow all\" rule is explicitly added to the end of the list."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/firewall/ingressRules:batchUpdate"
+     #{:appsId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewall-ingressRules-delete$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/delete
+  
+  Required parameters: appsId, ingressRulesId
+  
+  Optional parameters: none
+  Deletes the specified firewall rule."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:ingressRulesId :appsId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/firewall/ingressRules/{ingressRulesId}"
+     #{:ingressRulesId :appsId}
      args)
     (merge-with
      merge
@@ -465,51 +494,86 @@
       :as :json}
      auth))))
 
-(defn firewall-ingressRules-batchUpdate$
-  "Required parameters: appsId
+(defn firewall-ingressRules-list$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/list
   
-  Optional parameters: none
+  Required parameters: appsId
   
-  Replaces the entire firewall ruleset in one bulk operation. This overrides and replaces the rules of an existing firewall with the new rules.If the final rule does not match traffic with the '*' wildcard IP range, then an \"allow all\" rule is explicitly added to the end of the list."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  Optional parameters: matchingAddress, pageToken, pageSize
+  Lists the firewall rules of an application."
+  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/firewall/ingressRules:batchUpdate"
-     #{"appsId"}
+     "v1/apps/{appsId}/firewall/ingressRules"
+     #{:appsId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn firewall-ingressRules-create$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/firewall/ingressRules/create
+  
+  Required parameters: appsId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:sourceRange string,
+   :priority integer,
+   :action string,
+   :description string}
+  
+  Creates a firewall rule for the application."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/firewall/ingressRules"
+     #{:appsId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn locations-list$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/locations/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: appsId
   
+  Optional parameters: filter, pageToken, pageSize
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/locations"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -520,23 +584,23 @@
      auth))))
 
 (defn locations-get$
-  "Required parameters: appsId, locationsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/locations/get
+  
+  Required parameters: appsId, locationsId
   
   Optional parameters: none
-  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "locationsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :locationsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/locations/{locationsId}"
-     #{"appsId" "locationsId"}
+     #{:appsId :locationsId}
      args)
     (merge-with
      merge
@@ -547,21 +611,21 @@
      auth))))
 
 (defn authorizedCertificates-delete$
-  "Required parameters: authorizedCertificatesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedCertificates/delete
+  
+  Required parameters: authorizedCertificatesId, appsId
   
   Optional parameters: none
-  
   Deletes the specified SSL certificate."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"authorizedCertificatesId" "appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :authorizedCertificatesId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/authorizedCertificates/{authorizedCertificatesId}"
-     #{"authorizedCertificatesId" "appsId"}
+     #{:appsId :authorizedCertificatesId}
      args)
     (merge-with
      merge
@@ -572,23 +636,23 @@
      auth))))
 
 (defn authorizedCertificates-list$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedCertificates/list
+  
+  Required parameters: appsId
   
   Optional parameters: pageToken, pageSize, view
-  
   Lists all SSL certificates the user is authorized to administer."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/authorizedCertificates"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -599,23 +663,23 @@
      auth))))
 
 (defn authorizedCertificates-get$
-  "Required parameters: authorizedCertificatesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedCertificates/get
+  
+  Required parameters: authorizedCertificatesId, appsId
   
   Optional parameters: view
-  
   Gets the specified SSL certificate."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"authorizedCertificatesId" "appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :authorizedCertificatesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/authorizedCertificates/{authorizedCertificatesId}"
-     #{"authorizedCertificatesId" "appsId"}
+     #{:appsId :authorizedCertificatesId}
      args)
     (merge-with
      merge
@@ -626,73 +690,101 @@
      auth))))
 
 (defn authorizedCertificates-patch$
-  "Required parameters: appsId, authorizedCertificatesId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedCertificates/patch
+  
+  Required parameters: appsId, authorizedCertificatesId
   
   Optional parameters: updateMask
   
+  Body: 
+  
+  {:certificateRawData {:publicCertificate string, :privateKey string},
+   :displayName string,
+   :name string,
+   :visibleDomainMappings [string],
+   :id string,
+   :domainMappingsCount integer,
+   :domainNames [string],
+   :managedCertificate {:lastRenewalTime string, :status string},
+   :expireTime string}
+  
   Updates the specified SSL certificate. To renew a certificate and maintain its existing domain mappings, update certificate_data with a new certificate. The new certificate must be applicable to the same domains as the original certificate. The certificate display_name may also be updated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"authorizedCertificatesId" "appsId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId :authorizedCertificatesId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/authorizedCertificates/{authorizedCertificatesId}"
-     #{"authorizedCertificatesId" "appsId"}
+     #{:appsId :authorizedCertificatesId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn authorizedCertificates-create$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedCertificates/create
+  
+  Required parameters: appsId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:certificateRawData {:publicCertificate string, :privateKey string},
+   :displayName string,
+   :name string,
+   :visibleDomainMappings [string],
+   :id string,
+   :domainMappingsCount integer,
+   :domainNames [string],
+   :managedCertificate {:lastRenewalTime string, :status string},
+   :expireTime string}
   
   Uploads the specified SSL certificate."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/authorizedCertificates"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn services-delete$
-  "Required parameters: appsId, servicesId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/delete
+  
+  Required parameters: servicesId, appsId
   
   Optional parameters: none
-  
   Deletes the specified service and all enclosed versions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :servicesId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}"
-     #{"appsId" "servicesId"}
+     #{:appsId :servicesId}
      args)
     (merge-with
      merge
@@ -703,23 +795,23 @@
      auth))))
 
 (defn services-list$
-  "Required parameters: appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/list
+  
+  Required parameters: appsId
   
   Optional parameters: pageToken, pageSize
-  
   Lists all the services in the application."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services"
-     #{"appsId"}
+     #{:appsId}
      args)
     (merge-with
      merge
@@ -730,23 +822,23 @@
      auth))))
 
 (defn services-get$
-  "Required parameters: servicesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/get
+  
+  Required parameters: appsId, servicesId
   
   Optional parameters: none
-  
   Gets the current configuration of the specified service."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :servicesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}"
-     #{"appsId" "servicesId"}
+     #{:appsId :servicesId}
      args)
     (merge-with
      merge
@@ -757,73 +849,53 @@
      auth))))
 
 (defn services-patch$
-  "Required parameters: servicesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/patch
+  
+  Required parameters: servicesId, appsId
   
   Optional parameters: updateMask, migrateTraffic
   
+  Body: 
+  
+  {:name string, :split {:shardBy string, :allocations {}}, :id string}
+  
   Updates the configuration of the specified service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId :servicesId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}"
-     #{"appsId" "servicesId"}
+     #{:appsId :servicesId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
-(defn services-versions-create$
-  "Required parameters: servicesId, appsId
-  
-  Optional parameters: none
-  
-  Deploys code and resource files to a new version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/services/{servicesId}/versions"
-     #{"appsId" "servicesId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
 (defn services-versions-delete$
-  "Required parameters: servicesId, appsId, versionsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/delete
+  
+  Required parameters: servicesId, appsId, versionsId
   
   Optional parameters: none
-  
   Deletes an existing Version resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId" "versionsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:versionsId :appsId :servicesId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}"
-     #{"appsId" "servicesId" "versionsId"}
+     #{:versionsId :appsId :servicesId}
      args)
     (merge-with
      merge
@@ -834,23 +906,23 @@
      auth))))
 
 (defn services-versions-list$
-  "Required parameters: servicesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/list
   
-  Optional parameters: pageToken, pageSize, view
+  Required parameters: servicesId, appsId
   
+  Optional parameters: view, pageToken, pageSize
   Lists the versions of a service."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId :servicesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions"
-     #{"appsId" "servicesId"}
+     #{:appsId :servicesId}
      args)
     (merge-with
      merge
@@ -861,23 +933,23 @@
      auth))))
 
 (defn services-versions-get$
-  "Required parameters: servicesId, appsId, versionsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/get
+  
+  Required parameters: versionsId, servicesId, appsId
   
   Optional parameters: view
-  
   Gets the specified Version resource. By default, only a BASIC_VIEW will be returned. Specify the FULL_VIEW parameter to get the full resource."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId" "versionsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:versionsId :appsId :servicesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}"
-     #{"appsId" "servicesId" "versionsId"}
+     #{:versionsId :appsId :servicesId}
      args)
     (merge-with
      merge
@@ -888,9 +960,107 @@
      auth))))
 
 (defn services-versions-patch$
-  "Required parameters: servicesId, appsId, versionsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/patch
+  
+  Required parameters: servicesId, appsId, versionsId
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:runtimeChannel string,
+   :automaticScaling {:maxConcurrentRequests integer,
+                      :maxPendingLatency string,
+                      :requestUtilization RequestUtilization,
+                      :maxTotalInstances integer,
+                      :standardSchedulerSettings StandardSchedulerSettings,
+                      :diskUtilization DiskUtilization,
+                      :cpuUtilization CpuUtilization,
+                      :coolDownPeriod string,
+                      :minPendingLatency string,
+                      :minTotalInstances integer,
+                      :minIdleInstances integer,
+                      :maxIdleInstances integer,
+                      :networkUtilization NetworkUtilization},
+   :createdBy string,
+   :libraries [{:name string, :version string}],
+   :nobuildFilesRegex string,
+   :servingStatus string,
+   :endpointsApiService {:name string,
+                         :configId string,
+                         :disableTraceSampling boolean,
+                         :rolloutStrategy string},
+   :name string,
+   :versionUrl string,
+   :createTime string,
+   :vm boolean,
+   :betaSettings {},
+   :handlers [{:securityLevel string,
+               :authFailAction string,
+               :script ScriptHandler,
+               :urlRegex string,
+               :login string,
+               :apiEndpoint ApiEndpointHandler,
+               :staticFiles StaticFilesHandler,
+               :redirectHttpResponseCode string}],
+   :env string,
+   :threadsafe boolean,
+   :runtimeMainExecutablePath string,
+   :livenessCheck {:path string,
+                   :host string,
+                   :successThreshold integer,
+                   :checkInterval string,
+                   :failureThreshold integer,
+                   :timeout string,
+                   :initialDelay string},
+   :envVariables {},
+   :vpcAccessConnector {:name string},
+   :id string,
+   :runtime string,
+   :manualScaling {:instances integer},
+   :zones [string],
+   :entrypoint {:shell string},
+   :deployment {:zip ZipInfo,
+                :container ContainerInfo,
+                :files {},
+                :cloudBuildOptions CloudBuildOptions},
+   :errorHandlers [{:errorCode string,
+                    :mimeType string,
+                    :staticFile string}],
+   :network {:forwardedPorts [string],
+             :instanceTag string,
+             :subnetworkName string,
+             :name string,
+             :sessionAffinity boolean},
+   :instanceClass string,
+   :inboundServices [string],
+   :resources {:volumes [Volume],
+               :diskGb number,
+               :cpu number,
+               :memoryGb number},
+   :defaultExpiration string,
+   :diskUsageBytes string,
+   :apiConfig {:url string,
+               :securityLevel string,
+               :authFailAction string,
+               :script string,
+               :login string},
+   :healthCheck {:host string,
+                 :healthyThreshold integer,
+                 :restartThreshold integer,
+                 :checkInterval string,
+                 :timeout string,
+                 :unhealthyThreshold integer,
+                 :disableHealthCheck boolean},
+   :basicScaling {:maxInstances integer, :idleTimeout string},
+   :readinessCheck {:path string,
+                    :successThreshold integer,
+                    :host string,
+                    :checkInterval string,
+                    :timeout string,
+                    :failureThreshold integer,
+                    :appStartTimeout string},
+   :runtimeApiVersion string}
   
   Updates the specified Version resource. You can specify the following fields depending on the App Engine environment and type of scaling that the version resource uses:Standard environment
   instance_class (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#Version.FIELDS.instance_class)automatic scaling in the standard environment:
@@ -907,15 +1077,167 @@
   automatic_scaling.cool_down_period_sec (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#Version.FIELDS.automatic_scaling)
   automatic_scaling.cpu_utilization.target_utilization (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions#Version.FIELDS.automatic_scaling)"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId" "versionsId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:versionsId :appsId :servicesId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}"
-     #{"appsId" "servicesId" "versionsId"}
+     #{:versionsId :appsId :servicesId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn services-versions-create$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/create
+  
+  Required parameters: servicesId, appsId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:runtimeChannel string,
+   :automaticScaling {:maxConcurrentRequests integer,
+                      :maxPendingLatency string,
+                      :requestUtilization RequestUtilization,
+                      :maxTotalInstances integer,
+                      :standardSchedulerSettings StandardSchedulerSettings,
+                      :diskUtilization DiskUtilization,
+                      :cpuUtilization CpuUtilization,
+                      :coolDownPeriod string,
+                      :minPendingLatency string,
+                      :minTotalInstances integer,
+                      :minIdleInstances integer,
+                      :maxIdleInstances integer,
+                      :networkUtilization NetworkUtilization},
+   :createdBy string,
+   :libraries [{:name string, :version string}],
+   :nobuildFilesRegex string,
+   :servingStatus string,
+   :endpointsApiService {:name string,
+                         :configId string,
+                         :disableTraceSampling boolean,
+                         :rolloutStrategy string},
+   :name string,
+   :versionUrl string,
+   :createTime string,
+   :vm boolean,
+   :betaSettings {},
+   :handlers [{:securityLevel string,
+               :authFailAction string,
+               :script ScriptHandler,
+               :urlRegex string,
+               :login string,
+               :apiEndpoint ApiEndpointHandler,
+               :staticFiles StaticFilesHandler,
+               :redirectHttpResponseCode string}],
+   :env string,
+   :threadsafe boolean,
+   :runtimeMainExecutablePath string,
+   :livenessCheck {:path string,
+                   :host string,
+                   :successThreshold integer,
+                   :checkInterval string,
+                   :failureThreshold integer,
+                   :timeout string,
+                   :initialDelay string},
+   :envVariables {},
+   :vpcAccessConnector {:name string},
+   :id string,
+   :runtime string,
+   :manualScaling {:instances integer},
+   :zones [string],
+   :entrypoint {:shell string},
+   :deployment {:zip ZipInfo,
+                :container ContainerInfo,
+                :files {},
+                :cloudBuildOptions CloudBuildOptions},
+   :errorHandlers [{:errorCode string,
+                    :mimeType string,
+                    :staticFile string}],
+   :network {:forwardedPorts [string],
+             :instanceTag string,
+             :subnetworkName string,
+             :name string,
+             :sessionAffinity boolean},
+   :instanceClass string,
+   :inboundServices [string],
+   :resources {:volumes [Volume],
+               :diskGb number,
+               :cpu number,
+               :memoryGb number},
+   :defaultExpiration string,
+   :diskUsageBytes string,
+   :apiConfig {:url string,
+               :securityLevel string,
+               :authFailAction string,
+               :script string,
+               :login string},
+   :healthCheck {:host string,
+                 :healthyThreshold integer,
+                 :restartThreshold integer,
+                 :checkInterval string,
+                 :timeout string,
+                 :unhealthyThreshold integer,
+                 :disableHealthCheck boolean},
+   :basicScaling {:maxInstances integer, :idleTimeout string},
+   :readinessCheck {:path string,
+                    :successThreshold integer,
+                    :host string,
+                    :checkInterval string,
+                    :timeout string,
+                    :failureThreshold integer,
+                    :appStartTimeout string},
+   :runtimeApiVersion string}
+  
+  Deploys code and resource files to a new version."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:appsId :servicesId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/services/{servicesId}/versions"
+     #{:appsId :servicesId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn services-versions-instances-delete$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/instances/delete
+  
+  Required parameters: appsId, instancesId, versionsId, servicesId
+  
+  Optional parameters: none
+  Stops a running instance.The instance might be automatically recreated based on the scaling settings of the version. For more information, see \"How Instances are Managed\" (standard environment (https://cloud.google.com/appengine/docs/standard/python/how-instances-are-managed) | flexible environment (https://cloud.google.com/appengine/docs/flexible/python/how-instances-are-managed)).To ensure that instances are not re-created and avoid getting billed, you can stop all instances within the target version by changing the serving status of the version to STOPPED with the apps.services.versions.patch (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions/patch) method."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys?
+          args
+          #{:versionsId :appsId :instancesId :servicesId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://appengine.googleapis.com/"
+     "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}"
+     #{:versionsId :appsId :instancesId :servicesId}
      args)
     (merge-with
      merge
@@ -926,23 +1248,23 @@
      auth))))
 
 (defn services-versions-instances-list$
-  "Required parameters: versionsId, servicesId, appsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/instances/list
+  
+  Required parameters: versionsId, servicesId, appsId
   
   Optional parameters: pageToken, pageSize
-  
   Lists the instances of a version.Tip: To aggregate details about instances over time, see the Stackdriver Monitoring API (https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list)."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"appsId" "servicesId" "versionsId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:versionsId :appsId :servicesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}/instances"
-     #{"appsId" "servicesId" "versionsId"}
+     #{:versionsId :appsId :servicesId}
      args)
     (merge-with
      merge
@@ -953,10 +1275,11 @@
      auth))))
 
 (defn services-versions-instances-get$
-  "Required parameters: servicesId, appsId, instancesId, versionsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/instances/get
+  
+  Required parameters: servicesId, appsId, instancesId, versionsId
   
   Optional parameters: none
-  
   Gets instance information."
   {:scopes ["https://www.googleapis.com/auth/appengine.admin"
             "https://www.googleapis.com/auth/cloud-platform"
@@ -964,14 +1287,13 @@
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"appsId" "servicesId" "versionsId" "instancesId"})
-         (json-schema/validate schemas args)]}
+          #{:versionsId :appsId :instancesId :servicesId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}"
-     #{"appsId" "servicesId" "versionsId" "instancesId"}
+     #{:versionsId :appsId :instancesId :servicesId}
      args)
     (merge-with
      merge
@@ -982,52 +1304,57 @@
      auth))))
 
 (defn services-versions-instances-debug$
-  "Required parameters: servicesId, appsId, instancesId, versionsId
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/services/versions/instances/debug
+  
+  Required parameters: versionsId, servicesId, appsId, instancesId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:sshKey string}
   
   Enables debugging on a VM instance. This allows you to use the SSH command to connect to the virtual machine where the instance lives. While in \"debug mode\", the instance continues to serve live traffic. You should delete the instance when you are done debugging and then allow the system to take over and determine if another instance should be started.Only applicable for instances in App Engine flexible environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"appsId" "servicesId" "versionsId" "instancesId"})
-         (json-schema/validate schemas args)]}
+          #{:versionsId :appsId :instancesId :servicesId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://appengine.googleapis.com/"
      "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}:debug"
-     #{"appsId" "servicesId" "versionsId" "instancesId"}
+     #{:versionsId :appsId :instancesId :servicesId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn services-versions-instances-delete$
-  "Required parameters: servicesId, appsId, instancesId, versionsId
+(defn authorizedDomains-list$
+  "https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps/authorizedDomains/list
   
-  Optional parameters: none
+  Required parameters: appsId
   
-  Stops a running instance.The instance might be automatically recreated based on the scaling settings of the version. For more information, see \"How Instances are Managed\" (standard environment (https://cloud.google.com/appengine/docs/standard/python/how-instances-are-managed) | flexible environment (https://cloud.google.com/appengine/docs/flexible/python/how-instances-are-managed)).To ensure that instances are not re-created and avoid getting billed, you can stop all instances within the target version by changing the serving status of the version to STOPPED with the apps.services.versions.patch (https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions/patch) method."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Optional parameters: pageToken, pageSize
+  Lists all domains the user is authorized to administer."
+  {:scopes ["https://www.googleapis.com/auth/appengine.admin"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys?
-          args
-          #{"appsId" "servicesId" "versionsId" "instancesId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:appsId})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://appengine.googleapis.com/"
-     "v1/apps/{appsId}/services/{servicesId}/versions/{versionsId}/instances/{instancesId}"
-     #{"appsId" "servicesId" "versionsId" "instancesId"}
+     "v1/apps/{appsId}/authorizedDomains"
+     #{:appsId}
      args)
     (merge-with
      merge

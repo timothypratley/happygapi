@@ -466,17 +466,11 @@
  :DirectorySite {:id "DirectorySite",
                  :type "object",
                  :description "DirectorySites contains properties of a website from the Site Directory. Sites need to be added to an account via the Sites resource before they can be assigned to a placement.",
-                 :properties {:idDimensionValue {:$ref "DimensionValue",
+                 :properties {:id {:type "string",
+                                   :description "ID of this directory site. This is a read-only, auto-generated field.",
+                                   :format "int64"},
+                              :idDimensionValue {:$ref "DimensionValue",
                                                  :description "Dimension value for the ID of this directory site. This is a read-only, auto-generated field."},
-                              :interstitialTagFormats {:type "array",
-                                                       :description "Tag types for interstitial placements.\n\nAcceptable values are:\n- \"IFRAME_JAVASCRIPT_INTERSTITIAL\"\n- \"INTERNAL_REDIRECT_INTERSTITIAL\"\n- \"JAVASCRIPT_INTERSTITIAL\"",
-                                                       :items {:type "string",
-                                                               :enum ["IFRAME_JAVASCRIPT_INTERSTITIAL"
-                                                                      "INTERNAL_REDIRECT_INTERSTITIAL"
-                                                                      "JAVASCRIPT_INTERSTITIAL"],
-                                                               :enumDescriptions [""
-                                                                                  ""
-                                                                                  ""]}},
                               :inpageTagFormats {:type "array",
                                                  :description "Tag types for regular placements.\n\nAcceptable values are:\n- \"STANDARD\"\n- \"IFRAME_JAVASCRIPT_INPAGE\"\n- \"INTERNAL_REDIRECT_INPAGE\"\n- \"JAVASCRIPT_INPAGE\"",
                                                  :items {:type "string",
@@ -488,18 +482,22 @@
                                                                             ""
                                                                             ""
                                                                             ""]}},
+                              :interstitialTagFormats {:type "array",
+                                                       :description "Tag types for interstitial placements.\n\nAcceptable values are:\n- \"IFRAME_JAVASCRIPT_INTERSTITIAL\"\n- \"INTERNAL_REDIRECT_INTERSTITIAL\"\n- \"JAVASCRIPT_INTERSTITIAL\"",
+                                                       :items {:type "string",
+                                                               :enum ["IFRAME_JAVASCRIPT_INTERSTITIAL"
+                                                                      "INTERNAL_REDIRECT_INTERSTITIAL"
+                                                                      "JAVASCRIPT_INTERSTITIAL"],
+                                                               :enumDescriptions [""
+                                                                                  ""
+                                                                                  ""]}},
+                              :kind {:type "string",
+                                     :description "Identifies what kind of resource this is. Value: the fixed string \"dfareporting#directorySite\".",
+                                     :default "dfareporting#directorySite"},
                               :name {:type "string",
                                      :description "Name of this directory site."},
                               :settings {:$ref "DirectorySiteSettings",
                                          :description "Directory site settings."},
-                              :active {:type "boolean",
-                                       :description "Whether this directory site is active."},
-                              :id {:type "string",
-                                   :description "ID of this directory site. This is a read-only, auto-generated field.",
-                                   :format "int64"},
-                              :kind {:type "string",
-                                     :description "Identifies what kind of resource this is. Value: the fixed string \"dfareporting#directorySite\".",
-                                     :default "dfareporting#directorySite"},
                               :url {:type "string",
                                     :description "URL of this directory site."}}},
  :ContentCategory {:id "ContentCategory",

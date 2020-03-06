@@ -1,33 +1,27 @@
 (ns happygapi.mirror.contacts
-  "Google Mirror API
+  "Google Mirror API: contacts.
   Interacts with Glass users via the timeline.
-  See: https://developers.google.com/glass"
+  See: https://developers.google.com/glassapi/reference/rest/v1/contacts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "mirror_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/delete
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Deletes a contact."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "contacts/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn get$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/get
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Gets a single contact by ID."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "contacts/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
@@ -63,15 +57,31 @@
      auth))))
 
 (defn insert$
-  "Required parameters: none
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/insert
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:displayName string,
+   :speakableName string,
+   :sharingFeatures [string],
+   :acceptCommands [{:type string}],
+   :type string,
+   :source string,
+   :acceptTypes [string],
+   :imageUrls [string],
+   :priority integer,
+   :id string,
+   :kind string,
+   :phoneNumber string}
   
   Inserts a new contact."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -81,24 +91,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Retrieves a list of contacts for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -115,53 +125,87 @@
      auth))))
 
 (defn patch$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/patch
+  
+  Required parameters: id
   
   Optional parameters: none
   
+  Body: 
+  
+  {:displayName string,
+   :speakableName string,
+   :sharingFeatures [string],
+   :acceptCommands [{:type string}],
+   :type string,
+   :source string,
+   :acceptTypes [string],
+   :imageUrls [string],
+   :priority integer,
+   :id string,
+   :kind string,
+   :phoneNumber string}
+  
   Updates a contact in place. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "contacts/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: id
+  "https://developers.google.com/glassapi/reference/rest/v1/contacts/update
+  
+  Required parameters: id
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:displayName string,
+   :speakableName string,
+   :sharingFeatures [string],
+   :acceptCommands [{:type string}],
+   :type string,
+   :source string,
+   :acceptTypes [string],
+   :imageUrls [string],
+   :priority integer,
+   :id string,
+   :kind string,
+   :phoneNumber string}
   
   Updates a contact in place."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "contacts/{id}"
-     #{"id"}
+     #{:id}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

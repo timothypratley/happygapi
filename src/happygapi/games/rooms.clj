@@ -1,27 +1,42 @@
 (ns happygapi.games.rooms
-  "Google Play Game Services API
+  "Google Play Game Services API: rooms.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/rooms"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/create
+  
+  Required parameters: none
   
   Optional parameters: language
+  
+  Body: 
+  
+  {:autoMatchingCriteria {:exclusiveBitmask string,
+                          :kind string,
+                          :maxAutoMatchingPlayers integer,
+                          :minAutoMatchingPlayers integer},
+   :capabilities [string],
+   :clientAddress {:kind string, :xmppAddress string},
+   :invitedPlayerIds [string],
+   :kind string,
+   :networkDiagnostics {:androidNetworkSubtype integer,
+                        :androidNetworkType integer,
+                        :iosNetworkType integer,
+                        :kind string,
+                        :networkOperatorCode string,
+                        :networkOperatorName string,
+                        :registrationLatencyMillis integer},
+   :requestId string,
+   :variant integer}
   
   Create a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,84 +46,80 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn decline$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/decline
+  
+  Required parameters: roomId
   
   Optional parameters: language
-  
   Decline an invitation to join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/decline"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn dismiss$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/dismiss
+  
+  Required parameters: roomId
   
   Optional parameters: none
-  
   Dismiss an invitation to join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/dismiss"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn get$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/get
+  
+  Required parameters: roomId
   
   Optional parameters: language
-  
   Get the data for a room."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
@@ -119,69 +130,97 @@
      auth))))
 
 (defn join$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/join
+  
+  Required parameters: roomId
   
   Optional parameters: language
+  
+  Body: 
+  
+  {:capabilities [string],
+   :clientAddress {:kind string, :xmppAddress string},
+   :kind string,
+   :networkDiagnostics {:androidNetworkSubtype integer,
+                        :androidNetworkType integer,
+                        :iosNetworkType integer,
+                        :kind string,
+                        :networkOperatorCode string,
+                        :networkOperatorName string,
+                        :registrationLatencyMillis integer}}
   
   Join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/join"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn leave$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/leave
+  
+  Required parameters: roomId
   
   Optional parameters: language
+  
+  Body: 
+  
+  {:kind string,
+   :leaveDiagnostics {:androidNetworkSubtype integer,
+                      :androidNetworkType integer,
+                      :iosNetworkType integer,
+                      :kind string,
+                      :networkOperatorCode string,
+                      :networkOperatorName string,
+                      :peerSession [PeerSessionDiagnostics],
+                      :socketsUsed boolean},
+   :reason string}
   
   Leave a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/leave"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/list
+  
+  Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
-  
   Returns invitations to join rooms."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -198,28 +237,40 @@
      auth))))
 
 (defn reportStatus$
-  "Required parameters: roomId
+  "https://developers.google.com/games/services/api/reference/rest/v1/rooms/reportStatus
+  
+  Required parameters: roomId
   
   Optional parameters: language
+  
+  Body: 
+  
+  {:kind string,
+   :updates [{:connectionSetupLatencyMillis integer,
+              :error string,
+              :error_reason string,
+              :kind string,
+              :participantId string,
+              :status string,
+              :unreliableRoundtripLatencyMillis integer}]}
   
   Updates sent by a client reporting the status of peers in a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"roomId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/reportstatus"
-     #{"roomId"}
+     #{:roomId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

@@ -1,22 +1,17 @@
 (ns happygapi.proximitybeacon.beacons
-  "Proximity Beacon API
+  "Proximity Beacon API: beacons.
   Registers, manages, indexes, and searches beacons.
-  See: https://developers.google.com/beacons/proximity/"
+  See: https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "proximitybeacon_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/get
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
-  
   Returns detailed information about the specified beacon.
   
   Authenticate using an [OAuth access
@@ -31,14 +26,13 @@
   beacon's ephemeral Eddystone-EID broadcast will receive an error."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
@@ -49,9 +43,30 @@
      auth))))
 
 (defn update$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/update
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
+  
+  Body: 
+  
+  {:description string,
+   :properties {},
+   :beaconName string,
+   :indoorLevel {:name string},
+   :provisioningKey string,
+   :status string,
+   :advertisedId {:id string, :type string},
+   :latLng {:latitude number, :longitude number},
+   :ephemeralIdRegistration {:serviceEcdhPublicKey string,
+                             :beaconIdentityKey string,
+                             :initialEid string,
+                             :initialClockValue string,
+                             :beaconEcdhPublicKey string,
+                             :rotationPeriodExponent integer},
+   :expectedStability string,
+   :placeId string}
   
   Updates the information about the specified beacon. **Any field that you do
   not populate in the submitted beacon will be permanently erased**, so you
@@ -67,30 +82,30 @@
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn decommission$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/decommission
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
-  
   Decommissions the specified beacon in the service. This beacon will no
   longer be returned from `beaconinfo.getforobserved`. This operation is
   permanent -- you will not be able to re-register a beacon with this ID
@@ -101,49 +116,14 @@
   signed-in user with **Is owner** or **Can edit** permissions in the Google
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}:decommission"
-     #{"beaconName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn delete$
-  "Required parameters: beaconName
-  
-  Optional parameters: projectId
-  
-  Deletes the specified beacon including all diagnostics data for the beacon
-  as well as any attachments on the beacon (including those belonging to
-  other projects). This operation cannot be undone.
-  
-  Authenticate using an [OAuth access
-  token](https://developers.google.com/identity/protocols/OAuth2) from a
-  signed-in user with **Is owner** or **Can edit** permissions in the Google
-  Developers Console project."
-  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://proximitybeacon.googleapis.com/"
-     "v1beta1/{+beaconName}"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
@@ -154,10 +134,11 @@
      auth))))
 
 (defn deactivate$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/deactivate
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
-  
   Deactivates a beacon. Once deactivated, the API will not return
   information nor attachment data for the beacon when queried via
   `beaconinfo.getforobserved`. Calling this method on an already inactive
@@ -168,31 +149,114 @@
   signed-in user with **Is owner** or **Can edit** permissions in the Google
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}:deactivate"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/delete
+  
+  Required parameters: beaconName
+  
+  Optional parameters: projectId
+  Deletes the specified beacon including all diagnostics data for the beacon
+  as well as any attachments on the beacon (including those belonging to
+  other projects). This operation cannot be undone.
+  
+  Authenticate using an [OAuth access
+  token](https://developers.google.com/identity/protocols/OAuth2) from a
+  signed-in user with **Is owner** or **Can edit** permissions in the Google
+  Developers Console project."
+  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:beaconName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://proximitybeacon.googleapis.com/"
+     "v1beta1/{+beaconName}"
+     #{:beaconName}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn register$
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/register
+  
+  Required parameters: none
+  
+  Optional parameters: projectId
+  
+  Body: 
+  
+  {:description string,
+   :properties {},
+   :beaconName string,
+   :indoorLevel {:name string},
+   :provisioningKey string,
+   :status string,
+   :advertisedId {:id string, :type string},
+   :latLng {:latitude number, :longitude number},
+   :ephemeralIdRegistration {:serviceEcdhPublicKey string,
+                             :beaconIdentityKey string,
+                             :initialEid string,
+                             :initialClockValue string,
+                             :beaconEcdhPublicKey string,
+                             :rotationPeriodExponent integer},
+   :expectedStability string,
+   :placeId string}
+  
+  Registers a previously unregistered beacon given its `advertisedId`.
+  These IDs are unique within the system. An ID can be registered only once.
+  
+  Authenticate using an [OAuth access
+  token](https://developers.google.com/identity/protocols/OAuth2) from a
+  signed-in user with **Is owner** or **Can edit** permissions in the Google
+  Developers Console project."
+  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://proximitybeacon.googleapis.com/"
+     "v1beta1/beacons:register"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/list
+  
+  Required parameters: none
   
   Optional parameters: pageToken, q, pageSize, projectId
-  
   Searches the beacon registry for beacons that match the given search
   criteria. Only those beacons that the client has permission to list
   will be returned.
@@ -203,8 +267,7 @@
   the Google Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -220,44 +283,12 @@
       :as :json}
      auth))))
 
-(defn register$
-  "Required parameters: none
-  
-  Optional parameters: projectId
-  
-  Registers a previously unregistered beacon given its `advertisedId`.
-  These IDs are unique within the system. An ID can be registered only once.
-  
-  Authenticate using an [OAuth access
-  token](https://developers.google.com/identity/protocols/OAuth2) from a
-  signed-in user with **Is owner** or **Can edit** permissions in the Google
-  Developers Console project."
-  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://proximitybeacon.googleapis.com/"
-     "v1beta1/beacons:register"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
 (defn activate$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/activate
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
-  
   Activates a beacon. A beacon that is active will return information
   and attachment data when queried via `beaconinfo.getforobserved`.
   Calling this method on an already active beacon will do nothing (but
@@ -268,51 +299,14 @@
   signed-in user with **Is owner** or **Can edit** permissions in the Google
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}:activate"
-     #{"beaconName"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn attachments-delete$
-  "Required parameters: attachmentName
-  
-  Optional parameters: projectId
-  
-  Deletes the specified attachment for the given beacon. Each attachment has
-  a unique attachment name (`attachmentName`) which is returned when you
-  fetch the attachment data via this API. You specify this with the delete
-  request to control which attachment is removed. This operation cannot be
-  undone.
-  
-  Authenticate using an [OAuth access
-  token](https://developers.google.com/identity/protocols/OAuth2) from a
-  signed-in user with **Is owner** or **Can edit** permissions in the Google
-  Developers Console project."
-  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"attachmentName"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://proximitybeacon.googleapis.com/"
-     "v1beta1/{+attachmentName}"
-     #{"attachmentName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
@@ -322,18 +316,15 @@
       :as :json}
      auth))))
 
-(defn attachments-list$
-  "Required parameters: beaconName
+(defn diagnostics-list$
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/diagnostics/list
   
-  Optional parameters: namespacedType, projectId
+  Required parameters: beaconName
   
-  Returns the attachments for the specified beacon that match the specified
-  namespaced-type pattern.
-  
-  To control which namespaced types are returned, you add the
-  `namespacedType` query parameter to the request. You must either use
-  `*/*`, to return all attachments, or the namespace must be one of
-  the ones returned from the  `namespaces` endpoint.
+  Optional parameters: pageToken, pageSize, alertFilter, projectId
+  List the diagnostics for a single beacon. You can also list diagnostics for
+  all the beacons owned by your Google Developers Console project by using
+  the beacon name `beacons/-`.
   
   Authenticate using an [OAuth access
   token](https://developers.google.com/identity/protocols/OAuth2) from a
@@ -341,14 +332,13 @@
   the Google Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
-     "v1beta1/{+beaconName}/attachments"
-     #{"beaconName"}
+     "v1beta1/{+beaconName}/diagnostics"
+     #{:beaconName}
      args)
     (merge-with
      merge
@@ -359,9 +349,19 @@
      auth))))
 
 (defn attachments-create$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/attachments/create
+  
+  Required parameters: beaconName
   
   Optional parameters: projectId
+  
+  Body: 
+  
+  {:creationTimeMs string,
+   :maxDistanceMeters number,
+   :attachmentName string,
+   :namespacedType string,
+   :data string}
   
   Associates the given data with the specified beacon. Attachment data must
   contain two parts:
@@ -382,30 +382,30 @@
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}/attachments"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn attachments-batchDelete$
-  "Required parameters: beaconName
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/attachments/batchDelete
   
-  Optional parameters: projectId, namespacedType
+  Required parameters: beaconName
   
+  Optional parameters: namespacedType, projectId
   Deletes multiple attachments on a given beacon. This operation is
   permanent and cannot be undone.
   
@@ -419,34 +419,70 @@
   signed-in user with **Is owner** or **Can edit** permissions in the Google
   Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/{+beaconName}/attachments:batchDelete"
-     #{"beaconName"}
+     #{:beaconName}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn diagnostics-list$
-  "Required parameters: beaconName
+(defn attachments-delete$
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/attachments/delete
   
-  Optional parameters: pageToken, pageSize, alertFilter, projectId
+  Required parameters: attachmentName
   
-  List the diagnostics for a single beacon. You can also list diagnostics for
-  all the beacons owned by your Google Developers Console project by using
-  the beacon name `beacons/-`.
+  Optional parameters: projectId
+  Deletes the specified attachment for the given beacon. Each attachment has
+  a unique attachment name (`attachmentName`) which is returned when you
+  fetch the attachment data via this API. You specify this with the delete
+  request to control which attachment is removed. This operation cannot be
+  undone.
+  
+  Authenticate using an [OAuth access
+  token](https://developers.google.com/identity/protocols/OAuth2) from a
+  signed-in user with **Is owner** or **Can edit** permissions in the Google
+  Developers Console project."
+  {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:attachmentName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://proximitybeacon.googleapis.com/"
+     "v1beta1/{+attachmentName}"
+     #{:attachmentName}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn attachments-list$
+  "https://developers.google.com/beacons/proximity/api/reference/rest/v1beta1/beacons/attachments/list
+  
+  Required parameters: beaconName
+  
+  Optional parameters: projectId, namespacedType
+  Returns the attachments for the specified beacon that match the specified
+  namespaced-type pattern.
+  
+  To control which namespaced types are returned, you add the
+  `namespacedType` query parameter to the request. You must either use
+  `*/*`, to return all attachments, or the namespace must be one of
+  the ones returned from the  `namespaces` endpoint.
   
   Authenticate using an [OAuth access
   token](https://developers.google.com/identity/protocols/OAuth2) from a
@@ -454,14 +490,13 @@
   the Google Developers Console project."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"beaconName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:beaconName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
-     "v1beta1/{+beaconName}/diagnostics"
-     #{"beaconName"}
+     "v1beta1/{+beaconName}/attachments"
+     #{:beaconName}
      args)
     (merge-with
      merge

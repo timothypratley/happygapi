@@ -1,33 +1,27 @@
 (ns happygapi.blogger.pages
-  "Blogger API
+  "Blogger API: pages.
   API for access to the data within Blogger.
-  See: https://developers.google.com/blogger/docs/3.0/getting_started"
+  See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "blogger_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: blogId, pageId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/delete
+  
+  Required parameters: blogId, pageId
   
   Optional parameters: none
-  
   Delete a page by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
-     #{"pageId" "blogId"}
+     #{:blogId :pageId}
      args)
     (merge-with
      merge
@@ -38,22 +32,22 @@
      auth))))
 
 (defn get$
-  "Required parameters: blogId, pageId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/get
+  
+  Required parameters: blogId, pageId
   
   Optional parameters: view
-  
   Gets one blog page by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
-     #{"pageId" "blogId"}
+     #{:blogId :pageId}
      args)
     (merge-with
      merge
@@ -64,49 +58,68 @@
      auth))))
 
 (defn insert$
-  "Required parameters: blogId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/insert
+  
+  Required parameters: blogId
   
   Optional parameters: isDraft
+  
+  Body: 
+  
+  {:content string,
+   :updated string,
+   :selfLink string,
+   :etag string,
+   :title string,
+   :author {:displayName string,
+            :id string,
+            :image {:url string},
+            :url string},
+   :status string,
+   :id string,
+   :kind string,
+   :url string,
+   :blog {:id string},
+   :published string}
   
   Add a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages"
-     #{"blogId"}
+     #{:blogId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: blogId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/list
+  
+  Required parameters: blogId
   
   Optional parameters: fetchBodies, maxResults, pageToken, status, view
-  
   Retrieves the pages for a blog, optionally including non-LIVE statuses."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages"
-     #{"blogId"}
+     #{:blogId}
      args)
     (merge-with
      merge
@@ -117,21 +130,67 @@
      auth))))
 
 (defn patch$
-  "Required parameters: blogId, pageId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/patch
+  
+  Required parameters: blogId, pageId
   
   Optional parameters: publish, revert
   
+  Body: 
+  
+  {:content string,
+   :updated string,
+   :selfLink string,
+   :etag string,
+   :title string,
+   :author {:displayName string,
+            :id string,
+            :image {:url string},
+            :url string},
+   :status string,
+   :id string,
+   :kind string,
+   :url string,
+   :blog {:id string},
+   :published string}
+  
   Update a page. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
-     #{"pageId" "blogId"}
+     #{:blogId :pageId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn publish$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/publish
+  
+  Required parameters: blogId, pageId
+  
+  Optional parameters: none
+  Publishes a draft page."
+  {:scopes ["https://www.googleapis.com/auth/blogger"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/blogger/v3/"
+     "blogs/{blogId}/pages/{pageId}/publish"
+     #{:blogId :pageId}
      args)
     (merge-with
      merge
@@ -141,83 +200,73 @@
       :as :json}
      auth))))
 
-(defn publish$
-  "Required parameters: blogId, pageId
-  
-  Optional parameters: none
-  
-  Publishes a draft page."
-  {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/pages/{pageId}/publish"
-     #{"pageId" "blogId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
 (defn revert$
-  "Required parameters: blogId, pageId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/revert
+  
+  Required parameters: blogId, pageId
   
   Optional parameters: none
-  
   Revert a published or scheduled page to draft state."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}/revert"
-     #{"pageId" "blogId"}
+     #{:blogId :pageId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: blogId, pageId
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/update
+  
+  Required parameters: blogId, pageId
   
   Optional parameters: publish, revert
+  
+  Body: 
+  
+  {:content string,
+   :updated string,
+   :selfLink string,
+   :etag string,
+   :title string,
+   :author {:displayName string,
+            :id string,
+            :image {:url string},
+            :url string},
+   :status string,
+   :id string,
+   :kind string,
+   :url string,
+   :blog {:id string},
+   :published string}
   
   Update a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"pageId" "blogId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:blogId :pageId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
-     #{"pageId" "blogId"}
+     #{:blogId :pageId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

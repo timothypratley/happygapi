@@ -1,27 +1,21 @@
 (ns happygapi.books.promooffer
-  "Books API
+  "Books API: promooffer.
   Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_started"
+  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/promooffer"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "books_schema.edn"))))
+            [happy.util :as util]))
 
 (defn accept$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/promooffer/accept
+  
+  Required parameters: none
   
   Optional parameters: androidId, device, manufacturer, model, offerId, product, serial, volumeId
-  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -34,21 +28,19 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn dismiss$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/promooffer/dismiss
+  
+  Required parameters: none
   
   Optional parameters: androidId, device, manufacturer, model, offerId, product, serial
-  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -61,21 +53,19 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn get$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/promooffer/get
+  
+  Required parameters: none
   
   Optional parameters: androidId, device, manufacturer, model, product, serial
-  
   Returns a list of promo offers available to the user"
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

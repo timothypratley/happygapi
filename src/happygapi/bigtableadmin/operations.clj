@@ -1,88 +1,17 @@
 (ns happygapi.bigtableadmin.operations
-  "Cloud Bigtable Admin API
+  "Cloud Bigtable Admin API: operations.
   Administer your Cloud Bigtable tables and instances.
-  See: https://cloud.google.com/bigtable/"
+  See: https://cloud.google.com/bigtable/api/reference/rest/v2/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "bigtableadmin_schema.edn"))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+            [happy.util :as util]))
 
 (defn cancel$
-  "Required parameters: name
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -99,31 +28,95 @@
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigtableadmin.googleapis.com/"
      "v2/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))
 
 (defn projects-operations-list$
-  "Required parameters: name
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/operations/projects/operations/list
   
-  Optional parameters: filter, pageToken, pageSize
+  Required parameters: name
   
+  Optional parameters: pageToken, pageSize, filter
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -142,14 +135,13 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigtableadmin.googleapis.com/"
      "v2/{+name}/operations"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

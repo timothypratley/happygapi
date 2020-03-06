@@ -1,34 +1,28 @@
 (ns happygapi.adsense.reports
-  "AdSense Management API
+  "AdSense Management API: reports.
   Accesses AdSense publishers' inventory and generates performance reports.
-  See: https://developers.google.com/adsense/management/"
+  See: https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
+            [happy.util :as util]))
 
 (defn generate$
-  "Required parameters: startDate, endDate
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/generate
+  
+  Required parameters: startDate, endDate
   
   Optional parameters: locale, currency, filter, dimension, accountId, startIndex, metric, sort, useTimezoneReporting, maxResults
-  
   Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"startDate" "endDate"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:startDate :endDate})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "reports"
-     #{}
+     #{:startDate :endDate}
      args)
     (merge-with
      merge
@@ -39,22 +33,22 @@
      auth))))
 
 (defn saved-generate$
-  "Required parameters: savedReportId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/saved/generate
+  
+  Required parameters: savedReportId
   
   Optional parameters: locale, maxResults, startIndex
-  
   Generate an AdSense report based on the saved report ID sent in the query parameters."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"savedReportId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:savedReportId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "reports/{savedReportId}"
-     #{"savedReportId"}
+     #{:savedReportId}
      args)
     (merge-with
      merge
@@ -65,16 +59,16 @@
      auth))))
 
 (defn saved-list$
-  "Required parameters: none
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/saved/list
+  
+  Required parameters: none
   
   Optional parameters: maxResults, pageToken
-  
   List all saved reports in this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

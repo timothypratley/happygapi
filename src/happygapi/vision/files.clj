@@ -1,21 +1,25 @@
 (ns happygapi.vision.files
-  "Cloud Vision API
+  "Cloud Vision API: files.
   Integrates Google Vision features, including image labeling, face, logo, and landmark detection, optical character recognition (OCR), and detection of explicit content, into applications.
-  See: https://cloud.google.com/vision/"
+  See: https://cloud.google.com/vision/api/reference/rest/v1/files"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "vision_schema.edn"))))
+            [happy.util :as util]))
 
 (defn asyncBatchAnnotate$
-  "Required parameters: none
+  "https://cloud.google.com/vision/api/reference/rest/v1/files/asyncBatchAnnotate
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:inputConfig InputConfig,
+               :features [Feature],
+               :imageContext ImageContext,
+               :outputConfig OutputConfig}],
+   :parent string}
   
   Run asynchronous image detection and annotation for a list of generic
   files, such as PDF files, which may contain multiple pages and multiple
@@ -26,8 +30,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -37,18 +40,28 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn annotate$
-  "Required parameters: none
+  "https://cloud.google.com/vision/api/reference/rest/v1/files/annotate
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:parent string,
+   :requests [{:imageContext ImageContext,
+               :pages [integer],
+               :inputConfig InputConfig,
+               :features [Feature]}]}
   
   Service that performs image detection and annotation for a batch of files.
   Now only \"application/pdf\", \"image/tiff\" and \"image/gif\" are supported.
@@ -60,8 +73,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -71,10 +83,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

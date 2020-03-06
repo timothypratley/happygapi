@@ -1,34 +1,28 @@
 (ns happygapi.adsense.savedadstyles
-  "AdSense Management API
+  "AdSense Management API: savedadstyles.
   Accesses AdSense publishers' inventory and generates performance reports.
-  See: https://developers.google.com/adsense/management/"
+  See: https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsense_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: savedAdStyleId
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles/get
+  
+  Required parameters: savedAdStyleId
   
   Optional parameters: none
-  
   Get a specific saved ad style from the user's account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"savedAdStyleId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:savedAdStyleId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "savedadstyles/{savedAdStyleId}"
-     #{"savedAdStyleId"}
+     #{:savedAdStyleId}
      args)
     (merge-with
      merge
@@ -39,16 +33,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles/list
+  
+  Required parameters: none
   
   Optional parameters: maxResults, pageToken
-  
   List all saved ad styles in the user's account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

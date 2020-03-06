@@ -1,33 +1,27 @@
 (ns happygapi.games.leaderboards
-  "Google Play Game Services API
+  "Google Play Game Services API: leaderboards.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/leaderboards"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: leaderboardId
+  "https://developers.google.com/games/services/api/reference/rest/v1/leaderboards/get
+  
+  Required parameters: leaderboardId
   
   Optional parameters: language
-  
   Retrieves the metadata of the leaderboard with the given ID."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"leaderboardId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:leaderboardId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "leaderboards/{leaderboardId}"
-     #{"leaderboardId"}
+     #{:leaderboardId}
      args)
     (merge-with
      merge
@@ -38,15 +32,15 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/leaderboards/list
+  
+  Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
-  
   Lists all the leaderboard metadata for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

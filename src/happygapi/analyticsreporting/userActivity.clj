@@ -1,29 +1,32 @@
 (ns happygapi.analyticsreporting.userActivity
-  "Analytics Reporting API
+  "Analytics Reporting API: userActivity.
   Accesses Analytics report data.
-  See: https://developers.google.com/analytics/devguides/reporting/core/v4/"
+  See: https://developers.google.com/analytics/devguides/reporting/core/v4/api/reference/rest/v4/userActivity"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "analyticsreporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn search$
-  "Required parameters: none
+  "https://developers.google.com/analytics/devguides/reporting/core/v4/api/reference/rest/v4/userActivity/search
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:viewId string,
+   :user {:userId string, :type string},
+   :activityTypes [string],
+   :pageToken string,
+   :dateRange {:endDate string, :startDate string},
+   :pageSize integer}
   
   Returns User Activity data."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +36,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

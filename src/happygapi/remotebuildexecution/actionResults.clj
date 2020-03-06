@@ -1,23 +1,17 @@
 (ns happygapi.remotebuildexecution.actionResults
-  "Remote Build Execution API
+  "Remote Build Execution API: actionResults.
   Supplies a Remote Execution API service for tools such as bazel.
-  See: https://cloud.google.com/remote-build-execution/docs/"
+  See: https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "remotebuildexecution_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: sizeBytes, instanceName, hash
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults/get
   
-  Optional parameters: inlineStderr, inlineOutputFiles, inlineStdout
+  Required parameters: sizeBytes, instanceName, hash
   
+  Optional parameters: inlineStdout, inlineStderr, inlineOutputFiles
   Retrieve a cached execution result.
   
   Implementations SHOULD ensure that any blobs referenced from the
@@ -32,14 +26,13 @@
   * `NOT_FOUND`: The requested `ActionResult` is not in the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:hash :instanceName :sizeBytes})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/actionResults/{hash}/{sizeBytes}"
-     #{"instanceName" "hash" "sizeBytes"}
+     #{:hash :instanceName :sizeBytes}
      args)
     (merge-with
      merge
@@ -50,9 +43,37 @@
      auth))))
 
 (defn update$
-  "Required parameters: sizeBytes, instanceName, hash
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults/update
+  
+  Required parameters: sizeBytes, instanceName, hash
   
   Optional parameters: resultsCachePolicy.priority
+  
+  Body: 
+  
+  {:stderrDigest {:hash string, :sizeBytes string},
+   :exitCode integer,
+   :stdoutRaw string,
+   :executionMetadata {:executionCompletedTimestamp string,
+                       :workerStartTimestamp string,
+                       :inputFetchCompletedTimestamp string,
+                       :outputUploadCompletedTimestamp string,
+                       :executionStartTimestamp string,
+                       :workerCompletedTimestamp string,
+                       :inputFetchStartTimestamp string,
+                       :queuedTimestamp string,
+                       :outputUploadStartTimestamp string,
+                       :worker string},
+   :outputFiles [{:digest BuildBazelRemoteExecutionV2Digest,
+                  :isExecutable boolean,
+                  :path string,
+                  :contents string}],
+   :stdoutDigest {:hash string, :sizeBytes string},
+   :outputDirectories [{:path string,
+                        :treeDigest BuildBazelRemoteExecutionV2Digest}],
+   :outputDirectorySymlinks [{:target string, :path string}],
+   :stderrRaw string,
+   :outputFileSymlinks [{:target string, :path string}]}
   
   Upload a new execution result.
   
@@ -72,21 +93,20 @@
     entry to the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName" "hash" "sizeBytes"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:hash :instanceName :sizeBytes})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/actionResults/{hash}/{sizeBytes}"
-     #{"instanceName" "hash" "sizeBytes"}
+     #{:hash :instanceName :sizeBytes}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

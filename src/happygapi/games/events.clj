@@ -1,27 +1,21 @@
 (ns happygapi.games.events
-  "Google Play Game Services API
+  "Google Play Game Services API: events.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/events"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn listByPlayer$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/events/listByPlayer
+  
+  Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
-  
   Returns a list showing the current progress on events in this application for the currently authenticated user."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,15 +32,15 @@
      auth))))
 
 (defn listDefinitions$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/events/listDefinitions
+  
+  Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
-  
   Returns a list of the event definitions in this application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -63,15 +57,25 @@
      auth))))
 
 (defn record$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/events/record
+  
+  Required parameters: none
   
   Optional parameters: language
+  
+  Body: 
+  
+  {:currentTimeMillis string,
+   :kind string,
+   :requestId string,
+   :timePeriods [{:kind string,
+                  :timePeriod EventPeriodRange,
+                  :updates [EventUpdateRequest]}]}
   
   Records a batch of changes to the number of times events have occurred for the currently authenticated user of this application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -81,10 +85,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

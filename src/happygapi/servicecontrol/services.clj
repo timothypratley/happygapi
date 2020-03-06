@@ -1,21 +1,34 @@
 (ns happygapi.servicecontrol.services
-  "Service Control API
+  "Service Control API: services.
   Provides control plane functionality to managed services, such as logging, monitoring, and status checks.
-  See: https://cloud.google.com/service-control/"
+  See: https://cloud.google.com/service-control/api/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "servicecontrol_schema.edn"))))
+            [happy.util :as util]))
 
 (defn report$
-  "Required parameters: serviceName
+  "https://cloud.google.com/service-control/api/reference/rest/v1/services/report
+  
+  Required parameters: serviceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:operations [{:consumerId string,
+                 :labels {},
+                 :startTime string,
+                 :operationName string,
+                 :endTime string,
+                 :quotaProperties QuotaProperties,
+                 :traceSpans [TraceSpan],
+                 :metricValueSets [MetricValueSet],
+                 :resources [ResourceInfo],
+                 :userLabels {},
+                 :operationId string,
+                 :logEntries [LogEntry],
+                 :importance string}],
+   :serviceConfigId string}
   
   Reports operation results to Google Service Control, such as logs and
   metrics. It should be called after an operation is completed.
@@ -35,29 +48,40 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:serviceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicecontrol.googleapis.com/"
      "v1/services/{serviceName}:report"
-     #{"serviceName"}
+     #{:serviceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn allocateQuota$
-  "Required parameters: serviceName
+  "https://cloud.google.com/service-control/api/reference/rest/v1/services/allocateQuota
+  
+  Required parameters: serviceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:serviceConfigId string,
+   :allocateOperation {:labels {},
+                       :consumerId string,
+                       :operationId string,
+                       :methodName string,
+                       :quotaMode string,
+                       :quotaMetrics [MetricValueSet]}}
   
   Attempts to allocate quota for the specified consumer. It should be called
   before the operation is executed.
@@ -73,29 +97,49 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:serviceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicecontrol.googleapis.com/"
      "v1/services/{serviceName}:allocateQuota"
-     #{"serviceName"}
+     #{:serviceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn check$
-  "Required parameters: serviceName
+  "https://cloud.google.com/service-control/api/reference/rest/v1/services/check
+  
+  Required parameters: serviceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:operation {:consumerId string,
+               :labels {},
+               :startTime string,
+               :operationName string,
+               :endTime string,
+               :quotaProperties QuotaProperties,
+               :traceSpans [TraceSpan],
+               :metricValueSets [MetricValueSet],
+               :resources [ResourceInfo],
+               :userLabels {},
+               :operationId string,
+               :logEntries [LogEntry],
+               :importance string},
+   :requestProjectSettings boolean,
+   :serviceConfigId string,
+   :skipActivationCheck boolean}
   
   Checks whether an operation on a service should be allowed to proceed
   based on the configuration of the service and related policies. It must be
@@ -116,21 +160,20 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/servicecontrol"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"serviceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:serviceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicecontrol.googleapis.com/"
      "v1/services/{serviceName}:check"
-     #{"serviceName"}
+     #{:serviceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

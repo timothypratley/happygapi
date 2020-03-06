@@ -1,27 +1,21 @@
 (ns happygapi.drive.files
-  "Drive API
+  "Drive API: files.
   Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
-  See: https://developers.google.com/drive/"
+  See: https://developers.google.com/drive/api/reference/rest/v3/files"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "drive_schema.edn"))))
+            [happy.util :as util]))
 
 (defn emptyTrash$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/files/emptyTrash
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Permanently deletes all of the user's trashed files."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/delete
     (util/get-url
@@ -38,10 +32,11 @@
      auth))))
 
 (defn get$
-  "Required parameters: fileId
+  "https://developers.google.com/drive/api/reference/rest/v3/files/get
+  
+  Required parameters: fileId
   
   Optional parameters: acknowledgeAbuse, supportsAllDrives, supportsTeamDrives
-  
   Gets a file's metadata or content by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -51,14 +46,13 @@
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"fileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
-     #{"fileId"}
+     #{:fileId}
      args)
     (merge-with
      merge
@@ -69,9 +63,161 @@
      auth))))
 
 (defn copy$
-  "Required parameters: fileId
+  "https://developers.google.com/drive/api/reference/rest/v3/files/copy
+  
+  Required parameters: fileId
   
   Optional parameters: ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives
+  
+  Body: 
+  
+  {:description string,
+   :properties {},
+   :isAppAuthorized boolean,
+   :capabilities {:canDelete boolean,
+                  :canTrash boolean,
+                  :canMoveChildrenOutOfTeamDrive boolean,
+                  :canCopy boolean,
+                  :canTrashChildren boolean,
+                  :canMoveChildrenWithinDrive boolean,
+                  :canDownload boolean,
+                  :canReadTeamDrive boolean,
+                  :canUntrash boolean,
+                  :canMoveChildrenOutOfDrive boolean,
+                  :canDeleteChildren boolean,
+                  :canListChildren boolean,
+                  :canRename boolean,
+                  :canChangeCopyRequiresWriterPermission boolean,
+                  :canReadRevisions boolean,
+                  :canMoveItemIntoTeamDrive boolean,
+                  :canMoveItemOutOfDrive boolean,
+                  :canEdit boolean,
+                  :canComment boolean,
+                  :canRemoveChildren boolean,
+                  :canAddChildren boolean,
+                  :canMoveItemWithinTeamDrive boolean,
+                  :canModifyContent boolean,
+                  :canShare boolean,
+                  :canMoveItemOutOfTeamDrive boolean,
+                  :canMoveChildrenWithinTeamDrive boolean,
+                  :canChangeViewersCanCopyContent boolean,
+                  :canMoveTeamDriveItem boolean,
+                  :canReadDrive boolean,
+                  :canMoveItemWithinDrive boolean},
+   :copyRequiresWriterPermission boolean,
+   :imageMediaMetadata {:focalLength number,
+                        :aperture number,
+                        :rotation integer,
+                        :exposureBias number,
+                        :flashUsed boolean,
+                        :time string,
+                        :maxApertureValue number,
+                        :colorSpace string,
+                        :width integer,
+                        :lens string,
+                        :exposureMode string,
+                        :cameraModel string,
+                        :cameraMake string,
+                        :whiteBalance string,
+                        :exposureTime number,
+                        :subjectDistance integer,
+                        :meteringMode string,
+                        :isoSpeed integer,
+                        :location {:altitude number,
+                                   :latitude number,
+                                   :longitude number},
+                        :height integer,
+                        :sensor string},
+   :modifiedTime string,
+   :permissions [{:role string,
+                  :deleted boolean,
+                  :allowFileDiscovery boolean,
+                  :expirationTime string,
+                  :displayName string,
+                  :emailAddress string,
+                  :type string,
+                  :permissionDetails [{:inherited boolean,
+                                       :inheritedFrom string,
+                                       :permissionType string,
+                                       :role string}],
+                  :teamDrivePermissionDetails [{:inherited boolean,
+                                                :inheritedFrom string,
+                                                :role string,
+                                                :teamDrivePermissionType string}],
+                  :id string,
+                  :kind string,
+                  :domain string,
+                  :photoLink string}],
+   :owners [{:displayName string,
+             :emailAddress string,
+             :kind string,
+             :me boolean,
+             :permissionId string,
+             :photoLink string}],
+   :permissionIds [string],
+   :headRevisionId string,
+   :modifiedByMeTime string,
+   :starred boolean,
+   :fullFileExtension string,
+   :exportLinks {},
+   :name string,
+   :viewersCanCopyContent boolean,
+   :iconLink string,
+   :teamDriveId string,
+   :size string,
+   :hasThumbnail boolean,
+   :lastModifyingUser {:displayName string,
+                       :emailAddress string,
+                       :kind string,
+                       :me boolean,
+                       :permissionId string,
+                       :photoLink string},
+   :modifiedByMe boolean,
+   :thumbnailVersion string,
+   :folderColorRgb string,
+   :createdTime string,
+   :spaces [string],
+   :fileExtension string,
+   :trashed boolean,
+   :id string,
+   :thumbnailLink string,
+   :writersCanShare boolean,
+   :explicitlyTrashed boolean,
+   :kind string,
+   :parents [string],
+   :driveId string,
+   :sharedWithMeTime string,
+   :viewedByMeTime string,
+   :mimeType string,
+   :trashingUser {:displayName string,
+                  :emailAddress string,
+                  :kind string,
+                  :me boolean,
+                  :permissionId string,
+                  :photoLink string},
+   :shared boolean,
+   :sharingUser {:displayName string,
+                 :emailAddress string,
+                 :kind string,
+                 :me boolean,
+                 :permissionId string,
+                 :photoLink string},
+   :md5Checksum string,
+   :hasAugmentedPermissions boolean,
+   :quotaBytesUsed string,
+   :version string,
+   :originalFilename string,
+   :trashedTime string,
+   :webViewLink string,
+   :videoMediaMetadata {:durationMillis string,
+                        :height integer,
+                        :width integer},
+   :viewedByMe boolean,
+   :contentHints {:indexableText string,
+                  :thumbnail {:image string, :mimeType string}},
+   :appProperties {},
+   :ownedByMe boolean,
+   :webContentLink string}
   
   Creates a copy of a file and applies any requested updates with patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -79,37 +225,187 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.photos.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"fileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/copy"
-     #{"fileId"}
+     #{:fileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn create$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/files/create
+  
+  Required parameters: none
   
   Optional parameters: ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
+  
+  Body: 
+  
+  {:description string,
+   :properties {},
+   :isAppAuthorized boolean,
+   :capabilities {:canDelete boolean,
+                  :canTrash boolean,
+                  :canMoveChildrenOutOfTeamDrive boolean,
+                  :canCopy boolean,
+                  :canTrashChildren boolean,
+                  :canMoveChildrenWithinDrive boolean,
+                  :canDownload boolean,
+                  :canReadTeamDrive boolean,
+                  :canUntrash boolean,
+                  :canMoveChildrenOutOfDrive boolean,
+                  :canDeleteChildren boolean,
+                  :canListChildren boolean,
+                  :canRename boolean,
+                  :canChangeCopyRequiresWriterPermission boolean,
+                  :canReadRevisions boolean,
+                  :canMoveItemIntoTeamDrive boolean,
+                  :canMoveItemOutOfDrive boolean,
+                  :canEdit boolean,
+                  :canComment boolean,
+                  :canRemoveChildren boolean,
+                  :canAddChildren boolean,
+                  :canMoveItemWithinTeamDrive boolean,
+                  :canModifyContent boolean,
+                  :canShare boolean,
+                  :canMoveItemOutOfTeamDrive boolean,
+                  :canMoveChildrenWithinTeamDrive boolean,
+                  :canChangeViewersCanCopyContent boolean,
+                  :canMoveTeamDriveItem boolean,
+                  :canReadDrive boolean,
+                  :canMoveItemWithinDrive boolean},
+   :copyRequiresWriterPermission boolean,
+   :imageMediaMetadata {:focalLength number,
+                        :aperture number,
+                        :rotation integer,
+                        :exposureBias number,
+                        :flashUsed boolean,
+                        :time string,
+                        :maxApertureValue number,
+                        :colorSpace string,
+                        :width integer,
+                        :lens string,
+                        :exposureMode string,
+                        :cameraModel string,
+                        :cameraMake string,
+                        :whiteBalance string,
+                        :exposureTime number,
+                        :subjectDistance integer,
+                        :meteringMode string,
+                        :isoSpeed integer,
+                        :location {:altitude number,
+                                   :latitude number,
+                                   :longitude number},
+                        :height integer,
+                        :sensor string},
+   :modifiedTime string,
+   :permissions [{:role string,
+                  :deleted boolean,
+                  :allowFileDiscovery boolean,
+                  :expirationTime string,
+                  :displayName string,
+                  :emailAddress string,
+                  :type string,
+                  :permissionDetails [{:inherited boolean,
+                                       :inheritedFrom string,
+                                       :permissionType string,
+                                       :role string}],
+                  :teamDrivePermissionDetails [{:inherited boolean,
+                                                :inheritedFrom string,
+                                                :role string,
+                                                :teamDrivePermissionType string}],
+                  :id string,
+                  :kind string,
+                  :domain string,
+                  :photoLink string}],
+   :owners [{:displayName string,
+             :emailAddress string,
+             :kind string,
+             :me boolean,
+             :permissionId string,
+             :photoLink string}],
+   :permissionIds [string],
+   :headRevisionId string,
+   :modifiedByMeTime string,
+   :starred boolean,
+   :fullFileExtension string,
+   :exportLinks {},
+   :name string,
+   :viewersCanCopyContent boolean,
+   :iconLink string,
+   :teamDriveId string,
+   :size string,
+   :hasThumbnail boolean,
+   :lastModifyingUser {:displayName string,
+                       :emailAddress string,
+                       :kind string,
+                       :me boolean,
+                       :permissionId string,
+                       :photoLink string},
+   :modifiedByMe boolean,
+   :thumbnailVersion string,
+   :folderColorRgb string,
+   :createdTime string,
+   :spaces [string],
+   :fileExtension string,
+   :trashed boolean,
+   :id string,
+   :thumbnailLink string,
+   :writersCanShare boolean,
+   :explicitlyTrashed boolean,
+   :kind string,
+   :parents [string],
+   :driveId string,
+   :sharedWithMeTime string,
+   :viewedByMeTime string,
+   :mimeType string,
+   :trashingUser {:displayName string,
+                  :emailAddress string,
+                  :kind string,
+                  :me boolean,
+                  :permissionId string,
+                  :photoLink string},
+   :shared boolean,
+   :sharingUser {:displayName string,
+                 :emailAddress string,
+                 :kind string,
+                 :me boolean,
+                 :permissionId string,
+                 :photoLink string},
+   :md5Checksum string,
+   :hasAugmentedPermissions boolean,
+   :quotaBytesUsed string,
+   :version string,
+   :originalFilename string,
+   :trashedTime string,
+   :webViewLink string,
+   :videoMediaMetadata {:durationMillis string,
+                        :height integer,
+                        :width integer},
+   :viewedByMe boolean,
+   :contentHints {:indexableText string,
+                  :thumbnail {:image string, :mimeType string}},
+   :appProperties {},
+   :ownedByMe boolean,
+   :webContentLink string}
   
   Creates a new file."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -119,18 +415,170 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: fileId
+  "https://developers.google.com/drive/api/reference/rest/v3/files/update
+  
+  Required parameters: fileId
   
   Optional parameters: addParents, keepRevisionForever, ocrLanguage, removeParents, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
+  
+  Body: 
+  
+  {:description string,
+   :properties {},
+   :isAppAuthorized boolean,
+   :capabilities {:canDelete boolean,
+                  :canTrash boolean,
+                  :canMoveChildrenOutOfTeamDrive boolean,
+                  :canCopy boolean,
+                  :canTrashChildren boolean,
+                  :canMoveChildrenWithinDrive boolean,
+                  :canDownload boolean,
+                  :canReadTeamDrive boolean,
+                  :canUntrash boolean,
+                  :canMoveChildrenOutOfDrive boolean,
+                  :canDeleteChildren boolean,
+                  :canListChildren boolean,
+                  :canRename boolean,
+                  :canChangeCopyRequiresWriterPermission boolean,
+                  :canReadRevisions boolean,
+                  :canMoveItemIntoTeamDrive boolean,
+                  :canMoveItemOutOfDrive boolean,
+                  :canEdit boolean,
+                  :canComment boolean,
+                  :canRemoveChildren boolean,
+                  :canAddChildren boolean,
+                  :canMoveItemWithinTeamDrive boolean,
+                  :canModifyContent boolean,
+                  :canShare boolean,
+                  :canMoveItemOutOfTeamDrive boolean,
+                  :canMoveChildrenWithinTeamDrive boolean,
+                  :canChangeViewersCanCopyContent boolean,
+                  :canMoveTeamDriveItem boolean,
+                  :canReadDrive boolean,
+                  :canMoveItemWithinDrive boolean},
+   :copyRequiresWriterPermission boolean,
+   :imageMediaMetadata {:focalLength number,
+                        :aperture number,
+                        :rotation integer,
+                        :exposureBias number,
+                        :flashUsed boolean,
+                        :time string,
+                        :maxApertureValue number,
+                        :colorSpace string,
+                        :width integer,
+                        :lens string,
+                        :exposureMode string,
+                        :cameraModel string,
+                        :cameraMake string,
+                        :whiteBalance string,
+                        :exposureTime number,
+                        :subjectDistance integer,
+                        :meteringMode string,
+                        :isoSpeed integer,
+                        :location {:altitude number,
+                                   :latitude number,
+                                   :longitude number},
+                        :height integer,
+                        :sensor string},
+   :modifiedTime string,
+   :permissions [{:role string,
+                  :deleted boolean,
+                  :allowFileDiscovery boolean,
+                  :expirationTime string,
+                  :displayName string,
+                  :emailAddress string,
+                  :type string,
+                  :permissionDetails [{:inherited boolean,
+                                       :inheritedFrom string,
+                                       :permissionType string,
+                                       :role string}],
+                  :teamDrivePermissionDetails [{:inherited boolean,
+                                                :inheritedFrom string,
+                                                :role string,
+                                                :teamDrivePermissionType string}],
+                  :id string,
+                  :kind string,
+                  :domain string,
+                  :photoLink string}],
+   :owners [{:displayName string,
+             :emailAddress string,
+             :kind string,
+             :me boolean,
+             :permissionId string,
+             :photoLink string}],
+   :permissionIds [string],
+   :headRevisionId string,
+   :modifiedByMeTime string,
+   :starred boolean,
+   :fullFileExtension string,
+   :exportLinks {},
+   :name string,
+   :viewersCanCopyContent boolean,
+   :iconLink string,
+   :teamDriveId string,
+   :size string,
+   :hasThumbnail boolean,
+   :lastModifyingUser {:displayName string,
+                       :emailAddress string,
+                       :kind string,
+                       :me boolean,
+                       :permissionId string,
+                       :photoLink string},
+   :modifiedByMe boolean,
+   :thumbnailVersion string,
+   :folderColorRgb string,
+   :createdTime string,
+   :spaces [string],
+   :fileExtension string,
+   :trashed boolean,
+   :id string,
+   :thumbnailLink string,
+   :writersCanShare boolean,
+   :explicitlyTrashed boolean,
+   :kind string,
+   :parents [string],
+   :driveId string,
+   :sharedWithMeTime string,
+   :viewedByMeTime string,
+   :mimeType string,
+   :trashingUser {:displayName string,
+                  :emailAddress string,
+                  :kind string,
+                  :me boolean,
+                  :permissionId string,
+                  :photoLink string},
+   :shared boolean,
+   :sharingUser {:displayName string,
+                 :emailAddress string,
+                 :kind string,
+                 :me boolean,
+                 :permissionId string,
+                 :photoLink string},
+   :md5Checksum string,
+   :hasAugmentedPermissions boolean,
+   :quotaBytesUsed string,
+   :version string,
+   :originalFilename string,
+   :trashedTime string,
+   :webViewLink string,
+   :videoMediaMetadata {:durationMillis string,
+                        :height integer,
+                        :width integer},
+   :viewedByMe boolean,
+   :contentHints {:indexableText string,
+                  :thumbnail {:image string, :mimeType string}},
+   :appProperties {},
+   :ownedByMe boolean,
+   :webContentLink string}
   
   Updates a file's metadata and/or content with patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -138,42 +586,43 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.metadata"
             "https://www.googleapis.com/auth/drive.scripts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"fileId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
-     #{"fileId"}
+     #{:fileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: fileId
+  "https://developers.google.com/drive/api/reference/rest/v3/files/delete
+  
+  Required parameters: fileId
   
   Optional parameters: supportsAllDrives, supportsTeamDrives
-  
   Permanently deletes a file owned by the user without moving it to the trash. If the file belongs to a shared drive the user must be an organizer on the parent. If the target is a folder, all descendants owned by the user are also deleted."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"fileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
-     #{"fileId"}
+     #{:fileId}
      args)
     (merge-with
      merge
@@ -184,23 +633,23 @@
      auth))))
 
 (defn export$
-  "Required parameters: fileId, mimeType
+  "https://developers.google.com/drive/api/reference/rest/v3/files/export
+  
+  Required parameters: fileId, mimeType
   
   Optional parameters: none
-  
   Exports a Google Doc to the requested MIME type and returns the exported content. Please note that the exported content is limited to 10MB."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"mimeType" "fileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:mimeType :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/export"
-     #{"fileId"}
+     #{:mimeType :fileId}
      args)
     (merge-with
      merge
@@ -211,10 +660,11 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/files/list
+  
+  Required parameters: none
   
   Optional parameters: q, includeItemsFromAllDrives, corpora, supportsAllDrives, corpus, teamDriveId, pageToken, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives, orderBy
-  
   Lists or searches files."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -224,8 +674,7 @@
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -242,9 +691,24 @@
      auth))))
 
 (defn watch$
-  "Required parameters: fileId
+  "https://developers.google.com/drive/api/reference/rest/v3/files/watch
+  
+  Required parameters: fileId
   
   Optional parameters: acknowledgeAbuse, supportsAllDrives, supportsTeamDrives
+  
+  Body: 
+  
+  {:address string,
+   :resourceUri string,
+   :payload boolean,
+   :expiration string,
+   :params {},
+   :type string,
+   :resourceId string,
+   :token string,
+   :id string,
+   :kind string}
   
   Subscribes to changes to a file"
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -255,37 +719,36 @@
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"fileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/watch"
-     #{"fileId"}
+     #{:fileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn generateIds$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/files/generateIds
+  
+  Required parameters: none
   
   Optional parameters: count, space
-  
   Generates a set of file IDs which can be provided in create or copy requests."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

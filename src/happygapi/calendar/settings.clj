@@ -1,35 +1,29 @@
 (ns happygapi.calendar.settings
-  "Calendar API
+  "Calendar API: settings.
   Manipulates events and other calendar data.
-  See: https://developers.google.com/google-apps/calendar/firstapp"
+  See: https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/settings"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "calendar_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: setting
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/settings/get
+  
+  Required parameters: setting
   
   Optional parameters: none
-  
   Returns a single user setting."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"setting"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:setting})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "users/me/settings/{setting}"
-     #{"setting"}
+     #{:setting}
      args)
     (merge-with
      merge
@@ -40,17 +34,17 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/settings/list
+  
+  Required parameters: none
   
   Optional parameters: maxResults, pageToken, syncToken
-  
   Returns all user settings for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -67,17 +61,31 @@
      auth))))
 
 (defn watch$
-  "Required parameters: none
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/settings/watch
+  
+  Required parameters: none
   
   Optional parameters: maxResults, pageToken, syncToken
+  
+  Body: 
+  
+  {:address string,
+   :resourceUri string,
+   :payload boolean,
+   :expiration string,
+   :params {},
+   :type string,
+   :resourceId string,
+   :token string,
+   :id string,
+   :kind string}
   
   Watch for changes to Settings resources."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -87,10 +95,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

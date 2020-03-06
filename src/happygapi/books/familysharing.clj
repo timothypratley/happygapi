@@ -1,27 +1,21 @@
 (ns happygapi.books.familysharing
-  "Books API
+  "Books API: familysharing.
   Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_started"
+  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/familysharing"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "books_schema.edn"))))
+            [happy.util :as util]))
 
 (defn getFamilyInfo$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/familysharing/getFamilyInfo
+  
+  Required parameters: none
   
   Optional parameters: source
-  
   Gets information regarding the family that the user is part of."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,15 +32,15 @@
      auth))))
 
 (defn share$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/familysharing/share
+  
+  Required parameters: none
   
   Optional parameters: docId, source, volumeId
-  
   Initiates sharing of the content with the user's family. Empty response indicates success."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -59,21 +53,19 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn unshare$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/familysharing/unshare
+  
+  Required parameters: none
   
   Optional parameters: docId, source, volumeId
-  
   Initiates revoking content that has already been shared with the user's family. Empty response indicates success."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -86,7 +78,5 @@
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

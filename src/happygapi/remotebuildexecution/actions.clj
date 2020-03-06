@@ -1,22 +1,24 @@
 (ns happygapi.remotebuildexecution.actions
-  "Remote Build Execution API
+  "Remote Build Execution API: actions.
   Supplies a Remote Execution API service for tools such as bazel.
-  See: https://cloud.google.com/remote-build-execution/docs/"
+  See: https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "remotebuildexecution_schema.edn"))))
+            [happy.util :as util]))
 
 (defn execute$
-  "Required parameters: instanceName
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actions/execute
+  
+  Required parameters: instanceName
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:resultsCachePolicy {:priority integer},
+   :skipCacheLookup boolean,
+   :actionDigest {:hash string, :sizeBytes string},
+   :executionPolicy {:priority integer}}
   
   Execute an action remotely.
   
@@ -83,21 +85,20 @@
   `\"blobs/{hash}/{size}\"` indicating the digest of the missing blob."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"instanceName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instanceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/actions:execute"
-     #{"instanceName"}
+     #{:instanceName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

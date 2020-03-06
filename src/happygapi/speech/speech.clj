@@ -1,21 +1,35 @@
 (ns happygapi.speech.speech
-  "Cloud Speech-to-Text API
+  "Cloud Speech-to-Text API: speech.
   Converts audio to text by applying powerful neural network models.
-  See: https://cloud.google.com/speech-to-text/docs/quickstart-protocol"
+  See: https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "speech_schema.edn"))))
+            [happy.util :as util]))
 
 (defn longrunningrecognize$
-  "Required parameters: none
+  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/longrunningrecognize
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:config {:encoding string,
+            :maxAlternatives integer,
+            :enableAutomaticPunctuation boolean,
+            :enableWordTimeOffsets boolean,
+            :enableSeparateRecognitionPerChannel boolean,
+            :speechContexts [SpeechContext],
+            :sampleRateHertz integer,
+            :languageCode string,
+            :profanityFilter boolean,
+            :audioChannelCount integer,
+            :metadata RecognitionMetadata,
+            :useEnhanced boolean,
+            :diarizationConfig SpeakerDiarizationConfig,
+            :model string},
+   :audio {:content string, :uri string}}
   
   Performs asynchronous speech recognition: receive results via the
   google.longrunning.Operations interface. Returns either an
@@ -25,8 +39,7 @@
   [how-to](https://cloud.google.com/speech-to-text/docs/async-recognize)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -36,25 +49,44 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn recognize$
-  "Required parameters: none
+  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/recognize
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:config {:encoding string,
+            :maxAlternatives integer,
+            :enableAutomaticPunctuation boolean,
+            :enableWordTimeOffsets boolean,
+            :enableSeparateRecognitionPerChannel boolean,
+            :speechContexts [SpeechContext],
+            :sampleRateHertz integer,
+            :languageCode string,
+            :profanityFilter boolean,
+            :audioChannelCount integer,
+            :metadata RecognitionMetadata,
+            :useEnhanced boolean,
+            :diarizationConfig SpeakerDiarizationConfig,
+            :model string},
+   :audio {:content string, :uri string}}
   
   Performs synchronous speech recognition: receive results after all audio
   has been sent and processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -64,10 +96,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

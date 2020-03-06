@@ -1,33 +1,52 @@
 (ns happygapi.cloudasset.feeds
-  "Cloud Asset API
+  "Cloud Asset API: feeds.
   The cloud asset API manages the history and inventory of cloud resources.
-  See: https://cloud.google.com/asset-inventory/docs/quickstart"
+  See: https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
+            [happy.util :as util]))
 
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudasset_schema.edn"))))
-
-(defn get$
-  "Required parameters: name
+(defn delete$
+  "https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds/delete
+  
+  Required parameters: name
   
   Optional parameters: none
+  Deletes an asset feed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudasset.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds/get
   
+  Required parameters: name
+  
+  Optional parameters: none
   Gets details about an asset feed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudasset.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -38,21 +57,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: parent
+  "https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds/list
+  
+  Required parameters: parent
   
   Optional parameters: none
-  
   Lists all asset feeds in a parent project/folder/organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudasset.googleapis.com/"
      "v1/{+parent}/feeds"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -63,78 +82,75 @@
      auth))))
 
 (defn patch$
-  "Required parameters: name
+  "https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds/patch
+  
+  Required parameters: name
   
   Optional parameters: none
   
+  Body: 
+  
+  {:feed {:assetNames [string],
+          :name string,
+          :contentType string,
+          :assetTypes [string],
+          :feedOutputConfig FeedOutputConfig},
+   :updateMask string}
+  
   Updates an asset feed configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudasset.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn create$
-  "Required parameters: parent
+  "https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:feedId string,
+   :feed {:assetNames [string],
+          :name string,
+          :contentType string,
+          :assetTypes [string],
+          :feedOutputConfig FeedOutputConfig}}
   
   Creates a feed in a parent project/folder/organization to listen to its
   asset updates."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudasset.googleapis.com/"
      "v1/{+parent}/feeds"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an asset feed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudasset.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

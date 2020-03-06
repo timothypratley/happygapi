@@ -1,35 +1,29 @@
 (ns happygapi.youtube.subscriptions
-  "YouTube Data API
+  "YouTube Data API: subscriptions.
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3"
+  See: https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: id
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/delete
+  
+  Required parameters: id
   
   Optional parameters: none
-  
   Deletes a subscription."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "subscriptions"
-     #{}
+     #{:id}
      args)
     (merge-with
      merge
@@ -40,53 +34,74 @@
      auth))))
 
 (defn insert$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/insert
+  
+  Required parameters: part
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:contentDetails {:activityType string,
+                    :newItemCount integer,
+                    :totalItemCount integer},
+   :etag string,
+   :id string,
+   :kind string,
+   :snippet {:channelId string,
+             :channelTitle string,
+             :description string,
+             :publishedAt string,
+             :resourceId ResourceId,
+             :thumbnails ThumbnailDetails,
+             :title string},
+   :subscriberSnippet {:channelId string,
+                       :description string,
+                       :thumbnails ThumbnailDetails,
+                       :title string}}
   
   Adds a subscription for the authenticated user's channel."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "subscriptions"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/list
+  
+  Required parameters: part
   
   Optional parameters: forChannelId, onBehalfOfContentOwnerChannel, channelId, myRecentSubscribers, pageToken, mine, id, order, mySubscribers, onBehalfOfContentOwner, maxResults
-  
   Returns subscription resources that match the API request criteria."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "subscriptions"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge

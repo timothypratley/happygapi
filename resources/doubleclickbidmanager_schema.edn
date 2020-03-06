@@ -146,7 +146,7 @@
                                                                 ""
                                                                 ""]},
                                 :version {:type "string",
-                                          :description "SDF Version (column names, types, order) in which the entities will be returned. Default to 3.1."}}},
+                                          :description "SDF Version (column names, types, order) in which the entities will be returned. Default to 5."}}},
  :Report {:id "Report",
           :type "object",
           :description "Represents a report.",
@@ -417,11 +417,13 @@
                                                      "FILTER_YOUTUBE_AD_VIDEO_ID"
                                                      "FILTER_YOUTUBE_CHANNEL"
                                                      "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_ADVERTISER"
+                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_INSERTION_ORDER"
                                                      "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_PARTNER"
                                                      "FILTER_YOUTUBE_VIDEO"
                                                      "FILTER_ZIP_CODE"
                                                      "FILTER_ZIP_POSTAL_CODE"],
                                               :enumDescriptions [""
+                                                                 ""
                                                                  ""
                                                                  ""
                                                                  ""
@@ -1941,11 +1943,13 @@
                                          "FILTER_YOUTUBE_AD_VIDEO_ID"
                                          "FILTER_YOUTUBE_CHANNEL"
                                          "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_ADVERTISER"
+                                         "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_INSERTION_ORDER"
                                          "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_PARTNER"
                                          "FILTER_YOUTUBE_VIDEO"
                                          "FILTER_ZIP_CODE"
                                          "FILTER_ZIP_POSTAL_CODE"],
                                   :enumDescriptions [""
+                                                     ""
                                                      ""
                                                      ""
                                                      ""

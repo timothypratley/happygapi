@@ -1,27 +1,21 @@
 (ns happygapi.books.onboarding
-  "Books API
+  "Books API: onboarding.
   Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_started"
+  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/onboarding"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "books_schema.edn"))))
+            [happy.util :as util]))
 
 (defn listCategories$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/onboarding/listCategories
+  
+  Required parameters: none
   
   Optional parameters: locale
-  
   List categories for onboarding experience."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,15 +32,15 @@
      auth))))
 
 (defn listCategoryVolumes$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/onboarding/listCategoryVolumes
+  
+  Required parameters: none
   
   Optional parameters: categoryId, locale, maxAllowedMaturityRating, pageSize, pageToken
-  
   List available volumes under categories for onboarding experience."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

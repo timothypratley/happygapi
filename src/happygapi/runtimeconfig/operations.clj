@@ -1,21 +1,56 @@
 (ns happygapi.runtimeconfig.operations
-  "Cloud Runtime Configuration API
+  "Cloud Runtime Configuration API: operations.
   The Runtime Configurator allows you to dynamically configure and expose variables through Google Cloud Platform. In addition, you can also set Watchers and Waiters that will watch for changes to your data and return based on certain conditions.
-  See: https://cloud.google.com/deployment-manager/runtime-configurator/"
+  See: https://cloud.google.com/deployment-manager/runtime-configurator/api/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
+            [happy.util :as util]))
 
-(def schemas
-  (edn/read-string (slurp (io/resource "runtimeconfig_schema.edn"))))
+(defn list$
+  "https://cloud.google.com/deployment-manager/runtime-configurator/api/reference/rest/v1/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
+  Lists operations that match the specified filter in the request. If the
+  server doesn't support this method, it returns `UNIMPLEMENTED`.
+  
+  NOTE: the `name` binding allows API services to override the binding
+  to use different resource name schemes, such as `users/*/operations`. To
+  override the binding, API services can add a binding such as
+  `\"/v1/{name=users/*}/operations\"` to their service configuration.
+  For backwards compatibility, the default name includes the operations
+  collection id, however overriding users must ensure the name binding
+  is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudruntimeconfig"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://runtimeconfig.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn cancel$
-  "Required parameters: name
+  "https://cloud.google.com/deployment-manager/runtime-configurator/api/reference/rest/v1/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {}
   
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
@@ -30,30 +65,30 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudruntimeconfig"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://runtimeconfig.googleapis.com/"
      "v1/{+name}:cancel"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: name
+  "https://cloud.google.com/deployment-manager/runtime-configurator/api/reference/rest/v1/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
@@ -61,49 +96,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudruntimeconfig"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://runtimeconfig.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudruntimeconfig"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://runtimeconfig.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge

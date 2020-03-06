@@ -1,22 +1,32 @@
 (ns happygapi.firebasedynamiclinks.shortLinks
-  "Firebase Dynamic Links API
+  "Firebase Dynamic Links API: shortLinks.
   Programmatically creates and manages Firebase Dynamic Links.
-  See: https://firebase.google.com/docs/dynamic-links/"
+  See: https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/shortLinks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "firebasedynamiclinks_schema.edn"))))
+            [happy.util :as util]))
 
 (defn create$
-  "Required parameters: none
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/shortLinks/create
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:dynamicLinkInfo {:socialMetaTagInfo SocialMetaTagInfo,
+                     :analyticsInfo AnalyticsInfo,
+                     :desktopInfo DesktopInfo,
+                     :link string,
+                     :navigationInfo NavigationInfo,
+                     :iosInfo IosInfo,
+                     :domainUriPrefix string,
+                     :androidInfo AndroidInfo,
+                     :dynamicLinkDomain string},
+   :sdkVersion string,
+   :longDynamicLink string,
+   :suffix {:customSuffix string, :option string}}
   
   Creates a short Dynamic Link given either a valid long Dynamic Link or
   details such as Dynamic Link domain, Android and iOS app information.
@@ -29,8 +39,7 @@
   Firebase project."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -40,10 +49,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

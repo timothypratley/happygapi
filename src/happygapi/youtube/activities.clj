@@ -1,21 +1,42 @@
 (ns happygapi.youtube.activities
-  "YouTube Data API
+  "YouTube Data API: activities.
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3"
+  See: https://developers.google.com/youtube/v3api/reference/rest/v3/activities"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
+            [happy.util :as util]))
 
 (defn insert$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/activities/insert
+  
+  Required parameters: part
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:contentDetails {:like ActivityContentDetailsLike,
+                    :social ActivityContentDetailsSocial,
+                    :promotedItem ActivityContentDetailsPromotedItem,
+                    :recommendation ActivityContentDetailsRecommendation,
+                    :playlistItem ActivityContentDetailsPlaylistItem,
+                    :bulletin ActivityContentDetailsBulletin,
+                    :comment ActivityContentDetailsComment,
+                    :channelItem ActivityContentDetailsChannelItem,
+                    :favorite ActivityContentDetailsFavorite,
+                    :subscription ActivityContentDetailsSubscription,
+                    :upload ActivityContentDetailsUpload},
+   :etag string,
+   :id string,
+   :kind string,
+   :snippet {:channelId string,
+             :channelTitle string,
+             :description string,
+             :groupId string,
+             :publishedAt string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :type string}}
   
   Posts a bulletin for a specific channel. (The user submitting the request must be authorized to act on the channel's behalf.)
   
@@ -23,43 +44,42 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "activities"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/activities/list
+  
+  Required parameters: part
   
   Optional parameters: publishedBefore, home, channelId, pageToken, mine, regionCode, publishedAfter, maxResults
-  
   Returns a list of channel activity events that match the request criteria. For example, you can retrieve events associated with a particular channel, events associated with the user's subscriptions and Google+ friends, or the YouTube home page feed, which is customized for each user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "activities"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge

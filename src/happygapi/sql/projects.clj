@@ -1,180 +1,177 @@
 (ns happygapi.sql.projects
-  "Cloud SQL Admin API
+  "Cloud SQL Admin API: projects.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/"
+  See: https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas (edn/read-string (slurp (io/resource "sql_schema.edn"))))
-
-(defn locations-instances-verifyExternalSyncSettings$
-  "Required parameters: parent
-  
-  Optional parameters: instance, project, syncMode, verifyConnectionOnly
-  
-  Verify External master external sync settings."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/{+parent}/verifyExternalSyncSettings"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-instances-rescheduleMaintenance$
-  "Required parameters: parent
-  
-  Optional parameters: instance, project
-  
-  Reschedules the maintenance on the given instance."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/{+parent}/rescheduleMaintenance"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
+            [happy.util :as util]))
 
 (defn locations-instances-startExternalSync$
-  "Required parameters: parent
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/locations/instances/startExternalSync
+  
+  Required parameters: parent
   
   Optional parameters: instance, project, syncMode
-  
   Start External master migration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/{+parent}/startExternalSync"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn instances-verifyExternalSyncSettings$
-  "Required parameters: instance, project
+(defn locations-instances-verifyExternalSyncSettings$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/locations/instances/verifyExternalSyncSettings
   
-  Optional parameters: syncMode, parent, verifyConnectionOnly
+  Required parameters: parent
   
+  Optional parameters: instance, project, syncMode, verifyConnectionOnly
   Verify External master external sync settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/verifyExternalSyncSettings"
-     #{"project" "instance"}
+     "sql/v1beta4/{+parent}/verifyExternalSyncSettings"
+     #{:parent}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
-(defn instances-rescheduleMaintenance$
-  "Required parameters: instance, project
+(defn locations-instances-rescheduleMaintenance$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/locations/instances/rescheduleMaintenance
   
-  Optional parameters: parent
+  Required parameters: parent
+  
+  Optional parameters: instance, project
+  
+  Body: 
+  
+  {:reschedule {:scheduleTime string, :rescheduleType string}}
   
   Reschedules the maintenance on the given instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/rescheduleMaintenance"
-     #{"project" "instance"}
+     "sql/v1beta4/{+parent}/rescheduleMaintenance"
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn instances-startExternalSync$
-  "Required parameters: project, instance
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/instances/startExternalSync
+  
+  Required parameters: project, instance
   
   Optional parameters: syncMode, parent
-  
   Start External master migration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/startExternalSync"
-     #{"project" "instance"}
+     #{:instance :project}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn instances-verifyExternalSyncSettings$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/instances/verifyExternalSyncSettings
+  
+  Required parameters: project, instance
+  
+  Optional parameters: syncMode, parent, verifyConnectionOnly
+  Verify External master external sync settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:instance :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/verifyExternalSyncSettings"
+     #{:instance :project}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-rescheduleMaintenance$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/projects/instances/rescheduleMaintenance
+  
+  Required parameters: instance, project
+  
+  Optional parameters: parent
+  
+  Body: 
+  
+  {:reschedule {:scheduleTime string, :rescheduleType string}}
+  
+  Reschedules the maintenance on the given instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:instance :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/rescheduleMaintenance"
+     #{:instance :project}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

@@ -1,22 +1,25 @@
 (ns happygapi.script.scripts
-  "Apps Script API
+  "Apps Script API: scripts.
   Manages and executes Google Apps Script projects.
   
-  See: https://developers.google.com/apps-script/api/"
+  See: https://developers.google.com/apps-script/api/api/reference/rest/v1/scripts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "script_schema.edn"))))
+            [happy.util :as util]))
 
 (defn run$
-  "Required parameters: scriptId
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/scripts/run
+  
+  Required parameters: scriptId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:function string,
+   :devMode boolean,
+   :parameters [any],
+   :sessionState string}
   
   Runs a function in an Apps Script project. The script project must be
   deployed for use with the Apps Script API and the calling application must
@@ -46,21 +49,20 @@
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"scriptId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:scriptId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://script.googleapis.com/"
      "v1/scripts/{scriptId}:run"
-     #{"scriptId"}
+     #{:scriptId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

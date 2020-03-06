@@ -1,35 +1,29 @@
 (ns happygapi.compute.machineTypes
-  "Compute Engine API
+  "Compute Engine API: machineTypes.
   Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/"
+  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/machineTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "compute_schema.edn"))))
+            [happy.util :as util]))
 
 (defn aggregatedList$
-  "Required parameters: project
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/machineTypes/aggregatedList
+  
+  Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves an aggregated list of machine types."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/machineTypes"
-     #{"project"}
+     #{:project}
      args)
     (merge-with
      merge
@@ -40,23 +34,23 @@
      auth))))
 
 (defn get$
-  "Required parameters: machineType, project, zone
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/machineTypes/get
+  
+  Required parameters: machineType, project, zone
   
   Optional parameters: none
-  
   Returns the specified machine type. Gets a list of available machine types by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "machineType" "zone"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:zone :machineType :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/machineTypes/{machineType}"
-     #{"project" "machineType" "zone"}
+     #{:zone :machineType :project}
      args)
     (merge-with
      merge
@@ -67,23 +61,23 @@
      auth))))
 
 (defn list$
-  "Required parameters: project, zone
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/machineTypes/list
+  
+  Required parameters: project, zone
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  
   Retrieves a list of machine types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "zone"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/machineTypes"
-     #{"project" "zone"}
+     #{:zone :project}
      args)
     (merge-with
      merge

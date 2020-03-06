@@ -1,34 +1,28 @@
 (ns happygapi.dfareporting.userProfiles
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: userProfiles.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/userProfiles"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/userProfiles/get
+  
+  Required parameters: profileId
   
   Optional parameters: none
-  
   Gets one user profile by ID."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"
             "https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge
@@ -39,16 +33,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/userProfiles/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Retrieves list of user profiles for a user."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"
             "https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

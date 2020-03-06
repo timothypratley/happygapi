@@ -1,21 +1,25 @@
 (ns happygapi.cloudsearch.debug
-  "Cloud Search API
+  "Cloud Search API: debug.
   Cloud Search provides cloud-based search capabilities over G Suite data.  The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
-  See: https://developers.google.com/cloud-search/docs/guides/"
+  See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudsearch_schema.edn"))))
+            [happy.util :as util]))
 
 (defn datasources-items-checkAccess$
-  "Required parameters: name
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug/datasources/items/checkAccess
+  
+  Required parameters: name
   
   Optional parameters: debugOptions.enableDebugging
+  
+  Body: 
+  
+  {:gsuitePrincipal {:gsuiteUserEmail string,
+                     :gsuiteGroupEmail string,
+                     :gsuiteDomain boolean},
+   :groupResourceName string,
+   :userResourceName string}
   
   Checks whether an item is accessible by specified principal.
   
@@ -23,29 +27,36 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.debug"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/debug/{+name}:checkAccess"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn datasources-items-searchByViewUrl$
-  "Required parameters: name
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug/datasources/items/searchByViewUrl
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:pageToken string,
+   :viewUrl string,
+   :debugOptions {:enableDebugging boolean}}
   
   Fetches the item whose viewUrl exactly matches that of the URL provided
   in the request.
@@ -54,72 +65,43 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.debug"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/debug/{+name}/items:searchByViewUrl"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn datasources-items-unmappedids-list$
-  "Required parameters: parent
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug/datasources/items/unmappedids/list
   
-  Optional parameters: debugOptions.enableDebugging, pageToken, pageSize
+  Required parameters: parent
   
+  Optional parameters: pageToken, pageSize, debugOptions.enableDebugging
   List all unmapped identities for a specific item.
   
   **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.debug"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/debug/{+parent}/unmappedids"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn identitysources-items-listForunmappedidentity$
-  "Required parameters: parent
-  
-  Optional parameters: userResourceName, pageToken, pageSize, debugOptions.enableDebugging, groupResourceName
-  
-  Lists names of items associated with an unmapped identity.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.debug"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/debug/{+parent}/items:forunmappedidentity"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -130,24 +112,52 @@
      auth))))
 
 (defn identitysources-unmappedids-list$
-  "Required parameters: parent
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug/identitysources/unmappedids/list
   
-  Optional parameters: pageToken, pageSize, resolutionStatusCode, debugOptions.enableDebugging
+  Required parameters: parent
   
+  Optional parameters: resolutionStatusCode, debugOptions.enableDebugging, pageToken, pageSize
   Lists unmapped user identities for an identity source.
   
   **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.debug"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/debug/{+parent}/unmappedids"
-     #{"parent"}
+     #{:parent}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn identitysources-items-listForunmappedidentity$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug/identitysources/items/listForunmappedidentity
+  
+  Required parameters: parent
+  
+  Optional parameters: groupResourceName, userResourceName, pageToken, pageSize, debugOptions.enableDebugging
+  Lists names of items associated with an unmapped identity.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.debug"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/debug/{+parent}/items:forunmappedidentity"
+     #{:parent}
      args)
     (merge-with
      merge

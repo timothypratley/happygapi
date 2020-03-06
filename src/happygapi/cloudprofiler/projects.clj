@@ -1,21 +1,67 @@
 (ns happygapi.cloudprofiler.projects
-  "Stackdriver Profiler API
+  "Stackdriver Profiler API: projects.
   Manages continuous profiling information.
-  See: https://cloud.google.com/profiler/"
+  See: https://cloud.google.com/profiler/api/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
+            [happy.util :as util]))
 
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudprofiler_schema.edn"))))
+(defn profiles-createOffline$
+  "https://cloud.google.com/profiler/api/reference/rest/v2/projects/profiles/createOffline
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:profileType string,
+   :deployment {:target string, :projectId string, :labels {}},
+   :labels {},
+   :profileBytes string,
+   :name string,
+   :duration string}
+  
+  CreateOfflineProfile creates a new profile resource in the offline mode.
+  The client provides the profile to create along with the profile bytes, the
+  server records it."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.write"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudprofiler.googleapis.com/"
+     "v2/{+parent}/profiles:createOffline"
+     #{:parent}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn profiles-patch$
-  "Required parameters: name
+  "https://cloud.google.com/profiler/api/reference/rest/v2/projects/profiles/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:profileType string,
+   :deployment {:target string, :projectId string, :labels {}},
+   :labels {},
+   :profileBytes string,
+   :name string,
+   :duration string}
   
   UpdateProfile updates the profile bytes and labels on the profile resource
   created in the online mode. Updating the bytes for profiles created in the
@@ -24,28 +70,36 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudprofiler.googleapis.com/"
      "v2/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn profiles-create$
-  "Required parameters: parent
+  "https://cloud.google.com/profiler/api/reference/rest/v2/projects/profiles/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:profileType [string],
+   :deployment {:target string, :projectId string, :labels {}}}
   
   CreateProfile creates a new profile resource in the online mode.
   
@@ -64,52 +118,20 @@
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudprofiler.googleapis.com/"
      "v2/{+parent}/profiles"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn profiles-createOffline$
-  "Required parameters: parent
-  
-  Optional parameters: none
-  
-  CreateOfflineProfile creates a new profile resource in the offline mode.
-  The client provides the profile to create along with the profile bytes, the
-  server records it."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudprofiler.googleapis.com/"
-     "v2/{+parent}/profiles:createOffline"
-     #{"parent"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

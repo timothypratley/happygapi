@@ -1,21 +1,25 @@
 (ns happygapi.servicenetworking.services
-  "Service Networking API
+  "Service Networking API: services.
   Provides automatic management of network configurations necessary for certain services.
-  See: https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started"
+  See: https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "servicenetworking_schema.edn"))))
+            [happy.util :as util]))
 
 (defn validate$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/validate
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:validateNetwork boolean,
+   :consumerProject {:projectNum string},
+   :consumerNetwork string,
+   :rangeReservation {:secondaryRangeIpPrefixLengths [integer],
+                      :ipPrefixLength integer}}
   
   Service producers use this method to validate if the consumer provided
   network, project and the requested range is valid. This allows them to use
@@ -24,55 +28,75 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:validate"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn disableVpcServiceControls$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/disableVpcServiceControls
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:consumerNetwork string}
   
   Disables VPC service controls for a connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:disableVpcServiceControls"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn addSubnetwork$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/addSubnetwork
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :consumer string,
+   :consumerNetwork string,
+   :privateIpv6GoogleAccess string,
+   :subnetworkUsers [string],
+   :requestedAddress string,
+   :region string,
+   :ipPrefixLength integer,
+   :subnetwork string}
   
   For service producers, provisions a new subnet in a
   peered service's shared VPC network in the requested region and with the
@@ -86,29 +110,34 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:addSubnetwork"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn searchRange$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/searchRange
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:ipPrefixLength integer, :network string}
   
   Service producers can use this method to find a currently unused range
   within consumer allocated ranges.   This returned range is not reserved,
@@ -121,69 +150,75 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:searchRange"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn enableVpcServiceControls$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/enableVpcServiceControls
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:consumerNetwork string}
   
   Enables VPC service controls for a connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:enableVpcServiceControls"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn connections-list$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/connections/list
+  
+  Required parameters: parent
   
   Optional parameters: network
-  
   List the private connections that are configured in a service consumer's
   VPC network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}/connections"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -194,37 +229,56 @@
      auth))))
 
 (defn connections-patch$
-  "Required parameters: name
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/connections/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask, force
+  
+  Body: 
+  
+  {:network string,
+   :peering string,
+   :reservedPeeringRanges [string],
+   :service string}
   
   Updates the allocated ranges that are assigned to a connection.
   The response from the `get` operation will be of type `Connection` if the
   operation successfully completes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn connections-create$
-  "Required parameters: parent
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/connections/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:network string,
+   :peering string,
+   :reservedPeeringRanges [string],
+   :service string}
   
   Creates a private connection that establishes a VPC Network Peering
   connection to a VPC network in the service producer's organization.
@@ -238,21 +292,20 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}/connections"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

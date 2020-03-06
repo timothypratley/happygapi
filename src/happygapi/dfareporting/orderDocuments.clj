@@ -1,33 +1,27 @@
 (ns happygapi.dfareporting.orderDocuments
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: orderDocuments.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: id, profileId, projectId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments/get
+  
+  Required parameters: id, profileId, projectId
   
   Optional parameters: none
-  
   Gets one order document by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "projectId" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id :profileId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/projects/{projectId}/orderDocuments/{id}"
-     #{"id" "projectId" "profileId"}
+     #{:id :profileId :projectId}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: profileId, projectId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments/list
+  
+  Required parameters: profileId, projectId
   
   Optional parameters: siteId, ids, approved, searchString, pageToken, sortField, sortOrder, maxResults, orderId
-  
   Retrieves a list of order documents, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"projectId" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/projects/{projectId}/orderDocuments"
-     #{"projectId" "profileId"}
+     #{:profileId :projectId}
      args)
     (merge-with
      merge

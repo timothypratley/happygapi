@@ -1,36 +1,4 @@
-{:ResourceIssue {:description "Information about a resource with issue.",
-                 :type "object",
-                 :properties {:blockedResource {:description "Describes a blocked resource issue.",
-                                                :$ref "BlockedResource"}},
-                 :id "ResourceIssue"},
- :BlockedResource {:description "Blocked resource.",
-                   :type "object",
-                   :properties {:url {:description "URL of the blocked resource.",
-                                      :type "string"}},
-                   :id "BlockedResource"},
- :TestStatus {:description "Final state of the test, including error details if necessary.",
-              :type "object",
-              :properties {:status {:enum ["TEST_STATUS_UNSPECIFIED"
-                                           "COMPLETE"
-                                           "INTERNAL_ERROR"
-                                           "PAGE_UNREACHABLE"],
-                                    :description "Status of the test.",
-                                    :type "string",
-                                    :enumDescriptions ["Internal error when running this test. Please try running the test again."
-                                                       "Inspection has completed without errors."
-                                                       "Inspection terminated in an error state. This indicates a problem in\nGoogle's infrastructure, not a user error. Please try again later."
-                                                       "Google can not access the URL because of a user error such as a robots.txt\nblockage, a 403 or 500 code etc. Please make sure that the URL provided is\naccessible by Googlebot and is not password protected."]},
-                           :details {:description "Error details if applicable.",
-                                     :type "string"}},
-              :id "TestStatus"},
- :RunMobileFriendlyTestRequest {:description "Mobile-friendly test request.",
-                                :type "object",
-                                :properties {:url {:description "URL for inspection.",
-                                                   :type "string"},
-                                             :requestScreenshot {:description "Whether or not screenshot is requested. Default is false.",
-                                                                 :type "boolean"}},
-                                :id "RunMobileFriendlyTestRequest"},
- :Image {:description "Describe image data.",
+{:Image {:description "Describe image data.",
          :type "object",
          :properties {:mimeType {:description "The mime-type of the image data.",
                                  :type "string"},
@@ -38,26 +6,35 @@
                              :format "byte",
                              :type "string"}},
          :id "Image"},
- :MobileFriendlyIssue {:description "Mobile-friendly issue.",
-                       :type "object",
-                       :properties {:rule {:enum ["MOBILE_FRIENDLY_RULE_UNSPECIFIED"
-                                                  "USES_INCOMPATIBLE_PLUGINS"
-                                                  "CONFIGURE_VIEWPORT"
-                                                  "FIXED_WIDTH_VIEWPORT"
-                                                  "SIZE_CONTENT_TO_VIEWPORT"
-                                                  "USE_LEGIBLE_FONT_SIZES"
-                                                  "TAP_TARGETS_TOO_CLOSE"],
-                                           :description "Rule violated.",
-                                           :type "string",
+ :RunMobileFriendlyTestRequest {:id "RunMobileFriendlyTestRequest",
+                                :description "Mobile-friendly test request.",
+                                :type "object",
+                                :properties {:url {:description "URL for inspection.",
+                                                   :type "string"},
+                                             :requestScreenshot {:description "Whether or not screenshot is requested. Default is false.",
+                                                                 :type "boolean"}}},
+ :MobileFriendlyIssue {:type "object",
+                       :properties {:rule {:type "string",
                                            :enumDescriptions ["Unknown rule. Sorry, we don't have any description for the rule that was\nbroken."
                                                               "Plugins incompatible with mobile devices are being used. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#flash_usage)."
                                                               "Viewsport is not specified using the meta viewport tag. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#viewport_not_configured)."
                                                               "Viewport defined to a fixed width. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#fixed-width_viewport)."
                                                               "Content not sized to viewport. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#content_not_sized_to_viewport)."
                                                               "Font size is too small for easy reading on a small screen. [Learn More]\n(https://support.google.com/webmasters/answer/6352293#small_font_size)."
-                                                              "Touch elements are too close to each other. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#touch_elements_too_close)."]}},
-                       :id "MobileFriendlyIssue"},
- :RunMobileFriendlyTestResponse {:properties {:mobileFriendlyIssues {:description "List of mobile-usability issues.",
+                                                              "Touch elements are too close to each other. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#touch_elements_too_close)."],
+                                           :enum ["MOBILE_FRIENDLY_RULE_UNSPECIFIED"
+                                                  "USES_INCOMPATIBLE_PLUGINS"
+                                                  "CONFIGURE_VIEWPORT"
+                                                  "FIXED_WIDTH_VIEWPORT"
+                                                  "SIZE_CONTENT_TO_VIEWPORT"
+                                                  "USE_LEGIBLE_FONT_SIZES"
+                                                  "TAP_TARGETS_TOO_CLOSE"],
+                                           :description "Rule violated."}},
+                       :id "MobileFriendlyIssue",
+                       :description "Mobile-friendly issue."},
+ :RunMobileFriendlyTestResponse {:description "Mobile-friendly test response, including mobile-friendly issues and resource\nissues.",
+                                 :type "object",
+                                 :properties {:mobileFriendlyIssues {:description "List of mobile-usability issues.",
                                                                      :type "array",
                                                                      :items {:$ref "MobileFriendlyIssue"}},
                                               :screenshot {:$ref "Image",
@@ -67,14 +44,37 @@
                                               :resourceIssues {:description "Information about embedded resources issues.",
                                                                :type "array",
                                                                :items {:$ref "ResourceIssue"}},
-                                              :mobileFriendliness {:type "string",
-                                                                   :enumDescriptions ["Internal error when running this test. Please try running the test again."
-                                                                                      "The page is mobile friendly."
-                                                                                      "The page is not mobile friendly."],
-                                                                   :enum ["MOBILE_FRIENDLY_TEST_RESULT_UNSPECIFIED"
+                                              :mobileFriendliness {:enum ["MOBILE_FRIENDLY_TEST_RESULT_UNSPECIFIED"
                                                                           "MOBILE_FRIENDLY"
                                                                           "NOT_MOBILE_FRIENDLY"],
-                                                                   :description "Test verdict, whether the page is mobile friendly or not."}},
-                                 :id "RunMobileFriendlyTestResponse",
-                                 :description "Mobile-friendly test response, including mobile-friendly issues and resource\nissues.",
-                                 :type "object"}}
+                                                                   :description "Test verdict, whether the page is mobile friendly or not.",
+                                                                   :type "string",
+                                                                   :enumDescriptions ["Internal error when running this test. Please try running the test again."
+                                                                                      "The page is mobile friendly."
+                                                                                      "The page is not mobile friendly."]}},
+                                 :id "RunMobileFriendlyTestResponse"},
+ :ResourceIssue {:id "ResourceIssue",
+                 :description "Information about a resource with issue.",
+                 :type "object",
+                 :properties {:blockedResource {:description "Describes a blocked resource issue.",
+                                                :$ref "BlockedResource"}}},
+ :BlockedResource {:type "object",
+                   :properties {:url {:description "URL of the blocked resource.",
+                                      :type "string"}},
+                   :id "BlockedResource",
+                   :description "Blocked resource."},
+ :TestStatus {:description "Final state of the test, including error details if necessary.",
+              :type "object",
+              :properties {:status {:description "Status of the test.",
+                                    :type "string",
+                                    :enumDescriptions ["Internal error when running this test. Please try running the test again."
+                                                       "Inspection has completed without errors."
+                                                       "Inspection terminated in an error state. This indicates a problem in\nGoogle's infrastructure, not a user error. Please try again later."
+                                                       "Google can not access the URL because of a user error such as a robots.txt\nblockage, a 403 or 500 code etc. Please make sure that the URL provided is\naccessible by Googlebot and is not password protected."],
+                                    :enum ["TEST_STATUS_UNSPECIFIED"
+                                           "COMPLETE"
+                                           "INTERNAL_ERROR"
+                                           "PAGE_UNREACHABLE"]},
+                           :details {:description "Error details if applicable.",
+                                     :type "string"}},
+              :id "TestStatus"}}

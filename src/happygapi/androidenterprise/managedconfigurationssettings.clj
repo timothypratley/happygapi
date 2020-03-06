@@ -1,33 +1,27 @@
 (ns happygapi.androidenterprise.managedconfigurationssettings
-  "Google Play EMM API
+  "Google Play EMM API: managedconfigurationssettings.
   Manages the deployment of apps to Android for Work users.
-  See: https://developers.google.com/android/work/play/emm-api"
+  See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationssettings"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: enterpriseId, productId
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationssettings/list
+  
+  Required parameters: enterpriseId, productId
   
   Optional parameters: none
-  
   Lists all the managed configurations settings for the specified app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"productId" "enterpriseId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:enterpriseId :productId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/products/{productId}/managedConfigurationsSettings"
-     #{"productId" "enterpriseId"}
+     #{:enterpriseId :productId}
      args)
     (merge-with
      merge

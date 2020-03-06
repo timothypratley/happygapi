@@ -1,27 +1,21 @@
 (ns happygapi.books.personalizedstream
-  "Books API
+  "Books API: personalizedstream.
   Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_started"
+  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/personalizedstream"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "books_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: none
+  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/personalizedstream/get
+  
+  Required parameters: none
   
   Optional parameters: locale, maxAllowedMaturityRating, source
-  
   Returns a stream of personalized book clusters"
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

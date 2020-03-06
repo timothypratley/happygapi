@@ -1,33 +1,27 @@
 (ns happygapi.games.revisions
-  "Google Play Game Services API
+  "Google Play Game Services API: revisions.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/revisions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn check$
-  "Required parameters: clientRevision
+  "https://developers.google.com/games/services/api/reference/rest/v1/revisions/check
+  
+  Required parameters: clientRevision
   
   Optional parameters: none
-  
   Checks whether the games client is out of date."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"clientRevision"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:clientRevision})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "revisions/check"
-     #{}
+     #{:clientRevision}
      args)
     (merge-with
      merge

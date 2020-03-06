@@ -1,60 +1,52 @@
 (ns happygapi.calendar.calendars
-  "Calendar API
+  "Calendar API: calendars.
   Manipulates events and other calendar data.
-  See: https://developers.google.com/google-apps/calendar/firstapp"
+  See: https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "calendar_schema.edn"))))
+            [happy.util :as util]))
 
 (defn clear$
-  "Required parameters: calendarId
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/clear
+  
+  Required parameters: calendarId
   
   Optional parameters: none
-  
   Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"calendarId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/clear"
-     #{"calendarId"}
+     #{:calendarId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: calendarId
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/delete
+  
+  Required parameters: calendarId
   
   Optional parameters: none
-  
   Deletes a secondary calendar. Use calendars.clear for clearing all events on primary calendars."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"calendarId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:calendarId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
-     #{"calendarId"}
+     #{:calendarId}
      args)
     (merge-with
      merge
@@ -65,22 +57,22 @@
      auth))))
 
 (defn get$
-  "Required parameters: calendarId
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/get
+  
+  Required parameters: calendarId
   
   Optional parameters: none
-  
   Returns metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"calendarId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:calendarId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
-     #{"calendarId"}
+     #{:calendarId}
      args)
     (merge-with
      merge
@@ -91,15 +83,27 @@
      auth))))
 
 (defn insert$
-  "Required parameters: none
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
   
   Creates a secondary calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -109,62 +113,88 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn patch$
-  "Required parameters: calendarId
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
+  
+  Required parameters: calendarId
   
   Optional parameters: none
   
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
+  
   Updates metadata for a calendar. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"calendarId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:calendarId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
-     #{"calendarId"}
+     #{:calendarId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: calendarId
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
+  
+  Required parameters: calendarId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
   
   Updates metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"calendarId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:calendarId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
-     #{"calendarId"}
+     #{:calendarId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

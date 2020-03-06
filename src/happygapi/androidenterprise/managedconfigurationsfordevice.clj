@@ -1,41 +1,35 @@
 (ns happygapi.androidenterprise.managedconfigurationsfordevice
-  "Google Play EMM API
+  "Google Play EMM API: managedconfigurationsfordevice.
   Manages the deployment of apps to Android for Work users.
-  See: https://developers.google.com/android/work/play/emm-api"
+  See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "androidenterprise_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/delete
+  
+  Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
   
   Optional parameters: none
-  
   Removes a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId"
-            "userId"
-            "managedConfigurationForDeviceId"
-            "deviceId"})
-         (json-schema/validate schemas args)]}
+          #{:enterpriseId
+            :deviceId
+            :userId
+            :managedConfigurationForDeviceId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice/{managedConfigurationForDeviceId}"
-     #{"enterpriseId"
-       "userId"
-       "managedConfigurationForDeviceId"
-       "deviceId"}
+     #{:enterpriseId
+       :deviceId
+       :userId
+       :managedConfigurationForDeviceId}
      args)
     (merge-with
      merge
@@ -46,29 +40,29 @@
      auth))))
 
 (defn get$
-  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/get
+  
+  Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
   
   Optional parameters: none
-  
   Retrieves details of a per-device managed configuration."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId"
-            "userId"
-            "managedConfigurationForDeviceId"
-            "deviceId"})
-         (json-schema/validate schemas args)]}
+          #{:enterpriseId
+            :deviceId
+            :userId
+            :managedConfigurationForDeviceId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice/{managedConfigurationForDeviceId}"
-     #{"enterpriseId"
-       "userId"
-       "managedConfigurationForDeviceId"
-       "deviceId"}
+     #{:enterpriseId
+       :deviceId
+       :userId
+       :managedConfigurationForDeviceId}
      args)
     (merge-with
      merge
@@ -79,21 +73,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: deviceId, enterpriseId, userId
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/list
+  
+  Required parameters: deviceId, enterpriseId, userId
   
   Optional parameters: none
-  
   Lists all the per-device managed configurations for the specified device. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"enterpriseId" "userId" "deviceId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:enterpriseId :deviceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice"
-     #{"enterpriseId" "userId" "deviceId"}
+     #{:enterpriseId :deviceId :userId}
      args)
     (merge-with
      merge
@@ -104,36 +98,52 @@
      auth))))
 
 (defn update$
-  "Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/update
+  
+  Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:configurationVariables {:kind string,
+                            :mcmId string,
+                            :variableSet [VariableSet]},
+   :kind string,
+   :managedProperty [{:key string,
+                      :valueBool boolean,
+                      :valueBundle ManagedPropertyBundle,
+                      :valueBundleArray [ManagedPropertyBundle],
+                      :valueInteger integer,
+                      :valueString string,
+                      :valueStringArray [string]}],
+   :productId string}
   
   Adds or updates a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth args body]
   {:pre [(util/has-keys?
           args
-          #{"enterpriseId"
-            "userId"
-            "managedConfigurationForDeviceId"
-            "deviceId"})
-         (json-schema/validate schemas args)]}
+          #{:enterpriseId
+            :deviceId
+            :userId
+            :managedConfigurationForDeviceId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice/{managedConfigurationForDeviceId}"
-     #{"enterpriseId"
-       "userId"
-       "managedConfigurationForDeviceId"
-       "deviceId"}
+     #{:enterpriseId
+       :deviceId
+       :userId
+       :managedConfigurationForDeviceId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

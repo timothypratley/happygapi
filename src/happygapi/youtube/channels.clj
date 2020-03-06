@@ -1,22 +1,17 @@
 (ns happygapi.youtube.channels
-  "YouTube Data API
+  "YouTube Data API: channels.
   Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3"
+  See: https://developers.google.com/youtube/v3api/reference/rest/v3/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "youtube_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/channels/list
+  
+  Required parameters: part
   
   Optional parameters: managedByMe, categoryId, forUsername, pageToken, mine, hl, id, mySubscribers, onBehalfOfContentOwner, maxResults
-  
   Returns a collection of zero or more channel resources that match the request criteria."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
@@ -24,14 +19,13 @@
             "https://www.googleapis.com/auth/youtubepartner"
             "https://www.googleapis.com/auth/youtubepartner-channel-audit"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "channels"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge
@@ -42,30 +36,75 @@
      auth))))
 
 (defn update$
-  "Required parameters: part
+  "https://developers.google.com/youtube/v3api/reference/rest/v3/channels/update
+  
+  Required parameters: part
   
   Optional parameters: onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:contentOwnerDetails {:contentOwner string, :timeLinked string},
+   :localizations {},
+   :brandingSettings {:channel ChannelSettings,
+                      :hints [PropertyValue],
+                      :image ImageSettings,
+                      :watch WatchSettings},
+   :snippet {:country string,
+             :customUrl string,
+             :defaultLanguage string,
+             :description string,
+             :localized ChannelLocalization,
+             :publishedAt string,
+             :thumbnails ThumbnailDetails,
+             :title string},
+   :etag string,
+   :invideoPromotion {:defaultTiming InvideoTiming,
+                      :items [PromotedItem],
+                      :position InvideoPosition,
+                      :useSmartTiming boolean},
+   :auditDetails {:communityGuidelinesGoodStanding boolean,
+                  :contentIdClaimsGoodStanding boolean,
+                  :copyrightStrikesGoodStanding boolean},
+   :conversionPings {:pings [ChannelConversionPing]},
+   :statistics {:commentCount string,
+                :hiddenSubscriberCount boolean,
+                :subscriberCount string,
+                :videoCount string,
+                :viewCount string},
+   :status {:isLinked boolean,
+            :longUploadsStatus string,
+            :madeForKids boolean,
+            :privacyStatus string,
+            :selfDeclaredMadeForKids boolean},
+   :id string,
+   :kind string,
+   :contentDetails {:relatedPlaylists {:favorites string,
+                                       :likes string,
+                                       :uploads string,
+                                       :watchHistory string,
+                                       :watchLater string}},
+   :topicDetails {:topicCategories [string], :topicIds [string]}}
   
   Updates a channel's metadata. Note that this method currently only supports updates to the channel resource's brandingSettings and invideoPromotion objects and their child properties."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"part"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "channels"
-     #{}
+     #{:part}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

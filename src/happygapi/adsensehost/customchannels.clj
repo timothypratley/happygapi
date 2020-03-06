@@ -1,33 +1,27 @@
 (ns happygapi.adsensehost.customchannels
-  "AdSense Host API
+  "AdSense Host API: customchannels.
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
-  See: https://developers.google.com/adsense/host/"
+  See: https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "adsensehost_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: adClientId, customChannelId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/delete
+  
+  Required parameters: adClientId, customChannelId
   
   Optional parameters: none
-  
   Delete a specific custom channel from the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels/{customChannelId}"
-     #{"customChannelId" "adClientId"}
+     #{:adClientId :customChannelId}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn get$
-  "Required parameters: adClientId, customChannelId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/get
+  
+  Required parameters: adClientId, customChannelId
   
   Optional parameters: none
-  
   Get a specific custom channel from the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels/{customChannelId}"
-     #{"customChannelId" "adClientId"}
+     #{:adClientId :customChannelId}
      args)
     (merge-with
      merge
@@ -63,48 +57,53 @@
      auth))))
 
 (defn insert$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/insert
+  
+  Required parameters: adClientId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:code string, :id string, :kind string, :name string}
   
   Add a new custom channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/list
+  
+  Required parameters: adClientId
   
   Optional parameters: maxResults, pageToken
-  
   List all host custom channels in this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge
@@ -115,53 +114,65 @@
      auth))))
 
 (defn patch$
-  "Required parameters: adClientId, customChannelId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/patch
+  
+  Required parameters: adClientId, customChannelId
   
   Optional parameters: none
   
+  Body: 
+  
+  {:code string, :id string, :kind string, :name string}
+  
   Update a custom channel in the host AdSense account. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"customChannelId" "adClientId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"
-     #{"adClientId"}
+     #{:adClientId :customChannelId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: adClientId
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/update
+  
+  Required parameters: adClientId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:code string, :id string, :kind string, :name string}
   
   Update a custom channel in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"adClientId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:adClientId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"
-     #{"adClientId"}
+     #{:adClientId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

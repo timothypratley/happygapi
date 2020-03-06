@@ -1,60 +1,92 @@
 (ns happygapi.drive.drives
-  "Drive API
+  "Drive API: drives.
   Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
-  See: https://developers.google.com/drive/"
+  See: https://developers.google.com/drive/api/reference/rest/v3/drives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "drive_schema.edn"))))
+            [happy.util :as util]))
 
 (defn create$
-  "Required parameters: requestId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/create
+  
+  Required parameters: requestId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:capabilities {:canChangeDomainUsersOnlyRestriction boolean,
+                  :canRenameDrive boolean,
+                  :canCopy boolean,
+                  :canManageMembers boolean,
+                  :canTrashChildren boolean,
+                  :canDownload boolean,
+                  :canChangeDriveMembersOnlyRestriction boolean,
+                  :canDeleteChildren boolean,
+                  :canListChildren boolean,
+                  :canRename boolean,
+                  :canReadRevisions boolean,
+                  :canDeleteDrive boolean,
+                  :canChangeCopyRequiresWriterPermissionRestriction boolean,
+                  :canEdit boolean,
+                  :canComment boolean,
+                  :canAddChildren boolean,
+                  :canChangeDriveBackground boolean,
+                  :canShare boolean},
+   :restrictions {:adminManagedRestrictions boolean,
+                  :copyRequiresWriterPermission boolean,
+                  :domainUsersOnly boolean,
+                  :driveMembersOnly boolean},
+   :themeId string,
+   :backgroundImageFile {:id string,
+                         :width number,
+                         :xCoordinate number,
+                         :yCoordinate number},
+   :name string,
+   :createdTime string,
+   :hidden boolean,
+   :id string,
+   :kind string,
+   :colorRgb string,
+   :backgroundImageLink string}
   
   Creates a new shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"requestId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:requestId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives"
-     #{}
+     #{:requestId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: driveId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/delete
+  
+  Required parameters: driveId
   
   Optional parameters: none
-  
   Permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"driveId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:driveId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
-     #{"driveId"}
+     #{:driveId}
      args)
     (merge-with
      merge
@@ -65,22 +97,22 @@
      auth))))
 
 (defn get$
-  "Required parameters: driveId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/get
+  
+  Required parameters: driveId
   
   Optional parameters: useDomainAdminAccess
-  
   Gets a shared drive's metadata by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"driveId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:driveId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
-     #{"driveId"}
+     #{:driveId}
      args)
     (merge-with
      merge
@@ -91,43 +123,41 @@
      auth))))
 
 (defn hide$
-  "Required parameters: driveId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/hide
+  
+  Required parameters: driveId
   
   Optional parameters: none
-  
   Hides a shared drive from the default view."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"driveId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:driveId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}/hide"
-     #{"driveId"}
+     #{:driveId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/list
+  
+  Required parameters: none
   
   Optional parameters: pageSize, pageToken, q, useDomainAdminAccess
-  
   Lists the user's shared drives."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -144,52 +174,90 @@
      auth))))
 
 (defn unhide$
-  "Required parameters: driveId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/unhide
+  
+  Required parameters: driveId
   
   Optional parameters: none
-  
   Restores a shared drive to the default view."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"driveId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:driveId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}/unhide"
-     #{"driveId"}
+     #{:driveId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: driveId
+  "https://developers.google.com/drive/api/reference/rest/v3/drives/update
+  
+  Required parameters: driveId
   
   Optional parameters: useDomainAdminAccess
   
+  Body: 
+  
+  {:capabilities {:canChangeDomainUsersOnlyRestriction boolean,
+                  :canRenameDrive boolean,
+                  :canCopy boolean,
+                  :canManageMembers boolean,
+                  :canTrashChildren boolean,
+                  :canDownload boolean,
+                  :canChangeDriveMembersOnlyRestriction boolean,
+                  :canDeleteChildren boolean,
+                  :canListChildren boolean,
+                  :canRename boolean,
+                  :canReadRevisions boolean,
+                  :canDeleteDrive boolean,
+                  :canChangeCopyRequiresWriterPermissionRestriction boolean,
+                  :canEdit boolean,
+                  :canComment boolean,
+                  :canAddChildren boolean,
+                  :canChangeDriveBackground boolean,
+                  :canShare boolean},
+   :restrictions {:adminManagedRestrictions boolean,
+                  :copyRequiresWriterPermission boolean,
+                  :domainUsersOnly boolean,
+                  :driveMembersOnly boolean},
+   :themeId string,
+   :backgroundImageFile {:id string,
+                         :width number,
+                         :xCoordinate number,
+                         :yCoordinate number},
+   :name string,
+   :createdTime string,
+   :hidden boolean,
+   :id string,
+   :kind string,
+   :colorRgb string,
+   :backgroundImageLink string}
+  
   Updates the metadate for a shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"driveId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:driveId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
-     #{"driveId"}
+     #{:driveId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

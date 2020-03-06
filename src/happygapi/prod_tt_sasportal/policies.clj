@@ -1,56 +1,26 @@
 (ns happygapi.prod_tt_sasportal.policies
-  "SAS Portal API (Testing)
+  "SAS Portal API (Testing): policies.
   
-  See: https://developers.google.com/spectrum-access-system/"
+  See: https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "prod_tt_sasportal_schema.edn"))))
-
-(defn get$
-  "Required parameters: none
-  
-  Optional parameters: none
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/policies:get"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
+            [happy.util :as util]))
 
 (defn test$
-  "Required parameters: none
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/test
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:resource string, :permissions [string]}
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -60,25 +30,31 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn set$
-  "Required parameters: none
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/set
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:etag string, :assignments [SasPortalAssignment]},
+   :resource string}
   
   Sets the access control policy on the specified resource. Replaces any
   existing policy."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -88,10 +64,44 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/get
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:resource string}
+  
+  Gets the access control policy for a resource.
+  Returns an empty policy if the resource exists and does not have a policy
+  set."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/policies:get"
+     #{}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

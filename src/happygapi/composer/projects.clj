@@ -1,33 +1,52 @@
 (ns happygapi.composer.projects
-  "Cloud Composer API
+  "Cloud Composer API: projects.
   Manages Apache Airflow environments on Google Cloud Platform.
-  See: https://cloud.google.com/composer/"
+  See: https://cloud.google.com/composer/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
+            [happy.util :as util]))
 
-(def schemas
-  (edn/read-string (slurp (io/resource "composer_schema.edn"))))
-
-(defn locations-environments-get$
-  "Required parameters: name
+(defn locations-environments-delete$
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/delete
+  
+  Required parameters: name
   
   Optional parameters: none
+  Delete an environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://composer.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-environments-get$
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/get
   
+  Required parameters: name
+  
+  Optional parameters: none
   Get an existing environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -38,21 +57,21 @@
      auth))))
 
 (defn locations-environments-list$
-  "Required parameters: parent
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/list
+  
+  Required parameters: parent
   
   Optional parameters: pageToken, pageSize
-  
   List environments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+parent}/environments"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -63,101 +82,110 @@
      auth))))
 
 (defn locations-environments-patch$
-  "Required parameters: name
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/patch
+  
+  Required parameters: name
   
   Optional parameters: updateMask
   
+  Body: 
+  
+  {:createTime string,
+   :labels {},
+   :updateTime string,
+   :config {:airflowUri string,
+            :softwareConfig SoftwareConfig,
+            :nodeConfig NodeConfig,
+            :nodeCount integer,
+            :dagGcsPrefix string,
+            :gkeCluster string},
+   :state string,
+   :name string,
+   :uuid string}
+  
   Update an environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn locations-environments-create$
-  "Required parameters: parent
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:createTime string,
+   :labels {},
+   :updateTime string,
+   :config {:airflowUri string,
+            :softwareConfig SoftwareConfig,
+            :nodeConfig NodeConfig,
+            :nodeCount integer,
+            :dagGcsPrefix string,
+            :gkeCluster string},
+   :state string,
+   :name string,
+   :uuid string}
   
   Create a new environment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+parent}/environments"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
-     auth))))
-
-(defn locations-environments-delete$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Delete an environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://composer.googleapis.com/"
-     "v1/{+name}"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn locations-operations-delete$
-  "Required parameters: name
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/operations/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
   `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -168,10 +196,11 @@
      auth))))
 
 (defn locations-operations-list$
-  "Required parameters: name
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
-  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -184,14 +213,13 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+name}/operations"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -202,23 +230,23 @@
      auth))))
 
 (defn locations-operations-get$
-  "Required parameters: name
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -229,21 +257,21 @@
      auth))))
 
 (defn locations-imageVersions-list$
-  "Required parameters: parent
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/imageVersions/list
+  
+  Required parameters: parent
   
   Optional parameters: pageToken, pageSize
-  
   List ImageVersions for provided location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://composer.googleapis.com/"
      "v1/{+parent}/imageVersions"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge

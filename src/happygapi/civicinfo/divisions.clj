@@ -1,27 +1,26 @@
 (ns happygapi.civicinfo.divisions
-  "Google Civic Information API
+  "Google Civic Information API: divisions.
   Provides polling places, early vote locations, contest data, election officials, and government representatives for U.S. residential addresses.
-  See: https://developers.google.com/civic-information"
+  See: https://developers.google.com/civic-informationapi/reference/rest/v2/divisions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "civicinfo_schema.edn"))))
+            [happy.util :as util]))
 
 (defn search$
-  "Required parameters: none
+  "https://developers.google.com/civic-informationapi/reference/rest/v2/divisions/search
+  
+  Required parameters: none
   
   Optional parameters: query
   
+  Body: 
+  
+  {:contextParams {:clientProfile string}}
+  
   Searches for political divisions by their natural name or OCD ID."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -31,7 +30,9 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}

@@ -1,33 +1,27 @@
 (ns happygapi.dfareporting.creativeFieldValues
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: creativeFieldValues.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: creativeFieldId, id, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/delete
+  
+  Required parameters: creativeFieldId, id, profileId
   
   Optional parameters: none
-  
   Deletes an existing creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "id" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
-     #{"creativeFieldId" "id" "profileId"}
+     #{:id :creativeFieldId :profileId}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn get$
-  "Required parameters: creativeFieldId, id, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/get
+  
+  Required parameters: creativeFieldId, id, profileId
   
   Optional parameters: none
-  
   Gets one creative field value by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "id" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
-     #{"creativeFieldId" "id" "profileId"}
+     #{:id :creativeFieldId :profileId}
      args)
     (merge-with
      merge
@@ -63,48 +57,53 @@
      auth))))
 
 (defn insert$
-  "Required parameters: creativeFieldId, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/insert
+  
+  Required parameters: creativeFieldId, profileId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :kind string, :value string}
   
   Inserts a new creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
-     #{"creativeFieldId" "profileId"}
+     #{:creativeFieldId :profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: creativeFieldId, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/list
+  
+  Required parameters: creativeFieldId, profileId
   
   Optional parameters: ids, maxResults, pageToken, searchString, sortField, sortOrder
-  
   Retrieves a list of creative field values, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
-     #{"creativeFieldId" "profileId"}
+     #{:creativeFieldId :profileId}
      args)
     (merge-with
      merge
@@ -115,53 +114,65 @@
      auth))))
 
 (defn patch$
-  "Required parameters: creativeFieldId, id, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/patch
+  
+  Required parameters: creativeFieldId, id, profileId
   
   Optional parameters: none
   
+  Body: 
+  
+  {:id string, :kind string, :value string}
+  
   Updates an existing creative field value. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "id" "profileId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
-     #{"creativeFieldId" "profileId"}
+     #{:id :creativeFieldId :profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: creativeFieldId, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeFieldValues/update
+  
+  Required parameters: creativeFieldId, profileId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :kind string, :value string}
   
   Updates an existing creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"creativeFieldId" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
-     #{"creativeFieldId" "profileId"}
+     #{:creativeFieldId :profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

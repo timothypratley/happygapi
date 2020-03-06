@@ -1,28 +1,21 @@
 (ns happygapi.abusiveexperiencereport.violatingSites
-  "Abusive Experience Report API
+  "Abusive Experience Report API: violatingSites.
   Views Abusive Experience Report data, and gets a list of sites that have a significant number of abusive experiences.
-  See: https://developers.google.com/abusive-experience-report/"
+  See: https://developers.google.com/abusive-experience-report/api/reference/rest/v1/violatingSites"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "abusiveexperiencereport_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/abusive-experience-report/api/reference/rest/v1/violatingSites/list
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Lists sites that are failing in the Abusive Experience Report."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

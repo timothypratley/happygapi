@@ -1,33 +1,27 @@
 (ns happygapi.content.accounts
-  "Content API for Shopping
+  "Content API for Shopping: accounts.
   Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-content"
+  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "content_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/get
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
-  
   Retrieves a Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -38,42 +32,63 @@
      auth))))
 
 (defn insert$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/insert
+  
+  Required parameters: merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:websiteUrl string,
+   :name string,
+   :adsLinks [{:adsId string, :status string}],
+   :businessInformation {:address AccountAddress,
+                         :customerService AccountCustomerService,
+                         :phoneNumber string},
+   :id string,
+   :kind string,
+   :sellerId string,
+   :adultContent boolean,
+   :youtubeChannelLinks [{:channelId string, :status string}],
+   :googleMyBusinessLink {:gmbEmail string, :status string},
+   :users [{:admin boolean,
+            :emailAddress string,
+            :orderManager boolean,
+            :paymentsAnalyst boolean,
+            :paymentsManager boolean}]}
   
   Creates a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn authinfo$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/authinfo
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Returns information about the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -90,75 +105,94 @@
      auth))))
 
 (defn claimwebsite$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/claimwebsite
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: overwrite
-  
   Claims the website of a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/claimwebsite"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/update
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:websiteUrl string,
+   :name string,
+   :adsLinks [{:adsId string, :status string}],
+   :businessInformation {:address AccountAddress,
+                         :customerService AccountCustomerService,
+                         :phoneNumber string},
+   :id string,
+   :kind string,
+   :sellerId string,
+   :adultContent boolean,
+   :youtubeChannelLinks [{:channelId string, :status string}],
+   :googleMyBusinessLink {:gmbEmail string, :status string},
+   :users [{:admin boolean,
+            :emailAddress string,
+            :orderManager boolean,
+            :paymentsAnalyst boolean,
+            :paymentsManager boolean}]}
   
   Updates a Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn delete$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/delete
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: force
-  
   Deletes a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -169,21 +203,21 @@
      auth))))
 
 (defn list$
-  "Required parameters: merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/list
+  
+  Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
-  
   Lists the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts"
-     #{"merchantId"}
+     #{:merchantId}
      args)
     (merge-with
      merge
@@ -194,48 +228,56 @@
      auth))))
 
 (defn link$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/link
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:action string,
+   :linkType string,
+   :linkedAccountId string,
+   :services [string]}
   
   Performs an action on a link between two Merchant Center accounts, namely accountId and linkedAccountId."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/link"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn listlinks$
-  "Required parameters: accountId, merchantId
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/listlinks
+  
+  Required parameters: accountId, merchantId
   
   Optional parameters: maxResults, pageToken
-  
   Returns the list of accounts linked to your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"accountId" "merchantId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/listlinks"
-     #{"accountId" "merchantId"}
+     #{:accountId :merchantId}
      args)
     (merge-with
      merge
@@ -246,15 +288,27 @@
      auth))))
 
 (defn custombatch$
-  "Required parameters: none
+  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/custombatch
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:account Account,
+              :accountId string,
+              :batchId integer,
+              :force boolean,
+              :linkRequest AccountsCustomBatchRequestEntryLinkRequest,
+              :merchantId string,
+              :method string,
+              :overwrite boolean}]}
   
   Retrieves, inserts, updates, and deletes multiple Merchant Center (sub-)accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -264,10 +318,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

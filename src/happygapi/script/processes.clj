@@ -1,29 +1,23 @@
 (ns happygapi.script.processes
-  "Apps Script API
+  "Apps Script API: processes.
   Manages and executes Google Apps Script projects.
   
-  See: https://developers.google.com/apps-script/api/"
+  See: https://developers.google.com/apps-script/api/api/reference/rest/v1/processes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "script_schema.edn"))))
+            [happy.util :as util]))
 
 (defn listScriptProcesses$
-  "Required parameters: none
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/processes/listScriptProcesses
+  
+  Required parameters: none
   
   Optional parameters: scriptProcessFilter.startTime, scriptProcessFilter.endTime, scriptProcessFilter.userAccessLevels, scriptId, scriptProcessFilter.deploymentId, pageToken, pageSize, scriptProcessFilter.functionName, scriptProcessFilter.statuses, scriptProcessFilter.types
-  
   List information about a script's executed processes, such as process type
   and current status."
   {:scopes ["https://www.googleapis.com/auth/script.processes"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -40,16 +34,16 @@
      auth))))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/processes/list
+  
+  Required parameters: none
   
   Optional parameters: userProcessFilter.deploymentId, userProcessFilter.functionName, userProcessFilter.userAccessLevels, userProcessFilter.scriptId, pageToken, userProcessFilter.statuses, pageSize, userProcessFilter.types, userProcessFilter.startTime, userProcessFilter.endTime, userProcessFilter.projectName
-  
   List information about processes made by or on behalf of a user,
   such as process type and current status."
   {:scopes ["https://www.googleapis.com/auth/script.processes"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

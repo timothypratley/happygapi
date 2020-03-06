@@ -1,27 +1,21 @@
 (ns happygapi.games.achievementDefinitions
-  "Google Play Game Services API
+  "Google Play Game Services API: achievementDefinitions.
   The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/"
+  See: https://developers.google.com/games/services/api/reference/rest/v1/achievementDefinitions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "games_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/games/services/api/reference/rest/v1/achievementDefinitions/list
+  
+  Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
-  
   Lists all the achievement definitions for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

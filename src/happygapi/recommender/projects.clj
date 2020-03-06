@@ -1,34 +1,28 @@
 (ns happygapi.recommender.projects
-  "Recommender API
+  "Recommender API: projects.
   
-  See: https://cloud.google.com/recommender/docs/"
+  See: https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "recommender_schema.edn"))))
+            [happy.util :as util]))
 
 (defn locations-recommenders-recommendations-list$
-  "Required parameters: parent
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects/locations/recommenders/recommendations/list
+  
+  Required parameters: parent
   
   Optional parameters: filter, pageToken, pageSize
-  
   Lists recommendations for a Cloud project. Requires the recommender.*.list
   IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://recommender.googleapis.com/"
      "v1beta1/{+parent}/recommendations"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -39,22 +33,22 @@
      auth))))
 
 (defn locations-recommenders-recommendations-get$
-  "Required parameters: name
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects/locations/recommenders/recommendations/get
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Gets the requested recommendation. Requires the recommender.*.get
   IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://recommender.googleapis.com/"
      "v1beta1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -65,9 +59,15 @@
      auth))))
 
 (defn locations-recommenders-recommendations-markClaimed$
-  "Required parameters: name
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects/locations/recommenders/recommendations/markClaimed
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:stateMetadata {}, :etag string}
   
   Marks the Recommendation State as Claimed. Users can use this method to
   indicate to the Recommender API that they are starting to apply the
@@ -81,29 +81,34 @@
   recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://recommender.googleapis.com/"
      "v1beta1/{+name}:markClaimed"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn locations-recommenders-recommendations-markSucceeded$
-  "Required parameters: name
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects/locations/recommenders/recommendations/markSucceeded
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:stateMetadata {}, :etag string}
   
   Marks the Recommendation State as Succeeded. Users can use this method to
   indicate to the Recommender API that they have applied the recommendation
@@ -118,29 +123,34 @@
   recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://recommender.googleapis.com/"
      "v1beta1/{+name}:markSucceeded"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn locations-recommenders-recommendations-markFailed$
-  "Required parameters: name
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1beta1/projects/locations/recommenders/recommendations/markFailed
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:stateMetadata {}, :etag string}
   
   Marks the Recommendation State as Failed. Users can use this method to
   indicate to the Recommender API that they have applied the recommendation
@@ -155,21 +165,20 @@
   recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://recommender.googleapis.com/"
      "v1beta1/{+name}:markFailed"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

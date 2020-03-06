@@ -1,33 +1,27 @@
 (ns happygapi.dfareporting.sizes
-  "DCM/DFA Reporting And Trafficking API
+  "DCM/DFA Reporting And Trafficking API: sizes.
   Manages your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "dfareporting_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: id, profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/get
+  
+  Required parameters: id, profileId
   
   Optional parameters: none
-  
   Gets one size by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"id" "profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:id :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/sizes/{id}"
-     #{"id" "profileId"}
+     #{:id :profileId}
      args)
     (merge-with
      merge
@@ -38,48 +32,57 @@
      auth))))
 
 (defn insert$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/insert
+  
+  Required parameters: profileId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:height integer,
+   :iab boolean,
+   :id string,
+   :kind string,
+   :width integer}
   
   Inserts a new size."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/sizes"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: profileId
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/list
+  
+  Required parameters: profileId
   
   Optional parameters: height, iabStandard, ids, width
-  
   Retrieves a list of sizes, possibly filtered. Retrieved sizes are globally unique and may include values not currently in use by your account. Due to this, the list of sizes returned by this method may differ from the list seen in the Trafficking UI."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"profileId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/sizes"
-     #{"profileId"}
+     #{:profileId}
      args)
     (merge-with
      merge

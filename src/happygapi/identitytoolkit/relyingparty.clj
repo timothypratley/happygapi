@@ -1,27 +1,32 @@
 (ns happygapi.identitytoolkit.relyingparty
-  "Google Identity Toolkit API
+  "Google Identity Toolkit API: relyingparty.
   Help the third party sites to implement federated login.
-  See: https://developers.google.com/identity-toolkit/v3/"
+  See: https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "identitytoolkit_schema.edn"))))
+            [happy.util :as util]))
 
 (defn verifyPhoneNumber$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/verifyPhoneNumber
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:code string,
+   :idToken string,
+   :operation string,
+   :phoneNumber string,
+   :sessionInfo string,
+   :temporaryProof string,
+   :verificationProof string}
   
   Verifies ownership of a phone number and creates/updates the user account accordingly."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -31,24 +36,29 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn deleteAccount$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/deleteAccount
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:delegatedProjectNumber string, :idToken string, :localId string}
   
   Delete user account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -58,24 +68,42 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn signupNewUser$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/signupNewUser
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tenantId string,
+   :tenantProjectNumber string,
+   :email string,
+   :disabled boolean,
+   :instanceId string,
+   :password string,
+   :displayName string,
+   :idToken string,
+   :captchaResponse string,
+   :captchaChallenge string,
+   :emailVerified boolean,
+   :localId string,
+   :photoUrl string,
+   :phoneNumber string}
   
   Signup new user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -85,24 +113,64 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn setProjectConfig$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/setProjectConfig
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:allowPasswordUser boolean,
+   :authorizedDomains [string],
+   :legacyResetPasswordTemplate {:body string,
+                                 :format string,
+                                 :from string,
+                                 :fromDisplayName string,
+                                 :replyTo string,
+                                 :subject string},
+   :changeEmailTemplate {:body string,
+                         :format string,
+                         :from string,
+                         :fromDisplayName string,
+                         :replyTo string,
+                         :subject string},
+   :idpConfig [{:clientId string,
+                :enabled boolean,
+                :experimentPercent integer,
+                :provider string,
+                :secret string,
+                :whitelistedAudiences [string]}],
+   :apiKey string,
+   :enableAnonymousUser boolean,
+   :verifyEmailTemplate {:body string,
+                         :format string,
+                         :from string,
+                         :fromDisplayName string,
+                         :replyTo string,
+                         :subject string},
+   :useEmailSending boolean,
+   :delegatedProjectNumber string,
+   :resetPasswordTemplate {:body string,
+                           :format string,
+                           :from string,
+                           :fromDisplayName string,
+                           :replyTo string,
+                           :subject string}}
   
   Set project configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -112,24 +180,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getProjectConfig$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/getProjectConfig
+  
+  Required parameters: none
   
   Optional parameters: delegatedProjectNumber, projectNumber
-  
   Get project configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -146,15 +214,30 @@
      auth))))
 
 (defn verifyPassword$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/verifyPassword
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tenantId string,
+   :tenantProjectNumber string,
+   :email string,
+   :returnSecureToken boolean,
+   :instanceId string,
+   :password string,
+   :idToken string,
+   :captchaResponse string,
+   :captchaChallenge string,
+   :pendingIdToken string,
+   :delegatedProjectNumber string}
   
   Verifies the user entered password."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -164,24 +247,32 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn sendVerificationCode$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/sendVerificationCode
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:iosReceipt string,
+   :iosSecret string,
+   :phoneNumber string,
+   :recaptchaToken string}
   
   Send SMS verification code."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -191,24 +282,32 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn verifyCustomToken$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/verifyCustomToken
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:delegatedProjectNumber string,
+   :instanceId string,
+   :returnSecureToken boolean,
+   :token string}
   
   Verifies the developer asserted ID token."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -218,24 +317,41 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn verifyAssertion$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/verifyAssertion
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tenantId string,
+   :tenantProjectNumber string,
+   :autoCreate boolean,
+   :returnSecureToken boolean,
+   :sessionId string,
+   :instanceId string,
+   :idToken string,
+   :requestUri string,
+   :postBody string,
+   :returnRefreshToken boolean,
+   :pendingIdToken string,
+   :returnIdpCredential boolean,
+   :delegatedProjectNumber string}
   
   Verifies the assertion returned by the IdP."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -245,24 +361,29 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn emailLinkSignin$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/emailLinkSignin
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:email string, :idToken string, :oobCode string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -272,24 +393,33 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getAccountInfo$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/getAccountInfo
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:delegatedProjectNumber string,
+   :email [string],
+   :idToken string,
+   :localId [string],
+   :phoneNumber [string]}
   
   Returns the account info."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -299,24 +429,32 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn resetPassword$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/resetPassword
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:email string,
+   :newPassword string,
+   :oldPassword string,
+   :oobCode string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -326,24 +464,43 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getOobConfirmationCode$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/getOobConfirmationCode
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:newEmail string,
+   :continueUrl string,
+   :userIp string,
+   :email string,
+   :iOSAppStoreId string,
+   :captchaResp string,
+   :idToken string,
+   :androidInstallApp boolean,
+   :challenge string,
+   :kind string,
+   :requestType string,
+   :iOSBundleId string,
+   :androidPackageName string,
+   :canHandleCodeInApp boolean,
+   :androidMinimumVersion string}
   
   Get a code for user action confirmation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -353,24 +510,29 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn signOutUser$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/signOutUser
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:instanceId string, :localId string}
   
   Sign out user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -380,24 +542,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getPublicKeys$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/getPublicKeys
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Get token signing public key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -414,15 +576,42 @@
      auth))))
 
 (defn setAccountInfo$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/setAccountInfo
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:email string,
+   :deleteProvider [string],
+   :returnSecureToken boolean,
+   :validSince string,
+   :instanceId string,
+   :password string,
+   :displayName string,
+   :upgradeToFederatedLogin boolean,
+   :customAttributes string,
+   :createdAt string,
+   :idToken string,
+   :deleteAttribute [string],
+   :captchaResponse string,
+   :captchaChallenge string,
+   :emailVerified boolean,
+   :localId string,
+   :photoUrl string,
+   :oobCode string,
+   :disableUser boolean,
+   :phoneNumber string,
+   :lastLoginAt string,
+   :provider [string],
+   :delegatedProjectNumber string}
   
   Set account info for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -432,25 +621,68 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn uploadAccount$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/uploadAccount
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:blockSize integer,
+   :memoryCost integer,
+   :targetProjectId string,
+   :parallelization integer,
+   :hashAlgorithm string,
+   :cpuMemCost integer,
+   :sanityCheck boolean,
+   :dkLen integer,
+   :allowOverwrite boolean,
+   :rounds integer,
+   :signerKey string,
+   :saltSeparator string,
+   :delegatedProjectNumber string,
+   :users [{:salt string,
+            :email string,
+            :validSince string,
+            :disabled boolean,
+            :displayName string,
+            :providerUserInfo [{:displayName string,
+                                :email string,
+                                :federatedId string,
+                                :phoneNumber string,
+                                :photoUrl string,
+                                :providerId string,
+                                :rawId string,
+                                :screenName string}],
+            :customAttributes string,
+            :createdAt string,
+            :emailVerified boolean,
+            :customAuth boolean,
+            :localId string,
+            :passwordUpdatedAt number,
+            :photoUrl string,
+            :rawPassword string,
+            :passwordHash string,
+            :version integer,
+            :screenName string,
+            :phoneNumber string,
+            :lastLoginAt string}]}
   
   Batch upload existing user accounts."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -460,25 +692,33 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn downloadAccount$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/downloadAccount
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:delegatedProjectNumber string,
+   :maxResults integer,
+   :nextPageToken string,
+   :targetProjectId string}
   
   Batch download user accounts."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -488,24 +728,24 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn getRecaptchaParam$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/getRecaptchaParam
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Get recaptcha secure param."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -522,15 +762,35 @@
      auth))))
 
 (defn createAuthUri$
-  "Required parameters: none
+  "https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty/createAuthUri
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tenantId string,
+   :providerId string,
+   :clientId string,
+   :tenantProjectNumber string,
+   :continueUri string,
+   :sessionId string,
+   :hostedDomain string,
+   :otaApp string,
+   :openidRealm string,
+   :customParameter {},
+   :authFlowType string,
+   :oauthConsumerKey string,
+   :oauthScope string,
+   :appId string,
+   :identifier string,
+   :context string}
   
   Creates the URI used by the IdP to authenticate the user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -540,10 +800,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

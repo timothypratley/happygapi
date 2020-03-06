@@ -1,27 +1,21 @@
 (ns happygapi.webfonts.webfonts
-  "Google Fonts Developer API
+  "Google Fonts Developer API: webfonts.
   Accesses the metadata for all families served by Google Fonts, providing a list of families currently available (including available styles and a list of supported script subsets).
-  See: https://developers.google.com/fonts/docs/developer_api"
+  See: https://developers.google.com/fonts/docs/developer_apiapi/reference/rest/v1/webfonts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "webfonts_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://developers.google.com/fonts/docs/developer_apiapi/reference/rest/v1/webfonts/list
+  
+  Required parameters: none
   
   Optional parameters: sort
-  
   Retrieves the list of fonts currently served by the Google Fonts Developer API"
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

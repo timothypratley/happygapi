@@ -1,33 +1,27 @@
 (ns happygapi.androidpublisher.inappproducts
-  "Google Play Developer API
+  "Google Play Developer API: inappproducts.
   Accesses Android application developers' Google Play accounts.
-  See: https://developers.google.com/android-publisher"
+  See: https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "androidpublisher_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: packageName, sku
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/delete
+  
+  Required parameters: packageName, sku
   
   Optional parameters: none
-  
   Delete an in-app product for an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"sku" "packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName :sku})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts/{sku}"
-     #{"sku" "packageName"}
+     #{:packageName :sku}
      args)
     (merge-with
      merge
@@ -38,21 +32,21 @@
      auth))))
 
 (defn get$
-  "Required parameters: packageName, sku
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/get
+  
+  Required parameters: packageName, sku
   
   Optional parameters: none
-  
   Returns information about the in-app product specified."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"sku" "packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName :sku})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts/{sku}"
-     #{"sku" "packageName"}
+     #{:packageName :sku}
      args)
     (merge-with
      merge
@@ -63,48 +57,63 @@
      auth))))
 
 (defn insert$
-  "Required parameters: packageName
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/insert
+  
+  Required parameters: packageName
   
   Optional parameters: autoConvertMissingPrices
+  
+  Body: 
+  
+  {:packageName string,
+   :purchaseType string,
+   :sku string,
+   :prices {},
+   :trialPeriod string,
+   :status string,
+   :subscriptionPeriod string,
+   :gracePeriod string,
+   :defaultPrice {:currency string, :priceMicros string},
+   :listings {},
+   :defaultLanguage string}
   
   Creates a new in-app product for an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts"
-     #{"packageName"}
+     #{:packageName}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: packageName
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/list
+  
+  Required parameters: packageName
   
   Optional parameters: maxResults, startIndex, token
-  
   List all the in-app products for an Android app, both subscriptions and managed in-app products.."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts"
-     #{"packageName"}
+     #{:packageName}
      args)
     (merge-with
      merge
@@ -115,53 +124,85 @@
      auth))))
 
 (defn patch$
-  "Required parameters: packageName, sku
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/patch
+  
+  Required parameters: packageName, sku
   
   Optional parameters: autoConvertMissingPrices
   
+  Body: 
+  
+  {:packageName string,
+   :purchaseType string,
+   :sku string,
+   :prices {},
+   :trialPeriod string,
+   :status string,
+   :subscriptionPeriod string,
+   :gracePeriod string,
+   :defaultPrice {:currency string, :priceMicros string},
+   :listings {},
+   :defaultLanguage string}
+  
   Updates the details of an in-app product. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"sku" "packageName"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:packageName :sku})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts/{sku}"
-     #{"sku" "packageName"}
+     #{:packageName :sku}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn update$
-  "Required parameters: packageName, sku
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/update
+  
+  Required parameters: packageName, sku
   
   Optional parameters: autoConvertMissingPrices
+  
+  Body: 
+  
+  {:packageName string,
+   :purchaseType string,
+   :sku string,
+   :prices {},
+   :trialPeriod string,
+   :status string,
+   :subscriptionPeriod string,
+   :gracePeriod string,
+   :defaultPrice {:currency string, :priceMicros string},
+   :listings {},
+   :defaultLanguage string}
   
   Updates the details of an in-app product."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"sku" "packageName"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:packageName :sku})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/inappproducts/{sku}"
-     #{"sku" "packageName"}
+     #{:packageName :sku}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

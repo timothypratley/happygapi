@@ -1,28 +1,22 @@
 (ns happygapi.domainsrdap.v1
-  "Domains RDAP API
+  "Domains RDAP API: v1.
   Read-only public API that lets users search for information about domain names.
-  See: https://developers.google.com/domains/rdap/"
+  See: https://developers.google.com/domains/rdap/api/reference/rest/v1/v1"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "domainsrdap_schema.edn"))))
+            [happy.util :as util]))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/domains/rdap/api/reference/rest/v1/getDomains
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   The RDAP API recognizes this command from the RDAP specification but
   does not support it. The response is a formatted 501 error."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -39,16 +33,16 @@
      auth))))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/domains/rdap/api/reference/rest/v1/getEntities
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   The RDAP API recognizes this command from the RDAP specification but
   does not support it. The response is a formatted 501 error."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -65,16 +59,16 @@
      auth))))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/domains/rdap/api/reference/rest/v1/getNameservers
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   The RDAP API recognizes this command from the RDAP specification but
   does not support it. The response is a formatted 501 error."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -91,15 +85,15 @@
      auth))))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/domains/rdap/api/reference/rest/v1/getHelp
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   Get help information for the RDAP API, including links to documentation."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -116,16 +110,16 @@
      auth))))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/domains/rdap/api/reference/rest/v1/getIp
+  
+  Required parameters: none
   
   Optional parameters: none
-  
   The RDAP API recognizes this command from the RDAP specification but
   does not support it. The response is a formatted 501 error."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

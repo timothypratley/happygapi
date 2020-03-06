@@ -1,33 +1,28 @@
 (ns happygapi.sql.users
-  "Cloud SQL Admin API
+  "Cloud SQL Admin API: users.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/"
+  See: https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas (edn/read-string (slurp (io/resource "sql_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: project, instance
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/users/delete
+  
+  Required parameters: instance, project
   
   Optional parameters: host, name, resourceName
-  
   Deletes a user from a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instance :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
-     #{"project" "instance"}
+     #{:instance :project}
      args)
     (merge-with
      merge
@@ -38,50 +33,62 @@
      auth))))
 
 (defn insert$
-  "Required parameters: instance, project
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/users/insert
+  
+  Required parameters: instance, project
   
   Optional parameters: parent
+  
+  Body: 
+  
+  {:project string,
+   :host string,
+   :kind string,
+   :etag string,
+   :password string,
+   :sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
+   :instance string,
+   :name string}
   
   Creates a new user in a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
-     #{"project" "instance"}
+     #{:instance :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn list$
-  "Required parameters: instance, project
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/users/list
+  
+  Required parameters: instance, project
   
   Optional parameters: parent
-  
   Lists users in the specified Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
-     #{"project" "instance"}
+     #{:instance :project}
      args)
     (merge-with
      merge
@@ -92,29 +99,41 @@
      auth))))
 
 (defn update$
-  "Required parameters: project, instance
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/users/update
+  
+  Required parameters: instance, project
   
   Optional parameters: host, name, resourceName
+  
+  Body: 
+  
+  {:project string,
+   :host string,
+   :kind string,
+   :etag string,
+   :password string,
+   :sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
+   :instance string,
+   :name string}
   
   Updates an existing user in a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"project" "instance"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:instance :project})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
-     #{"project" "instance"}
+     #{:instance :project}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

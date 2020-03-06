@@ -1,34 +1,27 @@
 (ns happygapi.serviceconsumermanagement.services
-  "Service Consumer Management API
+  "Service Consumer Management API: services.
   Manages the service consumers of a Service Infrastructure service.
-  See: https://cloud.google.com/service-consumer-management/docs/overview"
+  See: https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "serviceconsumermanagement_schema.edn"))))
+            [happy.util :as util]))
 
 (defn search$
-  "Required parameters: parent
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/search
+  
+  Required parameters: parent
   
   Optional parameters: query, pageToken, pageSize
-  
   Search tenancy units for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}:search"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -39,9 +32,21 @@
      auth))))
 
 (defn tenancyUnits-addProject$
-  "Required parameters: parent
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/addProject
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:projectConfig {:services [string],
+                   :billingConfig BillingConfig,
+                   :tenantProjectPolicy TenantProjectPolicy,
+                   :folder string,
+                   :labels {},
+                   :serviceAccountConfig ServiceAccountConfig},
+   :tag string}
   
   Add a new tenant project to the tenancy unit.
   There can be a maximum of 512 tenant projects in a tenancy unit.
@@ -51,29 +56,34 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}:addProject"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-deleteProject$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/deleteProject
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tag string}
   
   Deletes the specified project resource identified by a tenant resource tag.
   The mothod removes a project lien with a 'TenantManager' origin if that was
@@ -87,29 +97,40 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:deleteProject"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-applyProjectConfig$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/applyProjectConfig
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:projectConfig {:services [string],
+                   :billingConfig BillingConfig,
+                   :tenantProjectPolicy TenantProjectPolicy,
+                   :folder string,
+                   :labels {},
+                   :serviceAccountConfig ServiceAccountConfig},
+   :tag string}
   
   Apply a configuration to an existing tenant project.
   This project must exist in an active state and have the original owner
@@ -130,29 +151,34 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:applyProjectConfig"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-create$
-  "Required parameters: parent
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/create
+  
+  Required parameters: parent
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tenancyUnitId string}
   
   Creates a tenancy unit with no tenant resources.
   If tenancy unit already exists, it will be returned,
@@ -161,43 +187,42 @@
   TenancyUnit with all fields populated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}/tenancyUnits"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-delete$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/delete
+  
+  Required parameters: name
   
   Optional parameters: none
-  
   Delete a tenancy unit. Before you delete the tenancy unit, there should be
   no tenant resources in it that aren't in a DELETED state.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
@@ -208,10 +233,11 @@
      auth))))
 
 (defn tenancyUnits-list$
-  "Required parameters: parent
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/list
   
-  Optional parameters: pageToken, pageSize, filter
+  Required parameters: parent
   
+  Optional parameters: pageSize, filter, pageToken
   Find the tenancy unit for a managed service and service consumer.
   This method shouldn't be used in a service producer's runtime path, for
   example to find the tenant project number when creating VMs. Service
@@ -219,14 +245,13 @@
   is created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"parent"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}/tenancyUnits"
-     #{"parent"}
+     #{:parent}
      args)
     (merge-with
      merge
@@ -237,9 +262,15 @@
      auth))))
 
 (defn tenancyUnits-attachProject$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/attachProject
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:externalResource string, :reservedResource string, :tag string}
   
   Attach an existing project to the tenancy unit as a new tenant
   resource. The project could either be the tenant project reserved by
@@ -254,29 +285,34 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:attachProject"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-removeProject$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/removeProject
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tag string}
   
   Removes the specified project resource identified by a tenant resource tag.
   The method removes the project lien with 'TenantManager' origin if that
@@ -288,29 +324,34 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:removeProject"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn tenancyUnits-undeleteProject$
-  "Required parameters: name
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/services/tenancyUnits/undeleteProject
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:tag string}
   
   Attempts to undelete a previously deleted tenant project. The project must
   be in a DELETED state.
@@ -321,21 +362,20 @@
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:undeleteProject"
-     #{"name"}
+     #{:name}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

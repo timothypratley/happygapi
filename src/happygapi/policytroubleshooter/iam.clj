@@ -1,29 +1,29 @@
 (ns happygapi.policytroubleshooter.iam
-  "Policy Troubleshooter API
+  "Policy Troubleshooter API: iam.
   
-  See: https://cloud.google.com/iam/"
+  See: https://cloud.google.com/iam/api/reference/rest/v1/iam"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string
-   (slurp (io/resource "policytroubleshooter_schema.edn"))))
+            [happy.util :as util]))
 
 (defn troubleshoot$
-  "Required parameters: none
+  "https://cloud.google.com/iam/api/reference/rest/v1/iam/troubleshoot
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:accessTuple {:fullResourceName string,
+                 :principal string,
+                 :permission string}}
   
   Checks whether a member has a specific permission for a specific resource,
   and explains why the member does or does not have that permission."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -33,10 +33,10 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

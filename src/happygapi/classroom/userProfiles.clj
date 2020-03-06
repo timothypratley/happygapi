@@ -1,22 +1,17 @@
 (ns happygapi.classroom.userProfiles
-  "Google Classroom API
+  "Google Classroom API: userProfiles.
   Manages classes, rosters, and invitations in Google Classroom.
-  See: https://developers.google.com/classroom/"
+  See: https://developers.google.com/classroom/api/reference/rest/v1/userProfiles"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "classroom_schema.edn"))))
+            [happy.util :as util]))
 
 (defn get$
-  "Required parameters: userId
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/get
+  
+  Required parameters: userId
   
   Optional parameters: none
-  
   Returns a user profile.
   
   This method returns the following error codes:
@@ -29,143 +24,13 @@
             "https://www.googleapis.com/auth/classroom.rosters"
             "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"userId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{userId}"
-     #{"userId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn guardians-delete$
-  "Required parameters: studentId, guardianId
-  
-  Optional parameters: none
-  
-  Deletes a guardian.
-  
-  The guardian will no longer receive guardian notifications and the guardian
-  will no longer be accessible via the API.
-  
-  This method returns the following error codes:
-  
-  * `PERMISSION_DENIED` if no user that matches the provided `student_id`
-    is visible to the requesting user, if the requesting user is not
-    permitted to manage guardians for the student identified by the
-    `student_id`, if guardians are not enabled for the domain in question,
-    or for other access errors.
-  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
-    be recognized (it is not an email address, nor a `student_id` from the
-    API).
-  * `NOT_FOUND` if the requesting user is permitted to modify guardians for
-    the requested `student_id`, but no `Guardian` record exists for that
-    student with the provided `guardian_id`."
-  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"guardianId" "studentId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/userProfiles/{studentId}/guardians/{guardianId}"
-     #{"guardianId" "studentId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn guardians-list$
-  "Required parameters: studentId
-  
-  Optional parameters: pageToken, invitedEmailAddress, pageSize
-  
-  Returns a list of guardians that the requesting user is permitted to
-  view, restricted to those that match the request.
-  
-  To list guardians for any student that the requesting user may view
-  guardians for, use the literal character `-` for the student ID.
-  
-  This method returns the following error codes:
-  
-  * `PERMISSION_DENIED` if a `student_id` is specified, and the requesting
-    user is not permitted to view guardian information for that student, if
-    `\"-\"` is specified as the `student_id` and the user is not a domain
-    administrator, if guardians are not enabled for the domain in question,
-    if the `invited_email_address` filter is set by a user who is not a
-    domain administrator, or for other access errors.
-  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
-    be recognized (it is not an email address, nor a `student_id` from the
-    API, nor the literal string `me`). May also be returned if an invalid
-    `page_token` is provided.
-  * `NOT_FOUND` if a `student_id` is specified, and its format can be
-    recognized, but Classroom has no record of that student."
-  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
-            "https://www.googleapis.com/auth/classroom.guardianlinks.students"
-            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"studentId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/userProfiles/{studentId}/guardians"
-     #{"studentId"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn guardians-get$
-  "Required parameters: studentId, guardianId
-  
-  Optional parameters: none
-  
-  Returns a specific guardian.
-  
-  This method returns the following error codes:
-  
-  * `PERMISSION_DENIED` if no user that matches the provided `student_id`
-    is visible to the requesting user, if the requesting user is not
-    permitted to view guardian information for the student identified by the
-    `student_id`, if guardians are not enabled for the domain in question,
-    or for other access errors.
-  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
-    be recognized (it is not an email address, nor a `student_id` from the
-    API, nor the literal string `me`).
-  * `NOT_FOUND` if the requesting user is permitted to view guardians for
-    the requested `student_id`, but no `Guardian` record exists for that
-    student that matches the provided `guardian_id`."
-  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
-            "https://www.googleapis.com/auth/classroom.guardianlinks.students"
-            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"guardianId" "studentId"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/userProfiles/{studentId}/guardians/{guardianId}"
-     #{"guardianId" "studentId"}
+     #{:userId}
      args)
     (merge-with
      merge
@@ -176,10 +41,11 @@
      auth))))
 
 (defn guardianInvitations-list$
-  "Required parameters: studentId
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardianInvitations/list
   
-  Optional parameters: pageToken, invitedEmailAddress, states, pageSize
+  Required parameters: studentId
   
+  Optional parameters: invitedEmailAddress, states, pageSize, pageToken
   Returns a list of guardian invitations that the requesting user is
   permitted to view, filtered by the parameters provided.
   
@@ -199,14 +65,13 @@
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"studentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:studentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations"
-     #{"studentId"}
+     #{:studentId}
      args)
     (merge-with
      merge
@@ -217,10 +82,11 @@
      auth))))
 
 (defn guardianInvitations-get$
-  "Required parameters: invitationId, studentId
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardianInvitations/get
+  
+  Required parameters: invitationId, studentId
   
   Optional parameters: none
-  
   Returns a specific guardian invitation.
   
   This method returns the following error codes:
@@ -238,14 +104,13 @@
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"studentId" "invitationId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:studentId :invitationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations/{invitationId}"
-     #{"studentId" "invitationId"}
+     #{:studentId :invitationId}
      args)
     (merge-with
      merge
@@ -256,9 +121,19 @@
      auth))))
 
 (defn guardianInvitations-patch$
-  "Required parameters: studentId, invitationId
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardianInvitations/patch
+  
+  Required parameters: invitationId, studentId
   
   Optional parameters: updateMask
+  
+  Body: 
+  
+  {:creationTime string,
+   :invitationId string,
+   :studentId string,
+   :state string,
+   :invitedEmailAddress string}
   
   Modifies a guardian invitation.
   
@@ -279,28 +154,39 @@
     Classroom has no record of that student, or if the `id` field does not
     refer to a guardian invitation known to Classroom."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"studentId" "invitationId"})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{:studentId :invitationId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations/{invitationId}"
-     #{"studentId" "invitationId"}
+     #{:studentId :invitationId}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
      auth))))
 
 (defn guardianInvitations-create$
-  "Required parameters: studentId
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardianInvitations/create
+  
+  Required parameters: studentId
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :invitationId string,
+   :studentId string,
+   :state string,
+   :invitedEmailAddress string}
   
   Creates a guardian invitation, and sends an email to the guardian asking
   them to confirm that they are the student's guardian.
@@ -334,21 +220,149 @@
     `Guardian` for this user."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"studentId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:studentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations"
-     #{"studentId"}
+     #{:studentId}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn guardians-delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardians/delete
+  
+  Required parameters: studentId, guardianId
+  
+  Optional parameters: none
+  Deletes a guardian.
+  
+  The guardian will no longer receive guardian notifications and the guardian
+  will no longer be accessible via the API.
+  
+  This method returns the following error codes:
+  
+  * `PERMISSION_DENIED` if no user that matches the provided `student_id`
+    is visible to the requesting user, if the requesting user is not
+    permitted to manage guardians for the student identified by the
+    `student_id`, if guardians are not enabled for the domain in question,
+    or for other access errors.
+  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
+    be recognized (it is not an email address, nor a `student_id` from the
+    API).
+  * `NOT_FOUND` if the requesting user is permitted to modify guardians for
+    the requested `student_id`, but no `Guardian` record exists for that
+    student with the provided `guardian_id`."
+  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:guardianId :studentId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/userProfiles/{studentId}/guardians/{guardianId}"
+     #{:guardianId :studentId}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
+     auth))))
+
+(defn guardians-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardians/list
+  
+  Required parameters: studentId
+  
+  Optional parameters: pageToken, invitedEmailAddress, pageSize
+  Returns a list of guardians that the requesting user is permitted to
+  view, restricted to those that match the request.
+  
+  To list guardians for any student that the requesting user may view
+  guardians for, use the literal character `-` for the student ID.
+  
+  This method returns the following error codes:
+  
+  * `PERMISSION_DENIED` if a `student_id` is specified, and the requesting
+    user is not permitted to view guardian information for that student, if
+    `\"-\"` is specified as the `student_id` and the user is not a domain
+    administrator, if guardians are not enabled for the domain in question,
+    if the `invited_email_address` filter is set by a user who is not a
+    domain administrator, or for other access errors.
+  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
+    be recognized (it is not an email address, nor a `student_id` from the
+    API, nor the literal string `me`). May also be returned if an invalid
+    `page_token` is provided.
+  * `NOT_FOUND` if a `student_id` is specified, and its format can be
+    recognized, but Classroom has no record of that student."
+  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students"
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:studentId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/userProfiles/{studentId}/guardians"
+     #{:studentId}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn guardians-get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardians/get
+  
+  Required parameters: guardianId, studentId
+  
+  Optional parameters: none
+  Returns a specific guardian.
+  
+  This method returns the following error codes:
+  
+  * `PERMISSION_DENIED` if no user that matches the provided `student_id`
+    is visible to the requesting user, if the requesting user is not
+    permitted to view guardian information for the student identified by the
+    `student_id`, if guardians are not enabled for the domain in question,
+    or for other access errors.
+  * `INVALID_ARGUMENT` if a `student_id` is specified, but its format cannot
+    be recognized (it is not an email address, nor a `student_id` from the
+    API, nor the literal string `me`).
+  * `NOT_FOUND` if the requesting user is permitted to view guardians for
+    the requested `student_id`, but no `Guardian` record exists for that
+    student that matches the provided `guardian_id`."
+  {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students"
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:guardianId :studentId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/userProfiles/{studentId}/guardians/{guardianId}"
+     #{:guardianId :studentId}
+     args)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
      auth))))

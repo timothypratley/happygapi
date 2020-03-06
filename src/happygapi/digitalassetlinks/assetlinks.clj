@@ -1,22 +1,17 @@
 (ns happygapi.digitalassetlinks.assetlinks
-  "Digital Asset Links API
+  "Digital Asset Links API: assetlinks.
   Discovers relationships between online assets such as websites or mobile apps.
-  See: https://developers.google.com/digital-asset-links/"
+  See: https://developers.google.com/digital-asset-links/api/reference/rest/v1/assetlinks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "digitalassetlinks_schema.edn"))))
+            [happy.util :as util]))
 
 (defn check$
-  "Required parameters: none
+  "https://developers.google.com/digital-asset-links/api/reference/rest/v1/assetlinks/check
   
-  Optional parameters: source.androidApp.certificate.sha256Fingerprint, relation, target.web.site, target.androidApp.certificate.sha256Fingerprint, source.web.site, source.androidApp.packageName, target.androidApp.packageName
+  Required parameters: none
   
+  Optional parameters: target.androidApp.certificate.sha256Fingerprint, source.web.site, source.androidApp.packageName, target.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation, target.web.site
   Determines whether the specified (directional) relationship exists between
   the specified source and target assets.
   
@@ -42,8 +37,7 @@
   specification](https://github.com/google/digitalassetlinks/blob/master/well-known/details.md)."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

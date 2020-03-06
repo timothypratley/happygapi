@@ -1,50 +1,25 @@
 (ns happygapi.cloudbilling.projects
-  "Cloud Billing API
+  "Cloud Billing API: projects.
   Allows developers to manage billing for their Google Cloud Platform projects
       programmatically.
-  See: https://cloud.google.com/billing/"
+  See: https://cloud.google.com/billing/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "cloudbilling_schema.edn"))))
-
-(defn getBillingInfo$
-  "Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the billing information for a project. The current authenticated user
-  must have [permission to view the
-  project](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo
-  )."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbilling.googleapis.com/"
-     "v1/{+name}/billingInfo"
-     #{"name"}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
+            [happy.util :as util]))
 
 (defn updateBillingInfo$
-  "Required parameters: name
+  "https://cloud.google.com/billing/api/reference/rest/v1/projects/updateBillingInfo
+  
+  Required parameters: name
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:projectId string,
+   :billingAccountName string,
+   :name string,
+   :billingEnabled boolean}
   
   Sets or updates the billing account associated with a project. You specify
   the new billing account by setting the `billing_account_name` in the
@@ -79,21 +54,48 @@
   *open* billing account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"name"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+name}/billingInfo"
-     #{"name"}
+     #{:name}
+     args)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params args,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getBillingInfo$
+  "https://cloud.google.com/billing/api/reference/rest/v1/projects/getBillingInfo
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  Gets the billing information for a project. The current authenticated user
+  must have [permission to view the
+  project](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo
+  )."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth args]
+  {:pre [(util/has-keys? args #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbilling.googleapis.com/"
+     "v1/{+name}/billingInfo"
+     #{:name}
      args)
     (merge-with
      merge
      {:throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

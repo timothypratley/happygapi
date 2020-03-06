@@ -1,22 +1,32 @@
 (ns happygapi.clouddebugger.controller
-  "Stackdriver Debugger API
+  "Cloud Debugger API: controller.
   Examines the call stack and variables of a running application without stopping or slowing it down.
   
-  See: https://cloud.google.com/debugger"
+  See: https://cloud.google.com/debuggerapi/reference/rest/v2/controller"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "clouddebugger_schema.edn"))))
+            [happy.util :as util]))
 
 (defn debuggees-register$
-  "Required parameters: none
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/register
+  
+  Required parameters: none
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:debuggee {:description string,
+              :labels {},
+              :isDisabled boolean,
+              :agentVersion string,
+              :isInactive boolean,
+              :sourceContexts [SourceContext],
+              :uniquifier string,
+              :project string,
+              :status StatusMessage,
+              :id string,
+              :extSourceContexts [ExtendedSourceContext]}}
   
   Registers the debuggee with the controller service.
   
@@ -31,8 +41,7 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/post
     (util/get-url
@@ -42,19 +51,20 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))
 
 (defn debuggees-breakpoints-list$
-  "Required parameters: debuggeeId
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/breakpoints/list
   
-  Optional parameters: successOnTimeout, waitToken
+  Required parameters: debuggeeId
   
+  Optional parameters: waitToken, successOnTimeout
   Returns the list of all active breakpoints for the debuggee.
   
   The breakpoint specification (`location`, `condition`, and `expressions`
@@ -71,14 +81,13 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args]
-  {:pre [(util/has-keys? args #{"debuggeeId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:debuggeeId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/controller/debuggees/{debuggeeId}/breakpoints"
-     #{"debuggeeId"}
+     #{:debuggeeId}
      args)
     (merge-with
      merge
@@ -89,9 +98,30 @@
      auth))))
 
 (defn debuggees-breakpoints-update$
-  "Required parameters: debuggeeId, id
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/breakpoints/update
+  
+  Required parameters: debuggeeId, id
   
   Optional parameters: none
+  
+  Body: 
+  
+  {:breakpoint {:finalTime string,
+                :labels {},
+                :isFinalState boolean,
+                :stackFrames [StackFrame],
+                :createTime string,
+                :evaluatedExpressions [Variable],
+                :status StatusMessage,
+                :id string,
+                :condition string,
+                :expressions [string],
+                :logLevel string,
+                :variableTable [Variable],
+                :action string,
+                :location SourceLocation,
+                :logMessageFormat string,
+                :userEmail string}}
   
   Updates the breakpoint state or mutable fields.
   The entire Breakpoint message must be sent back to the controller service.
@@ -104,21 +134,20 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth args body]
-  {:pre [(util/has-keys? args #{"id" "debuggeeId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:debuggeeId :id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/controller/debuggees/{debuggeeId}/breakpoints/{id}"
-     #{"id" "debuggeeId"}
+     #{:debuggeeId :id}
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
-      :as :json,
-      :content-type :json,
-      :body (json/generate-string body)}
+      :as :json}
      auth))))

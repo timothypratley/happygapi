@@ -1,28 +1,23 @@
 (ns happygapi.dlp.infoTypes
-  "Cloud Data Loss Prevention (DLP) API
+  "Cloud Data Loss Prevention (DLP) API: infoTypes.
   Provides methods for detection, risk analysis, and de-identification of privacy-sensitive fragments in text, images, and Google Cloud Platform storage repositories.
-  See: https://cloud.google.com/dlp/docs/"
+  See: https://cloud.google.com/dlp/docs/api/reference/rest/v2/infoTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas (edn/read-string (slurp (io/resource "dlp_schema.edn"))))
+            [happy.util :as util]))
 
 (defn list$
-  "Required parameters: none
+  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/infoTypes/list
+  
+  Required parameters: none
   
   Optional parameters: languageCode, filter, locationId
-  
   Returns a list of the sensitive information types that the DLP API
   supports. See https://cloud.google.com/dlp/docs/infotypes-reference to
   learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url

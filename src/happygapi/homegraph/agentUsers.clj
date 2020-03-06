@@ -1,22 +1,17 @@
 (ns happygapi.homegraph.agentUsers
-  "HomeGraph API
+  "HomeGraph API: agentUsers.
   
-  See: https://developers.google.com/actions/smarthome/create-app#request-sync"
+  See: https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/agentUsers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "homegraph_schema.edn"))))
+            [happy.util :as util]))
 
 (defn delete$
-  "Required parameters: agentUserId
+  "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/agentUsers/delete
+  
+  Required parameters: agentUserId
   
   Optional parameters: requestId
-  
   Unlinks an agent user from Google. As a result, all data related to this
   user will be deleted.
   
@@ -44,14 +39,13 @@
   URL-encoded."
   {:scopes nil}
   [auth args]
-  {:pre [(util/has-keys? args #{"agentUserId"})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{:agentUserId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/{+agentUserId}"
-     #{"agentUserId"}
+     #{:agentUserId}
      args)
     (merge-with
      merge

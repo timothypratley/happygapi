@@ -1,27 +1,21 @@
 (ns happygapi.alertcenter.v1beta1
-  "G Suite Alert Center API
+  "G Suite Alert Center API: v1beta1.
   Manages alerts on issues affecting your domain.
-  See: https://developers.google.com/admin-sdk/alertcenter/"
+  See: https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/v1beta1"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
-            [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [happy.util :as util]
-            [json-schema.core :as json-schema]))
-
-(def schemas
-  (edn/read-string (slurp (io/resource "alertcenter_schema.edn"))))
+            [happy.util :as util]))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/getSettings
+  
+  Required parameters: none
   
   Optional parameters: customerId
-  
   Returns customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
   [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/get
     (util/get-url
@@ -38,15 +32,20 @@
      auth))))
 
 (defn $
-  "Required parameters: none
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/updateSettings
+  
+  Required parameters: none
   
   Optional parameters: customerId
   
+  Body: 
+  
+  {:notifications [{:cloudPubsubTopic CloudPubsubTopic}]}
+  
   Updates the customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})
-         (json-schema/validate schemas args)]}
+  [auth args body]
+  {:pre [(util/has-keys? args #{})]}
   (util/get-response
    (http/patch
     (util/get-url
@@ -56,7 +55,9 @@
      args)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params args,
       :accept :json,
       :as :json}
