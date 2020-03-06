@@ -9,14 +9,21 @@
 
 (defn method-name
   "To avoid collisions with clojure.core, methods are named like `get$`.
-  Where they are a sub-resource, they are named like `parent-get$`"
+  Where they are a sub-resource, they are named like `parent-get$`."
   [id]
   (str (str/join \- (drop 2 (str/split id #"\."))) \$))
 
-(defn doc-path [id]
+(defn doc-path
+  "Google doc pages follow naming convention."
+  [id]
   (str/join \/ (rest (str/split id #"\."))))
 
 (defn summarize-schema [schema request depth]
+  "Given a json-schema of type definitions,
+  and a request that is a $ref to one of those types,
+  resolves $ref(s) to a depth of 3,
+  discards the distracting information,
+  and returns a pattern for constructing the required input."
   (m/rewrite request
     {:type                 "object"
      :id                   ?id
@@ -41,6 +48,8 @@
        (summarize-schema schema (get schema (keyword ?ref)) (inc depth)))))
 
 (def extract-method
+  "Given an api definition, and an api method definition,
+  produces a defn form."
   (s/rewrite
     [{:baseUrl ?base-url
       :schemas ?schemas
@@ -53,7 +62,7 @@
       :description ?description
       :scopes      ?scopes
       :httpMethod  ?httpMethod
-      :request     (m/and ?request (m/or nil !request))}]
+      :request     ?request}]
     ;;>
     (defn ~(symbol (method-name ?id))
       ~(str ?documentationLink "api/reference/rest/" ?version "/" (doc-path ?id)
@@ -65,10 +74,11 @@
             "Optional parameters: " (if (seq !optional-parameters)
                                       (str/join ", " (map name !optional-parameters))
                                       "none")
+            \newline \newline
             (when (seq ?request)
-              (str \newline \newline "Body: " \newline \newline
-                   (with-out-str (pprint/pprint (summarize-schema ?schemas ?request 1)))))
-            \newline
+              (str "Body: " \newline \newline
+                   (with-out-str (pprint/pprint (summarize-schema ?schemas ?request 1)))
+                   \newline))
             ?description)
       {:scopes ?scopes}
       ~(if ?request
@@ -91,6 +101,9 @@
     ?else ~(throw (ex-info "FAIL" {:input ?else}))))
 
 (def extract-resource-methods
+  "Given an api definition and a resource,
+  discovers all the methods,
+  and methods of sub-resources."
   (s/rewrite
     (m/with [%resource {:methods   (m/seqable [_ !methods] ...)
                         :resources (m/seqable [_ %resource] ...)}]
@@ -101,7 +114,8 @@
     ?else ~(throw (ex-info "FAIL" {:input ?else}))))
 
 (def build-ns
-  "Takes an API description and returns a namespace."
+  "Takes an API description, resource-name, and resource.
+  Returns a namespace form."
   (s/rewrite
     [{:as                ?api
       :name              ?api-name
@@ -127,6 +141,8 @@
     ?else ~(throw (ex-info "FAIL" {:input ?else}))))
 
 (def build-nss
+  "Takes an API definition and returns multiple namespace forms,
+  one for each resource in the API."
   (s/rewrite
     {:resources {& (m/seqable [!resource-names !resources] ...)}
      :as        ?api}
