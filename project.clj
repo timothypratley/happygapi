@@ -6,9 +6,7 @@
   :main happy.lion
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [clj-http "3.10.0"]
-                 [cheshire "5.10.0"]
-                 [com.google.api-client/google-api-client "1.30.9"]
-                 [com.google.oauth-client/google-oauth-client-jetty "1.30.5"]]
+                 [cheshire "5.10.0"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[fipp "0.6.22"]
                                   [meander/epsilon "0.0.402"]]}

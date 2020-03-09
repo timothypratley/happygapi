@@ -51,10 +51,10 @@
   "Given an api definition, and an api method definition,
   produces a defn form."
   (s/rewrite
-    [{:baseUrl ?base-url
-      :schemas ?schemas
+    [{:baseUrl           ?base-url
+      :schemas           ?schemas
       :documentationLink ?documentationLink
-      :version ?version}
+      :version           ?version}
      {:id          ?id
       :path        ?path
       :parameters  (m/seqable (m/or [!required-parameters {:required true}]
@@ -100,14 +100,18 @@
     ;;
     ?else ~(throw (ex-info "FAIL" {:input ?else}))))
 
+
+(m/defsyntax rec [reference pattern]
+  `(m/with [~reference ~pattern]
+     ~reference))
+
 (def extract-resource-methods
   "Given an api definition and a resource,
   discovers all the methods,
   and methods of sub-resources."
   (s/rewrite
-    (m/with [%resource {:methods   (m/seqable [_ !methods] ...)
-                        :resources (m/seqable [_ %resource] ...)}]
-      [?api %resource])
+    [?api (rec %resource {:methods   (m/seqable [_ !methods] ...)
+                          :resources (m/seqable [_ %resource] ...)})]
     ;;>
     ((m/app extract-method [?api !methods]) ...)
     ;;
@@ -123,7 +127,7 @@
       :description       ?description
       :documentationLink ?documentationLink
       :version           ?version
-      :id ?id}
+      :id                ?id}
      ?resource-name
      ?resource]
     ;;>

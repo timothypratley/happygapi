@@ -1,77 +1,103 @@
 (ns happy.oauth2
-  "An example way to authorize for testing the generated api"
-  (:require [clojure.java.io :as io])
-  (:import (com.google.api.client.googleapis.auth.oauth2 GoogleClientSecrets GoogleAuthorizationCodeFlow$Builder)
-           (com.google.api.client.json.jackson2 JacksonFactory)
-           (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
-           (com.google.api.client.extensions.jetty.auth.oauth2 LocalServerReceiver$Builder)
-           (com.google.api.client.util.store FileDataStoreFactory)
-           (com.google.api.client.extensions.java6.auth.oauth2 AuthorizationCodeInstalledApp)))
+  "Helpers for getting an OAuth 2.0 token.
+  See https://developers.google.com/identity/protocols/OAuth2WebServer"
+  (:require [clj-http.client :as http]
+            [clojure.string :as str]
+            [clojure.set :as set])
+  (:import (java.util Date)))
 
-(def default-config
-  {:tokens-directory "tokens"
-   :secret-file      (io/file "secret.json")
-   :scopes           ["https://www.googleapis.com/auth/spreadsheets"
-                      "https://www.googleapis.com/auth/drive"]
-   :port             8888})
+(defn- redirect-to-google
+  "Step 2: Redirect to Google's OAuth 2.0 server.
+  Builds the URL to send the user to for them to authorize your app.
+  Do not call this function directly, it is called from set-authorization-parameters (step 1).
+  For local testing you can paste this URL into your browser,
+  or call (clojure.java.browse/browse-url (redirect-to-google my-config)).
+  In your app you need to send your user to this URL, usually with a redirect response."
+  [{:as config :keys [client_id redirect_uri]} scopes {:as optional :keys [state login_hint]}]
+  (str "https://accounts.google.com/o/oauth2/v2/auth"
+       "?client_id=" client_id
+       "&redirect_uri=" redirect_uri
+       "&scope=" (str/join " " scopes)
+       "&state=" state
+       "&response_type=code"
+       "&access_type=online"))
 
-(defonce ^{:doc "Optional singleton system"} singleton-app nil)
+(defn set-authorization-parameters
+  "Step 1: Set authorization parameters.
+  We tell Google to expect a visit from our user.
+  Returns the URL to redirect the user to."
+  ([config scopes] (set-authorization-parameters config scopes nil))
+  ([{:as config :keys [client_id redirect_uri]} scopes {:as optional :keys [state login_hint]}]
+   (http/get "https://accounts.google.com/o/oauth2/v2/auth"
+             {:query-params (merge {:client_id     client_id
+                                    :redirect_uri  redirect_uri
+                                    :response_type "code"
+                                    :scope         (str/join " " scopes)
+                                    :access_type   "offline"}
+                                   optional)})
+   (redirect-to-google config scopes optional)))
 
-(defn start*
-  "Creates a new, running authorization system.
-  Use this to compose with system management."
-  [{:keys [scopes secret-file tokens-directory port]}]
-  {:pre [(.exists (io/file secret-file))]}
-  (doto (io/file tokens-directory) (.mkdirs))
-  (let [json-factory (JacksonFactory/getDefaultInstance)
-        transport (GoogleNetHttpTransport/newTrustedTransport)
-        secrets (with-open [r (io/reader (io/file secret-file))]
-                  (GoogleClientSecrets/load json-factory r))
-        flow (-> (GoogleAuthorizationCodeFlow$Builder. transport json-factory secrets scopes)
-                 (.setDataStoreFactory (FileDataStoreFactory. (io/file tokens-directory)))
-                 (.setAccessType "offline")
-                 (.build))
-        receiver (-> (LocalServerReceiver$Builder.)
-                     (.setPort port)
-                     (.build))]
-    (AuthorizationCodeInstalledApp. flow receiver)))
+(defn exchange-code
+  "Step 5: Exchange authorization code for refresh and access tokens.
+  When the user is redirected back to your app from Google with a short lived code,
+  exchange the code for a long lived access token."
+  [{:keys [client_id client_secret redirect_uri]} code]
+  (:body (http/post "https://oauth2.googleapis.com/token"
+                    {:form-params {:client_id     client_id
+                                   :client_secret client_secret
+                                   :code          code
+                                   :grant_type    "authorization_code"
+                                   :redirect_uri  redirect_uri}
+                     :accept      :json
+                     :as          :json})))
 
-(defn stop*
-  "Stops an authorization system."
-  [app]
-  (.stop (.getReceiver app)))
+;; Step 3: Google prompts user for consent.
+;; Sit back and wait.
+;; There should be a route in your app to handle the redirect from Google (see step 4).
 
-(defn auth*
-  "Returns request header suitable for merging into a request.
-  May refresh a token."
-  [app user]
-  (let [cred (.authorize app user)]
-    (or (pos? (.getExpiresInSeconds cred))
-        (.refreshToken cred))
-    {:headers {"Authorization" (str "Bearer " (.getAccessToken cred))}}))
+(defn redirect-from-google
+  "Step 4: Handle the OAuth 2.0 server response.
+  In your app server, create a route `:redirect-uri` receives the `code` parameter."
+  [config {{:keys [code]} :params}]
+  (exchange-code config code))
 
-(defn start!
-  "Starts the (optional) singleton system.
-  Use this if you don't have some other system management in place."
-  ([] (start! nil))
-  ([config]
-   {:pre [(nil? singleton-app)]}
-   (alter-var-root #'singleton-app (constantly (start* (merge default-config config))))))
+(defn maybe-grow-scopes
+  "Incremental authorization.
+  Given a credentials map, re-authorizes with additional scopes.
+  Include previous scopes when asking for new scopes.
+  Scopes are a vector of urls.
+  Credentials contain tokens and scopes.
+  Returns the URL to redirect the user to,
+  or nil if the scopes are already authorized."
+  [config {:as credentials :keys [scopes]} new-scopes optional]
+  (let [scopes (set scopes)]
+    (when-not (set/subset? (set new-scopes) (set scopes))
+      (set-authorization-parameters config scopes optional))))
 
-(defn stop!
-  "Stops the (optional) singleton system.
-  Use this if you don't have some other system management in place."
-  []
-  {:pre [singleton-app]}
-  (stop* singleton-app)
-  (alter-var-root #'singleton-app (constantly nil)))
+(defn with-timestamp
+  "Google won't give us the time of day, so let's check our clock."
+  [{:keys [expires_in] :as token-response}]
+  (assoc token-response
+    :expires-at (Date. ^long (+ (* expires_in 1000) (System/currentTimeMillis)))))
 
-(defn auth!
-  "Returns request header suitable for merging into a request,
-  based on the (optional) singleton system.
-  Will start an oauth2 listener if not already running.
-  Will refresh tokens."
-  ([] (auth! "user"))
-  ([user]
-   (or singleton-app (start!))
-   (auth* singleton-app user)))
+(defn refresh-token
+  "Given a config map, and a credentials map containing a refresh_token,
+  fetches a new access token.
+  Returns the response if successful, which is a map of credentials containing an access token.
+  Refresh tokens eventually expire, and attempts to refresh will fail with 401.
+  Therefore, calls that could cause a refresh should catch 401 exceptions,
+  call set-authorization-parameters and redirect."
+  [{:keys [client_id client_secret]} {:keys [refresh_token]}]
+  (:body (http/post "https://oauth2.googleapis.com/token"
+                    {:form-params {:client_id     client_id
+                                   :client_secret client_secret
+                                   :grant_type    "refresh_token"
+                                   :refresh_token refresh_token}
+                     :accept      :json
+                     :as          :json})))
+
+(defn revoke-token
+  "Given a credentials map containing either an access token or refresh token, revokes them."
+  [{:keys [access_token refresh_token]}]
+  (http/get "https://oauth2.googleapis.com/revoke"
+            {:params {:token (or access_token refresh_token)}}))
