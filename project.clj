@@ -9,5 +9,6 @@
                  [cheshire "5.10.0"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[fipp "0.6.22"]
-                                  [meander/epsilon "0.0.402"]]}
+                                  [meander/epsilon "0.0.408"]
+                                  [ring "1.8.0"]]}
              :uberjar {:aot :all}})

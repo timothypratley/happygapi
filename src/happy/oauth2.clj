@@ -20,7 +20,7 @@
        "&scope=" (str/join " " scopes)
        "&state=" state
        "&response_type=code"
-       "&access_type=online"))
+       "&access_type=offline"))
 
 (defn set-authorization-parameters
   "Step 1: Set authorization parameters.
@@ -32,28 +32,36 @@
              {:query-params (merge {:client_id     client_id
                                     :redirect_uri  redirect_uri
                                     :response_type "code"
-                                    :scope         (str/join " " scopes)
-                                    :access_type   "offline"}
+                                    :scope         (str/join " " scopes)}
                                    optional)})
    (redirect-to-google config scopes optional)))
+
+(defn with-timestamp
+  "Google won't give us the time of day, so let's check our clock."
+  [{:as credentials :keys [expires_in]}]
+  (assoc credentials
+    :expires-at (Date. ^long (+ (* expires_in 1000) (System/currentTimeMillis)))))
+
+;; Step 3: Google prompts user for consent.
+;; Sit back and wait.
+;; There should be a route in your app to handle the redirect from Google (see step 4).
+;; happy.oauth2-capture-redirect shows how you could do this,
+;; and is useful if you don't want to run a server.
 
 (defn exchange-code
   "Step 5: Exchange authorization code for refresh and access tokens.
   When the user is redirected back to your app from Google with a short lived code,
   exchange the code for a long lived access token."
   [{:keys [client_id client_secret redirect_uri]} code]
-  (:body (http/post "https://oauth2.googleapis.com/token"
-                    {:form-params {:client_id     client_id
-                                   :client_secret client_secret
-                                   :code          code
-                                   :grant_type    "authorization_code"
-                                   :redirect_uri  redirect_uri}
-                     :accept      :json
-                     :as          :json})))
-
-;; Step 3: Google prompts user for consent.
-;; Sit back and wait.
-;; There should be a route in your app to handle the redirect from Google (see step 4).
+  (with-timestamp
+    (:body (http/post "https://oauth2.googleapis.com/token"
+                      {:form-params {:client_id     client_id
+                                     :client_secret client_secret
+                                     :code          code
+                                     :grant_type    "authorization_code"
+                                     :redirect_uri  redirect_uri}
+                       :accept      :json
+                       :as          :json}))))
 
 (defn redirect-from-google
   "Step 4: Handle the OAuth 2.0 server response.
@@ -74,12 +82,6 @@
     (when-not (set/subset? (set new-scopes) (set scopes))
       (set-authorization-parameters config scopes optional))))
 
-(defn with-timestamp
-  "Google won't give us the time of day, so let's check our clock."
-  [{:keys [expires_in] :as token-response}]
-  (assoc token-response
-    :expires-at (Date. ^long (+ (* expires_in 1000) (System/currentTimeMillis)))))
-
 (defn refresh-token
   "Given a config map, and a credentials map containing a refresh_token,
   fetches a new access token.
@@ -87,17 +89,21 @@
   Refresh tokens eventually expire, and attempts to refresh will fail with 401.
   Therefore, calls that could cause a refresh should catch 401 exceptions,
   call set-authorization-parameters and redirect."
-  [{:keys [client_id client_secret]} {:keys [refresh_token]}]
-  (:body (http/post "https://oauth2.googleapis.com/token"
-                    {:form-params {:client_id     client_id
-                                   :client_secret client_secret
-                                   :grant_type    "refresh_token"
-                                   :refresh_token refresh_token}
-                     :accept      :json
-                     :as          :json})))
+  [{:as config :keys [client_id client_secret]} {:as credentials :keys [refresh_token]}]
+  (with-timestamp
+    (merge credentials
+           (:body (http/post "https://oauth2.googleapis.com/token"
+                             {:form-params {:client_id     client_id
+                                            :client_secret client_secret
+                                            :grant_type    "refresh_token"
+                                            :refresh_token refresh_token}
+                              :accept      :json
+                              :as          :json})))))
 
 (defn revoke-token
   "Given a credentials map containing either an access token or refresh token, revokes them."
   [{:keys [access_token refresh_token]}]
-  (http/get "https://oauth2.googleapis.com/revoke"
-            {:params {:token (or access_token refresh_token)}}))
+  (http/post "https://oauth2.googleapis.com/revoke"
+             {:accept :json
+              :as :json
+              :form-params {"token" (or access_token refresh_token)}}))

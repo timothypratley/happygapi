@@ -3,7 +3,8 @@
   (:require [clojure.string :as str]
             [fipp.clojure :as pprint]
             [meander.strategy.epsilon :as s]
-            [meander.epsilon :as m]))
+            [meander.epsilon :as m]
+            [meander.syntax.epsilon :as r.syntax]))
 
 (def out-ns "happygapi")
 
