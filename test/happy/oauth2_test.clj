@@ -1,6 +1,5 @@
 (ns happy.oauth2-test
-  (:require [cheshire.core :as json]
-            [clojure.test :refer [deftest is]]
+  (:require [clojure.test :refer [deftest is]]
             [happy.oauth2 :as oauth2]
             [happy.oauth2-capture-redirect :as r]
             [happy.oauth2-credentials :as credentials]))
