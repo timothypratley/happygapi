@@ -5,38 +5,43 @@ A Clojure library for calling [Google APIs](https://developers.google.com/apis-e
 
 ## Rationale
 
-HappyGAPI generates source code that defines functions for calling GAPI,
-so you don't have to!
-The discovery based approach is inspired by [clj-gapi](https://github.com/ianbarber/clj-gapi).
 
-The advantages of generating source code are:
+HappyGAPI defines functions for calling GAPI so you don't have to!
+
+HappyGAPI generates source code:
 1. Navigate to source
 2. See all available resources and methods
 3. Clear exceptions on failure
+4. The function doc-strings contain a description, a link to online docs, and example inputs.
 
 HappyGAPI accepts data instead of an objects.
+Data composes flexibly and is straight-forward to construct.
+
+Oauth2 works "out of the box" for standalone, and with minimal configuration in a web server.
+
+The discovery of GAPIs was inspired by [clj-gapi](https://github.com/ianbarber/clj-gapi).
 
 
 ## Usage
 
 Add the dependency to the project file:
 
-![](https://clojars.org/happygapi/latest-version.svg)
+![clojars version](https://clojars.org/happygapi/latest-version.svg)
 
-Require `happygapi.<api>.<resource>` in the code:
+Require `happygapi.<<api>>.<<resource>>` in the code:
 
 ```clojure
 (ns my.ns
   (:require [happygapi.sheets.spreadsheets :as gsheets]
-            [happy.oauth2 :as oauth2]))
+            [happy.oauth2-credentials :as credentials]))
 ```
 
 Call the api:
 
 ```clojure
-(gsheets/get$ (oauth2/auth!) {:spreadsheetId "xyz"})
+(gsheets/get$ (credentials/auth!) {:spreadsheetId "xyz"})
 
-(gsheets/values-batchUpdate$ (oauth2/auth!)
+(gsheets/values-batchUpdate$ (credentials/auth!)
                              {:spreadsheetId spreadsheet-id}
                              {:valueInputOption "USER_ENTERED"
                               :data             [{:range  "Sheet1"
@@ -47,7 +52,7 @@ Call the api:
 Functions are generated according to this pattern:
 
 ```
-(happygapi.<api>.<resource>/<?subresource(s)>-<method> auth params ?body)
+(happygapi.<<api>>.<<resource>>/<<?subresource(s)>>-<<method>>$ auth params ?body)
 ```
 
 Where `auth` is a map to apply to the request, `params` and `body` align with REST documentation.
@@ -70,15 +75,23 @@ The `auth` argument can be one of:
 The `auth` argument is merged into the request.
 You can specify additional request options if you want to.
 
-The `happy.oauth2` namespace provides a convenient way to authorize requests.
-It needs access to `secret.json` which can be downloaded from the Google Console.
+To participate in oauth2 you need to fetch and store tokens.
+The [`happy.oauth2-credentials`](src/happy/oauth2_credentials.clj) namespace provides a working reference for how you can go about this.
+By default it tries to read `secret.json` from disk in the current directory.
+This file can be downloaded from the [Google Console](https://console.cloud.google.com/).
 Do not add this file to source control, keep it secured.
-Follow the "Getting started" Google API instructions to create an App.
+To create an app in the Google Console, follow [Setting up OAuth 2.0](https://support.google.com/googleapi/answer/6158849?hl=en).
+If you use `happy.oauth2-credentials`, you will need to include [ring](https://github.com/ring-clojure/ring) as a dependency.
 
-Calling `(auth!)` will start a singleton oauth2 listener.
-If you prefer to start one with non-default configuration see `(start! config)`.
-If you prefer to use a system graph instead of a singleton, see `(start*)`.
-If you prefer to run your own oauth2 listener, pass in `auth` from some other source.
+`happy.oauth2-credentials` stores tokens on disk.
+If you want to use happygapi in a web app, you should instead store and fetch tokens from your database.
+This can be done by calling `init!` with a `fetch` and `store` function, or by creating your own implementation of `auth!`.
+
+The [`happy.oauth2-capture-redirect`](src/happy/oauth2_capture_redirect.clj) namespace provides a reference listener to capture a code when the user is redirected to your site from the oauth2 provider.
+If you use it, you will need to include [ring](https://github.com/ring-clojure/ring) as a dependency.
+Web applications should instead define a route to capture the code.
+
+The [`happy.oauth2`](src/happy/oauth2.clj) namespace provides generic functions to support oauth2 authorization so that you can assemble only the parts you need.
 
 
 ## Contributing
