@@ -38,21 +38,21 @@
   For more information on asynchronous speech recognition, see the
   [how-to](https://cloud.google.com/speech-to-text/docs/async-recognize)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://speech.googleapis.com/"
      "v1/speech:longrunningrecognize"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +85,21 @@
   Performs synchronous speech recognition: receive results after all audio
   has been sent and processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://speech.googleapis.com/"
      "v1/speech:recognize"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

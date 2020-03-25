@@ -12,21 +12,22 @@
   Required parameters: tasklist
   
   Optional parameters: none
+  
   Clears all completed tasks from the specified task list. The affected tasks will be marked as 'hidden' and no longer be returned by default when retrieving all tasks for a task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/clear"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: task, tasklist
   
   Optional parameters: none
+  
   Deletes the specified task from the task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:task :tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks/{task}"
      #{:task :tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,22 +64,23 @@
   Required parameters: task, tasklist
   
   Optional parameters: none
+  
   Returns the specified task."
   {:scopes ["https://www.googleapis.com/auth/tasks"
             "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:task :tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks/{task}"
      #{:task :tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,21 +112,21 @@
   
   Creates a new task on the specified task list. Fails with HTTP code 403 or 429 after reaching the storage limit of 100,000 tasks per account."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -134,22 +137,23 @@
   Required parameters: tasklist
   
   Optional parameters: completedMin, showCompleted, completedMax, pageToken, showHidden, dueMin, showDeleted, updatedMin, dueMax, maxResults
+  
   Returns all tasks in the specified task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"
             "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -160,21 +164,22 @@
   Required parameters: task, tasklist
   
   Optional parameters: parent, previous
+  
   Moves the specified task to another position in the task list. This can include putting it as a child task under a new parent and/or move it to a different position among its sibling tasks."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:task :tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks/{task}/move"
      #{:task :tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -206,21 +211,21 @@
   
   Updates the specified task. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:task :tasklist})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks/{task}"
      #{:task :tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -252,21 +257,21 @@
   
   Updates the specified task."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:task :tasklist})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "lists/{tasklist}/tasks/{task}"
      #{:task :tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: permissionId
   
   Optional parameters: language
+  
   Retrieves details of an Android app permission for display to an enterprise admin."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:permissionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:permissionId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "permissions/{permissionId}"
      #{:permissionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

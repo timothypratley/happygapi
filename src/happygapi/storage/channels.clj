@@ -32,21 +32,21 @@
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "channels/stop"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

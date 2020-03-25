@@ -22,21 +22,23 @@
   
   Inserts a new account for a user"
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userToken :accountName :accountType})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:userToken :accountName :accountType})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "accounts/{userToken}/{accountType}/{accountName}"
      #{:userToken :accountName :accountType}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

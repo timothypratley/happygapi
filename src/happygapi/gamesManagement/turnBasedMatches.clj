@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Reset all turn-based match data for a user. This method is only accessible to whitelisted tester accounts for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "turnbasedmatches/reset"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Deletes turn-based matches where the only match participants are from whitelisted tester accounts for your application. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "turnbasedmatches/resetForAllPlayers"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

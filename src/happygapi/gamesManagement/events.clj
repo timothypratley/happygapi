@@ -12,21 +12,22 @@
   Required parameters: eventId
   
   Optional parameters: none
+  
   Resets all player progress on the event with the given ID for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:eventId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:eventId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "events/{eventId}/reset"
      #{:eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Resets all player progress on all events for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "events/reset"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Resets all draft events for all players. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "events/resetAllForAllPlayers"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,21 +90,22 @@
   Required parameters: eventId
   
   Optional parameters: none
+  
   Resets the event with the given ID for all players. This method is only available to user accounts for your developer console. Only draft events can be reset."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:eventId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:eventId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "events/{eventId}/resetForAllPlayers"
      #{:eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -119,21 +123,21 @@
   
   Resets events with the given IDs for all players. This method is only available to user accounts for your developer console. Only draft events may be reset."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "events/resetMultipleForAllPlayers"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

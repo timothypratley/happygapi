@@ -12,21 +12,22 @@
   Required parameters: cpksver
   
   Optional parameters: none
+  
   Returns a list of offline dictionary metadata available"
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:cpksver})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:cpksver})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "dictionary/listOfflineMetadata"
      #{:cpksver}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

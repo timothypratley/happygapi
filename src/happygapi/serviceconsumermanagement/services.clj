@@ -12,21 +12,22 @@
   Required parameters: parent
   
   Optional parameters: query, pageToken, pageSize
+  
   Search tenancy units for a managed service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}:search"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -55,21 +56,21 @@
   another call to `AddTenantProject` with the same tag.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}:addProject"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -96,21 +97,21 @@
   resources in a DELETED state.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:deleteProject"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -150,21 +151,21 @@
   applied configuration changes is attempted.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:applyProjectConfig"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -186,21 +187,21 @@
   field set and ListTenancyUnit has to be used to get a complete
   TenancyUnit with all fields populated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}/tenancyUnits"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -211,23 +212,24 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Delete a tenancy unit. Before you delete the tenancy unit, there should be
   no tenant resources in it that aren't in a DELETED state.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -237,26 +239,27 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: filter, pageToken, pageSize
+  
   Find the tenancy unit for a managed service and service consumer.
   This method shouldn't be used in a service producer's runtime path, for
   example to find the tenant project number when creating VMs. Service
   producers must persist the tenant project's information after the project
   is created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+parent}/tenancyUnits"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -284,21 +287,21 @@
   if the project is reserved by calling `AddTenantProject`.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:attachProject"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -323,21 +326,21 @@
   resource metadata is permanently removed from the tenancy unit.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:removeProject"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -361,21 +364,21 @@
   resources.
   Operation<response: Empty>."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://serviceconsumermanagement.googleapis.com/"
      "v1/{+name}:undeleteProject"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

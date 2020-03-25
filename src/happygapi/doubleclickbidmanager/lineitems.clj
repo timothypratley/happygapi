@@ -22,21 +22,21 @@
   
   Retrieves line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "lineitems/downloadlineitems"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -54,21 +54,21 @@
   
   Uploads line items in CSV format. TrueView line items are not supported."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "lineitems/uploadlineitems"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -24,21 +24,21 @@
   server MAY choose to stream additional updates as execution progresses,
   such as to provide an update as to the state of the execution."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+name}:waitExecution"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

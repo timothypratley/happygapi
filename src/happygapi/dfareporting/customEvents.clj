@@ -15,33 +15,34 @@
   
   Body: 
   
-  {:customEvents [{:annotateClickEvent CustomEventClickAnnotation,
-                   :customVariables [CustomVariable],
-                   :eventType string,
+  {:customEvents [{:eventType string,
                    :floodlightConfigurationId string,
-                   :insertEvent CustomEventInsert,
-                   :kind string,
+                   :annotateImpressionEvent CustomEventImpressionAnnotation,
                    :ordinal string,
-                   :timestampMicros string}],
+                   :annotateClickEvent CustomEventClickAnnotation,
+                   :kind string,
+                   :insertEvent CustomEventInsert,
+                   :timestampMicros string,
+                   :customVariables [CustomVariable]}],
    :kind string}
   
   Inserts custom events."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/customEvents/batchinsert"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,6 +12,7 @@
   Required parameters: none
   
   Optional parameters: driveId, supportsAllDrives, supportsTeamDrives, teamDriveId
+  
   Gets the starting pageToken for listing future changes."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -20,19 +21,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "changes/startPageToken"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -43,6 +44,7 @@
   Required parameters: pageToken
   
   Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
+  
   Lists the changes for a user or shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -51,19 +53,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:pageToken})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:pageToken})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "changes"
      #{:pageToken}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -96,21 +98,21 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:pageToken})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:pageToken})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "changes/watch"
      #{:pageToken}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

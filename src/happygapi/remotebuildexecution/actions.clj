@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:resultsCachePolicy {:priority integer},
+  {:executionPolicy {:priority integer},
+   :resultsCachePolicy {:priority integer},
    :skipCacheLookup boolean,
-   :actionDigest {:hash string, :sizeBytes string},
-   :executionPolicy {:priority integer}}
+   :actionDigest {:hash string, :sizeBytes string}}
   
   Execute an action remotely.
   
@@ -84,21 +84,21 @@
   `Violation` with a `type` of `MISSING` and a `subject` of
   `\"blobs/{hash}/{size}\"` indicating the digest of the missing blob."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instanceName})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instanceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/actions:execute"
      #{:instanceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

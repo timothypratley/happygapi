@@ -12,24 +12,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
   `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://vault.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

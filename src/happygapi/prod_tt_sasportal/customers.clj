@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns a requested customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: pageToken, pageSize
+  
   Returns a list of requested customers."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/customers"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,25 +67,257 @@
   
   Body: 
   
-  {:name string, :displayName string, :sasUserIds [string]}
+  {:sasUserIds [string], :name string, :displayName string}
   
   Updates an existing customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :displayName string, :sasUserIds [string]}
+  
+  Creates a new node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-patch$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string, :displayName string, :sasUserIds [string]}
+  
+  Updates an existing node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-get$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a requested node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-move$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/move
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:destination string}
+  
+  Moves a node under another node or customer."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+name}:move"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-delete$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists nodes."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-nodes-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/nodes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists nodes."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-nodes-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/nodes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :displayName string, :sasUserIds [string]}
+  
+  Creates a new node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://prod-tt-sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +328,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets details about a device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -122,7 +357,16 @@
   
   Body: 
   
-  {:preloadedConfig {:category string,
+  {:serialNumber string,
+   :grants [{:maxEirp number,
+             :expireTime string,
+             :state string,
+             :moveList [SasPortalDpaMoveList],
+             :channelType string,
+             :frequencyRange SasPortalFrequencyRange}],
+   :fccId string,
+   :displayName string,
+   :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
                      :measurementCapabilities [string],
@@ -143,34 +387,25 @@
                   :userId string,
                   :isSigned boolean,
                   :airInterface SasPortalDeviceAirInterface,
-                  :model SasPortalDeviceModel},
-   :grants [{:moveList [SasPortalDpaMoveList],
-             :frequencyRange SasPortalFrequencyRange,
-             :channelType string,
-             :maxEirp number,
-             :expireTime string,
-             :state string}],
-   :fccId string,
-   :serialNumber string,
-   :displayName string}
+                  :model SasPortalDeviceModel}}
   
   Updates a device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -188,21 +423,21 @@
   
   Updates a signed device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}:updateSigned"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -220,21 +455,21 @@
   
   Creates a device under a node or customer. Returned devices are unordered."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+parent}/devices:bulk"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -253,21 +488,21 @@
   Creates a signed device under a
   node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+parent}/devices:createSigned"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -281,7 +516,16 @@
   
   Body: 
   
-  {:preloadedConfig {:category string,
+  {:serialNumber string,
+   :grants [{:maxEirp number,
+             :expireTime string,
+             :state string,
+             :moveList [SasPortalDpaMoveList],
+             :channelType string,
+             :frequencyRange SasPortalFrequencyRange}],
+   :fccId string,
+   :displayName string,
+   :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
                      :measurementCapabilities [string],
@@ -302,34 +546,25 @@
                   :userId string,
                   :isSigned boolean,
                   :airInterface SasPortalDeviceAirInterface,
-                  :model SasPortalDeviceModel},
-   :grants [{:moveList [SasPortalDpaMoveList],
-             :frequencyRange SasPortalFrequencyRange,
-             :channelType string,
-             :maxEirp number,
-             :expireTime string,
-             :state string}],
-   :fccId string,
-   :serialNumber string,
-   :displayName string}
+                  :model SasPortalDeviceModel}}
   
   Creates a device under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+parent}/devices"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -347,21 +582,21 @@
   
   Moves a device under another node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}:move"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -372,21 +607,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -396,22 +632,23 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists devices under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+parent}/devices"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -425,203 +662,32 @@
   
   Body: 
   
-  {:device {:preloadedConfig SasPortalDeviceConfig,
-            :state string,
-            :name string,
-            :activeConfig SasPortalDeviceConfig,
+  {:device {:serialNumber string,
             :grants [SasPortalDeviceGrant],
             :fccId string,
-            :serialNumber string,
-            :displayName string}}
+            :displayName string,
+            :preloadedConfig SasPortalDeviceConfig,
+            :state string,
+            :name string,
+            :activeConfig SasPortalDeviceConfig}}
   
   Signs a device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
      "v1alpha1/{+name}:signDevice"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-move$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/move
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:destination string}
-  
-  Moves a node under another node or customer."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+name}:move"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-delete$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-list$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  Lists nodes."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/nodes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-create$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string, :displayName string, :sasUserIds [string]}
-  
-  Creates a new node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/nodes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-get$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Returns a requested node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-patch$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/customers/nodes/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string, :displayName string, :sasUserIds [string]}
-  
-  Updates an existing node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

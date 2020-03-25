@@ -12,25 +12,26 @@
   Required parameters: documentId
   
   Optional parameters: suggestionsViewMode
+  
   Gets the latest version of the specified document."
   {:scopes ["https://www.googleapis.com/auth/documents"
             "https://www.googleapis.com/auth/documents.readonly"
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:documentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:documentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://docs.googleapis.com/"
      "v1/documents/{documentId}"
      #{:documentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +86,21 @@
   {:scopes ["https://www.googleapis.com/auth/documents"
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://docs.googleapis.com/"
      "v1/documents"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -171,21 +172,21 @@
   {:scopes ["https://www.googleapis.com/auth/documents"
             "https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:documentId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:documentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://docs.googleapis.com/"
      "v1/documents/{documentId}:batchUpdate"
      #{:documentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, webAppId
   
   Optional parameters: none
+  
   Deletes an existing web app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :webAppId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :webAppId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/webApps/{webAppId}"
      #{:enterpriseId :webAppId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: enterpriseId, webAppId
   
   Optional parameters: none
+  
   Gets an existing web app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :webAppId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :webAppId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/webApps/{webAppId}"
      #{:enterpriseId :webAppId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -75,21 +77,21 @@
   
   Creates a new web app for the enterprise."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/webApps"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -100,21 +102,22 @@
   Required parameters: enterpriseId
   
   Optional parameters: none
+  
   Retrieves the details of all web apps for a given enterprise."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/webApps"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -138,21 +141,21 @@
   
   Updates an existing web app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId :webAppId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :webAppId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/webApps/{webAppId}"
      #{:enterpriseId :webAppId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

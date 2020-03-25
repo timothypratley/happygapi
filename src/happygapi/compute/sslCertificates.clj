@@ -11,24 +11,25 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  
   Retrieves the list of all SslCertificate resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/sslCertificates"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,22 +40,23 @@
   Required parameters: project, sslCertificate
   
   Optional parameters: requestId
+  
   Deletes the specified SslCertificate resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sslCertificate :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sslCertificate :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/sslCertificates/{sslCertificate}"
      #{:sslCertificate :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,23 +67,24 @@
   Required parameters: project, sslCertificate
   
   Optional parameters: none
+  
   Returns the specified SslCertificate resource. Gets a list of available SSL certificates by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sslCertificate :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sslCertificate :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/sslCertificates/{sslCertificate}"
      #{:sslCertificate :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -108,21 +111,21 @@
   Creates a SslCertificate resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/sslCertificates"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -133,23 +136,24 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of SslCertificate resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/sslCertificates"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

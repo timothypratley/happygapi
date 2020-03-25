@@ -12,22 +12,23 @@
   Required parameters: autnumId
   
   Optional parameters: none
+  
   The RDAP API recognizes this command from the RDAP specification but
   does not support it. The response is a formatted 501 error."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:autnumId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:autnumId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://domainsrdap.googleapis.com/"
      "v1/autnum/{autnumId}"
      #{:autnumId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

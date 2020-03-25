@@ -22,21 +22,21 @@
   
   Retrieves entities in SDF format."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "sdf/download"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

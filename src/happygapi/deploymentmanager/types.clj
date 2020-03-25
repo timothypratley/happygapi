@@ -12,24 +12,25 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Lists all resource types for Deployment Manager."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.cloudman"
             "https://www.googleapis.com/auth/ndev.cloudman.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/deploymentmanager/v2/projects/"
      "{project}/global/types"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

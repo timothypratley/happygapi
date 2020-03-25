@@ -26,21 +26,21 @@
   key](https://developers.google.com/beacons/proximity/get-started#request_a_browser_api_key)
   for the application."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/beaconinfo:getforobserved"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

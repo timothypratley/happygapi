@@ -12,21 +12,22 @@
   Required parameters: date
   
   Optional parameters: customerId, pageToken, parameters
+  
   Retrieves a report which is a collection of properties and statistics for a specific customer's account. For more information, see the Customers Usage Report guide. For more information about the customer report's parameters, see the Customers Usage parameters reference guides."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.usage.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:date})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:date})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/admin/reports/v1/"
      "usage/dates/{date}"
      #{:date}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

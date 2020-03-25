@@ -12,21 +12,22 @@
   Required parameters: groupId
   
   Optional parameters: none
+  
   Inserts a new mail into the archive of the Google group."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.migration"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:groupId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:groupId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/groups/v1/groups/"
      "{groupId}/archive"
      #{:groupId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

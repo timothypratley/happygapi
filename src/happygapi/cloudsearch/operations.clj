@@ -12,6 +12,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
@@ -21,19 +22,19 @@
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

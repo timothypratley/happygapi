@@ -11,24 +11,25 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  
   Retrieves an aggregated list of interconnect attachments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/interconnectAttachments"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,12 +40,13 @@
   Required parameters: interconnectAttachment, project, region
   
   Optional parameters: requestId
+  
   Deletes the specified interconnect attachment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:interconnectAttachment :region :project})]}
   (util/get-response
    (http/delete
@@ -52,11 +54,11 @@
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/interconnectAttachments/{interconnectAttachment}"
      #{:interconnectAttachment :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -67,13 +69,14 @@
   Required parameters: interconnectAttachment, project, region
   
   Optional parameters: none
+  
   Returns the specified interconnect attachment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:interconnectAttachment :region :project})]}
   (util/get-response
    (http/get
@@ -81,11 +84,11 @@
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/interconnectAttachments/{interconnectAttachment}"
      #{:interconnectAttachment :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -129,21 +132,21 @@
   Creates an InterconnectAttachment in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/interconnectAttachments"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -154,23 +157,24 @@
   Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of interconnect attachments contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/interconnectAttachments"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -214,9 +218,9 @@
   Updates the specified interconnect attachment with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:interconnectAttachment :region :project})]}
   (util/get-response
    (http/patch
@@ -224,13 +228,13 @@
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/interconnectAttachments/{interconnectAttachment}"
      #{:interconnectAttachment :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

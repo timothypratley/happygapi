@@ -12,23 +12,24 @@
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
+  
   Deletes a YouTube video."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,23 +40,24 @@
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
+  
   Retrieves the ratings that the authorized user gave to a list of specified videos."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos/getRating"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -156,21 +158,21 @@
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.upload"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -181,24 +183,25 @@
   Required parameters: part
   
   Optional parameters: maxHeight, maxWidth, locale, pageToken, chart, hl, id, regionCode, myRating, onBehalfOfContentOwner, maxResults, videoCategoryId
+  
   Returns a list of videos that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -209,23 +212,24 @@
   Required parameters: id, rating
   
   Optional parameters: none
+  
   Add a like or dislike rating to a video or remove a rating from a video."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :rating})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :rating})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos/rate"
      #{:id :rating}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -249,21 +253,21 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos/reportAbuse"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -363,21 +367,21 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "videos"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

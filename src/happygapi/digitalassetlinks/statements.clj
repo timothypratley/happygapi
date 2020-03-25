@@ -12,6 +12,7 @@
   Required parameters: none
   
   Optional parameters: source.web.site, source.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation
+  
   Retrieves a list of all statements from a given source that match the
   specified target and statement string.
   
@@ -30,19 +31,19 @@
   device, the feature would make it easy to navigate to the corresponding web
   site or Google+ profile."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://digitalassetlinks.googleapis.com/"
      "v1/statements:list"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: id, profileId
   
   Optional parameters: none
+  
   Gets one creative by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creatives/{id}"
      #{:id :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -179,6 +180,12 @@
    :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
    :creativeAssetSelection {:defaultAssetId string, :rules [Rule]},
    :adTagKeys [string],
+   :obaIcon {:iconClickThroughUrl string,
+             :program string,
+             :resourceUrl string,
+             :size Size,
+             :xPosition string,
+             :yPosition string},
    :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
                 :eventName string,
                 :name string}],
@@ -211,21 +218,21 @@
   
   Inserts a new creative."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creatives"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -236,21 +243,22 @@
   Required parameters: profileId
   
   Optional parameters: archived, studioCreativeId, campaignId, renderingIds, ids, searchString, types, pageToken, sortField, advertiserId, active, sortOrder, creativeFieldIds, companionCreativeIds, sizeIds, maxResults
+  
   Retrieves a list of creatives, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creatives"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -403,6 +411,12 @@
    :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
    :creativeAssetSelection {:defaultAssetId string, :rules [Rule]},
    :adTagKeys [string],
+   :obaIcon {:iconClickThroughUrl string,
+             :program string,
+             :resourceUrl string,
+             :size Size,
+             :xPosition string,
+             :yPosition string},
    :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
                 :eventName string,
                 :name string}],
@@ -435,21 +449,21 @@
   
   Updates an existing creative. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creatives"
      #{:id :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -602,6 +616,12 @@
    :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
    :creativeAssetSelection {:defaultAssetId string, :rules [Rule]},
    :adTagKeys [string],
+   :obaIcon {:iconClickThroughUrl string,
+             :program string,
+             :resourceUrl string,
+             :size Size,
+             :xPosition string,
+             :yPosition string},
    :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
                 :eventName string,
                 :name string}],
@@ -634,21 +654,21 @@
   
   Updates an existing creative."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creatives"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

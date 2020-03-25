@@ -12,21 +12,22 @@
   Required parameters: applicationId, playerId
   
   Optional parameters: none
+  
   Hide the given player's leaderboard scores from the given application. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId :applicationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId :applicationId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "applications/{applicationId}/players/hidden/{playerId}"
      #{:playerId :applicationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: applicationId, playerId
   
   Optional parameters: none
+  
   Unhide the given player's leaderboard scores from the given application. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId :applicationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId :applicationId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "applications/{applicationId}/players/hidden/{playerId}"
      #{:playerId :applicationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

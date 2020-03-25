@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: locale, maxAllowedMaturityRating, source
+  
   Returns a stream of personalized book clusters"
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "personalizedstream/get"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

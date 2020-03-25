@@ -6,31 +6,82 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn searchapplications-create$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/searchapplications/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :operationIds [string],
+   :dataSourceRestrictions [{:filterOptions [FilterOptions],
+                             :source Source}],
+   :sourceConfig [{:source Source,
+                   :scoringConfig SourceScoringConfig,
+                   :crowdingConfig SourceCrowdingConfig}],
+   :defaultSortOptions {:operatorName string, :sortOrder string},
+   :displayName string,
+   :defaultFacetOptions [{:operatorName string,
+                          :objectType string,
+                          :sourceName string,
+                          :numFacetBuckets integer}],
+   :scoringConfig {:disablePersonalization boolean,
+                   :disableFreshness boolean}}
+  
+  Creates a search application.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.query"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/searchapplications"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn searchapplications-get$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/searchapplications/get
   
   Required parameters: name
   
   Optional parameters: debugOptions.enableDebugging
+  
   Gets the specified search application.
   
   **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,21 +95,21 @@
   
   Body: 
   
-  {:defaultSortOptions {:operatorName string, :sortOrder string},
-   :displayName string,
-   :defaultFacetOptions [{:sourceName string,
-                          :numFacetBuckets integer,
-                          :operatorName string,
-                          :objectType string}],
-   :scoringConfig {:disablePersonalization boolean,
-                   :disableFreshness boolean},
-   :name string,
+  {:name string,
    :operationIds [string],
    :dataSourceRestrictions [{:filterOptions [FilterOptions],
                              :source Source}],
    :sourceConfig [{:source Source,
                    :scoringConfig SourceScoringConfig,
-                   :crowdingConfig SourceCrowdingConfig}]}
+                   :crowdingConfig SourceCrowdingConfig}],
+   :defaultSortOptions {:operatorName string, :sortOrder string},
+   :displayName string,
+   :defaultFacetOptions [{:operatorName string,
+                          :objectType string,
+                          :sourceName string,
+                          :numFacetBuckets integer}],
+   :scoringConfig {:disablePersonalization boolean,
+                   :disableFreshness boolean}}
   
   Updates a search application.
   
@@ -66,21 +117,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -91,25 +142,26 @@
   Required parameters: name
   
   Optional parameters: debugOptions.enableDebugging
+  
   Deletes a search application.
   
   **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -132,21 +184,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/{+name}:reset"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -156,208 +208,27 @@
   
   Required parameters: none
   
-  Optional parameters: debugOptions.enableDebugging, pageToken, pageSize
+  Optional parameters: pageSize, debugOptions.enableDebugging, pageToken
+  
   Lists all search applications.
   
   **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/searchapplications"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn searchapplications-create$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/searchapplications/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:defaultSortOptions {:operatorName string, :sortOrder string},
-   :displayName string,
-   :defaultFacetOptions [{:sourceName string,
-                          :numFacetBuckets integer,
-                          :operatorName string,
-                          :objectType string}],
-   :scoringConfig {:disablePersonalization boolean,
-                   :disableFreshness boolean},
-   :name string,
-   :operationIds [string],
-   :dataSourceRestrictions [{:filterOptions [FilterOptions],
-                             :source Source}],
-   :sourceConfig [{:source Source,
-                   :scoringConfig SourceScoringConfig,
-                   :crowdingConfig SourceCrowdingConfig}]}
-  
-  Creates a search application.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/searchapplications"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn datasources-create$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :operationIds [string],
-   :disableModifications boolean,
-   :indexingServiceAccounts [string],
-   :displayName string,
-   :disableServing boolean,
-   :itemsVisibility [{:gsuiteUserEmail string,
-                      :gsuiteGroupEmail string,
-                      :gsuiteDomain boolean}],
-   :shortName string}
-  
-  Creates a datasource.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/datasources"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn datasources-delete$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/delete
-  
-  Required parameters: name
-  
-  Optional parameters: debugOptions.enableDebugging
-  Deletes a datasource.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn datasources-get$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/get
-  
-  Required parameters: name
-  
-  Optional parameters: debugOptions.enableDebugging
-  Gets a datasource.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn datasources-list$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/list
-  
-  Required parameters: none
-  
-  Optional parameters: debugOptions.enableDebugging, pageToken, pageSize
-  Lists datasources.
-  
-  **Note:** This API requires an admin account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/settings/datasources"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -371,14 +242,14 @@
   
   Body: 
   
-  {:source {:name string,
+  {:source {:disableServing boolean,
+            :displayName string,
+            :itemsVisibility [GSuitePrincipal],
+            :shortName string,
+            :name string,
             :operationIds [string],
             :disableModifications boolean,
-            :indexingServiceAccounts [string],
-            :displayName string,
-            :disableServing boolean,
-            :itemsVisibility [GSuitePrincipal],
-            :shortName string},
+            :indexingServiceAccounts [string]},
    :debugOptions {:enableDebugging boolean}}
   
   Updates a datasource.
@@ -387,21 +258,156 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/settings/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn datasources-create$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:disableServing boolean,
+   :displayName string,
+   :itemsVisibility [{:gsuiteUserEmail string,
+                      :gsuiteGroupEmail string,
+                      :gsuiteDomain boolean}],
+   :shortName string,
+   :name string,
+   :operationIds [string],
+   :disableModifications boolean,
+   :indexingServiceAccounts [string]}
+  
+  Creates a datasource.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/datasources"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn datasources-delete$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/delete
+  
+  Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
+  
+  Deletes a datasource.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn datasources-get$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/get
+  
+  Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
+  
+  Gets a datasource.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn datasources-list$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/settings/datasources/list
+  
+  Required parameters: none
+  
+  Optional parameters: debugOptions.enableDebugging, pageToken, pageSize
+  
+  Lists datasources.
+  
+  **Note:** This API requires an admin account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/settings/datasources"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

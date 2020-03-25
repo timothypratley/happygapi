@@ -12,6 +12,7 @@
   Required parameters: agentUserId
   
   Optional parameters: requestId
+  
   Unlinks an agent user from Google. As a result, all data related to this
   user will be deleted.
   
@@ -38,19 +39,19 @@
   Note: Special characters (except \"/\") in `agent_user_id` must be
   URL-encoded."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:agentUserId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:agentUserId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/{+agentUserId}"
      #{:agentUserId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

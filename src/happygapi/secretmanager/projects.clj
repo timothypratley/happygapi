@@ -13,21 +13,22 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize, filter
+  
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}/locations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,21 +39,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,21 +65,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets metadata for a given Secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -91,10 +94,10 @@
   
   Body: 
   
-  {:policy {:version integer,
+  {:policy {:etag string,
+            :version integer,
             :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :etag string},
+            :bindings [Binding]},
    :updateMask string}
   
   Sets the access control policy on the specified secret. Replaces any
@@ -103,21 +106,21 @@
   Permissions on SecretVersions are enforced according
   to the policy set on the associated Secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -131,28 +134,28 @@
   
   Body: 
   
-  {:replication {:automatic Automatic, :userManaged UserManaged},
+  {:name string,
+   :replication {:automatic Automatic, :userManaged UserManaged},
    :createTime string,
-   :labels {},
-   :name string}
+   :labels {}}
   
   Updates metadata of an existing Secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -176,21 +179,21 @@
   UIs and command-line tools, not for authorization checking. This operation
   may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -204,28 +207,28 @@
   
   Body: 
   
-  {:replication {:automatic Automatic, :userManaged UserManaged},
+  {:name string,
+   :replication {:automatic Automatic, :userManaged UserManaged},
    :createTime string,
-   :labels {},
-   :name string}
+   :labels {}}
   
   Creates a new Secret containing no SecretVersions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+parent}/secrets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -244,21 +247,21 @@
   Creates a new SecretVersion containing secret data and attaches
   it to an existing Secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+parent}:addVersion"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -269,21 +272,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a Secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -294,22 +298,23 @@
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
+  
   Gets the access control policy for a secret.
   Returns empty policy if the secret exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -320,21 +325,22 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Lists Secrets."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+parent}/secrets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -355,21 +361,21 @@
   Sets the state of the SecretVersion to
   ENABLED."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}:enable"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -380,22 +386,23 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Lists SecretVersions. This call does not return secret
   data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+parent}/versions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -417,21 +424,21 @@
   DESTROYED and irrevocably destroys the
   secret data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}:destroy"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -452,21 +459,21 @@
   Sets the state of the SecretVersion to
   DISABLED."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}:disable"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -477,24 +484,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets metadata for a SecretVersion.
   
   `projects/*/secrets/*/versions/latest` is an alias to the `latest`
   SecretVersion."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -505,24 +513,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Accesses a SecretVersion. This call returns the secret data.
   
   `projects/*/secrets/*/versions/latest` is an alias to the `latest`
   SecretVersion."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://secretmanager.googleapis.com/"
      "v1/{+name}:access"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,23 +12,24 @@
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
+  
   Deletes a playlist."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "playlists"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,21 +64,21 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "playlists"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -88,24 +89,25 @@
   Required parameters: part
   
   Optional parameters: onBehalfOfContentOwnerChannel, channelId, pageToken, mine, hl, id, onBehalfOfContentOwner, maxResults
+  
   Returns a collection of playlists that match the API request parameters. For example, you can retrieve all playlists that the authenticated user owns, or you can retrieve one or more playlists by their unique IDs."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "playlists"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -140,21 +142,21 @@
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "playlists"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

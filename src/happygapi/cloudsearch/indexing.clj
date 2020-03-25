@@ -6,35 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn datasources-getSchema$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/getSchema
-  
-  Required parameters: name
-  
-  Optional parameters: debugOptions.enableDebugging
-  Gets the schema of a data source.
-  
-  **Note:** This API requires an admin or service account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/indexing/{+name}/schema"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn datasources-updateSchema$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/updateSchema
   
@@ -44,10 +15,10 @@
   
   Body: 
   
-  {:debugOptions {:enableDebugging boolean},
-   :validateOnly boolean,
-   :schema {:operationIds [string],
-            :objectDefinitions [ObjectDefinition]}}
+  {:schema {:operationIds [string],
+            :objectDefinitions [ObjectDefinition]},
+   :debugOptions {:enableDebugging boolean},
+   :validateOnly boolean}
   
   Updates the schema of a data source. This method does not perform
   incremental updates to the schema. Instead, this method updates the schema
@@ -57,21 +28,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/schema"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,25 +53,56 @@
   Required parameters: name
   
   Optional parameters: debugOptions.enableDebugging
+  
   Deletes the schema of a data source.
   
   **Note:** This API requires an admin or service account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.settings"
             "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/schema"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn datasources-getSchema$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/getSchema
+  
+  Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
+  
+  Gets the schema of a data source.
+  
+  **Note:** This API requires an admin or service account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/indexing/{+name}/schema"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -110,26 +112,27 @@
   
   Required parameters: name
   
-  Optional parameters: connectorName, debugOptions.enableDebugging
+  Optional parameters: debugOptions.enableDebugging, connectorName
+  
   Gets Item resource by item name.
   
   This API requires an admin or service account to execute.  The service
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -144,13 +147,13 @@
   Body: 
   
   {:debugOptions {:enableDebugging boolean},
-   :item {:payload string,
+   :item {:contentHash string,
+          :metadataHash string,
+          :payload string,
           :repositoryError RepositoryError,
           :type string,
           :queue string,
-          :structuredDataHash string,
-          :contentHash string,
-          :metadataHash string},
+          :structuredDataHash string},
    :connectorName string}
   
   Pushes an item onto a queue for later polling and updating.
@@ -159,21 +162,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}:push"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -187,8 +190,7 @@
   
   Body: 
   
-  {:mode string,
-   :debugOptions {:enableDebugging boolean},
+  {:debugOptions {:enableDebugging boolean},
    :item {:payload string,
           :queue string,
           :content ItemContent,
@@ -200,7 +202,8 @@
           :structuredData ItemStructuredData,
           :metadata ItemMetadata},
    :connectorName string,
-   :indexItemOptions {:allowUnknownGsuitePrincipals boolean}}
+   :indexItemOptions {:allowUnknownGsuitePrincipals boolean},
+   :mode string}
   
   Updates Item ACL, metadata, and
   content. It will insert the Item if it
@@ -212,21 +215,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}:index"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -236,26 +239,27 @@
   
   Required parameters: name
   
-  Optional parameters: mode, connectorName, version, debugOptions.enableDebugging
+  Optional parameters: connectorName, version, debugOptions.enableDebugging, mode
+  
   Deletes Item resource for the
   specified resource name. This API requires an admin or service account
   to execute. The service account used is the one whitelisted in the
   corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -280,21 +284,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/items:deleteQueueItems"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -308,11 +312,11 @@
   
   Body: 
   
-  {:limit integer,
+  {:queue string,
+   :limit integer,
    :statusCodes [string],
    :debugOptions {:enableDebugging boolean},
-   :connectorName string,
-   :queue string}
+   :connectorName string}
   
   Polls for unreserved items from the indexing queue and marks a
   set as reserved, starting with items that have
@@ -344,21 +348,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/items:poll"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -368,26 +372,27 @@
   
   Required parameters: name
   
-  Optional parameters: debugOptions.enableDebugging, connectorName, brief, pageToken, pageSize
+  Optional parameters: connectorName, brief, pageToken, pageSize, debugOptions.enableDebugging
+  
   Lists all or a subset of Item resources.
   
   This API requires an admin or service account to execute. The service
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/items"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -413,21 +418,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}/items:unreserve"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -441,7 +446,7 @@
   
   Body: 
   
-  {:connectorName string, :debugOptions {:enableDebugging boolean}}
+  {:debugOptions {:enableDebugging boolean}, :connectorName string}
   
   Creates an upload session for uploading item content. For items smaller
   than 100 KB, it's easier to embed the content
@@ -452,21 +457,21 @@
   account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/indexing/{+name}:upload"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

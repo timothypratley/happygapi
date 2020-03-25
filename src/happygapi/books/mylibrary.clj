@@ -12,21 +12,22 @@
   Required parameters: annotationId
   
   Optional parameters: source
+  
   Deletes an annotation."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:annotationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:annotationId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/annotations/{annotationId}"
      #{:annotationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +95,21 @@
   
   Inserts a new annotation."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/annotations"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -119,21 +120,22 @@
   Required parameters: none
   
   Optional parameters: layerIds, volumeId, source, pageToken, contentVersion, updatedMax, layerId, showDeleted, updatedMin, maxResults
+  
   Retrieves a list of annotations, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/annotations"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -144,21 +146,22 @@
   Required parameters: layerIds, volumeId
   
   Optional parameters: none
+  
   Gets the summary of specified layers."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:layerIds :volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:layerIds :volumeId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/annotations/summary"
      #{:layerIds :volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -226,21 +229,21 @@
   
   Updates an existing annotation."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:annotationId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:annotationId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/annotations/{annotationId}"
      #{:annotationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -251,21 +254,22 @@
   Required parameters: shelf, volumeId
   
   Optional parameters: reason, source
+  
   Adds a volume to a bookshelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf :volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}/addVolume"
      #{:shelf :volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -276,21 +280,22 @@
   Required parameters: shelf
   
   Optional parameters: source
+  
   Clears all volumes from a bookshelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}/clearVolumes"
      #{:shelf}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -301,21 +306,22 @@
   Required parameters: shelf
   
   Optional parameters: source
+  
   Retrieves metadata for a specific bookshelf belonging to the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}"
      #{:shelf}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -326,21 +332,22 @@
   Required parameters: none
   
   Optional parameters: source
+  
   Retrieves a list of bookshelves belonging to the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -351,21 +358,24 @@
   Required parameters: shelf, volumeId, volumePosition
   
   Optional parameters: source
+  
   Moves a volume within a bookshelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf :volumeId :volumePosition})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:shelf :volumeId :volumePosition})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}/moveVolume"
      #{:shelf :volumeId :volumePosition}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -376,21 +386,22 @@
   Required parameters: shelf, volumeId
   
   Optional parameters: reason, source
+  
   Removes a volume from a bookshelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf :volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}/removeVolume"
      #{:shelf :volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -401,21 +412,22 @@
   Required parameters: shelf
   
   Optional parameters: country, maxResults, projection, q, showPreorders, source, startIndex
+  
   Gets volume information for volumes on a bookshelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/bookshelves/{shelf}/volumes"
      #{:shelf}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -426,21 +438,22 @@
   Required parameters: volumeId
   
   Optional parameters: contentVersion, source
+  
   Retrieves my reading position information for a volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/readingpositions/{volumeId}"
      #{:volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -451,21 +464,22 @@
   Required parameters: position, timestamp, volumeId
   
   Optional parameters: action, contentVersion, deviceCookie, source
+  
   Sets my reading position information for a volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId :position :timestamp})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId :position :timestamp})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "mylibrary/readingpositions/{volumeId}/setPosition"
      #{:volumeId :position :timestamp}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

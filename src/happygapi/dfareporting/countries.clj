@@ -12,21 +12,22 @@
   Required parameters: dartId, profileId
   
   Optional parameters: none
+  
   Gets one country by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:dartId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dartId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/countries/{dartId}"
      #{:dartId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: profileId
   
   Optional parameters: none
+  
   Retrieves a list of countries."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/countries"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

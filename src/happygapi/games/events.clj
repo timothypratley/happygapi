@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
+  
   Returns a list showing the current progress on events in this application for the currently authenticated user."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "events"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
+  
   Returns a list of the event definitions in this application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "eventDefinitions"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,21 +76,21 @@
   
   Records a batch of changes to the number of times events have occurred for the currently authenticated user of this application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "events"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

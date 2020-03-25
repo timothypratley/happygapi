@@ -11,23 +11,24 @@
   
   Required parameters: instance, project
   
-  Optional parameters: host, name, resourceName
+  Optional parameters: name, host
+  
   Deletes a user from a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,37 +38,37 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
   
   Body: 
   
-  {:project string,
+  {:sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
+   :instance string,
+   :name string,
+   :project string,
    :host string,
    :kind string,
    :etag string,
-   :password string,
-   :sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
-   :instance string,
-   :name string}
+   :password string}
   
   Creates a new user in a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -77,23 +78,24 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
+  
   Lists users in the specified Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -103,37 +105,37 @@
   
   Required parameters: instance, project
   
-  Optional parameters: host, name, resourceName
+  Optional parameters: name, host
   
   Body: 
   
-  {:project string,
+  {:sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
+   :instance string,
+   :name string,
+   :project string,
    :host string,
    :kind string,
    :etag string,
-   :password string,
-   :sqlserverUserDetails {:disabled boolean, :serverRoles [string]},
-   :instance string,
-   :name string}
+   :password string}
   
   Updates an existing user in a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/users"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

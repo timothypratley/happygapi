@@ -12,24 +12,25 @@
   Required parameters: part
   
   Optional parameters: hl, id, regionCode
+  
   Returns a list of categories that can be associated with YouTube channels."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "guideCategories"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

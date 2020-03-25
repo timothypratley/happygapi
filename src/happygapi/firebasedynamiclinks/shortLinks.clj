@@ -38,21 +38,21 @@
   The Dynamic Link domain in the request must be owned by requester's
   Firebase project."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
      "v1/shortLinks"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

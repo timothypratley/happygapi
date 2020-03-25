@@ -12,21 +12,22 @@
   Required parameters: blogId
   
   Optional parameters: range
+  
   Retrieve pageview stats for a Blog."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pageviews"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

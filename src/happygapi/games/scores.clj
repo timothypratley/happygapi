@@ -12,22 +12,25 @@
   Required parameters: leaderboardId, playerId, timeSpan
   
   Optional parameters: includeRankType, language, maxResults, pageToken
+  
   Get high scores, and optionally ranks, in leaderboards for the currently authenticated player. For a specific time span, leaderboardId can be set to ALL to retrieve data for all leaderboards in a given time span.
   NOTE: You cannot ask for 'ALL' leaderboards and 'ALL' timeSpans in the same request; only one parameter may be set to 'ALL'."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:timeSpan :leaderboardId :playerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:timeSpan :leaderboardId :playerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/{playerId}/leaderboards/{leaderboardId}/scores/{timeSpan}"
      #{:timeSpan :leaderboardId :playerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,21 +41,24 @@
   Required parameters: collection, leaderboardId, timeSpan
   
   Optional parameters: language, maxResults, pageToken
+  
   Lists the scores in a leaderboard, starting from the top."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:timeSpan :leaderboardId :collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:timeSpan :leaderboardId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "leaderboards/{leaderboardId}/scores/{collection}"
      #{:timeSpan :leaderboardId :collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,21 +69,24 @@
   Required parameters: collection, leaderboardId, timeSpan
   
   Optional parameters: language, maxResults, pageToken, resultsAbove, returnTopIfAbsent
+  
   Lists the scores in a leaderboard around (and including) a player's score."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:timeSpan :leaderboardId :collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:timeSpan :leaderboardId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "leaderboards/{leaderboardId}/window/{collection}"
      #{:timeSpan :leaderboardId :collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -88,21 +97,22 @@
   Required parameters: leaderboardId, score
   
   Optional parameters: language, scoreTag
+  
   Submits a score to the specified leaderboard."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:leaderboardId :score})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:leaderboardId :score})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "leaderboards/{leaderboardId}/scores"
      #{:leaderboardId :score}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -125,21 +135,21 @@
   
   Submits multiple scores to leaderboards."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "leaderboards/scores"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

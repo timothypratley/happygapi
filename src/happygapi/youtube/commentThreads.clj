@@ -28,21 +28,21 @@
   
   Creates a new top-level comment. To add a reply to an existing comment, use the comments.insert method instead."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "commentThreads"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -53,21 +53,22 @@
   Required parameters: part
   
   Optional parameters: textFormat, channelId, allThreadsRelatedToChannelId, pageToken, id, videoId, order, searchTerms, moderationStatus, maxResults
+  
   Returns a list of comment threads that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "commentThreads"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +95,21 @@
   
   Modifies the top-level comment in a comment thread."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "commentThreads"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

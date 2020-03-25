@@ -12,6 +12,7 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Gets information about the user, the user's Drive, and system capabilities."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -20,19 +21,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "about"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

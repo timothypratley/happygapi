@@ -19,21 +19,21 @@
   
   Looks up political geography and representative information for a single address."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/civicinfo/v2/"
      "representatives"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -51,21 +51,21 @@
   
   Looks up representative information for a single geographic division."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:ocdId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:ocdId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/civicinfo/v2/"
      "representatives/{ocdId}"
      #{:ocdId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

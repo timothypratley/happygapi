@@ -12,22 +12,23 @@
   Required parameters: externalVpnGateway, project
   
   Optional parameters: requestId
+  
   Deletes the specified externalVpnGateway."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:externalVpnGateway :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:externalVpnGateway :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways/{externalVpnGateway}"
      #{:externalVpnGateway :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +39,24 @@
   Required parameters: externalVpnGateway, project
   
   Optional parameters: none
+  
   Returns the specified externalVpnGateway. Get a list of available externalVpnGateways by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:externalVpnGateway :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:externalVpnGateway :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways/{externalVpnGateway}"
      #{:externalVpnGateway :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,21 +84,21 @@
   Creates a ExternalVpnGateway in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -107,23 +109,24 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of ExternalVpnGateway available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -142,21 +145,21 @@
   Sets the labels on an ExternalVpnGateway. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways/{resource}/setLabels"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -176,21 +179,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/externalVpnGateways/{resource}/testIamPermissions"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

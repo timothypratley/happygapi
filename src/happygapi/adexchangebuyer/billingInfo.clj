@@ -12,21 +12,22 @@
   Required parameters: accountId
   
   Optional parameters: none
+  
   Returns the billing information for one account specified by account ID."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "billinginfo/{accountId}"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Retrieves a list of billing information for all accounts of the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "billinginfo"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

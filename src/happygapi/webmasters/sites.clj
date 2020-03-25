@@ -12,21 +12,22 @@
   Required parameters: siteUrl
   
   Optional parameters: none
+  
   Adds a site to the set of the user's sites in Search Console."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:siteUrl})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}"
      #{:siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: siteUrl
   
   Optional parameters: none
+  
   Removes a site from the set of the user's Search Console sites."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:siteUrl})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}"
      #{:siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,22 +64,23 @@
   Required parameters: siteUrl
   
   Optional parameters: none
+  
   Retrieves information about specific site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:siteUrl})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}"
      #{:siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -88,22 +91,23 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Lists the user's Search Console sites."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

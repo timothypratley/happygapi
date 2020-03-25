@@ -12,11 +12,12 @@
   Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
   
   Optional parameters: none
+  
   Removes a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId
             :deviceId
             :userId
@@ -30,11 +31,11 @@
        :deviceId
        :userId
        :managedConfigurationForDeviceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -45,11 +46,12 @@
   Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
   
   Optional parameters: none
+  
   Retrieves details of a per-device managed configuration."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId
             :deviceId
             :userId
@@ -63,11 +65,11 @@
        :deviceId
        :userId
        :managedConfigurationForDeviceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -78,21 +80,24 @@
   Required parameters: deviceId, enterpriseId, userId
   
   Optional parameters: none
+  
   Lists all the per-device managed configurations for the specified device. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :deviceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :deviceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice"
      #{:enterpriseId :deviceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -121,9 +126,9 @@
   
   Adds or updates a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId
             :deviceId
             :userId
@@ -137,13 +142,13 @@
        :deviceId
        :userId
        :managedConfigurationForDeviceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

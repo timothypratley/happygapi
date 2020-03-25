@@ -12,25 +12,26 @@
   Required parameters: none
   
   Optional parameters: onBehalfOfContentOwner, id
+  
   Removes an item from a group."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"
             "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://youtubeanalytics.googleapis.com/"
      "v2/groupItems"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,12 +45,12 @@
   
   Body: 
   
-  {:etag string,
+  {:kind string,
+   :etag string,
    :resource {:kind string, :id string},
    :groupId string,
    :id string,
-   :errors {:error [ErrorProto], :code string, :requestId string},
-   :kind string}
+   :errors {:error [ErrorProto], :code string, :requestId string}}
   
   Creates a group item."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -57,21 +58,21 @@
             "https://www.googleapis.com/auth/youtubepartner"
             "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://youtubeanalytics.googleapis.com/"
      "v2/groupItems"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,25 +83,26 @@
   Required parameters: none
   
   Optional parameters: onBehalfOfContentOwner, groupId
+  
   Returns a collection of group items that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"
             "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://youtubeanalytics.googleapis.com/"
      "v2/groupItems"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

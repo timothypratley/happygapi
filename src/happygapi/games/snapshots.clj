@@ -12,22 +12,23 @@
   Required parameters: snapshotId
   
   Optional parameters: language
+  
   Retrieves the metadata for a given snapshot ID."
   {:scopes ["https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:snapshotId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:snapshotId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "snapshots/{snapshotId}"
      #{:snapshotId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: playerId
   
   Optional parameters: language, maxResults, pageToken
+  
   Retrieves a list of snapshots created by your application for the player corresponding to the player ID."
   {:scopes ["https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/{playerId}/snapshots"
      #{:playerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

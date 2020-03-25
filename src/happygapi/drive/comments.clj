@@ -44,21 +44,21 @@
   Creates a new comment on a file."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,22 +69,23 @@
   Required parameters: commentId, fileId
   
   Optional parameters: none
+  
   Deletes a comment."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId :fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}"
      #{:commentId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -95,23 +96,24 @@
   Required parameters: commentId, fileId
   
   Optional parameters: includeDeleted
+  
   Gets a comment by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}"
      #{:commentId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -122,23 +124,24 @@
   Required parameters: fileId
   
   Optional parameters: includeDeleted, pageSize, pageToken, startModifiedTime
+  
   Lists a file's comments."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -181,21 +184,21 @@
   Updates a comment with patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:commentId :fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:commentId :fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}"
      #{:commentId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

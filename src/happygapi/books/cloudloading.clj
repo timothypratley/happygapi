@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: drive_document_id, mime_type, name, upload_client_token
+  
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "cloudloading/addBook"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: volumeId
   
   Optional parameters: none
+  
   Remove the book and its contents"
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "cloudloading/deleteBook"
      #{:volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -72,21 +74,21 @@
   
   "
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "cloudloading/updateBook"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,24 +12,25 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists the billing accounts that the current authenticated user has
   permission to
   [view](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/billingAccounts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -43,11 +44,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:version integer,
+            :auditConfigs [AuditConfig],
             :bindings [Binding],
-            :etag string,
-            :version integer}}
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy for a billing account. Replaces any existing
   policy.
@@ -55,21 +56,21 @@
   account, which is often given to billing account
   [administrators](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -99,21 +100,21 @@
   This method will return an error if the master account has not been
   provisioned as a reseller account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/billingAccounts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -124,24 +125,53 @@
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
+  
   Gets the access control policy for a billing account.
   The caller must have the `billing.accounts.getIamPolicy` permission on the
   account, which is often given to billing account
   [viewers](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a billing account. The current authenticated user
+  must be a [viewer of the billing
+  account](https://cloud.google.com/billing/docs/how-to/billing-access)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbilling.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -167,48 +197,21 @@
   [administrator](https://cloud.google.com/billing/docs/how-to/billing-access)
   of the billing account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets information about a billing account. The current authenticated user
-  must be a [viewer of the billing
-  account](https://cloud.google.com/billing/docs/how-to/billing-access)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbilling.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -228,21 +231,21 @@
   the resource and a set of permissions as input and returns the subset of
   the input permissions that the caller is allowed for that resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -253,24 +256,25 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize
+  
   Lists the projects associated with a billing account. The current
   authenticated user must have the `billing.resourceAssociations.list` IAM
   permission, which is often given to billing account
   [viewers](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+name}/projects"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,22 +12,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns specified connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -41,11 +42,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
+  {:policy {:bindings [Binding],
+            :etag string,
             :version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding]}}
+            :auditConfigs [AuditConfig]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any
   existing policy.
@@ -53,21 +54,21 @@
   Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -81,36 +82,36 @@
   
   Body: 
   
-  {:lastModifiedTime string,
-   :description string,
-   :creationTime string,
+  {:creationTime string,
    :name string,
    :cloudSql {:type string,
               :credential CloudSqlCredential,
               :database string,
               :instanceId string},
    :hasCredential boolean,
-   :friendlyName string}
+   :friendlyName string,
+   :lastModifiedTime string,
+   :description string}
   
   Updates the specified connection. For security reasons, also resets
   credential if connection properties are in the update field mask."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -135,21 +136,21 @@
   may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -163,35 +164,35 @@
   
   Body: 
   
-  {:lastModifiedTime string,
-   :description string,
-   :creationTime string,
+  {:creationTime string,
    :name string,
    :cloudSql {:type string,
               :credential CloudSqlCredential,
               :database string,
               :instanceId string},
    :hasCredential boolean,
-   :friendlyName string}
+   :friendlyName string,
+   :lastModifiedTime string,
+   :description string}
   
   Creates a new connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+parent}/connections"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -202,22 +203,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes connection and associated credential."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -238,21 +240,21 @@
   set."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -271,21 +273,21 @@
   Sets the credential for the specified connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -296,22 +298,23 @@
   Required parameters: parent
   
   Optional parameters: pageToken, maxResults
+  
   Returns a list of connections in the given project."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
      "v1beta1/{+parent}/connections"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

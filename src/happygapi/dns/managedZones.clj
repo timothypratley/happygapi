@@ -39,21 +39,21 @@
   Create a new ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,22 +64,23 @@
   Required parameters: managedZone, project
   
   Optional parameters: clientOperationId
+  
   Delete a previously created ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -90,24 +91,25 @@
   Required parameters: managedZone, project
   
   Optional parameters: clientOperationId
+  
   Fetch the representation of an existing ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -118,24 +120,25 @@
   Required parameters: project
   
   Optional parameters: dnsName, maxResults, pageToken
+  
   Enumerate ManagedZones that have been created but not yet deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -173,21 +176,21 @@
   Apply a partial update to an existing ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -225,21 +228,21 @@
   Update an existing ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

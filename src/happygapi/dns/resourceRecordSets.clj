@@ -12,24 +12,25 @@
   Required parameters: managedZone, project
   
   Optional parameters: maxResults, name, pageToken, type
+  
   Enumerate ResourceRecordSets that have been created but not yet deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}/rrsets"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

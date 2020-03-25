@@ -16,31 +16,31 @@
   Body: 
   
   {:updateMask string,
-   :operation {:done boolean,
-               :response {},
-               :name string,
+   :operation {:name string,
                :error Status,
-               :metadata {}}}
+               :metadata {},
+               :done boolean,
+               :response {}}}
   
   Updates an existing operation returns an error if operation
    does not exist. The only valid operations are to update mark the done bit
   change the result."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -54,30 +54,30 @@
   
   Body: 
   
-  {:operation {:done boolean,
-               :response {},
-               :name string,
+  {:operation {:name string,
                :error Status,
-               :metadata {}},
+               :metadata {},
+               :done boolean,
+               :response {}},
    :operationId string}
   
   Creates a new `Operation`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+parent}/operations"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -88,21 +88,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns the requested `Occurrence`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -116,7 +117,7 @@
   
   Body: 
   
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
   Sets the access control policy on the specified `Note` or `Occurrence`.
   Requires `containeranalysis.notes.setIamPolicy` or
@@ -131,21 +132,21 @@
   formats: `projects/{projectid}/occurrences/{occurrenceid}` for occurrences
   and projects/{projectid}/notes/{noteid} for notes"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -162,56 +163,56 @@
   {:noteName string,
    :remediation string,
    :resourceUrl string,
-   :buildDetails {:provenanceBytes string, :provenance BuildProvenance},
-   :vulnerabilityDetails {:type string,
+   :buildDetails {:provenance BuildProvenance, :provenanceBytes string},
+   :vulnerabilityDetails {:severity string,
+                          :cvssScore number,
+                          :type string,
                           :effectiveSeverity string,
-                          :packageIssue [PackageIssue],
-                          :severity string,
-                          :cvssScore number},
+                          :packageIssue [PackageIssue]},
    :name string,
    :createTime string,
-   :discovered {:analysisStatusError Status,
-                :operation Operation,
+   :discovered {:operation Operation,
                 :analysisStatus string,
                 :continuousAnalysis string,
-                :cpe string},
+                :cpe string,
+                :analysisStatusError Status},
    :updateTime string,
-   :upgrade {:package string,
-             :parsedVersion Version,
-             :distribution UpgradeDistribution},
+   :upgrade {:distribution UpgradeDistribution,
+             :package string,
+             :parsedVersion Version},
    :installation {:name string, :location [Location]},
    :derivedImage {:baseResourceUrl string,
                   :fingerprint Fingerprint,
                   :layerInfo [Layer],
                   :distance integer},
    :attestation {:pgpSignedAttestation PgpSignedAttestation},
-   :resource {:contentHash Hash, :uri string, :name string},
+   :resource {:name string, :contentHash Hash, :uri string},
    :kind string,
    :deployment {:platform string,
                 :deployTime string,
                 :address string,
                 :resourceUri [string],
-                :userEmail string,
                 :config string,
+                :userEmail string,
                 :undeployTime string}}
   
   Updates an existing occurrence."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -236,21 +237,21 @@
   following formats: `projects/{PROJECT_ID}/occurrences/{OCCURRENCE_ID}` for
   `Occurrences` and `projects/{PROJECT_ID}/notes/{NOTE_ID}` for `Notes`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -267,57 +268,57 @@
   {:noteName string,
    :remediation string,
    :resourceUrl string,
-   :buildDetails {:provenanceBytes string, :provenance BuildProvenance},
-   :vulnerabilityDetails {:type string,
+   :buildDetails {:provenance BuildProvenance, :provenanceBytes string},
+   :vulnerabilityDetails {:severity string,
+                          :cvssScore number,
+                          :type string,
                           :effectiveSeverity string,
-                          :packageIssue [PackageIssue],
-                          :severity string,
-                          :cvssScore number},
+                          :packageIssue [PackageIssue]},
    :name string,
    :createTime string,
-   :discovered {:analysisStatusError Status,
-                :operation Operation,
+   :discovered {:operation Operation,
                 :analysisStatus string,
                 :continuousAnalysis string,
-                :cpe string},
+                :cpe string,
+                :analysisStatusError Status},
    :updateTime string,
-   :upgrade {:package string,
-             :parsedVersion Version,
-             :distribution UpgradeDistribution},
+   :upgrade {:distribution UpgradeDistribution,
+             :package string,
+             :parsedVersion Version},
    :installation {:name string, :location [Location]},
    :derivedImage {:baseResourceUrl string,
                   :fingerprint Fingerprint,
                   :layerInfo [Layer],
                   :distance integer},
    :attestation {:pgpSignedAttestation PgpSignedAttestation},
-   :resource {:contentHash Hash, :uri string, :name string},
+   :resource {:name string, :contentHash Hash, :uri string},
    :kind string,
    :deployment {:platform string,
                 :deployTime string,
                 :address string,
                 :resourceUri [string],
-                :userEmail string,
                 :config string,
+                :userEmail string,
                 :undeployTime string}}
   
   Creates a new `Occurrence`. Use this method to create `Occurrences`
   for a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+parent}/occurrences"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -328,22 +329,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes the given `Occurrence` from the system. Use this when
   an `Occurrence` is no longer applicable for the given resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -354,21 +356,22 @@
   Required parameters: parent
   
   Optional parameters: filter
+  
   Gets a summary of the number and severity of occurrences."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+parent}/occurrences:vulnerabilitySummary"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -396,21 +399,21 @@
   `projects/{PROJECT_ID}/occurrences/{OCCURRENCE_ID}` for occurrences and
   projects/{PROJECT_ID}/notes/{NOTE_ID} for notes"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -421,21 +424,22 @@
   Required parameters: parent
   
   Optional parameters: name, filter, pageToken, kind, pageSize
+  
   Lists active `Occurrences` for a given project matching the filters."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+parent}/occurrences"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -446,21 +450,207 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the `Note` attached to the given `Occurrence`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}/notes"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-testIamPermissions$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns the permissions that a caller has on the specified note or
+  occurrence resource. Requires list permission on the project (for example,
+  \"storage.objects.list\" on the containing bucket for testing permission of
+  an object). Attempting to call this method on a non-existent resource will
+  result in a `NOT_FOUND` error if the user has list permission on the
+  project, or a `PERMISSION_DENIED` error otherwise. The resource takes the
+  following formats: `projects/{PROJECT_ID}/occurrences/{OCCURRENCE_ID}` for
+  `Occurrences` and `projects/{PROJECT_ID}/notes/{NOTE_ID}` for `Notes`"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-delete$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the given `Note` from the system."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-list$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: name, pageToken, pageSize, filter
+  
+  Lists all `Notes` for a given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+parent}/notes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-create$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: name, noteId
+  
+  Body: 
+  
+  {:vulnerabilityType {:severity string,
+                       :details [Detail],
+                       :cvssScore number},
+   :relatedUrl [{:url string, :label string}],
+   :package {:name string, :distribution [Distribution]},
+   :buildType {:builderVersion string, :signature BuildSignature},
+   :discovery {:analysisKind string},
+   :deployable {:resourceUri [string]},
+   :expirationTime string,
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :attestationAuthority {:hint AttestationAuthorityHint},
+   :shortDescription string,
+   :upgrade {:package string,
+             :version Version,
+             :distributions [UpgradeDistribution]},
+   :baseImage {:fingerprint Fingerprint, :resourceUrl string},
+   :kind string,
+   :longDescription string}
+  
+  Creates a new `Note`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+parent}/notes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notes-setIamPolicy$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :bindings [Binding], :etag string}}
+  
+  Sets the access control policy on the specified `Note` or `Occurrence`.
+  Requires `containeranalysis.notes.setIamPolicy` or
+  `containeranalysis.occurrences.setIamPolicy` permission if the resource is
+  a `Note` or an `Occurrence`, respectively.
+  Attempting to call this method without these permissions will result in a `
+  `PERMISSION_DENIED` error.
+  Attempting to call this method on a non-existent resource will result in a
+  `NOT_FOUND` error if the user has `containeranalysis.notes.list` permission
+  on a `Note` or `containeranalysis.occurrences.list` on an `Occurrence`, or
+  a `PERMISSION_DENIED` error otherwise. The resource takes the following
+  formats: `projects/{projectid}/occurrences/{occurrenceid}` for occurrences
+  and projects/{projectid}/notes/{noteid} for notes"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1alpha1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -488,21 +678,21 @@
   `projects/{PROJECT_ID}/occurrences/{OCCURRENCE_ID}` for occurrences and
   projects/{PROJECT_ID}/notes/{NOTE_ID} for notes"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -513,21 +703,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns the requested `Note`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -541,9 +732,9 @@
   
   Body: 
   
-  {:vulnerabilityType {:cvssScore number,
-                       :severity string,
-                       :details [Detail]},
+  {:vulnerabilityType {:severity string,
+                       :details [Detail],
+                       :cvssScore number},
    :relatedUrl [{:url string, :label string}],
    :package {:name string, :distribution [Distribution]},
    :buildType {:builderVersion string, :signature BuildSignature},
@@ -555,213 +746,30 @@
    :updateTime string,
    :attestationAuthority {:hint AttestationAuthorityHint},
    :shortDescription string,
-   :upgrade {:distributions [UpgradeDistribution],
-             :package string,
-             :version Version},
+   :upgrade {:package string,
+             :version Version,
+             :distributions [UpgradeDistribution]},
    :baseImage {:fingerprint Fingerprint, :resourceUrl string},
    :kind string,
    :longDescription string}
   
   Updates an existing `Note`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notes-testIamPermissions$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns the permissions that a caller has on the specified note or
-  occurrence resource. Requires list permission on the project (for example,
-  \"storage.objects.list\" on the containing bucket for testing permission of
-  an object). Attempting to call this method on a non-existent resource will
-  result in a `NOT_FOUND` error if the user has list permission on the
-  project, or a `PERMISSION_DENIED` error otherwise. The resource takes the
-  following formats: `projects/{PROJECT_ID}/occurrences/{OCCURRENCE_ID}` for
-  `Occurrences` and `projects/{PROJECT_ID}/notes/{NOTE_ID}` for `Notes`"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+resource}:testIamPermissions"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notes-delete$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes the given `Note` from the system."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notes-list$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, name, pageToken
-  Lists all `Notes` for a given project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+parent}/notes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notes-setIamPolicy$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
-  
-  Sets the access control policy on the specified `Note` or `Occurrence`.
-  Requires `containeranalysis.notes.setIamPolicy` or
-  `containeranalysis.occurrences.setIamPolicy` permission if the resource is
-  a `Note` or an `Occurrence`, respectively.
-  Attempting to call this method without these permissions will result in a `
-  `PERMISSION_DENIED` error.
-  Attempting to call this method on a non-existent resource will result in a
-  `NOT_FOUND` error if the user has `containeranalysis.notes.list` permission
-  on a `Note` or `containeranalysis.occurrences.list` on an `Occurrence`, or
-  a `PERMISSION_DENIED` error otherwise. The resource takes the following
-  formats: `projects/{projectid}/occurrences/{occurrenceid}` for occurrences
-  and projects/{projectid}/notes/{noteid} for notes"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+resource}:setIamPolicy"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notes-create$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1alpha1/projects/notes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: name, noteId
-  
-  Body: 
-  
-  {:vulnerabilityType {:cvssScore number,
-                       :severity string,
-                       :details [Detail]},
-   :relatedUrl [{:url string, :label string}],
-   :package {:name string, :distribution [Distribution]},
-   :buildType {:builderVersion string, :signature BuildSignature},
-   :discovery {:analysisKind string},
-   :deployable {:resourceUri [string]},
-   :expirationTime string,
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :attestationAuthority {:hint AttestationAuthorityHint},
-   :shortDescription string,
-   :upgrade {:distributions [UpgradeDistribution],
-             :package string,
-             :version Version},
-   :baseImage {:fingerprint Fingerprint, :resourceUrl string},
-   :kind string,
-   :longDescription string}
-  
-  Creates a new `Note`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1alpha1/{+parent}/notes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -771,24 +779,25 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists `Occurrences` referencing the specified `Note`. Use this method to
   get all occurrences referencing your `Note` across all your customer
   projects."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}/occurrences"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -799,21 +808,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a specific scan configuration for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -823,22 +833,23 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists scan configurations for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+parent}/scanConfigs"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -852,29 +863,29 @@
   
   Body: 
   
-  {:name string,
+  {:createTime string,
+   :updateTime string,
+   :name string,
    :description string,
-   :enabled boolean,
-   :createTime string,
-   :updateTime string}
+   :enabled boolean}
   
   Updates the scan configuration to a new value."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

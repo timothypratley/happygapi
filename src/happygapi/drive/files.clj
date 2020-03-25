@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Permanently deletes all of the user's trashed files."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/trash"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,6 +38,7 @@
   Required parameters: fileId
   
   Optional parameters: acknowledgeAbuse, supportsAllDrives, supportsTeamDrives
+  
   Gets a file's metadata or content by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -45,19 +47,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -67,7 +69,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives
+  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives
   
   Body: 
   
@@ -75,6 +77,7 @@
    :properties {},
    :isAppAuthorized boolean,
    :capabilities {:canDelete boolean,
+                  :canAddMyDriveParent boolean,
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
@@ -90,6 +93,7 @@
                   :canChangeCopyRequiresWriterPermission boolean,
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
+                  :canRemoveMyDriveParent boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -196,6 +200,7 @@
                   :permissionId string,
                   :photoLink string},
    :shared boolean,
+   :shortcutDetails {:targetId string, :targetMimeType string},
    :sharingUser {:displayName string,
                  :emailAddress string,
                  :kind string,
@@ -224,21 +229,21 @@
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.photos.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/copy"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -248,7 +253,7 @@
   
   Required parameters: none
   
-  Optional parameters: ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
+  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
   
   Body: 
   
@@ -256,6 +261,7 @@
    :properties {},
    :isAppAuthorized boolean,
    :capabilities {:canDelete boolean,
+                  :canAddMyDriveParent boolean,
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
@@ -271,6 +277,7 @@
                   :canChangeCopyRequiresWriterPermission boolean,
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
+                  :canRemoveMyDriveParent boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -377,6 +384,7 @@
                   :permissionId string,
                   :photoLink string},
    :shared boolean,
+   :shortcutDetails {:targetId string, :targetMimeType string},
    :sharingUser {:displayName string,
                  :emailAddress string,
                  :kind string,
@@ -404,21 +412,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -428,7 +436,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: addParents, keepRevisionForever, ocrLanguage, removeParents, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
+  Optional parameters: removeParents, addParents, enforceSingleParent, supportsAllDrives, useContentAsIndexableText, ocrLanguage, supportsTeamDrives, keepRevisionForever
   
   Body: 
   
@@ -436,6 +444,7 @@
    :properties {},
    :isAppAuthorized boolean,
    :capabilities {:canDelete boolean,
+                  :canAddMyDriveParent boolean,
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
@@ -451,6 +460,7 @@
                   :canChangeCopyRequiresWriterPermission boolean,
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
+                  :canRemoveMyDriveParent boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -557,6 +567,7 @@
                   :permissionId string,
                   :photoLink string},
    :shared boolean,
+   :shortcutDetails {:targetId string, :targetMimeType string},
    :sharingUser {:displayName string,
                  :emailAddress string,
                  :kind string,
@@ -586,21 +597,21 @@
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.metadata"
             "https://www.googleapis.com/auth/drive.scripts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -611,23 +622,24 @@
   Required parameters: fileId
   
   Optional parameters: supportsAllDrives, supportsTeamDrives
+  
   Permanently deletes a file owned by the user without moving it to the trash. If the file belongs to a shared drive the user must be an organizer on the parent. If the target is a folder, all descendants owned by the user are also deleted."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -638,23 +650,24 @@
   Required parameters: fileId, mimeType
   
   Optional parameters: none
+  
   Exports a Google Doc to the requested MIME type and returns the exported content. Please note that the exported content is limited to 10MB."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:mimeType :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:mimeType :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/export"
      #{:mimeType :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -665,6 +678,7 @@
   Required parameters: none
   
   Optional parameters: q, includeItemsFromAllDrives, corpora, supportsAllDrives, corpus, teamDriveId, pageToken, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives, orderBy
+  
   Lists or searches files."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -673,19 +687,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -718,21 +732,21 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/watch"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -743,23 +757,24 @@
   Required parameters: none
   
   Optional parameters: count, space
+  
   Generates a set of file IDs which can be provided in create or copy requests."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/generateIds"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

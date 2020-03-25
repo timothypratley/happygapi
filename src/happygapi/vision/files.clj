@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:requests [{:inputConfig InputConfig,
+  {:parent string,
+   :requests [{:inputConfig InputConfig,
                :features [Feature],
                :imageContext ImageContext,
-               :outputConfig OutputConfig}],
-   :parent string}
+               :outputConfig OutputConfig}]}
   
   Run asynchronous image detection and annotation for a list of generic
   files, such as PDF files, which may contain multiple pages and multiple
@@ -29,21 +29,21 @@
   `Operation.response` contains `AsyncBatchAnnotateFilesResponse` (results)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://vision.googleapis.com/"
      "v1/files:asyncBatchAnnotate"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -57,11 +57,11 @@
   
   Body: 
   
-  {:parent string,
-   :requests [{:imageContext ImageContext,
-               :pages [integer],
-               :inputConfig InputConfig,
-               :features [Feature]}]}
+  {:requests [{:inputConfig InputConfig,
+               :features [Feature],
+               :imageContext ImageContext,
+               :pages [integer]}],
+   :parent string}
   
   Service that performs image detection and annotation for a batch of files.
   Now only \"application/pdf\", \"image/tiff\" and \"image/gif\" are supported.
@@ -72,21 +72,21 @@
   extracted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://vision.googleapis.com/"
      "v1/files:annotate"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

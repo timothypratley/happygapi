@@ -12,21 +12,22 @@
   Required parameters: feedpath, siteUrl
   
   Optional parameters: none
+  
   Deletes a sitemap from this site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:feedpath :siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:feedpath :siteUrl})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}/sitemaps/{feedpath}"
      #{:feedpath :siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,22 +38,23 @@
   Required parameters: feedpath, siteUrl
   
   Optional parameters: none
+  
   Retrieves information about a specific sitemap."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:feedpath :siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:feedpath :siteUrl})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}/sitemaps/{feedpath}"
      #{:feedpath :siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,22 +65,23 @@
   Required parameters: siteUrl
   
   Optional parameters: sitemapIndex
+  
   Lists the sitemaps-entries submitted for this site, or included in the sitemap index file (if sitemapIndex is specified in the request)."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:siteUrl})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}/sitemaps"
      #{:siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -89,21 +92,22 @@
   Required parameters: feedpath, siteUrl
   
   Optional parameters: none
+  
   Submits a sitemap for a site."
   {:scopes ["https://www.googleapis.com/auth/webmasters"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:feedpath :siteUrl})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:feedpath :siteUrl})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}/sitemaps/{feedpath}"
      #{:feedpath :siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

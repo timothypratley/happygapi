@@ -12,22 +12,23 @@
   Required parameters: license, project
   
   Optional parameters: requestId
-  Deletes the specified license."
+  
+  Deletes the specified license.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:license :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:license :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses/{license}"
      #{:license :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +39,24 @@
   Required parameters: license, project
   
   Optional parameters: none
-  Returns the specified License resource."
+  
+  Returns the specified License resource.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:license :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:license :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses/{license}"
      #{:license :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,23 +67,24 @@
   Required parameters: project, resource
   
   Optional parameters: none
-  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  
+  Gets the access control policy for a resource. May be empty if no such policy or resource exists.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses/{resource}/getIamPolicy"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -107,27 +110,27 @@
    :resourceRequirements {:minGuestCpuCount integer,
                           :minMemoryMb integer}}
   
-  Create a License resource in the specified project."
+  Create a License resource in the specified project.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -138,23 +141,24 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
-  Retrieves the list of licenses available in the specified project. This method does not get any licenses that belong to other projects, including licenses attached to publicly-available images, like Debian 9. If you want to get a list of publicly-available licenses, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
+  
+  Retrieves the list of licenses available in the specified project. This method does not get any licenses that belong to other projects, including licenses attached to publicly-available images, like Debian 9. If you want to get a list of publicly-available licenses, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -177,24 +181,24 @@
             :rules [Rule],
             :version integer}}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy."
+  Sets the access control policy on the specified resource. Replaces any existing policy.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses/{resource}/setIamPolicy"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -210,25 +214,25 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource."
+  Returns permissions that a caller has on the specified resource.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/licenses/{resource}/testIamPermissions"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

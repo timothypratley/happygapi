@@ -12,21 +12,22 @@
   Required parameters: id, profileId
   
   Optional parameters: none
+  
   Deletes an existing content category."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories/{id}"
      #{:id :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: id, profileId
   
   Optional parameters: none
+  
   Gets one content category by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories/{id}"
      #{:id :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,21 +71,21 @@
   
   Inserts a new content category."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +96,22 @@
   Required parameters: profileId
   
   Optional parameters: ids, maxResults, pageToken, searchString, sortField, sortOrder
+  
   Retrieves a list of content categories, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -126,21 +129,21 @@
   
   Updates an existing content category. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories"
      #{:id :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -158,21 +161,21 @@
   
   Updates an existing content category."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/contentCategories"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

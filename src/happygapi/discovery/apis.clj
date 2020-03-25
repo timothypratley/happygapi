@@ -12,21 +12,22 @@
   Required parameters: api, version
   
   Optional parameters: none
+  
   Retrieve the description of a particular version of an api."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:api :version})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:api :version})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/discovery/v1/"
      "apis/{api}/{version}/rest"
      #{:api :version}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: none
   
   Optional parameters: name, preferred
+  
   Retrieve the list of APIs supported at this endpoint."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/discovery/v1/"
      "apis"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

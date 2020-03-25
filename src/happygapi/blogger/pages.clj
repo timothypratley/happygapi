@@ -12,21 +12,22 @@
   Required parameters: blogId, pageId
   
   Optional parameters: none
+  
   Delete a page by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,22 +38,23 @@
   Required parameters: blogId, pageId
   
   Optional parameters: view
+  
   Gets one blog page by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -84,21 +86,21 @@
   
   Add a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,22 +111,23 @@
   Required parameters: blogId
   
   Optional parameters: fetchBodies, maxResults, pageToken, status, view
+  
   Retrieves the pages for a blog, optionally including non-LIVE statuses."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -156,21 +159,21 @@
   
   Update a page. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -181,21 +184,22 @@
   Required parameters: blogId, pageId
   
   Optional parameters: none
+  
   Publishes a draft page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}/publish"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -206,21 +210,22 @@
   Required parameters: blogId, pageId
   
   Optional parameters: none
+  
   Revert a published or scheduled page to draft state."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}/revert"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -252,21 +257,21 @@
   
   Update a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId :pageId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/pages/{pageId}"
      #{:blogId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

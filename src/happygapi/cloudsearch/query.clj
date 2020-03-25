@@ -6,51 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn suggest$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/suggest
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requestOptions {:debugOptions DebugOptions,
-                    :searchApplicationId string,
-                    :languageCode string,
-                    :timeZone string},
-   :query string,
-   :dataSourceRestrictions [{:filterOptions [FilterOptions],
-                             :source Source}]}
-  
-  Provides suggestions for autocompleting the query.
-  
-  **Note:** This API requires a standard end user account to execute.
-  A service account can't perform Query API requests directly; to use a
-  service account to perform queries, set up [G Suite domain-wide delegation
-  of
-  authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/query/suggest"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn search$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/search
   
@@ -60,22 +15,22 @@
   
   Body: 
   
-  {:queryInterpretationOptions {:disableNlInterpretation boolean,
-                                :enableVerbatimMode boolean},
-   :requestOptions {:debugOptions DebugOptions,
-                    :searchApplicationId string,
-                    :languageCode string,
-                    :timeZone string},
+  {:requestOptions {:languageCode string,
+                    :timeZone string,
+                    :debugOptions DebugOptions,
+                    :searchApplicationId string},
    :dataSourceRestrictions [{:filterOptions [FilterOptions],
                              :source Source}],
-   :facetOptions [{:sourceName string,
-                   :numFacetBuckets integer,
-                   :operatorName string,
-                   :objectType string}],
+   :facetOptions [{:operatorName string,
+                   :objectType string,
+                   :sourceName string,
+                   :numFacetBuckets integer}],
    :sortOptions {:operatorName string, :sortOrder string},
    :pageSize integer,
    :query string,
-   :start integer}
+   :start integer,
+   :queryInterpretationOptions {:enableVerbatimMode boolean,
+                                :disableNlInterpretation boolean}}
   
   The Cloud Search Query API provides the search method, which returns
   the most relevant results from a user query.  The results can come from
@@ -89,21 +44,66 @@
   authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.query"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/query/search"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn suggest$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/suggest
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requestOptions {:languageCode string,
+                    :timeZone string,
+                    :debugOptions DebugOptions,
+                    :searchApplicationId string},
+   :query string,
+   :dataSourceRestrictions [{:filterOptions [FilterOptions],
+                             :source Source}]}
+  
+  Provides suggestions for autocompleting the query.
+  
+  **Note:** This API requires a standard end user account to execute.
+  A service account can't perform Query API requests directly; to use a
+  service account to perform queries, set up [G Suite domain-wide delegation
+  of
+  authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.query"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/query/suggest"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -114,6 +114,7 @@
   Required parameters: none
   
   Optional parameters: requestOptions.searchApplicationId, requestOptions.timeZone, pageToken, requestOptions.debugOptions.enableDebugging, requestOptions.languageCode
+  
   Returns list of sources that user can use for Search and Suggest APIs.
   
   **Note:** This API requires a standard end user account to execute.
@@ -123,19 +124,19 @@
   authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.query"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/query/sources"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

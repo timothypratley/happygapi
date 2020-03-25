@@ -11,24 +11,25 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  
   Retrieves an aggregated list of target instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/targetInstances"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,22 +40,23 @@
   Required parameters: project, targetInstance, zone
   
   Optional parameters: requestId
+  
   Deletes the specified TargetInstance resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :targetInstance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :targetInstance :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/targetInstances/{targetInstance}"
      #{:zone :targetInstance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,23 +67,24 @@
   Required parameters: project, targetInstance, zone
   
   Optional parameters: none
+  
   Returns the specified TargetInstance resource. Gets a list of available target instances by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :targetInstance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :targetInstance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/targetInstances/{targetInstance}"
      #{:zone :targetInstance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -108,21 +111,21 @@
   Creates a TargetInstance resource in the specified project and zone using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/targetInstances"
      #{:zone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -133,23 +136,24 @@
   Required parameters: project, zone
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves a list of TargetInstance resources available to the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/targetInstances"
      #{:zone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

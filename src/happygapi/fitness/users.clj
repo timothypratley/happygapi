@@ -51,21 +51,21 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -76,6 +76,7 @@
   Required parameters: dataSourceId, userId
   
   Optional parameters: none
+  
   Deletes the specified data source. The request will fail if the data source contains any data points."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
             "https://www.googleapis.com/auth/fitness.blood_glucose.write"
@@ -86,19 +87,19 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:dataSourceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}"
      #{:dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,6 +110,7 @@
   Required parameters: dataSourceId, userId
   
   Optional parameters: none
+  
   Returns the specified data source."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
             "https://www.googleapis.com/auth/fitness.activity.write"
@@ -128,19 +130,19 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:dataSourceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}"
      #{:dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,6 +153,7 @@
   Required parameters: userId
   
   Optional parameters: dataTypeName
+  
   Lists all data sources that are visible to the developer, using the OAuth scopes provided. The list is not exhaustive; the user may have private data sources that are only visible to other developers, or calls using other scopes."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
             "https://www.googleapis.com/auth/fitness.activity.write"
@@ -170,19 +173,19 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -224,21 +227,21 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:dataSourceId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}"
      #{:dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -249,6 +252,7 @@
   Required parameters: dataSourceId, userId
   
   Optional parameters: limit, pageToken
+  
   Queries for user's data point changes for a particular data source."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
             "https://www.googleapis.com/auth/fitness.activity.write"
@@ -268,19 +272,19 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:dataSourceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}/dataPointChanges"
      #{:dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -291,6 +295,7 @@
   Required parameters: dataSourceId, datasetId, userId
   
   Optional parameters: currentTimeMillis, modifiedTimeMillis
+  
   Performs an inclusive delete of all data points whose start and end times have any overlap with the time range specified by the dataset ID. For most data types, the entire data point will be deleted. For data types where the time span represents a consistent value (such as com.google.activity.segment), and a data point straddles either end point of the dataset, only the overlapping portion of the data point will be deleted."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
             "https://www.googleapis.com/auth/fitness.blood_glucose.write"
@@ -301,19 +306,21 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :dataSourceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :dataSourceId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
      #{:datasetId :dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -324,6 +331,7 @@
   Required parameters: dataSourceId, datasetId, userId
   
   Optional parameters: limit, pageToken
+  
   Returns a dataset containing all data points whose start and end times overlap with the specified range of the dataset minimum start time and maximum end time. Specifically, any data point whose start time is less than or equal to the dataset end time and whose end time is greater than or equal to the dataset start time."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
             "https://www.googleapis.com/auth/fitness.activity.write"
@@ -343,19 +351,21 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :dataSourceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :dataSourceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
      #{:datasetId :dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -392,21 +402,23 @@
             "https://www.googleapis.com/auth/fitness.nutrition.write"
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:datasetId :dataSourceId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :dataSourceId :userId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
      #{:datasetId :dataSourceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -450,21 +462,21 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/dataset:aggregate"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -475,21 +487,22 @@
   Required parameters: sessionId, userId
   
   Optional parameters: currentTimeMillis
+  
   Deletes a session specified by the given session ID."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sessionId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/sessions/{sessionId}"
      #{:sessionId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -500,6 +513,7 @@
   Required parameters: userId
   
   Optional parameters: activityType, endTime, includeDeleted, pageToken, startTime
+  
   Lists sessions previously created."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
             "https://www.googleapis.com/auth/fitness.activity.write"
@@ -519,19 +533,19 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.read"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/sessions"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -560,21 +574,21 @@
   
   Updates or insert a given session."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:sessionId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/fitness/v1/users/"
      "{userId}/sessions/{sessionId}"
      #{:sessionId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

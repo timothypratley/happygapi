@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the settings associated with a project, folder, or organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,6 +38,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes the settings associated with a project, folder, or organization.
   This will have the effect of disabling Access Approval for the project,
   folder, or organization, but only if all ancestors also have Access
@@ -44,19 +46,19 @@
   hierarchy, then Access Approval will still be enabled at this level as
   the settings are inherited."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -70,29 +72,29 @@
   
   Body: 
   
-  {:notificationEmails [string],
-   :name string,
+  {:name string,
    :enrolledAncestor boolean,
-   :enrolledServices [{:enrollmentLevel string, :cloudProduct string}]}
+   :enrolledServices [{:cloudProduct string, :enrollmentLevel string}],
+   :notificationEmails [string]}
   
   Updates the settings associated with a project, folder, or organization.
   Settings to update are determined by the value of field_mask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -113,21 +115,21 @@
   Returns NOT_FOUND if the request does not exist. Returns
   FAILED_PRECONDITION if the request exists but is not in a pending state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}:approve"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -138,23 +140,24 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize, filter
+  
   Lists approval requests associated with a project, folder, or organization.
   Approval requests can be filtered by state (pending, active, dismissed).
   The order is reverse chronological."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+parent}/approvalRequests"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -165,21 +168,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets an approval request. Returns NOT_FOUND if the request does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -206,21 +210,21 @@
   Returns FAILED_PRECONDITION if the request exists but is not in a pending
   state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://accessapproval.googleapis.com/"
      "v1/{+name}:dismiss"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

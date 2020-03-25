@@ -6,27 +6,98 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn create$
+  "https://developers.google.com/fact-check/tools/api/api/reference/rest/v1alpha1/pages/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:pageUrl string,
+   :publishDate string,
+   :claimReviewMarkups [{:rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
+                         :claimAuthor GoogleFactcheckingFactchecktoolsV1alpha1ClaimAuthor,
+                         :url string,
+                         :claimAppearances [string],
+                         :claimLocation string,
+                         :claimReviewed string,
+                         :claimDate string,
+                         :claimFirstAppearance string}],
+   :claimReviewAuthor {:name string, :imageUrl string},
+   :name string,
+   :versionId string}
+  
+  Create `ClaimReview` markup on a page."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://factchecktools.googleapis.com/"
+     "v1alpha1/pages"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/fact-check/tools/api/api/reference/rest/v1alpha1/pages/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete all `ClaimReview` markup on a page."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://factchecktools.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/fact-check/tools/api/api/reference/rest/v1alpha1/pages/get
   
   Required parameters: name
   
   Optional parameters: none
+  
   Get all `ClaimReview` markup on a page."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://factchecktools.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -36,23 +107,24 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, organization, pageSize, url, offset
+  Optional parameters: url, offset, pageToken, organization, pageSize
+  
   List the `ClaimReview` markup pages for a specific URL or for an
   organization."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://factchecktools.googleapis.com/"
      "v1alpha1/pages"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -68,14 +140,14 @@
   
   {:pageUrl string,
    :publishDate string,
-   :claimReviewMarkups [{:claimLocation string,
-                         :claimReviewed string,
-                         :claimDate string,
-                         :claimFirstAppearance string,
-                         :rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
+   :claimReviewMarkups [{:rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
                          :claimAuthor GoogleFactcheckingFactchecktoolsV1alpha1ClaimAuthor,
                          :url string,
-                         :claimAppearances [string]}],
+                         :claimAppearances [string],
+                         :claimLocation string,
+                         :claimReviewed string,
+                         :claimDate string,
+                         :claimFirstAppearance string}],
    :claimReviewAuthor {:name string, :imageUrl string},
    :name string,
    :versionId string}
@@ -87,90 +159,21 @@
   markup, and finally call Update with the entire `ClaimReview` markup as the
   body."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://factchecktools.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://developers.google.com/fact-check/tools/api/api/reference/rest/v1alpha1/pages/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:pageUrl string,
-   :publishDate string,
-   :claimReviewMarkups [{:claimLocation string,
-                         :claimReviewed string,
-                         :claimDate string,
-                         :claimFirstAppearance string,
-                         :rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
-                         :claimAuthor GoogleFactcheckingFactchecktoolsV1alpha1ClaimAuthor,
-                         :url string,
-                         :claimAppearances [string]}],
-   :claimReviewAuthor {:name string, :imageUrl string},
-   :name string,
-   :versionId string}
-  
-  Create `ClaimReview` markup on a page."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://factchecktools.googleapis.com/"
-     "v1alpha1/pages"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/fact-check/tools/api/api/reference/rest/v1alpha1/pages/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Delete all `ClaimReview` markup on a page."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://factchecktools.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

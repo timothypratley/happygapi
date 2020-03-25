@@ -12,21 +12,22 @@
   Required parameters: volumeId
   
   Optional parameters: country, includeNonComicsSeries, partner, projection, source, user_library_consistent_read
+  
   Gets volume information for a single volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/{volumeId}"
      #{:volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: q
   
   Optional parameters: maxAllowedMaturityRating, partner, printType, libraryRestrict, langRestrict, source, filter, showPreorders, download, startIndex, projection, maxResults, orderBy
+  
   Performs a book search."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:q})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:q})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes"
      #{:q}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,22 @@
   Required parameters: volumeId
   
   Optional parameters: association, locale, maxAllowedMaturityRating, source
+  
   Return a list of associated books."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/{volumeId}/associated"
      #{:volumeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,21 +90,22 @@
   Required parameters: none
   
   Optional parameters: acquireMethod, country, locale, maxResults, processingState, source, startIndex
+  
   Return a list of books in My Library."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/mybooks"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -112,21 +116,22 @@
   Required parameters: none
   
   Optional parameters: locale, maxAllowedMaturityRating, source
+  
   Return a list of recommended books for the current user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/recommended"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -137,21 +142,22 @@
   Required parameters: rating, volumeId
   
   Optional parameters: locale, source
+  
   Rate a recommended book for the current user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId :rating})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId :rating})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/recommended/rate"
      #{:volumeId :rating}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -162,21 +168,22 @@
   Required parameters: none
   
   Optional parameters: locale, maxResults, processingState, source, startIndex, volumeId
+  
   Return a list of books uploaded by the current user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "volumes/useruploaded"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

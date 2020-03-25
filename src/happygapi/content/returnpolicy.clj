@@ -23,21 +23,21 @@
   
   Batches multiple return policy related calls in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "returnpolicy/batch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -48,21 +48,22 @@
   Required parameters: merchantId, returnPolicyId
   
   Optional parameters: none
+  
   Deletes a return policy for the given Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:returnPolicyId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:returnPolicyId :merchantId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicy/{returnPolicyId}"
      #{:returnPolicyId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -73,21 +74,22 @@
   Required parameters: merchantId, returnPolicyId
   
   Optional parameters: none
+  
   Gets a return policy of the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:returnPolicyId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:returnPolicyId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicy/{returnPolicyId}"
      #{:returnPolicyId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -115,21 +117,21 @@
   
   Inserts a return policy for the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicy"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -140,21 +142,22 @@
   Required parameters: merchantId
   
   Optional parameters: none
+  
   Lists the return policies of the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicy"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

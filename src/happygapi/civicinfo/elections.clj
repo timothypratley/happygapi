@@ -19,21 +19,21 @@
   
   List of available elections to query."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/civicinfo/v2/"
      "elections"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -55,21 +55,21 @@
   
   Looks up information relevant to a voter based on the voter's registered address."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:address})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:address})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/civicinfo/v2/"
      "voterinfo"
      #{:address}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -15,25 +15,25 @@
   
   Body: 
   
-  {:url string, :notifyTime string, :type string}
+  {:type string, :url string, :notifyTime string}
   
   Notifies that a URL has been updated or deleted."
   {:scopes ["https://www.googleapis.com/auth/indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://indexing.googleapis.com/"
      "v3/urlNotifications:publish"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,23 +44,24 @@
   Required parameters: none
   
   Optional parameters: url
+  
   Gets metadata about a Web Document. This method can _only_ be used to query
   URLs that were previously seen in successful Indexing API notifications.
   Includes the latest `UrlNotification` received via this API."
   {:scopes ["https://www.googleapis.com/auth/indexing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://indexing.googleapis.com/"
      "v3/urlNotifications/metadata"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

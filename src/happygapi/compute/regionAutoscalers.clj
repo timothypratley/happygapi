@@ -12,22 +12,23 @@
   Required parameters: autoscaler, project, region
   
   Optional parameters: requestId
+  
   Deletes the specified autoscaler."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project :autoscaler})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :autoscaler})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers/{autoscaler}"
      #{:region :project :autoscaler}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +39,24 @@
   Required parameters: autoscaler, project, region
   
   Optional parameters: none
+  
   Returns the specified autoscaler."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project :autoscaler})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :autoscaler})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers/{autoscaler}"
      #{:region :project :autoscaler}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -91,21 +93,21 @@
   Creates an autoscaler in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -116,23 +118,24 @@
   Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves a list of autoscalers contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -169,21 +172,21 @@
   Updates an autoscaler in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -220,21 +223,21 @@
   Updates an autoscaler in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/autoscalers"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: accountId, billingId
   
   Optional parameters: none
+  
   Returns the budget information for the adgroup specified by the accountId and billingId."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:billingId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:billingId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "billinginfo/{accountId}/{billingId}"
      #{:billingId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -49,21 +50,21 @@
   
   Updates the budget amount for the budget of the adgroup specified by the accountId and billingId, with the budget amount in the request. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:billingId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:billingId :accountId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "billinginfo/{accountId}/{billingId}"
      #{:billingId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -86,21 +87,21 @@
   
   Updates the budget amount for the budget of the adgroup specified by the accountId and billingId, with the budget amount in the request."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:billingId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:billingId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "billinginfo/{accountId}/{billingId}"
      #{:billingId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

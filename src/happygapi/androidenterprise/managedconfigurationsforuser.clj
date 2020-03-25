@@ -12,11 +12,12 @@
   Required parameters: enterpriseId, managedConfigurationForUserId, userId
   
   Optional parameters: none
+  
   Removes a per-user managed configuration for an app for the specified user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :managedConfigurationForUserId :userId})]}
   (util/get-response
    (http/delete
@@ -24,11 +25,11 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
      #{:enterpriseId :managedConfigurationForUserId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,11 +40,12 @@
   Required parameters: enterpriseId, managedConfigurationForUserId, userId
   
   Optional parameters: none
+  
   Retrieves details of a per-user managed configuration for an app for the specified user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :managedConfigurationForUserId :userId})]}
   (util/get-response
    (http/get
@@ -51,11 +53,11 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
      #{:enterpriseId :managedConfigurationForUserId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -66,21 +68,22 @@
   Required parameters: enterpriseId, userId
   
   Optional parameters: none
+  
   Lists all the per-user managed configurations for the specified user. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser"
      #{:enterpriseId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,9 +112,9 @@
   
   Adds or updates the managed configuration settings for an app for the specified user. If you support the Managed configurations iframe, you can apply managed configurations to a user by specifying an mcmId and its associated configuration variables (if any) in the request. Alternatively, all EMMs can apply managed configurations by passing a list of managed properties."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :managedConfigurationForUserId :userId})]}
   (util/get-response
    (http/put
@@ -119,13 +122,13 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
      #{:enterpriseId :managedConfigurationForUserId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

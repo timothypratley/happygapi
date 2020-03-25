@@ -12,22 +12,23 @@
   Required parameters: blogId, postId
   
   Optional parameters: fetchBody, fetchImages, maxComments, view
+  
   Get a post by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -81,21 +82,21 @@
   
   Add a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -149,21 +150,21 @@
   
   Update a post. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -217,21 +218,21 @@
   
   Update a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -242,21 +243,22 @@
   Required parameters: blogId, postId
   
   Optional parameters: none
+  
   Delete a post by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -267,22 +269,23 @@
   Required parameters: blogId, q
   
   Optional parameters: fetchBodies, orderBy
+  
   Search for a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :q})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :q})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/search"
      #{:blogId :q}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -293,21 +296,22 @@
   Required parameters: blogId, postId
   
   Optional parameters: none
+  
   Revert a published or scheduled post to draft state."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/revert"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -318,22 +322,23 @@
   Required parameters: blogId
   
   Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, fetchImages, maxResults, view, orderBy
+  
   Retrieves a list of posts, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -344,21 +349,22 @@
   Required parameters: blogId, postId
   
   Optional parameters: publishDate
+  
   Publishes a draft post, optionally at the specific time of the given publishDate parameter."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :postId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/{postId}/publish"
      #{:blogId :postId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -369,22 +375,23 @@
   Required parameters: blogId, path
   
   Optional parameters: maxComments, view
+  
   Retrieve a Post by Path."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :path})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :path})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}/posts/bypath"
      #{:blogId :path}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

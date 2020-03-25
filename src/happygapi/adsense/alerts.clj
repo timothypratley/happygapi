@@ -12,21 +12,22 @@
   Required parameters: alertId
   
   Optional parameters: none
+  
   Dismiss (delete) the specified alert from the publisher's AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:alertId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:alertId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "alerts/{alertId}"
      #{:alertId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,22 +38,23 @@
   Required parameters: none
   
   Optional parameters: locale
+  
   List the alerts for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "alerts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

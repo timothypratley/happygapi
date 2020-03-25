@@ -12,24 +12,25 @@
   Required parameters: part
   
   Optional parameters: hl
+  
   Returns a list of application languages that the YouTube website supports."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "i18nLanguages"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

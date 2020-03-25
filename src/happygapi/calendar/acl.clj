@@ -12,21 +12,22 @@
   Required parameters: calendarId, ruleId
   
   Optional parameters: none
+  
   Deletes an access control rule."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :ruleId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :ruleId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl/{ruleId}"
      #{:calendarId :ruleId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,22 +38,23 @@
   Required parameters: calendarId, ruleId
   
   Optional parameters: none
+  
   Returns an access control rule."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :ruleId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :ruleId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl/{ruleId}"
      #{:calendarId :ruleId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,21 +76,21 @@
   
   Creates an access control rule."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -99,21 +101,22 @@
   Required parameters: calendarId
   
   Optional parameters: maxResults, pageToken, showDeleted, syncToken
+  
   Returns the rules in the access control list for the calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -135,21 +138,21 @@
   
   Updates an access control rule. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId :ruleId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId :ruleId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl/{ruleId}"
      #{:calendarId :ruleId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -171,21 +174,21 @@
   
   Updates an access control rule."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId :ruleId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId :ruleId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl/{ruleId}"
      #{:calendarId :ruleId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -212,21 +215,21 @@
   
   Watch for changes to ACL resources."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/acl/watch"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

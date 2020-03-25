@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Return the metagame configuration data for the calling application."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "metagameConfig"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: collection, playerId
   
   Optional parameters: language, maxResults, pageToken
+  
   List play data aggregated per category for the player corresponding to playerId."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId :collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/{playerId}/categories/{collection}"
      #{:playerId :collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, groupLicenseId
   
   Optional parameters: none
+  
   Retrieves details of an enterprise's group license for a product."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :groupLicenseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :groupLicenseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/groupLicenses/{groupLicenseId}"
      #{:enterpriseId :groupLicenseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: enterpriseId
   
   Optional parameters: none
+  
   Retrieves IDs of all products for which the enterprise has a group license."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/groupLicenses"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

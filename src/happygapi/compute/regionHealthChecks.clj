@@ -12,22 +12,23 @@
   Required parameters: healthCheck, project, region
   
   Optional parameters: requestId
+  
   Deletes the specified HealthCheck resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project :healthCheck})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :healthCheck})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks/{healthCheck}"
      #{:region :project :healthCheck}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +39,24 @@
   Required parameters: healthCheck, project, region
   
   Optional parameters: none
+  
   Returns the specified HealthCheck resource. Gets a list of available health checks by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project :healthCheck})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :healthCheck})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks/{healthCheck}"
      #{:region :project :healthCheck}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -117,21 +119,21 @@
   Creates a HealthCheck resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -142,23 +144,24 @@
   Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of HealthCheck resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -221,21 +224,21 @@
   Updates a HealthCheck resource in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project :healthCheck})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :healthCheck})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks/{healthCheck}"
      #{:region :project :healthCheck}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -298,21 +301,21 @@
   Updates a HealthCheck resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project :healthCheck})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :healthCheck})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/healthChecks/{healthCheck}"
      #{:region :project :healthCheck}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

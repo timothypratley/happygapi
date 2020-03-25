@@ -12,22 +12,23 @@
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  
   Deletes a video stream."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "liveStreams"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -61,21 +62,21 @@
   Creates a video stream. The stream enables you to send your video to YouTube, which can then broadcast the video to your audience."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "liveStreams"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -86,23 +87,24 @@
   Required parameters: part
   
   Optional parameters: id, maxResults, mine, onBehalfOfContentOwner, onBehalfOfContentOwnerChannel, pageToken
+  
   Returns a list of video streams that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "liveStreams"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -136,21 +138,21 @@
   Updates a video stream. If the properties that you want to change cannot be updated, then you need to create a new stream with the proper settings."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:part})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "liveStreams"
      #{:part}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

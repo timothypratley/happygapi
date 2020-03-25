@@ -12,22 +12,25 @@
   Required parameters: end-date, ids, start-date, metrics
   
   Optional parameters: start-index, include-empty-rows, filters, max-results, output, dimensions, segment, samplingLevel, sort
+  
   Returns Analytics data for a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:end-date :ids :start-date :metrics})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:end-date :ids :start-date :metrics})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "data/ga"
      #{:end-date :ids :start-date :metrics}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +41,25 @@
   Required parameters: end-date, ids, start-date, metrics
   
   Optional parameters: start-index, filters, max-results, dimensions, samplingLevel, sort
+  
   Returns Analytics Multi-Channel Funnels data for a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:end-date :ids :start-date :metrics})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:end-date :ids :start-date :metrics})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "data/mcf"
      #{:end-date :ids :start-date :metrics}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,22 +70,23 @@
   Required parameters: ids, metrics
   
   Optional parameters: dimensions, filters, max-results, sort
+  
   Returns real time data for a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:ids :metrics})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:ids :metrics})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "data/realtime"
      #{:ids :metrics}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

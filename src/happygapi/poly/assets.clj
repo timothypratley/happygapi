@@ -13,24 +13,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns detailed information about an asset given its name.
   PRIVATE assets are returned only if
    the currently authenticated user (via OAuth token) is the author of the
    asset."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://poly.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,20 +41,25 @@
   
   Required parameters: none
   
-  Optional parameters: keywords, orderBy, format, curated, category, maxComplexity, pageToken, pageSize
+  Optional parameters: keywords, orderBy, format, curated, category, pageToken, maxComplexity, pageSize
+  
   Lists all public, remixable assets. These are assets with an access level
   of PUBLIC and published under the
   CC-By license."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
-    (util/get-url "https://poly.googleapis.com/" "v1/assets" #{} args)
+    (util/get-url
+     "https://poly.googleapis.com/"
+     "v1/assets"
+     #{}
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -21,21 +21,21 @@
   AI Platform implements a custom `explain` verb on top of an HTTP POST
   method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:explain"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -46,24 +46,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get the service account information associated with your project. You need
   this information in order to grant the service account permissions for
   the Google Cloud Storage location where you put your model training code
   for training the model with Google Cloud Machine Learning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:getConfig"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -83,82 +84,21 @@
   
   <div>{% dynamic include \"/ai-platform/includes/___predict-request\" %}</div>"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:predict"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-list$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-get$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -169,6 +109,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -180,154 +121,82 @@
   an Operation.error value with a google.rpc.Status.code of 1,
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:cancel"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn models-list$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/list
+(defn operations-list$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/operations/list
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
-  Lists the models in a project.
+  Optional parameters: pageToken, pageSize, filter
   
-  Each project can contain multiple models, and each model can have multiple
-  versions.
+  Lists operations that match the specified filter in the request. If the
+  server doesn't support this method, it returns `UNIMPLEMENTED`.
   
-  If there are no models that match the request parameters, the list request
-  returns an empty response body: {}."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  NOTE: the `name` binding allows API services to override the binding
+  to use different resource name schemes, such as `users/*/operations`. To
+  override the binding, API services can add a binding such as
+  `\"/v1/{name=users/*}/operations\"` to their service configuration.
+  For backwards compatibility, the default name includes the operations
+  collection id, however overriding users must ensure the name binding
+  is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
-     "v1/{+parent}/models"
-     #{:parent}
-     args)
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn models-create$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/create
+(defn operations-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/operations/get
   
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:onlinePredictionLogging boolean,
-   :etag string,
-   :labels {},
-   :name string,
-   :defaultVersion {:description string,
-                    :serviceAccount string,
-                    :labels {},
-                    :explanationConfig GoogleCloudMlV1__ExplanationConfig,
-                    :autoScaling GoogleCloudMlV1__AutoScaling,
-                    :isDefault boolean,
-                    :errorMessage string,
-                    :lastUseTime string,
-                    :name string,
-                    :createTime string,
-                    :deploymentUri string,
-                    :etag string,
-                    :state string,
-                    :machineType string,
-                    :pythonVersion string,
-                    :packageUris [string],
-                    :acceleratorConfig GoogleCloudMlV1__AcceleratorConfig,
-                    :runtimeVersion string,
-                    :manualScaling GoogleCloudMlV1__ManualScaling,
-                    :predictionClass string,
-                    :framework string,
-                    :requestLoggingConfig GoogleCloudMlV1__RequestLoggingConfig},
-   :onlinePredictionConsoleLogging boolean,
-   :regions [string],
-   :description string}
-  
-  Creates a model which will later contain one or more versions.
-  
-  You must add at least one version before you can request predictions from
-  the model. Add versions by calling
-  projects.models.versions.create."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+parent}/models"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn models-setIamPolicy$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/setIamPolicy
-  
-  Required parameters: resource
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:policy {:bindings [GoogleIamV1__Binding],
-            :etag string,
-            :version integer,
-            :auditConfigs [GoogleIamV1__AuditConfig]},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://ml.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     args)
+     "v1/{+name}"
+     #{:name}
+     parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -338,51 +207,24 @@
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
+  
   Gets the access control policy for a resource.
   Returns an empty policy if the resource exists and does not have a policy
   set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn models-get$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets information about a model, including its name, the description (if
-  set), and the default version (if at least one version of the model has
-  been deployed)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -422,8 +264,8 @@
                     :predictionClass string,
                     :framework string,
                     :requestLoggingConfig GoogleCloudMlV1__RequestLoggingConfig},
-   :onlinePredictionConsoleLogging boolean,
    :regions [string],
+   :onlinePredictionConsoleLogging boolean,
    :description string}
   
   Updates a specific model resource.
@@ -431,21 +273,50 @@
   Currently the only supported fields to update are `description` and
   `default_version.name`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn models-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a model, including its name, the description (if
+  set), and the default version (if at least one version of the model has
+  been deployed)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -469,21 +340,21 @@
   UIs and command-line tools, not for authorization checking. This operation
   may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -494,25 +365,162 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a model.
   
   You can only delete a model if there are no versions in it. You can delete
   versions by calling
   projects.models.versions.delete."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn models-list$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists the models in a project.
+  
+  Each project can contain multiple models, and each model can have multiple
+  versions.
+  
+  If there are no models that match the request parameters, the list request
+  returns an empty response body: {}."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/models"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn models-setIamPolicy$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:etag string,
+            :version integer,
+            :auditConfigs [GoogleIamV1__AuditConfig],
+            :bindings [GoogleIamV1__Binding]},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any
+  existing policy.
+  
+  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn models-create$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:onlinePredictionLogging boolean,
+   :etag string,
+   :labels {},
+   :name string,
+   :defaultVersion {:description string,
+                    :serviceAccount string,
+                    :labels {},
+                    :explanationConfig GoogleCloudMlV1__ExplanationConfig,
+                    :autoScaling GoogleCloudMlV1__AutoScaling,
+                    :isDefault boolean,
+                    :errorMessage string,
+                    :lastUseTime string,
+                    :name string,
+                    :createTime string,
+                    :deploymentUri string,
+                    :etag string,
+                    :state string,
+                    :machineType string,
+                    :pythonVersion string,
+                    :packageUris [string],
+                    :acceleratorConfig GoogleCloudMlV1__AcceleratorConfig,
+                    :runtimeVersion string,
+                    :manualScaling GoogleCloudMlV1__ManualScaling,
+                    :predictionClass string,
+                    :framework string,
+                    :requestLoggingConfig GoogleCloudMlV1__RequestLoggingConfig},
+   :regions [string],
+   :onlinePredictionConsoleLogging boolean,
+   :description string}
+  
+  Creates a model which will later contain one or more versions.
+  
+  You must add at least one version before you can request predictions from
+  the model. Add versions by calling
+  projects.models.versions.create."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/models"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -523,6 +531,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a model version.
   
   Each model can have multiple versions deployed and in use at any given
@@ -531,19 +540,19 @@
   Note: You cannot delete the version that is set as the default version
   of the model unless it is the only remaining version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -554,6 +563,7 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize, filter
+  
   Gets basic information about all the versions of a model.
   
   If you expect that a model has many versions, or if you need to handle
@@ -564,19 +574,19 @@
   request returns an empty response body: {}."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+parent}/versions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -594,7 +604,8 @@
    :serviceAccount string,
    :labels {},
    :explanationConfig {:integratedGradientsAttribution GoogleCloudMlV1__IntegratedGradientsAttribution,
-                       :sampledShapleyAttribution GoogleCloudMlV1__SampledShapleyAttribution},
+                       :sampledShapleyAttribution GoogleCloudMlV1__SampledShapleyAttribution,
+                       :xraiAttribution GoogleCloudMlV1__XraiAttribution},
    :autoScaling {:minNodes integer},
    :isDefault boolean,
    :errorMessage string,
@@ -624,21 +635,52 @@
   new version to be the default, you must call
   projects.models.versions.setDefault."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+parent}/versions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn models-versions-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/versions/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a model version.
+  
+  Models can have multiple versions. You can call
+  projects.models.versions.list
+  to get the same information that this method returns for all of the
+  versions of a model."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -656,7 +698,8 @@
    :serviceAccount string,
    :labels {},
    :explanationConfig {:integratedGradientsAttribution GoogleCloudMlV1__IntegratedGradientsAttribution,
-                       :sampledShapleyAttribution GoogleCloudMlV1__SampledShapleyAttribution},
+                       :sampledShapleyAttribution GoogleCloudMlV1__SampledShapleyAttribution,
+                       :xraiAttribution GoogleCloudMlV1__XraiAttribution},
    :autoScaling {:minNodes integer},
    :isDefault boolean,
    :errorMessage string,
@@ -682,51 +725,21 @@
   Currently the only update-able fields are `description`,
   `requestLoggingConfig`, `autoScaling.minNodes`, and `manualScaling.nodes`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn models-versions-get$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/models/versions/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets information about a model version.
-  
-  Models can have multiple versions. You can call
-  projects.models.versions.list
-  to get the same information that this method returns for all of the
-  versions of a model."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -751,21 +764,21 @@
   default. You must make any subsequent changes to the default version
   setting manually using this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:setDefault"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -776,23 +789,24 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get the complete list of CMLE capabilities in a location, along with their
   location-specific properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -803,22 +817,462 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   List all locations that provides at least one type of CMLE capability."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+parent}/locations"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-delete$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a study."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a study."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-list$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/list
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Lists all the studies in a region for an associated project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/studies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-create$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/create
+  
+  Required parameters: parent
+  
+  Optional parameters: studyId
+  
+  Body: 
+  
+  {:state string,
+   :name string,
+   :studyConfig {:metrics [GoogleCloudMlV1_StudyConfig_MetricSpec],
+                 :algorithm string,
+                 :parameters [GoogleCloudMlV1_StudyConfig_ParameterSpec],
+                 :automatedStoppingConfig GoogleCloudMlV1__AutomatedStoppingConfig},
+   :inactiveReason string,
+   :createTime string}
+  
+  Creates a study."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/studies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a Trial."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-create$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:clientId string,
+   :startTime string,
+   :measurements [{:metrics [GoogleCloudMlV1_Measurement_Metric],
+                   :stepCount string,
+                   :elapsedTime string}],
+   :name string,
+   :endTime string,
+   :state string,
+   :finalMeasurement {:metrics [GoogleCloudMlV1_Measurement_Metric],
+                      :stepCount string,
+                      :elapsedTime string},
+   :infeasibleReason string,
+   :trialInfeasible boolean,
+   :parameters [{:intValue string,
+                 :floatValue number,
+                 :stringValue string,
+                 :parameter string}]}
+  
+  Adds a user provided trial to a Study."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/trials"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-addMeasurement$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/addMeasurement
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:measurement {:metrics [GoogleCloudMlV1_Measurement_Metric],
+                 :stepCount string,
+                 :elapsedTime string}}
+  
+  Adds a measurement of the objective metrics to a Trial. This measurement
+  is assumed to have been taken before the Trial is complete."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}:addMeasurement"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-delete$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a Trial."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-checkEarlyStoppingState$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/checkEarlyStoppingState
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Checks whether a trial should stop or not."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}:checkEarlyStoppingState"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-stop$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/stop
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Stops a trial."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}:stop"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-suggest$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/suggest
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:suggestionCount integer, :clientId string}
+  
+  Returns a long-running operation associated with the generation of trial
+  suggestions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/trials:suggest"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-list$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/list
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Lists the trials associated with a Study."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+parent}/trials"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-studies-trials-complete$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/studies/trials/complete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:finalMeasurement {:metrics [GoogleCloudMlV1_Measurement_Metric],
+                      :stepCount string,
+                      :elapsedTime string},
+   :infeasibleReason string,
+   :trialInfeasible boolean}
+  
+  Marks a Trial as complete."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}:complete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation.  Clients can use this
+  method to poll the operation result at intervals as recommended by the API
+  service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -829,6 +1283,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Starts asynchronous cancellation on a long-running operation.  The server
   makes a best effort to cancel the operation, but success is not
   guaranteed.  If the server doesn't support this method, it returns
@@ -840,105 +1295,19 @@
   an Operation.error value with a google.rpc.Status.code of 1,
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}:cancel"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn jobs-cancel$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/jobs/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Cancels a running job."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn jobs-getIamPolicy$
-  "https://cloud.google.com/ml/api/reference/rest/v1/projects/jobs/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://ml.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -949,22 +1318,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Describes a job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1034,21 +1404,21 @@
   
   Currently the only supported fields to update are `labels`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1072,21 +1442,21 @@
   UIs and command-line tools, not for authorization checking. This operation
   may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1096,26 +1466,27 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists the jobs in the project.
   
   If there are no jobs that match the request parameters, the list
   request returns an empty response body: {}."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+parent}/jobs"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1183,21 +1554,21 @@
   
   Creates a training or a batch prediction job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+parent}/jobs"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1211,10 +1582,10 @@
   
   Body: 
   
-  {:policy {:bindings [GoogleIamV1__Binding],
-            :etag string,
+  {:policy {:etag string,
             :version integer,
-            :auditConfigs [GoogleIamV1__AuditConfig]},
+            :auditConfigs [GoogleIamV1__AuditConfig],
+            :bindings [GoogleIamV1__Binding]},
    :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any
@@ -1222,21 +1593,81 @@
   
   Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://ml.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn jobs-cancel$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/jobs/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Cancels a running job."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn jobs-getIamPolicy$
+  "https://cloud.google.com/ml/api/reference/rest/v1/projects/jobs/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource.
+  Returns an empty policy if the resource exists and does not have a policy
+  set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://ml.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

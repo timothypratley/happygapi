@@ -26,21 +26,21 @@
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.upload"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:channelId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:channelId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "watermarks/set"
      #{:channelId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -51,23 +51,24 @@
   Required parameters: channelId
   
   Optional parameters: onBehalfOfContentOwner
+  
   Deletes a channel's watermark image."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:channelId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:channelId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "watermarks/unset"
      #{:channelId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

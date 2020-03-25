@@ -12,23 +12,24 @@
   Required parameters: fileId, revisionId
   
   Optional parameters: none
+  
   Permanently deletes a file version. You can only delete revisions for files with binary content in Google Drive, like images or videos. Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:revisionId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:revisionId :fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/revisions/{revisionId}"
      #{:revisionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,6 +40,7 @@
   Required parameters: fileId, revisionId
   
   Optional parameters: acknowledgeAbuse
+  
   Gets a revision's metadata or content by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -47,19 +49,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:revisionId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:revisionId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/revisions/{revisionId}"
      #{:revisionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -70,6 +72,7 @@
   Required parameters: fileId
   
   Optional parameters: pageSize, pageToken
+  
   Lists a file's revisions."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
@@ -78,19 +81,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/revisions"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -127,21 +130,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:revisionId :fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:revisionId :fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/revisions/{revisionId}"
      #{:revisionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

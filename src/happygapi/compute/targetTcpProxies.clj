@@ -12,22 +12,23 @@
   Required parameters: project, targetTcpProxy
   
   Optional parameters: requestId
+  
   Deletes the specified TargetTcpProxy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:targetTcpProxy :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:targetTcpProxy :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies/{targetTcpProxy}"
      #{:targetTcpProxy :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +39,24 @@
   Required parameters: project, targetTcpProxy
   
   Optional parameters: none
+  
   Returns the specified TargetTcpProxy resource. Gets a list of available target TCP proxies by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:targetTcpProxy :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:targetTcpProxy :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies/{targetTcpProxy}"
      #{:targetTcpProxy :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -80,21 +82,21 @@
   Creates a TargetTcpProxy resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -105,23 +107,24 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of TargetTcpProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -140,21 +143,21 @@
   Changes the BackendService for TargetTcpProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:targetTcpProxy :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetTcpProxy :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies/{targetTcpProxy}/setBackendService"
      #{:targetTcpProxy :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -173,21 +176,21 @@
   Changes the ProxyHeaderType for TargetTcpProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:targetTcpProxy :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetTcpProxy :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/targetTcpProxies/{targetTcpProxy}/setProxyHeader"
      #{:targetTcpProxy :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -19,21 +19,21 @@
   
   Associates a creative with the specified campaign. This method creates a default ad with dimensions matching the creative in the campaign if such a default ad does not exist already."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:campaignId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:campaignId :profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,21 +44,22 @@
   Required parameters: campaignId, profileId
   
   Optional parameters: maxResults, pageToken, sortOrder
+  
   Retrieves the list of creative IDs associated with the specified campaign. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:campaignId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:campaignId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

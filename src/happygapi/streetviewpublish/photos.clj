@@ -7,75 +7,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn batchGet$
-  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchGet
-  
-  Required parameters: none
-  
-  Optional parameters: view, languageCode, photoIds
-  Gets the metadata of the specified
-  Photo batch.
-  
-  Note that if
-  BatchGetPhotos
-  fails, either critical fields are missing or there is an authentication
-  error. Even if
-  BatchGetPhotos
-  succeeds, individual photos in the batch may have failures.
-  These failures are specified in each
-  PhotoResponse.status
-  in
-  BatchGetPhotosResponse.results.
-  See
-  GetPhoto
-  for specific failures that can occur per photo."
-  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://streetviewpublish.googleapis.com/"
-     "v1/photos:batchGet"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, pageSize, view, filter, languageCode
-  Lists all the Photos that belong to
-  the user.
-  
-  <aside class=\"note\"><b>Note:</b> Recently created photos that are still
-  being indexed are not returned in the response.</aside>"
-  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://streetviewpublish.googleapis.com/"
-     "v1/photos"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn batchUpdate$
   "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchUpdate
   
@@ -121,21 +52,21 @@
   Pose.latLngPair has to be
   filled as well. Otherwise, the request will fail.</aside>"
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photos:batchUpdate"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -168,21 +99,92 @@
   DeletePhoto
   for specific failures that can occur per photo."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photos:batchDelete"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn batchGet$
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/batchGet
+  
+  Required parameters: none
+  
+  Optional parameters: view, languageCode, photoIds
+  
+  Gets the metadata of the specified
+  Photo batch.
+  
+  Note that if
+  BatchGetPhotos
+  fails, either critical fields are missing or there is an authentication
+  error. Even if
+  BatchGetPhotos
+  succeeds, individual photos in the batch may have failures.
+  These failures are specified in each
+  PhotoResponse.status
+  in
+  BatchGetPhotosResponse.results.
+  See
+  GetPhoto
+  for specific failures that can occur per photo."
+  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://streetviewpublish.googleapis.com/"
+     "v1/photos:batchGet"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/streetview/publish/api/reference/rest/v1/photos/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, pageSize, view, filter, languageCode
+  
+  Lists all the Photos that belong to
+  the user.
+  
+  <aside class=\"note\"><b>Note:</b> Recently created photos that are still
+  being indexed are not returned in the response.</aside>"
+  {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://streetviewpublish.googleapis.com/"
+     "v1/photos"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -11,7 +11,8 @@
   
   Required parameters: none
   
-  Optional parameters: target.androidApp.certificate.sha256Fingerprint, source.web.site, source.androidApp.packageName, target.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation, target.web.site
+  Optional parameters: target.web.site, target.androidApp.certificate.sha256Fingerprint, source.web.site, source.androidApp.packageName, target.androidApp.packageName, source.androidApp.certificate.sha256Fingerprint, relation
+  
   Determines whether the specified (directional) relationship exists between
   the specified source and target assets.
   
@@ -36,19 +37,19 @@
   design
   specification](https://github.com/google/digitalassetlinks/blob/master/well-known/details.md)."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://digitalassetlinks.googleapis.com/"
      "v1/assetlinks:check"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

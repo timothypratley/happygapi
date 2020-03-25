@@ -23,21 +23,21 @@
   
   Retrieves list of report dimension values for a list of filters."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/dimensionvalues/query"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

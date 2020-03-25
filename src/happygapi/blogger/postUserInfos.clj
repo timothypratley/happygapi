@@ -12,22 +12,23 @@
   Required parameters: blogId, postId, userId
   
   Optional parameters: maxComments
+  
   Gets one post and user info pair, by post ID and user ID. The post user info contains per-user information about the post, such as access rights, specific to the user."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :postId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :postId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "users/{userId}/blogs/{blogId}/posts/{postId}"
      #{:blogId :postId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: blogId, userId
   
   Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, maxResults, view, orderBy
+  
   Retrieves a list of post and post user info pairs, possibly filtered. The post user info contains per-user information about the post, such as access rights, specific to the user."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "users/{userId}/blogs/{blogId}/posts"
      #{:blogId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

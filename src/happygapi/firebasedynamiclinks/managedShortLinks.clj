@@ -15,9 +15,7 @@
   
   Body: 
   
-  {:longDynamicLink string,
-   :name string,
-   :suffix {:customSuffix string, :option string},
+  {:suffix {:customSuffix string, :option string},
    :dynamicLinkInfo {:socialMetaTagInfo SocialMetaTagInfo,
                      :analyticsInfo AnalyticsInfo,
                      :desktopInfo DesktopInfo,
@@ -27,7 +25,9 @@
                      :domainUriPrefix string,
                      :androidInfo AndroidInfo,
                      :dynamicLinkDomain string},
-   :sdkVersion string}
+   :sdkVersion string,
+   :longDynamicLink string,
+   :name string}
   
   Creates a managed short Dynamic Link given either a valid long Dynamic Link
   or details such as Dynamic Link domain, Android and iOS app information.
@@ -43,21 +43,21 @@
   The Dynamic Link domain in the request must be owned by requester's
   Firebase project."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
      "v1/managedShortLinks:create"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

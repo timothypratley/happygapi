@@ -32,6 +32,7 @@
                                                  "LAST_14_DAYS"
                                                  "LAST_30_DAYS"
                                                  "LAST_365_DAYS"
+                                                 "LAST_60_DAYS"
                                                  "LAST_7_DAYS"
                                                  "LAST_90_DAYS"
                                                  "MONTH_TO_DATE"
@@ -46,6 +47,7 @@
                                                  "WEEK_TO_DATE"
                                                  "YEAR_TO_DATE"],
                                           :enumDescriptions [""
+                                                             ""
                                                              ""
                                                              ""
                                                              ""
@@ -1617,6 +1619,7 @@
                                                    "LAST_14_DAYS"
                                                    "LAST_30_DAYS"
                                                    "LAST_365_DAYS"
+                                                   "LAST_60_DAYS"
                                                    "LAST_7_DAYS"
                                                    "LAST_90_DAYS"
                                                    "MONTH_TO_DATE"
@@ -1631,6 +1634,7 @@
                                                    "WEEK_TO_DATE"
                                                    "YEAR_TO_DATE"],
                                             :enumDescriptions [""
+                                                               ""
                                                                ""
                                                                ""
                                                                ""

@@ -12,21 +12,22 @@
   Required parameters: applicationId
   
   Optional parameters: maxResults, pageToken
+  
   Get the list of players hidden from the given application. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:applicationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:applicationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1management/"
      "applications/{applicationId}/players/hidden"
      #{:applicationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

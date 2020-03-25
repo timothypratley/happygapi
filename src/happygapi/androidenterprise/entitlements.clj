@@ -12,21 +12,24 @@
   Required parameters: enterpriseId, entitlementId, userId
   
   Optional parameters: none
+  
   Removes an entitlement to an app for a user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :entitlementId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
      #{:enterpriseId :entitlementId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +40,24 @@
   Required parameters: enterpriseId, entitlementId, userId
   
   Optional parameters: none
+  
   Retrieves details of an entitlement."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :entitlementId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
      #{:enterpriseId :entitlementId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +68,22 @@
   Required parameters: enterpriseId, userId
   
   Optional parameters: none
+  
   Lists all entitlements for the specified user. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/entitlements"
      #{:enterpriseId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +101,23 @@
   
   Adds or updates an entitlement to an app for a user."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId :entitlementId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
      #{:enterpriseId :entitlementId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

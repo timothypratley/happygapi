@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize, filter
+  
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}/locations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns a function with the given name from the requested project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,30 +67,30 @@
   
   Body: 
   
-  {:policy {:bindings [Binding],
-            :etag string,
+  {:policy {:etag string,
             :version integer,
-            :auditConfigs [AuditConfig]},
+            :auditConfigs [AuditConfig],
+            :bindings [Binding]},
    :updateMask string}
   
   Sets the IAM access control policy on the specified function.
   Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -112,10 +114,10 @@
    :vpcConnector string,
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:resource string,
+   :eventTrigger {:eventType string,
+                  :resource string,
                   :service string,
-                  :failurePolicy FailurePolicy,
-                  :eventType string},
+                  :failurePolicy FailurePolicy},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -130,21 +132,21 @@
   
   Updates existing function."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -165,21 +167,21 @@
   If the function does not exist, this will return an empty set of
   permissions, not a NOT_FOUND error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -200,21 +202,21 @@
   the actual limits, refer to
   [Rate Limits](https://cloud.google.com/functions/quotas#rate_limits)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}:call"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -238,10 +240,10 @@
    :vpcConnector string,
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:resource string,
+   :eventTrigger {:eventType string,
+                  :resource string,
                   :service string,
-                  :failurePolicy FailurePolicy,
-                  :eventType string},
+                  :failurePolicy FailurePolicy},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -258,21 +260,21 @@
   the specified project, the long running operation will return
   `ALREADY_EXISTS` error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:location})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:location})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+location}/functions"
      #{:location}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -314,21 +316,21 @@
   
   * `Authorization: Bearer YOUR_TOKEN`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+parent}/functions:generateUploadUrl"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -339,23 +341,24 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a function with the given name from the specified project. If the
   given function is used by some trigger, the trigger will be updated to
   remove this function."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -366,23 +369,24 @@
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
+  
   Gets the IAM access control policy for a function.
   Returns an empty policy if the function exists and does not have a policy
   set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -404,21 +408,21 @@
   For more information about the signed URL usage see:
   https://cloud.google.com/storage/docs/access-control/signed-urls"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+name}:generateDownloadUrl"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -429,21 +433,22 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Returns a list of functions that belong to the requested project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudfunctions.googleapis.com/"
      "v1/{+parent}/functions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

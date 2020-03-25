@@ -12,21 +12,22 @@
   Required parameters: tasklist
   
   Optional parameters: none
+  
   Deletes the authenticated user's specified task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists/{tasklist}"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,22 +38,23 @@
   Required parameters: tasklist
   
   Optional parameters: none
+  
   Returns the authenticated user's specified task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"
             "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists/{tasklist}"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -75,21 +77,21 @@
   
   Creates a new task list and adds it to the authenticated user's task lists. Fails with HTTP code 403 or 429 after reaching the storage limit of 2,000 lists."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -100,22 +102,23 @@
   Required parameters: none
   
   Optional parameters: maxResults, pageToken
+  
   Returns all the authenticated user's task lists."
   {:scopes ["https://www.googleapis.com/auth/tasks"
             "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -138,21 +141,21 @@
   
   Updates the authenticated user's specified task list. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists/{tasklist}"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -175,21 +178,21 @@
   
   Updates the authenticated user's specified task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:tasklist})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/tasks/v1/"
      "users/@me/lists/{tasklist}"
      #{:tasklist}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

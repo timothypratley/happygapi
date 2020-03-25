@@ -15,31 +15,31 @@
   
   Body: 
   
-  {:viewId string,
-   :user {:userId string, :type string},
-   :activityTypes [string],
+  {:activityTypes [string],
    :pageToken string,
-   :dateRange {:endDate string, :startDate string},
-   :pageSize integer}
+   :dateRange {:startDate string, :endDate string},
+   :pageSize integer,
+   :viewId string,
+   :user {:userId string, :type string}}
   
   Returns User Activity data."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://analyticsreporting.googleapis.com/"
      "v4/userActivity:search"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

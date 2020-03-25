@@ -21,21 +21,21 @@
   
   Creates a new variant of APK which is suitable for inclusion in a system image."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:packageName :versionCode})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/systemApks/{versionCode}/variants"
      #{:packageName :versionCode}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -46,21 +46,24 @@
   Required parameters: packageName, variantId, versionCode
   
   Optional parameters: none
+  
   Download a previously created APK which is suitable for inclusion in a system image."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:variantId :packageName :versionCode})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:variantId :packageName :versionCode})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/systemApks/{versionCode}/variants/{variantId}:download"
      #{:variantId :packageName :versionCode}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -71,21 +74,24 @@
   Required parameters: packageName, variantId, versionCode
   
   Optional parameters: none
+  
   Returns a previously created system APK variant."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:variantId :packageName :versionCode})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:variantId :packageName :versionCode})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/systemApks/{versionCode}/variants/{variantId}"
      #{:variantId :packageName :versionCode}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -96,21 +102,22 @@
   Required parameters: packageName, versionCode
   
   Optional parameters: none
+  
   Returns the list of previously created system APK variants."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :versionCode})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/systemApks/{versionCode}/variants"
      #{:packageName :versionCode}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

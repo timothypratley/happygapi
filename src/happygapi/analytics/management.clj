@@ -20,21 +20,21 @@
   Hashes the given Client ID."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/clientId:hashClientId"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -45,12 +45,13 @@
   Required parameters: accountId, goalId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Gets a goal to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:goalId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
@@ -58,11 +59,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals/{goalId}"
      #{:goalId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -110,21 +111,23 @@
   
   Create a new goal."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -135,23 +138,26 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists goals to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -199,9 +205,9 @@
   
   Updates an existing goal. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:goalId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/patch
@@ -209,13 +215,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals/{goalId}"
      #{:goalId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -263,9 +269,9 @@
   
   Updates an existing goal."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:goalId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/put
@@ -273,13 +279,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals/{goalId}"
      #{:goalId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -290,12 +296,13 @@
   Required parameters: accountId, experimentId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Delete an experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :profileId :experimentId :accountId})]}
   (util/get-response
    (http/delete
@@ -303,11 +310,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
      #{:webPropertyId :profileId :experimentId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -318,13 +325,14 @@
   Required parameters: accountId, experimentId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Returns an experiment to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :profileId :experimentId :accountId})]}
   (util/get-response
    (http/get
@@ -332,11 +340,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
      #{:webPropertyId :profileId :experimentId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -386,21 +394,23 @@
   Create a new experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -411,23 +421,26 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists experiments to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -477,9 +490,9 @@
   Update an existing experiment. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :profileId :experimentId :accountId})]}
   (util/get-response
    (http/patch
@@ -487,13 +500,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
      #{:webPropertyId :profileId :experimentId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -543,9 +556,9 @@
   Update an existing experiment."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :profileId :experimentId :accountId})]}
   (util/get-response
    (http/put
@@ -553,13 +566,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
      #{:webPropertyId :profileId :experimentId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -570,11 +583,12 @@
   Required parameters: accountId, linkId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Delete a profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/delete
@@ -582,11 +596,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -597,12 +611,13 @@
   Required parameters: accountId, linkId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Returns a single profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
@@ -610,11 +625,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -647,21 +662,23 @@
   
   Create a new profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -672,22 +689,25 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists all profile filter links for a profile."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -720,9 +740,9 @@
   
   Update an existing profile filter link. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/patch
@@ -730,13 +750,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -769,9 +789,9 @@
   
   Update an existing profile filter link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/put
@@ -779,13 +799,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -796,21 +816,22 @@
   Required parameters: accountId, filterId
   
   Optional parameters: none
+  
   Delete a filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:filterId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
      #{:filterId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -821,22 +842,23 @@
   Required parameters: accountId, filterId
   
   Optional parameters: none
+  
   Returns filters to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:filterId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
      #{:filterId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -894,21 +916,21 @@
   
   Create a new filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -919,22 +941,23 @@
   Required parameters: accountId
   
   Optional parameters: max-results, start-index
+  
   Lists all filters for an account"
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -992,21 +1015,21 @@
   
   Updates an existing filter. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:filterId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
      #{:filterId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1064,21 +1087,21 @@
   
   Updates an existing filter."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:filterId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
      #{:filterId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1089,12 +1112,13 @@
   Required parameters: accountId, customMetricId, webPropertyId
   
   Optional parameters: none
+  
   Get a custom metric to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customMetricId :webPropertyId :accountId})]}
   (util/get-response
    (http/get
@@ -1102,11 +1126,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
      #{:customMetricId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1138,21 +1162,21 @@
   
   Create a new custom metric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1163,22 +1187,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists custom metrics to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1210,9 +1235,9 @@
   
   Updates an existing custom metric. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customMetricId :webPropertyId :accountId})]}
   (util/get-response
    (http/patch
@@ -1220,13 +1245,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
      #{:customMetricId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1258,9 +1283,9 @@
   
   Updates an existing custom metric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customMetricId :webPropertyId :accountId})]}
   (util/get-response
    (http/put
@@ -1268,13 +1293,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
      #{:customMetricId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1285,21 +1310,24 @@
   Required parameters: accountId, linkId, webPropertyId
   
   Optional parameters: none
+  
   Removes a user from the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:linkId :webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:linkId :webPropertyId :accountId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks/{linkId}"
      #{:linkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1338,21 +1366,21 @@
   
   Adds a new user to the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1363,22 +1391,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists webProperty-user links for a given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
             "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1417,21 +1446,23 @@
   
   Updates permissions for an existing user on the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:linkId :webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:linkId :webPropertyId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks/{linkId}"
      #{:linkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1442,11 +1473,12 @@
   Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
   
   Optional parameters: none
+  
   Deletes a web property-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
   (util/get-response
    (http/delete
@@ -1454,11 +1486,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
      #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1469,12 +1501,13 @@
   Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
   
   Optional parameters: none
+  
   Returns a web property-Google Ads link to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
   (util/get-response
    (http/get
@@ -1482,11 +1515,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
      #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1517,21 +1550,21 @@
   
   Creates a webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1542,22 +1575,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists webProperty-Google Ads links for a given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1588,9 +1622,9 @@
   
   Updates an existing webProperty-Google Ads link. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
   (util/get-response
    (http/patch
@@ -1598,13 +1632,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
      #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1635,9 +1669,9 @@
   
   Updates an existing webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
   (util/get-response
    (http/put
@@ -1645,13 +1679,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
      #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1662,22 +1696,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: none
+  
   Gets a web property to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1713,21 +1748,21 @@
   
   Create a new property if the account has fewer than 20 properties. Web properties are visible in the Google Analytics interface only if they have at least one profile."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1738,23 +1773,24 @@
   Required parameters: accountId
   
   Optional parameters: max-results, start-index
+  
   Lists web properties to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1790,21 +1826,21 @@
   
   Updates an existing web property. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1840,21 +1876,21 @@
   
   Updates an existing web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1865,12 +1901,13 @@
   Required parameters: accountId, customDimensionId, webPropertyId
   
   Optional parameters: none
+  
   Get a custom dimension to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customDimensionId :webPropertyId :accountId})]}
   (util/get-response
    (http/get
@@ -1878,11 +1915,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
      #{:customDimensionId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1911,21 +1948,21 @@
   
   Create a new custom dimension."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1936,22 +1973,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists custom dimensions to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1980,9 +2018,9 @@
   
   Updates an existing custom dimension. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customDimensionId :webPropertyId :accountId})]}
   (util/get-response
    (http/patch
@@ -1990,13 +2028,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
      #{:customDimensionId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2025,9 +2063,9 @@
   
   Updates an existing custom dimension."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customDimensionId :webPropertyId :accountId})]}
   (util/get-response
    (http/put
@@ -2035,13 +2073,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
      #{:customDimensionId :webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2052,23 +2090,24 @@
   Required parameters: none
   
   Optional parameters: max-results, start-index
+  
   Lists segments to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/segments"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2079,22 +2118,23 @@
   Required parameters: none
   
   Optional parameters: max-results, start-index
+  
   Lists account summaries (lightweight tree comprised of accounts/properties/profiles) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accountSummaries"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2105,21 +2145,22 @@
   Required parameters: accountId, linkId
   
   Optional parameters: none
+  
   Removes a user from the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:linkId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:linkId :accountId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/entityUserLinks/{linkId}"
      #{:linkId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2158,21 +2199,21 @@
   
   Adds a new user to the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/entityUserLinks"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2183,22 +2224,23 @@
   Required parameters: accountId
   
   Optional parameters: max-results, start-index
+  
   Lists account-user links for a given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
             "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/entityUserLinks"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2237,21 +2279,21 @@
   
   Updates permissions for an existing user on the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:linkId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:linkId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/entityUserLinks/{linkId}"
      #{:linkId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2262,11 +2304,12 @@
   Required parameters: accountId, linkId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Removes a user from the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/delete
@@ -2274,11 +2317,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2317,21 +2360,23 @@
   
   Adds a new user to the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2342,22 +2387,25 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists profile-user links for a given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
             "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2396,9 +2444,9 @@
   
   Updates permissions for an existing user on the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/put
@@ -2406,13 +2454,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks/{linkId}"
      #{:linkId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2431,9 +2479,9 @@
   Delete data associated with a previous upload."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :accountId :customDataSourceId})]}
   (util/get-response
    (http/post
@@ -2441,13 +2489,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/deleteUploadData"
      #{:webPropertyId :accountId :customDataSourceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2458,13 +2506,14 @@
   Required parameters: accountId, customDataSourceId, uploadId, webPropertyId
   
   Optional parameters: none
+  
   List uploads to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:uploadId :webPropertyId :accountId :customDataSourceId})]}
   (util/get-response
    (http/get
@@ -2472,11 +2521,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads/{uploadId}"
      #{:uploadId :webPropertyId :accountId :customDataSourceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2487,13 +2536,14 @@
   Required parameters: accountId, customDataSourceId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   List uploads to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :accountId :customDataSourceId})]}
   (util/get-response
    (http/get
@@ -2501,11 +2551,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
      #{:webPropertyId :accountId :customDataSourceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2516,12 +2566,13 @@
   Required parameters: accountId, customDataSourceId, webPropertyId
   
   Optional parameters: none
+  
   Upload data for a custom data source."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :accountId :customDataSourceId})]}
   (util/get-response
    (http/post
@@ -2529,11 +2580,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
      #{:webPropertyId :accountId :customDataSourceId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2544,23 +2595,24 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   List custom data sources to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2571,21 +2623,24 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Deletes a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2596,22 +2651,25 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: none
+  
   Gets a view (profile) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2654,21 +2712,21 @@
   
   Create a new view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2679,23 +2737,24 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists views (profiles) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2738,21 +2797,23 @@
   
   Updates an existing view (profile). This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2795,21 +2856,23 @@
   
   Updates an existing view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2820,11 +2883,12 @@
   Required parameters: accountId, remarketingAudienceId, webPropertyId
   
   Optional parameters: none
+  
   Delete a remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :remarketingAudienceId :accountId})]}
   (util/get-response
    (http/delete
@@ -2832,11 +2896,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
      #{:webPropertyId :remarketingAudienceId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2847,12 +2911,13 @@
   Required parameters: accountId, remarketingAudienceId, webPropertyId
   
   Optional parameters: none
+  
   Gets a remarketing audience to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :remarketingAudienceId :accountId})]}
   (util/get-response
    (http/get
@@ -2860,11 +2925,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
      #{:webPropertyId :remarketingAudienceId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2914,21 +2979,21 @@
   
   Creates a new remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2939,22 +3004,23 @@
   Required parameters: accountId, webPropertyId
   
   Optional parameters: max-results, start-index, type
+  
   Lists remarketing audiences to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
      #{:webPropertyId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3004,9 +3070,9 @@
   
   Updates an existing remarketing audience. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :remarketingAudienceId :accountId})]}
   (util/get-response
    (http/patch
@@ -3014,13 +3080,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
      #{:webPropertyId :remarketingAudienceId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3070,9 +3136,9 @@
   
   Updates an existing remarketing audience."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:webPropertyId :remarketingAudienceId :accountId})]}
   (util/get-response
    (http/put
@@ -3080,13 +3146,13 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
      #{:webPropertyId :remarketingAudienceId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3097,23 +3163,24 @@
   Required parameters: none
   
   Optional parameters: max-results, start-index
+  
   Lists all accounts to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3124,11 +3191,12 @@
   Required parameters: accountId, profileId, unsampledReportId, webPropertyId
   
   Optional parameters: none
+  
   Deletes an unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:unsampledReportId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/delete
@@ -3136,11 +3204,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports/{unsampledReportId}"
      #{:unsampledReportId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3151,13 +3219,14 @@
   Required parameters: accountId, profileId, unsampledReportId, webPropertyId
   
   Optional parameters: none
+  
   Returns a single unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:unsampledReportId :webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
@@ -3165,11 +3234,11 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports/{unsampledReportId}"
      #{:unsampledReportId :webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3206,21 +3275,23 @@
   Create a new unsampled report."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -3231,23 +3302,26 @@
   Required parameters: accountId, profileId, webPropertyId
   
   Optional parameters: max-results, start-index
+  
   Lists unsampled reports to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:webPropertyId :profileId :accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports"
      #{:webPropertyId :profileId :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

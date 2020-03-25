@@ -12,21 +12,22 @@
   Required parameters: packageName, reviewId
   
   Optional parameters: translationLanguage
+  
   Returns a single review."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :reviewId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :reviewId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews/{reviewId}"
      #{:packageName :reviewId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: packageName
   
   Optional parameters: maxResults, startIndex, token, translationLanguage
+  
   Returns a list of reviews. Only reviews from last week will be returned."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews"
      #{:packageName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,21 +71,21 @@
   
   Reply to a single review, or update an existing reply."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:packageName :reviewId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :reviewId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/reviews/{reviewId}:reply"
      #{:packageName :reviewId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

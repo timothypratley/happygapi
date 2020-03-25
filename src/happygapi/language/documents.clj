@@ -6,43 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn analyzeSentiment$
-  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeSentiment
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:encodingType string,
-   :document {:type string,
-              :content string,
-              :gcsContentUri string,
-              :language string}}
-  
-  Analyzes the sentiment of the provided text."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:analyzeSentiment"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn analyzeEntitySentiment$
   "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeEntitySentiment
   
@@ -62,21 +25,21 @@
   sentiment associated with each entity and its mentions."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:analyzeEntitySentiment"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -101,21 +64,21 @@
   other properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:analyzeEntities"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -140,21 +103,21 @@
   properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:analyzeSyntax"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -168,36 +131,36 @@
   
   Body: 
   
-  {:features {:classifyText boolean,
-              :extractSyntax boolean,
-              :extractDocumentSentiment boolean,
-              :extractEntitySentiment boolean,
-              :extractEntities boolean},
-   :encodingType string,
+  {:encodingType string,
    :document {:type string,
               :content string,
               :gcsContentUri string,
-              :language string}}
+              :language string},
+   :features {:extractEntities boolean,
+              :classifyText boolean,
+              :extractSyntax boolean,
+              :extractDocumentSentiment boolean,
+              :extractEntitySentiment boolean}}
   
   A convenience method that provides all the features that analyzeSentiment,
   analyzeEntities, and analyzeSyntax provide in one call."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:annotateText"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -219,21 +182,58 @@
   Classifies a document into categories."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:classifyText"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn analyzeSentiment$
+  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeSentiment
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:encodingType string,
+   :document {:type string,
+              :content string,
+              :gcsContentUri string,
+              :language string}}
+  
+  Analyzes the sentiment of the provided text."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:analyzeSentiment"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

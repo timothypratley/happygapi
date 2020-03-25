@@ -12,6 +12,7 @@
   Required parameters: spreadsheetId
   
   Optional parameters: ranges, includeGridData
+  
   Returns the spreadsheet at the given ID.
   The caller must specify the spreadsheet ID.
   
@@ -38,19 +39,19 @@
             "https://www.googleapis.com/auth/drive.readonly"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/spreadsheets.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,10 +65,10 @@
   
   Body: 
   
-  {:dataFilters [{:developerMetadataLookup DeveloperMetadataLookup,
-                  :a1Range string,
-                  :gridRange GridRange}],
-   :includeGridData boolean}
+  {:includeGridData boolean,
+   :dataFilters [{:gridRange GridRange,
+                  :developerMetadataLookup DeveloperMetadataLookup,
+                  :a1Range string}]}
   
   Returns the spreadsheet at the given ID.
   The caller must specify the spreadsheet ID.
@@ -94,21 +95,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}:getByDataFilter"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -122,15 +123,15 @@
   
   Body: 
   
-  {:properties {:spreadsheetTheme SpreadsheetTheme,
+  {:properties {:locale string,
+                :spreadsheetTheme SpreadsheetTheme,
                 :iterativeCalculationSettings IterativeCalculationSettings,
                 :autoRecalc string,
                 :defaultFormat CellFormat,
                 :title string,
-                :timeZone string,
-                :locale string},
-   :namedRanges [{:name string, :namedRangeId string, :range GridRange}],
+                :timeZone string},
    :spreadsheetId string,
+   :namedRanges [{:name string, :namedRangeId string, :range GridRange}],
    :developerMetadata [{:metadataValue string,
                         :metadataKey string,
                         :metadataId integer,
@@ -155,21 +156,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -183,7 +184,10 @@
   
   Body: 
   
-  {:requests [{:moveDimension MoveDimensionRequest,
+  {:includeSpreadsheetInResponse boolean,
+   :responseRanges [string],
+   :responseIncludeGridData boolean,
+   :requests [{:moveDimension MoveDimensionRequest,
                :repeatCell RepeatCellRequest,
                :updateFilterView UpdateFilterViewRequest,
                :addSlicer AddSlicerRequest,
@@ -242,10 +246,7 @@
                :updateSlicerSpec UpdateSlicerSpecRequest,
                :autoFill AutoFillRequest,
                :copyPaste CopyPasteRequest,
-               :updateConditionalFormatRule UpdateConditionalFormatRuleRequest}],
-   :includeSpreadsheetInResponse boolean,
-   :responseRanges [string],
-   :responseIncludeGridData boolean}
+               :updateConditionalFormatRule UpdateConditionalFormatRuleRequest}]}
   
   Applies one or more updates to the spreadsheet.
   
@@ -269,21 +270,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}:batchUpdate"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -297,9 +298,9 @@
   
   Body: 
   
-  {:dataFilters [{:developerMetadataLookup DeveloperMetadataLookup,
-                  :a1Range string,
-                  :gridRange GridRange}]}
+  {:dataFilters [{:gridRange GridRange,
+                  :developerMetadataLookup DeveloperMetadataLookup,
+                  :a1Range string}]}
   
   Returns all developer metadata matching the specified DataFilter.
   If the provided DataFilter represents a DeveloperMetadataLookup object,
@@ -309,21 +310,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/developerMetadata:search"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -331,28 +332,29 @@
 (defn developerMetadata-get$
   "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/developerMetadata/get
   
-  Required parameters: metadataId, spreadsheetId
+  Required parameters: spreadsheetId, metadataId
   
   Optional parameters: none
+  
   Returns the developer metadata with the specified ID.
   The caller must specify the spreadsheet ID and the developer metadata's
   unique metadataId."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:spreadsheetId :metadataId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId :metadataId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/developerMetadata/{metadataId}"
      #{:spreadsheetId :metadataId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -366,9 +368,9 @@
   
   Body: 
   
-  {:dataFilters [{:developerMetadataLookup DeveloperMetadataLookup,
-                  :a1Range string,
-                  :gridRange GridRange}],
+  {:dataFilters [{:gridRange GridRange,
+                  :developerMetadataLookup DeveloperMetadataLookup,
+                  :a1Range string}],
    :valueRenderOption string,
    :dateTimeRenderOption string,
    :majorDimension string}
@@ -380,21 +382,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchGetByDataFilter"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -405,6 +407,7 @@
   Required parameters: spreadsheetId, range
   
   Optional parameters: valueRenderOption, dateTimeRenderOption, majorDimension
+  
   Returns a range of values from a spreadsheet.
   The caller must specify the spreadsheet ID and a range."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -412,19 +415,19 @@
             "https://www.googleapis.com/auth/drive.readonly"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/spreadsheets.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:spreadsheetId :range})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId :range})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values/{range}"
      #{:spreadsheetId :range}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -438,11 +441,11 @@
   
   Body: 
   
-  {:responseValueRenderOption string,
+  {:responseDateTimeRenderOption string,
+   :responseValueRenderOption string,
    :includeValuesInResponse boolean,
    :valueInputOption string,
-   :data [{:range string, :majorDimension string, :values [[any]]}],
-   :responseDateTimeRenderOption string}
+   :data [{:majorDimension string, :values [[any]], :range string}]}
   
   Sets values in one or more ranges of a spreadsheet.
   The caller must specify the spreadsheet ID,
@@ -451,21 +454,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchUpdate"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -476,6 +479,7 @@
   Required parameters: spreadsheetId
   
   Optional parameters: valueRenderOption, dateTimeRenderOption, ranges, majorDimension
+  
   Returns one or more ranges of values from a spreadsheet.
   The caller must specify the spreadsheet ID and one or more ranges."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -483,19 +487,19 @@
             "https://www.googleapis.com/auth/drive.readonly"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/spreadsheets.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchGet"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -509,9 +513,9 @@
   
   Body: 
   
-  {:dataFilters [{:developerMetadataLookup DeveloperMetadataLookup,
-                  :a1Range string,
-                  :gridRange GridRange}]}
+  {:dataFilters [{:gridRange GridRange,
+                  :developerMetadataLookup DeveloperMetadataLookup,
+                  :a1Range string}]}
   
   Clears one or more ranges of values from a spreadsheet.
   The caller must specify the spreadsheet ID and one or more
@@ -521,21 +525,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchClearByDataFilter"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -543,13 +547,13 @@
 (defn values-append$
   "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/values/append
   
-  Required parameters: spreadsheetId, range
+  Required parameters: range, spreadsheetId
   
-  Optional parameters: responseValueRenderOption, insertDataOption, valueInputOption, responseDateTimeRenderOption, includeValuesInResponse
+  Optional parameters: insertDataOption, valueInputOption, responseDateTimeRenderOption, includeValuesInResponse, responseValueRenderOption
   
   Body: 
   
-  {:range string, :majorDimension string, :values [[any]]}
+  {:majorDimension string, :values [[any]], :range string}
   
   Appends values to a spreadsheet. The input range is used to search for
   existing data and find a \"table\" within that range. Values will be
@@ -568,21 +572,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId :range})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId :range})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values/{range}:append"
      #{:spreadsheetId :range}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -590,13 +594,13 @@
 (defn values-update$
   "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/values/update
   
-  Required parameters: spreadsheetId, range
+  Required parameters: range, spreadsheetId
   
-  Optional parameters: responseValueRenderOption, valueInputOption, responseDateTimeRenderOption, includeValuesInResponse
+  Optional parameters: valueInputOption, responseDateTimeRenderOption, includeValuesInResponse, responseValueRenderOption
   
   Body: 
   
-  {:range string, :majorDimension string, :values [[any]]}
+  {:majorDimension string, :values [[any]], :range string}
   
   Sets values in a range of a spreadsheet.
   The caller must specify the spreadsheet ID, range, and
@@ -604,21 +608,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId :range})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId :range})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values/{range}"
      #{:spreadsheetId :range}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -632,13 +636,13 @@
   
   Body: 
   
-  {:responseValueRenderOption string,
+  {:responseDateTimeRenderOption string,
+   :responseValueRenderOption string,
    :includeValuesInResponse boolean,
    :valueInputOption string,
-   :data [{:majorDimension string,
-           :values [[any]],
-           :dataFilter DataFilter}],
-   :responseDateTimeRenderOption string}
+   :data [{:dataFilter DataFilter,
+           :majorDimension string,
+           :values [[any]]}]}
   
   Sets values in one or more ranges of a spreadsheet.
   The caller must specify the spreadsheet ID,
@@ -647,21 +651,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchUpdateByDataFilter"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -684,21 +688,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values:batchClear"
      #{:spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -721,21 +725,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:spreadsheetId :range})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:spreadsheetId :range})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/values/{range}:clear"
      #{:spreadsheetId :range}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -756,21 +760,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:sheetId :spreadsheetId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sheetId :spreadsheetId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sheets.googleapis.com/"
      "v4/spreadsheets/{spreadsheetId}/sheets/{sheetId}:copyTo"
      #{:sheetId :spreadsheetId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

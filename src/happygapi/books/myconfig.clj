@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Gets the current settings for the user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "myconfig/getUserSettings"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: cpksver, volumeIds
   
   Optional parameters: locale, source
+  
   Release downloaded content access restriction."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:cpksver :volumeIds})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:cpksver :volumeIds})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "myconfig/releaseDownloadAccess"
      #{:cpksver :volumeIds}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,24 @@
   Required parameters: cpksver, nonce, source, volumeId
   
   Optional parameters: licenseTypes, locale
+  
   Request concurrent and download access restrictions."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:volumeId :source :cpksver :nonce})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:volumeId :source :cpksver :nonce})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "myconfig/requestAccess"
      #{:volumeId :source :cpksver :nonce}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,21 +92,22 @@
   Required parameters: cpksver, nonce, source
   
   Optional parameters: features, includeNonComicsSeries, locale, showPreorders, volumeIds
+  
   Request downloaded content access for specified volumes on the My eBooks shelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:source :cpksver :nonce})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:source :cpksver :nonce})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "myconfig/syncVolumeLicenses"
      #{:source :cpksver :nonce}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -125,21 +131,21 @@
   
   Sets the settings for the user. If a sub-object is specified, it will overwrite the existing sub-object stored in the server. Unspecified sub-objects will retain the existing value."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "myconfig/updateUserSettings"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

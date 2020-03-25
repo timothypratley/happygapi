@@ -11,23 +11,24 @@
   
   Required parameters: operation, project
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Retrieves an instance operation that has been performed on an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:operation :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:operation :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/operations/{operation}"
      #{:operation :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,24 +38,25 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, parent, instance, pageToken
+  Optional parameters: instance, pageToken, maxResults
+  
   Lists all instance operations that have been performed on the given Cloud
   SQL instance in the reverse chronological order of the start time."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/operations"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

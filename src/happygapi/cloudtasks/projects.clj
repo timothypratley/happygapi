@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
+  
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}/locations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a queue."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -90,7 +93,7 @@
   
   Body: 
   
-  {:policy {:bindings [Binding], :etag string, :version integer}}
+  {:policy {:etag string, :version integer, :bindings [Binding]}}
   
   Sets the access control policy for a Queue. Replaces any existing
   policy.
@@ -104,21 +107,21 @@
   
   * `cloudtasks.queues.setIamPolicy`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -132,22 +135,22 @@
   
   Body: 
   
-  {:purgeTime string,
-   :retryConfig {:minBackoff string,
-                 :maxBackoff string,
+  {:stackdriverLoggingConfig {:samplingRatio number},
+   :appEngineRoutingOverride {:host string,
+                              :service string,
+                              :instance string,
+                              :version string},
+   :purgeTime string,
+   :state string,
+   :retryConfig {:maxBackoff string,
                  :maxRetryDuration string,
                  :maxAttempts integer,
-                 :maxDoublings integer},
-   :state string,
+                 :maxDoublings integer,
+                 :minBackoff string},
    :name string,
    :rateLimits {:maxConcurrentDispatches integer,
                 :maxDispatchesPerSecond number,
-                :maxBurstSize integer},
-   :stackdriverLoggingConfig {:samplingRatio number},
-   :appEngineRoutingOverride {:instance string,
-                              :version string,
-                              :host string,
-                              :service string}}
+                :maxBurstSize integer}}
   
   Updates a queue.
   
@@ -165,21 +168,21 @@
   queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using
   this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -203,21 +206,21 @@
   UIs and command-line tools, not for authorization checking. This operation
   may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -231,22 +234,22 @@
   
   Body: 
   
-  {:purgeTime string,
-   :retryConfig {:minBackoff string,
-                 :maxBackoff string,
+  {:stackdriverLoggingConfig {:samplingRatio number},
+   :appEngineRoutingOverride {:host string,
+                              :service string,
+                              :instance string,
+                              :version string},
+   :purgeTime string,
+   :state string,
+   :retryConfig {:maxBackoff string,
                  :maxRetryDuration string,
                  :maxAttempts integer,
-                 :maxDoublings integer},
-   :state string,
+                 :maxDoublings integer,
+                 :minBackoff string},
    :name string,
    :rateLimits {:maxConcurrentDispatches integer,
                 :maxDispatchesPerSecond number,
-                :maxBurstSize integer},
-   :stackdriverLoggingConfig {:samplingRatio number},
-   :appEngineRoutingOverride {:instance string,
-                              :version string,
-                              :host string,
-                              :service string}}
+                :maxBurstSize integer}}
   
   Creates a queue.
   
@@ -261,21 +264,21 @@
   queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using
   this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+parent}/queues"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -286,6 +289,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a queue.
   
   This command will delete the queue even if it has tasks in it.
@@ -300,19 +304,19 @@
   queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using
   this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -338,21 +342,21 @@
   
   * `cloudtasks.queues.getIamPolicy`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -362,24 +366,25 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists queues.
   
   Queues are returned in lexicographical order."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+parent}/queues"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -402,21 +407,21 @@
   Purge operations can take up to one minute to take effect. Tasks
   might be dispatched before the purge takes effect. A purge is irreversible."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}:purge"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -440,21 +445,21 @@
   when the queue is paused. A queue is paused if its
   state is PAUSED."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}:pause"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -484,21 +489,51 @@
   [Managing Cloud Tasks Scaling
   Risks](https://cloud.google.com/tasks/docs/manage-cloud-task-scaling)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}:resume"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-queues-tasks-delete$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a task.
+  
+  A task can be deleted if it is scheduled or dispatched. A task
+  cannot be deleted if it has executed successfully or permanently
+  failed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudtasks.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -508,7 +543,8 @@
   
   Required parameters: parent
   
-  Optional parameters: responseView, pageToken, pageSize
+  Optional parameters: pageSize, responseView, pageToken
+  
   Lists the tasks in a queue.
   
   By default, only the BASIC view is retrieved
@@ -519,19 +555,19 @@
   The tasks may be returned in any order. The ordering may change at any
   time."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+parent}/tasks"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -542,21 +578,22 @@
   Required parameters: name
   
   Optional parameters: responseView
+  
   Gets a task."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -589,21 +626,21 @@
   
   * The maximum task size is 100KB."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+parent}/tasks"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -644,50 +681,21 @@
   NOT_FOUND when it is called on a
   task that has already succeeded or permanently failed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+name}:run"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-queues-tasks-delete$
-  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a task.
-  
-  A task can be deleted if it is scheduled or dispatched. A task
-  cannot be deleted if it has executed successfully or permanently
-  failed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudtasks.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

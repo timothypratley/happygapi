@@ -11,22 +11,23 @@
   
   Required parameters: parent
   
-  Optional parameters: fieldSelector, includeUninitialized, resourceVersion, continue, limit, watch, labelSelector
+  Optional parameters: continue, limit, watch, labelSelector, resourceVersion, includeUninitialized, fieldSelector
+  
   List routes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+parent}/routes"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a route."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,22 @@
   Required parameters: name
   
   Optional parameters: apiVersion, propagationPolicy, kind
+  
   Delete a revision."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -86,22 +89,23 @@
   
   Required parameters: parent
   
-  Optional parameters: labelSelector, fieldSelector, resourceVersion, includeUninitialized, continue, limit, watch
+  Optional parameters: continue, limit, watch, labelSelector, fieldSelector, includeUninitialized, resourceVersion
+  
   List revisions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+parent}/revisions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -112,71 +116,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a revision."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configurations-list$
-  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/configurations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch, labelSelector
-  List configurations."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "apis/serving.knative.dev/v1/{+parent}/configurations"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configurations-get$
-  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/configurations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Get information about a configuration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "apis/serving.knative.dev/v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -186,22 +141,23 @@
   
   Required parameters: parent
   
-  Optional parameters: resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch, labelSelector
+  Optional parameters: watch, labelSelector, resourceVersion, includeUninitialized, fieldSelector, continue, limit
+  
   List domain mappings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/domains.cloudrun.com/v1/{+parent}/domainmappings"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -212,21 +168,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/domains.cloudrun.com/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -240,8 +197,7 @@
   
   Body: 
   
-  {:kind string,
-   :metadata {:labels {},
+  {:metadata {:labels {},
               :clusterName string,
               :generation integer,
               :ownerReferences [OwnerReference],
@@ -256,32 +212,33 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:resourceRecords [ResourceRecord],
-            :mappedRouteName string,
-            :conditions [GoogleCloudRunV1Condition],
-            :observedGeneration integer},
+   :status {:conditions [GoogleCloudRunV1Condition],
+            :observedGeneration integer,
+            :resourceRecords [ResourceRecord],
+            :mappedRouteName string},
    :apiVersion string,
    :spec {:forceOverride boolean,
           :routeName string,
-          :certificateMode string}}
+          :certificateMode string},
+   :kind string}
   
   Create a new domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "apis/domains.cloudrun.com/v1/{+parent}/domainmappings"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -292,21 +249,74 @@
   Required parameters: name
   
   Optional parameters: propagationPolicy, kind, apiVersion
+  
   Delete a domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://run.googleapis.com/"
      "apis/domains.cloudrun.com/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configurations-list$
+  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/configurations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: limit, watch, labelSelector, fieldSelector, includeUninitialized, resourceVersion, continue
+  
+  List configurations."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "apis/serving.knative.dev/v1/{+parent}/configurations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configurations-get$
+  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/configurations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get information about a configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "apis/serving.knative.dev/v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -317,48 +327,22 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   List authorized domains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/domains.cloudrun.com/v1/{+parent}/authorizeddomains"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn services-delete$
-  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/services/delete
-  
-  Required parameters: name
-  
-  Optional parameters: apiVersion, propagationPolicy, kind
-  Delete a service.
-  This will cause the Service to stop serving traffic and will delete the
-  child entities like Routes, Configurations and Revisions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://run.googleapis.com/"
-     "apis/serving.knative.dev/v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -368,22 +352,23 @@
   
   Required parameters: parent
   
-  Optional parameters: labelSelector, fieldSelector, includeUninitialized, resourceVersion, continue, limit, watch
+  Optional parameters: resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch, labelSelector
+  
   List services."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+parent}/services"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -394,21 +379,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -437,34 +423,34 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:url string,
-            :traffic [TrafficTarget],
-            :latestReadyRevisionName string,
-            :latestCreatedRevisionName string,
+   :status {:latestCreatedRevisionName string,
             :conditions [GoogleCloudRunV1Condition],
             :address Addressable,
-            :observedGeneration integer},
+            :observedGeneration integer,
+            :url string,
+            :traffic [TrafficTarget],
+            :latestReadyRevisionName string},
    :apiVersion string,
    :spec {:traffic [TrafficTarget], :template RevisionTemplate},
    :kind string}
   
   Create a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+parent}/services"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -493,13 +479,13 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:url string,
-            :traffic [TrafficTarget],
-            :latestReadyRevisionName string,
-            :latestCreatedRevisionName string,
+   :status {:latestCreatedRevisionName string,
             :conditions [GoogleCloudRunV1Condition],
             :address Addressable,
-            :observedGeneration integer},
+            :observedGeneration integer,
+            :url string,
+            :traffic [TrafficTarget],
+            :latestReadyRevisionName string},
    :apiVersion string,
    :spec {:traffic [TrafficTarget], :template RevisionTemplate},
    :kind string}
@@ -513,21 +499,49 @@
   May provide metadata.resourceVersion to enforce update from last read for
   optimistic concurrency control."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://run.googleapis.com/"
      "apis/serving.knative.dev/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn services-delete$
+  "https://cloud.google.com/run/api/reference/rest/v1/namespaces/services/delete
+  
+  Required parameters: name
+  
+  Optional parameters: apiVersion, propagationPolicy, kind
+  
+  Delete a service.
+  This will cause the Service to stop serving traffic and will delete the
+  child entities like Routes, Configurations and Revisions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://run.googleapis.com/"
+     "apis/serving.knative.dev/v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

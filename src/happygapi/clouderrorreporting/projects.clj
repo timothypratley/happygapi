@@ -13,21 +13,22 @@
   Required parameters: projectName
   
   Optional parameters: none
+  
   Deletes all error events of a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:projectName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectName})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+projectName}/events"
      #{:projectName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,21 +39,22 @@
   Required parameters: groupName
   
   Optional parameters: none
+  
   Get the specified group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:groupName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:groupName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+groupName}"
      #{:groupName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -66,26 +68,26 @@
   
   Body: 
   
-  {:name string, :groupId string, :trackingIssues [{:url string}]}
+  {:groupId string, :trackingIssues [{:url string}], :name string}
   
   Replace the data for the specified group.
   Fails if the group does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -96,21 +98,22 @@
   Required parameters: projectName
   
   Optional parameters: groupId, serviceFilter.resourceType, alignment, pageToken, alignmentTime, pageSize, serviceFilter.version, timeRange.period, order, timedCountDuration, serviceFilter.service
+  
   Lists the specified groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:projectName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+projectName}/groupStats"
      #{:projectName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -120,22 +123,23 @@
   
   Required parameters: projectName
   
-  Optional parameters: serviceFilter.resourceType, timeRange.period, groupId, pageToken, serviceFilter.service, pageSize, serviceFilter.version
+  Optional parameters: serviceFilter.resourceType, timeRange.period, groupId, serviceFilter.service, pageToken, pageSize, serviceFilter.version
+  
   Lists the specified events."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:projectName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+projectName}/events"
      #{:projectName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -149,15 +153,15 @@
   
   Body: 
   
-  {:message string,
+  {:context {:reportLocation SourceLocation,
+             :sourceReferences [SourceReference],
+             :httpRequest HttpRequestContext,
+             :user string},
+   :message string,
    :serviceContext {:service string,
                     :resourceType string,
                     :version string},
-   :eventTime string,
-   :context {:reportLocation SourceLocation,
-             :sourceReferences [SourceReference],
-             :httpRequest HttpRequestContext,
-             :user string}}
+   :eventTime string}
   
   Report an individual error event.
   
@@ -169,21 +173,21 @@
   `POST
   https://clouderrorreporting.googleapis.com/v1beta1/{projectName}/events:report?key=123ABC456`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectName})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+projectName}/events:report"
      #{:projectName}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

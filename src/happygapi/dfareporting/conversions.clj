@@ -40,21 +40,21 @@
   
   Inserts conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/conversions/batchinsert"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -93,21 +93,21 @@
   
   Updates existing conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/conversions/batchupdate"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

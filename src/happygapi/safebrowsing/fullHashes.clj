@@ -15,31 +15,31 @@
   
   Body: 
   
-  {:threatInfo {:threatEntries [ThreatEntry],
-                :threatEntryTypes [string],
-                :threatTypes [string],
-                :platformTypes [string]},
-   :apiClient {:clientVersion string, :clientId string},
+  {:apiClient {:clientVersion string, :clientId string},
    :clientStates [string],
-   :client {:clientVersion string, :clientId string}}
+   :client {:clientVersion string, :clientId string},
+   :threatInfo {:threatEntryTypes [string],
+                :threatTypes [string],
+                :platformTypes [string],
+                :threatEntries [ThreatEntry]}}
   
   Finds the full hashes that match the requested hash prefixes."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://safebrowsing.googleapis.com/"
      "v4/fullHashes:find"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

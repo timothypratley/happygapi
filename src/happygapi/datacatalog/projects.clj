@@ -7,71 +7,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-entryGroups-patch$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:dataCatalogTimestamps {:createTime string,
-                           :expireTime string,
-                           :updateTime string},
-   :name string,
-   :displayName string,
-   :description string}
-  
-  Updates an EntryGroup. The user should enable the Data Catalog API in the
-  project identified by the `entry_group.name` parameter (see [Data Catalog
-  Resource Project] (/data-catalog/docs/concepts/resource-project) for more
-  information)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-get$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/get
-  
-  Required parameters: name
-  
-  Optional parameters: readMask
-  Gets an EntryGroup."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-entryGroups-testIamPermissions$
   "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/testIamPermissions
   
@@ -98,21 +33,21 @@
   A caller is not required to have Google IAM permission to make this
   request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -123,24 +58,25 @@
   Required parameters: name
   
   Optional parameters: force
+  
   Deletes an EntryGroup. Only entry groups that do not contain entries can be
   deleted. Users should enable the Data Catalog API in the project
   identified by the `name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +87,68 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Lists entry groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/entryGroups"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-setIamPolicy$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :bindings [Binding], :etag string}}
+  
+  Sets the access control policy for a resource. Replaces any existing
+  policy.
+  Supported resources are:
+    - Tag templates.
+    - Entries.
+    - Entry groups.
+  Note, this method cannot be used to manage policies for BigQuery, Cloud
+  Pub/Sub and any external Google Cloud Platform resources synced to Cloud
+  Data Catalog.
+  
+  Callers must have following Google IAM permission
+    - `datacatalog.tagTemplates.setIamPolicy` to set policies on tag
+      templates.
+    - `datacatalog.entries.setIamPolicy` to set policies on entries.
+    - `datacatalog.entryGroups.setIamPolicy` to set policies on entry groups."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -193,67 +176,21 @@
   the `parent` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/entryGroups"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-setIamPolicy$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
-  
-  Sets the access control policy for a resource. Replaces any existing
-  policy.
-  Supported resources are:
-    - Tag templates.
-    - Entries.
-    - Entry groups.
-  Note, this method cannot be used to manage policies for BigQuery, Cloud
-  Pub/Sub and any external Google Cloud Platform resources synced to Cloud
-  Data Catalog.
-  
-  Callers must have following Google IAM permission
-    - `datacatalog.tagTemplates.setIamPolicy` to set policies on tag
-      templates.
-    - `datacatalog.entries.setIamPolicy` to set policies on entries.
-    - `datacatalog.entryGroups.setIamPolicy` to set policies on entry groups."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -287,21 +224,87 @@
     - `datacatalog.entries.getIamPolicy` to get policies on entries.
     - `datacatalog.entryGroups.getIamPolicy` to get policies on entry groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-get$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/get
+  
+  Required parameters: name
+  
+  Optional parameters: readMask
+  
+  Gets an EntryGroup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-patch$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:dataCatalogTimestamps {:createTime string,
+                           :expireTime string,
+                           :updateTime string},
+   :name string,
+   :displayName string,
+   :description string}
+  
+  Updates an EntryGroup. The user should enable the Data Catalog API in the
+  project identified by the `entry_group.name` parameter (see [Data Catalog
+  Resource Project] (/data-catalog/docs/concepts/resource-project) for more
+  information)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -312,6 +315,7 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes an existing entry. Only entries created through
   CreateEntry
   method can be deleted.
@@ -319,19 +323,19 @@
   the `name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -341,22 +345,23 @@
   
   Required parameters: parent
   
-  Optional parameters: readMask, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, readMask
+  
   Lists entries."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/entries"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -400,21 +405,21 @@
   
   A maximum of 100,000 entries may be created per entry group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/entries"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -448,21 +453,47 @@
     - `datacatalog.entries.getIamPolicy` to get policies on entries.
     - `datacatalog.entryGroups.getIamPolicy` to get policies on entry groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-entries-get$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/entries/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an entry."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -502,46 +533,21 @@
   the `entry.name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-entries-get$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/entries/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets an entry."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -572,21 +578,21 @@
   A caller is not required to have Google IAM permission to make this
   request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -600,29 +606,29 @@
   
   Body: 
   
-  {:column string,
-   :template string,
+  {:template string,
    :templateDisplayName string,
    :fields {},
-   :name string}
+   :name string,
+   :column string}
   
   Updates an existing tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -632,22 +638,23 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
+  
   Lists the tags on an Entry."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/tags"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -661,11 +668,11 @@
   
   Body: 
   
-  {:column string,
-   :template string,
+  {:template string,
    :templateDisplayName string,
    :fields {},
-   :name string}
+   :name string,
+   :column string}
   
   Creates a tag on an Entry.
   Note: The project identified by the `parent` parameter for the
@@ -675,21 +682,21 @@
   template](/data-catalog/docs/reference/rest/v1beta1/projects.locations.tagTemplates/create#path-parameters)
   used to create the tag must be from the same organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/tags"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -700,46 +707,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-entryGroups-tags-delete$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/tags/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a tag."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -753,29 +736,29 @@
   
   Body: 
   
-  {:column string,
-   :template string,
+  {:template string,
    :templateDisplayName string,
    :fields {},
-   :name string}
+   :name string,
+   :column string}
   
   Updates an existing tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -785,22 +768,23 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
+  
   Lists the tags on an Entry."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/tags"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -814,11 +798,11 @@
   
   Body: 
   
-  {:column string,
-   :template string,
+  {:template string,
    :templateDisplayName string,
    :fields {},
-   :name string}
+   :name string,
+   :column string}
   
   Creates a tag on an Entry.
   Note: The project identified by the `parent` parameter for the
@@ -828,21 +812,47 @@
   template](/data-catalog/docs/reference/rest/v1beta1/projects.locations.tagTemplates/create#path-parameters)
   used to create the tag must be from the same organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/tags"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-entryGroups-tags-delete$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/entryGroups/tags/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a tag."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -853,24 +863,25 @@
   Required parameters: name
   
   Optional parameters: force
+  
   Deletes a tag template and all tags using the template.
   Users should enable the Data Catalog API in the project identified by
   the `name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -891,21 +902,21 @@
   Resource Project](/data-catalog/docs/concepts/resource-project) for more
   information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/tagTemplates"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -919,7 +930,7 @@
   
   Body: 
   
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
   Sets the access control policy for a resource. Replaces any existing
   policy.
@@ -937,21 +948,21 @@
     - `datacatalog.entries.setIamPolicy` to set policies on entries.
     - `datacatalog.entryGroups.setIamPolicy` to set policies on entry groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -985,21 +996,21 @@
     - `datacatalog.entries.getIamPolicy` to get policies on entries.
     - `datacatalog.entryGroups.getIamPolicy` to get policies on entry groups."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1022,21 +1033,21 @@
   the `tag_template.name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1047,21 +1058,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a tag template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1092,49 +1104,21 @@
   A caller is not required to have Google IAM permission to make this
   request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-tagTemplates-fields-delete$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/tagTemplates/fields/delete
-  
-  Required parameters: name
-  
-  Optional parameters: force
-  Deletes a field in a tag template and all uses of that field.
-  Users should enable the Data Catalog API in the project identified by
-  the `name` parameter (see [Data Catalog Resource Project]
-  (/data-catalog/docs/concepts/resource-project) for more information)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1151,8 +1135,8 @@
   {:isRequired boolean,
    :name string,
    :displayName string,
-   :type {:enumType GoogleCloudDatacatalogV1beta1FieldTypeEnumType,
-          :primitiveType string},
+   :type {:primitiveType string,
+          :enumType GoogleCloudDatacatalogV1beta1FieldTypeEnumType},
    :order integer}
   
   Updates a field in a tag template. This method cannot be used to update the
@@ -1160,21 +1144,21 @@
   identified by the `name` parameter (see [Data Catalog Resource Project]
   (/data-catalog/docs/concepts/resource-project) for more information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1195,21 +1179,21 @@
   Resource Project](/data-catalog/docs/concepts/resource-project) for more
   information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}:rename"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1226,8 +1210,8 @@
   {:isRequired boolean,
    :name string,
    :displayName string,
-   :type {:enumType GoogleCloudDatacatalogV1beta1FieldTypeEnumType,
-          :primitiveType string},
+   :type {:primitiveType string,
+          :enumType GoogleCloudDatacatalogV1beta1FieldTypeEnumType},
    :order integer}
   
   Creates a field in a tag template. The user should enable the Data Catalog
@@ -1236,21 +1220,50 @@
   Project](/data-catalog/docs/concepts/resource-project) for more
   information)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/fields"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-tagTemplates-fields-delete$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/tagTemplates/fields/delete
+  
+  Required parameters: name
+  
+  Optional parameters: force
+  
+  Deletes a field in a tag template and all uses of that field.
+  Users should enable the Data Catalog API in the project identified by
+  the `name` parameter (see [Data Catalog Resource Project]
+  (/data-catalog/docs/concepts/resource-project) for more information)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1261,21 +1274,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a taxonomy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1289,25 +1303,25 @@
   
   Body: 
   
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
   Sets the IAM policy for a taxonomy or a policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1328,21 +1342,21 @@
   
   Updates a taxonomy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1361,21 +1375,21 @@
   Returns the permissions that a caller has on the specified taxonomy or
   policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1396,21 +1410,21 @@
   
   Creates a taxonomy in the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/taxonomies"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1421,22 +1435,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a taxonomy. This operation will also delete all
   policy tags in this taxonomy along with their associated policies."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1447,24 +1462,25 @@
   Required parameters: parent
   
   Optional parameters: taxonomies, serializedTaxonomies
+  
   Exports all taxonomies and their policy tags in a project.
   
   This method generates SerializedTaxonomy protos with nested policy tags
   that can be used as an input for future ImportTaxonomies calls."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/taxonomies:export"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1482,21 +1498,21 @@
   
   Gets the IAM policy for a taxonomy or a policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1507,22 +1523,23 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Lists all taxonomies in a project in a particular location that the caller
   has permission to view."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/taxonomies"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1544,46 +1561,21 @@
   This method provides a bulk taxonomy / policy tag creation using nested
   proto structure."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/taxonomies:import"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-taxonomies-policyTags-list$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/taxonomies/policyTags/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  Lists all policy tags in a taxonomy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+parent}/policyTags"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1597,25 +1589,25 @@
   
   Body: 
   
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
   Sets the IAM policy for a taxonomy or a policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1629,29 +1621,29 @@
   
   Body: 
   
-  {:name string,
+  {:parentPolicyTag string,
+   :name string,
    :childPolicyTags [string],
    :displayName string,
-   :description string,
-   :parentPolicyTag string}
+   :description string}
   
   Creates a policy tag in the specified taxonomy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+parent}/policyTags"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1669,46 +1661,21 @@
   
   Gets the IAM policy for a taxonomy or a policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-taxonomies-policyTags-get$
-  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/taxonomies/policyTags/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets a policy tag."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datacatalog.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1722,29 +1689,55 @@
   
   Body: 
   
-  {:name string,
+  {:parentPolicyTag string,
+   :name string,
    :childPolicyTags [string],
    :displayName string,
-   :description string,
-   :parentPolicyTag string}
+   :description string}
   
   Updates a policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-taxonomies-policyTags-get$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/taxonomies/policyTags/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a policy tag."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1763,21 +1756,21 @@
   Returns the permissions that a caller has on the specified taxonomy or
   policy tag."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1788,21 +1781,48 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a policy tag. Also deletes all of its descendant policy tags."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-taxonomies-policyTags-list$
+  "https://cloud.google.com/data-catalog/docs/api/reference/rest/v1beta1/projects/locations/taxonomies/policyTags/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists all policy tags in a taxonomy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datacatalog.googleapis.com/"
+     "v1beta1/{+parent}/policyTags"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

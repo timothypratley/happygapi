@@ -12,21 +12,22 @@
   Required parameters: notification_id
   
   Optional parameters: locale, source
+  
   Returns notification details for a given notification id."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:notification_id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:notification_id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "notification/get"
      #{:notification_id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

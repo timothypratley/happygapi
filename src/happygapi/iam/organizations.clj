@@ -6,12 +6,109 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn roles-undelete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/undelete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string}
+  
+  Undelete a Role, bringing it back in its previous state."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a Role definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:title string,
+   :includedPermissions [string],
+   :description string,
+   :etag string,
+   :stage string,
+   :name string,
+   :deleted boolean}
+  
+  Updates a Role definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn roles-delete$
   "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/delete
   
   Required parameters: name
   
   Optional parameters: etag
+  
   Soft deletes a role. The role is suspended and cannot be used to create new
   IAM Policy Bindings.
   The Role will not be included in `ListRoles()` unless `show_deleted` is set
@@ -20,19 +117,19 @@
   within 7 days. After 7 days the Role is deleted and all Bindings associated
   with the role are removed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -42,22 +139,23 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, view, showDeleted, pageToken
+  Optional parameters: pageToken, pageSize, view, showDeleted
+  
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+parent}/roles"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,116 +180,21 @@
   
   Creates a new Role."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+parent}/roles"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-undelete$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/undelete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string}
-  
-  Undelete a Role, bringing it back in its previous state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}:undelete"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-get$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets a Role definition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-patch$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:title string,
-   :includedPermissions [string],
-   :description string,
-   :etag string,
-   :stage string,
-   :name string,
-   :deleted boolean}
-  
-  Updates a Role definition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

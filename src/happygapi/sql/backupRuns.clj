@@ -6,28 +6,84 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/get
+  
+  Required parameters: instance, project, id
+  
+  Optional parameters: none
+  
+  Retrieves a resource containing information about a backup run."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns/{id}"
+     #{:instance :project :id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/list
+  
+  Required parameters: instance, project
+  
+  Optional parameters: pageToken, maxResults
+  
+  Lists all backup runs associated with a given instance and configuration in
+  the reverse chronological order of the backup initiation time."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns"
+     #{:instance :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/delete
   
-  Required parameters: project, id, instance
+  Required parameters: id, instance, project
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Deletes the backup taken by a backup run."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns/{id}"
      #{:instance :project :id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -35,14 +91,14 @@
 (defn insert$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/insert
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
-  Optional parameters: parent
+  Optional parameters: none
   
   Body: 
   
   {:description string,
-   :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
+   :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
    :instance string,
    :startTime string,
    :windowStartTime string,
@@ -61,74 +117,21 @@
   Second Generation instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/get
-  
-  Required parameters: project, id, instance
-  
-  Optional parameters: resourceName
-  Retrieves a resource containing information about a backup run."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :id})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns/{id}"
-     #{:instance :project :id}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/backupRuns/list
-  
-  Required parameters: instance, project
-  
-  Optional parameters: pageToken, maxResults, parent
-  Lists all backup runs associated with a given instance and configuration in
-  the reverse chronological order of the backup initiation time."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/backupRuns"
-     #{:instance :project}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

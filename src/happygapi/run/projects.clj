@@ -11,22 +11,23 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}/locations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -36,22 +37,23 @@
   
   Required parameters: parent
   
-  Optional parameters: limit, watch, labelSelector, fieldSelector, includeUninitialized, resourceVersion, continue
+  Optional parameters: fieldSelector, resourceVersion, includeUninitialized, continue, limit, watch, labelSelector
+  
   List routes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/routes"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,71 +64,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a route."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-revisions-list$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/revisions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch, labelSelector
-  List revisions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+parent}/revisions"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-revisions-get$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/revisions/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Get information about a revision."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -137,71 +90,74 @@
   Required parameters: name
   
   Optional parameters: apiVersion, propagationPolicy, kind
+  
   Delete a revision."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn locations-configurations-list$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/configurations/list
+(defn locations-revisions-list$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/revisions/list
   
   Required parameters: parent
   
   Optional parameters: labelSelector, resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch
-  List configurations."
+  
+  List revisions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
-     "v1/{+parent}/configurations"
+     "v1/{+parent}/revisions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn locations-configurations-get$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/configurations/get
+(defn locations-revisions-get$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/revisions/get
   
   Required parameters: name
   
   Optional parameters: none
-  Get information about a configuration."
+  
+  Get information about a revision."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -212,21 +168,22 @@
   Required parameters: name
   
   Optional parameters: apiVersion, propagationPolicy, kind
+  
   Delete a domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -237,21 +194,22 @@
   Required parameters: parent
   
   Optional parameters: labelSelector, resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch
+  
   List domain mappings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/domainmappings"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -262,21 +220,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Get information about a domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -290,8 +249,7 @@
   
   Body: 
   
-  {:kind string,
-   :metadata {:labels {},
+  {:metadata {:labels {},
               :clusterName string,
               :generation integer,
               :ownerReferences [OwnerReference],
@@ -306,32 +264,85 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:resourceRecords [ResourceRecord],
-            :mappedRouteName string,
-            :conditions [GoogleCloudRunV1Condition],
-            :observedGeneration integer},
+   :status {:conditions [GoogleCloudRunV1Condition],
+            :observedGeneration integer,
+            :resourceRecords [ResourceRecord],
+            :mappedRouteName string},
    :apiVersion string,
    :spec {:forceOverride boolean,
           :routeName string,
-          :certificateMode string}}
+          :certificateMode string},
+   :kind string}
   
   Create a new domain mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/domainmappings"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-configurations-list$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/configurations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: labelSelector, resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch
+  
+  List configurations."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+parent}/configurations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-configurations-get$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/configurations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get information about a configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -342,21 +353,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Rpc to get information about a secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -398,21 +410,21 @@
   May provide metadata.resourceVersion to enforce update from last read for
   optimistic concurrency control."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -447,21 +459,21 @@
   
   Creates a new secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/secrets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -472,21 +484,22 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   List authorized domains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/authorizeddomains"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -497,21 +510,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Rpc to get information about a namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -525,7 +539,9 @@
   
   Body: 
   
-  {:metadata {:labels {},
+  {:status {:phase string},
+   :spec {:finalizers [string]},
+   :metadata {:labels {},
               :clusterName string,
               :generation integer,
               :ownerReferences [OwnerReference],
@@ -539,202 +555,25 @@
               :deletionGracePeriodSeconds integer,
               :annotations {},
               :namespace string,
-              :generateName string},
-   :status {:phase string},
-   :spec {:finalizers [string]}}
+              :generateName string}}
   
   Rpc to update a namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-getIamPolicy$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  Get the IAM Access Control policy currently in effect for the given
-  Cloud Run service. This result does not include any inherited policies."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-get$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Get information about a service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-testIamPermissions$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified Project.
-  
-  There are no permissions required for making this API call."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-replaceService$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/replaceService
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:metadata {:labels {},
-              :clusterName string,
-              :generation integer,
-              :ownerReferences [OwnerReference],
-              :creationTimestamp string,
-              :uid string,
-              :name string,
-              :resourceVersion string,
-              :selfLink string,
-              :deletionTimestamp string,
-              :finalizers [string],
-              :deletionGracePeriodSeconds integer,
-              :annotations {},
-              :namespace string,
-              :generateName string},
-   :status {:url string,
-            :traffic [TrafficTarget],
-            :latestReadyRevisionName string,
-            :latestCreatedRevisionName string,
-            :conditions [GoogleCloudRunV1Condition],
-            :address Addressable,
-            :observedGeneration integer},
-   :apiVersion string,
-   :spec {:traffic [TrafficTarget], :template RevisionTemplate},
-   :kind string}
-  
-  Replace a service.
-  
-  Only the spec and metadata labels and annotations are modifiable. After
-  the Update request, Cloud Run will work to make the 'status'
-  match the requested 'spec'.
-  
-  May provide metadata.resourceVersion to enforce update from last read for
-  optimistic concurrency control."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-delete$
-  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/delete
-  
-  Required parameters: name
-  
-  Optional parameters: apiVersion, propagationPolicy, kind
-  Delete a service.
-  This will cause the Service to stop serving traffic and will delete the
-  child entities like Routes, Configurations and Revisions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://run.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -744,22 +583,23 @@
   
   Required parameters: parent
   
-  Optional parameters: labelSelector, resourceVersion, includeUninitialized, fieldSelector, continue, limit, watch
+  Optional parameters: continue, limit, watch, labelSelector, resourceVersion, includeUninitialized, fieldSelector
+  
   List services."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/services"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -788,34 +628,34 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:url string,
-            :traffic [TrafficTarget],
-            :latestReadyRevisionName string,
-            :latestCreatedRevisionName string,
+   :status {:latestCreatedRevisionName string,
             :conditions [GoogleCloudRunV1Condition],
             :address Addressable,
-            :observedGeneration integer},
+            :observedGeneration integer,
+            :url string,
+            :traffic [TrafficTarget],
+            :latestReadyRevisionName string},
    :apiVersion string,
    :spec {:traffic [TrafficTarget], :template RevisionTemplate},
    :kind string}
   
   Create a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+parent}/services"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -829,30 +669,208 @@
   
   Body: 
   
-  {:policy {:bindings [Binding],
-            :etag string,
+  {:policy {:etag string,
             :version integer,
-            :auditConfigs [AuditConfig]},
+            :auditConfigs [AuditConfig],
+            :bindings [Binding]},
    :updateMask string}
   
   Sets the IAM Access control policy for the specified Service. Overwrites
   any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://run.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-getIamPolicy$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Get the IAM Access Control policy currently in effect for the given
+  Cloud Run service. This result does not include any inherited policies."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-get$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get information about a service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-testIamPermissions$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified Project.
+  
+  There are no permissions required for making this API call."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-replaceService$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/replaceService
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:metadata {:labels {},
+              :clusterName string,
+              :generation integer,
+              :ownerReferences [OwnerReference],
+              :creationTimestamp string,
+              :uid string,
+              :name string,
+              :resourceVersion string,
+              :selfLink string,
+              :deletionTimestamp string,
+              :finalizers [string],
+              :deletionGracePeriodSeconds integer,
+              :annotations {},
+              :namespace string,
+              :generateName string},
+   :status {:latestCreatedRevisionName string,
+            :conditions [GoogleCloudRunV1Condition],
+            :address Addressable,
+            :observedGeneration integer,
+            :url string,
+            :traffic [TrafficTarget],
+            :latestReadyRevisionName string},
+   :apiVersion string,
+   :spec {:traffic [TrafficTarget], :template RevisionTemplate},
+   :kind string}
+  
+  Replace a service.
+  
+  Only the spec and metadata labels and annotations are modifiable. After
+  the Update request, Cloud Run will work to make the 'status'
+  match the requested 'spec'.
+  
+  May provide metadata.resourceVersion to enforce update from last read for
+  optimistic concurrency control."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-delete$
+  "https://cloud.google.com/run/api/reference/rest/v1/projects/locations/services/delete
+  
+  Required parameters: name
+  
+  Optional parameters: apiVersion, propagationPolicy, kind
+  
+  Delete a service.
+  This will cause the Service to stop serving traffic and will delete the
+  child entities like Routes, Configurations and Revisions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://run.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

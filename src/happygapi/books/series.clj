@@ -12,21 +12,22 @@
   Required parameters: series_id
   
   Optional parameters: none
+  
   Returns Series metadata for the given series ids."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:series_id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:series_id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "series/get"
      #{:series_id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: series_id
   
   Optional parameters: page_size, page_token
+  
   Returns Series membership data given the series id."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:series_id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:series_id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "series/membership/get"
      #{:series_id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

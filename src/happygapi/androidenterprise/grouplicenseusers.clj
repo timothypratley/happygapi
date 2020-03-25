@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, groupLicenseId
   
   Optional parameters: none
+  
   Retrieves the IDs of the users who have been granted entitlements under the license."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :groupLicenseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :groupLicenseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/groupLicenses/{groupLicenseId}/users"
      #{:enterpriseId :groupLicenseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

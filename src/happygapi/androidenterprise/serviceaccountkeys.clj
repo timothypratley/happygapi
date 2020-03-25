@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, keyId
   
   Optional parameters: none
+  
   Removes and invalidates the specified credentials for the service account associated with this enterprise. The calling service account must have been retrieved by calling Enterprises.GetServiceAccount and must have been set as the enterprise service account by calling Enterprises.SetAccount."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :keyId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :keyId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/serviceAccountKeys/{keyId}"
      #{:enterpriseId :keyId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -50,21 +51,21 @@
   
   Only the type of the key should be populated in the resource to be inserted."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/serviceAccountKeys"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -75,21 +76,22 @@
   Required parameters: enterpriseId
   
   Optional parameters: none
+  
   Lists all active credentials for the service account associated with this enterprise. Only the ID and key type are returned. The calling service account must have been retrieved by calling Enterprises.GetServiceAccount and must have been set as the enterprise service account by calling Enterprises.SetAccount."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/serviceAccountKeys"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

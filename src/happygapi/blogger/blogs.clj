@@ -12,22 +12,23 @@
   Required parameters: blogId
   
   Optional parameters: maxPosts, view
+  
   Gets one blog by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/{blogId}"
      #{:blogId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: url
   
   Optional parameters: view
+  
   Retrieve a Blog by URL."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:url})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:url})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "blogs/byurl"
      #{:url}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,22 +66,23 @@
   Required parameters: userId
   
   Optional parameters: fetchUserInfo, role, status, view
+  
   Retrieves a list of blogs, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "users/{userId}/blogs"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

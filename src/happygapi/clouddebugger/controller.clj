@@ -40,21 +40,21 @@
   `debuggee_id` value changing upon re-registration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/controller/debuggees/register"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,7 +64,8 @@
   
   Required parameters: debuggeeId
   
-  Optional parameters: waitToken, successOnTimeout
+  Optional parameters: successOnTimeout, waitToken
+  
   Returns the list of all active breakpoints for the debuggee.
   
   The breakpoint specification (`location`, `condition`, and `expressions`
@@ -80,19 +81,19 @@
   setting those breakpoints again."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:debuggeeId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:debuggeeId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/controller/debuggees/{debuggeeId}/breakpoints"
      #{:debuggeeId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -133,21 +134,21 @@
   or snapping the location to the correct line of code."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:debuggeeId :id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:debuggeeId :id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/controller/debuggees/{debuggeeId}/breakpoints/{id}"
      #{:debuggeeId :id}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

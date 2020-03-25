@@ -21,21 +21,21 @@
   
   Delete the specified deals from the proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/deals/delete"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -79,21 +79,21 @@
   
   Add new deals for the specified proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/deals/insert"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -104,21 +104,22 @@
   Required parameters: proposalId
   
   Optional parameters: pqlQuery
+  
   List all the deals for a given proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/deals"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -185,21 +186,21 @@
   
   Replaces all the deals in the proposal with the passed in deals"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/deals/update"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

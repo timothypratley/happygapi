@@ -12,21 +12,24 @@
   Required parameters: creativeFieldId, id, profileId
   
   Optional parameters: none
+  
   Deletes an existing creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
      #{:id :creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +40,24 @@
   Required parameters: creativeFieldId, id, profileId
   
   Optional parameters: none
+  
   Gets one creative field value by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
      #{:id :creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,21 +75,21 @@
   
   Inserts a new creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
      #{:creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +100,22 @@
   Required parameters: creativeFieldId, profileId
   
   Optional parameters: ids, maxResults, pageToken, searchString, sortField, sortOrder
+  
   Retrieves a list of creative field values, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
      #{:creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -124,23 +131,25 @@
   
   {:id string, :kind string, :value string}
   
-  Updates an existing creative field value. This method supports patch semantics."
+  Updates an existing creative field. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :creativeFieldId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
      #{:id :creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -158,21 +167,21 @@
   
   Updates an existing creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:creativeFieldId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:creativeFieldId :profileId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
      #{:creativeFieldId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

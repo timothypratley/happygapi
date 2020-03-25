@@ -12,21 +12,22 @@
   Required parameters: queryId
   
   Optional parameters: pageSize, pageToken
+  
   Retrieves stored reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:queryId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "queries/{queryId}/reports"
      #{:queryId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

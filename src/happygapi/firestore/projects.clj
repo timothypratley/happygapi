@@ -16,7 +16,7 @@
   
   Body: 
   
-  {:outputUriPrefix string, :collectionIds [string]}
+  {:collectionIds [string], :outputUriPrefix string}
   
   Exports a copy of all or a subset of documents from Google Cloud Firestore
   to another storage system, such as Google Cloud Storage. Recent updates to
@@ -28,21 +28,21 @@
   Cloud Storage."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}:exportDocuments"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -56,7 +56,7 @@
   
   Body: 
   
-  {:collectionIds [string], :inputUriPrefix string}
+  {:inputUriPrefix string, :collectionIds [string]}
   
   Imports documents into Google Cloud Firestore. Existing documents with the
   same name are overwritten. The import occurs in the background and its
@@ -65,716 +65,21 @@
   that a subset of the data has already been imported to Cloud Firestore."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}:importDocuments"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-fields-get$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets the metadata and configuration for a Field."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-fields-patch$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:indexConfig {:ancestorField string,
-                 :indexes [GoogleFirestoreAdminV1Index],
-                 :usesAncestorConfig boolean,
-                 :reverting boolean},
-   :name string}
-  
-  Updates a field configuration. Currently, field updates apply only to
-  single field index configuration. However, calls to
-  FirestoreAdmin.UpdateField should provide a field mask to avoid
-  changing any configuration that the caller isn't aware of. The field mask
-  should be specified as: `{ paths: \"index_config\" }`.
-  
-  This call returns a google.longrunning.Operation which may be used to
-  track the status of the field update. The metadata for
-  the operation will be the type FieldOperationMetadata.
-  
-  To configure the default field settings for the database, use
-  the special `Field` with resource name:
-  `projects/{project_id}/databases/{database_id}/collectionGroups/__default__/fields/*`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-fields-list$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  Lists the field configuration and metadata for this database.
-  
-  Currently, FirestoreAdmin.ListFields only supports listing fields
-  that have been explicitly overridden. To issue this query, call
-  FirestoreAdmin.ListFields with the filter set to
-  `indexConfig.usesAncestorConfig:false`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}/fields"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-indexes-create$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :queryScope string,
-   :fields [{:fieldPath string, :order string, :arrayConfig string}],
-   :state string}
-  
-  Creates a composite index. This returns a google.longrunning.Operation
-  which may be used to track the status of the creation. The metadata for
-  the operation will be the type IndexOperationMetadata."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}/indexes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-indexes-delete$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a composite index."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-indexes-list$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  Lists composite indexes."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}/indexes"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-collectionGroups-indexes-get$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets a composite index."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-rollback$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/rollback
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:transaction string}
-  
-  Rolls back a transaction."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:rollback"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-get$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/get
-  
-  Required parameters: name
-  
-  Optional parameters: mask.fieldPaths, readTime, transaction
-  Gets a single document."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-patch$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/patch
-  
-  Required parameters: name
-  
-  Optional parameters: currentDocument.exists, updateMask.fieldPaths, mask.fieldPaths, currentDocument.updateTime
-  
-  Body: 
-  
-  {:createTime string, :fields {}, :updateTime string, :name string}
-  
-  Updates or inserts a document."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-batchGet$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/batchGet
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:documents [string],
-   :readTime string,
-   :newTransaction {:readOnly ReadOnly, :readWrite ReadWrite},
-   :mask {:fieldPaths [string]},
-   :transaction string}
-  
-  Gets multiple documents.
-  
-  Documents returned by this method are not guaranteed to be returned in the
-  same order that they were requested."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:batchGet"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-delete$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/delete
-  
-  Required parameters: name
-  
-  Optional parameters: currentDocument.exists, currentDocument.updateTime
-  Deletes a document."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-runQuery$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/runQuery
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:readTime string,
-   :newTransaction {:readOnly ReadOnly, :readWrite ReadWrite},
-   :transaction string,
-   :structuredQuery {:limit integer,
-                     :offset integer,
-                     :from [CollectionSelector],
-                     :endAt Cursor,
-                     :startAt Cursor,
-                     :where Filter,
-                     :orderBy [Order],
-                     :select Projection}}
-  
-  Runs a query."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}:runQuery"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-write$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/write
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:streamToken string,
-   :writes [{:update Document,
-             :transform DocumentTransform,
-             :delete string,
-             :updateMask DocumentMask,
-             :currentDocument Precondition}],
-   :labels {},
-   :streamId string}
-  
-  Streams batches of document updates and deletes, in order."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:write"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-beginTransaction$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/beginTransaction
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:readOnly ReadOnly, :readWrite ReadWrite}}
-  
-  Starts a new transaction."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:beginTransaction"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-listen$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/listen
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:removeTarget integer,
-   :addTarget {:query QueryTarget,
-               :resumeToken string,
-               :once boolean,
-               :readTime string,
-               :targetId integer,
-               :documents DocumentsTarget},
-   :labels {}}
-  
-  Listens to changes."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:listen"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-list$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/list
-  
-  Required parameters: collectionId, parent
-  
-  Optional parameters: mask.fieldPaths, transaction, pageToken, pageSize, readTime, showMissing, orderBy
-  Lists documents."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:collectionId :parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}/{collectionId}"
-     #{:collectionId :parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-commit$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/commit
-  
-  Required parameters: database
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:writes [{:update Document,
-             :transform DocumentTransform,
-             :delete string,
-             :updateMask DocumentMask,
-             :currentDocument Precondition}],
-   :transaction string}
-  
-  Commits a transaction, while optionally updating documents."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:database})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+database}/documents:commit"
-     #{:database}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-listCollectionIds$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/listCollectionIds
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:pageToken string, :pageSize integer}
-  
-  Lists all the collection IDs underneath a document."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}:listCollectionIds"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-documents-createDocument$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/createDocument
-  
-  Required parameters: collectionId, parent
-  
-  Optional parameters: mask.fieldPaths, documentId
-  
-  Body: 
-  
-  {:createTime string, :fields {}, :updateTime string, :name string}
-  
-  Creates a new document."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:collectionId :parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+parent}/{collectionId}"
-     #{:collectionId :parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn databases-operations-delete$
-  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firestore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -785,6 +90,7 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize, filter
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -797,19 +103,19 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}/operations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -820,24 +126,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -865,21 +172,727 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}:cancel"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-operations-delete$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-fields-get$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the metadata and configuration for a Field."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-fields-patch$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :indexConfig {:indexes [GoogleFirestoreAdminV1Index],
+                 :usesAncestorConfig boolean,
+                 :reverting boolean,
+                 :ancestorField string}}
+  
+  Updates a field configuration. Currently, field updates apply only to
+  single field index configuration. However, calls to
+  FirestoreAdmin.UpdateField should provide a field mask to avoid
+  changing any configuration that the caller isn't aware of. The field mask
+  should be specified as: `{ paths: \"index_config\" }`.
+  
+  This call returns a google.longrunning.Operation which may be used to
+  track the status of the field update. The metadata for
+  the operation will be the type FieldOperationMetadata.
+  
+  To configure the default field settings for the database, use
+  the special `Field` with resource name:
+  `projects/{project_id}/databases/{database_id}/collectionGroups/__default__/fields/*`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-fields-list$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/fields/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists the field configuration and metadata for this database.
+  
+  Currently, FirestoreAdmin.ListFields only supports listing fields
+  that have been explicitly overridden. To issue this query, call
+  FirestoreAdmin.ListFields with the filter set to
+  `indexConfig.usesAncestorConfig:false`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}/fields"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-indexes-delete$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a composite index."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-indexes-list$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists composite indexes."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}/indexes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-indexes-get$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a composite index."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-collectionGroups-indexes-create$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/collectionGroups/indexes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :queryScope string,
+   :fields [{:fieldPath string, :order string, :arrayConfig string}],
+   :state string}
+  
+  Creates a composite index. This returns a google.longrunning.Operation
+  which may be used to track the status of the creation. The metadata for
+  the operation will be the type IndexOperationMetadata."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}/indexes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-rollback$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/rollback
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:transaction string}
+  
+  Rolls back a transaction."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:rollback"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-get$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/get
+  
+  Required parameters: name
+  
+  Optional parameters: mask.fieldPaths, readTime, transaction
+  
+  Gets a single document."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-patch$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/patch
+  
+  Required parameters: name
+  
+  Optional parameters: currentDocument.updateTime, currentDocument.exists, updateMask.fieldPaths, mask.fieldPaths
+  
+  Body: 
+  
+  {:createTime string, :fields {}, :updateTime string, :name string}
+  
+  Updates or inserts a document."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-batchGet$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/batchGet
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:readTime string,
+   :newTransaction {:readOnly ReadOnly, :readWrite ReadWrite},
+   :mask {:fieldPaths [string]},
+   :transaction string,
+   :documents [string]}
+  
+  Gets multiple documents.
+  
+  Documents returned by this method are not guaranteed to be returned in the
+  same order that they were requested."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:batchGet"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-delete$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/delete
+  
+  Required parameters: name
+  
+  Optional parameters: currentDocument.exists, currentDocument.updateTime
+  
+  Deletes a document."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-runQuery$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/runQuery
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:readTime string,
+   :newTransaction {:readOnly ReadOnly, :readWrite ReadWrite},
+   :transaction string,
+   :structuredQuery {:orderBy [Order],
+                     :select Projection,
+                     :limit integer,
+                     :offset integer,
+                     :from [CollectionSelector],
+                     :endAt Cursor,
+                     :startAt Cursor,
+                     :where Filter}}
+  
+  Runs a query."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}:runQuery"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-write$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/write
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:writes [{:transform DocumentTransform,
+             :updateTransforms [FieldTransform],
+             :update Document,
+             :delete string,
+             :updateMask DocumentMask,
+             :currentDocument Precondition}],
+   :labels {},
+   :streamId string,
+   :streamToken string}
+  
+  Streams batches of document updates and deletes, in order."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:write"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-beginTransaction$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/beginTransaction
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:readOnly ReadOnly, :readWrite ReadWrite}}
+  
+  Starts a new transaction."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:beginTransaction"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-listen$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/listen
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:removeTarget integer,
+   :addTarget {:query QueryTarget,
+               :resumeToken string,
+               :once boolean,
+               :readTime string,
+               :targetId integer,
+               :documents DocumentsTarget},
+   :labels {}}
+  
+  Listens to changes."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:listen"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-list$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/list
+  
+  Required parameters: collectionId, parent
+  
+  Optional parameters: mask.fieldPaths, transaction, pageToken, pageSize, readTime, showMissing, orderBy
+  
+  Lists documents."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collectionId :parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}/{collectionId}"
+     #{:collectionId :parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-commit$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/commit
+  
+  Required parameters: database
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:transaction string,
+   :writes [{:transform DocumentTransform,
+             :updateTransforms [FieldTransform],
+             :update Document,
+             :delete string,
+             :updateMask DocumentMask,
+             :currentDocument Precondition}]}
+  
+  Commits a transaction, while optionally updating documents."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:database})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+database}/documents:commit"
+     #{:database}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-listCollectionIds$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/listCollectionIds
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:pageToken string, :pageSize integer}
+  
+  Lists all the collection IDs underneath a document."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}:listCollectionIds"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn databases-documents-createDocument$
+  "https://cloud.google.com/firestoreapi/reference/rest/v1/projects/databases/documents/createDocument
+  
+  Required parameters: collectionId, parent
+  
+  Optional parameters: mask.fieldPaths, documentId
+  
+  Body: 
+  
+  {:createTime string, :fields {}, :updateTime string, :name string}
+  
+  Creates a new document."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:collectionId :parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firestore.googleapis.com/"
+     "v1/{+parent}/{collectionId}"
+     #{:collectionId :parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -890,22 +903,23 @@
   Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
+  
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}/locations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -916,22 +930,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firestore.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

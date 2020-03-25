@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:input {:ssml string, :text string},
+  {:input {:text string, :ssml string},
    :voice {:languageCode string, :name string, :ssmlGender string},
    :audioConfig {:audioEncoding string,
                  :effectsProfileId [string],
@@ -27,21 +27,21 @@
   Synthesizes speech synchronously: receive results after all text input
   has been processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://texttospeech.googleapis.com/"
      "v1/text:synthesize"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: sort
+  
   Retrieves the list of fonts currently served by the Google Fonts Developer API"
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/webfonts/v1/"
      "webfonts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

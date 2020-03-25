@@ -53,21 +53,21 @@
   disable billing, you should always call this method with the name of an
   *open* billing account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+name}/billingInfo"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -78,24 +78,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the billing information for a project. The current authenticated user
   must have [permission to view the
   project](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo
   )."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
      "v1/{+name}/billingInfo"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

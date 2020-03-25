@@ -6,31 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getOrganizationSettings$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/getOrganizationSettings
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets the settings for an organization."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn updateOrganizationSettings$
   "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/updateOrganizationSettings
   
@@ -40,27 +15,204 @@
   
   Body: 
   
-  {:assetDiscoveryConfig {:inclusionMode string, :projectIds [string]},
-   :enableAssetDiscovery boolean,
-   :name string}
+  {:name string,
+   :assetDiscoveryConfig {:projectIds [string], :inclusionMode string},
+   :enableAssetDiscovery boolean}
   
   Updates an organization's settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getOrganizationSettings$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/getOrganizationSettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the settings for an organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-delete$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/notificationConfigs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-get$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/notificationConfigs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-list$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/notificationConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists notification configs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/notificationConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-patch$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/notificationConfigs/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:pubsubTopic string,
+   :name string,
+   :description string,
+   :streamingConfig {:filter string},
+   :serviceAccount string}
+  
+  
+  Updates a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-create$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/notificationConfigs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: configId
+  
+  Body: 
+  
+  {:pubsubTopic string,
+   :name string,
+   :description string,
+   :streamingConfig {:filter string},
+   :serviceAccount string}
+  
+  Creates a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/notificationConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -83,21 +235,21 @@
   it is called too frequently the caller will receive a TOO_MANY_REQUESTS
   error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/assets:runDiscovery"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -107,7 +259,7 @@
   
   Required parameters: name
   
-  Optional parameters: updateMask, startTime
+  Optional parameters: startTime, updateMask
   
   Body: 
   
@@ -115,21 +267,21 @@
   
   Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -143,31 +295,31 @@
   
   Body: 
   
-  {:readTime string,
-   :compareDuration string,
+  {:compareDuration string,
    :groupBy string,
    :filter string,
    :pageToken string,
-   :pageSize integer}
+   :pageSize integer,
+   :readTime string}
   
   Filters an organization's assets and  groups them by their specified
   properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/assets:group"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -177,22 +329,23 @@
   
   Required parameters: parent
   
-  Optional parameters: readTime, orderBy, compareDuration, filter, pageToken, fieldMask, pageSize
+  Optional parameters: compareDuration, filter, fieldMask, pageToken, pageSize, orderBy, readTime
+  
   Lists an organization's assets."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/assets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -203,21 +356,22 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Lists all sources belonging to an organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/sources"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -235,21 +389,21 @@
   
   Creates a source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/sources"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -263,29 +417,29 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:version integer,
+  {:policy {:etag string,
+            :version integer,
             :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :etag string}}
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified Source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -303,46 +457,21 @@
   
   Gets the access control policy on the specified Source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-get$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets a source."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -360,21 +489,47 @@
   
   Updates a source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-get$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a source."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -392,132 +547,21 @@
   
   Returns the permissions that a caller has on the specified source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-list$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/list
-  
-  Required parameters: parent
-  
-  Optional parameters: readTime, orderBy, compareDuration, filter, pageToken, fieldMask, pageSize
-  Lists an organization or source's findings.
-  
-  To list across all sources provide a `-` as the source id.
-  Example: /v1/organizations/{organization_id}/sources/-/findings"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-create$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/create
-  
-  Required parameters: parent
-  
-  Optional parameters: findingId
-  
-  Body: 
-  
-  {:category string,
-   :parent string,
-   :name string,
-   :createTime string,
-   :state string,
-   :externalUri string,
-   :resourceName string,
-   :securityMarks {:name string, :marks {}},
-   :sourceProperties {},
-   :eventTime string}
-  
-  Creates a finding. The corresponding source must exist for finding creation
-  to succeed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-group$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/group
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:pageToken string,
-   :pageSize integer,
-   :readTime string,
-   :compareDuration string,
-   :groupBy string,
-   :filter string}
-  
-  Filters an organization or source's findings and  groups them by their
-  specified properties.
-  
-  To group across all sources provide a `-` as the source id.
-  Example: /v1/organizations/{organization_id}/sources/-/findings"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings:group"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -545,21 +589,21 @@
   Creates or updates a finding. The corresponding source must exist for a
   finding creation to succeed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -573,25 +617,25 @@
   
   Body: 
   
-  {:startTime string, :state string}
+  {:state string, :startTime string}
   
   Updates the state of a finding."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}:setState"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -609,83 +653,133 @@
   
   Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn operations-cancel$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/operations/cancel
+(defn sources-findings-list$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
+  Optional parameters: orderBy, readTime, compareDuration, filter, fieldMask, pageToken, pageSize
+  
+  Lists an organization or source's findings.
+  
+  To list across all sources provide a `-` as the source id.
+  Example: /v1/organizations/{organization_id}/sources/-/findings"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/findings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-findings-create$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/create
+  
+  Required parameters: parent
+  
+  Optional parameters: findingId
+  
+  Body: 
+  
+  {:category string,
+   :parent string,
+   :name string,
+   :createTime string,
+   :state string,
+   :externalUri string,
+   :resourceName string,
+   :securityMarks {:name string, :marks {}},
+   :sourceProperties {},
+   :eventTime string}
+  
+  Creates a finding. The corresponding source must exist for finding creation
+  to succeed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     args)
+     "v1/{+parent}/findings"
+     #{:parent}
+     parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn operations-delete$
-  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/operations/delete
+(defn sources-findings-group$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/sources/findings/group
   
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  
+  Body: 
+  
+  {:readTime string,
+   :compareDuration string,
+   :groupBy string,
+   :filter string,
+   :pageToken string,
+   :pageSize integer}
+  
+  Filters an organization or source's findings and  groups them by their
+  specified properties.
+  
+  To group across all sources provide a `-` as the source id.
+  Example: /v1/organizations/{organization_id}/sources/-/findings"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
+     "v1/{+parent}/findings:group"
+     #{:parent}
+     parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params args,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -695,7 +789,8 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -707,19 +802,19 @@
   collection id, however overriding users must ensure the name binding
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -730,23 +825,88 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-cancel$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-delete$
+  "https://console.cloud.google.com/apis/api/securitycenter.googleapis.com/overviewapi/reference/rest/v1/organizations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -6,56 +6,31 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/delete
+(defn get$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
   
   Required parameters: datasetId, modelId, projectId
   
   Optional parameters: none
-  Deletes the model specified by modelId from the dataset."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:modelId :datasetId :projectId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
-     #{:modelId :datasetId :projectId}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
   
-  Required parameters: projectId, datasetId, modelId
-  
-  Optional parameters: none
   Gets the specified model resource by model ID."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:modelId :datasetId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
      #{:modelId :datasetId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,28 +38,29 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/models/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
+  
   Lists all models in the specified dataset. Requires the READER dataset
   role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/models"
      #{:datasetId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -106,37 +82,64 @@
    :etag string,
    :lastModifiedTime string,
    :friendlyName string,
-   :trainingRuns [{:trainingOptions TrainingOptions,
-                   :dataSplitResult DataSplitResult,
-                   :startTime string,
+   :trainingRuns [{:startTime string,
                    :results [IterationResult],
-                   :evaluationMetrics EvaluationMetrics}],
+                   :evaluationMetrics EvaluationMetrics,
+                   :trainingOptions TrainingOptions,
+                   :dataSplitResult DataSplitResult}],
    :featureColumns [{:name string, :type StandardSqlDataType}],
    :labelColumns [{:name string, :type StandardSqlDataType}],
    :location string,
    :encryptionConfiguration {:kmsKeyName string},
-   :modelReference {:projectId string,
-                    :datasetId string,
-                    :modelId string}}
+   :modelReference {:datasetId string,
+                    :modelId string,
+                    :projectId string}}
   
   Patch specific fields in the specified model."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:modelId :datasetId :projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
      #{:modelId :datasetId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/delete
+  
+  Required parameters: datasetId, modelId, projectId
+  
+  Optional parameters: none
+  
+  Deletes the model specified by modelId from the dataset."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
+     #{:modelId :datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,22 +12,23 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Lists sites that are failing in the Ad Experience Report on at least one
   platform."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adexperiencereport.googleapis.com/"
      "v1/violatingSites"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

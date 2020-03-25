@@ -12,24 +12,25 @@
   Required parameters: calendarId, eventId
   
   Optional parameters: alwaysIncludeEmail, maxAttendees, timeZone
+  
   Returns an event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"
             "https://www.googleapis.com/auth/calendar.events.readonly"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :eventId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :eventId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}"
      #{:calendarId :eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -118,21 +119,21 @@
   Creates an event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -221,21 +222,21 @@
   Updates an event. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId :eventId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId :eventId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}"
      #{:calendarId :eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -246,22 +247,25 @@
   Required parameters: calendarId, destination, eventId
   
   Optional parameters: sendNotifications, sendUpdates
+  
   Moves an event to another calendar, i.e. changes an event's organizer."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :eventId :destination})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:calendarId :eventId :destination})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}/move"
      #{:calendarId :eventId :destination}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -350,21 +354,21 @@
   Updates an event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId :eventId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId :eventId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}"
      #{:calendarId :eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -375,22 +379,23 @@
   Required parameters: calendarId, eventId
   
   Optional parameters: sendNotifications, sendUpdates
+  
   Deletes an event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :eventId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :eventId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}"
      #{:calendarId :eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -401,24 +406,25 @@
   Required parameters: calendarId, eventId
   
   Optional parameters: timeZone, timeMin, maxAttendees, originalStart, pageToken, showDeleted, maxResults, timeMax, alwaysIncludeEmail
+  
   Returns instances of the specified recurring event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"
             "https://www.googleapis.com/auth/calendar.events.readonly"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :eventId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :eventId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/{eventId}/instances"
      #{:calendarId :eventId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -429,24 +435,25 @@
   Required parameters: calendarId
   
   Optional parameters: iCalUID, q, timeZone, showHiddenInvitations, timeMin, syncToken, maxAttendees, pageToken, sharedExtendedProperty, privateExtendedProperty, showDeleted, updatedMin, singleEvents, maxResults, timeMax, orderBy, alwaysIncludeEmail
+  
   Returns events on the specified calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"
             "https://www.googleapis.com/auth/calendar.events.readonly"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -476,21 +483,21 @@
             "https://www.googleapis.com/auth/calendar.events"
             "https://www.googleapis.com/auth/calendar.events.readonly"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/watch"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -501,22 +508,23 @@
   Required parameters: calendarId, text
   
   Optional parameters: sendNotifications, sendUpdates
+  
   Creates an event based on a simple text string."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId :text})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId :text})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/quickAdd"
      #{:calendarId :text}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -605,21 +613,21 @@
   Imports an event. This operation is used to add a private copy of an existing event to a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/events/import"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

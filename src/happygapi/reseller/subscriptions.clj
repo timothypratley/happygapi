@@ -12,22 +12,23 @@
   Required parameters: customerId, subscriptionId
   
   Optional parameters: none
+  
   Get a specific subscription."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
             "https://www.googleapis.com/auth/apps.order.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -68,21 +69,21 @@
   
   Create or transfer a subscription."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions"
      #{:customerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -100,21 +101,21 @@
   
   Update a user license's renewal settings. This is applicable for accounts with annual commitment plans only."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/changeRenewalSettings"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -125,11 +126,12 @@
   Required parameters: customerId, deletionType, subscriptionId
   
   Optional parameters: none
+  
   Cancel, suspend, or transfer a subscription to direct."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:customerId :deletionType :subscriptionId})]}
   (util/get-response
    (http/delete
@@ -137,11 +139,11 @@
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}"
      #{:customerId :deletionType :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -152,21 +154,22 @@
   Required parameters: customerId, subscriptionId
   
   Optional parameters: none
+  
   Suspends an active subscription."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/suspend"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -177,22 +180,23 @@
   Required parameters: none
   
   Optional parameters: customerAuthToken, customerId, customerNamePrefix, maxResults, pageToken
+  
   List of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
             "https://www.googleapis.com/auth/apps.order.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "subscriptions"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -217,21 +221,21 @@
   
   Update a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/changePlan"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -252,21 +256,21 @@
   
   Update a subscription's user license settings."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/changeSeats"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -277,21 +281,22 @@
   Required parameters: customerId, subscriptionId
   
   Optional parameters: none
+  
   Activates a subscription previously suspended by the reseller"
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/activate"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -302,21 +307,22 @@
   Required parameters: customerId, subscriptionId
   
   Optional parameters: none
+  
   Immediately move a 30-day free trial subscription to a paid service subscription."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:customerId :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}/subscriptions/{subscriptionId}/startPaidService"
      #{:customerId :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

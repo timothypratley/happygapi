@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, pageId
   
   Optional parameters: none
+  
   Deletes a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
      #{:enterpriseId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: enterpriseId, pageId
   
   Optional parameters: none
+  
   Retrieves details of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :pageId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
      #{:enterpriseId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -72,21 +74,21 @@
   
   Inserts a new store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/storeLayout/pages"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -97,21 +99,22 @@
   Required parameters: enterpriseId
   
   Optional parameters: none
+  
   Retrieves the details of all pages in the store."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/storeLayout/pages"
      #{:enterpriseId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -132,21 +135,21 @@
   
   Updates the content of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:enterpriseId :pageId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
      #{:enterpriseId :pageId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

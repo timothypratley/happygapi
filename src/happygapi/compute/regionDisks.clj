@@ -12,23 +12,24 @@
   Required parameters: disk, project, region
   
   Optional parameters: none
+  
   Returns a specified regional persistent disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -45,6 +46,7 @@
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
+                                 :kmsKeyServiceAccount string,
                                  :rawKey string,
                                  :sha256 string},
    :guestOsFeatures [{:type string}],
@@ -52,6 +54,7 @@
    :sourceImage string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
+                              :kmsKeyServiceAccount string,
                               :rawKey string,
                               :sha256 string},
    :zone string,
@@ -74,6 +77,7 @@
    :replicaZones [string],
    :options string,
    :diskEncryptionKey {:kmsKeyName string,
+                       :kmsKeyServiceAccount string,
                        :rawKey string,
                        :sha256 string},
    :users [string],
@@ -82,21 +86,21 @@
   Creates a persistent regional disk in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -116,21 +120,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{resource}/testIamPermissions"
      #{:region :project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -155,6 +159,7 @@
    :licenses [string],
    :selfLink string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
+                             :kmsKeyServiceAccount string,
                              :rawKey string,
                              :sha256 string},
    :status string,
@@ -164,6 +169,7 @@
    :licenseCodes [string],
    :storageBytesStatus string,
    :snapshotEncryptionKey {:kmsKeyName string,
+                           :kmsKeyServiceAccount string,
                            :rawKey string,
                            :sha256 string},
    :storageLocations [string],
@@ -173,21 +179,21 @@
   Creates a snapshot of this regional disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}/createSnapshot"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -206,21 +212,21 @@
   Sets the labels on the target regional disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{resource}/setLabels"
      #{:region :project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -239,21 +245,21 @@
   Removes resource policies from a regional disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}/removeResourcePolicies"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -264,22 +270,23 @@
   Required parameters: disk, project, region
   
   Optional parameters: requestId
+  
   Deletes the specified regional persistent disk. Deleting a regional disk removes all the replicas of its data permanently and is irreversible. However, deleting a disk does not delete any snapshots previously made from the disk. You must separately delete snapshots."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -298,21 +305,21 @@
   Resizes the specified regional persistent disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}/resize"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -331,21 +338,21 @@
   Adds existing resource policies to a regional disk. You can only add one policy which will be applied to this disk for scheduling snapshot creation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:disk :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks/{disk}/addResourcePolicies"
      #{:disk :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -356,23 +363,24 @@
   Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of persistent disks contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/disks"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

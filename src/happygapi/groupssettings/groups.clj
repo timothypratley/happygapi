@@ -12,21 +12,22 @@
   Required parameters: groupUniqueId
   
   Optional parameters: none
+  
   Gets one resource by id."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:groupUniqueId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/groups/v1/groups/"
      "{groupUniqueId}"
      #{:groupUniqueId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -104,21 +105,21 @@
   
   Updates an existing resource. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:groupUniqueId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/groups/v1/groups/"
      "{groupUniqueId}"
      #{:groupUniqueId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -196,21 +197,21 @@
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:groupUniqueId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/groups/v1/groups/"
      "{groupUniqueId}"
      #{:groupUniqueId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

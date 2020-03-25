@@ -6,6 +6,39 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn testMatrices-get$
+  "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/get
+  
+  Required parameters: projectId, testMatrixId
+  
+  Optional parameters: none
+  
+  Checks the status of a test matrix.
+  
+  May return any of the following canonical error codes:
+  
+  - PERMISSION_DENIED - if the user is not authorized to read project
+  - INVALID_ARGUMENT - if the request is malformed
+  - NOT_FOUND - if the Test Matrix does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:testMatrixId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://testing.googleapis.com/"
+     "v1/projects/{projectId}/testMatrices/{testMatrixId}"
+     #{:testMatrixId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn testMatrices-create$
   "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/create
   
@@ -35,9 +68,9 @@
                      :timestamp string,
                      :testSpecification TestSpecification,
                      :toolResultsStep ToolResultsStep}],
-   :environmentMatrix {:androidDeviceList AndroidDeviceList,
-                       :androidMatrix AndroidMatrix,
-                       :iosDeviceList IosDeviceList},
+   :environmentMatrix {:iosDeviceList IosDeviceList,
+                       :androidDeviceList AndroidDeviceList,
+                       :androidMatrix AndroidMatrix},
    :projectId string,
    :timestamp string,
    :testSpecification {:testTimeout string,
@@ -61,21 +94,21 @@
   - INVALID_ARGUMENT - if the request is malformed or if the matrix expands
                        to more than 200 supported executions"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://testing.googleapis.com/"
      "v1/projects/{projectId}/testMatrices"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -86,6 +119,7 @@
   Required parameters: projectId, testMatrixId
   
   Optional parameters: none
+  
   Cancels unfinished test executions in a test matrix.
   This call returns immediately and cancellation proceeds asychronously.
   If the matrix is already final, this operation will have no effect.
@@ -96,51 +130,19 @@
   - INVALID_ARGUMENT - if the request is malformed
   - NOT_FOUND - if the Test Matrix does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:testMatrixId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:testMatrixId :projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://testing.googleapis.com/"
      "v1/projects/{projectId}/testMatrices/{testMatrixId}:cancel"
      #{:testMatrixId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn testMatrices-get$
-  "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/get
-  
-  Required parameters: projectId, testMatrixId
-  
-  Optional parameters: none
-  Checks the status of a test matrix.
-  
-  May return any of the following canonical error codes:
-  
-  - PERMISSION_DENIED - if the user is not authorized to read project
-  - INVALID_ARGUMENT - if the request is malformed
-  - NOT_FOUND - if the Test Matrix does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:testMatrixId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://testing.googleapis.com/"
-     "v1/projects/{projectId}/testMatrices/{testMatrixId}"
-     #{:testMatrixId :projectId}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

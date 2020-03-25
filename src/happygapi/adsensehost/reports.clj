@@ -12,21 +12,22 @@
   Required parameters: startDate, endDate
   
   Optional parameters: locale, filter, dimension, startIndex, metric, sort, maxResults
+  
   Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:startDate :endDate})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:startDate :endDate})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "reports"
      #{:startDate :endDate}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,24 +12,25 @@
   Required parameters: deployment, project, resource
   
   Optional parameters: none
+  
   Gets information about a single resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.cloudman"
             "https://www.googleapis.com/auth/ndev.cloudman.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :resource :deployment})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :resource :deployment})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/deploymentmanager/v2/projects/"
      "{project}/global/deployments/{deployment}/resources/{resource}"
      #{:project :resource :deployment}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,24 +41,25 @@
   Required parameters: deployment, project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Lists all resources in a given deployment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.cloudman"
             "https://www.googleapis.com/auth/ndev.cloudman.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :deployment})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :deployment})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/deploymentmanager/v2/projects/"
      "{project}/global/deployments/{deployment}/resources"
      #{:project :deployment}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

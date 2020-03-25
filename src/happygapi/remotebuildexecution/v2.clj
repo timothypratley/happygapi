@@ -12,6 +12,7 @@
   Required parameters: instanceName
   
   Optional parameters: none
+  
   GetCapabilities returns the server capabilities configuration of the
   remote endpoint.
   Only the capabilities of the services supported by the endpoint will
@@ -21,19 +22,19 @@
   * Execution only endpoints should return ExecutionCapabilities.
   * CAS + Action Cache only endpoints should return CacheCapabilities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instanceName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instanceName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/capabilities"
      #{:instanceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

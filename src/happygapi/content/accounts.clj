@@ -12,21 +12,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
   Retrieves a Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -60,21 +61,21 @@
   
   Creates a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +86,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Returns information about the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "accounts/authinfo"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -110,21 +112,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: overwrite
+  
   Claims the website of a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/claimwebsite"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -158,21 +161,21 @@
   
   Updates a Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -183,21 +186,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: force
+  
   Deletes a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -208,21 +212,22 @@
   Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
+  
   Lists the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -243,21 +248,21 @@
   
   Performs an action on a link between two Merchant Center accounts, namely accountId and linkedAccountId."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/link"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -268,21 +273,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: maxResults, pageToken
+  
   Returns the list of accounts linked to your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/accounts/{accountId}/listlinks"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -307,21 +313,21 @@
   
   Retrieves, inserts, updates, and deletes multiple Merchant Center (sub-)accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "accounts/batch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,23 +12,24 @@
   Required parameters: none
   
   Optional parameters: none
+  
   "
-  {:scopes ["https://www.googleapis.com/auth/plus.me"
+  {:scopes ["openid"
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/"
      "oauth2/v2/userinfo"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,23 +40,24 @@
   Required parameters: none
   
   Optional parameters: none
+  
   "
-  {:scopes ["https://www.googleapis.com/auth/plus.me"
+  {:scopes ["openid"
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/"
      "userinfo/v2/me"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

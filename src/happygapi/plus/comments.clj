@@ -12,22 +12,23 @@
   Required parameters: commentId
   
   Optional parameters: none
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "comments/{commentId}"
      #{:commentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: activityId
   
   Optional parameters: maxResults, pageToken, sortOrder
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:activityId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:activityId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "activities/{activityId}/comments"
      #{:activityId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

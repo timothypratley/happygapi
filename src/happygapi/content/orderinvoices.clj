@@ -27,21 +27,21 @@
   
   Creates a charge invoice for a shipment group, and triggers a charge capture for orderinvoice enabled orders."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orderinvoices/{orderId}/createChargeInvoice"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -65,21 +65,21 @@
   
   Creates a refund invoice for one or more shipment groups, and triggers a refund for orderinvoice enabled orders. This can only be used for line items that have previously been charged using createChargeInvoice. All amounts (except for the summary) are incremental with respect to the previous invoice."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orderinvoices/{orderId}/createRefundInvoice"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

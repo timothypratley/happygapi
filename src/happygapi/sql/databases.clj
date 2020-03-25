@@ -11,7 +11,7 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
   
   Body: 
   
@@ -30,21 +30,21 @@
   SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -52,26 +52,27 @@
 (defn get$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/get
   
-  Required parameters: instance, project, database
+  Required parameters: project, database, instance
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Retrieves a resource containing information about a database inside a Cloud
   SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :database})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
      #{:instance :project :database}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -79,9 +80,9 @@
 (defn patch$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/patch
   
-  Required parameters: database, instance, project
+  Required parameters: instance, project, database
   
-  Optional parameters: resourceName
+  Optional parameters: none
   
   Body: 
   
@@ -97,29 +98,24 @@
                               :compatibilityLevel integer}}
   
   Partially updates a resource containing information about a database inside
-  a Cloud SQL instance. This method supports patch semantics.
-  <aside
-  class=\"caution\"><strong>Caution:</strong> This is not a partial update, so
-  you must include values for all the settings that you want to retain. For
-  partial updates, use <a
-  href=\"/sql/docs/db_path/admin-api/rest/v1beta4/instances/update\">update</a>.</aside>"
+  a Cloud SQL instance. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project :database})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
      #{:instance :project :database}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -127,9 +123,9 @@
 (defn update$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/update
   
-  Required parameters: database, instance, project
+  Required parameters: project, database, instance
   
-  Optional parameters: resourceName
+  Optional parameters: none
   
   Body: 
   
@@ -148,21 +144,21 @@
   SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project :database})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
      #{:instance :project :database}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -172,23 +168,24 @@
   
   Required parameters: instance, project, database
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Deletes a database from a Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :database})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
      #{:instance :project :database}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -198,23 +195,24 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
+  
   Lists databases in the specified Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/databases"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

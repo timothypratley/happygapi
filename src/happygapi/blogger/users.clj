@@ -12,22 +12,23 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets one user by ID."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "users/{userId}"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

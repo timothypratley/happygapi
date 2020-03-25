@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:validateNetwork boolean,
-   :consumerProject {:projectNum string},
-   :consumerNetwork string,
+  {:consumerNetwork string,
    :rangeReservation {:secondaryRangeIpPrefixLengths [integer],
-                      :ipPrefixLength integer}}
+                      :ipPrefixLength integer},
+   :validateNetwork boolean,
+   :consumerProject {:projectNum string}}
   
   Service producers use this method to validate if the consumer provided
   network, project and the requested range is valid. This allows them to use
@@ -27,21 +27,21 @@
   AddSubnetwork operation completion to determine if user request is invalid."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:validate"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -60,21 +60,21 @@
   Disables VPC service controls for a connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:disableVpcServiceControls"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,21 +109,21 @@
   type `Subnetwork` if the operation successfully completes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:addSubnetwork"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -149,21 +149,21 @@
   Operation<response: Range>"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:searchRange"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -182,21 +182,58 @@
   Enables VPC service controls for a connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}:enableVpcServiceControls"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-add$
+  "https://cloud.google.com/service-infrastructure/docs/service-networking/getting-startedapi/reference/rest/v1/services/roles/add
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policyBinding [{:member string, :role string}],
+   :consumerNetwork string}
+  
+  Service producers can use this method to add roles in the shared VPC host
+  project. Each role is bound to the provided member. Each role must be
+  selected from within a whitelisted set of roles. Each role is applied at
+  only the granularity specified in the whitelist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicenetworking.googleapis.com/"
+     "v1/{+parent}/roles:add"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -207,23 +244,24 @@
   Required parameters: parent
   
   Optional parameters: network
+  
   List the private connections that are configured in a service consumer's
   VPC network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}/connections"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -237,31 +275,31 @@
   
   Body: 
   
-  {:network string,
-   :peering string,
-   :reservedPeeringRanges [string],
-   :service string}
+  {:reservedPeeringRanges [string],
+   :service string,
+   :network string,
+   :peering string}
   
   Updates the allocated ranges that are assigned to a connection.
   The response from the `get` operation will be of type `Connection` if the
   operation successfully completes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -275,10 +313,10 @@
   
   Body: 
   
-  {:network string,
-   :peering string,
-   :reservedPeeringRanges [string],
-   :service string}
+  {:reservedPeeringRanges [string],
+   :service string,
+   :network string,
+   :peering string}
   
   Creates a private connection that establishes a VPC Network Peering
   connection to a VPC network in the service producer's organization.
@@ -291,21 +329,21 @@
   completes."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicenetworking.googleapis.com/"
      "v1/{+parent}/connections"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -41,21 +41,21 @@
     **Note:** This API requires a service account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.indexing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/media/{+resourceName}"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

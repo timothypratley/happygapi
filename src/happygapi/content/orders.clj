@@ -31,21 +31,21 @@
   
   Sandbox only. Creates a test order."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/testorders"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -67,21 +67,21 @@
   
   Updates ship by and delivery by dates for a line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/updateLineItemShippingDetails"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -92,21 +92,22 @@
   Required parameters: merchantId, orderId
   
   Optional parameters: none
+  
   Retrieves an order from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -124,21 +125,21 @@
   
   Marks an order as acknowledged."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/acknowledge"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -159,21 +160,21 @@
   
   Sets (or overrides if it already exists) merchant provided annotations in the form of key-value pairs. A common use case would be to supply us with additional structured information about a line item that cannot be provided via other methods. Submitted key-value pairs can be retrieved as part of the orders resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/setLineItemMetadata"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -191,21 +192,21 @@
   
   Sandbox only. Creates a test return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/testreturn"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -228,21 +229,21 @@
   
   Cancels a line item, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/cancelLineItem"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -265,21 +266,21 @@
   
   Updates a shipment's status, carrier, and/or tracking ID."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/updateShipment"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -302,21 +303,21 @@
   
   Rejects return on an line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/rejectReturnLineItem"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -342,21 +343,21 @@
   Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (e.g. cash refund done in store).
   Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding via Google then via an in-store return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/inStoreRefundLineItem"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -367,21 +368,22 @@
   Required parameters: merchantId
   
   Optional parameters: acknowledged, maxResults, orderBy, pageToken, placedDateEnd, placedDateStart, statuses
+  
   Lists the orders in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -406,21 +408,21 @@
   
   Marks line item(s) as shipped."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/shipLineItems"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -431,21 +433,22 @@
   Required parameters: merchantId, templateName
   
   Optional parameters: country
+  
   Sandbox only. Retrieves an order template that can be used to quickly create a new order in sandbox."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:templateName :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:templateName :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/testordertemplates/{templateName}"
      #{:templateName :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -456,21 +459,22 @@
   Required parameters: merchantId, merchantOrderId
   
   Optional parameters: none
+  
   Retrieves an order using merchant order ID."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantOrderId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantOrderId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/ordersbymerchantid/{merchantOrderId}"
      #{:merchantOrderId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -488,21 +492,21 @@
   
   Cancels all line items in an order, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/cancel"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -513,21 +517,22 @@
   Required parameters: merchantId, orderId
   
   Optional parameters: none
+  
   Sandbox only. Moves a test order from state \"inProgress\" to state \"pendingShipment\"."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/testorders/{orderId}/advance"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -552,21 +557,21 @@
   
   Returns and refunds a line item. Note that this method can only be called on fully shipped orders."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/returnRefundLineItem"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -584,21 +589,21 @@
   
   Sandbox only. Cancels a test order for customer-initiated cancellation."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/testorders/{orderId}/cancelByCustomer"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -616,21 +621,21 @@
   
   Updates the merchant order ID for a given order."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId :orderId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orders/{orderId}/updateMerchantOrderId"
      #{:merchantId :orderId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -15,31 +15,31 @@
   
   Body: 
   
-  {:pageSize integer,
+  {:filter string,
+   :pageToken string,
+   :pageSize integer,
    :ancestorName string,
    :consolidationStrategy {:none NoConsolidation, :legacy Legacy},
-   :itemName string,
-   :filter string,
-   :pageToken string}
+   :itemName string}
   
   Query past activity in Google Drive."
   {:scopes ["https://www.googleapis.com/auth/drive.activity"
             "https://www.googleapis.com/auth/drive.activity.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://driveactivity.googleapis.com/"
      "v2/activity:query"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

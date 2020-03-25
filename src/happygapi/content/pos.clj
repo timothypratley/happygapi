@@ -26,21 +26,21 @@
   
   Batches multiple POS-related calls in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "pos/batch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -51,11 +51,12 @@
   Required parameters: merchantId, storeCode, targetMerchantId
   
   Optional parameters: none
+  
   Deletes a store for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:targetMerchantId :storeCode :merchantId})]}
   (util/get-response
    (http/delete
@@ -63,11 +64,11 @@
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
      #{:targetMerchantId :storeCode :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -78,11 +79,12 @@
   Required parameters: merchantId, storeCode, targetMerchantId
   
   Optional parameters: none
+  
   Retrieves information about the given store."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:targetMerchantId :storeCode :merchantId})]}
   (util/get-response
    (http/get
@@ -90,11 +92,11 @@
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
      #{:targetMerchantId :storeCode :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -112,21 +114,21 @@
   
   Creates a store for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:targetMerchantId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/store"
      #{:targetMerchantId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +153,21 @@
   
   Submit inventory for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:targetMerchantId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/inventory"
      #{:targetMerchantId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -176,21 +178,22 @@
   Required parameters: merchantId, targetMerchantId
   
   Optional parameters: none
+  
   Lists the stores of the target merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:targetMerchantId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/store"
      #{:targetMerchantId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -216,21 +219,21 @@
   
   Submit a sale event for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:targetMerchantId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/pos/{targetMerchantId}/sale"
      #{:targetMerchantId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

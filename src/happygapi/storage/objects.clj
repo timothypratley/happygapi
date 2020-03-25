@@ -56,9 +56,9 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:destinationBucket :destinationObject})]}
   (util/get-response
    (http/post
@@ -66,13 +66,13 @@
      "https://storage.googleapis.com/storage/v1/"
      "b/{destinationBucket}/o/{destinationObject}/compose"
      #{:destinationBucket :destinationObject}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,7 +82,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  Optional parameters: startOffset, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
   
   Body: 
   
@@ -103,21 +103,21 @@
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/watch"
      #{:bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -128,25 +128,26 @@
   Required parameters: object, bucket
   
   Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
+  
   Retrieves an object or its metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -208,9 +209,9 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:destinationBucket
             :sourceBucket
             :destinationObject
@@ -224,13 +225,13 @@
        :sourceBucket
        :destinationObject
        :sourceObject}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -259,21 +260,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}/iam"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -335,21 +336,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o"
      #{:bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -410,21 +411,21 @@
   Patches an object's metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -435,25 +436,26 @@
   Required parameters: bucket, object, permissions
   
   Optional parameters: generation, provisionalUserProject, userProject
+  
   Tests a set of permissions on the given object to see which, if any, are held by the caller."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:permissions :object :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:permissions :object :bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}/iam/testPermissions"
      #{:permissions :object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -514,21 +516,21 @@
   Updates an object's metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -539,23 +541,24 @@
   Required parameters: object, bucket
   
   Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject
+  
   Deletes an object and its metadata. Deletions are permanent if versioning is not enabled for the bucket, or if the generation parameter is used."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -566,25 +569,26 @@
   Required parameters: bucket, object
   
   Optional parameters: generation, provisionalUserProject, userProject
+  
   Returns an IAM policy for the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:object :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:object :bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o/{object}/iam"
      #{:object :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -594,26 +598,27 @@
   
   Required parameters: bucket
   
-  Optional parameters: prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  Optional parameters: startOffset, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  
   Retrieves a list of objects matching the criteria."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/o"
      #{:bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -675,9 +680,9 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:destinationBucket
             :sourceBucket
             :destinationObject
@@ -691,13 +696,13 @@
        :sourceBucket
        :destinationObject
        :sourceObject}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

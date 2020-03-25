@@ -12,23 +12,24 @@
   Required parameters: image, project
   
   Optional parameters: none
+  
   Returns the specified image. Gets a list of available images by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :image})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :image})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{image}"
      #{:project :image}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -54,21 +55,21 @@
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{resource}/setIamPolicy"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,6 +86,7 @@
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
+                                 :kmsKeyServiceAccount string,
                                  :rawKey string,
                                  :sha256 string},
    :guestOsFeatures [{:type string}],
@@ -93,9 +95,11 @@
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
+                              :kmsKeyServiceAccount string,
                               :rawKey string,
                               :sha256 string},
    :imageEncryptionKey {:kmsKeyName string,
+                        :kmsKeyServiceAccount string,
                         :rawKey string,
                         :sha256 string},
    :name string,
@@ -105,6 +109,7 @@
    :selfLink string,
    :sourceSnapshot string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
+                             :kmsKeyServiceAccount string,
                              :rawKey string,
                              :sha256 string},
    :status string,
@@ -123,6 +128,10 @@
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
+   :shieldedInstanceInitialState {:dbs [FileContentBuffer],
+                                  :dbxs [FileContentBuffer],
+                                  :keks [FileContentBuffer],
+                                  :pk FileContentBuffer},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -132,21 +141,21 @@
             "https://www.googleapis.com/auth/devstorage.full_control"
             "https://www.googleapis.com/auth/devstorage.read_only"
             "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -157,23 +166,24 @@
   Required parameters: family, project
   
   Optional parameters: none
+  
   Returns the latest image that is part of an image family and is not deprecated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:family :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:family :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/family/{family}"
      #{:family :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -193,21 +203,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{resource}/testIamPermissions"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -226,21 +236,21 @@
   Sets the labels on an image. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{resource}/setLabels"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -251,22 +261,23 @@
   Required parameters: image, project
   
   Optional parameters: requestId
+  
   Deletes the specified image."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :image})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :image})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{image}"
      #{:project :image}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -277,23 +288,24 @@
   Required parameters: project, resource
   
   Optional parameters: none
+  
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project :resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{resource}/getIamPolicy"
      #{:project :resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -304,23 +316,24 @@
   Required parameters: project
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of custom images available to the specified project. Custom images are images you create that belong to your project. This method does not get any images that belong to other projects, including publicly-available images, like Debian 8. If you want to get a list of publicly-available images, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -345,21 +358,21 @@
   If an empty request body is given, clears the deprecation status instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:project :image})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :image})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/global/images/{image}/deprecate"
      #{:project :image}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

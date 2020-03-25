@@ -12,21 +12,22 @@
   Required parameters: proposalId
   
   Optional parameters: none
+  
   Get a proposal given its id"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -67,21 +68,21 @@
   
   Create the given list of proposals"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/insert"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -124,9 +125,9 @@
   
   Update the given proposal. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:revisionNumber :updateAction :proposalId})]}
   (util/get-response
    (http/patch
@@ -134,13 +135,13 @@
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/{revisionNumber}/{updateAction}"
      #{:revisionNumber :updateAction :proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +152,22 @@
   Required parameters: none
   
   Optional parameters: pqlQuery
+  
   Search for proposals using pql query"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/search"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -176,21 +178,22 @@
   Required parameters: proposalId
   
   Optional parameters: none
+  
   Update the given proposal to indicate that setup has been completed."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/setupcomplete"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -233,9 +236,9 @@
   
   Update the given proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:revisionNumber :updateAction :proposalId})]}
   (util/get-response
    (http/put
@@ -243,13 +246,13 @@
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/{revisionNumber}/{updateAction}"
      #{:revisionNumber :updateAction :proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

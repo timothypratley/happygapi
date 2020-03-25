@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: asynchronous
   
   Body: 
   
@@ -45,21 +45,21 @@
   
   Creates a query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "query"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -70,21 +70,22 @@
   Required parameters: queryId
   
   Optional parameters: none
+  
   Deletes a stored query as well as the associated stored reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:queryId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "query/{queryId}"
      #{:queryId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -95,21 +96,22 @@
   Required parameters: queryId
   
   Optional parameters: none
+  
   Retrieves a stored query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:queryId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "query/{queryId}"
      #{:queryId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -120,21 +122,22 @@
   Required parameters: none
   
   Optional parameters: pageSize, pageToken
+  
   Retrieves stored queries."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "queries"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -144,7 +147,7 @@
   
   Required parameters: queryId
   
-  Optional parameters: none
+  Optional parameters: asynchronous
   
   Body: 
   
@@ -155,21 +158,21 @@
   
   Runs a stored query to generate a report."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:queryId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
      "query/{queryId}"
      #{:queryId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

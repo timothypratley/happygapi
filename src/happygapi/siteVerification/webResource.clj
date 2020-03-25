@@ -12,21 +12,22 @@
   Required parameters: id
   
   Optional parameters: none
+  
   Relinquish ownership of a website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: id
   
   Optional parameters: none
+  
   Get the most current data for a website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -70,21 +72,21 @@
   Get a verification token for placing on a website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"
             "https://www.googleapis.com/auth/siteverification.verify_only"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "token"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -105,21 +107,21 @@
   Attempt verification of a website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"
             "https://www.googleapis.com/auth/siteverification.verify_only"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:verificationMethod})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:verificationMethod})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource"
      #{:verificationMethod}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -130,21 +132,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Get the list of your verified websites and domains."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -164,21 +167,21 @@
   
   Modify the list of owners for your website or domain. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -198,21 +201,21 @@
   
   Modify the list of owners for your website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
      "webResource/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -15,30 +15,30 @@
   
   Body: 
   
-  {:fullResourceName string,
+  {:view string,
+   :fullResourceName string,
    :pageToken string,
-   :pageSize integer,
-   :view string}
+   :pageSize integer}
   
   Queries roles that can be granted on a particular resource.
   A role is grantable if it can be used as the role in a binding for a policy
   for that resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/roles:queryGrantableRoles"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -48,18 +48,23 @@
   
   Required parameters: none
   
-  Optional parameters: parent, showDeleted, pageToken, pageSize, view
+  Optional parameters: view, parent, showDeleted, pageToken, pageSize
+  
   Lists the Roles defined on a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
-    (util/get-url "https://iam.googleapis.com/" "v1/roles" #{} args)
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/roles"
+     #{}
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -70,21 +75,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a Role definition."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

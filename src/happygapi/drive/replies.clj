@@ -33,21 +33,21 @@
   Creates a new reply to a comment."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:commentId :fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:commentId :fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}/replies"
      #{:commentId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -58,22 +58,23 @@
   Required parameters: commentId, fileId, replyId
   
   Optional parameters: none
+  
   Deletes a reply."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId :replyId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId :replyId :fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}/replies/{replyId}"
      #{:commentId :replyId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -84,23 +85,24 @@
   Required parameters: commentId, fileId, replyId
   
   Optional parameters: includeDeleted
+  
   Gets a reply by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId :replyId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId :replyId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}/replies/{replyId}"
      #{:commentId :replyId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -111,23 +113,24 @@
   Required parameters: commentId, fileId
   
   Optional parameters: includeDeleted, pageSize, pageToken
+  
   Lists a comment's replies."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:commentId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:commentId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}/replies"
      #{:commentId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -159,21 +162,21 @@
   Updates a reply with patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:commentId :replyId :fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:commentId :replyId :fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/comments/{commentId}/replies/{replyId}"
      #{:commentId :replyId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

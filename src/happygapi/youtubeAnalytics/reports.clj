@@ -12,25 +12,26 @@
   Required parameters: none
   
   Optional parameters: filters, startDate, ids, dimensions, currency, includeHistoricalChannelData, endDate, startIndex, metrics, sort, maxResults
+  
   Retrieve your YouTube Analytics reports."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"
             "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://youtubeanalytics.googleapis.com/"
      "v2/reports"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

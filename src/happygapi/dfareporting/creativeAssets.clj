@@ -15,38 +15,69 @@
   
   Body: 
   
-  {:assetIdentifier {:name string, :type string},
-   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
-                :eventName string,
-                :name string}],
-   :detectedFeatures [string],
-   :id string,
+  {:counterCustomEvents [{:advertiserCustomEventName string,
+                          :popupWindowProperties PopupWindowProperties,
+                          :artworkType string,
+                          :artworkLabel string,
+                          :videoReportingId string,
+                          :advertiserCustomEventId string,
+                          :id string,
+                          :targetType string,
+                          :exitClickThroughUrl CreativeClickThroughUrl,
+                          :advertiserCustomEventType string}],
+   :richMedia boolean,
    :idDimensionValue {:dimensionName string,
                       :etag string,
                       :id string,
                       :kind string,
                       :matchType string,
                       :value string},
+   :timerCustomEvents [{:advertiserCustomEventName string,
+                        :popupWindowProperties PopupWindowProperties,
+                        :artworkType string,
+                        :artworkLabel string,
+                        :videoReportingId string,
+                        :advertiserCustomEventId string,
+                        :id string,
+                        :targetType string,
+                        :exitClickThroughUrl CreativeClickThroughUrl,
+                        :advertiserCustomEventType string}],
+   :detectedFeatures [string],
+   :exitCustomEvents [{:advertiserCustomEventName string,
+                       :popupWindowProperties PopupWindowProperties,
+                       :artworkType string,
+                       :artworkLabel string,
+                       :videoReportingId string,
+                       :advertiserCustomEventId string,
+                       :id string,
+                       :targetType string,
+                       :exitClickThroughUrl CreativeClickThroughUrl,
+                       :advertiserCustomEventType string}],
+   :warnedValidationRules [string],
+   :id string,
    :kind string,
-   :warnedValidationRules [string]}
+   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+                :eventName string,
+                :name string}],
+   :assetIdentifier {:name string, :type string}}
   
   Inserts a new creative asset."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:advertiserId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:advertiserId :profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeAssets/{advertiserId}/creativeAssets"
      #{:advertiserId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

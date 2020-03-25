@@ -12,21 +12,22 @@
   Required parameters: accountId
   
   Optional parameters: none
+  
   Gets the requested publisher profile(s) by publisher accountId."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "publisher/{accountId}/profiles"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

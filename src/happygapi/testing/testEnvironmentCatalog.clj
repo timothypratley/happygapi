@@ -12,6 +12,7 @@
   Required parameters: environmentType
   
   Optional parameters: projectId
+  
   Gets the catalog of supported test environments.
   
   May return any of the following canonical error codes:
@@ -21,19 +22,19 @@
   - INTERNAL - if an internal error occurred"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:environmentType})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:environmentType})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://testing.googleapis.com/"
      "v1/testEnvironmentCatalog/{environmentType}"
      #{:environmentType}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

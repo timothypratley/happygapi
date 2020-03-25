@@ -52,21 +52,21 @@
   
   Creates a new shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:requestId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:requestId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives"
      #{:requestId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -77,21 +77,22 @@
   Required parameters: driveId
   
   Optional parameters: none
+  
   Permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:driveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:driveId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
      #{:driveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -102,22 +103,23 @@
   Required parameters: driveId
   
   Optional parameters: useDomainAdminAccess
+  
   Gets a shared drive's metadata by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:driveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:driveId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
      #{:driveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -128,21 +130,22 @@
   Required parameters: driveId
   
   Optional parameters: none
+  
   Hides a shared drive from the default view."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:driveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:driveId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}/hide"
      #{:driveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -153,22 +156,23 @@
   Required parameters: none
   
   Optional parameters: pageSize, pageToken, q, useDomainAdminAccess
+  
   Lists the user's shared drives."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -179,21 +183,22 @@
   Required parameters: driveId
   
   Optional parameters: none
+  
   Restores a shared drive to the default view."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:driveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:driveId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}/unhide"
      #{:driveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -244,21 +249,21 @@
   
   Updates the metadate for a shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:driveId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:driveId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "drives/{driveId}"
      #{:driveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

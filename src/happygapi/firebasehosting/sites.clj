@@ -12,24 +12,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the Hosting metadata for a specific site."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -48,55 +49,232 @@
   Sets the Hosting metadata for a specific site."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn releases-list$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/releases/list
+(defn domains-list$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/list
   
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
+  Lists the domains for the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+parent}/domains"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn domains-get$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a domain mapping on the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn domains-update$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/update
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:status string,
+   :site string,
+   :domainName string,
+   :updateTime string,
+   :provisioning {:dnsFetchTime string,
+                  :certChallengeDns CertDnsChallenge,
+                  :certStatus string,
+                  :certChallengeDiscoveredTxt [string],
+                  :discoveredIps [string],
+                  :expectedIps [string],
+                  :dnsStatus string,
+                  :certChallengeHttp CertHttpChallenge},
+   :domainRedirect {:domainName string, :type string}}
+  
+  Updates the specified domain mapping, creating the mapping as if it does
+  not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn domains-create$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:status string,
+   :site string,
+   :domainName string,
+   :updateTime string,
+   :provisioning {:dnsFetchTime string,
+                  :certChallengeDns CertDnsChallenge,
+                  :certStatus string,
+                  :certChallengeDiscoveredTxt [string],
+                  :discoveredIps [string],
+                  :expectedIps [string],
+                  :dnsStatus string,
+                  :certChallengeHttp CertHttpChallenge},
+   :domainRedirect {:domainName string, :type string}}
+  
+  Creates a domain mapping on the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+parent}/domains"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn domains-delete$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the existing domain mapping on the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn channels-releases-list$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/channels/releases/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
   Lists the releases that have been created on the specified site."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/releases"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn releases-create$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/releases/create
+(defn channels-releases-create$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/channels/releases/create
   
   Required parameters: parent
   
@@ -104,7 +282,9 @@
   
   Body: 
   
-  {:releaseTime string,
+  {:message string,
+   :releaseUser {:imageUrl string, :email string},
+   :releaseTime string,
    :name string,
    :type string,
    :version {:labels {},
@@ -119,29 +299,162 @@
              :createUser ActingUser,
              :versionBytes string,
              :finalizeTime string,
-             :finalizeUser ActingUser},
-   :releaseUser {:imageUrl string, :email string},
-   :message string}
+             :finalizeUser ActingUser}}
   
   Creates a new release which makes the content of the specified version
-  actively display on the site."
+  actively display on the appropriate URL(s)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/releases"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn releases-list$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/releases/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the releases that have been created on the specified site."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+parent}/releases"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn releases-create$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/releases/create
+  
+  Required parameters: parent
+  
+  Optional parameters: versionName
+  
+  Body: 
+  
+  {:message string,
+   :releaseUser {:imageUrl string, :email string},
+   :releaseTime string,
+   :name string,
+   :type string,
+   :version {:labels {},
+             :deleteTime string,
+             :deleteUser ActingUser,
+             :fileCount string,
+             :config ServingConfig,
+             :name string,
+             :createTime string,
+             :preview PreviewConfig,
+             :status string,
+             :createUser ActingUser,
+             :versionBytes string,
+             :finalizeTime string,
+             :finalizeUser ActingUser}}
+  
+  Creates a new release which makes the content of the specified version
+  actively display on the appropriate URL(s)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+parent}/releases"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn versions-patch$
+  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/versions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:labels {},
+   :deleteTime string,
+   :deleteUser {:imageUrl string, :email string},
+   :fileCount string,
+   :config {:appAssociation string,
+            :trailingSlashBehavior string,
+            :cleanUrls boolean,
+            :rewrites [Rewrite],
+            :redirects [Redirect],
+            :headers [Header]},
+   :name string,
+   :createTime string,
+   :preview {:expireTime string, :active boolean},
+   :status string,
+   :createUser {:imageUrl string, :email string},
+   :versionBytes string,
+   :finalizeTime string,
+   :finalizeUser {:imageUrl string, :email string}}
+  
+  Updates the specified metadata for a version. Note that this method will
+  fail with `FAILED_PRECONDITION` in the event of an invalid state
+  transition. The only valid transition for a version is currently from a
+  `CREATED` status to a `FINALIZED` status.
+  Use [`DeleteVersion`](../sites.versions/delete) to set the status of a
+  version to `DELETED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firebasehosting.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -160,21 +473,21 @@
   Adds content files to a version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}:populateFiles"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -185,22 +498,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes the specified version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -210,23 +524,24 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists the versions that have been created on the specified site.
   Will include filtering in the future."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/versions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -236,7 +551,7 @@
   
   Required parameters: parent
   
-  Optional parameters: versionId, sizeBytes
+  Optional parameters: sizeBytes, versionId
   
   Body: 
   
@@ -244,12 +559,12 @@
    :deleteTime string,
    :deleteUser {:imageUrl string, :email string},
    :fileCount string,
-   :config {:redirects [Redirect],
-            :headers [Header],
-            :appAssociation string,
+   :config {:appAssociation string,
             :trailingSlashBehavior string,
             :cleanUrls boolean,
-            :rewrites [Rewrite]},
+            :rewrites [Rewrite],
+            :redirects [Redirect],
+            :headers [Header]},
    :name string,
    :createTime string,
    :preview {:expireTime string, :active boolean},
@@ -262,21 +577,21 @@
   Creates a new version for a site."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/versions"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -298,76 +613,21 @@
   Creates a new version on the target site using the content
   of the specified version."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/versions:clone"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn versions-patch$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/versions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:labels {},
-   :deleteTime string,
-   :deleteUser {:imageUrl string, :email string},
-   :fileCount string,
-   :config {:redirects [Redirect],
-            :headers [Header],
-            :appAssociation string,
-            :trailingSlashBehavior string,
-            :cleanUrls boolean,
-            :rewrites [Rewrite]},
-   :name string,
-   :createTime string,
-   :preview {:expireTime string, :active boolean},
-   :status string,
-   :createUser {:imageUrl string, :email string},
-   :versionBytes string,
-   :finalizeTime string,
-   :finalizeUser {:imageUrl string, :email string}}
-  
-  Updates the specified metadata for a version. Note that this method will
-  fail with `FAILED_PRECONDITION` in the event of an invalid state
-  transition. The only valid transition for a version is currently from a
-  `CREATED` status to a `FINALIZED` status.
-  Use [`DeleteVersion`](../sites.versions/delete) to set the status of a
-  version to `DELETED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -378,197 +638,25 @@
   Required parameters: parent
   
   Optional parameters: status, pageToken, pageSize
+  
   Lists the remaining files to be uploaded for the specified version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebasehosting.googleapis.com/"
      "v1beta1/{+parent}/files"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domains-create$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:domainName string,
-   :updateTime string,
-   :provisioning {:dnsFetchTime string,
-                  :certChallengeDns CertDnsChallenge,
-                  :certStatus string,
-                  :certChallengeDiscoveredTxt [string],
-                  :expectedIps [string],
-                  :discoveredIps [string],
-                  :dnsStatus string,
-                  :certChallengeHttp CertHttpChallenge},
-   :domainRedirect {:type string, :domainName string},
-   :status string,
-   :site string}
-  
-  Creates a domain mapping on the specified site."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+parent}/domains"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domains-delete$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes the existing domain mapping on the specified site."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domains-list$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  Lists the domains for the specified site."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+parent}/domains"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domains-get$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets a domain mapping on the specified site."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn domains-update$
-  "https://firebase.google.com/docs/hosting/api/reference/rest/v1beta1/sites/domains/update
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:domainName string,
-   :updateTime string,
-   :provisioning {:dnsFetchTime string,
-                  :certChallengeDns CertDnsChallenge,
-                  :certStatus string,
-                  :certChallengeDiscoveredTxt [string],
-                  :expectedIps [string],
-                  :discoveredIps [string],
-                  :dnsStatus string,
-                  :certChallengeHttp CertHttpChallenge},
-   :domainRedirect {:type string, :domainName string},
-   :status string,
-   :site string}
-  
-  Updates the specified domain mapping, creating the mapping as if it does
-  not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://firebasehosting.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

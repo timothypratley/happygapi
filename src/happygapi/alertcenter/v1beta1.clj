@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: customerId
+  
   Returns customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://alertcenter.googleapis.com/"
      "v1beta1/settings"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,21 +45,21 @@
   
   Updates the customer-level settings."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://alertcenter.googleapis.com/"
      "v1beta1/settings"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

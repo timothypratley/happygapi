@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/registrations/delete
+  
+  Required parameters: registrationId
+  
+  Optional parameters: none
+  
+  Deletes a `Registration`, causing Classroom to stop sending notifications
+  for that `Registration`."
+  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:registrationId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/registrations/{registrationId}"
+     #{:registrationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn create$
   "https://developers.google.com/classroom/api/reference/rest/v1/registrations/create
   
@@ -54,47 +81,21 @@
       * the specified `cloudPubsubTopic` cannot be located, or Classroom has
         not been granted permission to publish to it."
   {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/registrations"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/registrations/delete
-  
-  Required parameters: registrationId
-  
-  Optional parameters: none
-  Deletes a `Registration`, causing Classroom to stop sending notifications
-  for that `Registration`."
-  {:scopes ["https://www.googleapis.com/auth/classroom.push-notifications"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:registrationId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/registrations/{registrationId}"
-     #{:registrationId}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

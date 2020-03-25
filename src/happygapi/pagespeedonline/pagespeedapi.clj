@@ -12,24 +12,25 @@
   
   Required parameters: none
   
-  Optional parameters: url, utm_campaign, captchaToken, strategy, category, utm_source, locale
+  Optional parameters: locale, url, utm_campaign, captchaToken, strategy, category, utm_source
+  
   Runs PageSpeed analysis on the page at the specified URL, and returns
   PageSpeed scores, a list of suggestions to make that page faster, and other
   information."
   {:scopes ["openid"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://pagespeedonline.googleapis.com/"
      "pagespeedonline/v5/runPagespeed"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

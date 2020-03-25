@@ -12,23 +12,24 @@
   Required parameters: setting
   
   Optional parameters: none
+  
   Returns a single user setting."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:setting})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:setting})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "users/me/settings/{setting}"
      #{:setting}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,23 +40,24 @@
   Required parameters: none
   
   Optional parameters: maxResults, pageToken, syncToken
+  
   Returns all user settings for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "users/me/settings"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -84,21 +86,21 @@
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"
             "https://www.googleapis.com/auth/calendar.settings.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "users/me/settings/watch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

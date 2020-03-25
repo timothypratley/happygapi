@@ -35,21 +35,21 @@
   
   Create a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/create"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -60,21 +60,22 @@
   Required parameters: roomId
   
   Optional parameters: language
+  
   Decline an invitation to join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/decline"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +86,22 @@
   Required parameters: roomId
   
   Optional parameters: none
+  
   Dismiss an invitation to join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/dismiss"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -110,21 +112,22 @@
   Required parameters: roomId
   
   Optional parameters: language
+  
   Get the data for a room."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +154,21 @@
   
   Join a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/join"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -192,21 +195,21 @@
   
   Leave a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/leave"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -217,21 +220,22 @@
   Required parameters: none
   
   Optional parameters: language, maxResults, pageToken
+  
   Returns invitations to join rooms."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -256,21 +260,21 @@
   
   Updates sent by a client reporting the status of peers in a room. For internal use by the Games SDK only. Calling this method directly is unsupported."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:roomId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:roomId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "rooms/{roomId}/reportstatus"
      #{:roomId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

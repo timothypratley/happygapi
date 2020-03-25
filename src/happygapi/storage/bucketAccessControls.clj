@@ -12,22 +12,23 @@
   Required parameters: bucket, entity
   
   Optional parameters: provisionalUserProject, userProject
+  
   Permanently deletes the ACL entry for the specified entity on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:entity :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:entity :bucket})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl/{entity}"
      #{:entity :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: bucket, entity
   
   Optional parameters: provisionalUserProject, userProject
+  
   Returns the ACL entry for the specified entity on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:entity :bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:entity :bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl/{entity}"
      #{:entity :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,21 +84,21 @@
   Creates a new ACL entry on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl"
      #{:bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -107,22 +109,23 @@
   Required parameters: bucket
   
   Optional parameters: provisionalUserProject, userProject
+  
   Retrieves ACL entries on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:bucket})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl"
      #{:bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +154,21 @@
   Patches an ACL entry on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:entity :bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:entity :bucket})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl/{entity}"
      #{:entity :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -194,21 +197,21 @@
   Updates an ACL entry on the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/devstorage.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:entity :bucket})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:entity :bucket})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://storage.googleapis.com/storage/v1/"
      "b/{bucket}/acl/{entity}"
      #{:entity :bucket}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

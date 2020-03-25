@@ -16,26 +16,26 @@
   
   Body: 
   
-  {:urls [string], :lookupStrategy string}
+  {:lookupStrategy string, :urls [string]}
   
   Returns AMP URL(s) and equivalent
   [AMP Cache URL(s)](/amp/cache/overview#amp-cache-url-format)."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://acceleratedmobilepageurl.googleapis.com/"
      "v1/ampUrls:batchGet"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

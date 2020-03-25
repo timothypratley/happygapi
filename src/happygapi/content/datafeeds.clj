@@ -23,21 +23,21 @@
   
   Deletes, fetches, gets, inserts and updates multiple datafeeds in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "datafeeds/batch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -48,21 +48,22 @@
   Required parameters: datafeedId, merchantId
   
   Optional parameters: none
+  
   Deletes a datafeed configuration from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datafeedId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds/{datafeedId}"
      #{:datafeedId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -73,21 +74,22 @@
   Required parameters: datafeedId, merchantId
   
   Optional parameters: none
+  
   Invokes a fetch for the datafeed in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datafeedId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds/{datafeedId}/fetchNow"
      #{:datafeedId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -98,21 +100,22 @@
   Required parameters: datafeedId, merchantId
   
   Optional parameters: none
+  
   Retrieves a datafeed configuration from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datafeedId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds/{datafeedId}"
      #{:datafeedId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,21 +154,21 @@
   
   Registers a datafeed configuration with your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -176,21 +179,22 @@
   Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
+  
   Lists the configurations for datafeeds in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -229,21 +233,21 @@
   
   Updates a datafeed configuration of your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:datafeedId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/datafeeds/{datafeedId}"
      #{:datafeedId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

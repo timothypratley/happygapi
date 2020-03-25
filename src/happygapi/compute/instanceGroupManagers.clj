@@ -11,24 +11,27 @@
   
   Required parameters: instanceGroupManager, project, zone
   
-  Optional parameters: filter, maxResults, order_by, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Lists all of the instances in the managed instance group. Each instance in the list has a currentAction, which indicates the action that the managed instance group is performing on the instance. For example, if the group is still creating an instance, the currentAction is CREATING. If a previous action failed, the list displays the errors for that failed action."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/listManagedInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -47,21 +50,53 @@
   Specifies the instance template to use when creating new instances in this group. The templates for existing instances in the group do not change unless you recreate them."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/setInstanceTemplate"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listErrors$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instanceGroupManagers/listErrors
+  
+  Required parameters: instanceGroupManager, project, zone
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken
+  
+  Lists all errors thrown by actions on instances for a given managed instance group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/listErrors"
+     #{:zone :instanceGroupManager :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -72,23 +107,26 @@
   Required parameters: instanceGroupManager, project, zone
   
   Optional parameters: none
+  
   Returns all of the details about the specified managed instance group. Gets a list of available managed instance groups by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -107,6 +145,7 @@
                   :maxSurge FixedOrPercent,
                   :maxUnavailable FixedOrPercent,
                   :minimalAction string,
+                  :replacementMethod string,
                   :type string},
    :creationTimestamp string,
    :zone string,
@@ -124,7 +163,8 @@
                     :none integer,
                     :creatingWithoutRetries integer},
    :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
-   :status {:isStable boolean,
+   :status {:autoscaler string,
+            :isStable boolean,
             :versionTarget InstanceGroupManagerStatusVersionTarget},
    :instanceGroup string,
    :id string,
@@ -144,21 +184,21 @@
   A managed instance group can have up to 1000 VM instances per group. Please contact Cloud Support if you need an increase in this limit."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers"
      #{:zone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -181,21 +221,23 @@
   You can specify a maximum of 1000 instances with this method per request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/abandonInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -218,21 +260,23 @@
   You can specify a maximum of 1000 instances with this method per request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/recreateInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -250,24 +294,26 @@
    :minimalAction string,
    :mostDisruptiveAllowedAction string}
   
-  Apply changes to selected instances on the managed instance group. This method can be used to apply new overrides and/or new versions."
+  Applies changes to selected instances on the managed instance group. This method can be used to apply new overrides and/or new versions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/applyUpdatesToInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -286,6 +332,7 @@
                   :maxSurge FixedOrPercent,
                   :maxUnavailable FixedOrPercent,
                   :minimalAction string,
+                  :replacementMethod string,
                   :type string},
    :creationTimestamp string,
    :zone string,
@@ -303,7 +350,8 @@
                     :none integer,
                     :creatingWithoutRetries integer},
    :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
-   :status {:isStable boolean,
+   :status {:autoscaler string,
+            :isStable boolean,
             :versionTarget InstanceGroupManagerStatusVersionTarget},
    :instanceGroup string,
    :id string,
@@ -321,21 +369,23 @@
   Updates a managed instance group using the information that you specify in the request. This operation is marked as DONE when the group is patched even if the instances in the group are still in the process of being patched. You must separately verify the status of the individual instances with the listManagedInstances method. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -345,24 +395,25 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  
   Retrieves the list of managed instance groups and groups them by zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/aggregated/instanceGroupManagers"
      #{:project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -373,22 +424,25 @@
   Required parameters: instanceGroupManager, project, zone
   
   Optional parameters: requestId
+  
   Deletes the specified managed instance group and all of the instances in that group. Note that the instance group must not belong to a backend service. Read  Deleting an instance group for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -399,6 +453,7 @@
   Required parameters: instanceGroupManager, project, size, zone
   
   Optional parameters: requestId
+  
   Resizes the managed instance group. If you increase the size, the group creates new instances using the current instance template. If you decrease the size, the group deletes instances. The resize operation is marked DONE when the resize actions are scheduled even if the group has not yet added or deleted any instances. You must separately verify the status of the creating or deleting actions with the listmanagedinstances method.
   
   When resizing down, the instance group arbitrarily chooses the order in which VMs are deleted. The group takes into account some VM attributes when making the selection including:
@@ -410,9 +465,9 @@
   If the group is part of a backend service that has enabled connection draining, it can take up to 60 seconds after the connection draining duration has elapsed before the VM instance is removed or deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:zone :instanceGroupManager :size :project})]}
   (util/get-response
    (http/post
@@ -420,11 +475,11 @@
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/resize"
      #{:zone :instanceGroupManager :size :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -443,21 +498,23 @@
   Modifies the target pools to which all instances in this managed instance group are assigned. The target pools automatically apply to all of the instances in the managed instance group. This operation is marked DONE when you make the request even if the instances have not yet been added to their target pools. The change might take some time to apply to all of the instances in the group depending on the size of the group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/setTargetPools"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -468,23 +525,24 @@
   Required parameters: project, zone
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves a list of managed instance groups that are contained within the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:zone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers"
      #{:zone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -503,21 +561,23 @@
   Creates instances with per-instance configs in this managed instance group. Instances are created using the current instance template. The create instances operation is marked DONE if the createInstances request is successful. The underlying actions take additional time. You must separately verify the status of the creating or actions with the listmanagedinstances method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/createInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -540,21 +600,23 @@
   You can specify a maximum of 1000 instances with this method per request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:zone :instanceGroupManager :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:zone :instanceGroupManager :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/zones/{zone}/instanceGroupManagers/{instanceGroupManager}/deleteInstances"
      #{:zone :instanceGroupManager :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

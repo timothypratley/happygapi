@@ -11,22 +11,23 @@
   
   Required parameters: productCode, websiteUrl
   
-  Optional parameters: userLocale, websiteLocale
+  Optional parameters: callbackUrl, websiteLocale, userLocale
+  
   Create an association session for initiating an association with an AdSense user."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:websiteUrl :productCode})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:websiteUrl :productCode})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "associationsessions/start"
      #{:websiteUrl :productCode}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: token
   
   Optional parameters: none
+  
   Verify an association session after the association callback returns from AdSense signup."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:token})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:token})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "associationsessions/verify"
      #{:token}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

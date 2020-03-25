@@ -12,21 +12,22 @@
   Required parameters: productId, skuId, userId
   
   Optional parameters: none
+  
   Revoke a license."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:productId :skuId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/user/{userId}"
      #{:productId :skuId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: productId, skuId, userId
   
   Optional parameters: none
+  
   Get a specific user's license by product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:productId :skuId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/user/{userId}"
      #{:productId :skuId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,21 +71,21 @@
   
   Assign a license."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:productId :skuId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:productId :skuId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/user"
      #{:productId :skuId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -94,21 +96,22 @@
   Required parameters: customerId, productId
   
   Optional parameters: maxResults, pageToken
+  
   List all users assigned licenses for a specific product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:productId :customerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :customerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/users"
      #{:productId :customerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -119,21 +122,22 @@
   Required parameters: customerId, productId, skuId
   
   Optional parameters: maxResults, pageToken
+  
   List all users assigned licenses for a specific product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:productId :customerId :skuId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :customerId :skuId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/users"
      #{:productId :customerId :skuId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -158,21 +162,21 @@
   
   Reassign a user's product SKU with a different SKU in the same product. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:productId :skuId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/user/{userId}"
      #{:productId :skuId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -197,21 +201,21 @@
   
   Reassign a user's product SKU with a different SKU in the same product."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:productId :skuId :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/apps/licensing/v1/product/"
      "{productId}/sku/{skuId}/user/{userId}"
      #{:productId :skuId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

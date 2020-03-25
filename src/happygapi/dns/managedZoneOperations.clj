@@ -12,24 +12,27 @@
   Required parameters: managedZone, operation, project
   
   Optional parameters: clientOperationId
+  
   Fetch the representation of an existing Operation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :operation :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:managedZone :operation :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}/operations/{operation}"
      #{:managedZone :operation :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,24 +43,25 @@
   Required parameters: managedZone, project
   
   Optional parameters: maxResults, pageToken, sortBy
+  
   Enumerate Operations for the given ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}/operations"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

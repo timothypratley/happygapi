@@ -12,24 +12,27 @@
   Required parameters: dnsKeyId, managedZone, project
   
   Optional parameters: clientOperationId, digestType
+  
   Fetch the representation of an existing DnsKey."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project :dnsKeyId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:managedZone :project :dnsKeyId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}/dnsKeys/{dnsKeyId}"
      #{:managedZone :project :dnsKeyId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,24 +43,25 @@
   Required parameters: managedZone, project
   
   Optional parameters: digestType, maxResults, pageToken
+  
   Enumerate DnsKeys to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:managedZone :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dns.googleapis.com/dns/v1/projects/"
      "{project}/managedZones/{managedZone}/dnsKeys"
      #{:managedZone :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

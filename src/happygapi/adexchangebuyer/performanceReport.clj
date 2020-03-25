@@ -12,11 +12,12 @@
   Required parameters: accountId, endDateTime, startDateTime
   
   Optional parameters: maxResults, pageToken
+  
   Retrieves the authenticated user's list of performance metrics."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:startDateTime :endDateTime :accountId})]}
   (util/get-response
    (http/get
@@ -24,11 +25,11 @@
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "performancereport"
      #{:startDateTime :endDateTime :accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -26,21 +26,21 @@
   
   Add notes to the proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/notes/insert"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -51,21 +51,22 @@
   Required parameters: proposalId
   
   Optional parameters: pqlQuery
+  
   Get all the notes associated with a proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:proposalId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:proposalId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "proposals/{proposalId}/notes"
      #{:proposalId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

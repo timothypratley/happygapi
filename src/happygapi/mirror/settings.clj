@@ -12,21 +12,22 @@
   Required parameters: id
   
   Optional parameters: none
+  
   Gets a single setting by ID."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "settings/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

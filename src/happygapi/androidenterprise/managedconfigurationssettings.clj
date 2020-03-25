@@ -12,21 +12,22 @@
   Required parameters: enterpriseId, productId
   
   Optional parameters: none
+  
   Lists all the managed configurations settings for the specified app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :productId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :productId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/products/{productId}/managedConfigurationsSettings"
      #{:enterpriseId :productId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

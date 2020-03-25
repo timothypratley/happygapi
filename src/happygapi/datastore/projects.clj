@@ -21,21 +21,21 @@
   Rolls back a transaction."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:rollback"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -56,21 +56,21 @@
   Datastore."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:reserveIds"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -90,21 +90,21 @@
   Looks up entities by key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:lookup"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -118,11 +118,11 @@
   
   Body: 
   
-  {:partitionId {:namespaceId string, :projectId string},
-   :gqlQuery {:queryString string,
-              :allowLiterals boolean,
+  {:partitionId {:projectId string, :namespaceId string},
+   :gqlQuery {:allowLiterals boolean,
               :namedBindings {},
-              :positionalBindings [GqlQueryParameter]},
+              :positionalBindings [GqlQueryParameter],
+              :queryString string},
    :readOptions {:readConsistency string, :transaction string},
    :query {:limit integer,
            :offset integer,
@@ -137,21 +137,21 @@
   Queries for entities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:runQuery"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -165,7 +165,7 @@
   
   Body: 
   
-  {:entityFilter {:namespaceIds [string], :kinds [string]},
+  {:entityFilter {:kinds [string], :namespaceIds [string]},
    :outputUrlPrefix string,
    :labels {}}
   
@@ -179,21 +179,21 @@
   Cloud Storage."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:export"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -212,21 +212,21 @@
   Begins a new transaction."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:beginTransaction"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -240,33 +240,33 @@
   
   Body: 
   
-  {:mutations [{:delete Key,
+  {:transaction string,
+   :mode string,
+   :mutations [{:delete Key,
                 :insert Entity,
                 :baseVersion string,
                 :update Entity,
-                :upsert Entity}],
-   :transaction string,
-   :mode string}
+                :upsert Entity}]}
   
   Commits a transaction, optionally creating, deleting or modifying some
   entities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:commit"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -286,21 +286,21 @@
   before it is inserted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:allocateIds"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -316,7 +316,7 @@
   
   {:labels {},
    :inputUrl string,
-   :entityFilter {:namespaceIds [string], :kinds [string]}}
+   :entityFilter {:kinds [string], :namespaceIds [string]}}
   
   Imports entities into Google Cloud Datastore. Existing entities with the
   same key are overwritten. The import occurs in the background and its
@@ -325,21 +325,57 @@
   that a subset of the data has already been imported to Cloud Datastore."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}:import"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn indexes-delete$
+  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/indexes/delete
+  
+  Required parameters: projectId, indexId
+  
+  Optional parameters: none
+  
+  Deletes an existing index.
+  An index can only be deleted if it is in a `READY` or `ERROR` state. On
+  successful execution of the request, the index will be in a `DELETING`
+  state. And on completion of the
+  returned google.longrunning.Operation, the index will be removed.
+  
+  During index deletion, the process could result in an error, in which
+  case the index will move to the `ERROR` state. The process can be recovered
+  by fixing the data that caused the error, followed by calling
+  delete again."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:indexId :projectId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/projects/{projectId}/indexes/{indexId}"
+     #{:indexId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -350,22 +386,23 @@
   Required parameters: projectId, indexId
   
   Optional parameters: none
+  
   Gets an index."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:indexId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:indexId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}/indexes/{indexId}"
      #{:indexId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -375,25 +412,26 @@
   
   Required parameters: projectId
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists the indexes that match the specified filters.  Datastore uses an
   eventually consistent query to fetch the list of indexes and may
   occasionally return stale results."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}/indexes"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -407,12 +445,12 @@
   
   Body: 
   
-  {:properties [{:direction string, :name string}],
+  {:ancestor string,
+   :kind string,
+   :properties [{:direction string, :name string}],
    :indexId string,
    :state string,
-   :projectId string,
-   :ancestor string,
-   :kind string}
+   :projectId string}
   
   Creates the specified index.
   A newly created index's initial state is `CREATING`. On completion of the
@@ -429,120 +467,21 @@
   Indexes with a single property cannot be created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/projects/{projectId}/indexes"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn indexes-delete$
-  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/indexes/delete
-  
-  Required parameters: projectId, indexId
-  
-  Optional parameters: none
-  Deletes an existing index.
-  An index can only be deleted if it is in a `READY` or `ERROR` state. On
-  successful execution of the request, the index will be in a `DELETING`
-  state. And on completion of the
-  returned google.longrunning.Operation, the index will be removed.
-  
-  During index deletion, the process could result in an error, in which
-  case the index will move to the `ERROR` state. The process can be recovered
-  by fixing the data that caused the error, followed by calling
-  delete again."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:indexId :projectId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/projects/{projectId}/indexes/{indexId}"
-     #{:indexId :projectId}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-cancel$
-  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-delete$
-  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datastore.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -553,6 +492,7 @@
   Required parameters: name
   
   Optional parameters: filter, pageToken, pageSize
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -565,19 +505,19 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/{+name}/operations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -588,24 +528,91 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datastore.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-cancel$
+  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation.  The server
+  makes a best effort to cancel the operation, but success is not
+  guaranteed.  If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+  Operations.GetOperation or
+  other methods to check whether the cancellation succeeded or whether the
+  operation completed despite cancellation. On successful cancellation,
+  the operation is not deleted; instead, it becomes an operation with
+  an Operation.error value with a google.rpc.Status.code of 1,
+  corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-delete$
+  "https://cloud.google.com/datastore/api/reference/rest/v1/projects/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is
+  no longer interested in the operation result. It does not cancel the
+  operation. If the server doesn't support this method, it returns
+  `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/datastore"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datastore.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

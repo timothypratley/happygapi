@@ -15,29 +15,29 @@
   
   Body: 
   
-  {:threatInfo {:threatEntries [ThreatEntry],
-                :threatEntryTypes [string],
+  {:client {:clientVersion string, :clientId string},
+   :threatInfo {:threatEntryTypes [string],
                 :threatTypes [string],
-                :platformTypes [string]},
-   :client {:clientVersion string, :clientId string}}
+                :platformTypes [string],
+                :threatEntries [ThreatEntry]}}
   
   Finds the threat entries that match the Safe Browsing lists."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://safebrowsing.googleapis.com/"
      "v4/threatMatches:find"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

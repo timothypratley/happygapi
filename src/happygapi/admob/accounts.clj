@@ -13,21 +13,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets information about the specified AdMob publisher account."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://admob.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,63 +38,24 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
+  
   Lists the AdMob publisher account accessible with the client credential.
   Currently, all credentials have access to at most one AdMob account."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://admob.googleapis.com/"
      "v1/accounts"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn networkReport-generate$
-  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/networkReport/generate
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:reportSpec {:dateRange DateRange,
-                :maxReportRows integer,
-                :dimensionFilters [NetworkReportSpecDimensionFilter],
-                :metrics [string],
-                :localizationSettings LocalizationSettings,
-                :sortConditions [NetworkReportSpecSortCondition],
-                :timeZone string,
-                :dimensions [string]}}
-  
-  Generates an AdMob Network report based on the provided report
-  specification."
-  {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://admob.googleapis.com/"
-     "v1/{+parent}/networkReport:generate"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -119,21 +81,61 @@
   Generates an AdMob Mediation report based on the provided report
   specification."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://admob.googleapis.com/"
      "v1/{+parent}/mediationReport:generate"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn networkReport-generate$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/networkReport/generate
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:reportSpec {:timeZone string,
+                :dimensions [string],
+                :dateRange DateRange,
+                :maxReportRows integer,
+                :localizationSettings LocalizationSettings,
+                :metrics [string],
+                :dimensionFilters [NetworkReportSpecDimensionFilter],
+                :sortConditions [NetworkReportSpecSortCondition]}}
+  
+  Generates an AdMob Network report based on the provided report
+  specification."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://admob.googleapis.com/"
+     "v1/{+parent}/networkReport:generate"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

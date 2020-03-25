@@ -11,23 +11,24 @@
   
   Required parameters: adClientId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
+  
   List all URL channels in the specified ad client for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/urlchannels"
      #{:adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

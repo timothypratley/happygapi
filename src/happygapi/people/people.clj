@@ -6,132 +6,28 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/people/api/reference/rest/v1/people/get
+(defn deleteContactPhoto$
+  "https://developers.google.com/people/api/reference/rest/v1/people/deleteContactPhoto
   
   Required parameters: resourceName
   
-  Optional parameters: personFields, requestMask.includeField
-  Provides information about a person by specifying a resource name. Use
-  `people/me` to indicate the authenticated user.
+  Optional parameters: personFields
   
-  The request throws a 400 error if 'personFields' is not specified."
-  {:scopes ["https://www.googleapis.com/auth/contacts"
-            "https://www.googleapis.com/auth/contacts.readonly"
-            "https://www.googleapis.com/auth/user.addresses.read"
-            "https://www.googleapis.com/auth/user.birthday.read"
-            "https://www.googleapis.com/auth/user.emails.read"
-            "https://www.googleapis.com/auth/user.organization.read"
-            "https://www.googleapis.com/auth/user.phonenumbers.read"
-            "https://www.googleapis.com/auth/userinfo.email"
-            "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}"
-     #{:resourceName}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deleteContact$
-  "https://developers.google.com/people/api/reference/rest/v1/people/deleteContact
-  
-  Required parameters: resourceName
-  
-  Optional parameters: none
-  Delete a contact person. Any non-contact data will not be deleted."
+  Delete a contact's photo."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://people.googleapis.com/"
-     "v1/{+resourceName}:deleteContact"
+     "v1/{+resourceName}:deleteContactPhoto"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getBatchGet$
-  "https://developers.google.com/people/api/reference/rest/v1/people/getBatchGet
-  
-  Required parameters: none
-  
-  Optional parameters: personFields, requestMask.includeField, resourceNames
-  Provides information about a list of specific people by specifying a list
-  of requested resource names. Use `people/me` to indicate the authenticated
-  user.
-  
-  The request throws a 400 error if 'personFields' is not specified."
-  {:scopes ["https://www.googleapis.com/auth/contacts"
-            "https://www.googleapis.com/auth/contacts.readonly"
-            "https://www.googleapis.com/auth/user.addresses.read"
-            "https://www.googleapis.com/auth/user.birthday.read"
-            "https://www.googleapis.com/auth/user.emails.read"
-            "https://www.googleapis.com/auth/user.organization.read"
-            "https://www.googleapis.com/auth/user.phonenumbers.read"
-            "https://www.googleapis.com/auth/userinfo.email"
-            "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/people:batchGet"
-     #{}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn updateContactPhoto$
-  "https://developers.google.com/people/api/reference/rest/v1/people/updateContactPhoto
-  
-  Required parameters: resourceName
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:photoBytes string, :personFields string}
-  
-  Update a contact's photo."
-  {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resourceName})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}:updateContactPhoto"
-     #{:resourceName}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -161,13 +57,13 @@
            :type string,
            :value string,
            :formattedType string}],
-   :relationshipStatuses [{:value string,
-                           :formattedValue string,
-                           :metadata FieldMetadata}],
+   :relationshipStatuses [{:formattedValue string,
+                           :metadata FieldMetadata,
+                           :value string}],
    :coverPhotos [{:url string,
                   :metadata FieldMetadata,
                   :default boolean}],
-   :birthdays [{:metadata FieldMetadata, :text string, :date Date}],
+   :birthdays [{:date Date, :metadata FieldMetadata, :text string}],
    :relations [{:metadata FieldMetadata,
                 :type string,
                 :person string,
@@ -177,11 +73,11 @@
              :type string,
              :date Date,
              :formattedType string}],
-   :phoneNumbers [{:canonicalForm string,
+   :phoneNumbers [{:value string,
+                   :formattedType string,
+                   :canonicalForm string,
                    :metadata FieldMetadata,
-                   :type string,
-                   :value string,
-                   :formattedType string}],
+                   :type string}],
    :etag string,
    :biographies [{:value string,
                   :contentType string,
@@ -205,22 +101,22 @@
                     :domain string,
                     :location string,
                     :metadata FieldMetadata}],
-   :sipAddresses [{:metadata FieldMetadata,
+   :sipAddresses [{:formattedType string,
+                   :metadata FieldMetadata,
                    :type string,
-                   :value string,
-                   :formattedType string}],
-   :braggingRights [{:value string, :metadata FieldMetadata}],
+                   :value string}],
+   :braggingRights [{:metadata FieldMetadata, :value string}],
    :resourceName string,
-   :relationshipInterests [{:metadata FieldMetadata,
-                            :value string,
-                            :formattedValue string}],
-   :photos [{:metadata FieldMetadata, :default boolean, :url string}],
+   :relationshipInterests [{:formattedValue string,
+                            :metadata FieldMetadata,
+                            :value string}],
+   :photos [{:url string, :metadata FieldMetadata, :default boolean}],
    :skills [{:metadata FieldMetadata, :value string}],
    :locales [{:metadata FieldMetadata, :value string}],
    :ageRanges [{:ageRange string, :metadata FieldMetadata}],
-   :memberships [{:contactGroupMembership ContactGroupMembership,
-                  :domainMembership DomainMembership,
-                  :metadata FieldMetadata}],
+   :memberships [{:metadata FieldMetadata,
+                  :contactGroupMembership ContactGroupMembership,
+                  :domainMembership DomainMembership}],
    :interests [{:value string, :metadata FieldMetadata}],
    :nicknames [{:metadata FieldMetadata, :type string, :value string}],
    :residences [{:metadata FieldMetadata,
@@ -228,20 +124,20 @@
                  :value string}],
    :imClients [{:formattedProtocol string,
                 :formattedType string,
+                :protocol string,
                 :metadata FieldMetadata,
                 :type string,
-                :protocol string,
                 :username string}],
-   :genders [{:formattedValue string,
-              :metadata FieldMetadata,
-              :value string}],
-   :taglines [{:metadata FieldMetadata, :value string}],
-   :occupations [{:metadata FieldMetadata, :value string}],
-   :metadata {:objectType string,
-              :linkedPeopleResourceNames [string],
+   :genders [{:value string,
+              :formattedValue string,
+              :metadata FieldMetadata}],
+   :taglines [{:value string, :metadata FieldMetadata}],
+   :occupations [{:value string, :metadata FieldMetadata}],
+   :metadata {:linkedPeopleResourceNames [string],
               :sources [Source],
               :previousResourceNames [string],
-              :deleted boolean},
+              :deleted boolean,
+              :objectType string},
    :names [{:middleName string,
             :phoneticHonorificPrefix string,
             :phoneticHonorificSuffix string,
@@ -272,46 +168,21 @@
   was read. Clients should get the latest person and re-apply their updates
   to the latest person."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://people.googleapis.com/"
      "v1/{+resourceName}:updateContact"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deleteContactPhoto$
-  "https://developers.google.com/people/api/reference/rest/v1/people/deleteContactPhoto
-  
-  Required parameters: resourceName
-  
-  Optional parameters: personFields
-  Delete a contact's photo."
-  {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://people.googleapis.com/"
-     "v1/{+resourceName}:deleteContactPhoto"
-     #{:resourceName}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -341,13 +212,13 @@
            :type string,
            :value string,
            :formattedType string}],
-   :relationshipStatuses [{:value string,
-                           :formattedValue string,
-                           :metadata FieldMetadata}],
+   :relationshipStatuses [{:formattedValue string,
+                           :metadata FieldMetadata,
+                           :value string}],
    :coverPhotos [{:url string,
                   :metadata FieldMetadata,
                   :default boolean}],
-   :birthdays [{:metadata FieldMetadata, :text string, :date Date}],
+   :birthdays [{:date Date, :metadata FieldMetadata, :text string}],
    :relations [{:metadata FieldMetadata,
                 :type string,
                 :person string,
@@ -357,11 +228,11 @@
              :type string,
              :date Date,
              :formattedType string}],
-   :phoneNumbers [{:canonicalForm string,
+   :phoneNumbers [{:value string,
+                   :formattedType string,
+                   :canonicalForm string,
                    :metadata FieldMetadata,
-                   :type string,
-                   :value string,
-                   :formattedType string}],
+                   :type string}],
    :etag string,
    :biographies [{:value string,
                   :contentType string,
@@ -385,22 +256,22 @@
                     :domain string,
                     :location string,
                     :metadata FieldMetadata}],
-   :sipAddresses [{:metadata FieldMetadata,
+   :sipAddresses [{:formattedType string,
+                   :metadata FieldMetadata,
                    :type string,
-                   :value string,
-                   :formattedType string}],
-   :braggingRights [{:value string, :metadata FieldMetadata}],
+                   :value string}],
+   :braggingRights [{:metadata FieldMetadata, :value string}],
    :resourceName string,
-   :relationshipInterests [{:metadata FieldMetadata,
-                            :value string,
-                            :formattedValue string}],
-   :photos [{:metadata FieldMetadata, :default boolean, :url string}],
+   :relationshipInterests [{:formattedValue string,
+                            :metadata FieldMetadata,
+                            :value string}],
+   :photos [{:url string, :metadata FieldMetadata, :default boolean}],
    :skills [{:metadata FieldMetadata, :value string}],
    :locales [{:metadata FieldMetadata, :value string}],
    :ageRanges [{:ageRange string, :metadata FieldMetadata}],
-   :memberships [{:contactGroupMembership ContactGroupMembership,
-                  :domainMembership DomainMembership,
-                  :metadata FieldMetadata}],
+   :memberships [{:metadata FieldMetadata,
+                  :contactGroupMembership ContactGroupMembership,
+                  :domainMembership DomainMembership}],
    :interests [{:value string, :metadata FieldMetadata}],
    :nicknames [{:metadata FieldMetadata, :type string, :value string}],
    :residences [{:metadata FieldMetadata,
@@ -408,20 +279,20 @@
                  :value string}],
    :imClients [{:formattedProtocol string,
                 :formattedType string,
+                :protocol string,
                 :metadata FieldMetadata,
                 :type string,
-                :protocol string,
                 :username string}],
-   :genders [{:formattedValue string,
-              :metadata FieldMetadata,
-              :value string}],
-   :taglines [{:metadata FieldMetadata, :value string}],
-   :occupations [{:metadata FieldMetadata, :value string}],
-   :metadata {:objectType string,
-              :linkedPeopleResourceNames [string],
+   :genders [{:value string,
+              :formattedValue string,
+              :metadata FieldMetadata}],
+   :taglines [{:value string, :metadata FieldMetadata}],
+   :occupations [{:value string, :metadata FieldMetadata}],
+   :metadata {:linkedPeopleResourceNames [string],
               :sources [Source],
               :previousResourceNames [string],
-              :deleted boolean},
+              :deleted boolean,
+              :objectType string},
    :names [{:middleName string,
             :phoneticHonorificPrefix string,
             :phoneticHonorificSuffix string,
@@ -440,21 +311,154 @@
   
   Create a new contact and return the person resource for that contact."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://people.googleapis.com/"
      "v1/people:createContact"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/people/api/reference/rest/v1/people/get
+  
+  Required parameters: resourceName
+  
+  Optional parameters: personFields, requestMask.includeField
+  
+  Provides information about a person by specifying a resource name. Use
+  `people/me` to indicate the authenticated user.
+  
+  The request throws a 400 error if 'personFields' is not specified."
+  {:scopes ["https://www.googleapis.com/auth/contacts"
+            "https://www.googleapis.com/auth/contacts.readonly"
+            "https://www.googleapis.com/auth/user.addresses.read"
+            "https://www.googleapis.com/auth/user.birthday.read"
+            "https://www.googleapis.com/auth/user.emails.read"
+            "https://www.googleapis.com/auth/user.organization.read"
+            "https://www.googleapis.com/auth/user.phonenumbers.read"
+            "https://www.googleapis.com/auth/userinfo.email"
+            "https://www.googleapis.com/auth/userinfo.profile"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}"
+     #{:resourceName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn deleteContact$
+  "https://developers.google.com/people/api/reference/rest/v1/people/deleteContact
+  
+  Required parameters: resourceName
+  
+  Optional parameters: none
+  
+  Delete a contact person. Any non-contact data will not be deleted."
+  {:scopes ["https://www.googleapis.com/auth/contacts"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}:deleteContact"
+     #{:resourceName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getBatchGet$
+  "https://developers.google.com/people/api/reference/rest/v1/people/getBatchGet
+  
+  Required parameters: none
+  
+  Optional parameters: resourceNames, personFields, requestMask.includeField
+  
+  Provides information about a list of specific people by specifying a list
+  of requested resource names. Use `people/me` to indicate the authenticated
+  user.
+  
+  The request throws a 400 error if 'personFields' is not specified."
+  {:scopes ["https://www.googleapis.com/auth/contacts"
+            "https://www.googleapis.com/auth/contacts.readonly"
+            "https://www.googleapis.com/auth/user.addresses.read"
+            "https://www.googleapis.com/auth/user.birthday.read"
+            "https://www.googleapis.com/auth/user.emails.read"
+            "https://www.googleapis.com/auth/user.organization.read"
+            "https://www.googleapis.com/auth/user.phonenumbers.read"
+            "https://www.googleapis.com/auth/userinfo.email"
+            "https://www.googleapis.com/auth/userinfo.profile"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/people:batchGet"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn updateContactPhoto$
+  "https://developers.google.com/people/api/reference/rest/v1/people/updateContactPhoto
+  
+  Required parameters: resourceName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:personFields string, :photoBytes string}
+  
+  Update a contact's photo."
+  {:scopes ["https://www.googleapis.com/auth/contacts"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://people.googleapis.com/"
+     "v1/{+resourceName}:updateContactPhoto"
+     #{:resourceName}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -464,26 +468,27 @@
   
   Required parameters: resourceName
   
-  Optional parameters: requestSyncToken, pageToken, pageSize, requestMask.includeField, syncToken, personFields, sortOrder
+  Optional parameters: personFields, sortOrder, requestSyncToken, pageToken, pageSize, requestMask.includeField, syncToken
+  
   Provides a list of the authenticated user's contacts merged with any
   connected profiles.
   
   The request throws a 400 error if 'personFields' is not specified."
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://people.googleapis.com/"
      "v1/{+resourceName}/connections"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

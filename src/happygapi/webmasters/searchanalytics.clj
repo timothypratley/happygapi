@@ -30,21 +30,21 @@
   When date is one of the group by values, any days without data are omitted from the result list. If you need to know which days have data, issue a broad date range query grouped by date for any metric, and see which day rows are returned."
   {:scopes ["https://www.googleapis.com/auth/webmasters"
             "https://www.googleapis.com/auth/webmasters.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:siteUrl})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:siteUrl})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/webmasters/v3/"
      "sites/{siteUrl}/searchAnalytics/query"
      #{:siteUrl}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

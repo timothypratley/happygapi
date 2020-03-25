@@ -12,24 +12,25 @@
   
   Required parameters: none
   
-  Optional parameters: linkedResource, sqlResource
+  Optional parameters: sqlResource, linkedResource
+  
   Get an entry by target resource name. This method allows clients to use
   the resource name from the source Google Cloud Platform service to get the
   Data Catalog Entry."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://datacatalog.googleapis.com/"
      "v1beta1/entries:lookup"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

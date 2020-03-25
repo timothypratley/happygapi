@@ -12,23 +12,24 @@
   Required parameters: reportType
   
   Optional parameters: none
+  
   Lists all columns for a report type"
   {:scopes ["https://www.googleapis.com/auth/analytics"
             "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportType})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportType})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "metadata/{reportType}/columns"
      #{:reportType}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

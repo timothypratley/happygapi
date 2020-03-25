@@ -12,24 +12,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Get a person's profile. If your app uses scope https://www.googleapis.com/auth/plus.login, this method is guaranteed to return ageRange and language."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"
             "https://www.googleapis.com/auth/userinfo.email"
             "https://www.googleapis.com/auth/userinfo.profile"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "people/{userId}"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,22 +41,23 @@
   Required parameters: collection, userId
   
   Optional parameters: maxResults, orderBy, pageToken
+  
   List all of the people in the specified collection."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId :collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "people/{userId}/people/{collection}"
      #{:userId :collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -66,22 +68,23 @@
   Required parameters: activityId, collection
   
   Optional parameters: maxResults, pageToken
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:collection :activityId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collection :activityId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "activities/{activityId}/people/{collection}"
      #{:collection :activityId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -92,22 +95,23 @@
   Required parameters: query
   
   Optional parameters: language, maxResults, pageToken
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:query})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:query})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "people"
      #{:query}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

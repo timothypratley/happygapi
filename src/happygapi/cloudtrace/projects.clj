@@ -1,6 +1,6 @@
 (ns happygapi.cloudtrace.projects
   "Cloud Trace API: projects.
-  Sends application trace data to Cloud Trace for viewing. Trace data is collected for all App Engine applications by default. Trace data from other applications can be provided using this API. This library is used to interact with the Trace API directly. If you are looking to instrument your application for Cloud Trace, we recommend using OpenCensus.
+  Sends application trace data to Cloud Trace for viewing. Trace data is collected for all App Engine applications by default. Trace data from other applications can be provided using this API. This library is used to interact with the Cloud Trace API directly. If you are looking to instrument your application for Cloud Trace, we recommend using OpenCensus.
   
   See: https://cloud.google.com/traceapi/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
@@ -37,21 +37,21 @@
   method since traces are machine generated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/trace.append"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtrace.googleapis.com/"
      "v2/{+name}/traces:batchWrite"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,7 +74,7 @@
                 :droppedMessageEventsCount integer,
                 :timeEvent [TimeEvent]},
    :childSpanCount integer,
-   :status {:details [{}], :code integer, :message string},
+   :status {:message string, :details [{}], :code integer},
    :sameProcessAsParentSpan boolean,
    :parentSpanId string,
    :spanKind string,
@@ -87,21 +87,21 @@
   method since traces are machine generated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/trace.append"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtrace.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

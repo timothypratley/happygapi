@@ -12,21 +12,22 @@
   Required parameters: encodedRequest
   
   Optional parameters: clientId, clientVersion
+  
   "
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:encodedRequest})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:encodedRequest})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://safebrowsing.googleapis.com/"
      "v4/encodedFullHashes/{encodedRequest}"
      #{:encodedRequest}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

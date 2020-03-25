@@ -16,10 +16,10 @@
   
   Body: 
   
-  {:function string,
-   :devMode boolean,
-   :parameters [any],
-   :sessionState string}
+  {:parameters [any],
+   :sessionState string,
+   :function string,
+   :devMode boolean}
   
   Runs a function in an Apps Script project. The script project must be
   deployed for use with the Apps Script API and the calling application must
@@ -48,21 +48,21 @@
             "https://www.googleapis.com/auth/groups"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:scriptId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:scriptId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://script.googleapis.com/"
      "v1/scripts/{scriptId}:run"
      #{:scriptId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

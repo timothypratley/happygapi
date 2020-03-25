@@ -1,50 +1,51 @@
-{:ZoneTypeRestriction {:description "Represents a Zone's type restrictions.",
-                       :type "object",
-                       :properties {:whitelistedTypeId {:description "List of type public ids that have been whitelisted for use in this Zone.",
+{:ZoneTypeRestriction {:type "object",
+                       :properties {:enable {:description "True if type restrictions have been enabled for this Zone.",
+                                             :type "boolean"},
+                                    :whitelistedTypeId {:description "List of type public ids that have been whitelisted for use in this Zone.",
                                                         :type "array",
-                                                        :items {:type "string"}},
-                                    :enable {:type "boolean",
-                                             :description "True if type restrictions have been enabled for this Zone."}},
-                       :id "ZoneTypeRestriction"},
- :AccountAccess {:properties {:permission {:description "Whether the user has no access, user access, or admin access to an account.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
+                                                        :items {:type "string"}}},
+                       :id "ZoneTypeRestriction",
+                       :description "Represents a Zone's type restrictions."},
+ :AccountAccess {:description "Defines the Google Tag Manager Account access permissions.",
+                 :type "object",
+                 :properties {:permission {:enum ["accountPermissionUnspecified"
+                                                  "noAccess"
+                                                  "user"
+                                                  "admin"],
+                                           :description "Whether the user has no access, user access, or admin access to an account.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
                                            :type "string",
                                            :enumDescriptions [""
                                                               ""
                                                               ""
-                                                              ""],
-                                           :enum ["accountPermissionUnspecified"
-                                                  "noAccess"
-                                                  "user"
-                                                  "admin"]}},
-                 :id "AccountAccess",
-                 :description "Defines the Google Tag Manager Account access permissions.",
-                 :type "object"},
- :Environment {:description "Represents a Google Tag Manager Environment. Note that a user can create,\ndelete and update environments of type USER, but can only update the\nenable_debug and url fields of environments of other types.",
+                                                              ""]}},
+                 :id "AccountAccess"},
+ :Environment {:id "Environment",
+               :description "Represents a Google Tag Manager Environment. Note that a user can create,\ndelete and update environments of type USER, but can only update the\nenable_debug and url fields of environments of other types.",
                :type "object",
                :properties {:description {:description "The environment description. Can be set or changed only on USER type\nenvironments.\n@mutable tagmanager.accounts.containers.environments.create\n@mutable tagmanager.accounts.containers.environments.update",
                                           :type "string"},
                             :path {:description "GTM Environment's API relative path.",
                                    :type "string"},
-                            :workspaceId {:description "Represents a link to a quick preview of a workspace.",
-                                          :type "string"},
+                            :workspaceId {:type "string",
+                                          :description "Represents a link to a quick preview of a workspace."},
                             :enableDebug {:description "Whether or not to enable debug by default for the environment.\n@mutable tagmanager.accounts.containers.environments.create\n@mutable tagmanager.accounts.containers.environments.update",
                                           :type "boolean"},
-                            :name {:type "string",
-                                   :description "The environment display name. Can be set or changed only on USER type\nenvironments.\n@mutable tagmanager.accounts.containers.environments.create\n@mutable tagmanager.accounts.containers.environments.update",
+                            :name {:description "The environment display name. Can be set or changed only on USER type\nenvironments.\n@mutable tagmanager.accounts.containers.environments.create\n@mutable tagmanager.accounts.containers.environments.update",
                                    :annotations {:required ["tagmanager.accounts.containers.environments.create"
-                                                            "tagmanager.accounts.containers.environments.update"]}},
-                            :containerId {:description "GTM Container ID.",
-                                          :type "string"},
-                            :type {:enumDescriptions ["Points to a user defined environment."
-                                                      "Points to the current live container version."
-                                                      "Points to the latest container version."
-                                                      "Automatically managed environment that points to a workspace preview or\nversion created by a workspace."],
-                                   :enum ["user"
+                                                            "tagmanager.accounts.containers.environments.update"]},
+                                   :type "string"},
+                            :containerId {:type "string",
+                                          :description "GTM Container ID."},
+                            :type {:enum ["user"
                                           "live"
                                           "latest"
                                           "workspace"],
                                    :description "The type of this environment.",
-                                   :type "string"},
+                                   :type "string",
+                                   :enumDescriptions ["Points to a user defined environment."
+                                                      "Points to the current live container version."
+                                                      "Points to the latest container version."
+                                                      "Automatically managed environment that points to a workspace preview or\nversion created by a workspace."]},
                             :authorizationTimestamp {:description "The last update time-stamp for the authorization code.",
                                                      :format "google-datetime",
                                                      :type "string"},
@@ -56,40 +57,42 @@
                                                 :type "string"},
                             :url {:description "Default preview page url for the environment.\n@mutable tagmanager.accounts.containers.environments.create\n@mutable tagmanager.accounts.containers.environments.update",
                                   :type "string"},
-                            :tagManagerUrl {:type "string",
-                                            :description "Auto generated link to the tag manager UI"},
+                            :tagManagerUrl {:description "Auto generated link to the tag manager UI",
+                                            :type "string"},
                             :accountId {:description "GTM Account ID.",
                                         :type "string"},
-                            :fingerprint {:description "The fingerprint of the GTM environment as computed at storage time.\nThis value is recomputed whenever the environment is modified.",
-                                          :type "string"}},
-               :id "Environment"},
+                            :fingerprint {:type "string",
+                                          :description "The fingerprint of the GTM environment as computed at storage time.\nThis value is recomputed whenever the environment is modified."}}},
  :CreateContainerVersionResponse {:description "Create container versions response.",
                                   :type "object",
                                   :properties {:syncStatus {:$ref "SyncStatus",
                                                             :description "Whether version creation failed when syncing the workspace to the latest\ncontainer version."},
                                                :containerVersion {:$ref "ContainerVersion",
                                                                   :description "The container version created."},
-                                               :compilerError {:description "Compiler errors or not.",
-                                                               :type "boolean"},
-                                               :newWorkspacePath {:type "string",
-                                                                  :description "Auto generated workspace path created as a result of version creation. This\nfield should only be populated if the created version was not a quick\npreview."}},
+                                               :compilerError {:type "boolean",
+                                                               :description "Compiler errors or not."},
+                                               :newWorkspacePath {:description "Auto generated workspace path created as a result of version creation. This\nfield should only be populated if the created version was not a quick\npreview.",
+                                                                  :type "string"}},
                                   :id "CreateContainerVersionResponse"},
- :Tag {:type "object",
+ :Tag {:id "Tag",
+       :description "Represents a Google Tag Manager Tag.",
+       :type "object",
        :properties {:monitoringMetadataTagNameKey {:description "If non-empty, then the tag display name will be included in the monitoring\nmetadata map using the key specified.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                                    :type "string"},
                     :path {:type "string",
                            :description "GTM Tag's API relative path."},
-                    :parentFolderId {:type "string",
-                                     :description "Parent folder id."},
-                    :setupTag {:description "The list of setup tags. Currently we only allow one.",
-                               :type "array",
-                               :items {:$ref "SetupTag"}},
+                    :parentFolderId {:description "Parent folder id.",
+                                     :type "string"},
+                    :setupTag {:type "array",
+                               :items {:$ref "SetupTag"},
+                               :description "The list of setup tags. Currently we only allow one."},
                     :paused {:description "Indicates whether the tag is paused, which prevents the tag from firing.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                              :type "boolean"},
                     :firingRuleId {:description "Firing rule IDs. A tag will fire when any of the listed rules are true and\n    all of its <code>blockingRuleIds</code> (if any specified) are false.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                    :type "array",
                                    :items {:type "string"}},
-                    :tagFiringOption {:type "string",
+                    :tagFiringOption {:description "Option to fire this tag.",
+                                      :type "string",
                                       :enumDescriptions [""
                                                          "Tag can be fired multiple times per event."
                                                          "Tag can only be fired per event but can be fired multiple times per load\n(e.g., app load or page load)."
@@ -97,28 +100,27 @@
                                       :enum ["tagFiringOptionUnspecified"
                                              "unlimited"
                                              "oncePerEvent"
-                                             "oncePerLoad"],
-                                      :description "Option to fire this tag."},
+                                             "oncePerLoad"]},
                     :workspaceId {:type "string",
                                   :description "GTM Workspace ID."},
                     :scheduleStartMs {:description "The start timestamp in milliseconds to schedule a tag.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                       :format "int64",
                                       :type "string"},
-                    :firingTriggerId {:description "Firing trigger IDs. A tag will fire when any of the listed triggers are\ntrue and all of its <code>blockingTriggerIds</code> (if any specified) are\nfalse.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                                      :type "array",
-                                      :items {:type "string"}},
+                    :firingTriggerId {:type "array",
+                                      :items {:type "string"},
+                                      :description "Firing trigger IDs. A tag will fire when any of the listed triggers are\ntrue and all of its <code>blockingTriggerIds</code> (if any specified) are\nfalse.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"},
                     :name {:type "string",
                            :description "Tag display name.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                            :annotations {:required ["tagmanager.accounts.containers.workspaces.tags.create"
                                                     "tagmanager.accounts.containers.workspaces.tags.update"]}},
-                    :containerId {:type "string",
-                                  :description "GTM Container ID."},
+                    :containerId {:description "GTM Container ID.",
+                                  :type "string"},
                     :type {:description "GTM Tag Type.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                            :annotations {:required ["tagmanager.accounts.containers.workspaces.tags.create"
                                                     "tagmanager.accounts.containers.workspaces.tags.update"]},
                            :type "string"},
-                    :tagId {:description "The Tag ID uniquely identifies the GTM Tag.",
-                            :type "string"},
+                    :tagId {:type "string",
+                            :description "The Tag ID uniquely identifies the GTM Tag."},
                     :blockingRuleId {:description "Blocking rule IDs. If any of the listed rules evaluate to true, the tag\n    will not fire.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                      :type "array",
                                      :items {:type "string"}},
@@ -127,15 +129,15 @@
                                   :items {:$ref "TeardownTag"}},
                     :priority {:$ref "Parameter",
                                :description "User defined numeric priority of the tag. Tags are fired asynchronously in\norder of priority. Tags with higher numeric value fire first. A tag's\npriority can be a positive or negative value. The default value is 0.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"},
-                    :monitoringMetadata {:description "A map of key-value pairs of tag metadata to be included in the event data\nfor tag monitoring.\nNotes:<ul>\n<li>This parameter must be type <code>MAP</code>.</li>\n<li>Each parameter in the map are type <code>TEMPLATE</code>, however\ncannot contain variable references.</li>\n</ul>\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                                         :$ref "Parameter"},
-                    :scheduleEndMs {:description "The end timestamp in milliseconds to schedule a tag.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                                    :format "int64",
-                                    :type "string"},
-                    :notes {:description "User notes on how to apply this tag in the container.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                            :type "string"},
-                    :tagManagerUrl {:description "Auto generated link to the tag manager UI",
-                                    :type "string"},
+                    :monitoringMetadata {:$ref "Parameter",
+                                         :description "A map of key-value pairs of tag metadata to be included in the event data\nfor tag monitoring.\nNotes:<ul>\n<li>This parameter must be type <code>MAP</code>.</li>\n<li>Each parameter in the map are type <code>TEMPLATE</code>, however\ncannot contain variable references.</li>\n</ul>\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"},
+                    :scheduleEndMs {:type "string",
+                                    :description "The end timestamp in milliseconds to schedule a tag.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
+                                    :format "int64"},
+                    :notes {:type "string",
+                            :description "User notes on how to apply this tag in the container.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"},
+                    :tagManagerUrl {:type "string",
+                                    :description "Auto generated link to the tag manager UI"},
                     :blockingTriggerId {:description "Blocking trigger IDs. If any of the listed triggers evaluate to true, the\ntag will not fire.\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                         :type "array",
                                         :items {:type "string"}},
@@ -146,13 +148,12 @@
                                 :items {:$ref "Parameter"}},
                     :fingerprint {:description "The fingerprint of the GTM Tag as computed at storage time.\nThis value is recomputed whenever the tag is modified.",
                                   :type "string"},
-                    :liveOnly {:description "If set to true, this tag will only fire in the live environment (e.g. not\nin preview or debug mode).\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                               :type "boolean"}},
-       :id "Tag",
-       :description "Represents a Google Tag Manager Tag."},
- :Workspace {:type "object",
-             :properties {:fingerprint {:description "The fingerprint of the GTM Workspace as computed at storage time. This\nvalue is recomputed whenever the workspace is modified.",
-                                        :type "string"},
+                    :liveOnly {:type "boolean",
+                               :description "If set to true, this tag will only fire in the live environment (e.g. not\nin preview or debug mode).\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"}}},
+ :Workspace {:description "Represents a Google Tag Manager Container Workspace.",
+             :type "object",
+             :properties {:fingerprint {:type "string",
+                                        :description "The fingerprint of the GTM Workspace as computed at storage time. This\nvalue is recomputed whenever the workspace is modified."},
                           :name {:description "Workspace display name.\n@mutable tagmanager.accounts.containers.workspaces.create\n@mutable tagmanager.accounts.containers.workspaces.update",
                                  :annotations {:required ["tagmanager.accounts.containers.workspaces.create"
                                                           "tagmanager.accounts.containers.workspaces.update"]},
@@ -161,21 +162,20 @@
                                       :type "string"},
                           :tagManagerUrl {:description "Auto generated link to the tag manager UI",
                                           :type "string"},
-                          :path {:description "GTM Workspace's API relative path.",
-                                 :type "string"},
-                          :workspaceId {:description "The Workspace ID uniquely identifies the GTM Workspace.",
-                                        :type "string"},
+                          :path {:type "string",
+                                 :description "GTM Workspace's API relative path."},
+                          :workspaceId {:type "string",
+                                        :description "The Workspace ID uniquely identifies the GTM Workspace."},
                           :containerId {:description "GTM Container ID.",
                                         :type "string"},
-                          :description {:description "Workspace description.\n@mutable tagmanager.accounts.containers.workspaces.create\n@mutable tagmanager.accounts.containers.workspaces.update",
-                                        :type "string"}},
-             :id "Workspace",
-             :description "Represents a Google Tag Manager Container Workspace."},
+                          :description {:type "string",
+                                        :description "Workspace description.\n@mutable tagmanager.accounts.containers.workspaces.create\n@mutable tagmanager.accounts.containers.workspaces.update"}},
+             :id "Workspace"},
  :ListVariablesResponse {:description "List Variables Response.",
                          :type "object",
-                         :properties {:variable {:description "All GTM Variables of a GTM Container.",
-                                                 :type "array",
-                                                 :items {:$ref "Variable"}},
+                         :properties {:variable {:type "array",
+                                                 :items {:$ref "Variable"},
+                                                 :description "All GTM Variables of a GTM Container."},
                                       :nextPageToken {:description "Continuation token for fetching the next page of results.",
                                                       :type "string"}},
                          :id "ListVariablesResponse"},
@@ -188,16 +188,25 @@
                                  :type "string"},
                           :containerId {:description "The Container ID uniquely identifies the GTM Container.",
                                         :type "string"},
-                          :domainName {:type "array",
-                                       :items {:type "string"},
-                                       :description "List of domain names associated with the Container.\n@mutable tagmanager.accounts.containers.create\n@mutable tagmanager.accounts.containers.update"},
+                          :domainName {:description "List of domain names associated with the Container.\n@mutable tagmanager.accounts.containers.create\n@mutable tagmanager.accounts.containers.update",
+                                       :type "array",
+                                       :items {:type "string"}},
                           :notes {:description "Container Notes.\n@mutable tagmanager.accounts.containers.create\n@mutable tagmanager.accounts.containers.update",
                                   :type "string"},
-                          :tagManagerUrl {:description "Auto generated link to the tag manager UI",
-                                          :type "string"},
-                          :publicId {:description "Container Public ID.",
-                                     :type "string"},
-                          :usageContext {:enumDescriptions [""
+                          :tagManagerUrl {:type "string",
+                                          :description "Auto generated link to the tag manager UI"},
+                          :publicId {:type "string",
+                                     :description "Container Public ID."},
+                          :usageContext {:type "array",
+                                         :items {:type "string",
+                                                 :enum ["usageContextUnspecified"
+                                                        "web"
+                                                        "android"
+                                                        "ios"
+                                                        "androidSdk5"
+                                                        "iosSdk5"
+                                                        "amp"]},
+                                         :enumDescriptions [""
                                                             ""
                                                             ""
                                                             ""
@@ -206,30 +215,22 @@
                                                             ""],
                                          :description "List of Usage Contexts for the Container. Valid values include: <code>web,\nandroid, or ios</code>.\n@mutable tagmanager.accounts.containers.create\n@mutable tagmanager.accounts.containers.update",
                                          :annotations {:required ["tagmanager.accounts.containers.create"
-                                                                  "tagmanager.accounts.containers.update"]},
-                                         :type "array",
-                                         :items {:enum ["usageContextUnspecified"
-                                                        "web"
-                                                        "android"
-                                                        "ios"
-                                                        "androidSdk5"
-                                                        "iosSdk5"
-                                                        "amp"],
-                                                 :type "string"}},
-                          :accountId {:type "string",
-                                      :description "GTM Account ID."},
+                                                                  "tagmanager.accounts.containers.update"]}},
+                          :accountId {:description "GTM Account ID.",
+                                      :type "string"},
                           :fingerprint {:description "The fingerprint of the GTM Container as computed at storage time.  This\nvalue is recomputed whenever the account is modified.",
                                         :type "string"}},
              :id "Container"},
- :ListWorkspacesResponse {:id "ListWorkspacesResponse",
-                          :description "A list of workspaces in a container.",
+ :ListWorkspacesResponse {:description "A list of workspaces in a container.",
                           :type "object",
-                          :properties {:workspace {:type "array",
-                                                   :items {:$ref "Workspace"},
-                                                   :description "All Workspaces of a GTM Container."},
+                          :properties {:workspace {:description "All Workspaces of a GTM Container.",
+                                                   :type "array",
+                                                   :items {:$ref "Workspace"}},
                                        :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                       :type "string"}}},
- :CustomTemplate {:description "Represents a Google Tag Manager Custom Template's contents.",
+                                                       :type "string"}},
+                          :id "ListWorkspacesResponse"},
+ :CustomTemplate {:id "CustomTemplate",
+                  :description "Represents a Google Tag Manager Custom Template's contents.",
                   :type "object",
                   :properties {:galleryReference {:$ref "GalleryReference",
                                                   :description "A reference to the Community Template Gallery entry."},
@@ -249,16 +250,15 @@
                                             :type "string"},
                                :accountId {:description "GTM Account ID.",
                                            :type "string"},
-                               :fingerprint {:description "The fingerprint of the GTM Custom Template as computed at storage time.\nThis value is recomputed whenever the template is modified.",
-                                             :type "string"}},
-                  :id "CustomTemplate"},
- :CreateContainerVersionRequestVersionOptions {:properties {:notes {:description "The notes of the container version to be created.",
-                                                                    :type "string"},
-                                                            :name {:description "The name of the container version to be created.",
-                                                                   :type "string"}},
+                               :fingerprint {:type "string",
+                                             :description "The fingerprint of the GTM Custom Template as computed at storage time.\nThis value is recomputed whenever the template is modified."}}},
+ :CreateContainerVersionRequestVersionOptions {:type "object",
+                                               :properties {:name {:description "The name of the container version to be created.",
+                                                                   :type "string"},
+                                                            :notes {:description "The notes of the container version to be created.",
+                                                                    :type "string"}},
                                                :id "CreateContainerVersionRequestVersionOptions",
-                                               :description "Options for new container versions.",
-                                               :type "object"},
+                                               :description "Options for new container versions."},
  :RevertBuiltInVariableResponse {:description "The result of reverting a built-in variable in a workspace.",
                                  :type "object",
                                  :properties {:enabled {:description "Whether the built-in variable is enabled after reversion.",
@@ -269,107 +269,107 @@
                                               :description "Folder as it appears in the latest container version since the last\nworkspace synchronization operation. If no folder is present, that means\nthe folder was deleted in the latest container version."}},
                         :id "RevertFolderResponse",
                         :description "The result of reverting folder changes in a workspace."},
- :ListAccountsResponse {:properties {:account {:description "List of GTM Accounts that a user has access to.",
-                                               :type "array",
-                                               :items {:$ref "Account"}},
-                                     :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                     :type "string"}},
-                        :id "ListAccountsResponse",
-                        :description "List Accounts Response.",
-                        :type "object"},
+ :ListAccountsResponse {:description "List Accounts Response.",
+                        :type "object",
+                        :properties {:account {:type "array",
+                                               :items {:$ref "Account"},
+                                               :description "List of GTM Accounts that a user has access to."},
+                                     :nextPageToken {:type "string",
+                                                     :description "Continuation token for fetching the next page of results."}},
+                        :id "ListAccountsResponse"},
  :ListFoldersResponse {:description "List Folders Response.",
                        :type "object",
                        :properties {:folder {:description "All GTM Folders of a GTM Container.",
                                              :type "array",
                                              :items {:$ref "Folder"}},
-                                    :nextPageToken {:type "string",
-                                                    :description "Continuation token for fetching the next page of results."}},
+                                    :nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                    :type "string"}},
                        :id "ListFoldersResponse"},
- :QuickPreviewResponse {:description "Response to quick previewing a workspace.",
+ :QuickPreviewResponse {:id "QuickPreviewResponse",
+                        :description "Response to quick previewing a workspace.",
                         :type "object",
-                        :properties {:syncStatus {:$ref "SyncStatus",
-                                                  :description "Whether quick previewing failed when syncing the workspace to the latest\ncontainer version."},
-                                     :containerVersion {:$ref "ContainerVersion",
-                                                        :description "The quick previewed container version."},
-                                     :compilerError {:description "Were there compiler errors or not.",
-                                                     :type "boolean"}},
-                        :id "QuickPreviewResponse"},
- :UserPermission {:properties {:accountAccess {:description "GTM Account access permissions.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
-                                               :$ref "AccountAccess"},
-                               :accountId {:description "The Account ID uniquely identifies the GTM Account.",
-                                           :type "string"},
-                               :containerAccess {:type "array",
-                                                 :items {:$ref "ContainerAccess"},
-                                                 :description "GTM Container access permissions.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update"},
-                               :path {:description "GTM UserPermission's API relative path.",
+                        :properties {:containerVersion {:description "The quick previewed container version.",
+                                                        :$ref "ContainerVersion"},
+                                     :compilerError {:type "boolean",
+                                                     :description "Were there compiler errors or not."},
+                                     :syncStatus {:$ref "SyncStatus",
+                                                  :description "Whether quick previewing failed when syncing the workspace to the latest\ncontainer version."}}},
+ :UserPermission {:description "Represents a user's permissions to an account and its container.",
+                  :type "object",
+                  :properties {:path {:description "GTM UserPermission's API relative path.",
                                       :type "string"},
                                :emailAddress {:description "User's email address.\n@mutable tagmanager.accounts.permissions.create",
-                                              :type "string"}},
-                  :id "UserPermission",
-                  :description "Represents a user's permissions to an account and its container.",
-                  :type "object"},
+                                              :type "string"},
+                               :accountAccess {:$ref "AccountAccess",
+                                               :description "GTM Account access permissions.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update"},
+                               :accountId {:type "string",
+                                           :description "The Account ID uniquely identifies the GTM Account."},
+                               :containerAccess {:description "GTM Container access permissions.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
+                                                 :type "array",
+                                                 :items {:$ref "ContainerAccess"}}},
+                  :id "UserPermission"},
  :ListEnvironmentsResponse {:id "ListEnvironmentsResponse",
                             :description "List Environments Response.",
                             :type "object",
                             :properties {:environment {:description "All Environments of a GTM Container.",
                                                        :type "array",
                                                        :items {:$ref "Environment"}},
-                                         :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                         :type "string"}}},
- :ListTagsResponse {:properties {:tag {:description "All GTM Tags of a GTM Container.",
+                                         :nextPageToken {:type "string",
+                                                         :description "Continuation token for fetching the next page of results."}}},
+ :ListTagsResponse {:description "List Tags Response.",
+                    :type "object",
+                    :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                 :type "string"},
+                                 :tag {:description "All GTM Tags of a GTM Container.",
                                        :type "array",
-                                       :items {:$ref "Tag"}},
-                                 :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                 :type "string"}},
-                    :id "ListTagsResponse",
-                    :description "List Tags Response.",
-                    :type "object"},
- :SyncWorkspaceResponse {:description "A response after synchronizing the workspace to the latest container version.",
+                                       :items {:$ref "Tag"}}},
+                    :id "ListTagsResponse"},
+ :SyncWorkspaceResponse {:id "SyncWorkspaceResponse",
+                         :description "A response after synchronizing the workspace to the latest container version.",
                          :type "object",
-                         :properties {:syncStatus {:description "Indicates whether synchronization caused a merge conflict or sync error.",
-                                                   :$ref "SyncStatus"},
-                                      :mergeConflict {:description "The merge conflict after sync.\nIf this field is not empty, the sync is still treated as successful.\nBut a version cannot be created until all conflicts are resolved.",
-                                                      :type "array",
-                                                      :items {:$ref "MergeConflict"}}},
-                         :id "SyncWorkspaceResponse"},
- :ContainerAccess {:description "Defines the Google Tag Manager Container access permissions.",
-                   :type "object",
+                         :properties {:syncStatus {:$ref "SyncStatus",
+                                                   :description "Indicates whether synchronization caused a merge conflict or sync error."},
+                                      :mergeConflict {:type "array",
+                                                      :items {:$ref "MergeConflict"},
+                                                      :description "The merge conflict after sync.\nIf this field is not empty, the sync is still treated as successful.\nBut a version cannot be created until all conflicts are resolved."}}},
+ :ContainerAccess {:type "object",
                    :properties {:containerId {:description "GTM Container ID.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
                                               :type "string"},
-                                :permission {:enum ["containerPermissionUnspecified"
+                                :permission {:enumDescriptions [""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""],
+                                             :enum ["containerPermissionUnspecified"
                                                     "noAccess"
                                                     "read"
                                                     "edit"
                                                     "approve"
                                                     "publish"],
                                              :description "List of Container permissions.\n@mutable tagmanager.accounts.permissions.create\n@mutable tagmanager.accounts.permissions.update",
-                                             :type "string",
-                                             :enumDescriptions [""
-                                                                ""
-                                                                ""
-                                                                ""
-                                                                ""
-                                                                ""]}},
-                   :id "ContainerAccess"},
- :TeardownTag {:properties {:stopTeardownOnFailure {:description "If true, fire the teardown tag if and only if the main tag fires\nsuccessfully.\nIf false, fire the teardown tag regardless of main tag firing status.",
-                                                    :type "boolean"},
+                                             :type "string"}},
+                   :id "ContainerAccess",
+                   :description "Defines the Google Tag Manager Container access permissions."},
+ :TeardownTag {:description "Represents a tag that fires after another tag in order to tear down\ndependencies.",
+               :type "object",
+               :properties {:stopTeardownOnFailure {:type "boolean",
+                                                    :description "If true, fire the teardown tag if and only if the main tag fires\nsuccessfully.\nIf false, fire the teardown tag regardless of main tag firing status."},
                             :tagName {:description "The name of the teardown tag.",
                                       :type "string"}},
-               :id "TeardownTag",
-               :description "Represents a tag that fires after another tag in order to tear down\ndependencies.",
-               :type "object"},
- :SyncStatus {:properties {:mergeConflict {:description "Synchornization operation detected a merge conflict.",
-                                           :type "boolean"},
-                           :syncError {:description "An error occurred during the synchronization operation.",
-                                       :type "boolean"}},
+               :id "TeardownTag"},
+ :SyncStatus {:type "object",
+              :properties {:syncError {:type "boolean",
+                                       :description "An error occurred during the synchronization operation."},
+                           :mergeConflict {:type "boolean",
+                                           :description "Synchornization operation detected a merge conflict."}},
               :id "SyncStatus",
-              :description "The status of a workspace after synchronization.",
-              :type "object"},
- :RevertTemplateResponse {:description "The result of reverting a template in a workspace.",
+              :description "The status of a workspace after synchronization."},
+ :RevertTemplateResponse {:id "RevertTemplateResponse",
+                          :description "The result of reverting a template in a workspace.",
                           :type "object",
-                          :properties {:template {:$ref "CustomTemplate",
-                                                  :description "Template as it appears in the latest container version since the last\nworkspace synchronization operation. If no template is present, that means\nthe template was deleted in the latest container version."}},
-                          :id "RevertTemplateResponse"},
+                          :properties {:template {:description "Template as it appears in the latest container version since the last\nworkspace synchronization operation. If no template is present, that means\nthe template was deleted in the latest container version.",
+                                                  :$ref "CustomTemplate"}}},
  :Zone {:description "Represents a Google Tag Manager Zone's contents.",
         :type "object",
         :properties {:path {:description "GTM Zone's API relative path.",
@@ -382,35 +382,35 @@
                               :type "string"},
                      :name {:description "Zone display name.",
                             :type "string"},
-                     :containerId {:description "GTM Container ID.",
-                                   :type "string"},
-                     :childContainer {:description "Containers that are children of this Zone.",
-                                      :type "array",
-                                      :items {:$ref "ZoneChildContainer"}},
+                     :containerId {:type "string",
+                                   :description "GTM Container ID."},
+                     :childContainer {:type "array",
+                                      :items {:$ref "ZoneChildContainer"},
+                                      :description "Containers that are children of this Zone."},
                      :boundary {:$ref "ZoneBoundary",
                                 :description "This Zone's boundary."},
                      :notes {:type "string",
                              :description "User notes on how to apply this zone in the container."},
                      :tagManagerUrl {:description "Auto generated link to the tag manager UI",
                                      :type "string"},
-                     :accountId {:description "GTM Account ID.",
-                                 :type "string"},
-                     :fingerprint {:type "string",
-                                   :description "The fingerprint of the GTM Zone as computed at storage time.\nThis value is recomputed whenever the zone is modified."}},
+                     :accountId {:type "string",
+                                 :description "GTM Account ID."},
+                     :fingerprint {:description "The fingerprint of the GTM Zone as computed at storage time.\nThis value is recomputed whenever the zone is modified.",
+                                   :type "string"}},
         :id "Zone"},
  :RevertZoneResponse {:type "object",
                       :properties {:zone {:$ref "Zone",
                                           :description "Zone as it appears in the latest container version since the last\nworkspace synchronization operation. If no zone is present, that means\nthe zone was deleted in the latest container version."}},
                       :id "RevertZoneResponse",
                       :description "The result of reverting a zone in a workspace."},
- :ListUserPermissionsResponse {:description "List user permissions response.",
-                               :type "object",
-                               :properties {:userPermission {:description "All GTM UserPermissions of a GTM Account.",
+ :ListUserPermissionsResponse {:type "object",
+                               :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                            :type "string"},
+                                            :userPermission {:description "All GTM UserPermissions of a GTM Account.",
                                                              :type "array",
-                                                             :items {:$ref "UserPermission"}},
-                                            :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                            :type "string"}},
-                               :id "ListUserPermissionsResponse"},
+                                                             :items {:$ref "UserPermission"}}},
+                               :id "ListUserPermissionsResponse",
+                               :description "List user permissions response."},
  :CreateBuiltInVariableResponse {:type "object",
                                  :properties {:builtInVariable {:description "List of created built-in variables.",
                                                                 :type "array",
@@ -427,34 +427,34 @@
                                  :variable {:description "The variables in the container that this version was taken from.",
                                             :type "array",
                                             :items {:$ref "Variable"}},
-                                 :zone {:description "The zones in the container that this version was taken from.",
-                                        :type "array",
-                                        :items {:$ref "Zone"}},
+                                 :zone {:type "array",
+                                        :items {:$ref "Zone"},
+                                        :description "The zones in the container that this version was taken from."},
                                  :folder {:description "The folders in the container that this version was taken from.",
                                           :type "array",
                                           :items {:$ref "Folder"}},
                                  :name {:description "Container version display name.\n@mutable tagmanager.accounts.containers.versions.update",
                                         :type "string"},
-                                 :containerId {:description "GTM Container ID.",
-                                               :type "string"},
+                                 :containerId {:type "string",
+                                               :description "GTM Container ID."},
                                  :customTemplate {:description "The custom templates in the container that this version was taken from.",
                                                   :type "array",
                                                   :items {:$ref "CustomTemplate"}},
-                                 :client {:description "The clients in the container that this version was taken from.",
-                                          :type "array",
-                                          :items {:$ref "Client"}},
+                                 :client {:type "array",
+                                          :items {:$ref "Client"},
+                                          :description "The clients in the container that this version was taken from."},
                                  :containerVersionId {:description "The Container Version ID uniquely identifies the GTM Container Version.",
                                                       :type "string"},
-                                 :container {:$ref "Container",
-                                             :description "The container that this version was taken from."},
+                                 :container {:description "The container that this version was taken from.",
+                                             :$ref "Container"},
                                  :builtInVariable {:description "The built-in variables in the container that this version was taken from.",
                                                    :type "array",
                                                    :items {:$ref "BuiltInVariable"}},
                                  :tag {:description "The tags in the container that this version was taken from.",
                                        :type "array",
                                        :items {:$ref "Tag"}},
-                                 :tagManagerUrl {:description "Auto generated link to the tag manager UI",
-                                                 :type "string"},
+                                 :tagManagerUrl {:type "string",
+                                                 :description "Auto generated link to the tag manager UI"},
                                  :trigger {:description "The triggers in the container that this version was taken from.",
                                            :type "array",
                                            :items {:$ref "Trigger"}},
@@ -463,13 +463,13 @@
                                  :fingerprint {:description "The fingerprint of the GTM Container Version as computed at\nstorage time. This value is recomputed whenever the container version is\nmodified.",
                                                :type "string"}},
                     :id "ContainerVersion"},
- :ListZonesResponse {:type "object",
+ :ListZonesResponse {:id "ListZonesResponse",
+                     :type "object",
                      :properties {:zone {:description "All GTM Zones of a GTM Container.",
                                          :type "array",
                                          :items {:$ref "Zone"}},
-                                  :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                  :type "string"}},
-                     :id "ListZonesResponse"},
+                                  :nextPageToken {:type "string",
+                                                  :description "Continuation token for fetching the next page of results."}}},
  :ListTemplatesResponse {:type "object",
                          :properties {:template {:description "All GTM Custom Templates of a GTM Container.",
                                                  :type "array",
@@ -477,18 +477,19 @@
                                       :nextPageToken {:description "Continuation token for fetching the next page of results.",
                                                       :type "string"}},
                          :id "ListTemplatesResponse"},
- :Trigger {:description "Represents a Google Tag Manager Trigger",
+ :Trigger {:id "Trigger",
+           :description "Represents a Google Tag Manager Trigger",
            :type "object",
            :properties {:checkValidation {:$ref "Parameter",
                                           :description "Whether or not we should only fire tags if the form submit or link click\nevent is not cancelled by some other event handler (e.g. because of\nvalidation). Only valid for Form Submission and Link Click triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :path {:description "GTM Trigger's API relative path.",
-                               :type "string"},
+                        :path {:type "string",
+                               :description "GTM Trigger's API relative path."},
                         :parentFolderId {:description "Parent folder id.",
                                          :type "string"},
                         :selector {:$ref "Parameter",
                                    :description "A click trigger CSS selector (i.e. \"a\", \"button\" etc.). Only valid for AMP\nClick trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :eventName {:description "Name of the GTM event that is fired. Only valid for Timer triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
-                                    :$ref "Parameter"},
+                        :eventName {:$ref "Parameter",
+                                    :description "Name of the GTM event that is fired. Only valid for Timer triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
                         :customEventFilter {:description "Used in the case of custom event, which is fired iff all Conditions are\ntrue.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                             :type "array",
                                             :items {:$ref "Condition"}},
@@ -500,8 +501,8 @@
                                     :type "string"},
                         :limit {:$ref "Parameter",
                                 :description "Limit of the number of GTM events this Timer Trigger will fire. If no limit\nis set, we will continue to fire GTM events until the user leaves the page.\nOnly valid for Timer triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :horizontalScrollPercentageList {:description "List of integer percentage values for scroll triggers. The trigger will\nfire when each percentage is reached when the view is scrolled\nhorizontally. Only valid for AMP scroll triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
-                                                         :$ref "Parameter"},
+                        :horizontalScrollPercentageList {:$ref "Parameter",
+                                                         :description "List of integer percentage values for scroll triggers. The trigger will\nfire when each percentage is reached when the view is scrolled\nhorizontally. Only valid for AMP scroll triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
                         :name {:description "Trigger display name.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                :annotations {:required ["tagmanager.accounts.containers.workspaces.triggers.create"
                                                         "tagmanager.accounts.containers.workspaces.triggers.update"]},
@@ -510,41 +511,9 @@
                                                        :description "List of integer percentage values for scroll triggers. The trigger will\nfire when each percentage is reached when the view is scrolled vertically.\nOnly valid for AMP scroll triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
                         :containerId {:description "GTM Container ID.",
                                       :type "string"},
-                        :visibilitySelector {:description "A visibility trigger CSS selector (i.e. \"#id\"). Only valid for AMP\nVisibility trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
-                                             :$ref "Parameter"},
-                        :type {:enum ["eventTypeUnspecified"
-                                      "pageview"
-                                      "domReady"
-                                      "windowLoaded"
-                                      "customEvent"
-                                      "triggerGroup"
-                                      "always"
-                                      "firebaseAppException"
-                                      "firebaseAppUpdate"
-                                      "firebaseCampaign"
-                                      "firebaseFirstOpen"
-                                      "firebaseInAppPurchase"
-                                      "firebaseNotificationDismiss"
-                                      "firebaseNotificationForeground"
-                                      "firebaseNotificationOpen"
-                                      "firebaseNotificationReceive"
-                                      "firebaseOsUpdate"
-                                      "firebaseSessionStart"
-                                      "firebaseUserEngagement"
-                                      "formSubmission"
-                                      "click"
-                                      "linkClick"
-                                      "jsError"
-                                      "historyChange"
-                                      "timer"
-                                      "ampClick"
-                                      "ampTimer"
-                                      "ampScroll"
-                                      "ampVisibility"
-                                      "youTubeVideo"
-                                      "scrollDepth"
-                                      "elementVisibility"],
-                               :description "Defines the data layer event that causes this trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
+                        :visibilitySelector {:$ref "Parameter",
+                                             :description "A visibility trigger CSS selector (i.e. \"#id\"). Only valid for AMP\nVisibility trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
+                        :type {:description "Defines the data layer event that causes this trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                :annotations {:required ["tagmanager.accounts.containers.workspaces.triggers.create"]},
                                :type "string",
                                :enumDescriptions [""
@@ -578,7 +547,39 @@
                                                   ""
                                                   ""
                                                   ""
-                                                  ""]},
+                                                  ""],
+                               :enum ["eventTypeUnspecified"
+                                      "pageview"
+                                      "domReady"
+                                      "windowLoaded"
+                                      "customEvent"
+                                      "triggerGroup"
+                                      "always"
+                                      "firebaseAppException"
+                                      "firebaseAppUpdate"
+                                      "firebaseCampaign"
+                                      "firebaseFirstOpen"
+                                      "firebaseInAppPurchase"
+                                      "firebaseNotificationDismiss"
+                                      "firebaseNotificationForeground"
+                                      "firebaseNotificationOpen"
+                                      "firebaseNotificationReceive"
+                                      "firebaseOsUpdate"
+                                      "firebaseSessionStart"
+                                      "firebaseUserEngagement"
+                                      "formSubmission"
+                                      "click"
+                                      "linkClick"
+                                      "jsError"
+                                      "historyChange"
+                                      "timer"
+                                      "ampClick"
+                                      "ampTimer"
+                                      "ampScroll"
+                                      "ampVisibility"
+                                      "youTubeVideo"
+                                      "scrollDepth"
+                                      "elementVisibility"]},
                         :autoEventFilter {:description "Used in the case of auto event tracking.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                           :type "array",
                                           :items {:$ref "Condition"}},
@@ -588,9 +589,9 @@
                                              :description "How long to wait (in milliseconds) for tags to fire when 'waits_for_tags'\nabove evaluates to <code>true</code>.  Only valid for Form Submission and\nLink Click triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
                         :continuousTimeMinMilliseconds {:$ref "Parameter",
                                                         :description "A visibility trigger minimum continuous visible time (in milliseconds).\nOnly valid for AMP Visibility trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :filter {:type "array",
-                                 :items {:$ref "Condition"},
-                                 :description "The trigger will only fire iff all Conditions are true.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
+                        :filter {:description "The trigger will only fire iff all Conditions are true.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
+                                 :type "array",
+                                 :items {:$ref "Condition"}},
                         :visiblePercentageMin {:$ref "Parameter",
                                                :description "A visibility trigger minimum percent visibility. Only valid for AMP\nVisibility trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
                         :uniqueTriggerId {:$ref "Parameter",
@@ -599,10 +600,10 @@
                                 :type "string"},
                         :maxTimerLengthSeconds {:$ref "Parameter",
                                                 :description "Max time to fire Timer Events (in seconds). Only valid for AMP Timer\ntrigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :interval {:$ref "Parameter",
-                                   :description "Time between triggering recurring Timer Events (in milliseconds). Only\nvalid for Timer triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update"},
-                        :tagManagerUrl {:description "Auto generated link to the tag manager UI",
-                                        :type "string"},
+                        :interval {:description "Time between triggering recurring Timer Events (in milliseconds). Only\nvalid for Timer triggers.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
+                                   :$ref "Parameter"},
+                        :tagManagerUrl {:type "string",
+                                        :description "Auto generated link to the tag manager UI"},
                         :totalTimeMinMilliseconds {:description "A visibility trigger minimum total visible time (in milliseconds).\nOnly valid for AMP Visibility trigger.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                                    :$ref "Parameter"},
                         :intervalSeconds {:$ref "Parameter",
@@ -613,13 +614,10 @@
                                     :type "array",
                                     :items {:$ref "Parameter"}},
                         :fingerprint {:description "The fingerprint of the GTM Trigger as computed at storage time.\nThis value is recomputed whenever the trigger is modified.",
-                                      :type "string"}},
-           :id "Trigger"},
+                                      :type "string"}}},
  :FolderEntities {:description "Represents a Google Tag Manager Folder's contents.",
                   :type "object",
-                  :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                               :type "string"},
-                               :tag {:description "The list of tags inside the folder.",
+                  :properties {:tag {:description "The list of tags inside the folder.",
                                      :type "array",
                                      :items {:$ref "Tag"}},
                                :trigger {:description "The list of triggers inside the folder.",
@@ -627,40 +625,44 @@
                                          :items {:$ref "Trigger"}},
                                :variable {:description "The list of variables inside the folder.",
                                           :type "array",
-                                          :items {:$ref "Variable"}}},
+                                          :items {:$ref "Variable"}},
+                               :nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                               :type "string"}},
                   :id "FolderEntities"},
- :SetupTag {:id "SetupTag",
-            :description "Represents a reference to atag that fires before another tag in order to\nset up dependencies.",
+ :SetupTag {:description "Represents a reference to atag that fires before another tag in order to\nset up dependencies.",
             :type "object",
-            :properties {:tagName {:description "The name of the setup tag.",
-                                   :type "string"},
-                         :stopOnSetupFailure {:description "If true, fire the main tag if and only if the setup tag fires\nsuccessfully.\nIf false, fire the main tag regardless of setup tag firing status.",
-                                              :type "boolean"}}},
- :RevertVariableResponse {:description "The result of reverting a variable in a workspace.",
+            :properties {:stopOnSetupFailure {:description "If true, fire the main tag if and only if the setup tag fires\nsuccessfully.\nIf false, fire the main tag regardless of setup tag firing status.",
+                                              :type "boolean"},
+                         :tagName {:description "The name of the setup tag.",
+                                   :type "string"}},
+            :id "SetupTag"},
+ :RevertVariableResponse {:id "RevertVariableResponse",
+                          :description "The result of reverting a variable in a workspace.",
                           :type "object",
                           :properties {:variable {:description "Variable as it appears in the latest container version since the last\nworkspace synchronization operation. If no variable is present, that means\nthe variable was deleted in the latest container version.",
-                                                  :$ref "Variable"}},
-                          :id "RevertVariableResponse"},
+                                                  :$ref "Variable"}}},
  :Account {:description "Represents a Google Tag Manager Account.",
            :type "object",
-           :properties {:fingerprint {:type "string",
-                                      :description "The fingerprint of the GTM Account as computed at storage time.\nThis value is recomputed whenever the account is modified."},
+           :properties {:shareData {:type "boolean",
+                                    :description "Whether the account shares data anonymously with Google and others.\nThis flag enables benchmarking by sharing your data in an anonymous form.\nGoogle will remove all identifiable information about your website, combine\nthe data with hundreds of other anonymous sites and report aggregate trends\nin the benchmarking service.\n@mutable tagmanager.accounts.create\n@mutable tagmanager.accounts.update"},
+                        :fingerprint {:description "The fingerprint of the GTM Account as computed at storage time.\nThis value is recomputed whenever the account is modified.",
+                                      :type "string"},
                         :name {:description "Account display name.\n@mutable tagmanager.accounts.create\n@mutable tagmanager.accounts.update",
                                :type "string"},
-                        :accountId {:description "The Account ID uniquely identifies the GTM Account.",
-                                    :type "string"},
-                        :tagManagerUrl {:type "string",
-                                        :description "Auto generated link to the tag manager UI"},
-                        :path {:description "GTM Account's API relative path.",
-                               :type "string"},
-                        :shareData {:description "Whether the account shares data anonymously with Google and others.\nThis flag enables benchmarking by sharing your data in an anonymous form.\nGoogle will remove all identifiable information about your website, combine\nthe data with hundreds of other anonymous sites and report aggregate trends\nin the benchmarking service.\n@mutable tagmanager.accounts.create\n@mutable tagmanager.accounts.update",
-                                    :type "boolean"}},
+                        :accountId {:type "string",
+                                    :description "The Account ID uniquely identifies the GTM Account."},
+                        :tagManagerUrl {:description "Auto generated link to the tag manager UI",
+                                        :type "string"},
+                        :path {:type "string",
+                               :description "GTM Account's API relative path."}},
            :id "Account"},
- :GalleryReference {:type "object",
+ :GalleryReference {:id "GalleryReference",
+                    :description "Represents the link between a custom template and an entry on the Community\nTemplate Gallery site.",
+                    :type "object",
                     :properties {:isModified {:description "If a user has manually edited the community  gallery template.",
                                               :type "boolean"},
-                                 :signature {:type "string",
-                                             :description "The signature of the community gallery template as computed at import time.\nThis value is recomputed whenever the template is updated from the gallery."},
+                                 :signature {:description "The signature of the community gallery template as computed at import time.\nThis value is recomputed whenever the template is updated from the gallery.",
+                                             :type "string"},
                                  :owner {:description "The name of the owner for the community gallery template.",
                                          :type "string"},
                                  :repository {:description "The name of the repository for the community gallery template.",
@@ -668,20 +670,18 @@
                                  :version {:description "The version of the community gallery template.",
                                            :type "string"},
                                  :host {:description "The name of the host for the community gallery template.",
-                                        :type "string"}},
-                    :id "GalleryReference",
-                    :description "Represents the link between a custom template and an entry on the Community\nTemplate Gallery site."},
+                                        :type "string"}}},
  :Folder {:id "Folder",
           :description "Represents a Google Tag Manager Folder.",
           :type "object",
-          :properties {:path {:description "GTM Folder's API relative path.",
-                              :type "string"},
-                       :workspaceId {:description "GTM Workspace ID.",
-                                     :type "string"},
-                       :name {:description "Folder display name.\n@mutable tagmanager.accounts.containers.workspaces.folders.create\n@mutable tagmanager.accounts.containers.workspaces.folders.update",
+          :properties {:path {:type "string",
+                              :description "GTM Folder's API relative path."},
+                       :workspaceId {:type "string",
+                                     :description "GTM Workspace ID."},
+                       :name {:type "string",
+                              :description "Folder display name.\n@mutable tagmanager.accounts.containers.workspaces.folders.create\n@mutable tagmanager.accounts.containers.workspaces.folders.update",
                               :annotations {:required ["tagmanager.accounts.containers.workspaces.folders.create"
-                                                       "tagmanager.accounts.containers.workspaces.folders.update"]},
-                              :type "string"},
+                                                       "tagmanager.accounts.containers.workspaces.folders.update"]}},
                        :containerId {:description "GTM Container ID.",
                                      :type "string"},
                        :notes {:description "User notes on how to apply this folder in the container.\n@mutable tagmanager.accounts.containers.workspaces.folders.create\n@mutable tagmanager.accounts.containers.workspaces.folders.update",
@@ -690,40 +690,39 @@
                                   :type "string"},
                        :tagManagerUrl {:description "Auto generated link to the tag manager UI",
                                        :type "string"},
-                       :accountId {:description "GTM Account ID.",
-                                   :type "string"},
+                       :accountId {:type "string",
+                                   :description "GTM Account ID."},
                        :fingerprint {:description "The fingerprint of the GTM Folder as computed at storage time.\nThis value is recomputed whenever the folder is modified.",
                                      :type "string"}}},
  :MergeConflict {:description "Represents a merge conflict.",
                  :type "object",
                  :properties {:entityInBaseVersion {:$ref "Entity",
                                                     :description "The base version entity (since the latest sync operation) that has\nconflicting changes compared to the workspace. If this field is missing,\nit means the workspace entity is deleted from the base version."},
-                              :entityInWorkspace {:description "The workspace entity that has conflicting changes compared to the\nbase version. If an entity is deleted in a workspace, it will still\nappear with a deleted change status.",
-                                                  :$ref "Entity"}},
+                              :entityInWorkspace {:$ref "Entity",
+                                                  :description "The workspace entity that has conflicting changes compared to the\nbase version. If an entity is deleted in a workspace, it will still\nappear with a deleted change status."}},
                  :id "MergeConflict"},
- :RevertTriggerResponse {:properties {:trigger {:$ref "Trigger",
+ :RevertTriggerResponse {:description "The result of reverting a trigger in a workspace.",
+                         :type "object",
+                         :properties {:trigger {:$ref "Trigger",
                                                 :description "Trigger as it appears in the latest container version since the last\nworkspace synchronization operation. If no trigger is present, that means\nthe trigger was deleted in the latest container version."}},
-                         :id "RevertTriggerResponse",
-                         :description "The result of reverting a trigger in a workspace.",
-                         :type "object"},
- :ListEnabledBuiltInVariablesResponse {:type "object",
-                                       :properties {:builtInVariable {:description "All GTM BuiltInVariables of a GTM container.",
+                         :id "RevertTriggerResponse"},
+ :ListEnabledBuiltInVariablesResponse {:id "ListEnabledBuiltInVariablesResponse",
+                                       :description "A list of enabled built-in variables.",
+                                       :type "object",
+                                       :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                                    :type "string"},
+                                                    :builtInVariable {:description "All GTM BuiltInVariables of a GTM container.",
                                                                       :type "array",
-                                                                      :items {:$ref "BuiltInVariable"}},
-                                                    :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                                    :type "string"}},
-                                       :id "ListEnabledBuiltInVariablesResponse",
-                                       :description "A list of enabled built-in variables."},
- :ListContainersResponse {:description "List Containers Response.",
+                                                                      :items {:$ref "BuiltInVariable"}}}},
+ :ListContainersResponse {:id "ListContainersResponse",
+                          :description "List Containers Response.",
                           :type "object",
-                          :properties {:container {:description "All Containers of a GTM Account.",
+                          :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                       :type "string"},
+                                       :container {:description "All Containers of a GTM Account.",
                                                    :type "array",
-                                                   :items {:$ref "Container"}},
-                                       :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                       :type "string"}},
-                          :id "ListContainersResponse"},
- :Variable {:description "Represents a Google Tag Manager Variable.",
-            :type "object",
+                                                   :items {:$ref "Container"}}}},
+ :Variable {:type "object",
             :properties {:path {:description "GTM Variable's API relative path.",
                                 :type "string"},
                          :parentFolderId {:description "Parent folder id.",
@@ -749,17 +748,17 @@
                          :scheduleEndMs {:description "The end timestamp in milliseconds to schedule a variable.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update",
                                          :format "int64",
                                          :type "string"},
-                         :notes {:description "User notes on how to apply this variable in the container.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update",
-                                 :type "string"},
-                         :disablingTriggerId {:type "array",
-                                              :items {:type "string"},
-                                              :description "For mobile containers only: A list of trigger IDs for disabling conditional\nvariables; the variable is enabled if one of the enabling trigger is true\nwhile all the disabling trigger are false. Treated as an unordered set.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update"},
+                         :notes {:type "string",
+                                 :description "User notes on how to apply this variable in the container.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update"},
+                         :disablingTriggerId {:description "For mobile containers only: A list of trigger IDs for disabling conditional\nvariables; the variable is enabled if one of the enabling trigger is true\nwhile all the disabling trigger are false. Treated as an unordered set.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update",
+                                              :type "array",
+                                              :items {:type "string"}},
                          :tagManagerUrl {:description "Auto generated link to the tag manager UI",
                                          :type "string"},
-                         :variableId {:description "The Variable ID uniquely identifies the GTM Variable.",
-                                      :type "string"},
-                         :formatValue {:description "Option to convert a variable value to other value.",
-                                       :$ref "VariableFormatValue"},
+                         :variableId {:type "string",
+                                      :description "The Variable ID uniquely identifies the GTM Variable."},
+                         :formatValue {:$ref "VariableFormatValue",
+                                       :description "Option to convert a variable value to other value."},
                          :accountId {:description "GTM Account ID.",
                                      :type "string"},
                          :parameter {:description "The variable's parameters.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update",
@@ -767,13 +766,17 @@
                                      :items {:$ref "Parameter"}},
                          :fingerprint {:description "The fingerprint of the GTM Variable as computed at storage time.\nThis value is recomputed whenever the variable is modified.",
                                        :type "string"}},
-            :id "Variable"},
- :Parameter {:id "Parameter",
-             :description "Represents a Google Tag Manager Parameter.",
+            :id "Variable",
+            :description "Represents a Google Tag Manager Variable."},
+ :Parameter {:description "Represents a Google Tag Manager Parameter.",
              :type "object",
-             :properties {:key {:description "The named key that uniquely identifies a parameter.  Required for top-level\nparameters, as well as map values.  Ignored for list values.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                                :type "string"},
-                          :type {:enumDescriptions [""
+             :properties {:list {:description "This list parameter's parameters (keys will be ignored).\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
+                                 :type "array",
+                                 :items {:$ref "Parameter"}},
+                          :key {:type "string",
+                                :description "The named key that uniquely identifies a parameter.  Required for top-level\nparameters, as well as map values.  Ignored for list values.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update"},
+                          :type {:type "string",
+                                 :enumDescriptions [""
                                                     "May include variable references (such as \"{{myVariable}}\")."
                                                     ""
                                                     ""
@@ -795,17 +798,15 @@
                                                           "tagmanager.accounts.containers.workspaces.triggers.create"
                                                           "tagmanager.accounts.containers.workspaces.triggers.update"
                                                           "tagmanager.accounts.containers.workspaces.variables.create"
-                                                          "tagmanager.accounts.containers.workspaces.variables.update"]},
-                                 :type "string"},
+                                                          "tagmanager.accounts.containers.workspaces.variables.update"]}},
                           :value {:description "A parameter's value (may contain variable references such as\n\"{{myVariable}}\")\nas appropriate to the specified type.\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                   :type "string"},
                           :map {:description "This map parameter's parameters (must have keys; keys must be unique).\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
                                 :type "array",
-                                :items {:$ref "Parameter"}},
-                          :list {:description "This list parameter's parameters (keys will be ignored).\n@mutable tagmanager.accounts.containers.workspaces.variables.create\n@mutable tagmanager.accounts.containers.workspaces.variables.update\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update\n@mutable tagmanager.accounts.containers.workspaces.tags.create\n@mutable tagmanager.accounts.containers.workspaces.tags.update",
-                                 :type "array",
-                                 :items {:$ref "Parameter"}}}},
- :Client {:type "object",
+                                :items {:$ref "Parameter"}}},
+             :id "Parameter"},
+ :Client {:id "Client",
+          :type "object",
           :properties {:path {:description "GTM client's API relative path.",
                               :type "string"},
                        :clientId {:description "The Client ID uniquely identifies the GTM client.",
@@ -828,31 +829,130 @@
                        :parameter {:description "The client's parameters.\n@mutable tagmanager.accounts.containers.workspaces.clients.create\n@mutable tagmanager.accounts.containers.workspaces.clients.update",
                                    :type "array",
                                    :items {:$ref "Parameter"}},
-                       :fingerprint {:description "The fingerprint of the GTM Client as computed at storage time.\nThis value is recomputed whenever the client is modified.",
-                                     :type "string"}},
-          :id "Client"},
- :GetWorkspaceStatusResponse {:description "The changes that have occurred in the workspace since the base container\nversion.",
+                       :fingerprint {:type "string",
+                                     :description "The fingerprint of the GTM Client as computed at storage time.\nThis value is recomputed whenever the client is modified."}}},
+ :GetWorkspaceStatusResponse {:id "GetWorkspaceStatusResponse",
+                              :description "The changes that have occurred in the workspace since the base container\nversion.",
                               :type "object",
-                              :properties {:workspaceChange {:type "array",
-                                                             :items {:$ref "Entity"},
-                                                             :description "Entities that have been changed in the workspace."},
-                                           :mergeConflict {:description "The merge conflict after sync.",
-                                                           :type "array",
-                                                           :items {:$ref "MergeConflict"}}},
-                              :id "GetWorkspaceStatusResponse"},
+                              :properties {:workspaceChange {:description "Entities that have been changed in the workspace.",
+                                                             :type "array",
+                                                             :items {:$ref "Entity"}},
+                                           :mergeConflict {:type "array",
+                                                           :items {:$ref "MergeConflict"},
+                                                           :description "The merge conflict after sync."}}},
  :BuiltInVariable {:description "Built-in variables are a special category of variables that are pre-created\nand non-customizable. They provide common functionality like accessing\npropeties of the gtm data layer, monitoring clicks, or accessing elements\nof a page URL.",
                    :type "object",
-                   :properties {:path {:description "GTM BuiltInVariable's API relative path.",
-                                       :type "string"},
-                                :containerId {:description "GTM Container ID.",
-                                              :type "string"},
-                                :workspaceId {:description "GTM Workspace ID.",
-                                              :type "string"},
-                                :name {:description "Name of the built-in variable to be used to refer to the built-in variable.",
-                                       :type "string"},
-                                :accountId {:type "string",
-                                            :description "GTM Account ID."},
-                                :type {:description "Type of built-in variable.\n@required.tagmanager.accounts.containers.workspaces.built_in_variable.update\n@mutable tagmanager.accounts.containers.workspaces.built_in_variable.update",
+                   :properties {:type {:enum ["builtInVariableTypeUnspecified"
+                                              "pageUrl"
+                                              "pageHostname"
+                                              "pagePath"
+                                              "referrer"
+                                              "event"
+                                              "clickElement"
+                                              "clickClasses"
+                                              "clickId"
+                                              "clickTarget"
+                                              "clickUrl"
+                                              "clickText"
+                                              "firstPartyServingUrl"
+                                              "formElement"
+                                              "formClasses"
+                                              "formId"
+                                              "formTarget"
+                                              "formUrl"
+                                              "formText"
+                                              "errorMessage"
+                                              "errorUrl"
+                                              "errorLine"
+                                              "newHistoryUrl"
+                                              "oldHistoryUrl"
+                                              "newHistoryFragment"
+                                              "oldHistoryFragment"
+                                              "newHistoryState"
+                                              "oldHistoryState"
+                                              "historySource"
+                                              "containerVersion"
+                                              "debugMode"
+                                              "randomNumber"
+                                              "containerId"
+                                              "appId"
+                                              "appName"
+                                              "appVersionCode"
+                                              "appVersionName"
+                                              "language"
+                                              "osVersion"
+                                              "platform"
+                                              "sdkVersion"
+                                              "deviceName"
+                                              "resolution"
+                                              "advertiserId"
+                                              "advertisingTrackingEnabled"
+                                              "htmlId"
+                                              "environmentName"
+                                              "ampBrowserLanguage"
+                                              "ampCanonicalPath"
+                                              "ampCanonicalUrl"
+                                              "ampCanonicalHost"
+                                              "ampReferrer"
+                                              "ampTitle"
+                                              "ampClientId"
+                                              "ampClientTimezone"
+                                              "ampClientTimestamp"
+                                              "ampClientScreenWidth"
+                                              "ampClientScreenHeight"
+                                              "ampClientScrollX"
+                                              "ampClientScrollY"
+                                              "ampClientMaxScrollX"
+                                              "ampClientMaxScrollY"
+                                              "ampTotalEngagedTime"
+                                              "ampPageViewId"
+                                              "ampPageLoadTime"
+                                              "ampPageDownloadTime"
+                                              "ampGtmEvent"
+                                              "eventName"
+                                              "firebaseEventParameterCampaign"
+                                              "firebaseEventParameterCampaignAclid"
+                                              "firebaseEventParameterCampaignAnid"
+                                              "firebaseEventParameterCampaignClickTimestamp"
+                                              "firebaseEventParameterCampaignContent"
+                                              "firebaseEventParameterCampaignCp1"
+                                              "firebaseEventParameterCampaignGclid"
+                                              "firebaseEventParameterCampaignSource"
+                                              "firebaseEventParameterCampaignTerm"
+                                              "firebaseEventParameterCurrency"
+                                              "firebaseEventParameterDynamicLinkAcceptTime"
+                                              "firebaseEventParameterDynamicLinkLinkid"
+                                              "firebaseEventParameterNotificationMessageDeviceTime"
+                                              "firebaseEventParameterNotificationMessageId"
+                                              "firebaseEventParameterNotificationMessageName"
+                                              "firebaseEventParameterNotificationMessageTime"
+                                              "firebaseEventParameterNotificationTopic"
+                                              "firebaseEventParameterPreviousAppVersion"
+                                              "firebaseEventParameterPreviousOsVersion"
+                                              "firebaseEventParameterPrice"
+                                              "firebaseEventParameterProductId"
+                                              "firebaseEventParameterQuantity"
+                                              "firebaseEventParameterValue"
+                                              "videoProvider"
+                                              "videoUrl"
+                                              "videoTitle"
+                                              "videoDuration"
+                                              "videoPercent"
+                                              "videoVisible"
+                                              "videoStatus"
+                                              "videoCurrentTime"
+                                              "scrollDepthThreshold"
+                                              "scrollDepthUnits"
+                                              "scrollDepthDirection"
+                                              "elementVisibilityRatio"
+                                              "elementVisibilityTime"
+                                              "elementVisibilityFirstTime"
+                                              "elementVisibilityRecentTime"
+                                              "requestPath"
+                                              "requestMethod"
+                                              "clientName"
+                                              "queryString"],
+                                       :description "Type of built-in variable.\n@required.tagmanager.accounts.containers.workspaces.built_in_variable.update\n@mutable tagmanager.accounts.containers.workspaces.built_in_variable.update",
                                        :type "string",
                                        :enumDescriptions [""
                                                           ""
@@ -963,171 +1063,63 @@
                                                           ""
                                                           ""
                                                           ""
-                                                          ""],
-                                       :enum ["builtInVariableTypeUnspecified"
-                                              "pageUrl"
-                                              "pageHostname"
-                                              "pagePath"
-                                              "referrer"
-                                              "event"
-                                              "clickElement"
-                                              "clickClasses"
-                                              "clickId"
-                                              "clickTarget"
-                                              "clickUrl"
-                                              "clickText"
-                                              "firstPartyServingUrl"
-                                              "formElement"
-                                              "formClasses"
-                                              "formId"
-                                              "formTarget"
-                                              "formUrl"
-                                              "formText"
-                                              "errorMessage"
-                                              "errorUrl"
-                                              "errorLine"
-                                              "newHistoryUrl"
-                                              "oldHistoryUrl"
-                                              "newHistoryFragment"
-                                              "oldHistoryFragment"
-                                              "newHistoryState"
-                                              "oldHistoryState"
-                                              "historySource"
-                                              "containerVersion"
-                                              "debugMode"
-                                              "randomNumber"
-                                              "containerId"
-                                              "appId"
-                                              "appName"
-                                              "appVersionCode"
-                                              "appVersionName"
-                                              "language"
-                                              "osVersion"
-                                              "platform"
-                                              "sdkVersion"
-                                              "deviceName"
-                                              "resolution"
-                                              "advertiserId"
-                                              "advertisingTrackingEnabled"
-                                              "htmlId"
-                                              "environmentName"
-                                              "ampBrowserLanguage"
-                                              "ampCanonicalPath"
-                                              "ampCanonicalUrl"
-                                              "ampCanonicalHost"
-                                              "ampReferrer"
-                                              "ampTitle"
-                                              "ampClientId"
-                                              "ampClientTimezone"
-                                              "ampClientTimestamp"
-                                              "ampClientScreenWidth"
-                                              "ampClientScreenHeight"
-                                              "ampClientScrollX"
-                                              "ampClientScrollY"
-                                              "ampClientMaxScrollX"
-                                              "ampClientMaxScrollY"
-                                              "ampTotalEngagedTime"
-                                              "ampPageViewId"
-                                              "ampPageLoadTime"
-                                              "ampPageDownloadTime"
-                                              "ampGtmEvent"
-                                              "eventName"
-                                              "firebaseEventParameterCampaign"
-                                              "firebaseEventParameterCampaignAclid"
-                                              "firebaseEventParameterCampaignAnid"
-                                              "firebaseEventParameterCampaignClickTimestamp"
-                                              "firebaseEventParameterCampaignContent"
-                                              "firebaseEventParameterCampaignCp1"
-                                              "firebaseEventParameterCampaignGclid"
-                                              "firebaseEventParameterCampaignSource"
-                                              "firebaseEventParameterCampaignTerm"
-                                              "firebaseEventParameterCurrency"
-                                              "firebaseEventParameterDynamicLinkAcceptTime"
-                                              "firebaseEventParameterDynamicLinkLinkid"
-                                              "firebaseEventParameterNotificationMessageDeviceTime"
-                                              "firebaseEventParameterNotificationMessageId"
-                                              "firebaseEventParameterNotificationMessageName"
-                                              "firebaseEventParameterNotificationMessageTime"
-                                              "firebaseEventParameterNotificationTopic"
-                                              "firebaseEventParameterPreviousAppVersion"
-                                              "firebaseEventParameterPreviousOsVersion"
-                                              "firebaseEventParameterPrice"
-                                              "firebaseEventParameterProductId"
-                                              "firebaseEventParameterQuantity"
-                                              "firebaseEventParameterValue"
-                                              "videoProvider"
-                                              "videoUrl"
-                                              "videoTitle"
-                                              "videoDuration"
-                                              "videoPercent"
-                                              "videoVisible"
-                                              "videoStatus"
-                                              "videoCurrentTime"
-                                              "scrollDepthThreshold"
-                                              "scrollDepthUnits"
-                                              "scrollDepthDirection"
-                                              "elementVisibilityRatio"
-                                              "elementVisibilityTime"
-                                              "elementVisibilityFirstTime"
-                                              "elementVisibilityRecentTime"
-                                              "requestPath"
-                                              "requestMethod"
-                                              "clientName"
-                                              "queryString"]}},
+                                                          ""]},
+                                :path {:type "string",
+                                       :description "GTM BuiltInVariable's API relative path."},
+                                :containerId {:type "string",
+                                              :description "GTM Container ID."},
+                                :workspaceId {:type "string",
+                                              :description "GTM Workspace ID."},
+                                :name {:type "string",
+                                       :description "Name of the built-in variable to be used to refer to the built-in variable."},
+                                :accountId {:type "string",
+                                            :description "GTM Account ID."}},
                    :id "BuiltInVariable"},
- :ListTriggersResponse {:properties {:trigger {:description "All GTM Triggers of a GTM Container.",
-                                               :type "array",
-                                               :items {:$ref "Trigger"}},
-                                     :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                     :type "string"}},
-                        :id "ListTriggersResponse",
+ :ListTriggersResponse {:id "ListTriggersResponse",
                         :description "List triggers response.",
-                        :type "object"},
- :ContainerVersionHeader {:properties {:path {:description "GTM Container Versions's API relative path.",
+                        :type "object",
+                        :properties {:nextPageToken {:description "Continuation token for fetching the next page of results.",
+                                                     :type "string"},
+                                     :trigger {:type "array",
+                                               :items {:$ref "Trigger"},
+                                               :description "All GTM Triggers of a GTM Container."}}},
+ :ContainerVersionHeader {:id "ContainerVersionHeader",
+                          :description "Represents a Google Tag Manager Container Version Header.",
+                          :type "object",
+                          :properties {:path {:description "GTM Container Versions's API relative path.",
                                               :type "string"},
-                                       :deleted {:description "A value of true indicates this container version has been deleted.",
-                                                 :type "boolean"},
-                                       :numRules {:description "Number of rules in the container version.",
-                                                  :type "string"},
+                                       :deleted {:type "boolean",
+                                                 :description "A value of true indicates this container version has been deleted."},
+                                       :numRules {:type "string",
+                                                  :description "Number of rules in the container version."},
                                        :numMacros {:description "Number of macros in the container version.",
                                                    :type "string"},
                                        :numVariables {:description "Number of variables in the container version.",
                                                       :type "string"},
-                                       :numTriggers {:description "Number of triggers in the container version.",
-                                                     :type "string"},
+                                       :numTriggers {:type "string",
+                                                     :description "Number of triggers in the container version."},
                                        :name {:description "Container version display name.",
                                               :type "string"},
                                        :containerId {:description "GTM Container ID.",
                                                      :type "string"},
                                        :numCustomTemplates {:description "Number of custom templates in the container version.",
                                                             :type "string"},
-                                       :containerVersionId {:type "string",
-                                                            :description "The Container Version ID uniquely identifies the GTM Container Version."},
+                                       :containerVersionId {:description "The Container Version ID uniquely identifies the GTM Container Version.",
+                                                            :type "string"},
                                        :numTags {:description "Number of tags in the container version.",
                                                  :type "string"},
                                        :numZones {:description "Number of zones in the container version.",
                                                   :type "string"},
-                                       :accountId {:type "string",
-                                                   :description "GTM Account ID."}},
-                          :id "ContainerVersionHeader",
-                          :description "Represents a Google Tag Manager Container Version Header.",
-                          :type "object"},
+                                       :accountId {:description "GTM Account ID.",
+                                                   :type "string"}}},
  :Condition {:description "Represents a predicate.",
              :type "object",
-             :properties {:type {:type "string",
-                                 :enumDescriptions [""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    ""
-                                                    "NOTE(lanzone): When defining a ConditionType here, don't forget to also\ndefine a matching PredicateType (in condition.proto)."],
-                                 :enum ["conditionTypeUnspecified"
+             :properties {:parameter {:description "A list of named parameters (key/value), depending on the condition's type.\nNotes:<ul>\n<li>For binary operators, include parameters named <code>arg0</code> and\n   <code>arg1</code> for specifying the left and right operands,\n   respectively.</li>\n<li>At this time, the left operand (<code>arg0</code>) must be a reference\n    to a variable.</li>\n<li>For case-insensitive Regex matching, include a boolean parameter named\n    <code>ignore_case</code> that is set to <code>true</code>.\n    If not specified or set to any other value, the matching will be case\n    sensitive.</li>\n<li>To negate an operator, include a boolean parameter named\n    <code>negate</code> boolean parameter that is set to <code>true</code>.\n    </li>\n</ul>\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
+                                      :annotations {:required ["tagmanager.accounts.containers.workspaces.triggers.create"
+                                                               "tagmanager.accounts.containers.workspaces.triggers.update"]},
+                                      :type "array",
+                                      :items {:$ref "Parameter"}},
+                          :type {:enum ["conditionTypeUnspecified"
                                         "equals"
                                         "contains"
                                         "startsWith"
@@ -1141,74 +1133,81 @@
                                         "urlMatches"],
                                  :description "The type of operator for this condition.\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
                                  :annotations {:required ["tagmanager.accounts.containers.workspaces.triggers.create"
-                                                          "tagmanager.accounts.containers.workspaces.triggers.update"]}},
-                          :parameter {:description "A list of named parameters (key/value), depending on the condition's type.\nNotes:<ul>\n<li>For binary operators, include parameters named <code>arg0</code> and\n   <code>arg1</code> for specifying the left and right operands,\n   respectively.</li>\n<li>At this time, the left operand (<code>arg0</code>) must be a reference\n    to a variable.</li>\n<li>For case-insensitive Regex matching, include a boolean parameter named\n    <code>ignore_case</code> that is set to <code>true</code>.\n    If not specified or set to any other value, the matching will be case\n    sensitive.</li>\n<li>To negate an operator, include a boolean parameter named\n    <code>negate</code> boolean parameter that is set to <code>true</code>.\n    </li>\n</ul>\n@mutable tagmanager.accounts.containers.workspaces.triggers.create\n@mutable tagmanager.accounts.containers.workspaces.triggers.update",
-                                      :annotations {:required ["tagmanager.accounts.containers.workspaces.triggers.create"
-                                                               "tagmanager.accounts.containers.workspaces.triggers.update"]},
-                                      :type "array",
-                                      :items {:$ref "Parameter"}}},
+                                                          "tagmanager.accounts.containers.workspaces.triggers.update"]},
+                                 :type "string",
+                                 :enumDescriptions [""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    ""
+                                                    "NOTE(lanzone): When defining a ConditionType here, don't forget to also\ndefine a matching PredicateType (in condition.proto)."]}},
              :id "Condition"},
  :ListContainerVersionsResponse {:description "List container versions response.",
                                  :type "object",
-                                 :properties {:containerVersionHeader {:description "All container version headers of a GTM Container.",
+                                 :properties {:nextPageToken {:type "string",
+                                                              :description "Continuation token for fetching the next page of results."},
+                                              :containerVersionHeader {:description "All container version headers of a GTM Container.",
                                                                        :type "array",
-                                                                       :items {:$ref "ContainerVersionHeader"}},
-                                              :nextPageToken {:description "Continuation token for fetching the next page of results.",
-                                                              :type "string"}},
+                                                                       :items {:$ref "ContainerVersionHeader"}}},
                                  :id "ListContainerVersionsResponse"},
- :RevertTagResponse {:properties {:tag {:$ref "Tag",
+ :RevertTagResponse {:description "The result of reverting a tag in a workspace.",
+                     :type "object",
+                     :properties {:tag {:$ref "Tag",
                                         :description "Tag as it appears in the latest container version since the last\nworkspace synchronization operation. If no tag is present, that means\nthe tag was deleted in the latest container version."}},
-                     :id "RevertTagResponse",
-                     :description "The result of reverting a tag in a workspace.",
-                     :type "object"},
- :ZoneBoundary {:description "Represents a Zone's boundaries.",
+                     :id "RevertTagResponse"},
+ :ZoneBoundary {:id "ZoneBoundary",
+                :description "Represents a Zone's boundaries.",
                 :type "object",
-                :properties {:condition {:description "The conditions that, when conjoined, make up the boundary.",
+                :properties {:customEvaluationTriggerId {:description "Custom evaluation trigger IDs. A zone will evaluate its boundary\nconditions when any of the listed triggers are true.",
+                                                         :type "array",
+                                                         :items {:type "string"}},
+                             :condition {:description "The conditions that, when conjoined, make up the boundary.",
                                          :type "array",
-                                         :items {:$ref "Condition"}},
-                             :customEvaluationTriggerId {:type "array",
-                                                         :items {:type "string"},
-                                                         :description "Custom evaluation trigger IDs. A zone will evaluate its boundary\nconditions when any of the listed triggers are true."}},
-                :id "ZoneBoundary"},
+                                         :items {:$ref "Condition"}}}},
  :ZoneChildContainer {:description "Represents a child container of a Zone.",
                       :type "object",
-                      :properties {:publicId {:type "string",
-                                              :description "The child container's public id."},
+                      :properties {:publicId {:description "The child container's public id.",
+                                              :type "string"},
                                    :nickname {:description "The zone's nickname for the child container.",
                                               :type "string"}},
                       :id "ZoneChildContainer"},
- :VariableFormatValue {:properties {:convertUndefinedToValue {:$ref "Parameter",
+ :VariableFormatValue {:type "object",
+                       :properties {:convertNullToValue {:$ref "Parameter",
+                                                         :description "The value to convert if a variable value is null."},
+                                    :convertTrueToValue {:$ref "Parameter",
+                                                         :description "The value to convert if a variable value is true."},
+                                    :convertFalseToValue {:description "The value to convert if a variable value is false.",
+                                                          :$ref "Parameter"},
+                                    :convertUndefinedToValue {:$ref "Parameter",
                                                               :description "The value to convert if a variable value is undefined."},
-                                    :caseConversionType {:description "The option to convert a string-type variable value to either lowercase or\nuppercase.",
+                                    :caseConversionType {:enum ["none"
+                                                                "lowercase"
+                                                                "uppercase"],
+                                                         :description "The option to convert a string-type variable value to either lowercase or\nuppercase.",
                                                          :type "string",
                                                          :enumDescriptions [""
                                                                             "The option to convert a variable value to lowercase."
-                                                                            "The option to convert a variable value to uppercase."],
-                                                         :enum ["none"
-                                                                "lowercase"
-                                                                "uppercase"]},
-                                    :convertNullToValue {:$ref "Parameter",
-                                                         :description "The value to convert if a variable value is null."},
-                                    :convertTrueToValue {:description "The value to convert if a variable value is true.",
-                                                         :$ref "Parameter"},
-                                    :convertFalseToValue {:description "The value to convert if a variable value is false.",
-                                                          :$ref "Parameter"}},
-                       :id "VariableFormatValue",
-                       :type "object"},
- :PublishContainerVersionResponse {:id "PublishContainerVersionResponse",
-                                   :description "Publish container version response.",
+                                                                            "The option to convert a variable value to uppercase."]}},
+                       :id "VariableFormatValue"},
+ :PublishContainerVersionResponse {:description "Publish container version response.",
                                    :type "object",
-                                   :properties {:compilerError {:description "Compiler errors or not.",
-                                                                :type "boolean"},
-                                                :containerVersion {:description "The container version created.",
-                                                                   :$ref "ContainerVersion"}}},
+                                   :properties {:containerVersion {:description "The container version created.",
+                                                                   :$ref "ContainerVersion"},
+                                                :compilerError {:description "Compiler errors or not.",
+                                                                :type "boolean"}},
+                                   :id "PublishContainerVersionResponse"},
  :Entity {:description "A workspace entity that may represent a tag, trigger, variable, or folder in\naddition to its status in the workspace.",
           :type "object",
-          :properties {:folder {:$ref "Folder",
-                                :description "The Folder being represented by the entity."},
-                       :tag {:description "The tag being represented by the entity.",
+          :properties {:tag {:description "The tag being represented by the entity.",
                              :$ref "Tag"},
-                       :changeStatus {:enumDescriptions [""
+                       :changeStatus {:type "string",
+                                      :enumDescriptions [""
                                                          "The entity has never been changed."
                                                          "The entity is added to the workspace."
                                                          "The entity is deleted from the workspace."
@@ -1218,10 +1217,11 @@
                                              "added"
                                              "deleted"
                                              "updated"],
-                                      :description "Represents how the entity has been changed in the workspace.",
-                                      :type "string"},
+                                      :description "Represents how the entity has been changed in the workspace."},
                        :trigger {:$ref "Trigger",
                                  :description "The trigger being represented by the entity."},
                        :variable {:$ref "Variable",
-                                  :description "The variable being represented by the entity."}},
+                                  :description "The variable being represented by the entity."},
+                       :folder {:$ref "Folder",
+                                :description "The Folder being represented by the entity."}},
           :id "Entity"}}

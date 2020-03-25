@@ -12,21 +12,22 @@
   Required parameters: adClientId
   
   Optional parameters: none
+  
   Get information about one of the ad clients in the Host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}"
      #{:adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -36,22 +37,23 @@
   
   Required parameters: none
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
+  
   List all host ad clients in this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

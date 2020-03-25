@@ -12,25 +12,26 @@
   Required parameters: presentationId
   
   Optional parameters: none
+  
   Gets the latest version of the specified presentation."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/drive.readonly"
             "https://www.googleapis.com/auth/presentations"
             "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:presentationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:presentationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations/{+presentationId}"
      #{:presentationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,7 +75,7 @@
               :masterProperties MasterProperties,
               :layoutProperties LayoutProperties,
               :pageProperties PageProperties}],
-   :pageSize {:width Dimension, :height Dimension},
+   :pageSize {:height Dimension, :width Dimension},
    :masters [{:notesProperties NotesProperties,
               :objectId string,
               :revisionId string,
@@ -94,21 +95,21 @@
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/presentations"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -122,8 +123,7 @@
   
   Body: 
   
-  {:writeControl {:requiredRevisionId string},
-   :requests [{:updateImageProperties UpdateImagePropertiesRequest,
+  {:requests [{:updateImageProperties UpdateImagePropertiesRequest,
                :updatePageElementsZOrder UpdatePageElementsZOrderRequest,
                :updatePageElementTransform UpdatePageElementTransformRequest,
                :createLine CreateLineRequest,
@@ -165,7 +165,8 @@
                :ungroupObjects UngroupObjectsRequest,
                :updateSlidesPosition UpdateSlidesPositionRequest,
                :insertTableColumns InsertTableColumnsRequest,
-               :createTable CreateTableRequest}]}
+               :createTable CreateTableRequest}],
+   :writeControl {:requiredRevisionId string}}
   
   Applies one or more updates to the presentation.
   
@@ -194,21 +195,51 @@
             "https://www.googleapis.com/auth/presentations"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/spreadsheets.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:presentationId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:presentationId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations/{presentationId}:batchUpdate"
      #{:presentationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn pages-get$
+  "https://developers.google.com/slides/api/reference/rest/v1/presentations/pages/get
+  
+  Required parameters: presentationId, pageObjectId
+  
+  Optional parameters: none
+  
+  Gets the latest version of the specified page in the presentation."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/presentations"
+            "https://www.googleapis.com/auth/presentations.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:pageObjectId :presentationId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://slides.googleapis.com/"
+     "v1/presentations/{presentationId}/pages/{pageObjectId}"
+     #{:pageObjectId :presentationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -216,9 +247,10 @@
 (defn pages-getThumbnail$
   "https://developers.google.com/slides/api/reference/rest/v1/presentations/pages/getThumbnail
   
-  Required parameters: pageObjectId, presentationId
+  Required parameters: presentationId, pageObjectId
   
   Optional parameters: thumbnailProperties.mimeType, thumbnailProperties.thumbnailSize
+  
   Generates a thumbnail of the latest version of the specified page in the
   presentation and returns a URL to the thumbnail image.
   
@@ -229,48 +261,19 @@
             "https://www.googleapis.com/auth/drive.readonly"
             "https://www.googleapis.com/auth/presentations"
             "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:pageObjectId :presentationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:pageObjectId :presentationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://slides.googleapis.com/"
      "v1/presentations/{presentationId}/pages/{pageObjectId}/thumbnail"
      #{:pageObjectId :presentationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn pages-get$
-  "https://developers.google.com/slides/api/reference/rest/v1/presentations/pages/get
-  
-  Required parameters: pageObjectId, presentationId
-  
-  Optional parameters: none
-  Gets the latest version of the specified page in the presentation."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/drive.readonly"
-            "https://www.googleapis.com/auth/presentations"
-            "https://www.googleapis.com/auth/presentations.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:pageObjectId :presentationId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://slides.googleapis.com/"
-     "v1/presentations/{presentationId}/pages/{pageObjectId}"
-     #{:pageObjectId :presentationId}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

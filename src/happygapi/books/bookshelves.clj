@@ -12,21 +12,22 @@
   Required parameters: shelf, userId
   
   Optional parameters: source
+  
   Retrieves metadata for a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "users/{userId}/bookshelves/{shelf}"
      #{:shelf :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: userId
   
   Optional parameters: source
+  
   Retrieves a list of public bookshelves for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "users/{userId}/bookshelves"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +64,22 @@
   Required parameters: shelf, userId
   
   Optional parameters: maxResults, showPreorders, source, startIndex
+  
   Retrieves volumes in a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:shelf :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/books/v1/"
      "users/{userId}/bookshelves/{shelf}/volumes"
      #{:shelf :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

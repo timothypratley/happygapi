@@ -12,6 +12,7 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Returns a user profile.
   
   This method returns the following error codes:
@@ -23,19 +24,19 @@
             "https://www.googleapis.com/auth/classroom.profile.photos"
             "https://www.googleapis.com/auth/classroom.rosters"
             "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{userId}"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -46,6 +47,7 @@
   Required parameters: studentId
   
   Optional parameters: invitedEmailAddress, states, pageSize, pageToken
+  
   Returns a list of guardian invitations that the requesting user is
   permitted to view, filtered by the parameters provided.
   
@@ -64,19 +66,19 @@
     recognized, but Classroom has no record of that student."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:studentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:studentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations"
      #{:studentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -84,9 +86,10 @@
 (defn guardianInvitations-get$
   "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardianInvitations/get
   
-  Required parameters: invitationId, studentId
+  Required parameters: studentId, invitationId
   
   Optional parameters: none
+  
   Returns a specific guardian invitation.
   
   This method returns the following error codes:
@@ -103,19 +106,19 @@
     requesting user does not have access to see that student."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:studentId :invitationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:studentId :invitationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations/{invitationId}"
      #{:studentId :invitationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -129,11 +132,11 @@
   
   Body: 
   
-  {:creationTime string,
-   :invitationId string,
+  {:invitationId string,
    :studentId string,
    :state string,
-   :invitedEmailAddress string}
+   :invitedEmailAddress string,
+   :creationTime string}
   
   Modifies a guardian invitation.
   
@@ -154,21 +157,21 @@
     Classroom has no record of that student, or if the `id` field does not
     refer to a guardian invitation known to Classroom."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:studentId :invitationId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:studentId :invitationId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations/{invitationId}"
      #{:studentId :invitationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -182,11 +185,11 @@
   
   Body: 
   
-  {:creationTime string,
-   :invitationId string,
+  {:invitationId string,
    :studentId string,
    :state string,
-   :invitedEmailAddress string}
+   :invitedEmailAddress string,
+   :creationTime string}
   
   Creates a guardian invitation, and sends an email to the guardian asking
   them to confirm that they are the student's guardian.
@@ -219,21 +222,21 @@
     `invited_email_address` matches the Google account of an existing
     `Guardian` for this user."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:studentId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:studentId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardianInvitations"
      #{:studentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -244,6 +247,7 @@
   Required parameters: studentId, guardianId
   
   Optional parameters: none
+  
   Deletes a guardian.
   
   The guardian will no longer receive guardian notifications and the guardian
@@ -263,19 +267,19 @@
     the requested `student_id`, but no `Guardian` record exists for that
     student with the provided `guardian_id`."
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.students"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:guardianId :studentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:guardianId :studentId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardians/{guardianId}"
      #{:guardianId :studentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -286,6 +290,7 @@
   Required parameters: studentId
   
   Optional parameters: pageToken, invitedEmailAddress, pageSize
+  
   Returns a list of guardians that the requesting user is permitted to
   view, restricted to those that match the request.
   
@@ -309,19 +314,19 @@
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:studentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:studentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardians"
      #{:studentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -329,9 +334,10 @@
 (defn guardians-get$
   "https://developers.google.com/classroom/api/reference/rest/v1/userProfiles/guardians/get
   
-  Required parameters: guardianId, studentId
+  Required parameters: studentId, guardianId
   
   Optional parameters: none
+  
   Returns a specific guardian.
   
   This method returns the following error codes:
@@ -350,19 +356,19 @@
   {:scopes ["https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students"
             "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:guardianId :studentId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:guardianId :studentId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/userProfiles/{studentId}/guardians/{guardianId}"
      #{:guardianId :studentId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

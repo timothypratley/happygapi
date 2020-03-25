@@ -12,22 +12,23 @@
   Required parameters: activityId
   
   Optional parameters: none
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:activityId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:activityId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "activities/{activityId}"
      #{:activityId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,22 +39,23 @@
   Required parameters: collection, userId
   
   Optional parameters: maxResults, pageToken
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId :collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "people/{userId}/activities/{collection}"
      #{:userId :collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -64,22 +66,23 @@
   Required parameters: query
   
   Optional parameters: language, maxResults, orderBy, pageToken
+  
   Shut down. See https://developers.google.com/+/api-shutdown for more details."
   {:scopes ["https://www.googleapis.com/auth/plus.login"
             "https://www.googleapis.com/auth/plus.me"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:query})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:query})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/plus/v1/"
      "activities"
      #{:query}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -13,23 +13,24 @@
   Required parameters: name
   
   Optional parameters: orderBy, pageToken, pageSize, format
+  
   Lists assets that the user has liked. Only the value 'me', representing
   the currently-authenticated user, is supported. May include assets with an
   access level of UNLISTED."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://poly.googleapis.com/"
      "v1/{+name}/likedassets"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,6 +41,7 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize, visibility, orderBy, format
+  
   Lists assets authored by the given user. Only the value 'me', representing
   the currently-authenticated user, is supported. May include assets with an
   access level of PRIVATE or
@@ -47,19 +49,19 @@
   All Rights Reserved for the
   currently-authenticated user."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://poly.googleapis.com/"
      "v1/{+name}/assets"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

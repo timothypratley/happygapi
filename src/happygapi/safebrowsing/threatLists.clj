@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Lists the Safe Browsing threat lists available for download."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://safebrowsing.googleapis.com/"
      "v4/threatLists"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

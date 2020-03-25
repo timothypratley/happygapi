@@ -12,11 +12,12 @@
   Required parameters: startDate, endDate, engineAccountId, advertiserId, startRow, agencyId, rowCount
   
   Optional parameters: adId, adGroupId, campaignId, criterionId
+  
   Retrieves a list of conversions from a DoubleClick Search engine account."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:startDate
             :endDate
             :engineAccountId
@@ -36,11 +37,11 @@
        :startRow
        :agencyId
        :rowCount}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -91,21 +92,21 @@
   
   Inserts a batch of new conversions into DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "conversion"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -156,9 +157,9 @@
   
   Updates a batch of conversions in DoubleClick Search. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:startDate
             :endDate
             :engineAccountId
@@ -178,13 +179,13 @@
        :startRow
        :agencyId
        :rowCount}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -235,21 +236,21 @@
   
   Updates a batch of conversions in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "conversion"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -272,21 +273,21 @@
   
   Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "conversion/updateAvailability"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

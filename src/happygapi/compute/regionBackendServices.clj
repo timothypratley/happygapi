@@ -12,22 +12,25 @@
   Required parameters: backendService, project, region
   
   Optional parameters: requestId
+  
   Deletes the specified regional BackendService resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:backendService :region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,23 +41,26 @@
   Required parameters: backendService, project, region
   
   Optional parameters: none
+  
   Returns the specified regional BackendService resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:backendService :region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,21 +80,23 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:backendService :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices/{backendService}/getHealth"
      #{:backendService :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -143,10 +151,14 @@
    :id string,
    :kind string,
    :localityLbPolicy string,
+   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
+                    :dropTrafficIfUnhealthy boolean,
+                    :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
    :backends [{:description string,
+               :failover boolean,
                :capacityScaler number,
                :group string,
                :maxRatePerInstance number,
@@ -163,24 +175,24 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Creates a regional BackendService resource in the specified project using the data included in the request. There are several restrictions and guidelines to keep in mind when creating a regional backend service. Read  Restrictions and Guidelines for more information."
+  Creates a regional BackendService resource in the specified project using the data included in the request. There are several restrictions and guidelines to keep in mind when creating a regional backend service. Read  Understanding backend services for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -191,23 +203,24 @@
   Required parameters: project, region
   
   Optional parameters: filter, maxResults, orderBy, pageToken
+  
   Retrieves the list of regional BackendService resources available to the specified project in the given region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:region :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices"
      #{:region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -262,10 +275,14 @@
    :id string,
    :kind string,
    :localityLbPolicy string,
+   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
+                    :dropTrafficIfUnhealthy boolean,
+                    :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
    :backends [{:description string,
+               :failover boolean,
                :capacityScaler number,
                :group string,
                :maxRatePerInstance number,
@@ -282,24 +299,26 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified regional BackendService resource with the data included in the request. There are several restrictions and guidelines to keep in mind when updating a backend service. Read  Restrictions and Guidelines for more information. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Updates the specified regional BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:backendService :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -354,10 +373,14 @@
    :id string,
    :kind string,
    :localityLbPolicy string,
+   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
+                    :dropTrafficIfUnhealthy boolean,
+                    :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
    :backends [{:description string,
+               :failover boolean,
                :capacityScaler number,
                :group string,
                :maxRatePerInstance number,
@@ -374,24 +397,26 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified regional BackendService resource with the data included in the request. There are several restrictions and guidelines to keep in mind when updating a backend service. Read  Restrictions and Guidelines for more information."
+  Updates the specified regional BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:backendService :region :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

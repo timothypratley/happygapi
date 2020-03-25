@@ -12,21 +12,22 @@
   Required parameters: calendarId
   
   Optional parameters: none
+  
   Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}/clear"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: calendarId
   
   Optional parameters: none
+  
   Deletes a secondary calendar. Use calendars.clear for clearing all events on primary calendars."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,22 +64,23 @@
   Required parameters: calendarId
   
   Optional parameters: none
+  
   Returns metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -102,21 +105,21 @@
   
   Creates a secondary calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -141,21 +144,21 @@
   
   Updates metadata for a calendar. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -180,21 +183,21 @@
   
   Updates metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:calendarId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
      "calendars/{calendarId}"
      #{:calendarId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

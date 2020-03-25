@@ -12,6 +12,7 @@
   Required parameters: none
   
   Optional parameters: pageToken, pageSize
+  
   Returns a list of [Google Cloud Platform (GCP) `Projects`]
   (https://cloud.google.com/resource-manager/reference/rest/v1/projects)
   that are available to have Firebase resources added to them.
@@ -29,19 +30,19 @@
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
             "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://firebase.googleapis.com/"
      "v1beta1/availableProjects"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

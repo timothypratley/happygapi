@@ -29,21 +29,21 @@
   
   Update a given private auction proposal"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:privateAuctionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:privateAuctionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "privateauction/{privateAuctionId}/updateproposal"
      #{:privateAuctionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

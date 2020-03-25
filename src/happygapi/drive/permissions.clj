@@ -11,7 +11,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: emailMessage, sendNotificationEmail, supportsAllDrives, supportsTeamDrives, transferOwnership, useDomainAdminAccess
+  Optional parameters: transferOwnership, moveToNewOwnersRoot, emailMessage, enforceSingleParent, supportsAllDrives, useDomainAdminAccess, sendNotificationEmail, supportsTeamDrives
   
   Body: 
   
@@ -38,21 +38,21 @@
   Creates a permission for a file or shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/permissions"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -63,22 +63,23 @@
   Required parameters: fileId, permissionId
   
   Optional parameters: supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
+  
   Deletes a permission."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:permissionId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:permissionId :fileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/permissions/{permissionId}"
      #{:permissionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -89,6 +90,7 @@
   Required parameters: fileId, permissionId
   
   Optional parameters: supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
+  
   Gets a permission by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
@@ -96,19 +98,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:permissionId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:permissionId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/permissions/{permissionId}"
      #{:permissionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -119,6 +121,7 @@
   Required parameters: fileId
   
   Optional parameters: pageSize, pageToken, supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
+  
   Lists a file's or shared drive's permissions."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
@@ -126,19 +129,19 @@
             "https://www.googleapis.com/auth/drive.metadata.readonly"
             "https://www.googleapis.com/auth/drive.photos.readonly"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/permissions"
      #{:fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -175,21 +178,21 @@
   Updates a permission with patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:permissionId :fileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:permissionId :fileId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "files/{fileId}/permissions/{permissionId}"
      #{:permissionId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

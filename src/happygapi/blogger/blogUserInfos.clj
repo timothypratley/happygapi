@@ -12,22 +12,23 @@
   Required parameters: blogId, userId
   
   Optional parameters: maxPosts
+  
   Gets one blog and user info pair by blogId and userId."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:blogId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/blogger/v3/"
      "users/{userId}/blogs/{blogId}"
      #{:blogId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

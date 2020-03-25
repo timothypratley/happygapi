@@ -12,6 +12,7 @@
   Required parameters: projectId
   
   Optional parameters: none
+  
   Returns the Google service account that is used by Storage Transfer
   Service to access buckets in the project where transfers
   run or in other projects. Each Google service account is associated
@@ -21,19 +22,19 @@
   account is created and owned by Storage Transfer Service and can
   only be used by Storage Transfer Service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storagetransfer.googleapis.com/"
      "v1/googleServiceAccounts/{projectId}"
      #{:projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

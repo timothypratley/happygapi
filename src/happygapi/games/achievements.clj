@@ -12,21 +12,24 @@
   Required parameters: achievementId, stepsToIncrement
   
   Optional parameters: requestId
+  
   Increments the steps of the achievement with the given ID for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:achievementId :stepsToIncrement})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:achievementId :stepsToIncrement})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "achievements/{achievementId}/increment"
      #{:achievementId :stepsToIncrement}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +40,22 @@
   Required parameters: playerId
   
   Optional parameters: language, maxResults, pageToken, state
+  
   Lists the progress for all your application's achievements for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/{playerId}/achievements"
      #{:playerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,21 +66,22 @@
   Required parameters: achievementId
   
   Optional parameters: none
+  
   Sets the state of the achievement with the given ID to REVEALED for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:achievementId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "achievements/{achievementId}/reveal"
      #{:achievementId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,21 +92,22 @@
   Required parameters: achievementId, steps
   
   Optional parameters: none
+  
   Sets the steps for the currently authenticated player towards unlocking an achievement. If the steps parameter is less than the current number of steps that the player already gained for the achievement, the achievement is not modified."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:achievementId :steps})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId :steps})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "achievements/{achievementId}/setStepsAtLeast"
      #{:achievementId :steps}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -112,21 +118,22 @@
   Required parameters: achievementId
   
   Optional parameters: builtinGameId
+  
   Unlocks this achievement for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:achievementId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "achievements/{achievementId}/unlock"
      #{:achievementId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -149,21 +156,21 @@
   
   Updates multiple achievements for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "achievements/updateMultiple"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -15,28 +15,28 @@
   
   Body: 
   
-  {:accessTuple {:fullResourceName string,
-                 :principal string,
-                 :permission string}}
+  {:accessTuple {:principal string,
+                 :permission string,
+                 :fullResourceName string}}
   
   Checks whether a member has a specific permission for a specific resource,
   and explains why the member does or does not have that permission."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://policytroubleshooter.googleapis.com/"
      "v1/iam:troubleshoot"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

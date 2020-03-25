@@ -12,23 +12,24 @@
   Required parameters: locationId
   
   Optional parameters: languageCode, filter
+  
   Returns a list of the sensitive information types that the DLP API
   supports. See https://cloud.google.com/dlp/docs/infotypes-reference to
   learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:locationId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:locationId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
      "v2/locations/{locationId}/infoTypes"
      #{:locationId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

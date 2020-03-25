@@ -12,21 +12,22 @@
   Required parameters: id
   
   Optional parameters: none
+  
   Deletes a subscription."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -57,21 +58,21 @@
   
   Creates a new subscription."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -82,21 +83,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Retrieves a list of subscriptions for the authenticated user and service."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -127,21 +129,21 @@
   
   Updates an existing subscription in place."
   {:scopes ["https://www.googleapis.com/auth/glass.timeline"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/mirror/v1/"
      "subscriptions/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

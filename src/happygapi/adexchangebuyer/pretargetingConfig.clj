@@ -12,21 +12,22 @@
   Required parameters: accountId, configId
   
   Optional parameters: none
+  
   Deletes an existing pretargeting config."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :configId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :configId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}/{configId}"
      #{:accountId :configId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: accountId, configId
   
   Optional parameters: none
+  
   Gets a specific pretargeting configuration"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :configId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :configId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}/{configId}"
      #{:accountId :configId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -97,21 +99,21 @@
   
   Inserts a new pretargeting configuration."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -122,21 +124,22 @@
   Required parameters: accountId
   
   Optional parameters: none
+  
   Retrieves a list of the authenticated user's pretargeting configurations."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}"
      #{:accountId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -182,21 +185,21 @@
   
   Updates an existing pretargeting config. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId :configId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :configId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}/{configId}"
      #{:accountId :configId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -242,21 +245,21 @@
   
   Updates an existing pretargeting config."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId :configId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :configId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/adexchangebuyer/v1.4/"
      "pretargetingconfigs/{accountId}/{configId}"
      #{:accountId :configId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

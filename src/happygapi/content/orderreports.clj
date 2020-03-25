@@ -12,21 +12,24 @@
   Required parameters: disbursementStartDate, merchantId
   
   Optional parameters: disbursementEndDate, maxResults, pageToken
+  
   Retrieves a report for disbursements from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:disbursementStartDate :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:disbursementStartDate :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orderreports/disbursements"
      #{:disbursementStartDate :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,11 +40,12 @@
   Required parameters: disbursementId, merchantId, transactionStartDate
   
   Optional parameters: maxResults, pageToken, transactionEndDate
+  
   Retrieves a list of transactions for a disbursement from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:transactionStartDate :disbursementId :merchantId})]}
   (util/get-response
    (http/get
@@ -49,11 +53,11 @@
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/orderreports/disbursements/{disbursementId}/transactions"
      #{:transactionStartDate :disbursementId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

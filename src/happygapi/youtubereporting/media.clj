@@ -12,23 +12,24 @@
   Required parameters: resourceName
   
   Optional parameters: none
+  
   Method for media download. Download is supported
   on the URI `/v1/media/{+name}?alt=media`."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://youtubereporting.googleapis.com/"
      "v1/media/{+resourceName}"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

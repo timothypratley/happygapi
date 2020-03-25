@@ -1,21 +1,6 @@
-{:ViolatingSitesResponse {:id "ViolatingSitesResponse",
-                          :description "Response message for ListViolatingSites.",
-                          :type "object",
-                          :properties {:violatingSites {:type "array",
-                                                        :items {:$ref "SiteSummaryResponse"},
-                                                        :description "The list of violating sites."}}},
- :SiteSummaryResponse {:description "Response message for GetSiteSummary.",
+{:SiteSummaryResponse {:description "Response message for GetSiteSummary.",
                        :type "object",
-                       :properties {:underReview {:description "Whether the site is currently under review.",
-                                                  :type "boolean"},
-                                    :reportUrl {:type "string",
-                                                :description "A link to the full Abusive Experience Report for the site.\n\nNot set in\nViolatingSitesResponse.\n\nNote that you must complete the [Search Console verification\nprocess](https://support.google.com/webmasters/answer/9008080) for the site\nbefore you can access the full report."},
-                                    :lastChangeTime {:description "The time at which the site's status last changed.",
-                                                     :format "google-datetime",
-                                                     :type "string"},
-                                    :reviewedSite {:description "The name of the reviewed site, e.g. `google.com`.",
-                                                   :type "string"},
-                                    :abusiveStatus {:description "The site's Abusive Experience Report status.",
+                       :properties {:abusiveStatus {:description "The site's Abusive Experience Report status.",
                                                     :type "string",
                                                     :enumDescriptions ["Not reviewed."
                                                                        "Passing."
@@ -26,9 +11,7 @@
                                     :enforcementTime {:description "The time at which\n[enforcement](https://support.google.com/webtools/answer/7538608) against\nthe site began or will begin.\n\nNot set when the\nfilter_status\nis OFF.",
                                                       :format "google-datetime",
                                                       :type "string"},
-                                    :filterStatus {:description "The site's [enforcement\nstatus](https://support.google.com/webtools/answer/7538608).",
-                                                   :type "string",
-                                                   :enumDescriptions ["N/A."
+                                    :filterStatus {:enumDescriptions ["N/A."
                                                                       "Enforcement is on."
                                                                       "Enforcement is off."
                                                                       "Enforcement is paused."
@@ -37,5 +20,22 @@
                                                           "ON"
                                                           "OFF"
                                                           "PAUSED"
-                                                          "PENDING"]}},
-                       :id "SiteSummaryResponse"}}
+                                                          "PENDING"],
+                                                   :description "The site's [enforcement\nstatus](https://support.google.com/webtools/answer/7538608).",
+                                                   :type "string"},
+                                    :underReview {:description "Whether the site is currently under review.",
+                                                  :type "boolean"},
+                                    :reportUrl {:description "A link to the full Abusive Experience Report for the site.\n\nNot set in\nViolatingSitesResponse.\n\nNote that you must complete the [Search Console verification\nprocess](https://support.google.com/webmasters/answer/9008080) for the site\nbefore you can access the full report.",
+                                                :type "string"},
+                                    :lastChangeTime {:type "string",
+                                                     :description "The time at which the site's status last changed.",
+                                                     :format "google-datetime"},
+                                    :reviewedSite {:description "The name of the reviewed site, e.g. `google.com`.",
+                                                   :type "string"}},
+                       :id "SiteSummaryResponse"},
+ :ViolatingSitesResponse {:description "Response message for ListViolatingSites.",
+                          :type "object",
+                          :properties {:violatingSites {:type "array",
+                                                        :items {:$ref "SiteSummaryResponse"},
+                                                        :description "The list of violating sites."}},
+                          :id "ViolatingSitesResponse"}}

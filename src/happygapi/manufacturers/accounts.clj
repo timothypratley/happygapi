@@ -6,52 +6,28 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn products-delete$
-  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
-  
-  Required parameters: name, parent
-  
-  Optional parameters: none
-  Deletes the product from a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent :name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products/{+name}"
-     #{:parent :name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn products-list$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, include
+  Optional parameters: include, pageToken, pageSize
+  
   Lists all the products in a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -62,6 +38,7 @@
   Required parameters: parent, name
   
   Optional parameters: include
+  
   Gets the product from a Manufacturer Center account, including product
   issues.
   
@@ -70,19 +47,19 @@
   available once the product has been processed, other issues may take days
   to appear."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent :name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"
      #{:parent :name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -90,7 +67,7 @@
 (defn products-update$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/update
   
-  Required parameters: parent, name
+  Required parameters: name, parent
   
   Optional parameters: none
   
@@ -112,9 +89,9 @@
                           :status string}],
    :productPageUrl string,
    :releaseDate string,
-   :productDetail [{:attributeValue string,
-                    :sectionName string,
-                    :attributeName string}],
+   :productDetail [{:attributeName string,
+                    :attributeValue string,
+                    :sectionName string}],
    :productName string,
    :sizeType string,
    :size string,
@@ -134,7 +111,8 @@
    :gender string,
    :targetClientId string,
    :imageLink {:type string, :imageUrl string, :status string},
-   :pattern string}
+   :pattern string,
+   :richProductContent [string]}
   
   Inserts or updates the attributes of the product in a Manufacturer Center
   account.
@@ -152,21 +130,47 @@
   of previously uploaded products will return the original state of the
   product."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent :name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent :name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"
      #{:parent :name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn products-delete$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
+  
+  Required parameters: name, parent
+  
+  Optional parameters: none
+  
+  Deletes the product from a Manufacturer Center account."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products/{+name}"
+     #{:parent :name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

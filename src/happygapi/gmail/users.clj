@@ -12,25 +12,26 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets the current user's Gmail profile."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/profile"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -41,24 +42,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Stop receiving push notifications for the given user mailbox."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/stop"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -79,21 +81,21 @@
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/watch"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -123,21 +125,21 @@
             "https://www.googleapis.com/auth/gmail.addons.current.action.compose"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -148,23 +150,24 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Immediately and permanently deletes the specified draft. Does not simply trash it."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -175,24 +178,25 @@
   Required parameters: id, userId
   
   Optional parameters: format
+  
   Gets the specified draft."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -203,24 +207,25 @@
   Required parameters: userId
   
   Optional parameters: includeSpamTrash, maxResults, pageToken, q
+  
   Lists the drafts in the user's mailbox."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -249,21 +254,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts/send"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -292,21 +297,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/drafts/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -317,24 +322,25 @@
   Required parameters: userId
   
   Optional parameters: historyTypes, labelId, maxResults, pageToken, startHistoryId
+  
   Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing historyId)."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/history"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -363,21 +369,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -388,23 +394,24 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -415,25 +422,26 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Gets the specified label."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -444,25 +452,26 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Lists all labels in the user's mailbox."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -491,21 +500,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -534,21 +543,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.labels"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/labels/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -559,6 +568,7 @@
   Required parameters: id, userId
   
   Optional parameters: format, metadataHeaders
+  
   Gets the specified message."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.addons.current.message.action"
@@ -567,19 +577,19 @@
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -612,21 +622,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.insert"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -637,22 +647,23 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Removes the specified message from the trash."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{id}/untrash"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -663,21 +674,22 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Immediately and permanently deletes the specified message. This operation cannot be undone. Prefer messages.trash instead."
   {:scopes ["https://mail.google.com/"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -695,21 +707,21 @@
   
   Deletes many messages by message ID. Provides no guarantees that messages were not already deleted or even existed at all."
   {:scopes ["https://mail.google.com/"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/batchDelete"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -728,21 +740,21 @@
   Modifies the labels on the specified messages."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/batchModify"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -753,24 +765,25 @@
   Required parameters: userId
   
   Optional parameters: includeSpamTrash, labelIds, maxResults, pageToken, q
+  
   Lists the messages in the user's mailbox."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -805,21 +818,21 @@
             "https://www.googleapis.com/auth/gmail.compose"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.send"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/send"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -852,21 +865,21 @@
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.insert"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/import"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -885,21 +898,21 @@
   Modifies the labels on the specified message."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{id}/modify"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -910,22 +923,23 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Moves the specified message to the trash."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{id}/trash"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -936,25 +950,26 @@
   Required parameters: id, messageId, userId
   
   Optional parameters: none
+  
   Gets the specified message attachment."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.addons.current.message.action"
             "https://www.googleapis.com/auth/gmail.addons.current.message.readonly"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:messageId :id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:messageId :id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/messages/{messageId}/attachments/{id}"
      #{:messageId :id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -965,24 +980,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets language settings."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/language"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1003,21 +1019,21 @@
   
   Updates IMAP settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/imap"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1028,24 +1044,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets vacation responder settings."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/vacation"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1056,24 +1073,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets the auto-forwarding setting for the specified account."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/autoForwarding"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1093,21 +1111,21 @@
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/autoForwarding"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1132,21 +1150,21 @@
   
   Updates vacation responder settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/vacation"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1166,21 +1184,21 @@
   
   If successful, the return object contains the displayLanguage that was saved for the user, which may differ from the value passed into the request. This is because the requested displayLanguage may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/language"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1191,24 +1209,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets IMAP settings."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/imap"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1219,24 +1238,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Gets POP settings."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/pop"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1254,21 +1274,21 @@
   
   Updates POP settings."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/pop"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1294,21 +1314,21 @@
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/delegates"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1319,25 +1339,26 @@
   Required parameters: delegateEmail, userId
   
   Optional parameters: none
+  
   Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it.
   
   Note that a delegate user must be referred to by their primary email address, and not an email alias.
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:delegateEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:delegateEmail :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/delegates/{delegateEmail}"
      #{:delegateEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1348,6 +1369,7 @@
   Required parameters: delegateEmail, userId
   
   Optional parameters: none
+  
   Gets the specified delegate.
   
   Note that a delegate user must be referred to by their primary email address, and not an email alias.
@@ -1357,19 +1379,19 @@
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:delegateEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:delegateEmail :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/delegates/{delegateEmail}"
      #{:delegateEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1380,6 +1402,7 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Lists the delegates for the specified account.
   
   This method is only available to service account clients that have been delegated domain-wide authority."
@@ -1387,19 +1410,19 @@
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/delegates"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1429,21 +1452,21 @@
   
   Creates a filter."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/filters"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1454,21 +1477,22 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Deletes a filter."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/filters/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1479,24 +1503,25 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Gets a filter."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/filters/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1507,24 +1532,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Lists the message filters of a Gmail user."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/filters"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1544,21 +1570,21 @@
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/forwardingAddresses"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1569,23 +1595,24 @@
   Required parameters: forwardingEmail, userId
   
   Optional parameters: none
+  
   Deletes the specified forwarding address and revokes any verification that may have been required.
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:forwardingEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:forwardingEmail :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/forwardingAddresses/{forwardingEmail}"
      #{:forwardingEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1596,24 +1623,25 @@
   Required parameters: forwardingEmail, userId
   
   Optional parameters: none
+  
   Gets the specified forwarding address."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:forwardingEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:forwardingEmail :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/forwardingAddresses/{forwardingEmail}"
      #{:forwardingEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1624,24 +1652,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Lists the forwarding addresses for the specified account."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/forwardingAddresses"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1673,21 +1702,21 @@
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1698,23 +1727,24 @@
   Required parameters: sendAsEmail, userId
   
   Optional parameters: none
+  
   Deletes the specified send-as alias. Revokes any verification that may have been required for using it.
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1725,24 +1755,25 @@
   Required parameters: sendAsEmail, userId
   
   Optional parameters: none
+  
   Gets the specified send-as alias. Fails with an HTTP 404 error if the specified address is not a member of the collection."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1753,24 +1784,25 @@
   Required parameters: userId
   
   Optional parameters: none
+  
   Lists the send-as aliases for the specified account. The result includes the primary send-as address associated with the account as well as any custom \"from\" aliases."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1803,21 +1835,21 @@
   Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1850,21 +1882,21 @@
   Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1875,23 +1907,24 @@
   Required parameters: sendAsEmail, userId
   
   Optional parameters: none
+  
   Sends a verification email to the specified send-as alias address. The verification status must be pending.
   
   This method is only available to service account clients that have been delegated domain-wide authority."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/verify"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1902,22 +1935,23 @@
   Required parameters: id, sendAsEmail, userId
   
   Optional parameters: none
+  
   Deletes the specified S/MIME config for the specified send-as alias."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :sendAsEmail :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}"
      #{:id :sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1928,25 +1962,26 @@
   Required parameters: id, sendAsEmail, userId
   
   Optional parameters: none
+  
   Gets the specified S/MIME config for the specified send-as alias."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :sendAsEmail :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}"
      #{:id :sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1971,21 +2006,21 @@
   Insert (upload) the given S/MIME config for the specified send-as alias. Note that pkcs12 format is required for the key."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/smimeInfo"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -1996,25 +2031,26 @@
   Required parameters: sendAsEmail, userId
   
   Optional parameters: none
+  
   Lists S/MIME configs for the specified send-as alias."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"
             "https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sendAsEmail :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/smimeInfo"
      #{:sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2025,22 +2061,23 @@
   Required parameters: id, sendAsEmail, userId
   
   Optional parameters: none
+  
   Sets the default S/MIME config for the specified send-as alias."
   {:scopes ["https://www.googleapis.com/auth/gmail.settings.basic"
             "https://www.googleapis.com/auth/gmail.settings.sharing"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :sendAsEmail :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :sendAsEmail :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}/setDefault"
      #{:id :sendAsEmail :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2051,21 +2088,22 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Immediately and permanently deletes the specified thread. This operation cannot be undone. Prefer threads.trash instead."
   {:scopes ["https://mail.google.com/"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2076,6 +2114,7 @@
   Required parameters: id, userId
   
   Optional parameters: format, metadataHeaders
+  
   Gets the specified thread."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.addons.current.message.action"
@@ -2084,19 +2123,19 @@
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads/{id}"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2107,24 +2146,25 @@
   Required parameters: userId
   
   Optional parameters: includeSpamTrash, labelIds, maxResults, pageToken, q
+  
   Lists the threads in the user's mailbox."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.metadata"
             "https://www.googleapis.com/auth/gmail.modify"
             "https://www.googleapis.com/auth/gmail.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads"
      #{:userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2143,21 +2183,21 @@
   Modifies the labels applied to the thread. This applies to all messages in the thread."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads/{id}/modify"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2168,22 +2208,23 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Moves the specified thread to the trash."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads/{id}/trash"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -2194,22 +2235,23 @@
   Required parameters: id, userId
   
   Optional parameters: none
+  
   Removes the specified thread from the trash."
   {:scopes ["https://mail.google.com/"
             "https://www.googleapis.com/auth/gmail.modify"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :userId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/gmail/v1/users/"
      "{userId}/threads/{id}/untrash"
      #{:id :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

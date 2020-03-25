@@ -6,42 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults/get
-  
-  Required parameters: sizeBytes, instanceName, hash
-  
-  Optional parameters: inlineStdout, inlineStderr, inlineOutputFiles
-  Retrieve a cached execution result.
-  
-  Implementations SHOULD ensure that any blobs referenced from the
-  ContentAddressableStorage
-  are available at the time of returning the
-  ActionResult and will be
-  for some period of time afterwards. The TTLs of the referenced blobs SHOULD be increased
-  if necessary and applicable.
-  
-  Errors:
-  
-  * `NOT_FOUND`: The requested `ActionResult` is not in the cache."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:hash :instanceName :sizeBytes})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://remotebuildexecution.googleapis.com/"
-     "v2/{+instanceName}/actionResults/{hash}/{sizeBytes}"
-     #{:hash :instanceName :sizeBytes}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults/update
   
@@ -53,6 +17,9 @@
   
   {:stderrDigest {:hash string, :sizeBytes string},
    :exitCode integer,
+   :outputSymlinks [{:path string,
+                     :nodeProperties [BuildBazelRemoteExecutionV2NodeProperty],
+                     :target string}],
    :stdoutRaw string,
    :executionMetadata {:executionCompletedTimestamp string,
                        :workerStartTimestamp string,
@@ -64,16 +31,21 @@
                        :queuedTimestamp string,
                        :outputUploadStartTimestamp string,
                        :worker string},
-   :outputFiles [{:digest BuildBazelRemoteExecutionV2Digest,
-                  :isExecutable boolean,
+   :outputFiles [{:isExecutable boolean,
                   :path string,
-                  :contents string}],
+                  :contents string,
+                  :nodeProperties [BuildBazelRemoteExecutionV2NodeProperty],
+                  :digest BuildBazelRemoteExecutionV2Digest}],
    :stdoutDigest {:hash string, :sizeBytes string},
-   :outputDirectories [{:path string,
-                        :treeDigest BuildBazelRemoteExecutionV2Digest}],
-   :outputDirectorySymlinks [{:target string, :path string}],
+   :outputDirectories [{:treeDigest BuildBazelRemoteExecutionV2Digest,
+                        :path string}],
+   :outputDirectorySymlinks [{:path string,
+                              :nodeProperties [BuildBazelRemoteExecutionV2NodeProperty],
+                              :target string}],
    :stderrRaw string,
-   :outputFileSymlinks [{:target string, :path string}]}
+   :outputFileSymlinks [{:path string,
+                         :nodeProperties [BuildBazelRemoteExecutionV2NodeProperty],
+                         :target string}]}
   
   Upload a new execution result.
   
@@ -92,21 +64,58 @@
   * `RESOURCE_EXHAUSTED`: There is insufficient storage space to add the
     entry to the cache."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:hash :instanceName :sizeBytes})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:hash :instanceName :sizeBytes})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://remotebuildexecution.googleapis.com/"
      "v2/{+instanceName}/actionResults/{hash}/{sizeBytes}"
      #{:hash :instanceName :sizeBytes}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/remote-build-execution/docs/api/reference/rest/v2/actionResults/get
+  
+  Required parameters: hash, sizeBytes, instanceName
+  
+  Optional parameters: inlineStdout, inlineStderr, inlineOutputFiles
+  
+  Retrieve a cached execution result.
+  
+  Implementations SHOULD ensure that any blobs referenced from the
+  ContentAddressableStorage
+  are available at the time of returning the
+  ActionResult and will be
+  for some period of time afterwards. The TTLs of the referenced blobs SHOULD be increased
+  if necessary and applicable.
+  
+  Errors:
+  
+  * `NOT_FOUND`: The requested `ActionResult` is not in the cache."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:hash :instanceName :sizeBytes})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://remotebuildexecution.googleapis.com/"
+     "v2/{+instanceName}/actionResults/{hash}/{sizeBytes}"
+     #{:hash :instanceName :sizeBytes}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

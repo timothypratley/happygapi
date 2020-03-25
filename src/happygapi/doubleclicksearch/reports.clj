@@ -71,21 +71,21 @@
   
   Generates and returns a report immediately."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "reports/generate"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -96,21 +96,22 @@
   Required parameters: reportId
   
   Optional parameters: none
+  
   Polls for the status of a report request."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "reports/{reportId}"
      #{:reportId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -121,21 +122,22 @@
   Required parameters: reportFragment, reportId
   
   Optional parameters: none
+  
   Downloads a report file encoded in UTF-8."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportFragment :reportId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportFragment :reportId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "reports/{reportId}/files/{reportFragment}"
      #{:reportFragment :reportId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -205,21 +207,21 @@
   
   Inserts a report request into the reporting system."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "reports"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

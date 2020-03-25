@@ -12,22 +12,23 @@
   Required parameters: customerId
   
   Optional parameters: none
+  
   Get a customer account."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
             "https://www.googleapis.com/auth/apps.order.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:customerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}"
      #{:customerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -61,21 +62,21 @@
   
   Order a new customer's account."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -109,21 +110,21 @@
   
   Update a customer account's settings. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}"
      #{:customerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -157,21 +158,21 @@
   
   Update a customer account's settings."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:customerId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/apps/reseller/v1/"
      "customers/{customerId}"
      #{:customerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

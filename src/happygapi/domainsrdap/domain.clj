@@ -12,21 +12,22 @@
   Required parameters: domainName
   
   Optional parameters: none
+  
   Look up RDAP information for a domain by name."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{:domainName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:domainName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://domainsrdap.googleapis.com/"
      "v1/domain/{+domainName}"
      #{:domainName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

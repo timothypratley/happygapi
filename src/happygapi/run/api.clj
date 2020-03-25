@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Rpc to get information about a namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "api/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,7 +41,57 @@
   
   Body: 
   
-  {:metadata {:labels {},
+  {:status {:phase string},
+   :spec {:finalizers [string]},
+   :metadata {:labels {},
+              :clusterName string,
+              :generation integer,
+              :ownerReferences [OwnerReference],
+              :creationTimestamp string,
+              :uid string,
+              :name string,
+              :resourceVersion string,
+              :selfLink string,
+              :deletionTimestamp string,
+              :finalizers [string],
+              :deletionGracePeriodSeconds integer,
+              :annotations {},
+              :namespace string,
+              :generateName string}}
+  
+  Rpc to update a namespace."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://run.googleapis.com/"
+     "api/v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn v1-namespaces-secrets-create$
+  "https://cloud.google.com/run/api/reference/rest/v1/api/v1/namespaces/secrets/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:data {},
+   :stringData {},
+   :metadata {:labels {},
               :clusterName string,
               :generation integer,
               :ownerReferences [OwnerReference],
@@ -55,26 +106,25 @@
               :annotations {},
               :namespace string,
               :generateName string},
-   :status {:phase string},
-   :spec {:finalizers [string]}}
+   :type string}
   
-  Rpc to update a namespace."
+  Creates a new secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://run.googleapis.com/"
-     "api/v1/{+name}"
-     #{:name}
-     args)
+     "api/v1/{+parent}/secrets"
+     #{:parent}
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +135,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Rpc to get information about a secret."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://run.googleapis.com/"
      "api/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -141,70 +192,21 @@
   May provide metadata.resourceVersion to enforce update from last read for
   optimistic concurrency control."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://run.googleapis.com/"
      "api/v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn v1-namespaces-secrets-create$
-  "https://cloud.google.com/run/api/reference/rest/v1/api/v1/namespaces/secrets/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:data {},
-   :stringData {},
-   :metadata {:labels {},
-              :clusterName string,
-              :generation integer,
-              :ownerReferences [OwnerReference],
-              :creationTimestamp string,
-              :uid string,
-              :name string,
-              :resourceVersion string,
-              :selfLink string,
-              :deletionTimestamp string,
-              :finalizers [string],
-              :deletionGracePeriodSeconds integer,
-              :annotations {},
-              :namespace string,
-              :generateName string},
-   :type string}
-  
-  Creates a new secret."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://run.googleapis.com/"
-     "api/v1/{+parent}/secrets"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

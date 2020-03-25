@@ -12,22 +12,23 @@
   Required parameters: adClientId, customChannelId
   
   Optional parameters: none
+  
   Get the specified custom channel from the specified ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels/{customChannelId}"
      #{:adClientId :customChannelId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,23 +38,24 @@
   
   Required parameters: adClientId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
+  
   List all custom channels in the specified ad client for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels"
      #{:adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -61,25 +63,26 @@
 (defn adunits-list$
   "https://developers.google.com/adsense/management/api/reference/rest/v1.4/customchannels/adunits/list
   
-  Required parameters: adClientId, customChannelId
+  Required parameters: customChannelId, adClientId
   
-  Optional parameters: includeInactive, maxResults, pageToken
+  Optional parameters: includeInactive, pageToken, maxResults
+  
   List all ad units in the specified custom channel."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId :customChannelId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/customchannels/{customChannelId}/adunits"
      #{:adClientId :customChannelId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

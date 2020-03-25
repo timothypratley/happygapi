@@ -9,25 +9,28 @@
 (defn delete$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/delete
   
-  Required parameters: projectId, datasetId, routineId
+  Required parameters: datasetId, routineId, projectId
   
   Optional parameters: none
+  
   Deletes the routine specified by routineId from the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :projectId :routineId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :projectId :routineId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
      #{:datasetId :projectId :routineId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,14 +47,14 @@
   {:creationTime string,
    :description string,
    :importedLibraries [string],
-   :arguments [{:name string,
-                :argumentKind string,
+   :arguments [{:argumentKind string,
                 :mode string,
-                :dataType StandardSqlDataType}],
+                :dataType StandardSqlDataType,
+                :name string}],
    :etag string,
-   :returnType {:structType StandardSqlStructType,
-                :arrayElementType StandardSqlDataType,
-                :typeKind string},
+   :returnType {:typeKind string,
+                :structType StandardSqlStructType,
+                :arrayElementType StandardSqlDataType},
    :routineType string,
    :lastModifiedTime string,
    :definitionBody string,
@@ -63,21 +66,21 @@
   Creates a new routine in the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:datasetId :projectId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/routines"
      #{:datasetId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -88,24 +91,27 @@
   Required parameters: projectId, datasetId, routineId
   
   Optional parameters: readMask
+  
   Gets the specified routine resource by routine ID."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :projectId :routineId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :projectId :routineId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
      #{:datasetId :projectId :routineId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -115,26 +121,27 @@
   
   Required parameters: datasetId, projectId
   
-  Optional parameters: readMask, filter, pageToken, maxResults
+  Optional parameters: pageToken, maxResults, readMask, filter
+  
   Lists all routines in the specified dataset. Requires the READER dataset
   role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:datasetId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/routines"
      #{:datasetId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -151,14 +158,14 @@
   {:creationTime string,
    :description string,
    :importedLibraries [string],
-   :arguments [{:name string,
-                :argumentKind string,
+   :arguments [{:argumentKind string,
                 :mode string,
-                :dataType StandardSqlDataType}],
+                :dataType StandardSqlDataType,
+                :name string}],
    :etag string,
-   :returnType {:structType StandardSqlStructType,
-                :arrayElementType StandardSqlDataType,
-                :typeKind string},
+   :returnType {:typeKind string,
+                :structType StandardSqlStructType,
+                :arrayElementType StandardSqlDataType},
    :routineType string,
    :lastModifiedTime string,
    :definitionBody string,
@@ -171,21 +178,23 @@
   entire Routine resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:datasetId :projectId :routineId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :projectId :routineId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
      #{:datasetId :projectId :routineId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

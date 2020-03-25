@@ -19,21 +19,21 @@
   
   Create and publish a new custom app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:account})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:account})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/playcustomapp/v1/accounts/"
      "{account}/customApps"
      #{:account}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

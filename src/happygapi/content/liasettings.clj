@@ -12,21 +12,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
   Retrieves the LIA settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,11 +38,12 @@
   Required parameters: accountId, contactEmail, contactName, country, language, merchantId
   
   Optional parameters: none
+  
   Sets the inventory verification contract for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:contactName
             :contactEmail
             :language
@@ -59,11 +61,11 @@
        :accountId
        :country
        :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -74,21 +76,24 @@
   Required parameters: accountId, country, merchantId
   
   Optional parameters: none
+  
   Requests inventory validation for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :country :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:accountId :country :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/requestinventoryverification/{country}"
      #{:accountId :country :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -114,21 +119,21 @@
   
   Updates the LIA settings of the account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -139,21 +144,24 @@
   Required parameters: accountId, gmbEmail, merchantId
   
   Optional parameters: none
+  
   Requests access to a specified Google My Business account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:gmbEmail :accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:gmbEmail :accountId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/requestgmbaccess"
      #{:gmbEmail :accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -164,21 +172,22 @@
   Required parameters: merchantId
   
   Optional parameters: maxResults, pageToken
+  
   Lists the LIA settings of the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings"
      #{:merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -189,21 +198,24 @@
   Required parameters: accountId, country, merchantId
   
   Optional parameters: posDataProviderId, posExternalAccountId
+  
   Sets the POS data provider for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :country :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:accountId :country :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/setposdataprovider"
      #{:accountId :country :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -214,21 +226,22 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Retrieves the list of POS data providers that have active settings for the all eiligible countries."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "liasettings/posdataproviders"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -239,21 +252,22 @@
   Required parameters: accountId, merchantId
   
   Optional parameters: none
+  
   Retrieves the list of accessible Google My Business accounts."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:accountId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "{merchantId}/liasettings/{accountId}/accessiblegmbaccounts"
      #{:accountId :merchantId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -281,21 +295,21 @@
   
   Retrieves and/or updates the LIA settings of multiple accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/content/v2.1/"
      "liasettings/batch"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

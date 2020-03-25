@@ -16,7 +16,7 @@
   Body: 
   
   {:profileType string,
-   :deployment {:target string, :projectId string, :labels {}},
+   :deployment {:labels {}, :target string, :projectId string},
    :labels {},
    :profileBytes string,
    :name string,
@@ -28,21 +28,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudprofiler.googleapis.com/"
      "v2/{+parent}/profiles:createOffline"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -57,7 +57,7 @@
   Body: 
   
   {:profileType string,
-   :deployment {:target string, :projectId string, :labels {}},
+   :deployment {:labels {}, :target string, :projectId string},
    :labels {},
    :profileBytes string,
    :name string,
@@ -70,21 +70,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://cloudprofiler.googleapis.com/"
      "v2/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -99,7 +99,7 @@
   Body: 
   
   {:profileType [string],
-   :deployment {:target string, :projectId string, :labels {}}}
+   :deployment {:labels {}, :target string, :projectId string}}
   
   CreateProfile creates a new profile resource in the online mode.
   
@@ -117,21 +117,21 @@
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
             "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudprofiler.googleapis.com/"
      "v2/{+parent}/profiles"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

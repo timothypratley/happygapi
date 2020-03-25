@@ -12,21 +12,22 @@
   Required parameters: profileId, reportId
   
   Optional parameters: none
+  
   Deletes a report by its ID."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}"
      #{:reportId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: profileId, reportId
   
   Optional parameters: none
+  
   Retrieves a report by its ID."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}"
      #{:reportId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -219,21 +221,21 @@
   
   Creates a report."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -244,21 +246,22 @@
   Required parameters: profileId
   
   Optional parameters: maxResults, pageToken, scope, sortField, sortOrder
+  
   Retrieves list of reports."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -269,21 +272,22 @@
   Required parameters: profileId, reportId
   
   Optional parameters: synchronous
+  
   Runs a report."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}/run"
      #{:reportId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -451,21 +455,21 @@
   
   Updates a report."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:reportId :profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}"
      #{:reportId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -633,21 +637,21 @@
   
   Returns the fields that are compatible to be selected in the respective sections of a report criteria, given the fields already selected in the input report and user permissions."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/compatiblefields/query"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -658,21 +662,22 @@
   Required parameters: fileId, profileId, reportId
   
   Optional parameters: none
+  
   Retrieves a report file. This method supports media download."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :profileId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}/files/{fileId}"
      #{:reportId :profileId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -683,21 +688,22 @@
   Required parameters: profileId, reportId
   
   Optional parameters: maxResults, pageToken, sortField, sortOrder
+  
   Lists files for a report."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/reports/{reportId}/files"
      #{:reportId :profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

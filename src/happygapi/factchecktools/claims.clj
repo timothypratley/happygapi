@@ -11,22 +11,23 @@
   
   Required parameters: none
   
-  Optional parameters: maxAgeDays, offset, pageToken, reviewPublisherSiteFilter, pageSize, query, languageCode
+  Optional parameters: languageCode, maxAgeDays, offset, pageToken, reviewPublisherSiteFilter, pageSize, query
+  
   Search through fact-checked claims."
   {:scopes nil}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://factchecktools.googleapis.com/"
      "v1alpha1/claims:search"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

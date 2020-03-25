@@ -139,6 +139,8 @@
                                             :description "The url to the landscape mode player banner image."},
                        :lastPlayedWith {:$ref "GamesPlayedResource",
                                         :description "Details about the last time this player played a multiplayer game with the currently authenticated player. Populated for PLAYED_WITH player collection members."},
+                       :friendStatus {:type "string",
+                                      :description "The friend status of the given player, relative to the requester. This is unset if the player is not sharing their friends list with the game."},
                        :experienceInfo {:$ref "GamesPlayerExperienceInfoResource",
                                         :description "An object to represent Play Game experience information for the player."}}},
  :GamesPlayedResource {:id "GamesPlayedResource",

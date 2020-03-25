@@ -13,6 +13,7 @@
   Required parameters: photoId
   
   Optional parameters: none
+  
   Deletes a Photo and its metadata.
   
   This method returns the following error codes:
@@ -21,19 +22,19 @@
   create the requested photo.
   * google.rpc.Code.NOT_FOUND if the photo ID does not exist."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:photoId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:photoId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{photoId}"
      #{:photoId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -43,7 +44,8 @@
   
   Required parameters: photoId
   
-  Optional parameters: languageCode, view
+  Optional parameters: view, languageCode
+  
   Gets the metadata of the specified
   Photo.
   
@@ -56,19 +58,19 @@
   * google.rpc.Code.UNAVAILABLE if the requested
   Photo is still being indexed."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:photoId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:photoId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{photoId}"
      #{:photoId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,18 +89,18 @@
    :uploadReference {:uploadUrl string},
    :viewCount string,
    :transferStatus string,
-   :pose {:pitch number,
-          :latLngPair LatLng,
-          :roll number,
-          :accuracyMeters number,
+   :pose {:accuracyMeters number,
           :level Level,
           :heading number,
-          :altitude number},
+          :altitude number,
+          :pitch number,
+          :latLngPair LatLng,
+          :roll number},
    :shareLink string,
    :mapsPublishStatus string,
    :downloadUrl string,
    :connections [{:target PhotoId}],
-   :places [{:languageCode string, :name string, :placeId string}],
+   :places [{:name string, :placeId string, :languageCode string}],
    :photoId {:id string}}
   
   Updates the metadata of a Photo, such
@@ -119,21 +121,21 @@
   * google.rpc.Code.UNAVAILABLE if the requested
   Photo is still being indexed."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/put
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo/{id}"
      #{:id}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -152,18 +154,18 @@
    :uploadReference {:uploadUrl string},
    :viewCount string,
    :transferStatus string,
-   :pose {:pitch number,
-          :latLngPair LatLng,
-          :roll number,
-          :accuracyMeters number,
+   :pose {:accuracyMeters number,
           :level Level,
           :heading number,
-          :altitude number},
+          :altitude number,
+          :pitch number,
+          :latLngPair LatLng,
+          :roll number},
    :shareLink string,
    :mapsPublishStatus string,
    :downloadUrl string,
    :connections [{:target PhotoId}],
-   :places [{:languageCode string, :name string, :placeId string}],
+   :places [{:name string, :placeId string, :languageCode string}],
    :photoId {:id string}}
   
   After the client finishes uploading the photo with the returned
@@ -186,21 +188,21 @@
   * google.rpc.Code.RESOURCE_EXHAUSTED if the account has reached the
   storage limit."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -237,21 +239,21 @@
   CreatePhoto
   to create the Photo object entry."
   {:scopes ["https://www.googleapis.com/auth/streetviewpublish"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://streetviewpublish.googleapis.com/"
      "v1/photo:startUpload"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

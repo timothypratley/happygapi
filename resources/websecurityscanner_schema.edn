@@ -1,8 +1,9 @@
-{:StartScanRunRequest {:id "StartScanRunRequest",
-                       :description "Request for the `StartScanRun` method.",
+{:StartScanRunRequest {:description "Request for the `StartScanRun` method.",
                        :type "object",
-                       :properties {}},
- :ScanRunErrorTrace {:properties {:code {:description "Output only. Indicates the error reason code.",
+                       :properties {},
+                       :id "StartScanRunRequest"},
+ :ScanRunErrorTrace {:type "object",
+                     :properties {:code {:description "Output only. Indicates the error reason code.",
                                          :type "string",
                                          :enumDescriptions ["Default value is never used."
                                                             "Indicates that the scan run failed due to an internal server error."
@@ -20,51 +21,93 @@
                                                 "TOO_MANY_HTTP_ERRORS"]},
                                   :scanConfigError {:description "Output only. If the scan encounters SCAN_CONFIG_ISSUE error, this field has the error\nmessage encountered during scan configuration validation that is performed\nbefore each scan run.",
                                                     :$ref "ScanConfigError"},
-                                  :mostCommonHttpErrorCode {:description "Output only. If the scan encounters TOO_MANY_HTTP_ERRORS, this field indicates the most\ncommon HTTP error code, if such is available. For example, if this code is\n404, the scan has encountered too many NOT_FOUND responses.",
-                                                            :format "int32",
-                                                            :type "integer"}},
+                                  :mostCommonHttpErrorCode {:type "integer",
+                                                            :description "Output only. If the scan encounters TOO_MANY_HTTP_ERRORS, this field indicates the most\ncommon HTTP error code, if such is available. For example, if this code is\n404, the scan has encountered too many NOT_FOUND responses.",
+                                                            :format "int32"}},
                      :id "ScanRunErrorTrace",
-                     :description "Output only.\nDefines an error trace message for a ScanRun.",
-                     :type "object"},
- :Header {:description "Describes a HTTP Header.",
-          :type "object",
-          :properties {:name {:description "Header name.",
-                              :type "string"},
-                       :value {:description "Header value.",
-                               :type "string"}},
-          :id "Header"},
- :OutdatedLibrary {:properties {:version {:description "The version number.",
-                                          :type "string"},
-                                :libraryName {:description "The name of the outdated library.",
+                     :description "Output only.\nDefines an error trace message for a ScanRun."},
+ :Header {:type "object",
+          :properties {:value {:type "string",
+                               :description "Header value."},
+                       :name {:description "Header name.",
+                              :type "string"}},
+          :id "Header",
+          :description "Describes a HTTP Header."},
+ :OutdatedLibrary {:type "object",
+                   :properties {:libraryName {:description "The name of the outdated library.",
                                               :type "string"},
-                                :learnMoreUrls {:description "URLs to learn more information about the vulnerabilities in the library.",
-                                                :type "array",
-                                                :items {:type "string"}}},
+                                :learnMoreUrls {:type "array",
+                                                :items {:type "string"},
+                                                :description "URLs to learn more information about the vulnerabilities in the library."},
+                                :version {:description "The version number.",
+                                          :type "string"}},
                    :id "OutdatedLibrary",
-                   :description "Information reported for an outdated library.",
-                   :type "object"},
- :Schedule {:properties {:scheduleTime {:description "A timestamp indicates when the next run will be scheduled. The value is\nrefreshed by the server after each run. If unspecified, it will default\nto current server time, which means the scan will be scheduled to start\nimmediately.",
+                   :description "Information reported for an outdated library."},
+ :Schedule {:description "Scan schedule configuration.",
+            :type "object",
+            :properties {:scheduleTime {:description "A timestamp indicates when the next run will be scheduled. The value is\nrefreshed by the server after each run. If unspecified, it will default\nto current server time, which means the scan will be scheduled to start\nimmediately.",
                                         :format "google-datetime",
                                         :type "string"},
-                         :intervalDurationDays {:description "Required. The duration of time between executions in days.",
-                                                :format "int32",
-                                                :type "integer"}},
-            :id "Schedule",
-            :description "Scan schedule configuration.",
-            :type "object"},
+                         :intervalDurationDays {:type "integer",
+                                                :description "Required. The duration of time between executions in days.",
+                                                :format "int32"}},
+            :id "Schedule"},
  :CustomAccount {:description "Describes authentication configuration that uses a custom account.",
                  :type "object",
-                 :properties {:password {:description "Required. Input only. The password of the custom account. The credential is stored encrypted\nand not returned in any response nor included in audit logs.",
+                 :properties {:loginUrl {:description "Required. The login form URL of the website.",
+                                         :type "string"},
+                              :password {:description "Required. Input only. The password of the custom account. The credential is stored encrypted\nand not returned in any response nor included in audit logs.",
                                          :type "string"},
                               :username {:description "Required. The user name of the custom account.",
-                                         :type "string"},
-                              :loginUrl {:description "Required. The login form URL of the website.",
                                          :type "string"}},
                  :id "CustomAccount"},
- :ScanConfigError {:type "object",
+ :ScanConfigError {:description "Defines a custom error message used by CreateScanConfig and UpdateScanConfig\nAPIs when scan configuration validation fails. It is also reported as part of\na ScanRunErrorTrace message if scan validation fails due to a scan\nconfiguration error.",
+                   :type "object",
                    :properties {:fieldName {:description "Output only. Indicates the full name of the ScanConfig field that triggers this error,\nfor example \"scan_config.max_qps\". This field is provided for\ntroubleshooting purposes only and its actual value can change in the\nfuture.",
                                             :type "string"},
-                                :code {:enum ["CODE_UNSPECIFIED"
+                                :code {:enumDescriptions ["There is no error."
+                                                          "There is no error."
+                                                          "Indicates an internal server error.\nPlease DO NOT USE THIS ERROR CODE unless the root cause is truly unknown."
+                                                          "One of the seed URLs is an App Engine URL but we cannot validate the scan\nsettings due to an App Engine API backend error."
+                                                          "One of the seed URLs is an App Engine URL but we cannot access the\nApp Engine API to validate scan settings."
+                                                          "One of the seed URLs is an App Engine URL but the Default Host of the\nApp Engine is not set."
+                                                          "Google corporate accounts can not be used for scanning."
+                                                          "The account of the scan creator can not be used for scanning."
+                                                          "This scan targets Compute Engine, but we cannot validate scan settings\ndue to a Compute Engine API backend error."
+                                                          "This scan targets Compute Engine, but we cannot access the Compute Engine\nAPI to validate the scan settings."
+                                                          "The Custom Login URL does not belong to the current project."
+                                                          "The Custom Login URL is malformed (can not be parsed)."
+                                                          "The Custom Login URL is mapped to a non-routable IP address in DNS."
+                                                          "The Custom Login URL is mapped to an IP address which is not reserved for\nthe current project."
+                                                          "The Custom Login URL has a non-routable IP address."
+                                                          "The Custom Login URL has an IP address which is not reserved for the\ncurrent project."
+                                                          "Another scan with the same name (case-sensitive) already exists."
+                                                          "A field is set to an invalid value."
+                                                          "There was an error trying to authenticate to the scan target."
+                                                          "Finding type value is not specified in the list findings request."
+                                                          "Scan targets Compute Engine, yet current project was not whitelisted for\nGoogle Compute Engine Scanning Alpha access."
+                                                          "User tries to update managed scan"
+                                                          "The supplied filter is malformed. For example, it can not be parsed, does\nnot have a filter type in expression, or the same filter type appears\nmore than once."
+                                                          "The supplied resource name is malformed (can not be parsed)."
+                                                          "The current project is not in an active state."
+                                                          "A required field is not set."
+                                                          "Project id, scanconfig id, scanrun id, or finding id are not consistent\nwith each other in resource name."
+                                                          "The scan being requested to start is already running."
+                                                          "The scan that was requested to be stopped is not running."
+                                                          "One of the seed URLs does not belong to the current project."
+                                                          "One of the seed URLs is malformed (can not be parsed)."
+                                                          "One of the seed URLs is mapped to a non-routable IP address in DNS."
+                                                          "One of the seed URLs is mapped to an IP address which is not reserved\nfor the current project."
+                                                          "One of the seed URLs has on-routable IP address."
+                                                          "One of the seed URLs has an IP address that is not reserved\nfor the current project."
+                                                          "The Cloud Security Scanner service account is not configured under the\nproject."
+                                                          "A project has reached the maximum number of scans."
+                                                          "Resolving the details of the current project fails."
+                                                          "One or more blacklist patterns were in the wrong format."
+                                                          "The supplied filter is not supported."
+                                                          "The supplied finding type is not supported. For example, we do not\nprovide findings of the given finding type."
+                                                          "The URL scheme of one or more of the supplied URLs is not supported."],
+                                       :enum ["CODE_UNSPECIFIED"
                                               "OK"
                                               "INTERNAL_ERROR"
                                               "APPENGINE_API_BACKEND_ERROR"
@@ -107,61 +150,17 @@
                                               "UNSUPPORTED_FINDING_TYPE"
                                               "UNSUPPORTED_URL_SCHEME"],
                                        :description "Output only. Indicates the reason code for a configuration failure.",
-                                       :type "string",
-                                       :enumDescriptions ["There is no error."
-                                                          "There is no error."
-                                                          "Indicates an internal server error.\nPlease DO NOT USE THIS ERROR CODE unless the root cause is truly unknown."
-                                                          "One of the seed URLs is an App Engine URL but we cannot validate the scan\nsettings due to an App Engine API backend error."
-                                                          "One of the seed URLs is an App Engine URL but we cannot access the\nApp Engine API to validate scan settings."
-                                                          "One of the seed URLs is an App Engine URL but the Default Host of the\nApp Engine is not set."
-                                                          "Google corporate accounts can not be used for scanning."
-                                                          "The account of the scan creator can not be used for scanning."
-                                                          "This scan targets Compute Engine, but we cannot validate scan settings\ndue to a Compute Engine API backend error."
-                                                          "This scan targets Compute Engine, but we cannot access the Compute Engine\nAPI to validate the scan settings."
-                                                          "The Custom Login URL does not belong to the current project."
-                                                          "The Custom Login URL is malformed (can not be parsed)."
-                                                          "The Custom Login URL is mapped to a non-routable IP address in DNS."
-                                                          "The Custom Login URL is mapped to an IP address which is not reserved for\nthe current project."
-                                                          "The Custom Login URL has a non-routable IP address."
-                                                          "The Custom Login URL has an IP address which is not reserved for the\ncurrent project."
-                                                          "Another scan with the same name (case-sensitive) already exists."
-                                                          "A field is set to an invalid value."
-                                                          "There was an error trying to authenticate to the scan target."
-                                                          "Finding type value is not specified in the list findings request."
-                                                          "Scan targets Compute Engine, yet current project was not whitelisted for\nGoogle Compute Engine Scanning Alpha access."
-                                                          "User tries to update managed scan"
-                                                          "The supplied filter is malformed. For example, it can not be parsed, does\nnot have a filter type in expression, or the same filter type appears\nmore than once."
-                                                          "The supplied resource name is malformed (can not be parsed)."
-                                                          "The current project is not in an active state."
-                                                          "A required field is not set."
-                                                          "Project id, scanconfig id, scanrun id, or finding id are not consistent\nwith each other in resource name."
-                                                          "The scan being requested to start is already running."
-                                                          "The scan that was requested to be stopped is not running."
-                                                          "One of the seed URLs does not belong to the current project."
-                                                          "One of the seed URLs is malformed (can not be parsed)."
-                                                          "One of the seed URLs is mapped to a non-routable IP address in DNS."
-                                                          "One of the seed URLs is mapped to an IP address which is not reserved\nfor the current project."
-                                                          "One of the seed URLs has on-routable IP address."
-                                                          "One of the seed URLs has an IP address that is not reserved\nfor the current project."
-                                                          "The Cloud Security Scanner service account is not configured under the\nproject."
-                                                          "A project has reached the maximum number of scans."
-                                                          "Resolving the details of the current project fails."
-                                                          "One or more blacklist patterns were in the wrong format."
-                                                          "The supplied filter is not supported."
-                                                          "The supplied finding type is not supported. For example, we do not\nprovide findings of the given finding type."
-                                                          "The URL scheme of one or more of the supplied URLs is not supported."]}},
-                   :id "ScanConfigError",
-                   :description "Defines a custom error message used by CreateScanConfig and UpdateScanConfig\nAPIs when scan configuration validation fails. It is also reported as part of\na ScanRunErrorTrace message if scan validation fails due to a scan\nconfiguration error."},
- :ListCrawledUrlsResponse {:description "Response for the `ListCrawledUrls` method.",
-                           :type "object",
-                           :properties {:nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
-                                                        :type "string"},
-                                        :crawledUrls {:description "The list of CrawledUrls returned.",
+                                       :type "string"}},
+                   :id "ScanConfigError"},
+ :ListCrawledUrlsResponse {:type "object",
+                           :properties {:crawledUrls {:description "The list of CrawledUrls returned.",
                                                       :type "array",
-                                                      :items {:$ref "CrawledUrl"}}},
-                           :id "ListCrawledUrlsResponse"},
- :ScanConfig {:description "A ScanConfig resource contains the configurations to launch a scan.",
-              :type "object",
+                                                      :items {:$ref "CrawledUrl"}},
+                                        :nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
+                                                        :type "string"}},
+                           :id "ListCrawledUrlsResponse",
+                           :description "Response for the `ListCrawledUrls` method."},
+ :ScanConfig {:type "object",
               :properties {:schedule {:$ref "Schedule",
                                       :description "The schedule of the ScanConfig."},
                            :maxQps {:description "The maximum QPS during scanning. A valid value ranges from 5 to 20\ninclusively. If the field is unspecified or its value is set 0, server will\ndefault to 15. Other values outside of [5, 20] range will be rejected with\nINVALID_ARGUMENT error.",
@@ -171,16 +170,16 @@
                                          :description "Required. The user provided display name of the ScanConfig."},
                            :name {:description "The resource name of the ScanConfig. The name follows the format of\n'projects/{projectId}/scanConfigs/{scanConfigId}'. The ScanConfig IDs are\ngenerated by the system.",
                                   :type "string"},
-                           :riskLevel {:enum ["RISK_LEVEL_UNSPECIFIED"
+                           :riskLevel {:enumDescriptions ["Use default, which is NORMAL."
+                                                          "Normal scanning (Recommended)"
+                                                          "Lower impact scanning"],
+                                       :enum ["RISK_LEVEL_UNSPECIFIED"
                                               "NORMAL"
                                               "LOW"],
                                        :description "The risk level selected for the scan",
-                                       :type "string",
-                                       :enumDescriptions ["Use default, which is NORMAL."
-                                                          "Normal scanning (Recommended)"
-                                                          "Lower impact scanning"]},
-                           :managedScan {:description "Whether the scan config is managed by Cloud Web Security Scanner, output\nonly.",
-                                         :type "boolean"},
+                                       :type "string"},
+                           :managedScan {:type "boolean",
+                                         :description "Whether the scan config is managed by Cloud Web Security Scanner, output\nonly."},
                            :staticIpScan {:description "Whether the scan configuration has enabled static IP address scan feature.\nIf enabled, the scanner will access applications from static IP addresses.",
                                           :type "boolean"},
                            :exportToSecurityCommandCenter {:enumDescriptions ["Use default, which is ENABLED."
@@ -206,25 +205,27 @@
                                                           "Chrome on Linux. This is the service default if unspecified."
                                                           "Chrome on Android."
                                                           "Safari on IPhone."]},
-                           :blacklistPatterns {:description "The blacklist URL patterns as described in\nhttps://cloud.google.com/security-scanner/docs/excluded-urls",
-                                               :type "array",
-                                               :items {:type "string"}}},
-              :id "ScanConfig"},
- :VulnerableParameters {:description "Information about vulnerable request parameters.",
+                           :blacklistPatterns {:type "array",
+                                               :items {:type "string"},
+                                               :description "The blacklist URL patterns as described in\nhttps://cloud.google.com/security-scanner/docs/excluded-urls"}},
+              :id "ScanConfig",
+              :description "A ScanConfig resource contains the configurations to launch a scan."},
+ :VulnerableParameters {:id "VulnerableParameters",
+                        :description "Information about vulnerable request parameters.",
                         :type "object",
                         :properties {:parameterNames {:description "The vulnerable parameter names.",
                                                       :type "array",
-                                                      :items {:type "string"}}},
-                        :id "VulnerableParameters"},
- :ScanRun {:description "A ScanRun is a output-only resource representing an actual run of the scan.\nNext id: 12",
+                                                      :items {:type "string"}}}},
+ :ScanRun {:id "ScanRun",
+           :description "A ScanRun is a output-only resource representing an actual run of the scan.\nNext id: 12",
            :type "object",
            :properties {:hasVulnerabilities {:description "Output only. Whether the scan run has found any vulnerabilities.",
                                              :type "boolean"},
                         :errorTrace {:$ref "ScanRunErrorTrace",
                                      :description "Output only. If result_state is an ERROR, this field provides the primary reason for\nscan's termination and more details, if such are available."},
-                        :urlsTestedCount {:description "Output only. The number of URLs tested during this ScanRun. If the scan is in progress,\nthe value represents the number of URLs tested up to now. The number of\nURLs tested is usually larger than the number URLS crawled because\ntypically a crawled URL is tested with multiple test payloads.",
-                                          :format "int64",
-                                          :type "string"},
+                        :urlsTestedCount {:type "string",
+                                          :description "Output only. The number of URLs tested during this ScanRun. If the scan is in progress,\nthe value represents the number of URLs tested up to now. The number of\nURLs tested is usually larger than the number URLS crawled because\ntypically a crawled URL is tested with multiple test payloads.",
+                                          :format "int64"},
                         :startTime {:type "string",
                                     :description "Output only. The time at which the ScanRun started.",
                                     :format "google-datetime"},
@@ -239,94 +240,92 @@
                         :progressPercent {:description "Output only. The percentage of total completion ranging from 0 to 100.\nIf the scan is in queue, the value is 0.\nIf the scan is running, the value ranges from 0 to 100.\nIf the scan is finished, the value is 100.",
                                           :format "int32",
                                           :type "integer"},
-                        :executionState {:enumDescriptions ["Represents an invalid state caused by internal server error. This value\nshould never be returned."
+                        :executionState {:description "Output only. The execution state of the ScanRun.",
+                                         :type "string",
+                                         :enumDescriptions ["Represents an invalid state caused by internal server error. This value\nshould never be returned."
                                                             "The scan is waiting in the queue."
                                                             "The scan is in progress."
                                                             "The scan is either finished or stopped by user."],
                                          :enum ["EXECUTION_STATE_UNSPECIFIED"
                                                 "QUEUED"
                                                 "SCANNING"
-                                                "FINISHED"],
-                                         :description "Output only. The execution state of the ScanRun.",
-                                         :type "string"},
+                                                "FINISHED"]},
                         :urlsCrawledCount {:description "Output only. The number of URLs crawled during this ScanRun. If the scan is in progress,\nthe value represents the number of URLs crawled up to now.",
                                            :format "int64",
                                            :type "string"},
-                        :resultState {:enum ["RESULT_STATE_UNSPECIFIED"
-                                             "SUCCESS"
-                                             "ERROR"
-                                             "KILLED"],
-                                      :description "Output only. The result state of the ScanRun. This field is only available after the\nexecution state reaches \"FINISHED\".",
-                                      :type "string",
+                        :resultState {:type "string",
                                       :enumDescriptions ["Default value. This value is returned when the ScanRun is not yet\nfinished."
                                                          "The scan finished without errors."
                                                          "The scan finished with errors."
-                                                         "The scan was terminated by user."]}},
-           :id "ScanRun"},
+                                                         "The scan was terminated by user."],
+                                      :enum ["RESULT_STATE_UNSPECIFIED"
+                                             "SUCCESS"
+                                             "ERROR"
+                                             "KILLED"],
+                                      :description "Output only. The result state of the ScanRun. This field is only available after the\nexecution state reaches \"FINISHED\"."}}},
  :GoogleAccount {:description "Describes authentication configuration that uses a Google account.",
                  :type "object",
                  :properties {:password {:description "Required. Input only. The password of the Google account. The credential is stored encrypted\nand not returned in any response nor included in audit logs.",
                                          :type "string"},
-                              :username {:description "Required. The user name of the Google account.",
-                                         :type "string"}},
+                              :username {:type "string",
+                                         :description "Required. The user name of the Google account."}},
                  :id "GoogleAccount"},
- :FindingTypeStats {:type "object",
-                    :properties {:findingType {:type "string",
-                                               :description "Output only. The finding type associated with the stats."},
-                                 :findingCount {:type "integer",
-                                                :description "Output only. The count of findings belonging to this finding type.",
-                                                :format "int32"}},
-                    :id "FindingTypeStats",
-                    :description "A FindingTypeStats resource represents stats regarding a specific FindingType\nof Findings under a given ScanRun."},
+ :FindingTypeStats {:description "A FindingTypeStats resource represents stats regarding a specific FindingType\nof Findings under a given ScanRun.",
+                    :type "object",
+                    :properties {:findingType {:description "Output only. The finding type associated with the stats.",
+                                               :type "string"},
+                                 :findingCount {:description "Output only. The count of findings belonging to this finding type.",
+                                                :format "int32",
+                                                :type "integer"}},
+                    :id "FindingTypeStats"},
  :ViolatingResource {:description "Information regarding any resource causing the vulnerability such\nas JavaScript sources, image, audio files, etc.",
                      :type "object",
-                     :properties {:resourceUrl {:description "URL of this violating resource.",
-                                                :type "string"},
-                                  :contentType {:description "The MIME type of this resource.",
-                                                :type "string"}},
+                     :properties {:contentType {:type "string",
+                                                :description "The MIME type of this resource."},
+                                  :resourceUrl {:type "string",
+                                                :description "URL of this violating resource."}},
                      :id "ViolatingResource"},
  :Form {:description "! Information about a vulnerability with an HTML.",
         :type "object",
-        :properties {:fields {:description "! The names of form fields related to the vulnerability.",
+        :properties {:actionUri {:type "string",
+                                 :description "! The URI where to send the form when it's submitted."},
+                     :fields {:description "! The names of form fields related to the vulnerability.",
                               :type "array",
-                              :items {:type "string"}},
-                     :actionUri {:description "! The URI where to send the form when it's submitted.",
-                                 :type "string"}},
+                              :items {:type "string"}}},
         :id "Form"},
- :Empty {:description "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
-         :type "object",
+ :Empty {:type "object",
          :properties {},
-         :id "Empty"},
+         :id "Empty",
+         :description "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`."},
  :StopScanRunRequest {:id "StopScanRunRequest",
                       :description "Request for the `StopScanRun` method.",
                       :type "object",
                       :properties {}},
  :ListFindingsResponse {:description "Response for the `ListFindings` method.",
                         :type "object",
-                        :properties {:findings {:description "The list of Findings returned.",
+                        :properties {:nextPageToken {:type "string",
+                                                     :description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list."},
+                                     :findings {:description "The list of Findings returned.",
                                                 :type "array",
-                                                :items {:$ref "Finding"}},
-                                     :nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
-                                                     :type "string"}},
+                                                :items {:$ref "Finding"}}},
                         :id "ListFindingsResponse"},
  :CrawledUrl {:id "CrawledUrl",
               :description "A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web\nSecurity Scanner Service crawls the web applications, following all links\nwithin the scope of sites, to find the URLs to test against.",
               :type "object",
-              :properties {:body {:description "Output only. The body of the request that was used to visit the URL.",
+              :properties {:httpMethod {:description "Output only. The http method of the request that was used to visit the URL, in\nuppercase.",
+                                        :type "string"},
+                           :body {:description "Output only. The body of the request that was used to visit the URL.",
                                   :type "string"},
-                           :url {:description "Output only. The URL that was crawled.",
-                                 :type "string"},
-                           :httpMethod {:description "Output only. The http method of the request that was used to visit the URL, in\nuppercase.",
-                                        :type "string"}}},
- :IapTestServiceAccountInfo {:id "IapTestServiceAccountInfo",
-                             :description "Describes authentication configuration when Web-Security-Scanner\nservice account is added in Identity-Aware-Proxy (IAP) access policies.",
-                             :type "object",
-                             :properties {:targetAudienceClientId {:description "Required. Describes OAuth2 client id of resources protected by\nIdentity-Aware-Proxy (IAP).",
-                                                                   :type "string"}}},
- :Finding {:description "A Finding resource represents a vulnerability instance identified during a\nScanRun.",
-           :type "object",
-           :properties {:description {:description "Output only. The description of the vulnerability.",
-                                      :type "string"},
+                           :url {:type "string",
+                                 :description "Output only. The URL that was crawled."}}},
+ :IapTestServiceAccountInfo {:type "object",
+                             :properties {:targetAudienceClientId {:type "string",
+                                                                   :description "Required. Describes OAuth2 client id of resources protected by\nIdentity-Aware-Proxy (IAP)."}},
+                             :id "IapTestServiceAccountInfo",
+                             :description "Describes authentication configuration when Web-Security-Scanner\nservice account is added in Identity-Aware-Proxy (IAP) access policies."},
+ :Finding {:type "object",
+           :properties {:description {:type "string",
+                                      :description "Output only. The description of the vulnerability."},
                         :findingType {:description "Output only. The type of the Finding.\nDetailed and up-to-date information on findings can be found here:\nhttps://cloud.google.com/security-scanner/docs/scan-result-details",
                                       :type "string"},
                         :fuzzedUrl {:description "Output only. The URL produced by the server-side fuzzer and used in the request that\ntriggered the vulnerability.",
@@ -339,13 +338,14 @@
                                    :type "string"},
                         :vulnerableHeaders {:$ref "VulnerableHeaders",
                                             :description "Output only. An addon containing information about vulnerable or missing HTTP headers."},
-                        :trackingId {:description "Output only. The tracking ID uniquely identifies a vulnerability instance across\nmultiple ScanRuns.",
-                                     :type "string"},
+                        :trackingId {:type "string",
+                                     :description "Output only. The tracking ID uniquely identifies a vulnerability instance across\nmultiple ScanRuns."},
                         :xss {:$ref "Xss",
                               :description "Output only. An addon containing information reported for an XSS, if any."},
                         :reproductionUrl {:description "Output only. The URL containing human-readable payload that user can leverage to\nreproduce the vulnerability.",
                                           :type "string"},
-                        :severity {:enumDescriptions ["No severity specified. The default value."
+                        :severity {:type "string",
+                                   :enumDescriptions ["No severity specified. The default value."
                                                       "Critical severity."
                                                       "High severity."
                                                       "Medium severity."
@@ -355,75 +355,79 @@
                                           "HIGH"
                                           "MEDIUM"
                                           "LOW"],
-                                   :description "Output only. The severity level of the reported vulnerability.",
-                                   :type "string"},
-                        :outdatedLibrary {:description "Output only. An addon containing information about outdated libraries.",
-                                          :$ref "OutdatedLibrary"},
-                        :form {:description "Output only. An addon containing information reported for a vulnerability with an HTML\nform, if any.",
-                               :$ref "Form"},
-                        :httpMethod {:type "string",
-                                     :description "Output only. The http method of the request that triggered the vulnerability, in\nuppercase."},
+                                   :description "Output only. The severity level of the reported vulnerability."},
+                        :outdatedLibrary {:$ref "OutdatedLibrary",
+                                          :description "Output only. An addon containing information about outdated libraries."},
+                        :form {:$ref "Form",
+                               :description "Output only. An addon containing information reported for a vulnerability with an HTML\nform, if any."},
+                        :httpMethod {:description "Output only. The http method of the request that triggered the vulnerability, in\nuppercase.",
+                                     :type "string"},
                         :body {:description "Output only. The body of the request that triggered the vulnerability.",
                                :type "string"},
                         :finalUrl {:description "Output only. The URL where the browser lands when the vulnerability is detected.",
                                    :type "string"},
                         :vulnerableParameters {:$ref "VulnerableParameters",
                                                :description "Output only. An addon containing information about request parameters which were found\nto be vulnerable."}},
-           :id "Finding"},
+           :id "Finding",
+           :description "A Finding resource represents a vulnerability instance identified during a\nScanRun."},
  :ListScanConfigsResponse {:description "Response for the `ListScanConfigs` method.",
                            :type "object",
-                           :properties {:scanConfigs {:description "The list of ScanConfigs returned.",
+                           :properties {:nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
+                                                        :type "string"},
+                                        :scanConfigs {:description "The list of ScanConfigs returned.",
                                                       :type "array",
-                                                      :items {:$ref "ScanConfig"}},
-                                        :nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
-                                                        :type "string"}},
+                                                      :items {:$ref "ScanConfig"}}},
                            :id "ListScanConfigsResponse"},
- :VulnerableHeaders {:id "VulnerableHeaders",
-                     :description "Information about vulnerable or missing HTTP Headers.",
-                     :type "object",
-                     :properties {:headers {:type "array",
-                                            :items {:$ref "Header"},
-                                            :description "List of vulnerable headers."},
-                                  :missingHeaders {:type "array",
-                                                   :items {:$ref "Header"},
-                                                   :description "List of missing headers."}}},
- :ScanRunWarningTrace {:type "object",
-                       :properties {:code {:enum ["CODE_UNSPECIFIED"
-                                                  "INSUFFICIENT_CRAWL_RESULTS"
-                                                  "TOO_MANY_CRAWL_RESULTS"
-                                                  "TOO_MANY_FUZZ_TASKS"
-                                                  "BLOCKED_BY_IAP"],
-                                           :description "Output only. Indicates the warning code.",
-                                           :type "string",
+ :VulnerableHeaders {:type "object",
+                     :properties {:missingHeaders {:description "List of missing headers.",
+                                                   :type "array",
+                                                   :items {:$ref "Header"}},
+                                  :headers {:description "List of vulnerable headers.",
+                                            :type "array",
+                                            :items {:$ref "Header"}}},
+                     :id "VulnerableHeaders",
+                     :description "Information about vulnerable or missing HTTP Headers."},
+ :ScanRunWarningTrace {:description "Output only.\nDefines a warning trace message for ScanRun. Warning traces provide customers\nwith useful information that helps make the scanning process more effective.",
+                       :type "object",
+                       :properties {:code {:type "string",
                                            :enumDescriptions ["Default value is never used."
                                                               "Indicates that a scan discovered an unexpectedly low number of URLs. This\nis sometimes caused by complex navigation features or by using a single\nURL for numerous pages."
                                                               "Indicates that a scan discovered too many URLs to test, or excessive\nredundant URLs."
                                                               "Indicates that too many tests have been generated for the scan. Customer\nshould try reducing the number of starting URLs, increasing the QPS rate,\nor narrowing down the scope of the scan using the excluded patterns."
-                                                              "Indicates that a scan is blocked by IAP."]}},
-                       :id "ScanRunWarningTrace",
-                       :description "Output only.\nDefines a warning trace message for ScanRun. Warning traces provide customers\nwith useful information that helps make the scanning process more effective."},
- :ListFindingTypeStatsResponse {:description "Response for the `ListFindingTypeStats` method.",
+                                                              "Indicates that a scan is blocked by IAP."],
+                                           :enum ["CODE_UNSPECIFIED"
+                                                  "INSUFFICIENT_CRAWL_RESULTS"
+                                                  "TOO_MANY_CRAWL_RESULTS"
+                                                  "TOO_MANY_FUZZ_TASKS"
+                                                  "BLOCKED_BY_IAP"],
+                                           :description "Output only. Indicates the warning code."}},
+                       :id "ScanRunWarningTrace"},
+ :ListFindingTypeStatsResponse {:id "ListFindingTypeStatsResponse",
+                                :description "Response for the `ListFindingTypeStats` method.",
                                 :type "object",
                                 :properties {:findingTypeStats {:description "The list of FindingTypeStats returned.",
                                                                 :type "array",
-                                                                :items {:$ref "FindingTypeStats"}}},
-                                :id "ListFindingTypeStatsResponse"},
- :IapCredential {:type "object",
-                 :properties {:iapTestServiceAccountInfo {:description "Authentication configuration when Web-Security-Scanner service\naccount is added in Identity-Aware-Proxy (IAP) access policies.",
-                                                          :$ref "IapTestServiceAccountInfo"}},
-                 :id "IapCredential",
-                 :description "Describes authentication configuration for Identity-Aware-Proxy (IAP)."},
+                                                                :items {:$ref "FindingTypeStats"}}}},
+ :IapCredential {:id "IapCredential",
+                 :description "Describes authentication configuration for Identity-Aware-Proxy (IAP).",
+                 :type "object",
+                 :properties {:iapTestServiceAccountInfo {:$ref "IapTestServiceAccountInfo",
+                                                          :description "Authentication configuration when Web-Security-Scanner service\naccount is added in Identity-Aware-Proxy (IAP) access policies."}}},
  :ListScanRunsResponse {:description "Response for the `ListScanRuns` method.",
                         :type "object",
-                        :properties {:scanRuns {:type "array",
-                                                :items {:$ref "ScanRun"},
-                                                :description "The list of ScanRuns returned."},
-                                     :nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
-                                                     :type "string"}},
+                        :properties {:nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no\nmore results in the list.",
+                                                     :type "string"},
+                                     :scanRuns {:description "The list of ScanRuns returned.",
+                                                :type "array",
+                                                :items {:$ref "ScanRun"}}},
                         :id "ListScanRunsResponse"},
- :Xss {:description "Information reported for an XSS.",
+ :Xss {:id "Xss",
+       :description "Information reported for an XSS.",
        :type "object",
-       :properties {:attackVector {:enum ["ATTACK_VECTOR_UNSPECIFIED"
+       :properties {:stackTraces {:description "Stack traces leading to the point where the XSS occurred.",
+                                  :type "array",
+                                  :items {:type "string"}},
+                    :attackVector {:enum ["ATTACK_VECTOR_UNSPECIFIED"
                                           "LOCAL_STORAGE"
                                           "SESSION_STORAGE"
                                           "WINDOW_NAME"
@@ -460,11 +464,7 @@
                     :storedXssSeedingUrl {:description "The reproduction url for the seeding POST request of a Stored XSS.",
                                           :type "string"},
                     :errorMessage {:type "string",
-                                   :description "An error message generated by a javascript breakage."},
-                    :stackTraces {:type "array",
-                                  :items {:type "string"},
-                                  :description "Stack traces leading to the point where the XSS occurred."}},
-       :id "Xss"},
+                                   :description "An error message generated by a javascript breakage."}}},
  :Authentication {:description "Scan authentication configuration.",
                   :type "object",
                   :properties {:iapCredential {:description "Authentication using Identity-Aware-Proxy (IAP).",

@@ -12,24 +12,25 @@
   Required parameters: resourceName
   
   Optional parameters: none
+  
   Downloads media. Download is supported on the URI `/download/{resource_name=**}?alt=media.`
   
   **Note**: Download requests will not be successful without including `alt=media` query string."
   {:scopes ["https://www.googleapis.com/auth/display-video"
             "https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resourceName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
      "download/{+resourceName}"
      #{:resourceName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

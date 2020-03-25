@@ -12,21 +12,22 @@
   Required parameters: playerId
   
   Optional parameters: language
+  
   Retrieves the Player resource with the given ID. To retrieve the player for the currently authenticated user, set playerId to me."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:playerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/{playerId}"
      #{:playerId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: collection
   
   Optional parameters: language, maxResults, pageToken
+  
   Get the collection of players for the currently authenticated user."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:collection})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collection})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "players/me/players/{collection}"
      #{:collection}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

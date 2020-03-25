@@ -15,32 +15,32 @@
   
   Body: 
   
-  {:glossaryConfig {:ignoreCase boolean, :glossary string},
-   :labels {},
-   :targetLanguageCode string,
+  {:targetLanguageCode string,
    :sourceLanguageCode string,
    :model string,
    :contents [string],
-   :mimeType string}
+   :mimeType string,
+   :glossaryConfig {:glossary string, :ignoreCase boolean},
+   :labels {}}
   
   Translates input text and returns translated text."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}:translateText"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -50,23 +50,24 @@
   
   Required parameters: parent
   
-  Optional parameters: model, displayLanguageCode
+  Optional parameters: displayLanguageCode, model
+  
   Returns a list of supported languages for translation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}/supportedLanguages"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -85,21 +86,119 @@
   Detects the language of text within a request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}:detectLanguage"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-get$
+  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-batchTranslateText$
+  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/batchTranslateText
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:inputConfigs [{:gcsSource GcsSource, :mimeType string}],
+   :glossaries {},
+   :models {},
+   :labels {},
+   :targetLanguageCodes [string],
+   :outputConfig {:gcsDestination GcsDestination},
+   :sourceLanguageCode string}
+  
+  Translates a large volume of text in asynchronous batch mode.
+  This function provides real-time output as the inputs are being processed.
+  If caller cancels a request, the partial results (for an input file, it's
+  all or nothing) may still be available on the specified output location.
+  
+  This call returns immediately and you can
+  use google.longrunning.Operation.name to poll the status of the call."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+parent}:batchTranslateText"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-translation"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://translation.googleapis.com/"
+     "v3/{+name}/locations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -113,32 +212,32 @@
   
   Body: 
   
-  {:glossaryConfig {:ignoreCase boolean, :glossary string},
-   :labels {},
-   :targetLanguageCode string,
+  {:targetLanguageCode string,
    :sourceLanguageCode string,
    :model string,
    :contents [string],
-   :mimeType string}
+   :mimeType string,
+   :glossaryConfig {:glossary string, :ignoreCase boolean},
+   :labels {}}
   
   Translates input text and returns translated text."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}:translateText"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -149,22 +248,23 @@
   Required parameters: parent
   
   Optional parameters: displayLanguageCode, model
+  
   Returns a list of supported languages for translation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}/supportedLanguages"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -183,117 +283,21 @@
   Detects the language of text within a request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}:detectLanguage"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-get$
-  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Gets information about a location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-batchTranslateText$
-  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/batchTranslateText
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:outputConfig {:gcsDestination GcsDestination},
-   :sourceLanguageCode string,
-   :inputConfigs [{:gcsSource GcsSource, :mimeType string}],
-   :glossaries {},
-   :models {},
-   :labels {},
-   :targetLanguageCodes [string]}
-  
-  Translates a large volume of text in asynchronous batch mode.
-  This function provides real-time output as the inputs are being processed.
-  If caller cancels a request, the partial results (for an input file, it's
-  all or nothing) may still be available on the specified output location.
-  
-  This call returns immediately and you can
-  use google.longrunning.Operation.name to poll the status of the call."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+parent}:batchTranslateText"
-     #{:parent}
-     args)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-list$
-  "https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://translation.googleapis.com/"
-     "v3/{+name}/locations"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -304,24 +308,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a glossary, or cancels glossary construction
   if the glossary isn't created yet.
   Returns NOT_FOUND, if the glossary doesn't exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -331,24 +336,25 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
+  
   Lists glossaries in a project. Returns NOT_FOUND, if the project doesn't
   exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}/glossaries"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -359,23 +365,24 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets a glossary. Returns NOT_FOUND, if the glossary doesn't
   exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -389,33 +396,33 @@
   
   Body: 
   
-  {:endTime string,
-   :entryCount integer,
-   :inputConfig {:gcsSource GcsSource},
+  {:inputConfig {:gcsSource GcsSource},
    :submitTime string,
-   :languagePair {:sourceLanguageCode string,
-                  :targetLanguageCode string},
    :name string,
-   :languageCodesSet {:languageCodes [string]}}
+   :languagePair {:targetLanguageCode string,
+                  :sourceLanguageCode string},
+   :languageCodesSet {:languageCodes [string]},
+   :endTime string,
+   :entryCount integer}
   
   Creates a glossary and returns the long-running operation. Returns
   NOT_FOUND, if the project doesn't exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+parent}/glossaries"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -443,21 +450,21 @@
   corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}:cancel"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -468,25 +475,26 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a long-running operation. This method indicates that the client is
   no longer interested in the operation result. It does not cancel the
   operation. If the server doesn't support this method, it returns
   `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -497,6 +505,7 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize, filter
+  
   Lists operations that match the specified filter in the request. If the
   server doesn't support this method, it returns `UNIMPLEMENTED`.
   
@@ -509,19 +518,19 @@
   is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}/operations"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -532,24 +541,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of a long-running operation.  Clients can use this
   method to poll the operation result at intervals as recommended by the API
   service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -576,21 +586,21 @@
   immediate response is no guarantee that the operation is done."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-translation"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://translation.googleapis.com/"
      "v3/{+name}:wait"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

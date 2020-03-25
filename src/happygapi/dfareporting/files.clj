@@ -12,21 +12,22 @@
   Required parameters: fileId, reportId
   
   Optional parameters: none
+  
   Retrieves a report file by its report ID and file ID. This method supports media download."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:reportId :fileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :fileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "reports/{reportId}/files/{fileId}"
      #{:reportId :fileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: profileId
   
   Optional parameters: maxResults, pageToken, scope, sortField, sortOrder
+  
   Lists files for a user profile."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/files"
      #{:profileId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

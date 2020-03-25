@@ -12,21 +12,22 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a budget. Returns successfully if already deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://billingbudgets.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,36 +41,36 @@
   
   Body: 
   
-  {:updateMask string,
-   :budget {:allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
+  {:budget {:budgetFilter GoogleCloudBillingBudgetsV1beta1Filter,
+            :allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
             :displayName string,
             :etag string,
             :thresholdRules [GoogleCloudBillingBudgetsV1beta1ThresholdRule],
             :name string,
-            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount,
-            :budgetFilter GoogleCloudBillingBudgetsV1beta1Filter}}
+            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount},
+   :updateMask string}
   
   Updates a budget and returns the updated budget.
   
   WARNING: There are some fields exposed on the Google Cloud Console that
-  aren’t available on this API. Budget fields that are not exposed in
+  aren't available on this API. Budget fields that are not exposed in
   this API will not be changed by this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://billingbudgets.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -80,26 +81,27 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns a budget.
   
   WARNING: There are some fields exposed on the Google Cloud Console that
-  aren’t available on this API. When reading from the API, you will not
+  aren't available on this API. When reading from the API, you will not
   see these fields in the return value, though they may have been set
-  in the cloud console."
+  in the Cloud Console."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://billingbudgets.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -110,26 +112,27 @@
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
+  
   Returns a list of budgets for a billing account.
   
   WARNING: There are some fields exposed on the Google Cloud Console that
-  aren’t available on this API. When reading from the API, you will not
+  aren't available on this API. When reading from the API, you will not
   see these fields in the return value, though they may have been set
-  in the cloud console."
+  in the Cloud Console."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://billingbudgets.googleapis.com/"
      "v1beta1/{+parent}/budgets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -143,33 +146,33 @@
   
   Body: 
   
-  {:budget {:allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
+  {:budget {:budgetFilter GoogleCloudBillingBudgetsV1beta1Filter,
+            :allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
             :displayName string,
             :etag string,
             :thresholdRules [GoogleCloudBillingBudgetsV1beta1ThresholdRule],
             :name string,
-            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount,
-            :budgetFilter GoogleCloudBillingBudgetsV1beta1Filter}}
+            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount}}
   
   Creates a new budget. See
   <a href=\"https://cloud.google.com/billing/quotas\">Quotas and limits</a>
   for more information on the limits of the number of budgets you can create."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://billingbudgets.googleapis.com/"
      "v1beta1/{+parent}/budgets"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

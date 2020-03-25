@@ -7,33 +7,6 @@
             [happy.util :as util]))
 
 (defn $
-  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/getLinkStats
-  
-  Required parameters: dynamicLink
-  
-  Optional parameters: durationDays, sdkVersion
-  Fetches analytics stats of a short Dynamic Link for a given
-  duration. Metrics include number of clicks, redirects, installs,
-  app first opens, and app reopens."
-  {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:dynamicLink})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebasedynamiclinks.googleapis.com/"
-     "v1/{dynamicLink}/linkStats"
-     #{:dynamicLink}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn $
   "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/installAttribution
   
   Required parameters: none
@@ -42,38 +15,38 @@
   
   Body: 
   
-  {:uniqueMatchLinkToCheck string,
+  {:bundleId string,
+   :device {:deviceModelName string,
+            :languageCodeFromWebview string,
+            :languageCodeRaw string,
+            :screenResolutionWidth string,
+            :timezone string,
+            :screenResolutionHeight string,
+            :languageCode string},
+   :uniqueMatchLinkToCheck string,
    :appInstallationTime string,
    :iosVersion string,
    :visualStyle string,
    :retrievalMethod string,
-   :sdkVersion string,
-   :bundleId string,
-   :device {:languageCodeRaw string,
-            :screenResolutionWidth string,
-            :timezone string,
-            :screenResolutionHeight string,
-            :languageCode string,
-            :deviceModelName string,
-            :languageCodeFromWebview string}}
+   :sdkVersion string}
   
   Get iOS strong/weak-match info for post-install attribution."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
      "v1/installAttribution"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -87,25 +60,53 @@
   
   Body: 
   
-  {:sdkVersion string, :bundleId string, :requestedLink string}
+  {:bundleId string, :requestedLink string, :sdkVersion string}
   
   Get iOS reopen attribution for app universal link open deeplinking."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
      "v1/reopenAttribution"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn $
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/getLinkStats
+  
+  Required parameters: dynamicLink
+  
+  Optional parameters: durationDays, sdkVersion
+  
+  Fetches analytics stats of a short Dynamic Link for a given
+  duration. Metrics include number of clicks, redirects, installs,
+  app first opens, and app reopens."
+  {:scopes ["https://www.googleapis.com/auth/firebase"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dynamicLink})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebasedynamiclinks.googleapis.com/"
+     "v1/{dynamicLink}/linkStats"
+     #{:dynamicLink}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

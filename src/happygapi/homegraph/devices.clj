@@ -22,21 +22,21 @@
   is identified by the JWT signed by the third-party partner's service
   account."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:sync"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -50,11 +50,11 @@
   
   Body: 
   
-  {:followUpToken string,
-   :eventId string,
+  {:eventId string,
    :agentUserId string,
    :payload {:devices ReportStateAndNotificationDevice},
-   :requestId string}
+   :requestId string,
+   :followUpToken string}
   
   Reports device state and optionally sends device notifications. Called by
   an agent when the device state of a third-party changes or the agent wants
@@ -72,21 +72,21 @@
   The third-party user's identity is passed in as `agent_user_id`.
   The agent is identified by the JWT signed by the partner's service account."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:reportStateAndNotification"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -111,21 +111,21 @@
   The agent is identified by the API key or JWT signed by the partner's
   service account."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:requestSync"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -148,21 +148,21 @@
   is identified by the JWT signed by the third-party partner's service
   account."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:query"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

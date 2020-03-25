@@ -19,8 +19,8 @@
    :communityId string,
    :comment {:text string, :type string},
    :doNotStore boolean,
-   :context {:articleAndParentComment ArticleAndParentComment,
-             :entries [TextEntry]},
+   :context {:entries [TextEntry],
+             :articleAndParentComment ArticleAndParentComment},
    :requestedAttributes {},
    :languages [string],
    :spanAnnotations boolean,
@@ -28,21 +28,21 @@
   
   Analyzes the provided text and returns scores for requested attributes."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://commentanalyzer.googleapis.com/"
      "v1alpha1/comments:analyze"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -56,32 +56,32 @@
   
   Body: 
   
-  {:sessionId string,
+  {:communityId string,
    :clientToken string,
-   :communityId string,
    :languages [string],
    :comment {:text string, :type string},
-   :context {:articleAndParentComment ArticleAndParentComment,
-             :entries [TextEntry]},
-   :attributeScores {}}
+   :context {:entries [TextEntry],
+             :articleAndParentComment ArticleAndParentComment},
+   :attributeScores {},
+   :sessionId string}
   
   Suggest comment scores as training data."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://commentanalyzer.googleapis.com/"
      "v1alpha1/comments:suggestscore"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

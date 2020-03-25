@@ -9,26 +9,29 @@
 (defn delete$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/delete
   
-  Required parameters: instance, project, sha1Fingerprint
+  Required parameters: sha1Fingerprint, instance, project
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Deletes the SSL certificate. For First Generation instances, the
   certificate remains valid until the instance is restarted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :sha1Fingerprint})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instance :project :sha1Fingerprint})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
      #{:instance :project :sha1Fingerprint}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -38,7 +41,7 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
   
   Body: 
   
@@ -49,21 +52,21 @@
   the instance is restarted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -71,27 +74,30 @@
 (defn get$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/get
   
-  Required parameters: project, sha1Fingerprint, instance
+  Required parameters: sha1Fingerprint, instance, project
   
-  Optional parameters: resourceName
+  Optional parameters: none
+  
   Retrieves a particular SSL certificate.  Does not include the private key
   (required for usage).  The private key must be saved from the response to
   initial creation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project :sha1Fingerprint})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instance :project :sha1Fingerprint})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
      #{:instance :project :sha1Fingerprint}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -101,23 +107,24 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
+  
   Lists all of the current SSL certificates for the instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -127,7 +134,7 @@
   
   Required parameters: instance, project
   
-  Optional parameters: parent
+  Optional parameters: none
   
   Body: 
   
@@ -139,21 +146,21 @@
   database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:instance :project})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
      "sql/v1beta4/projects/{project}/instances/{instance}/createEphemeral"
      #{:instance :project}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

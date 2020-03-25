@@ -15,34 +15,34 @@
   
   Body: 
   
-  {:userInfo {:regionCode string, :userId string},
+  {:resources [{:remoteIp string,
+                :referrer string,
+                :type string,
+                :url string}],
+   :entry {:digest string, :hash string, :url string},
+   :platformType string,
+   :userInfo {:userId string, :regionCode string},
    :clientInfo {:clientVersion string, :clientId string},
-   :threatType string,
-   :resources [{:type string,
-                :url string,
-                :remoteIp string,
-                :referrer string}],
-   :entry {:hash string, :url string, :digest string},
-   :platformType string}
+   :threatType string}
   
   Reports a Safe Browsing threat list hit to Google. Only projects with
   TRUSTED_REPORTER visibility can use this method."
   {:scopes nil}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://safebrowsing.googleapis.com/"
      "v4/threatHits"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

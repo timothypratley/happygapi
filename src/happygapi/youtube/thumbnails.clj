@@ -12,24 +12,25 @@
   Required parameters: videoId
   
   Optional parameters: onBehalfOfContentOwner
+  
   Uploads a custom video thumbnail to YouTube and sets it for a video."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.upload"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:videoId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:videoId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/youtube/v3/"
      "thumbnails/set"
      #{:videoId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

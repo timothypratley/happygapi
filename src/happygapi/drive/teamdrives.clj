@@ -52,21 +52,21 @@
   
   Deprecated use drives.create instead."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:requestId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:requestId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "teamdrives"
      #{:requestId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -77,21 +77,22 @@
   Required parameters: teamDriveId
   
   Optional parameters: none
+  
   Deprecated use drives.delete instead."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:teamDriveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:teamDriveId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "teamdrives/{teamDriveId}"
      #{:teamDriveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -102,22 +103,23 @@
   Required parameters: teamDriveId
   
   Optional parameters: useDomainAdminAccess
+  
   Deprecated use drives.get instead."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:teamDriveId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:teamDriveId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "teamdrives/{teamDriveId}"
      #{:teamDriveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -128,22 +130,23 @@
   Required parameters: none
   
   Optional parameters: pageSize, pageToken, q, useDomainAdminAccess
+  
   Deprecated use drives.list instead."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "teamdrives"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -194,21 +197,21 @@
   
   Deprecated use drives.update instead"
   {:scopes ["https://www.googleapis.com/auth/drive"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:teamDriveId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:teamDriveId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://www.googleapis.com/drive/v3/"
      "teamdrives/{teamDriveId}"
      #{:teamDriveId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

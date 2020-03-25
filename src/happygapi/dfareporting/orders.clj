@@ -12,21 +12,22 @@
   Required parameters: id, profileId, projectId
   
   Optional parameters: none
+  
   Gets one order by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:id :profileId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/projects/{projectId}/orders/{id}"
      #{:id :profileId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -37,21 +38,22 @@
   Required parameters: profileId, projectId
   
   Optional parameters: siteId, ids, searchString, pageToken, sortField, sortOrder, maxResults
+  
   Retrieves a list of orders, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:profileId :projectId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/projects/{projectId}/orders"
      #{:profileId :projectId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

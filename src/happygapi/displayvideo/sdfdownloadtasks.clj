@@ -19,12 +19,12 @@
    :parentEntityFilter {:fileType [string],
                         :filterType string,
                         :filterIds [string]},
-   :idFilter {:adGroupIds [string],
-              :campaignIds [string],
-              :insertionOrderIds [string],
-              :mediaProductIds [string],
+   :idFilter {:mediaProductIds [string],
               :lineItemIds [string],
-              :adGroupAdIds [string]},
+              :adGroupAdIds [string],
+              :adGroupIds [string],
+              :campaignIds [string],
+              :insertionOrderIds [string]},
    :partnerId string,
    :version string,
    :inventorySourceFilter {:inventorySourceIds [string]}}
@@ -47,21 +47,21 @@
   that error.details is expected to be
   empty."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
      "v1/sdfdownloadtasks"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -72,22 +72,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Gets the latest state of an asynchronous SDF download task operation. Clients should poll this method at intervals of 30 seconds."
   {:scopes ["https://www.googleapis.com/auth/display-video"
             "https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -19,21 +19,21 @@
   
   Acknowledges a purchase of an inapp item."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:packageName :productId :token})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :productId :token})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/products/{productId}/tokens/{token}:acknowledge"
      #{:packageName :productId :token}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -44,21 +44,22 @@
   Required parameters: packageName, productId, token
   
   Optional parameters: none
+  
   Checks the purchase and consumption status of an inapp item."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :productId :token})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :productId :token})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/products/{productId}/tokens/{token}"
      #{:packageName :productId :token}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -76,21 +77,23 @@
   
   Acknowledges a subscription purchase."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}:acknowledge"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -101,21 +104,24 @@
   Required parameters: packageName, subscriptionId, token
   
   Optional parameters: none
+  
   Cancels a user's subscription purchase. The subscription remains valid until its expiration time."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}:cancel"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -134,21 +140,23 @@
   
   Defers a user's subscription purchase until a specified future expiration time."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}:defer"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -159,21 +167,24 @@
   Required parameters: packageName, subscriptionId, token
   
   Optional parameters: none
+  
   Checks whether a user's subscription purchase is valid and returns its expiry time."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -184,21 +195,24 @@
   Required parameters: packageName, subscriptionId, token
   
   Optional parameters: none
+  
   Refunds a user's subscription purchase, but the subscription remains valid until its expiration time and it will continue to recur."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}:refund"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -209,21 +223,24 @@
   Required parameters: packageName, subscriptionId, token
   
   Optional parameters: none
+  
   Refunds and immediately revokes a user's subscription purchase. Access to the subscription will be terminated immediately and it will stop recurring."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName :token :subscriptionId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :token :subscriptionId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}:revoke"
      #{:packageName :token :subscriptionId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -234,21 +251,22 @@
   Required parameters: packageName
   
   Optional parameters: endTime, maxResults, startIndex, startTime, token, type
+  
   Lists the purchases that were canceled, refunded or charged-back."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:packageName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidpublisher/v3/applications/"
      "{packageName}/purchases/voidedpurchases"
      #{:packageName}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

@@ -12,21 +12,22 @@
   Required parameters: clientRevision
   
   Optional parameters: none
+  
   Checks whether the games client is out of date."
   {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:clientRevision})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:clientRevision})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/games/v1/"
      "revisions/check"
      #{:clientRevision}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

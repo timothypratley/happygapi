@@ -12,21 +12,22 @@
   Required parameters: none
   
   Optional parameters: projectId, callbackUrl
+  
   Creates an enterprise signup URL."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://androidmanagement.googleapis.com/"
      "v1/signupUrls"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

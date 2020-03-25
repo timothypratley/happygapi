@@ -12,21 +12,22 @@
   Required parameters: adClientId, urlChannelId
   
   Optional parameters: none
+  
   Delete a URL channel from the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:urlChannelId :adClientId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:urlChannelId :adClientId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels/{urlChannelId}"
      #{:urlChannelId :adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -40,25 +41,25 @@
   
   Body: 
   
-  {:id string, :kind string, :urlPattern string}
+  {:id string, :urlPattern string, :kind string}
   
   Add a new URL channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:adClientId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels"
      #{:adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -69,21 +70,22 @@
   Required parameters: adClientId
   
   Optional parameters: maxResults, pageToken
+  
   List all host URL channels in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:adClientId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/urlchannels"
      #{:adClientId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

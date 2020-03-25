@@ -12,6 +12,7 @@
   Required parameters: none
   
   Optional parameters: none
+  
   Gets the Proximity Beacon API's current public key and associated
   parameters used to initiate the Diffie-Hellman key exchange required to
   register a beacon that broadcasts the Eddystone-EID format. This key
@@ -20,19 +21,19 @@
   prepared to refresh this key when they encounter an error registering an
   Eddystone-EID beacon."
   {:scopes ["https://www.googleapis.com/auth/userlocation.beacon.registry"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://proximitybeacon.googleapis.com/"
      "v1beta1/eidparams"
      #{}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

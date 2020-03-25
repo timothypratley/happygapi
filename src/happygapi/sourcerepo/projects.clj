@@ -6,31 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getConfig$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/getConfig
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  Returns the Cloud Source Repositories configuration of the project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sourcerepo.googleapis.com/"
-     "v1/{+name}/config"
-     #{:name}
-     args)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params args,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn updateConfig$
   "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/updateConfig
   
@@ -40,28 +15,54 @@
   
   Body: 
   
-  {:projectConfig {:pubsubConfigs {},
+  {:updateMask string,
+   :projectConfig {:pubsubConfigs {},
                    :name string,
-                   :enablePrivateKeyCheck boolean},
-   :updateMask string}
+                   :enablePrivateKeyCheck boolean}}
   
   Updates the Cloud Source Repositories configuration of the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}/config"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getConfig$
+  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/getConfig
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the Cloud Source Repositories configuration of the project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sourcerepo.googleapis.com/"
+     "v1/{+name}/config"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -72,24 +73,25 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Returns information about a repo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
             "https://www.googleapis.com/auth/source.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -103,31 +105,31 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:version integer,
+  {:policy {:version integer,
             :auditConfigs [AuditConfig],
             :bindings [Binding],
-            :etag string}}
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any
   existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -142,29 +144,29 @@
   Body: 
   
   {:updateMask string,
-   :repo {:name string,
-          :mirrorConfig MirrorConfig,
-          :url string,
+   :repo {:url string,
           :pubsubConfigs {},
-          :size string}}
+          :size string,
+          :name string,
+          :mirrorConfig MirrorConfig}}
   
   Updates information about a repo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -187,21 +189,21 @@
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
             "https://www.googleapis.com/auth/source.read_write"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -215,11 +217,11 @@
   
   Body: 
   
-  {:name string,
-   :mirrorConfig {:deployKeyId string, :url string, :webhookId string},
-   :url string,
+  {:url string,
    :pubsubConfigs {},
-   :size string}
+   :size string,
+   :name string,
+   :mirrorConfig {:url string, :webhookId string, :deployKeyId string}}
   
   Creates a repo in the given project with the given name.
   
@@ -227,21 +229,21 @@
   `ALREADY_EXISTS`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+parent}/repos"
      #{:parent}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -252,22 +254,23 @@
   Required parameters: name
   
   Optional parameters: none
+  
   Deletes a repo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -287,21 +290,21 @@
   
   The response contains SyncRepoMetadata in the metadata field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth args body]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}:sync"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -312,6 +315,7 @@
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
+  
   Gets the access control policy for a resource.
   Returns an empty policy if the resource exists and does not have a policy
   set."
@@ -319,19 +323,19 @@
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
             "https://www.googleapis.com/auth/source.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -342,25 +346,26 @@
   Required parameters: name
   
   Optional parameters: pageToken, pageSize
+  
   Returns all repos belonging to a project. The sizes of the repos are
   not set by ListRepos.  To get the size of a repo, use GetRepo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
             "https://www.googleapis.com/auth/source.read_write"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sourcerepo.googleapis.com/"
      "v1/{+name}/repos"
      #{:name}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

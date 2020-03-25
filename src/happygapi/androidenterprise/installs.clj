@@ -12,11 +12,12 @@
   Required parameters: deviceId, enterpriseId, installId, userId
   
   Optional parameters: none
+  
   Requests to remove an app from a device. A call to get or list will still show the app as installed on the device until it is actually removed."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :deviceId :installId :userId})]}
   (util/get-response
    (http/delete
@@ -24,11 +25,11 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -39,11 +40,12 @@
   Required parameters: deviceId, enterpriseId, installId, userId
   
   Optional parameters: none
+  
   Retrieves details of an installation of an app on a device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
+  [auth parameters]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :deviceId :installId :userId})]}
   (util/get-response
    (http/get
@@ -51,11 +53,11 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -66,21 +68,24 @@
   Required parameters: deviceId, enterpriseId, userId
   
   Optional parameters: none
+  
   Retrieves the details of all apps installed on the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:enterpriseId :deviceId :userId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :deviceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs"
      #{:enterpriseId :deviceId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
@@ -101,9 +106,9 @@
   
   Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth args body]
+  [auth parameters body]
   {:pre [(util/has-keys?
-          args
+          parameters
           #{:enterpriseId :deviceId :installId :userId})]}
   (util/get-response
    (http/put
@@ -111,13 +116,13 @@
      "https://www.googleapis.com/androidenterprise/v1/"
      "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
-     args)
+     parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))

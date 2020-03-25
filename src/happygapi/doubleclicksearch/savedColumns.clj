@@ -12,21 +12,22 @@
   Required parameters: advertiserId, agencyId
   
   Optional parameters: none
+  
   Retrieve the list of saved columns for a specified advertiser."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth args]
-  {:pre [(util/has-keys? args #{:advertiserId :agencyId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:advertiserId :agencyId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/doubleclicksearch/v2/"
      "agency/{agencyId}/advertiser/{advertiserId}/savedcolumns"
      #{:advertiserId :agencyId}
-     args)
+     parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params args,
+      :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
