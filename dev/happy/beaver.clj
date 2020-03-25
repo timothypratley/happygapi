@@ -83,15 +83,15 @@
             ?description)
       {:scopes ?scopes}
       ~(if ?request
-         '[auth args body]
-         '[auth args])
-      {:pre [(util/has-keys? args ~(set !required-parameters))]}
+         '[auth parameters body]
+         '[auth parameters])
+      {:pre [(util/has-keys? parameters ~(set !required-parameters))]}
       (util/get-response
         (~(symbol "http" (str/lower-case ?httpMethod))
-          (util/get-url ?base-url ?path ~(set !required-parameters) args)
+          (util/get-url ?base-url ?path ~(set !required-parameters) parameters)
           (merge-with merge
                       {:throw-exceptions false
-                       :query-params     args
+                       :query-params     parameters
                        :accept           :json
                        :as               :json
                        &                 ~(when ?request

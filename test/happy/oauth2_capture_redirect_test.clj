@@ -6,7 +6,7 @@
 (deftest wait-for-redirect-test
   (-> (fn []
         (Thread/sleep 100)
-        (http/get "http://localhost:8888/redirect?code=CODE"))
+        (http/get "http://localhost/redirect?code=CODE"))
       (Thread.)
       (.start))
   (is (= "CODE" (r/wait-for-redirect {}))))

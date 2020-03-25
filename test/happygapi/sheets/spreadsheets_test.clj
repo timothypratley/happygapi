@@ -1,24 +1,24 @@
 (ns happygapi.sheets.spreadsheets-test
   (:require [clojure.test :refer [deftest is testing]]
             [happygapi.sheets.spreadsheets :as gsheets]
-            [happy.oauth2 :as oauth2]))
+            [happy.oauth2-credentials :as credentials]))
 
 (def spreadsheet-id "1NbGRyCRMoOT_MLhnubC5900JNwiQq_uqvdKwbqZOfyM")
 
 (deftest get$-test
   (testing "When fetching a spreadsheet"
-    (let [spreadsheet (gsheets/get$ (oauth2/auth!)
+    (let [spreadsheet (gsheets/get$ (credentials/auth!)
                                     {:spreadsheetId spreadsheet-id})]
       (is (map? spreadsheet) "should receive spreadsheet info")
       (is (seq spreadsheet) "should contain properties")))
 
   (testing "When missing a required key"
-    (is (thrown? AssertionError (gsheets/get$ (oauth2/auth!) {:badKey "123"}))
+    (is (thrown? AssertionError (gsheets/get$ (credentials/auth!) {:badKey "123"}))
         "should get an exception")))
 
 (deftest values-batchUpdate$-test
   (testing "When updating values in a sheet"
-    (let [response (gsheets/values-batchUpdate$ (oauth2/auth!)
+    (let [response (gsheets/values-batchUpdate$ (credentials/auth!)
                                                 {:spreadsheetId spreadsheet-id}
                                                 {:valueInputOption "USER_ENTERED"
                                                  :data             [{:range  "Sheet1"
