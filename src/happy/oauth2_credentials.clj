@@ -10,19 +10,10 @@
             [cheshire.core :as json]))
 
 (def secret
-  "If you download secret.json or service.json from your Google Console,
-  do not add it to source control."
-  (atom (merge
-          (let [secret-file (io/file "secret.json")]
-            (when (.exists secret-file)
-              (:installed (json/parse-string (slurp secret-file) true))))
-          (let [service-file (io/file "service.json")]
-            (when (.exists service-file))
-            (json/parse-string (slurp service-file) true)))))
+  (atom {}))
 
 (def scopes
-  (atom ["https://www.googleapis.com/auth/spreadsheets"
-         "https://www.googleapis.com/auth/drive"]))
+  (atom []))
 
 (def credentials-cache
   (atom nil))
@@ -53,7 +44,17 @@
 
 (defn init!
   ([]
-   (init! secret scopes))
+   (init! (merge
+            ;; If you download secret.json or service.json from your Google Console,
+            ;; do not add them to source control.
+            (let [secret-file (io/file "secret.json")]
+              (when (.exists secret-file)
+                (:installed (json/parse-string (slurp secret-file) true))))
+            (let [service-file (io/file "service.json")]
+              (when (.exists service-file)
+                (json/parse-string (slurp service-file) true))))
+          ["https://www.googleapis.com/auth/spreadsheets"
+           "https://www.googleapis.com/auth/drive"]))
   ([config new-scopes]
    (init! config new-scopes fetch-credentials save-credentials))
   ([config new-scopes fetch-credentials save-credentials]
