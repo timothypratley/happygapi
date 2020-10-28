@@ -1,6 +1,6 @@
 (ns happygapi.blogger.users
-  "Blogger API: users.
-  API for access to the data within Blogger.
+  "Blogger API v3: users.
+  The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Gets one user by ID."
+  Gets one user by user_id."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -21,8 +21,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "users/{userId}"
+     "https://blogger.googleapis.com/"
+     "v3/users/{userId}"
      #{:userId}
      parameters)
     (merge-with

@@ -1,19 +1,19 @@
 (ns happygapi.youtube.sponsors
-  "YouTube Data API: sponsors.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/sponsors"
+  "YouTube Data API v3: sponsors.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/sponsors"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/sponsors/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/sponsors/list
   
   Required parameters: part
   
-  Optional parameters: filter, maxResults, pageToken
+  Optional parameters: maxResults, filter, pageToken
   
-  Lists sponsors for a channel."
+  Retrieves a list of sponsors that match the request criteria for a channel."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "sponsors"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/sponsors"
      #{:part}
      parameters)
     (merge-with

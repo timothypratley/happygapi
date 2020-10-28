@@ -33,39 +33,12 @@
       :as :json}
      auth))))
 
-(defn saved-list$
-  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/saved/list
-  
-  Required parameters: none
-  
-  Optional parameters: maxResults, pageToken
-  
-  List all saved reports in this AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsense/v1.4/"
-     "reports/saved"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn saved-generate$
   "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/saved/generate
   
   Required parameters: savedReportId
   
-  Optional parameters: locale, maxResults, startIndex
+  Optional parameters: locale, startIndex, maxResults
   
   Generate an AdSense report based on the saved report ID sent in the query parameters."
   {:scopes ["https://www.googleapis.com/auth/adsense"
@@ -78,6 +51,33 @@
      "https://www.googleapis.com/adsense/v1.4/"
      "reports/{savedReportId}"
      #{:savedReportId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn saved-list$
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/reports/saved/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, maxResults
+  
+  List all saved reports in this AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsense/v1.4/"
+     "reports/saved"
+     #{}
      parameters)
     (merge-with
      merge

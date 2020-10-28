@@ -41,7 +41,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of instance group resources contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -69,13 +69,13 @@
   
   Required parameters: instanceGroup, project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Body: 
   
   {:instanceState string, :portName string}
   
-  Lists the instances in the specified instance group and displays information about the named ports. Depending on the specified options, this method can list all instances or only the instances that are running."
+  Lists the instances in the specified instance group and displays information about the named ports. Depending on the specified options, this method can list all instances or only the instances that are running. The orderBy query parameter is not supported."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}

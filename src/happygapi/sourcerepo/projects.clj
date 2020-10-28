@@ -16,9 +16,9 @@
   Body: 
   
   {:updateMask string,
-   :projectConfig {:pubsubConfigs {},
-                   :name string,
-                   :enablePrivateKeyCheck boolean}}
+   :projectConfig {:enablePrivateKeyCheck boolean,
+                   :pubsubConfigs {},
+                   :name string}}
   
   Updates the Cloud Source Repositories configuration of the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -105,14 +105,13 @@
   
   Body: 
   
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
+  {:updateMask string,
+   :policy {:version integer,
+            :etag string,
             :bindings [Binding],
-            :etag string},
-   :updateMask string}
+            :auditConfigs [AuditConfig]}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
   [auth parameters body]
@@ -143,12 +142,12 @@
   
   Body: 
   
-  {:updateMask string,
-   :repo {:url string,
+  {:repo {:url string,
           :pubsubConfigs {},
-          :size string,
           :name string,
-          :mirrorConfig MirrorConfig}}
+          :mirrorConfig MirrorConfig,
+          :size string},
+   :updateMask string}
   
   Updates information about a repo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -182,9 +181,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
@@ -219,14 +216,11 @@
   
   {:url string,
    :pubsubConfigs {},
-   :size string,
    :name string,
-   :mirrorConfig {:url string, :webhookId string, :deployKeyId string}}
+   :mirrorConfig {:url string, :deployKeyId string, :webhookId string},
+   :size string}
   
-  Creates a repo in the given project with the given name.
-  
-  If the named repository already exists, `CreateRepo` returns
-  `ALREADY_EXISTS`."
+  Creates a repo in the given project with the given name. If the named repository already exists, `CreateRepo` returns `ALREADY_EXISTS`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
   [auth parameters body]
@@ -286,9 +280,7 @@
   
   {}
   
-  Synchronize a connected repo.
-  
-  The response contains SyncRepoMetadata in the metadata field."
+  Synchronize a connected repo. The response contains SyncRepoMetadata in the metadata field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -316,9 +308,7 @@
   
   Optional parameters: options.requestedPolicyVersion
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"
@@ -347,8 +337,7 @@
   
   Optional parameters: pageToken, pageSize
   
-  Returns all repos belonging to a project. The sizes of the repos are
-  not set by ListRepos.  To get the size of a repo, use GetRepo."
+  Returns all repos belonging to a project. The sizes of the repos are not set by ListRepos. To get the size of a repo, use GetRepo."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"

@@ -106,6 +106,33 @@
       :as :json}
      auth))))
 
+(defn listPreconfiguredExpressionSets$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/listPreconfiguredExpressionSets
+  
+  Required parameters: project
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Gets the current list of preconfigured Web Application Firewall (WAF) expressions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/global/securityPolicies/listPreconfiguredExpressionSets"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/patch
   
@@ -263,7 +290,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   List all the policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

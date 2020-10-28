@@ -16,16 +16,15 @@
   Body: 
   
   {:input {:text string, :ssml string},
-   :voice {:languageCode string, :name string, :ssmlGender string},
-   :audioConfig {:audioEncoding string,
-                 :effectsProfileId [string],
-                 :volumeGainDb number,
+   :voice {:ssmlGender string, :name string, :languageCode string},
+   :audioConfig {:effectsProfileId [string],
+                 :audioEncoding string,
                  :sampleRateHertz integer,
-                 :pitch number,
-                 :speakingRate number}}
+                 :volumeGainDb number,
+                 :speakingRate number,
+                 :pitch number}}
   
-  Synthesizes speech synchronously: receive results after all text input
-  has been processed."
+  Synthesizes speech synchronously: receive results after all text input has been processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

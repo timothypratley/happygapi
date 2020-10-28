@@ -1,13 +1,13 @@
 (ns happygapi.books.bookshelves
   "Books API: bookshelves.
-  Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/bookshelves"
+  The Google Books API allows clients to access the Google Books repository.
+  See: https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/bookshelves/get
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves/get
   
   Required parameters: shelf, userId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "users/{userId}/bookshelves/{shelf}"
+     "https://books.googleapis.com/"
+     "books/v1/users/{userId}/bookshelves/{shelf}"
      #{:shelf :userId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/bookshelves/list
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves/list
   
   Required parameters: userId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "users/{userId}/bookshelves"
+     "https://books.googleapis.com/"
+     "books/v1/users/{userId}/bookshelves"
      #{:userId}
      parameters)
     (merge-with
@@ -59,11 +59,11 @@
      auth))))
 
 (defn volumes-list$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/bookshelves/volumes/list
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves/volumes/list
   
   Required parameters: shelf, userId
   
-  Optional parameters: maxResults, showPreorders, source, startIndex
+  Optional parameters: startIndex, showPreorders, maxResults, source
   
   Retrieves volumes in a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -72,8 +72,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "users/{userId}/bookshelves/{shelf}/volumes"
+     "https://books.googleapis.com/"
+     "books/v1/users/{userId}/bookshelves/{shelf}/volumes"
      #{:shelf :userId}
      parameters)
     (merge-with

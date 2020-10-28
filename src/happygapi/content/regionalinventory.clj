@@ -1,36 +1,40 @@
 (ns happygapi.content.regionalinventory
   "Content API for Shopping: regionalinventory.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regionalinventory"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory/custombatch
+(defn insert$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regionalinventory/insert
   
-  Required parameters: none
+  Required parameters: productId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:batchId integer,
-              :merchantId string,
-              :method string,
-              :productId string,
-              :regionalInventory RegionalInventory}]}
+  {:salePriceEffectiveDate string,
+   :price {:value string, :currency string},
+   :regionId string,
+   :customAttributes [{:groupValues [CustomAttribute],
+                       :value string,
+                       :name string}],
+   :kind string,
+   :salePrice {:value string, :currency string},
+   :availability string}
   
-  Updates regional inventory for multiple products or regions in a single request."
+  Update the regional inventory of a product in your Merchant Center account. If a regional inventory with the same region ID already exists, this method updates that entry."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "regionalinventory/batch"
-     #{}
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/products/{productId}/regionalinventory"
+     #{:productId :merchantId}
      parameters)
     (merge-with
      merge
@@ -42,35 +46,31 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/regionalinventory/insert
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regionalinventory/custombatch
   
-  Required parameters: merchantId, productId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:availability string,
-   :customAttributes [{:groupValues [CustomAttribute],
-                       :name string,
-                       :value string}],
-   :kind string,
-   :price {:currency string, :value string},
-   :regionId string,
-   :salePrice {:currency string, :value string},
-   :salePriceEffectiveDate string}
+  {:entries [{:merchantId string,
+              :regionalInventory RegionalInventory,
+              :productId string,
+              :batchId integer,
+              :method string}]}
   
-  Update the regional inventory of a product in your Merchant Center account. If a regional inventory with the same region ID already exists, this method updates that entry."
+  Updates regional inventory for multiple products or regions in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/products/{productId}/regionalinventory"
-     #{:productId :merchantId}
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/regionalinventory/batch"
+     #{}
      parameters)
     (merge-with
      merge

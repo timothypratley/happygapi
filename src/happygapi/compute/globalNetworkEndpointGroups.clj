@@ -15,7 +15,8 @@
   
   Body: 
   
-  {:networkEndpoints [{:fqdn string,
+  {:networkEndpoints [{:annotations {},
+                       :fqdn string,
                        :instance string,
                        :ipAddress string,
                        :port integer}]}
@@ -78,7 +79,8 @@
   
   Body: 
   
-  {:networkEndpoints [{:fqdn string,
+  {:networkEndpoints [{:annotations {},
+                       :fqdn string,
                        :instance string,
                        :ipAddress string,
                        :port integer}]}
@@ -147,10 +149,15 @@
    :creationTimestamp string,
    :zone string,
    :name string,
+   :cloudFunction {:function string, :urlMask string},
    :selfLink string,
+   :cloudRun {:service string, :tag string, :urlMask string},
    :size integer,
+   :region string,
    :id string,
    :kind string,
+   :appEngine {:service string, :urlMask string, :version string},
+   :annotations {},
    :network string,
    :defaultPort integer,
    :subnetwork string}
@@ -182,7 +189,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of network endpoint groups that are located in the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -210,7 +217,7 @@
   
   Required parameters: networkEndpointGroup, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists the network endpoints in the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

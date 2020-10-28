@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.dimensionValues
   "DCM/DFA Reporting And Trafficking API: dimensionValues.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dimensionValues"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,15 +11,15 @@
   
   Required parameters: profileId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Body: 
   
-  {:dimensionName string,
-   :endDate string,
-   :filters [{:dimensionName string, :kind string, :value string}],
+  {:filters [{:dimensionName string, :kind string, :value string}],
    :kind string,
-   :startDate string}
+   :dimensionName string,
+   :startDate string,
+   :endDate string}
   
   Retrieves list of report dimension values for a list of filters."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
@@ -28,7 +28,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/dimensionvalues/query"
      #{:profileId}
      parameters)

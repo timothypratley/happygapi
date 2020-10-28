@@ -9,22 +9,20 @@
 (defn infoTypes-list$
   "https://cloud.google.com/dlp/docs/api/reference/rest/v2/locations/infoTypes/list
   
-  Required parameters: locationId
+  Required parameters: parent
   
-  Optional parameters: languageCode, filter
+  Optional parameters: locationId, filter, languageCode
   
-  Returns a list of the sensitive information types that the DLP API
-  supports. See https://cloud.google.com/dlp/docs/infotypes-reference to
-  learn more."
+  Returns a list of the sensitive information types that the DLP API supports. See https://cloud.google.com/dlp/docs/infotypes-reference to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:locationId})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/locations/{locationId}/infoTypes"
-     #{:locationId}
+     "v2/{+parent}/infoTypes"
+     #{:parent}
      parameters)
     (merge-with
      merge

@@ -77,12 +77,17 @@
   {:description string,
    :creationTimestamp string,
    :name string,
+   :selfManaged {:certificate string, :privateKey string},
    :privateKey string,
    :selfLink string,
+   :type string,
    :region string,
    :certificate string,
+   :subjectAlternativeNames [string],
    :id string,
-   :kind string}
+   :kind string,
+   :managed {:domainStatus {}, :domains [string], :status string},
+   :expireTime string}
   
   Creates a SslCertificate resource in the specified project and region using the data included in the request"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -111,7 +116,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of SslCertificate resources available to the specified project in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

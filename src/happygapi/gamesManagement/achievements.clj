@@ -1,39 +1,13 @@
 (ns happygapi.gamesManagement.achievements
-  "Google Play Game Services Management API: achievements.
-  The Management API for Google Play Game Services.
-  See: https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements"
+  "Google Play Game Management: achievements.
+  The Google Play Game Management API allows developers to manage resources from the Google Play Game service.
+  See: https://developers.google.com/games/api/reference/rest/v1management/achievements"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn reset$
-  "https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements/reset
-  
-  Required parameters: achievementId
-  
-  Optional parameters: none
-  
-  Resets the achievement with the given ID for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:achievementId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/games/v1management/"
-     "achievements/{achievementId}/reset"
-     #{:achievementId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn resetAll$
-  "https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements/resetAll
+  "https://developers.google.com/games/api/reference/rest/v1management/achievements/resetAll
   
   Required parameters: none
   
@@ -46,8 +20,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/games/v1management/"
-     "achievements/reset"
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/achievements/reset"
      #{}
      parameters)
     (merge-with
@@ -59,7 +33,7 @@
      auth))))
 
 (defn resetAllForAllPlayers$
-  "https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements/resetAllForAllPlayers
+  "https://developers.google.com/games/api/reference/rest/v1management/achievements/resetAllForAllPlayers
   
   Required parameters: none
   
@@ -72,8 +46,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/games/v1management/"
-     "achievements/resetAllForAllPlayers"
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/achievements/resetAllForAllPlayers"
      #{}
      parameters)
     (merge-with
@@ -84,8 +58,34 @@
       :as :json}
      auth))))
 
+(defn reset$
+  "https://developers.google.com/games/api/reference/rest/v1management/achievements/reset
+  
+  Required parameters: achievementId
+  
+  Optional parameters: none
+  
+  Resets the achievement with the given ID for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/achievements/{achievementId}/reset"
+     #{:achievementId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn resetForAllPlayers$
-  "https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements/resetForAllPlayers
+  "https://developers.google.com/games/api/reference/rest/v1management/achievements/resetForAllPlayers
   
   Required parameters: achievementId
   
@@ -98,8 +98,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/games/v1management/"
-     "achievements/{achievementId}/resetForAllPlayers"
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/achievements/{achievementId}/resetForAllPlayers"
      #{:achievementId}
      parameters)
     (merge-with
@@ -111,7 +111,7 @@
      auth))))
 
 (defn resetMultipleForAllPlayers$
-  "https://developers.google.com/games/servicesapi/reference/rest/v1management/achievements/resetMultipleForAllPlayers
+  "https://developers.google.com/games/api/reference/rest/v1management/achievements/resetMultipleForAllPlayers
   
   Required parameters: none
   
@@ -119,7 +119,7 @@
   
   Body: 
   
-  {:achievement_ids [string], :kind string}
+  {:kind string, :achievement_ids [string]}
   
   Resets achievements with the given IDs for all players. This method is only available to user accounts for your developer console. Only draft achievements may be reset."
   {:scopes ["https://www.googleapis.com/auth/games"]}
@@ -128,8 +128,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/games/v1management/"
-     "achievements/resetMultipleForAllPlayers"
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/achievements/resetMultipleForAllPlayers"
      #{}
      parameters)
     (merge-with

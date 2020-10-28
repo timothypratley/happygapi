@@ -13,13 +13,7 @@
   
   Optional parameters: projectId
   
-  Gets the catalog of supported test environments.
-  
-  May return any of the following canonical error codes:
-  
-  - INVALID_ARGUMENT - if the request is malformed
-  - NOT_FOUND - if the environment type does not exist
-  - INTERNAL - if an internal error occurred"
+  Gets the catalog of supported test environments. May return any of the following canonical error codes: - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the environment type does not exist - INTERNAL - if an internal error occurred"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]

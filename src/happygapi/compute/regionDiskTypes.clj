@@ -39,7 +39,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of regional disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

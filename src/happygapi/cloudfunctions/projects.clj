@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: pageToken, filter, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -67,14 +67,13 @@
   
   Body: 
   
-  {:policy {:etag string,
+  {:policy {:bindings [Binding],
+            :etag string,
             :version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding]},
+            :auditConfigs [AuditConfig]},
    :updateMask string}
   
-  Sets the IAM access control policy on the specified function.
-  Replaces any existing policy."
+  Sets the IAM access control policy on the specified function. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -112,12 +111,13 @@
    :environmentVariables {},
    :sourceUploadUrl string,
    :vpcConnector string,
+   :buildEnvironmentVariables {},
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:eventType string,
-                  :resource string,
+   :eventTrigger {:failurePolicy FailurePolicy,
                   :service string,
-                  :failurePolicy FailurePolicy},
+                  :resource string,
+                  :eventType string},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -125,6 +125,7 @@
    :runtime string,
    :network string,
    :timeout string,
+   :buildId string,
    :maxInstances integer,
    :ingressSettings string,
    :httpsTrigger {:url string},
@@ -162,10 +163,7 @@
   
   {:permissions [string]}
   
-  Tests the specified permissions against the IAM access control policy
-  for a function.
-  If the function does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error."
+  Tests the specified permissions against the IAM access control policy for a function. If the function does not exist, this will return an empty set of permissions, not a NOT_FOUND error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -197,10 +195,7 @@
   
   {:data string}
   
-  Synchronously invokes a deployed Cloud Function. To be used for testing
-  purposes as very limited traffic is allowed. For more information on
-  the actual limits, refer to
-  [Rate Limits](https://cloud.google.com/functions/quotas#rate_limits)."
+  Synchronously invokes a deployed Cloud Function. To be used for testing purposes as very limited traffic is allowed. For more information on the actual limits, refer to [Rate Limits](https://cloud.google.com/functions/quotas#rate_limits)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -238,12 +233,13 @@
    :environmentVariables {},
    :sourceUploadUrl string,
    :vpcConnector string,
+   :buildEnvironmentVariables {},
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:eventType string,
-                  :resource string,
+   :eventTrigger {:failurePolicy FailurePolicy,
                   :service string,
-                  :failurePolicy FailurePolicy},
+                  :resource string,
+                  :eventType string},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -251,14 +247,13 @@
    :runtime string,
    :network string,
    :timeout string,
+   :buildId string,
    :maxInstances integer,
    :ingressSettings string,
    :httpsTrigger {:url string},
    :sourceRepository {:url string, :deployedUrl string}}
   
-  Creates a new function. If a function with the given name already exists in
-  the specified project, the long running operation will return
-  `ALREADY_EXISTS` error."
+  Creates a new function. If a function with the given name already exists in the specified project, the long running operation will return `ALREADY_EXISTS` error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:location})]}
@@ -290,31 +285,7 @@
   
   {}
   
-  Returns a signed URL for uploading a function source code.
-  For more information about the signed URL usage see:
-  https://cloud.google.com/storage/docs/access-control/signed-urls.
-  Once the function source code upload is complete, the used signed
-  URL should be provided in CreateFunction or UpdateFunction request
-  as a reference to the function source code.
-  
-  When uploading source code to the generated signed URL, please follow
-  these restrictions:
-  
-  * Source file type should be a zip file.
-  * Source file size should not exceed 100MB limit.
-  * No credentials should be attached - the signed URLs provide access to the
-    target bucket using internal service identity; if credentials were
-    attached, the identity from the credentials would be used, but that
-    identity does not have permissions to upload files to the URL.
-  
-  When making a HTTP PUT request, these two headers need to be specified:
-  
-  * `content-type: application/zip`
-  * `x-goog-content-length-range: 0,104857600`
-  
-  And this header SHOULD NOT be specified:
-  
-  * `Authorization: Bearer YOUR_TOKEN`"
+  Returns a signed URL for uploading a function source code. For more information about the signed URL usage see: https://cloud.google.com/storage/docs/access-control/signed-urls. Once the function source code upload is complete, the used signed URL should be provided in CreateFunction or UpdateFunction request as a reference to the function source code. When uploading source code to the generated signed URL, please follow these restrictions: * Source file type should be a zip file. * Source file size should not exceed 100MB limit. * No credentials should be attached - the signed URLs provide access to the target bucket using internal service identity; if credentials were attached, the identity from the credentials would be used, but that identity does not have permissions to upload files to the URL. When making a HTTP PUT request, these two headers need to be specified: * `content-type: application/zip` * `x-goog-content-length-range: 0,104857600` And this header SHOULD NOT be specified: * `Authorization: Bearer YOUR_TOKEN`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -342,9 +313,7 @@
   
   Optional parameters: none
   
-  Deletes a function with the given name from the specified project. If the
-  given function is used by some trigger, the trigger will be updated to
-  remove this function."
+  Deletes a function with the given name from the specified project. If the given function is used by some trigger, the trigger will be updated to remove this function."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -370,9 +339,7 @@
   
   Optional parameters: options.requestedPolicyVersion
   
-  Gets the IAM access control policy for a function.
-  Returns an empty policy if the function exists and does not have a policy
-  set."
+  Gets the IAM access control policy for a function. Returns an empty policy if the function exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -402,11 +369,7 @@
   
   {:versionId string}
   
-  Returns a signed URL for downloading deployed function source code.
-  The URL is only valid for a limited period and should be used within
-  minutes after generation.
-  For more information about the signed URL usage see:
-  https://cloud.google.com/storage/docs/access-control/signed-urls"
+  Returns a signed URL for downloading deployed function source code. The URL is only valid for a limited period and should be used within minutes after generation. For more information about the signed URL usage see: https://cloud.google.com/storage/docs/access-control/signed-urls"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -432,7 +395,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Returns a list of functions that belong to the requested project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

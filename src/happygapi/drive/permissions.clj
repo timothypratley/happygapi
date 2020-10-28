@@ -33,6 +33,7 @@
    :id string,
    :kind string,
    :domain string,
+   :view string,
    :photoLink string}
   
   Creates a permission for a file or shared drive."
@@ -120,7 +121,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: pageSize, pageToken, supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
+  Optional parameters: includePermissionsForView, pageSize, pageToken, supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
   
   Lists a file's or shared drive's permissions."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -173,6 +174,7 @@
    :id string,
    :kind string,
    :domain string,
+   :view string,
    :photoLink string}
   
   Updates a permission with patch semantics."

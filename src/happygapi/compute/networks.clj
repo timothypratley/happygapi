@@ -44,15 +44,19 @@
   Body: 
   
   {:description string,
-   :peerings [{:autoCreateRoutes boolean,
-               :exchangeSubnetRoutes boolean,
-               :exportCustomRoutes boolean,
-               :importCustomRoutes boolean,
+   :peerings [{:exportCustomRoutes boolean,
+               :peerMtu integer,
+               :importSubnetRoutesWithPublicIp boolean,
                :name string,
-               :network string,
+               :exchangeSubnetRoutes boolean,
                :state string,
-               :stateDetails string}],
+               :stateDetails string,
+               :autoCreateRoutes boolean,
+               :network string,
+               :exportSubnetRoutesWithPublicIp boolean,
+               :importCustomRoutes boolean}],
    :creationTimestamp string,
+   :mtu integer,
    :name string,
    :gatewayIPv4 string,
    :routingConfig {:routingMode string},
@@ -95,15 +99,19 @@
   Body: 
   
   {:description string,
-   :peerings [{:autoCreateRoutes boolean,
-               :exchangeSubnetRoutes boolean,
-               :exportCustomRoutes boolean,
-               :importCustomRoutes boolean,
+   :peerings [{:exportCustomRoutes boolean,
+               :peerMtu integer,
+               :importSubnetRoutesWithPublicIp boolean,
                :name string,
-               :network string,
+               :exchangeSubnetRoutes boolean,
                :state string,
-               :stateDetails string}],
+               :stateDetails string,
+               :autoCreateRoutes boolean,
+               :network string,
+               :exportSubnetRoutesWithPublicIp boolean,
+               :importCustomRoutes boolean}],
    :creationTimestamp string,
+   :mtu integer,
    :name string,
    :gatewayIPv4 string,
    :routingConfig {:routingMode string},
@@ -141,7 +149,7 @@
   
   Required parameters: project, network
   
-  Optional parameters: pageToken, region, filter, peeringName, direction, maxResults, orderBy
+  Optional parameters: returnPartialSuccess, pageToken, region, filter, peeringName, direction, maxResults, orderBy
   
   Lists the peering routes exchanged over peering connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -208,14 +216,17 @@
   
   {:autoCreateRoutes boolean,
    :name string,
-   :networkPeering {:autoCreateRoutes boolean,
-                    :exchangeSubnetRoutes boolean,
-                    :exportCustomRoutes boolean,
-                    :importCustomRoutes boolean,
+   :networkPeering {:exportCustomRoutes boolean,
+                    :peerMtu integer,
+                    :importSubnetRoutesWithPublicIp boolean,
                     :name string,
-                    :network string,
+                    :exchangeSubnetRoutes boolean,
                     :state string,
-                    :stateDetails string},
+                    :stateDetails string,
+                    :autoCreateRoutes boolean,
+                    :network string,
+                    :exportSubnetRoutesWithPublicIp boolean,
+                    :importCustomRoutes boolean},
    :peerNetwork string}
   
   Adds a peering to the specified network."
@@ -272,7 +283,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of networks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -331,14 +342,17 @@
   
   Body: 
   
-  {:networkPeering {:autoCreateRoutes boolean,
-                    :exchangeSubnetRoutes boolean,
-                    :exportCustomRoutes boolean,
-                    :importCustomRoutes boolean,
+  {:networkPeering {:exportCustomRoutes boolean,
+                    :peerMtu integer,
+                    :importSubnetRoutesWithPublicIp boolean,
                     :name string,
-                    :network string,
+                    :exchangeSubnetRoutes boolean,
                     :state string,
-                    :stateDetails string}}
+                    :stateDetails string,
+                    :autoCreateRoutes boolean,
+                    :network string,
+                    :exportSubnetRoutesWithPublicIp boolean,
+                    :importCustomRoutes boolean}}
   
   Updates the specified network peering with the data included in the request Only the following fields can be modified: NetworkPeering.export_custom_routes, and NetworkPeering.import_custom_routes"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

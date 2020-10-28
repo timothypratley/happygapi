@@ -1,6 +1,6 @@
 (ns happygapi.blogger.blogUserInfos
-  "Blogger API: blogUserInfos.
-  API for access to the data within Blogger.
+  "Blogger API v3: blogUserInfos.
+  The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogUserInfos"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -9,11 +9,11 @@
 (defn get$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogUserInfos/get
   
-  Required parameters: blogId, userId
+  Required parameters: userId, blogId
   
   Optional parameters: maxPosts
   
-  Gets one blog and user info pair by blogId and userId."
+  Gets one blog and user info pair by blog id and user id."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -21,8 +21,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "users/{userId}/blogs/{blogId}"
+     "https://blogger.googleapis.com/"
+     "v3/users/{userId}/blogs/{blogId}"
      #{:blogId :userId}
      parameters)
     (merge-with

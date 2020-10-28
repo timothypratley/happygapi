@@ -1,6 +1,6 @@
 (ns happygapi.doubleclickbidmanager.reports
   "DoubleClick Bid Manager API: reports.
-  API for viewing and managing your reports in DoubleClick Bid Manager.
+  DoubleClick Bid Manager API allows users to manage and create campaigns and reports.
   See: https://developers.google.com/bid-manager/api/reference/rest/v1.1/reports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
+     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
      "queries/{queryId}/reports"
      #{:queryId}
      parameters)

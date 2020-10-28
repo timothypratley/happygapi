@@ -1,13 +1,13 @@
 (ns happygapi.deploymentmanager.operations
-  "Google Cloud Deployment Manager API: operations.
-  Declares, configures, and deploys complex solutions on Google Cloud Platform.
-  See: https://cloud.google.com/deployment-manager/api/reference/rest/v2/operations"
+  "Cloud Deployment Manager V2 API: operations.
+  The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
+  See: http://cloud.google.com/deployment-managerapi/reference/rest/v2/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/operations/get
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/operations/get
   
   Required parameters: operation, project
   
@@ -23,8 +23,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/operations/{operation}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/operations/{operation}"
      #{:operation :project}
      parameters)
     (merge-with
@@ -36,11 +36,11 @@
      auth))))
 
 (defn list$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/operations/list
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/operations/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, pageToken, orderBy, returnPartialSuccess
   
   Lists all operations for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -52,8 +52,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/operations"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/operations"
      #{:project}
      parameters)
     (merge-with

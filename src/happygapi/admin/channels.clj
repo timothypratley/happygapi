@@ -1,13 +1,13 @@
 (ns happygapi.admin.channels
-  "Admin Reports API: channels.
-  Fetches reports for the administrators of G Suite customers about the usage, collaboration, security, and risk for their users.
-  See: /admin-sdk/reports/api/reference/rest/reports_v1/channels"
+  "Admin SDK: channels.
+  Admin SDK lets administrators of enterprise domains to view and manage resources like user, groups etc. It also provides audit and usage reports of domain.
+  See: http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn stop$
-  "/admin-sdk/reports/api/reference/rest/reports_v1/channels/stop
+  "http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels/stop
   
   Required parameters: none
   
@@ -26,15 +26,15 @@
    :id string,
    :kind string}
   
-  Stop watching resources through this channel"
+  Stop watching resources through this channel."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.audit.readonly"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/admin/reports/v1/"
-     "/admin/reports_v1/channels/stop"
+     "https://www.googleapis.com/"
+     "admin/reports_v1/channels/stop"
      #{}
      parameters)
     (merge-with

@@ -15,13 +15,13 @@
   
   Body: 
   
-  {:apiClient {:clientVersion string, :clientId string},
-   :clientStates [string],
-   :client {:clientVersion string, :clientId string},
-   :threatInfo {:threatEntryTypes [string],
-                :threatTypes [string],
-                :platformTypes [string],
-                :threatEntries [ThreatEntry]}}
+  {:clientStates [string],
+   :client {:clientId string, :clientVersion string},
+   :apiClient {:clientId string, :clientVersion string},
+   :threatInfo {:platformTypes [string],
+                :threatEntries [ThreatEntry],
+                :threatEntryTypes [string],
+                :threatTypes [string]}}
   
   Finds the full hashes that match the requested hash prefixes."
   {:scopes nil}

@@ -15,18 +15,17 @@
   
   Body: 
   
-  {:resources [{:remoteIp string,
-                :referrer string,
-                :type string,
-                :url string}],
-   :entry {:digest string, :hash string, :url string},
+  {:entry {:digest string, :hash string, :url string},
+   :userInfo {:regionCode string, :userId string},
+   :clientInfo {:clientId string, :clientVersion string},
    :platformType string,
-   :userInfo {:userId string, :regionCode string},
-   :clientInfo {:clientVersion string, :clientId string},
-   :threatType string}
+   :threatType string,
+   :resources [{:type string,
+                :remoteIp string,
+                :url string,
+                :referrer string}]}
   
-  Reports a Safe Browsing threat list hit to Google. Only projects with
-  TRUSTED_REPORTER visibility can use this method."
+  Reports a Safe Browsing threat list hit to Google. Only projects with TRUSTED_REPORTER visibility can use this method."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

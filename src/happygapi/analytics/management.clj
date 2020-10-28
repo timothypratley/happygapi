@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:clientId string, :kind string, :webPropertyId string}
+  {:webPropertyId string, :kind string, :clientId string}
   
   Hashes the given Client ID."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -39,10 +39,104 @@
       :as :json}
      auth))))
 
+(defn goals-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/patch
+  
+  Required parameters: accountId, goalId, profileId, webPropertyId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:eventDetails {:useEventValue boolean,
+                  :eventConditions [{:comparisonValue string,
+                                     :type string,
+                                     :comparisonType string,
+                                     :expression string,
+                                     :matchType string}]},
+   :updated string,
+   :visitNumPagesDetails {:comparisonType string,
+                          :comparisonValue string},
+   :name string,
+   :value number,
+   :selfLink string,
+   :type string,
+   :urlDestinationDetails {:matchType string,
+                           :steps [{:number integer,
+                                    :name string,
+                                    :url string}],
+                           :caseSensitive boolean,
+                           :firstStepRequired boolean,
+                           :url string},
+   :created string,
+   :parentLink {:href string, :type string},
+   :visitTimeOnSiteDetails {:comparisonValue string,
+                            :comparisonType string},
+   :webPropertyId string,
+   :active boolean,
+   :id string,
+   :kind string,
+   :internalWebPropertyId string,
+   :profileId string,
+   :accountId string}
+  
+  Updates an existing goal. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:goalId :webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals/{goalId}"
+     #{:goalId :webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn goals-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/list
+  
+  Required parameters: profileId, webPropertyId, accountId
+  
+  Optional parameters: max-results, start-index
+  
+  Lists goals to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn goals-get$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/get
   
-  Required parameters: accountId, goalId, profileId, webPropertyId
+  Required parameters: accountId, goalId, webPropertyId, profileId
   
   Optional parameters: none
   
@@ -77,12 +171,12 @@
   
   Body: 
   
-  {:eventDetails {:eventConditions [{:comparisonType string,
-                                     :comparisonValue string,
+  {:eventDetails {:useEventValue boolean,
+                  :eventConditions [{:comparisonValue string,
+                                     :type string,
+                                     :comparisonType string,
                                      :expression string,
-                                     :matchType string,
-                                     :type string}],
-                  :useEventValue boolean},
+                                     :matchType string}]},
    :updated string,
    :visitNumPagesDetails {:comparisonType string,
                           :comparisonValue string},
@@ -90,17 +184,17 @@
    :value number,
    :selfLink string,
    :type string,
-   :urlDestinationDetails {:caseSensitive boolean,
-                           :firstStepRequired boolean,
-                           :matchType string,
-                           :steps [{:name string,
-                                    :number integer,
+   :urlDestinationDetails {:matchType string,
+                           :steps [{:number integer,
+                                    :name string,
                                     :url string}],
+                           :caseSensitive boolean,
+                           :firstStepRequired boolean,
                            :url string},
    :created string,
    :parentLink {:href string, :type string},
-   :visitTimeOnSiteDetails {:comparisonType string,
-                            :comparisonValue string},
+   :visitTimeOnSiteDetails {:comparisonValue string,
+                            :comparisonType string},
    :webPropertyId string,
    :active boolean,
    :id string,
@@ -132,115 +226,21 @@
       :as :json}
      auth))))
 
-(defn goals-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/list
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  Lists goals to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn goals-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/patch
-  
-  Required parameters: accountId, goalId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:eventDetails {:eventConditions [{:comparisonType string,
-                                     :comparisonValue string,
-                                     :expression string,
-                                     :matchType string,
-                                     :type string}],
-                  :useEventValue boolean},
-   :updated string,
-   :visitNumPagesDetails {:comparisonType string,
-                          :comparisonValue string},
-   :name string,
-   :value number,
-   :selfLink string,
-   :type string,
-   :urlDestinationDetails {:caseSensitive boolean,
-                           :firstStepRequired boolean,
-                           :matchType string,
-                           :steps [{:name string,
-                                    :number integer,
-                                    :url string}],
-                           :url string},
-   :created string,
-   :parentLink {:href string, :type string},
-   :visitTimeOnSiteDetails {:comparisonType string,
-                            :comparisonValue string},
-   :webPropertyId string,
-   :active boolean,
-   :id string,
-   :kind string,
-   :internalWebPropertyId string,
-   :profileId string,
-   :accountId string}
-  
-  Updates an existing goal. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:goalId :webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals/{goalId}"
-     #{:goalId :webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn goals-update$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/goals/update
   
-  Required parameters: accountId, goalId, profileId, webPropertyId
+  Required parameters: accountId, webPropertyId, profileId, goalId
   
   Optional parameters: none
   
   Body: 
   
-  {:eventDetails {:eventConditions [{:comparisonType string,
-                                     :comparisonValue string,
+  {:eventDetails {:useEventValue boolean,
+                  :eventConditions [{:comparisonValue string,
+                                     :type string,
+                                     :comparisonType string,
                                      :expression string,
-                                     :matchType string,
-                                     :type string}],
-                  :useEventValue boolean},
+                                     :matchType string}]},
    :updated string,
    :visitNumPagesDetails {:comparisonType string,
                           :comparisonValue string},
@@ -248,17 +248,17 @@
    :value number,
    :selfLink string,
    :type string,
-   :urlDestinationDetails {:caseSensitive boolean,
-                           :firstStepRequired boolean,
-                           :matchType string,
-                           :steps [{:name string,
-                                    :number integer,
+   :urlDestinationDetails {:matchType string,
+                           :steps [{:number integer,
+                                    :name string,
                                     :url string}],
+                           :caseSensitive boolean,
+                           :firstStepRequired boolean,
                            :url string},
    :created string,
    :parentLink {:href string, :type string},
-   :visitTimeOnSiteDetails {:comparisonType string,
-                            :comparisonValue string},
+   :visitTimeOnSiteDetails {:comparisonValue string,
+                            :comparisonType string},
    :webPropertyId string,
    :active boolean,
    :id string,
@@ -293,7 +293,7 @@
 (defn experiments-delete$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/delete
   
-  Required parameters: accountId, experimentId, profileId, webPropertyId
+  Required parameters: webPropertyId, profileId, accountId, experimentId
   
   Optional parameters: none
   
@@ -319,136 +319,10 @@
       :as :json}
      auth))))
 
-(defn experiments-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/get
-  
-  Required parameters: accountId, experimentId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Returns an experiment to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :experimentId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
-     #{:webPropertyId :profileId :experimentId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn experiments-insert$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/insert
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :equalWeighting boolean,
-   :winnerFound boolean,
-   :trafficCoverage number,
-   :startTime string,
-   :updated string,
-   :name string,
-   :rewriteVariationUrlsAsOriginal boolean,
-   :endTime string,
-   :snippet string,
-   :selfLink string,
-   :created string,
-   :minimumExperimentLengthInDays integer,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :reasonExperimentEnded string,
-   :objectiveMetric string,
-   :winnerConfidenceLevel number,
-   :editableInGaUi boolean,
-   :status string,
-   :id string,
-   :kind string,
-   :internalWebPropertyId string,
-   :profileId string,
-   :servingFramework string,
-   :variations [{:name string,
-                 :status string,
-                 :url string,
-                 :weight number,
-                 :won boolean}],
-   :accountId string,
-   :optimizationType string}
-  
-  Create a new experiment."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn experiments-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/list
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  Lists experiments to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn experiments-patch$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/patch
   
-  Required parameters: accountId, experimentId, profileId, webPropertyId
+  Required parameters: profileId, webPropertyId, accountId, experimentId
   
   Optional parameters: none
   
@@ -479,11 +353,11 @@
    :internalWebPropertyId string,
    :profileId string,
    :servingFramework string,
-   :variations [{:name string,
-                 :status string,
-                 :url string,
+   :variations [{:url string,
+                 :won boolean,
                  :weight number,
-                 :won boolean}],
+                 :name string,
+                 :status string}],
    :accountId string,
    :optimizationType string}
   
@@ -511,10 +385,10 @@
       :as :json}
      auth))))
 
-(defn experiments-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/update
+(defn experiments-insert$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/insert
   
-  Required parameters: accountId, experimentId, profileId, webPropertyId
+  Required parameters: webPropertyId, profileId, accountId
   
   Optional parameters: none
   
@@ -545,11 +419,107 @@
    :internalWebPropertyId string,
    :profileId string,
    :servingFramework string,
-   :variations [{:name string,
-                 :status string,
-                 :url string,
+   :variations [{:url string,
+                 :won boolean,
                  :weight number,
-                 :won boolean}],
+                 :name string,
+                 :status string}],
+   :accountId string,
+   :optimizationType string}
+  
+  Create a new experiment."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn experiments-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/get
+  
+  Required parameters: profileId, accountId, webPropertyId, experimentId
+  
+  Optional parameters: none
+  
+  Returns an experiment to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :experimentId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments/{experimentId}"
+     #{:webPropertyId :profileId :experimentId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn experiments-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/update
+  
+  Required parameters: accountId, webPropertyId, profileId, experimentId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :equalWeighting boolean,
+   :winnerFound boolean,
+   :trafficCoverage number,
+   :startTime string,
+   :updated string,
+   :name string,
+   :rewriteVariationUrlsAsOriginal boolean,
+   :endTime string,
+   :snippet string,
+   :selfLink string,
+   :created string,
+   :minimumExperimentLengthInDays integer,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :reasonExperimentEnded string,
+   :objectiveMetric string,
+   :winnerConfidenceLevel number,
+   :editableInGaUi boolean,
+   :status string,
+   :id string,
+   :kind string,
+   :internalWebPropertyId string,
+   :profileId string,
+   :servingFramework string,
+   :variations [{:url string,
+                 :won boolean,
+                 :weight number,
+                 :name string,
+                 :status string}],
    :accountId string,
    :optimizationType string}
   
@@ -577,54 +547,27 @@
       :as :json}
      auth))))
 
-(defn profileFilterLinks-delete$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/delete
+(defn experiments-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/experiments/list
   
-  Required parameters: accountId, linkId, profileId, webPropertyId
+  Required parameters: webPropertyId, accountId, profileId
   
-  Optional parameters: none
+  Optional parameters: max-results, start-index
   
-  Delete a profile filter link."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:linkId :webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
-     #{:linkId :webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn profileFilterLinks-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/get
-  
-  Required parameters: accountId, linkId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Returns a single profile filter link."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+  Lists experiments to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys?
           parameters
-          #{:linkId :webPropertyId :profileId :accountId})]}
+          #{:webPropertyId :profileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
-     #{:linkId :webPropertyId :profileId :accountId}
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/experiments"
+     #{:webPropertyId :profileId :accountId}
      parameters)
     (merge-with
      merge
@@ -637,27 +580,27 @@
 (defn profileFilterLinks-insert$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/insert
   
-  Required parameters: accountId, profileId, webPropertyId
+  Required parameters: webPropertyId, accountId, profileId
   
   Optional parameters: none
   
   Body: 
   
-  {:filterRef {:accountId string,
-               :href string,
-               :id string,
+  {:kind string,
+   :filterRef {:id string,
+               :accountId string,
                :kind string,
+               :href string,
                :name string},
+   :rank integer,
    :id string,
-   :kind string,
-   :profileRef {:accountId string,
-                :href string,
-                :id string,
+   :profileRef {:href string,
                 :internalWebPropertyId string,
+                :webPropertyId string,
                 :kind string,
                 :name string,
-                :webPropertyId string},
-   :rank integer,
+                :id string,
+                :accountId string},
    :selfLink string}
   
   Create a new profile filter link."
@@ -683,10 +626,38 @@
       :as :json}
      auth))))
 
+(defn profileFilterLinks-delete$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/delete
+  
+  Required parameters: linkId, accountId, profileId, webPropertyId
+  
+  Optional parameters: none
+  
+  Delete a profile filter link."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:linkId :webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
+     #{:linkId :webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn profileFilterLinks-list$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/list
   
-  Required parameters: accountId, profileId, webPropertyId
+  Required parameters: accountId, webPropertyId, profileId
   
   Optional parameters: max-results, start-index
   
@@ -712,30 +683,79 @@
       :as :json}
      auth))))
 
-(defn profileFilterLinks-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/patch
+(defn profileFilterLinks-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/update
   
-  Required parameters: accountId, linkId, profileId, webPropertyId
+  Required parameters: webPropertyId, accountId, linkId, profileId
   
   Optional parameters: none
   
   Body: 
   
-  {:filterRef {:accountId string,
-               :href string,
-               :id string,
+  {:kind string,
+   :filterRef {:id string,
+               :accountId string,
                :kind string,
+               :href string,
                :name string},
+   :rank integer,
    :id string,
-   :kind string,
-   :profileRef {:accountId string,
-                :href string,
-                :id string,
+   :profileRef {:href string,
                 :internalWebPropertyId string,
+                :webPropertyId string,
                 :kind string,
                 :name string,
-                :webPropertyId string},
+                :id string,
+                :accountId string},
+   :selfLink string}
+  
+  Update an existing profile filter link."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:linkId :webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
+     #{:linkId :webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn profileFilterLinks-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/patch
+  
+  Required parameters: profileId, linkId, webPropertyId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :filterRef {:id string,
+               :accountId string,
+               :kind string,
+               :href string,
+               :name string},
    :rank integer,
+   :id string,
+   :profileRef {:href string,
+                :internalWebPropertyId string,
+                :webPropertyId string,
+                :kind string,
+                :name string,
+                :id string,
+                :accountId string},
    :selfLink string}
   
   Update an existing profile filter link. This method supports patch semantics."
@@ -761,40 +781,22 @@
       :as :json}
      auth))))
 
-(defn profileFilterLinks-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/update
+(defn profileFilterLinks-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileFilterLinks/get
   
-  Required parameters: accountId, linkId, profileId, webPropertyId
+  Required parameters: accountId, profileId, webPropertyId, linkId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:filterRef {:accountId string,
-               :href string,
-               :id string,
-               :kind string,
-               :name string},
-   :id string,
-   :kind string,
-   :profileRef {:accountId string,
-                :href string,
-                :id string,
-                :internalWebPropertyId string,
-                :kind string,
-                :name string,
-                :webPropertyId string},
-   :rank integer,
-   :selfLink string}
-  
-  Update an existing profile filter link."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
+  Returns a single profile filter link."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
   {:pre [(util/has-keys?
           parameters
           #{:linkId :webPropertyId :profileId :accountId})]}
   (util/get-response
-   (http/put
+   (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/profileFilterLinks/{linkId}"
@@ -802,9 +804,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -836,20 +836,63 @@
       :as :json}
      auth))))
 
-(defn filters-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/filters/get
+(defn filters-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/filters/patch
   
   Required parameters: accountId, filterId
   
   Optional parameters: none
   
-  Returns filters to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
+  Body: 
+  
+  {:advancedDetails {:fieldAIndex integer,
+                     :outputToFieldIndex integer,
+                     :fieldA string,
+                     :extractB string,
+                     :fieldB string,
+                     :outputConstructor string,
+                     :outputToField string,
+                     :fieldBRequired boolean,
+                     :fieldARequired boolean,
+                     :extractA string,
+                     :caseSensitive boolean,
+                     :overrideOutputField boolean,
+                     :fieldBIndex integer},
+   :searchAndReplaceDetails {:fieldIndex integer,
+                             :caseSensitive boolean,
+                             :replaceString string,
+                             :searchString string,
+                             :field string},
+   :updated string,
+   :name string,
+   :selfLink string,
+   :type string,
+   :created string,
+   :parentLink {:type string, :href string},
+   :uppercaseDetails {:field string, :fieldIndex integer},
+   :lowercaseDetails {:field string, :fieldIndex integer},
+   :id string,
+   :kind string,
+   :includeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
+                    :kind string,
+                    :fieldIndex integer,
+                    :expressionValue string},
+   :excludeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
+                    :kind string,
+                    :fieldIndex integer,
+                    :expressionValue string},
+   :accountId string}
+  
+  Updates an existing filter. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
@@ -857,7 +900,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -885,33 +930,33 @@
                      :caseSensitive boolean,
                      :overrideOutputField boolean,
                      :fieldBIndex integer},
-   :searchAndReplaceDetails {:caseSensitive boolean,
-                             :field string,
-                             :fieldIndex integer,
+   :searchAndReplaceDetails {:fieldIndex integer,
+                             :caseSensitive boolean,
                              :replaceString string,
-                             :searchString string},
+                             :searchString string,
+                             :field string},
    :updated string,
    :name string,
    :selfLink string,
    :type string,
    :created string,
-   :parentLink {:href string, :type string},
+   :parentLink {:type string, :href string},
    :uppercaseDetails {:field string, :fieldIndex integer},
    :lowercaseDetails {:field string, :fieldIndex integer},
    :id string,
    :kind string,
-   :includeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
-                    :fieldIndex integer,
+   :includeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
                     :kind string,
-                    :matchType string},
-   :excludeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
                     :fieldIndex integer,
+                    :expressionValue string},
+   :excludeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
                     :kind string,
-                    :matchType string},
+                    :fieldIndex integer,
+                    :expressionValue string},
    :accountId string}
   
   Create a new filter."
@@ -962,63 +1007,20 @@
       :as :json}
      auth))))
 
-(defn filters-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/filters/patch
+(defn filters-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/filters/get
   
-  Required parameters: accountId, filterId
+  Required parameters: filterId, accountId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:advancedDetails {:fieldAIndex integer,
-                     :outputToFieldIndex integer,
-                     :fieldA string,
-                     :extractB string,
-                     :fieldB string,
-                     :outputConstructor string,
-                     :outputToField string,
-                     :fieldBRequired boolean,
-                     :fieldARequired boolean,
-                     :extractA string,
-                     :caseSensitive boolean,
-                     :overrideOutputField boolean,
-                     :fieldBIndex integer},
-   :searchAndReplaceDetails {:caseSensitive boolean,
-                             :field string,
-                             :fieldIndex integer,
-                             :replaceString string,
-                             :searchString string},
-   :updated string,
-   :name string,
-   :selfLink string,
-   :type string,
-   :created string,
-   :parentLink {:href string, :type string},
-   :uppercaseDetails {:field string, :fieldIndex integer},
-   :lowercaseDetails {:field string, :fieldIndex integer},
-   :id string,
-   :kind string,
-   :includeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
-                    :fieldIndex integer,
-                    :kind string,
-                    :matchType string},
-   :excludeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
-                    :fieldIndex integer,
-                    :kind string,
-                    :matchType string},
-   :accountId string}
-  
-  Updates an existing filter. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
+  Returns filters to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:filterId :accountId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/filters/{filterId}"
@@ -1026,9 +1028,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1056,33 +1056,33 @@
                      :caseSensitive boolean,
                      :overrideOutputField boolean,
                      :fieldBIndex integer},
-   :searchAndReplaceDetails {:caseSensitive boolean,
-                             :field string,
-                             :fieldIndex integer,
+   :searchAndReplaceDetails {:fieldIndex integer,
+                             :caseSensitive boolean,
                              :replaceString string,
-                             :searchString string},
+                             :searchString string,
+                             :field string},
    :updated string,
    :name string,
    :selfLink string,
    :type string,
    :created string,
-   :parentLink {:href string, :type string},
+   :parentLink {:type string, :href string},
    :uppercaseDetails {:field string, :fieldIndex integer},
    :lowercaseDetails {:field string, :fieldIndex integer},
    :id string,
    :kind string,
-   :includeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
-                    :fieldIndex integer,
+   :includeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
                     :kind string,
-                    :matchType string},
-   :excludeDetails {:caseSensitive boolean,
-                    :expressionValue string,
-                    :field string,
                     :fieldIndex integer,
+                    :expressionValue string},
+   :excludeDetails {:field string,
+                    :caseSensitive boolean,
+                    :matchType string,
                     :kind string,
-                    :matchType string},
+                    :fieldIndex integer,
+                    :expressionValue string},
    :accountId string}
   
   Updates an existing filter."
@@ -1109,7 +1109,7 @@
 (defn customMetrics-get$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/customMetrics/get
   
-  Required parameters: accountId, customMetricId, webPropertyId
+  Required parameters: webPropertyId, accountId, customMetricId
   
   Optional parameters: none
   
@@ -1130,6 +1130,102 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customMetrics-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/customMetrics/patch
+  
+  Required parameters: customMetricId, webPropertyId, accountId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
+  
+  Body: 
+  
+  {:max_value string,
+   :index integer,
+   :updated string,
+   :name string,
+   :selfLink string,
+   :type string,
+   :created string,
+   :scope string,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :min_value string,
+   :active boolean,
+   :id string,
+   :kind string,
+   :accountId string}
+  
+  Updates an existing custom metric. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:customMetricId :webPropertyId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
+     #{:customMetricId :webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customMetrics-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/customMetrics/update
+  
+  Required parameters: webPropertyId, customMetricId, accountId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
+  
+  Body: 
+  
+  {:max_value string,
+   :index integer,
+   :updated string,
+   :name string,
+   :selfLink string,
+   :type string,
+   :created string,
+   :scope string,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :min_value string,
+   :active boolean,
+   :id string,
+   :kind string,
+   :accountId string}
+  
+  Updates an existing custom metric."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:customMetricId :webPropertyId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
+     #{:customMetricId :webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1208,117 +1304,46 @@
       :as :json}
      auth))))
 
-(defn customMetrics-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/customMetrics/patch
+(defn webpropertyUserLinks-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webpropertyUserLinks/update
   
-  Required parameters: accountId, customMetricId, webPropertyId
-  
-  Optional parameters: ignoreCustomDataSourceLinks
-  
-  Body: 
-  
-  {:max_value string,
-   :index integer,
-   :updated string,
-   :name string,
-   :selfLink string,
-   :type string,
-   :created string,
-   :scope string,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :min_value string,
-   :active boolean,
-   :id string,
-   :kind string,
-   :accountId string}
-  
-  Updates an existing custom metric. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:customMetricId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
-     #{:customMetricId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customMetrics-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/customMetrics/update
-  
-  Required parameters: accountId, customMetricId, webPropertyId
-  
-  Optional parameters: ignoreCustomDataSourceLinks
-  
-  Body: 
-  
-  {:max_value string,
-   :index integer,
-   :updated string,
-   :name string,
-   :selfLink string,
-   :type string,
-   :created string,
-   :scope string,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :min_value string,
-   :active boolean,
-   :id string,
-   :kind string,
-   :accountId string}
-  
-  Updates an existing custom metric."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:customMetricId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customMetrics/{customMetricId}"
-     #{:customMetricId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webpropertyUserLinks-delete$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webpropertyUserLinks/delete
-  
-  Required parameters: accountId, linkId, webPropertyId
+  Required parameters: linkId, webPropertyId, accountId
   
   Optional parameters: none
   
-  Removes a user from the given web property."
+  Body: 
+  
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
+                         :kind string,
+                         :name string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
+   :kind string,
+   :selfLink string,
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
+  
+  Updates permissions for an existing user on the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys?
           parameters
           #{:linkId :webPropertyId :accountId})]}
   (util/get-response
-   (http/delete
+   (http/put
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks/{linkId}"
@@ -1326,7 +1351,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1341,28 +1368,28 @@
   
   Body: 
   
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
                          :kind string,
                          :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
    :kind string,
-   :permissions {:effective [string], :local [string]},
    :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
   
   Adds a new user to the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -1390,7 +1417,7 @@
   
   Required parameters: accountId, webPropertyId
   
-  Optional parameters: max-results, start-index
+  Optional parameters: start-index, max-results
   
   Lists webProperty-user links for a given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
@@ -1412,46 +1439,21 @@
       :as :json}
      auth))))
 
-(defn webpropertyUserLinks-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webpropertyUserLinks/update
+(defn webpropertyUserLinks-delete$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webpropertyUserLinks/delete
   
-  Required parameters: accountId, linkId, webPropertyId
+  Required parameters: linkId, webPropertyId, accountId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
-                         :kind string,
-                         :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
-   :kind string,
-   :permissions {:effective [string], :local [string]},
-   :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
-  
-  Updates permissions for an existing user on the given web property."
+  Removes a user from the given web property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys?
           parameters
           #{:linkId :webPropertyId :accountId})]}
   (util/get-response
-   (http/put
+   (http/delete
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/entityUserLinks/{linkId}"
@@ -1459,9 +1461,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1470,7 +1470,7 @@
 (defn webPropertyAdWordsLinks-delete$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/delete
   
-  Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
+  Required parameters: accountId, webPropertyId, webPropertyAdWordsLinkId
   
   Optional parameters: none
   
@@ -1495,35 +1495,6 @@
       :as :json}
      auth))))
 
-(defn webPropertyAdWordsLinks-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/get
-  
-  Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
-  
-  Optional parameters: none
-  
-  Returns a web property-Google Ads link to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
-     #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn webPropertyAdWordsLinks-insert$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/insert
   
@@ -1533,20 +1504,20 @@
   
   Body: 
   
-  {:adWordsAccounts [{:autoTaggingEnabled boolean,
-                      :customerId string,
+  {:adWordsAccounts [{:customerId string,
+                      :autoTaggingEnabled boolean,
                       :kind string}],
-   :entity {:webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
    :id string,
-   :kind string,
    :name string,
-   :profileIds [string],
-   :selfLink string}
+   :entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string}},
+   :selfLink string,
+   :kind string,
+   :profileIds [string]}
   
   Creates a webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
@@ -1572,7 +1543,7 @@
 (defn webPropertyAdWordsLinks-list$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/list
   
-  Required parameters: accountId, webPropertyId
+  Required parameters: webPropertyId, accountId
   
   Optional parameters: max-results, start-index
   
@@ -1596,53 +1567,6 @@
       :as :json}
      auth))))
 
-(defn webPropertyAdWordsLinks-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/patch
-  
-  Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:adWordsAccounts [{:autoTaggingEnabled boolean,
-                      :customerId string,
-                      :kind string}],
-   :entity {:webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
-   :kind string,
-   :name string,
-   :profileIds [string],
-   :selfLink string}
-  
-  Updates an existing webProperty-Google Ads link. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
-     #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn webPropertyAdWordsLinks-update$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/update
   
@@ -1652,20 +1576,20 @@
   
   Body: 
   
-  {:adWordsAccounts [{:autoTaggingEnabled boolean,
-                      :customerId string,
+  {:adWordsAccounts [{:customerId string,
+                      :autoTaggingEnabled boolean,
                       :kind string}],
-   :entity {:webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
    :id string,
-   :kind string,
    :name string,
-   :profileIds [string],
-   :selfLink string}
+   :entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string}},
+   :selfLink string,
+   :kind string,
+   :profileIds [string]}
   
   Updates an existing webProperty-Google Ads link."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
@@ -1690,24 +1614,73 @@
       :as :json}
      auth))))
 
-(defn webproperties-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/get
+(defn webPropertyAdWordsLinks-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/patch
   
-  Required parameters: accountId, webPropertyId
+  Required parameters: accountId, webPropertyAdWordsLinkId, webPropertyId
   
   Optional parameters: none
   
-  Gets a web property to which the user has access."
+  Body: 
+  
+  {:adWordsAccounts [{:customerId string,
+                      :autoTaggingEnabled boolean,
+                      :kind string}],
+   :id string,
+   :name string,
+   :entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string}},
+   :selfLink string,
+   :kind string,
+   :profileIds [string]}
+  
+  Updates an existing webProperty-Google Ads link. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
+     #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webPropertyAdWordsLinks-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webPropertyAdWordsLinks/get
+  
+  Required parameters: webPropertyAdWordsLinkId, accountId, webPropertyId
+  
+  Optional parameters: none
+  
+  Returns a web property-Google Ads link to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyAdWordsLinkId :webPropertyId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}"
-     #{:webPropertyId :accountId}
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/entityAdWordsLinks/{webPropertyAdWordsLinkId}"
+     #{:webPropertyAdWordsLinkId :webPropertyId :accountId}
      parameters)
     (merge-with
      merge
@@ -1739,7 +1712,7 @@
    :level string,
    :id string,
    :kind string,
-   :childLink {:href string, :type string},
+   :childLink {:type string, :href string},
    :internalWebPropertyId string,
    :dataRetentionTtl string,
    :profileCount integer,
@@ -1756,6 +1729,106 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties"
      #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webproperties-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/update
+  
+  Required parameters: webPropertyId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions {:effective [string]},
+   :defaultProfileId string,
+   :starred boolean,
+   :websiteUrl string,
+   :updated string,
+   :name string,
+   :industryVertical string,
+   :selfLink string,
+   :created string,
+   :parentLink {:href string, :type string},
+   :level string,
+   :id string,
+   :kind string,
+   :childLink {:type string, :href string},
+   :internalWebPropertyId string,
+   :dataRetentionTtl string,
+   :profileCount integer,
+   :dataRetentionResetOnNewActivity boolean,
+   :accountId string}
+  
+  Updates an existing web property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}"
+     #{:webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webproperties-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/patch
+  
+  Required parameters: accountId, webPropertyId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions {:effective [string]},
+   :defaultProfileId string,
+   :starred boolean,
+   :websiteUrl string,
+   :updated string,
+   :name string,
+   :industryVertical string,
+   :selfLink string,
+   :created string,
+   :parentLink {:href string, :type string},
+   :level string,
+   :id string,
+   :kind string,
+   :childLink {:type string, :href string},
+   :internalWebPropertyId string,
+   :dataRetentionTtl string,
+   :profileCount integer,
+   :dataRetentionResetOnNewActivity boolean,
+   :accountId string}
+  
+  Updates an existing web property. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}"
+     #{:webPropertyId :accountId}
      parameters)
     (merge-with
      merge
@@ -1795,41 +1868,20 @@
       :as :json}
      auth))))
 
-(defn webproperties-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/patch
+(defn webproperties-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/get
   
   Required parameters: accountId, webPropertyId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:permissions {:effective [string]},
-   :defaultProfileId string,
-   :starred boolean,
-   :websiteUrl string,
-   :updated string,
-   :name string,
-   :industryVertical string,
-   :selfLink string,
-   :created string,
-   :parentLink {:href string, :type string},
-   :level string,
-   :id string,
-   :kind string,
-   :childLink {:href string, :type string},
-   :internalWebPropertyId string,
-   :dataRetentionTtl string,
-   :profileCount integer,
-   :dataRetentionResetOnNewActivity boolean,
-   :accountId string}
-  
-  Updates an existing web property. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
+  Gets a web property to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}"
@@ -1837,59 +1889,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webproperties-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/webproperties/update
-  
-  Required parameters: accountId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions {:effective [string]},
-   :defaultProfileId string,
-   :starred boolean,
-   :websiteUrl string,
-   :updated string,
-   :name string,
-   :industryVertical string,
-   :selfLink string,
-   :created string,
-   :parentLink {:href string, :type string},
-   :level string,
-   :id string,
-   :kind string,
-   :childLink {:href string, :type string},
-   :internalWebPropertyId string,
-   :dataRetentionTtl string,
-   :profileCount integer,
-   :dataRetentionResetOnNewActivity boolean,
-   :accountId string}
-  
-  Updates an existing web property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}"
-     #{:webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1924,10 +1924,100 @@
       :as :json}
      auth))))
 
+(defn customDimensions-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/customDimensions/patch
+  
+  Required parameters: accountId, webPropertyId, customDimensionId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
+  
+  Body: 
+  
+  {:index integer,
+   :updated string,
+   :name string,
+   :selfLink string,
+   :created string,
+   :scope string,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :active boolean,
+   :id string,
+   :kind string,
+   :accountId string}
+  
+  Updates an existing custom dimension. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:customDimensionId :webPropertyId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
+     #{:customDimensionId :webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/customDimensions/update
+  
+  Required parameters: customDimensionId, accountId, webPropertyId
+  
+  Optional parameters: ignoreCustomDataSourceLinks
+  
+  Body: 
+  
+  {:index integer,
+   :updated string,
+   :name string,
+   :selfLink string,
+   :created string,
+   :scope string,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :active boolean,
+   :id string,
+   :kind string,
+   :accountId string}
+  
+  Updates an existing custom dimension."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:customDimensionId :webPropertyId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
+     #{:customDimensionId :webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn customDimensions-insert$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/customDimensions/insert
   
-  Required parameters: accountId, webPropertyId
+  Required parameters: webPropertyId, accountId
   
   Optional parameters: none
   
@@ -1994,102 +2084,12 @@
       :as :json}
      auth))))
 
-(defn customDimensions-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/customDimensions/patch
-  
-  Required parameters: accountId, customDimensionId, webPropertyId
-  
-  Optional parameters: ignoreCustomDataSourceLinks
-  
-  Body: 
-  
-  {:index integer,
-   :updated string,
-   :name string,
-   :selfLink string,
-   :created string,
-   :scope string,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :active boolean,
-   :id string,
-   :kind string,
-   :accountId string}
-  
-  Updates an existing custom dimension. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:customDimensionId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
-     #{:customDimensionId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customDimensions-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/customDimensions/update
-  
-  Required parameters: accountId, customDimensionId, webPropertyId
-  
-  Optional parameters: ignoreCustomDataSourceLinks
-  
-  Body: 
-  
-  {:index integer,
-   :updated string,
-   :name string,
-   :selfLink string,
-   :created string,
-   :scope string,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :active boolean,
-   :id string,
-   :kind string,
-   :accountId string}
-  
-  Updates an existing custom dimension."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:customDimensionId :webPropertyId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDimensions/{customDimensionId}"
-     #{:customDimensionId :webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn segments-list$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/segments/list
   
   Required parameters: none
   
-  Optional parameters: max-results, start-index
+  Optional parameters: start-index, max-results
   
   Lists segments to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -2117,7 +2117,7 @@
   
   Required parameters: none
   
-  Optional parameters: max-results, start-index
+  Optional parameters: start-index, max-results
   
   Lists account summaries (lightweight tree comprised of accounts/properties/profiles) to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -2174,28 +2174,28 @@
   
   Body: 
   
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
                          :kind string,
                          :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
    :kind string,
-   :permissions {:effective [string], :local [string]},
    :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
   
   Adds a new user to the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -2248,34 +2248,34 @@
 (defn accountUserLinks-update$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/accountUserLinks/update
   
-  Required parameters: accountId, linkId
+  Required parameters: linkId, accountId
   
   Optional parameters: none
   
   Body: 
   
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
                          :kind string,
                          :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
    :kind string,
-   :permissions {:effective [string], :local [string]},
    :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
   
   Updates permissions for an existing user on the given account."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -2298,10 +2298,39 @@
       :as :json}
      auth))))
 
+(defn profileUserLinks-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/list
+  
+  Required parameters: webPropertyId, accountId, profileId
+  
+  Optional parameters: start-index, max-results
+  
+  Lists profile-user links for a given view (profile)."
+  {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
+            "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn profileUserLinks-delete$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/delete
   
-  Required parameters: accountId, linkId, profileId, webPropertyId
+  Required parameters: linkId, accountId, profileId, webPropertyId
   
   Optional parameters: none
   
@@ -2326,121 +2355,37 @@
       :as :json}
      auth))))
 
-(defn profileUserLinks-insert$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/insert
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
-                         :kind string,
-                         :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
-   :kind string,
-   :permissions {:effective [string], :local [string]},
-   :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
-  
-  Adds a new user to the given view (profile)."
-  {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn profileUserLinks-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/list
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  Lists profile-user links for a given view (profile)."
-  {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"
-            "https://www.googleapis.com/auth/analytics.manage.users.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn profileUserLinks-update$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/update
   
-  Required parameters: accountId, linkId, profileId, webPropertyId
+  Required parameters: webPropertyId, linkId, profileId, accountId
   
   Optional parameters: none
   
   Body: 
   
-  {:entity {:accountRef {:href string,
-                         :id string,
-                         :kind string,
-                         :name string},
-            :profileRef {:accountId string,
-                         :href string,
-                         :id string,
-                         :internalWebPropertyId string,
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
                          :kind string,
                          :name string,
-                         :webPropertyId string},
-            :webPropertyRef {:accountId string,
-                             :href string,
-                             :id string,
-                             :internalWebPropertyId string,
-                             :kind string,
-                             :name string}},
-   :id string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
    :kind string,
-   :permissions {:effective [string], :local [string]},
    :selfLink string,
-   :userRef {:email string, :id string, :kind string}}
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
   
   Updates permissions for an existing user on the given view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -2465,10 +2410,154 @@
       :as :json}
      auth))))
 
+(defn profileUserLinks-insert$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profileUserLinks/insert
+  
+  Required parameters: webPropertyId, profileId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entity {:webPropertyRef {:id string,
+                             :accountId string,
+                             :kind string,
+                             :name string,
+                             :href string,
+                             :internalWebPropertyId string},
+            :accountRef {:href string,
+                         :kind string,
+                         :name string,
+                         :id string},
+            :profileRef {:href string,
+                         :internalWebPropertyId string,
+                         :webPropertyId string,
+                         :kind string,
+                         :name string,
+                         :id string,
+                         :accountId string}},
+   :kind string,
+   :selfLink string,
+   :userRef {:id string, :email string, :kind string},
+   :id string,
+   :permissions {:effective [string], :local [string]}}
+  
+  Adds a new user to the given view (profile)."
+  {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/entityUserLinks"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uploads-uploadData$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/uploadData
+  
+  Required parameters: customDataSourceId, accountId, webPropertyId
+  
+  Optional parameters: none
+  
+  Upload data for a custom data source."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :accountId :customDataSourceId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
+     #{:webPropertyId :accountId :customDataSourceId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uploads-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/get
+  
+  Required parameters: webPropertyId, uploadId, customDataSourceId, accountId
+  
+  Optional parameters: none
+  
+  List uploads to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:uploadId :webPropertyId :accountId :customDataSourceId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads/{uploadId}"
+     #{:uploadId :webPropertyId :accountId :customDataSourceId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uploads-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/list
+  
+  Required parameters: accountId, webPropertyId, customDataSourceId
+  
+  Optional parameters: start-index, max-results
+  
+  List uploads to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :accountId :customDataSourceId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
+     #{:webPropertyId :accountId :customDataSourceId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn uploads-deleteUploadData$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/deleteUploadData
   
-  Required parameters: accountId, customDataSourceId, webPropertyId
+  Required parameters: customDataSourceId, accountId, webPropertyId
   
   Optional parameters: none
   
@@ -2500,101 +2589,12 @@
       :as :json}
      auth))))
 
-(defn uploads-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/get
-  
-  Required parameters: accountId, customDataSourceId, uploadId, webPropertyId
-  
-  Optional parameters: none
-  
-  List uploads to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:uploadId :webPropertyId :accountId :customDataSourceId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads/{uploadId}"
-     #{:uploadId :webPropertyId :accountId :customDataSourceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn uploads-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/list
-  
-  Required parameters: accountId, customDataSourceId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  List uploads to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :accountId :customDataSourceId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
-     #{:webPropertyId :accountId :customDataSourceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn uploads-uploadData$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/uploads/uploadData
-  
-  Required parameters: accountId, customDataSourceId, webPropertyId
-  
-  Optional parameters: none
-  
-  Upload data for a custom data source."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :accountId :customDataSourceId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources/{customDataSourceId}/uploads"
-     #{:webPropertyId :accountId :customDataSourceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn customDataSources-list$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/customDataSources/list
   
   Required parameters: accountId, webPropertyId
   
-  Optional parameters: max-results, start-index
+  Optional parameters: start-index, max-results
   
   List custom data sources to which the user has access."
   {:scopes ["https://www.googleapis.com/auth/analytics"
@@ -2608,63 +2608,6 @@
      "https://www.googleapis.com/analytics/v3/"
      "management/accounts/{accountId}/webproperties/{webPropertyId}/customDataSources"
      #{:webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn profiles-delete$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/delete
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Deletes a view (profile)."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn profiles-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/get
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Gets a view (profile) to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
-     #{:webPropertyId :profileId :accountId}
      parameters)
     (merge-with
      merge
@@ -2731,97 +2674,10 @@
       :as :json}
      auth))))
 
-(defn profiles-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/list
-  
-  Required parameters: accountId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  Lists views (profiles) to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles"
-     #{:webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn profiles-patch$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/patch
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:timezone string,
-   :permissions {:effective [string]},
-   :starred boolean,
-   :websiteUrl string,
-   :botFilteringEnabled boolean,
-   :updated string,
-   :name string,
-   :defaultPage string,
-   :selfLink string,
-   :type string,
-   :created string,
-   :parentLink {:href string, :type string},
-   :webPropertyId string,
-   :stripSiteSearchCategoryParameters boolean,
-   :siteSearchCategoryParameters string,
-   :currency string,
-   :enhancedECommerceTracking boolean,
-   :id string,
-   :kind string,
-   :childLink {:href string, :type string},
-   :internalWebPropertyId string,
-   :stripSiteSearchQueryParameters boolean,
-   :excludeQueryParameters string,
-   :accountId string,
-   :eCommerceTracking boolean,
-   :siteSearchQueryParameters string}
-  
-  Updates an existing view (profile). This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn profiles-update$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/update
   
-  Required parameters: accountId, profileId, webPropertyId
+  Required parameters: webPropertyId, profileId, accountId
   
   Optional parameters: none
   
@@ -2877,10 +2733,154 @@
       :as :json}
      auth))))
 
+(defn profiles-delete$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/delete
+  
+  Required parameters: webPropertyId, profileId, accountId
+  
+  Optional parameters: none
+  
+  Deletes a view (profile)."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn profiles-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/list
+  
+  Required parameters: accountId, webPropertyId
+  
+  Optional parameters: max-results, start-index
+  
+  Lists views (profiles) to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles"
+     #{:webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn profiles-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/get
+  
+  Required parameters: profileId, webPropertyId, accountId
+  
+  Optional parameters: none
+  
+  Gets a view (profile) to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn profiles-patch$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/profiles/patch
+  
+  Required parameters: profileId, webPropertyId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:timezone string,
+   :permissions {:effective [string]},
+   :starred boolean,
+   :websiteUrl string,
+   :botFilteringEnabled boolean,
+   :updated string,
+   :name string,
+   :defaultPage string,
+   :selfLink string,
+   :type string,
+   :created string,
+   :parentLink {:href string, :type string},
+   :webPropertyId string,
+   :stripSiteSearchCategoryParameters boolean,
+   :siteSearchCategoryParameters string,
+   :currency string,
+   :enhancedECommerceTracking boolean,
+   :id string,
+   :kind string,
+   :childLink {:href string, :type string},
+   :internalWebPropertyId string,
+   :stripSiteSearchQueryParameters boolean,
+   :excludeQueryParameters string,
+   :accountId string,
+   :eCommerceTracking boolean,
+   :siteSearchQueryParameters string}
+  
+  Updates an existing view (profile). This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn remarketingAudience-delete$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/delete
   
-  Required parameters: accountId, remarketingAudienceId, webPropertyId
+  Required parameters: accountId, webPropertyId, remarketingAudienceId
   
   Optional parameters: none
   
@@ -2905,130 +2905,10 @@
       :as :json}
      auth))))
 
-(defn remarketingAudience-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/get
-  
-  Required parameters: accountId, remarketingAudienceId, webPropertyId
-  
-  Optional parameters: none
-  
-  Gets a remarketing audience to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :remarketingAudienceId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
-     #{:webPropertyId :remarketingAudienceId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn remarketingAudience-insert$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/insert
-  
-  Required parameters: accountId, webPropertyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :updated string,
-   :name string,
-   :audienceType string,
-   :created string,
-   :audienceDefinition {:includeConditions {:daysToLookBack integer,
-                                            :isSmartList boolean,
-                                            :kind string,
-                                            :membershipDurationDays integer,
-                                            :segment string}},
-   :webPropertyId string,
-   :id string,
-   :kind string,
-   :internalWebPropertyId string,
-   :stateBasedAudienceDefinition {:excludeConditions {:exclusionDuration string,
-                                                      :segment string},
-                                  :includeConditions {:daysToLookBack integer,
-                                                      :isSmartList boolean,
-                                                      :kind string,
-                                                      :membershipDurationDays integer,
-                                                      :segment string}},
-   :linkedAdAccounts [{:eligibleForSearch boolean,
-                       :linkedAccountId string,
-                       :type string,
-                       :webPropertyId string,
-                       :remarketingAudienceId string,
-                       :status string,
-                       :id string,
-                       :kind string,
-                       :internalWebPropertyId string,
-                       :accountId string}],
-   :accountId string,
-   :linkedViews [string]}
-  
-  Creates a new remarketing audience."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
-     #{:webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn remarketingAudience-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/list
-  
-  Required parameters: accountId, webPropertyId
-  
-  Optional parameters: max-results, start-index, type
-  
-  Lists remarketing audiences to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
-     #{:webPropertyId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn remarketingAudience-patch$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/patch
   
-  Required parameters: accountId, remarketingAudienceId, webPropertyId
+  Required parameters: remarketingAudienceId, webPropertyId, accountId
   
   Optional parameters: none
   
@@ -3039,22 +2919,22 @@
    :name string,
    :audienceType string,
    :created string,
-   :audienceDefinition {:includeConditions {:daysToLookBack integer,
-                                            :isSmartList boolean,
-                                            :kind string,
+   :audienceDefinition {:includeConditions {:segment string,
+                                            :daysToLookBack integer,
                                             :membershipDurationDays integer,
-                                            :segment string}},
+                                            :kind string,
+                                            :isSmartList boolean}},
    :webPropertyId string,
    :id string,
    :kind string,
    :internalWebPropertyId string,
-   :stateBasedAudienceDefinition {:excludeConditions {:exclusionDuration string,
-                                                      :segment string},
-                                  :includeConditions {:daysToLookBack integer,
-                                                      :isSmartList boolean,
-                                                      :kind string,
+   :stateBasedAudienceDefinition {:includeConditions {:segment string,
+                                                      :daysToLookBack integer,
                                                       :membershipDurationDays integer,
-                                                      :segment string}},
+                                                      :kind string,
+                                                      :isSmartList boolean},
+                                  :excludeConditions {:segment string,
+                                                      :exclusionDuration string}},
    :linkedAdAccounts [{:eligibleForSearch boolean,
                        :linkedAccountId string,
                        :type string,
@@ -3091,10 +2971,37 @@
       :as :json}
      auth))))
 
-(defn remarketingAudience-update$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/update
+(defn remarketingAudience-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/list
   
-  Required parameters: accountId, remarketingAudienceId, webPropertyId
+  Required parameters: accountId, webPropertyId
+  
+  Optional parameters: type, max-results, start-index
+  
+  Lists remarketing audiences to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
+     #{:webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn remarketingAudience-insert$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/insert
+  
+  Required parameters: accountId, webPropertyId
   
   Optional parameters: none
   
@@ -3105,22 +3012,115 @@
    :name string,
    :audienceType string,
    :created string,
-   :audienceDefinition {:includeConditions {:daysToLookBack integer,
-                                            :isSmartList boolean,
-                                            :kind string,
+   :audienceDefinition {:includeConditions {:segment string,
+                                            :daysToLookBack integer,
                                             :membershipDurationDays integer,
-                                            :segment string}},
+                                            :kind string,
+                                            :isSmartList boolean}},
    :webPropertyId string,
    :id string,
    :kind string,
    :internalWebPropertyId string,
-   :stateBasedAudienceDefinition {:excludeConditions {:exclusionDuration string,
-                                                      :segment string},
-                                  :includeConditions {:daysToLookBack integer,
-                                                      :isSmartList boolean,
-                                                      :kind string,
+   :stateBasedAudienceDefinition {:includeConditions {:segment string,
+                                                      :daysToLookBack integer,
                                                       :membershipDurationDays integer,
-                                                      :segment string}},
+                                                      :kind string,
+                                                      :isSmartList boolean},
+                                  :excludeConditions {:segment string,
+                                                      :exclusionDuration string}},
+   :linkedAdAccounts [{:eligibleForSearch boolean,
+                       :linkedAccountId string,
+                       :type string,
+                       :webPropertyId string,
+                       :remarketingAudienceId string,
+                       :status string,
+                       :id string,
+                       :kind string,
+                       :internalWebPropertyId string,
+                       :accountId string}],
+   :accountId string,
+   :linkedViews [string]}
+  
+  Creates a new remarketing audience."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:webPropertyId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences"
+     #{:webPropertyId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn remarketingAudience-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/get
+  
+  Required parameters: webPropertyId, remarketingAudienceId, accountId
+  
+  Optional parameters: none
+  
+  Gets a remarketing audience to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :remarketingAudienceId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/remarketingAudiences/{remarketingAudienceId}"
+     #{:webPropertyId :remarketingAudienceId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn remarketingAudience-update$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/remarketingAudience/update
+  
+  Required parameters: webPropertyId, remarketingAudienceId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :updated string,
+   :name string,
+   :audienceType string,
+   :created string,
+   :audienceDefinition {:includeConditions {:segment string,
+                                            :daysToLookBack integer,
+                                            :membershipDurationDays integer,
+                                            :kind string,
+                                            :isSmartList boolean}},
+   :webPropertyId string,
+   :id string,
+   :kind string,
+   :internalWebPropertyId string,
+   :stateBasedAudienceDefinition {:includeConditions {:segment string,
+                                                      :daysToLookBack integer,
+                                                      :membershipDurationDays integer,
+                                                      :kind string,
+                                                      :isSmartList boolean},
+                                  :excludeConditions {:segment string,
+                                                      :exclusionDuration string}},
    :linkedAdAccounts [{:eligibleForSearch boolean,
                        :linkedAccountId string,
                        :type string,
@@ -3185,38 +3185,10 @@
       :as :json}
      auth))))
 
-(defn unsampledReports-delete$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/delete
-  
-  Required parameters: accountId, profileId, unsampledReportId, webPropertyId
-  
-  Optional parameters: none
-  
-  Deletes an unsampled report."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:unsampledReportId :webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports/{unsampledReportId}"
-     #{:unsampledReportId :webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn unsampledReports-get$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/get
   
-  Required parameters: accountId, profileId, unsampledReportId, webPropertyId
+  Required parameters: webPropertyId, accountId, unsampledReportId, profileId
   
   Optional parameters: none
   
@@ -3243,10 +3215,68 @@
       :as :json}
      auth))))
 
+(defn unsampledReports-list$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/list
+  
+  Required parameters: accountId, webPropertyId, profileId
+  
+  Optional parameters: max-results, start-index
+  
+  Lists unsampled reports to which the user has access."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports"
+     #{:webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn unsampledReports-delete$
+  "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/delete
+  
+  Required parameters: unsampledReportId, accountId, profileId, webPropertyId
+  
+  Optional parameters: none
+  
+  Deletes an unsampled report."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:unsampledReportId :webPropertyId :profileId :accountId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports/{unsampledReportId}"
+     #{:unsampledReportId :webPropertyId :profileId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn unsampledReports-insert$
   "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/insert
   
-  Required parameters: accountId, profileId, webPropertyId
+  Required parameters: webPropertyId, accountId, profileId
   
   Optional parameters: none
   
@@ -3291,36 +3321,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn unsampledReports-list$
-  "https://developers.google.com/analytics/api/reference/rest/v3/management/unsampledReports/list
-  
-  Required parameters: accountId, profileId, webPropertyId
-  
-  Optional parameters: max-results, start-index
-  
-  Lists unsampled reports to which the user has access."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:webPropertyId :profileId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/unsampledReports"
-     #{:webPropertyId :profileId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

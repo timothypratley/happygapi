@@ -16,11 +16,10 @@
   Body: 
   
   {:accessTuple {:principal string,
-                 :permission string,
-                 :fullResourceName string}}
+                 :fullResourceName string,
+                 :permission string}}
   
-  Checks whether a member has a specific permission for a specific resource,
-  and explains why the member does or does not have that permission."
+  Checks whether a member has a specific permission for a specific resource, and explains why the member does or does not have that permission."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

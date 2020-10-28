@@ -11,11 +11,9 @@
   
   Required parameters: none
   
-  Optional parameters: locationId, languageCode, filter
+  Optional parameters: filter, languageCode, locationId, parent
   
-  Returns a list of the sensitive information types that the DLP API
-  supports. See https://cloud.google.com/dlp/docs/infotypes-reference to
-  learn more."
+  Returns a list of the sensitive information types that the DLP API supports. See https://cloud.google.com/dlp/docs/infotypes-reference to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}

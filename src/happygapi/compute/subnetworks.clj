@@ -43,7 +43,10 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
@@ -88,10 +91,12 @@
    :privateIpGoogleAccess boolean,
    :creationTimestamp string,
    :purpose string,
+   :privateIpv6GoogleAccess string,
    :name string,
    :ipCidrRange string,
    :selfLink string,
    :state string,
+   :ipv6CidrRange string,
    :region string,
    :gatewayAddress string,
    :id string,
@@ -134,9 +139,9 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Retrieves an aggregated list of all usable subnetworks in the project. The list contains all of the subnetworks in the project and the subnetworks that were shared by a Shared VPC host project."
+  Retrieves an aggregated list of all usable subnetworks in the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -171,10 +176,12 @@
    :privateIpGoogleAccess boolean,
    :creationTimestamp string,
    :purpose string,
+   :privateIpv6GoogleAccess string,
    :name string,
    :ipCidrRange string,
    :selfLink string,
    :state string,
+   :ipv6CidrRange string,
    :region string,
    :gatewayAddress string,
    :id string,
@@ -190,7 +197,7 @@
                :metadataFields [string]},
    :fingerprint string}
   
-  Patches the specified subnetwork with the data included in the request. Only certain fields can up updated with a patch request as indicated in the field descriptions. You must specify the current fingeprint of the subnetwork resource being patched."
+  Patches the specified subnetwork with the data included in the request. Only certain fields can up updated with a patch request as indicated in the field descriptions. You must specify the current fingerprint of the subnetwork resource being patched."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -251,7 +258,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of subnetworks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -339,7 +346,7 @@
   
   Required parameters: project, region, resource
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -400,7 +407,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of subnetworks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

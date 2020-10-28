@@ -1,13 +1,49 @@
 (ns happygapi.content.orders
   "Content API for Shopping: orders.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn refundorder$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/refundorder
+  
+  Required parameters: orderId, merchantId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:fullRefund boolean,
+   :operationId string,
+   :reason string,
+   :amount {:priceAmount Price, :taxAmount Price},
+   :reasonText string}
+  
+  Issues a partial or total refund for an order."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/refundorder"
+     #{:merchantId :orderId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn createtestorder$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/createtestorder
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/createtestorder
   
   Required parameters: merchantId
   
@@ -20,9 +56,11 @@
    :testOrder {:promotions [OrderPromotion],
                :predefinedPickupDetails string,
                :shippingOption string,
+               :pickupDetails TestOrderPickupDetails,
                :enableOrderinvoices boolean,
                :predefinedBillingAddress string,
                :lineItems [TestOrderLineItem],
+               :deliveryDetails TestOrderDeliveryDetails,
                :shippingCost Price,
                :kind string,
                :predefinedDeliveryAddress string,
@@ -36,8 +74,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/testorders"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/testorders"
      #{:merchantId}
      parameters)
     (merge-with
@@ -51,19 +89,19 @@
      auth))))
 
 (defn updatelineitemshippingdetails$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/updatelineitemshippingdetails
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/updatelineitemshippingdetails
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
   {:deliverByDate string,
-   :lineItemId string,
    :operationId string,
-   :productId string,
-   :shipByDate string}
+   :shipByDate string,
+   :lineItemId string,
+   :productId string}
   
   Updates ship by and delivery by dates for a line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -72,8 +110,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/updateLineItemShippingDetails"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/updateLineItemShippingDetails"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -87,7 +125,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/get
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/get
   
   Required parameters: merchantId, orderId
   
@@ -100,8 +138,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -113,9 +151,9 @@
      auth))))
 
 (defn acknowledge$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/acknowledge
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/acknowledge
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
@@ -130,8 +168,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/acknowledge"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/acknowledge"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -145,16 +183,16 @@
      auth))))
 
 (defn setlineitemmetadata$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/setlineitemmetadata
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/setlineitemmetadata
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:annotations [{:key string, :value string}],
-   :lineItemId string,
+  {:lineItemId string,
+   :annotations [{:value string, :key string}],
    :operationId string,
    :productId string}
   
@@ -165,8 +203,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/setLineItemMetadata"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/setLineItemMetadata"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -180,7 +218,7 @@
      auth))))
 
 (defn createtestreturn$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/createtestreturn
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/createtestreturn
   
   Required parameters: merchantId, orderId
   
@@ -197,8 +235,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/testreturn"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/testreturn"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -212,7 +250,7 @@
      auth))))
 
 (defn cancellineitem$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/cancellineitem
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/cancellineitem
   
   Required parameters: merchantId, orderId
   
@@ -221,11 +259,11 @@
   Body: 
   
   {:lineItemId string,
-   :operationId string,
    :productId string,
+   :reasonText string,
+   :operationId string,
    :quantity integer,
-   :reason string,
-   :reasonText string}
+   :reason string}
   
   Cancels a line item, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -234,8 +272,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/cancelLineItem"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/cancelLineItem"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -249,20 +287,23 @@
      auth))))
 
 (defn updateshipment$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/updateshipment
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/updateshipment
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:carrier string,
-   :deliveryDate string,
-   :operationId string,
+  {:readyPickupDate string,
+   :undeliveredDate string,
+   :carrier string,
+   :trackingId string,
+   :lastPickupDate string,
    :shipmentId string,
    :status string,
-   :trackingId string}
+   :operationId string,
+   :deliveryDate string}
   
   Updates a shipment's status, carrier, and/or tracking ID."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -271,8 +312,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/updateShipment"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/updateShipment"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -286,20 +327,20 @@
      auth))))
 
 (defn rejectreturnlineitem$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/rejectreturnlineitem
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/rejectreturnlineitem
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:lineItemId string,
-   :operationId string,
+  {:reason string,
    :productId string,
-   :quantity integer,
-   :reason string,
-   :reasonText string}
+   :operationId string,
+   :lineItemId string,
+   :reasonText string,
+   :quantity integer}
   
   Rejects return on an line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -308,8 +349,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/rejectReturnLineItem"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/rejectReturnLineItem"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -323,33 +364,32 @@
      auth))))
 
 (defn instorerefundlineitem$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/instorerefundlineitem
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/instorerefundlineitem
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:lineItemId string,
+  {:quantity integer,
+   :lineItemId string,
+   :priceAmount {:value string, :currency string},
    :operationId string,
-   :priceAmount {:currency string, :value string},
+   :taxAmount {:value string, :currency string},
    :productId string,
-   :quantity integer,
    :reason string,
-   :reasonText string,
-   :taxAmount {:currency string, :value string}}
+   :reasonText string}
   
-  Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (e.g. cash refund done in store).
-  Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding via Google then via an in-store return."
+  Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (e.g. cash refund done in store). Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding via Google then via an in-store return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/inStoreRefundLineItem"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/inStoreRefundLineItem"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -363,11 +403,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/list
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/list
   
   Required parameters: merchantId
   
-  Optional parameters: acknowledged, maxResults, orderBy, pageToken, placedDateEnd, placedDateStart, statuses
+  Optional parameters: acknowledged, placedDateEnd, placedDateStart, pageToken, maxResults, orderBy, statuses
   
   Lists the orders in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -376,8 +416,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders"
      #{:merchantId}
      parameters)
     (merge-with
@@ -389,21 +429,21 @@
      auth))))
 
 (defn shiplineitems$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/shiplineitems
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/shiplineitems
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:lineItems [{:lineItemId string,
+  {:lineItems [{:quantity integer,
                 :productId string,
-                :quantity integer}],
-   :operationId string,
+                :lineItemId string}],
    :shipmentGroupId string,
-   :shipmentInfos [{:carrier string,
-                    :shipmentId string,
+   :operationId string,
+   :shipmentInfos [{:shipmentId string,
+                    :carrier string,
                     :trackingId string}]}
   
   Marks line item(s) as shipped."
@@ -413,8 +453,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/shipLineItems"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/shipLineItems"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -428,7 +468,7 @@
      auth))))
 
 (defn gettestordertemplate$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/gettestordertemplate
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/gettestordertemplate
   
   Required parameters: merchantId, templateName
   
@@ -441,8 +481,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/testordertemplates/{templateName}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/testordertemplates/{templateName}"
      #{:templateName :merchantId}
      parameters)
     (merge-with
@@ -454,9 +494,9 @@
      auth))))
 
 (defn getbymerchantorderid$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/getbymerchantorderid
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/getbymerchantorderid
   
-  Required parameters: merchantId, merchantOrderId
+  Required parameters: merchantOrderId, merchantId
   
   Optional parameters: none
   
@@ -467,8 +507,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/ordersbymerchantid/{merchantOrderId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/ordersbymerchantid/{merchantOrderId}"
      #{:merchantOrderId :merchantId}
      parameters)
     (merge-with
@@ -480,7 +520,7 @@
      auth))))
 
 (defn cancel$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/cancel
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/cancel
   
   Required parameters: merchantId, orderId
   
@@ -488,7 +528,7 @@
   
   Body: 
   
-  {:operationId string, :reason string, :reasonText string}
+  {:reasonText string, :operationId string, :reason string}
   
   Cancels all line items in an order, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -497,8 +537,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/cancel"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/cancel"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -512,21 +552,21 @@
      auth))))
 
 (defn advancetestorder$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/advancetestorder
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/advancetestorder
   
   Required parameters: merchantId, orderId
   
   Optional parameters: none
   
-  Sandbox only. Moves a test order from state \"inProgress\" to state \"pendingShipment\"."
+  Sandbox only. Moves a test order from state \"`inProgress`\" to state \"`pendingShipment`\"."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/testorders/{orderId}/advance"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/testorders/{orderId}/advance"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -537,8 +577,8 @@
       :as :json}
      auth))))
 
-(defn returnrefundlineitem$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/returnrefundlineitem
+(defn refunditem$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/refunditem
   
   Required parameters: merchantId, orderId
   
@@ -546,24 +586,64 @@
   
   Body: 
   
-  {:lineItemId string,
-   :operationId string,
-   :priceAmount {:currency string, :value string},
-   :productId string,
-   :quantity integer,
-   :reason string,
+  {:items [{:fullRefund boolean,
+            :quantity integer,
+            :productId string,
+            :amount MonetaryAmount,
+            :lineItemId string}],
    :reasonText string,
-   :taxAmount {:currency string, :value string}}
+   :operationId string,
+   :reason string,
+   :shipping {:amount Price, :fullRefund boolean}}
   
-  Returns and refunds a line item. Note that this method can only be called on fully shipped orders."
+  Issues a partial or total refund for items and shipment."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/returnRefundLineItem"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/refunditem"
+     #{:merchantId :orderId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn returnrefundlineitem$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/returnrefundlineitem
+  
+  Required parameters: merchantId, orderId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:reason string,
+   :priceAmount {:value string, :currency string},
+   :quantity integer,
+   :operationId string,
+   :reasonText string,
+   :productId string,
+   :taxAmount {:value string, :currency string},
+   :lineItemId string}
+  
+  Returns and refunds a line item. Note that this method can only be called on fully shipped orders. Please also note that the Orderreturns API is the preferred way to handle returns after you receive a return from a customer. You can use Orderreturns.list or Orderreturns.get to search for the return, and then use Orderreturns.processreturn to issue the refund. If the return cannot be found, then we recommend using this API to issue a refund."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/returnRefundLineItem"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -577,9 +657,9 @@
      auth))))
 
 (defn canceltestorderbycustomer$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/canceltestorderbycustomer
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/canceltestorderbycustomer
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
@@ -594,8 +674,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/testorders/{orderId}/cancelByCustomer"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/testorders/{orderId}/cancelByCustomer"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -609,7 +689,7 @@
      auth))))
 
 (defn updatemerchantorderid$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/orders/updatemerchantorderid
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/updatemerchantorderid
   
   Required parameters: merchantId, orderId
   
@@ -626,8 +706,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/orders/{orderId}/updateMerchantOrderId"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/orders/{orderId}/updateMerchantOrderId"
      #{:merchantId :orderId}
      parameters)
     (merge-with

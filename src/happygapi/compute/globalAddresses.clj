@@ -115,7 +115,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of global addresses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/adclients/list
+  
+  Required parameters: none
+  
+  Optional parameters: maxResults, pageToken
+  
+  List all host ad clients in this AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "adclients"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/adclients/get
   
@@ -23,32 +49,6 @@
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}"
      #{:adClientId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/adclients/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, maxResults
-  
-  List all host ad clients in this AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients"
-     #{}
      parameters)
     (merge-with
      merge

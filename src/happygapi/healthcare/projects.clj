@@ -1,39 +1,13 @@
 (ns happygapi.healthcare.projects
   "Cloud Healthcare API: projects.
   Manage, store, and access healthcare data in Google Cloud Platform.
-  See: https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/healthcareapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/get
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/get
   
   Required parameters: name
   
@@ -47,7 +21,33 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -59,7 +59,7 @@
      auth))))
 
 (defn locations-datasets-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/get
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/get
   
   Required parameters: name
   
@@ -73,7 +73,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -85,7 +85,7 @@
      auth))))
 
 (defn locations-datasets-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/setIamPolicy
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/setIamPolicy
   
   Required parameters: resource
   
@@ -99,10 +99,7 @@
             :etag string},
    :updateMask string}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -110,7 +107,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
+     "v1/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -124,7 +121,7 @@
      auth))))
 
 (defn locations-datasets-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/patch
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/patch
   
   Required parameters: name
   
@@ -142,7 +139,7 @@
    (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -156,7 +153,7 @@
      auth))))
 
 (defn locations-datasets-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/testIamPermissions
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/testIamPermissions
   
   Required parameters: resource
   
@@ -166,13 +163,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -180,7 +171,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
+     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -194,7 +185,7 @@
      auth))))
 
 (defn locations-datasets-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/create
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/create
   
   Required parameters: parent
   
@@ -204,13 +195,7 @@
   
   {:timeZone string, :name string}
   
-  Creates a new health dataset. Results are returned through the
-  Operation interface which returns either an
-  `Operation.response` which contains a Dataset or
-  `Operation.error`. The metadata
-  field type is OperationMetadata.
-  A Google Cloud Platform project can contain up to 500 datasets across all
-  regions."
+  Creates a new health dataset. Results are returned through the Operation interface which returns either an `Operation.response` which contains a Dataset or `Operation.error`. The metadata field type is OperationMetadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -218,7 +203,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/datasets"
+     "v1/{+parent}/datasets"
      #{:parent}
      parameters)
     (merge-with
@@ -232,15 +217,13 @@
      auth))))
 
 (defn locations-datasets-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/delete
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes the specified health dataset and all data contained in the dataset.
-  Deleting a dataset does not affect the sources from which the dataset was
-  imported (if any)."
+  Deletes the specified health dataset and all data contained in the dataset. Deleting a dataset does not affect the sources from which the dataset was imported (if any)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -248,7 +231,7 @@
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -260,15 +243,13 @@
      auth))))
 
 (defn locations-datasets-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/getIamPolicy
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/getIamPolicy
   
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -276,7 +257,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
+     "v1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -288,7 +269,7 @@
      auth))))
 
 (defn locations-datasets-deidentify$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/deidentify
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/deidentify
   
   Required parameters: sourceDataset
   
@@ -296,24 +277,13 @@
   
   Body: 
   
-  {:config {:image ImageConfig,
+  {:config {:fhir FhirConfig,
+            :image ImageConfig,
             :text TextConfig,
-            :dicom DicomConfig,
-            :fhir FhirConfig},
+            :dicom DicomConfig},
    :destinationDataset string}
   
-  Creates a new dataset containing de-identified data from the source
-  dataset. The metadata field type
-  is OperationMetadata.
-  If the request is successful, the
-  response field type is
-  DeidentifySummary.
-  If errors occur,
-  error
-  details field type is
-  DeidentifyErrorDetails.
-  Errors are also logged to Stackdriver Logging. For more information,
-  see [Viewing logs](/healthcare/docs/how-tos/stackdriver-logging)."
+  Creates a new dataset containing de-identified data from the source dataset. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifySummary. If errors occur, error is set. The LRO result may still be successful if de-identification fails for some DICOM instances. The new de-identified dataset will not contain these failed resources. Failed resource totals are tracked in Operation.metadata. Error details are also logged to Cloud Logging. For more information, see [Viewing logs](/healthcare/docs/how-tos/logging)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:sourceDataset})]}
@@ -321,7 +291,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+sourceDataset}:deidentify"
+     "v1/{+sourceDataset}:deidentify"
      #{:sourceDataset}
      parameters)
     (merge-with
@@ -335,7 +305,7 @@
      auth))))
 
 (defn locations-datasets-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/list
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/list
   
   Required parameters: parent
   
@@ -349,7 +319,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/datasets"
+     "v1/{+parent}/datasets"
      #{:parent}
      parameters)
     (merge-with
@@ -361,22 +331,13 @@
      auth))))
 
 (defn locations-datasets-operations-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/operations/list
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/list
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter
   
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -384,35 +345,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-operations-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}/operations"
      #{:name}
      parameters)
     (merge-with
@@ -424,7 +357,7 @@
      auth))))
 
 (defn locations-datasets-operations-cancel$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/operations/cancel
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/cancel
   
   Required parameters: name
   
@@ -434,16 +367,7 @@
   
   {}
   
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -451,7 +375,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}:cancel"
+     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -464,14 +388,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/get
+(defn locations-datasets-operations-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the specified DICOM store."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -479,917 +403,8 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-searchForSeries$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/searchForSeries
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  SearchForSeries returns a list of matching series. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :etag string},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:labels {}, :notificationConfig {:pubsubTopic string}, :name string}
-  
-  Updates the specified DICOM store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/create
-  
-  Required parameters: parent
-  
-  Optional parameters: dicomStoreId
-  
-  Body: 
-  
-  {:labels {}, :notificationConfig {:pubsubTopic string}, :name string}
-  
-  Creates a new DICOM store within the parent dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomStores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified DICOM store and removes all images that are contained
-  within it."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-searchForStudies$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/searchForStudies
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  SearchForStudies returns a list of matching studies. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-export$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/export
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:bigqueryDestination {:tableUri string, :force boolean},
-   :gcsDestination {:mimeType string, :uriPrefix string}}
-  
-  Exports data to the specified destination by copying it from the DICOM
-  store.
-  The metadata field type is
-  OperationMetadata."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}:export"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-searchForInstances$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/searchForInstances
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  SearchForInstances returns a list of matching instances. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-deidentify$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/deidentify
-  
-  Required parameters: sourceStore
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:destinationStore string,
-   :filterConfig {:resourcePathsGcsUri string},
-   :config {:image ImageConfig,
-            :text TextConfig,
-            :dicom DicomConfig,
-            :fhir FhirConfig}}
-  
-  De-identifies data from the source store and writes it to the destination
-  store. The metadata field type
-  is OperationMetadata.
-  If the request is successful, the
-  response field type is
-  DeidentifyDicomStoreSummary. If errors occur,
-  error
-  details field type is
-  DeidentifyErrorDetails.
-  Errors are also logged to Stackdriver
-  (see [Viewing logs](/healthcare/docs/how-tos/stackdriver-logging))."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:sourceStore})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+sourceStore}:deidentify"
-     #{:sourceStore}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists the DICOM stores in the given dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomStores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-import$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/import
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:gcsSource {:uri string}}
-  
-  Imports data into the DICOM store by copying it from the specified source.
-  For errors, the Operation is populated with error details (in the form
-  of ImportDicomDataErrorDetails in error.details), which hold
-  finer-grained error information. Errors are also logged to Stackdriver
-  Logging. For more information,
-  see [Viewing logs](/healthcare/docs/how-tos/stackdriver-logging).
-  The metadata field type is
-  OperationMetadata."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}:import"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-storeInstances$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/storeInstances
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:extensions [{}], :data string, :contentType string}
-  
-  StoreInstances stores DICOM instances associated with study instance unique
-  identifiers (SUID). See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-retrieveMetadata$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/retrieveMetadata
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveStudyMetadata returns instance associated with the given study
-  presented as metadata with the bulk data removed. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-storeInstances$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/storeInstances
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:extensions [{}], :data string, :contentType string}
-  
-  StoreInstances stores DICOM instances associated with study instance unique
-  identifiers (SUID). See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/delete
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  DeleteStudy deletes all instances within the given study. Delete requests
-  are equivalent to the GET requests specified in the Retrieve transaction."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-retrieveStudy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/retrieveStudy
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveStudy returns all instances within the given study. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-searchForSeries$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/searchForSeries
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  SearchForSeries returns a list of matching series. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-searchForInstances$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/searchForInstances
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  SearchForInstances returns a list of matching instances. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-retrieveMetadata$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/retrieveMetadata
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveSeriesMetadata returns instance associated with the given study and
-  series, presented as metadata with the bulk data removed. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-retrieveSeries$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/retrieveSeries
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveSeries returns all instances within the given study and series. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-searchForInstances$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/searchForInstances
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  SearchForInstances returns a list of matching instances. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/delete
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  DeleteSeries deletes all instances within the given study and series.
-  Delete requests are equivalent to the GET requests specified in the
-  Retrieve transaction."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveInstance$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveInstance
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveInstance returns instance associated with the given study, series,
-  and SOP Instance UID. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveMetadata
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveInstanceMetadata returns instance associated with the given study,
-  series, and SOP Instance UID presented as metadata with the bulk data
-  removed. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/delete
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  DeleteInstance deletes an instance associated with the given study, series,
-  and SOP Instance UID. Delete requests are equivalent to the GET requests
-  specified in the Retrieve transaction."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveRendered$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveRendered
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveRenderedInstance returns instance associated with the given study,
-  series, and SOP Instance UID in an acceptable Rendered Media Type. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveFrames$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveFrames
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveFrames returns instances associated with the given study, series,
-  SOP Instance UID and frame numbers. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveRendered$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveRendered
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveRenderedFrames returns instances associated with the given study,
-  series, SOP Instance UID and frame numbers in an acceptable Rendered Media
-  Type. See
-  http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
      parameters)
     (merge-with
      merge
@@ -1400,7 +415,7 @@
      auth))))
 
 (defn locations-datasets-hl7V2Stores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/testIamPermissions
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/testIamPermissions
   
   Required parameters: resource
   
@@ -1410,13 +425,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -1424,7 +433,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
+     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -1437,87 +446,31 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/delete
+(defn locations-datasets-hl7V2Stores-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/patch
   
   Required parameters: name
   
-  Optional parameters: none
-  
-  Deletes the specified HL7v2 store and removes all messages that are
-  contained within it."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists the HL7v2 stores in the given dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/hl7V2Stores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :etag string},
-   :updateMask string}
+  {:notificationConfigs [{:pubsubTopic string, :filter string}],
+   :name string,
+   :labels {},
+   :rejectDuplicateMessage boolean,
+   :parserConfig {:segmentTerminator string, :allowNullHeader boolean}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  Updates the HL7v2 store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{:resource}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -1530,7 +483,7 @@
      auth))))
 
 (defn locations-datasets-hl7V2Stores-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/create
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/create
   
   Required parameters: parent
   
@@ -1538,11 +491,11 @@
   
   Body: 
   
-  {:labels {},
-   :notificationConfig {:pubsubTopic string},
-   :parserConfig {:allowNullHeader boolean, :segmentTerminator string},
+  {:notificationConfigs [{:pubsubTopic string, :filter string}],
    :name string,
-   :rejectDuplicateMessage boolean}
+   :labels {},
+   :rejectDuplicateMessage boolean,
+   :parserConfig {:segmentTerminator string, :allowNullHeader boolean}}
   
   Creates a new HL7v2 store within the parent dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1552,7 +505,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/hl7V2Stores"
+     "v1/{+parent}/hl7V2Stores"
      #{:parent}
      parameters)
     (merge-with
@@ -1565,25 +518,23 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/getIamPolicy
+(defn locations-datasets-hl7V2Stores-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/delete
   
-  Required parameters: resource
+  Required parameters: name
   
-  Optional parameters: options.requestedPolicyVersion
+  Optional parameters: none
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Deletes the specified HL7v2 store and removes all messages that it contains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
-     #{:resource}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -1593,44 +544,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:labels {},
-   :notificationConfig {:pubsubTopic string},
-   :parserConfig {:allowNullHeader boolean, :segmentTerminator string},
-   :name string,
-   :rejectDuplicateMessage boolean}
-  
-  Updates the HL7v2 store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-datasets-hl7V2Stores-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/get
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/get
   
   Required parameters: name
   
@@ -1644,7 +559,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -1655,8 +570,122 @@
       :as :json}
      auth))))
 
+(defn locations-datasets-hl7V2Stores-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists the HL7v2 stores in the given dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/hl7V2Stores"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-getIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-setIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer,
+            :auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-messages-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, orderBy, filter, view
+  
+  Lists all the messages in the given HL7v2 store with support for filtering. Note: HL7v2 messages are indexed asynchronously, so there might be a slight delay between the time a message is created and when it can be found through a filter."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/messages"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-datasets-hl7V2Stores-messages-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/patch
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/patch
   
   Required parameters: name
   
@@ -1674,13 +703,7 @@
    :patientIds [{:type string, :value string}],
    :data string}
   
-  Update the message.
-  
-  The contents of the message in Message.data and data extracted from
-  the contents such as Message.create_time cannot be altered. Only the
-  Message.labels field is allowed to be updated. The labels in the
-  request are merged with the existing set of labels. Existing labels with
-  the same keys are updated."
+  Update the message. The contents of the message in Message.data and data extracted from the contents such as Message.create_time cannot be altered. Only the Message.labels field is allowed to be updated. The labels in the request are merged with the existing set of labels. Existing labels with the same keys are updated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1688,7 +711,7 @@
    (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -1701,8 +724,48 @@
       :as :json}
      auth))))
 
+(defn locations-datasets-hl7V2Stores-messages-ingest$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/ingest
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:message {:labels {},
+             :messageType string,
+             :sendTime string,
+             :name string,
+             :createTime string,
+             :parsedData ParsedData,
+             :sendFacility string,
+             :patientIds [PatientId],
+             :data string}}
+  
+  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Cloud Pub/Sub topic configured in projects.locations.datasets.hl7V2Stores.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Cloud Pub/Sub topic, the adapter transmits the message when a notification is received. This method also generates a response containing an HL7v2 acknowledgement (`ACK`) message when successful or a negative acknowledgement (`NACK`) message in case of error, suitable for replying to HL7v2 interface systems that expect these acknowledgements."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/messages:ingest"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-datasets-hl7V2Stores-messages-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/get
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/get
   
   Required parameters: name
   
@@ -1716,7 +779,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -1728,7 +791,7 @@
      auth))))
 
 (defn locations-datasets-hl7V2Stores-messages-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/delete
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/delete
   
   Required parameters: name
   
@@ -1742,7 +805,7 @@
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -1753,38 +816,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, filter, pageToken, pageSize, view
-  
-  Lists all the messages in the given HL7v2 store with support for filtering.
-  
-  Note: HL7v2 messages are indexed asynchronously, so there might be a slight
-  delay between the time a message is created and when it can be found
-  through a filter."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/messages"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-datasets-hl7V2Stores-messages-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/create
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/create
   
   Required parameters: parent
   
@@ -1802,12 +835,7 @@
              :patientIds [PatientId],
              :data string}}
   
-  Creates a message and sends a notification to the Cloud Pub/Sub topic. If
-  configured, the MLLP adapter listens to messages created by this method and
-  sends those back to the hospital. A successful response indicates the
-  message has been persisted to storage and a Cloud Pub/Sub notification has
-  been sent. Sending to the hospital by the MLLP adapter happens
-  asynchronously."
+  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Cloud Pub/Sub topic configured in projects.locations.datasets.hl7V2Stores.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Cloud Pub/Sub topic, the adapter transmits the message when a notification is received."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1815,155 +843,8 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/messages"
+     "v1/{+parent}/messages"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-messages-ingest$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/hl7V2Stores/messages/ingest
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:message {:labels {},
-             :messageType string,
-             :sendTime string,
-             :name string,
-             :createTime string,
-             :parsedData ParsedData,
-             :sendFacility string,
-             :patientIds [PatientId],
-             :data string}}
-  
-  Ingests a new HL7v2 message from the hospital and sends a notification to
-  the Cloud Pub/Sub topic. Return is an HL7v2 ACK message if the message was
-  successfully stored. Otherwise an error is returned."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/messages:ingest"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-annotationStores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/annotationStores/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-annotationStores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/annotationStores/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :etag string},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-annotationStores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/annotationStores/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
-     #{:resource}
      parameters)
     (merge-with
      merge
@@ -1976,7 +857,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/get
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/get
   
   Required parameters: name
   
@@ -1990,7 +871,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2002,7 +883,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/setIamPolicy
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/setIamPolicy
   
   Required parameters: resource
   
@@ -2016,10 +897,7 @@
             :etag string},
    :updateMask string}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -2027,7 +905,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
+     "v1/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -2041,7 +919,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/patch
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/patch
   
   Required parameters: name
   
@@ -2049,13 +927,15 @@
   
   Body: 
   
-  {:disableReferentialIntegrity boolean,
-   :version string,
+  {:enableUpdateCreate boolean,
+   :disableReferentialIntegrity boolean,
+   :name string,
+   :streamConfigs [{:resourceTypes [string],
+                    :bigqueryDestination GoogleCloudHealthcareV1FhirBigQueryDestination}],
    :disableResourceVersioning boolean,
-   :enableUpdateCreate boolean,
+   :version string,
    :labels {},
-   :notificationConfig {:pubsubTopic string},
-   :name string}
+   :notificationConfig {:pubsubTopic string}}
   
   Updates the configuration of the specified FHIR store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2065,7 +945,7 @@
    (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2079,7 +959,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/testIamPermissions
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/testIamPermissions
   
   Required parameters: resource
   
@@ -2089,13 +969,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -2103,7 +977,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
+     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -2117,7 +991,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/create
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/create
   
   Required parameters: parent
   
@@ -2125,13 +999,15 @@
   
   Body: 
   
-  {:disableReferentialIntegrity boolean,
-   :version string,
+  {:enableUpdateCreate boolean,
+   :disableReferentialIntegrity boolean,
+   :name string,
+   :streamConfigs [{:resourceTypes [string],
+                    :bigqueryDestination GoogleCloudHealthcareV1FhirBigQueryDestination}],
    :disableResourceVersioning boolean,
-   :enableUpdateCreate boolean,
+   :version string,
    :labels {},
-   :notificationConfig {:pubsubTopic string},
-   :name string}
+   :notificationConfig {:pubsubTopic string}}
   
   Creates a new FHIR store within the parent dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2141,7 +1017,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhirStores"
+     "v1/{+parent}/fhirStores"
      #{:parent}
      parameters)
     (merge-with
@@ -2155,7 +1031,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/delete
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/delete
   
   Required parameters: name
   
@@ -2169,7 +1045,7 @@
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2181,7 +1057,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-export$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/export
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/export
   
   Required parameters: name
   
@@ -2189,26 +1065,12 @@
   
   Body: 
   
-  {:bigqueryDestination {:datasetUri string,
-                         :schemaConfig SchemaConfig,
-                         :force boolean},
+  {:bigqueryDestination {:force boolean,
+                         :datasetUri string,
+                         :schemaConfig SchemaConfig},
    :gcsDestination {:uriPrefix string}}
   
-  Export resources from the FHIR store to the specified destination.
-  
-  This method returns an Operation that can
-  be used to track the status of the export by calling
-  GetOperation.
-  
-  Immediate fatal errors appear in the
-  error field, errors are also logged
-  to Stackdriver (see [Viewing
-  logs](/healthcare/docs/how-tos/stackdriver-logging)).
-  Otherwise, when the operation finishes, a detailed response of type
-  ExportResourcesResponse is returned in the
-  response field.
-  The metadata field type for this
-  operation is OperationMetadata."
+  Export resources from the FHIR store to the specified destination. This method returns an Operation that can be used to track the status of the export by calling GetOperation. Immediate fatal errors appear in the error field, errors are also logged to Cloud Logging (see [Viewing logs](/healthcare/docs/how-tos/logging)). Otherwise, when the operation finishes, a detailed response of type ExportResourcesResponse is returned in the response field. The metadata field type for this operation is OperationMetadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2216,7 +1078,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}:export"
+     "v1/{+name}:export"
      #{:name}
      parameters)
     (merge-with
@@ -2230,15 +1092,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/getIamPolicy
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/getIamPolicy
   
   Required parameters: resource
   
   Optional parameters: options.requestedPolicyVersion
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -2246,7 +1106,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
+     "v1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -2258,7 +1118,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-deidentify$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/deidentify
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/deidentify
   
   Required parameters: sourceStore
   
@@ -2266,24 +1126,14 @@
   
   Body: 
   
-  {:config {:image ImageConfig,
+  {:destinationStore string,
+   :config {:fhir FhirConfig,
+            :image ImageConfig,
             :text TextConfig,
-            :dicom DicomConfig,
-            :fhir FhirConfig},
-   :destinationStore string,
+            :dicom DicomConfig},
    :resourceFilter {:resources Resources}}
   
-  De-identifies data from the source store and writes it to the destination
-  store. The metadata field type
-  is OperationMetadata.
-  If the request is successful, the
-  response field type is
-  DeidentifyFhirStoreSummary. If errors occur,
-  error
-  details field type is
-  DeidentifyErrorDetails.
-  Errors are also logged to Stackdriver
-  (see [Viewing logs](/healthcare/docs/how-tos/stackdriver-logging))."
+  De-identifies data from the source store and writes it to the destination store. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifyFhirStoreSummary. If errors occur, error is set. Error details are also logged to Cloud Logging (see [Viewing logs](/healthcare/docs/how-tos/logging))."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:sourceStore})]}
@@ -2291,7 +1141,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+sourceStore}:deidentify"
+     "v1/{+sourceStore}:deidentify"
      #{:sourceStore}
      parameters)
     (merge-with
@@ -2305,11 +1155,11 @@
      auth))))
 
 (defn locations-datasets-fhirStores-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/list
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/list
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists the FHIR stores in the given dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2319,7 +1169,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhirStores"
+     "v1/{+parent}/fhirStores"
      #{:parent}
      parameters)
     (merge-with
@@ -2331,7 +1181,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-import$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/import
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/import
   
   Required parameters: name
   
@@ -2339,81 +1189,9 @@
   
   Body: 
   
-  {:gcsSource {:uri string}, :contentStructure string}
+  {:contentStructure string, :gcsSource {:uri string}}
   
-  Import resources to the FHIR store by loading data from the specified
-  sources. This method is optimized to load large quantities of data using
-  import semantics that ignore some FHIR store configuration options and are
-  not suitable for all use cases. It is primarily intended to load data into
-  an empty FHIR store that is not being used by other clients. In cases
-  where this method is not appropriate, consider using ExecuteBundle to
-  load data.
-  
-  Every resource in the input must contain a client-supplied ID, and will be
-  stored using that ID regardless of the
-  enable_update_create setting on the FHIR
-  store.
-  
-  The import process does not enforce referential integrity, regardless of
-  the
-  disable_referential_integrity
-  setting on the FHIR store. This allows the import of resources with
-  arbitrary interdependencies without considering grouping or ordering, but
-  if the input data contains invalid references or if some resources fail to
-  be imported, the FHIR store might be left in a state that violates
-  referential integrity.
-  
-  The import process does not trigger PubSub notification or BigQuery
-  streaming update, regardless of how those are configured on the FHIR store.
-  
-  If a resource with the specified ID already exists, the most recent
-  version of the resource is overwritten without creating a new historical
-  version, regardless of the
-  disable_resource_versioning
-  setting on the FHIR store. If transient failures occur during the import,
-  it is possible that successfully imported resources will be overwritten
-  more than once.
-  
-  The import operation is idempotent unless the input data contains multiple
-  valid resources with the same ID but different contents. In that case,
-  after the import completes, the store will contain exactly one resource
-  with that ID but there is no ordering guarantee on which version of the
-  contents it will have. The operation result counters do not count
-  duplicate IDs as an error and will count one success for each resource in
-  the input, which might result in a success count larger than the number
-  of resources in the FHIR store. This often occurs when importing data
-  organized in bundles produced by Patient-everything
-  where each bundle contains its own copy of a resource such as Practitioner
-  that might be referred to by many patients.
-  
-  If some resources fail to import, for example due to parsing errors,
-  successfully imported resources are not rolled back.
-  
-  The location and format of the input data is specified by the parameters
-  below. Note that if no format is specified, this method assumes the
-  `BUNDLE` format. When using the `BUNDLE` format this method ignores the
-  `Bundle.type` field, except that `history` bundles are rejected, and does
-  not apply any of the bundle processing semantics for batch or transaction
-  bundles. Unlike in ExecuteBundle, transaction bundles are not executed
-  as a single transaction and bundle-internal references are not rewritten.
-  The bundle is treated as a collection of resources to be written as
-  provided in `Bundle.entry.resource`, ignoring `Bundle.entry.request`. As
-  an example, this allows the import of `searchset` bundles produced by a
-  FHIR search or
-  Patient-everything operation.
-  
-  This method returns an Operation that can
-  be used to track the status of the import by calling
-  GetOperation.
-  
-  Immediate fatal errors appear in the
-  error field, errors are also logged
-  to Stackdriver (see [Viewing
-  logs](/healthcare/docs/how-tos/stackdriver-logging)). Otherwise, when the
-  operation finishes, a detailed response of type ImportResourcesResponse
-  is returned in the response field.
-  The metadata field type for this
-  operation is OperationMetadata."
+  Imports resources to the FHIR store by loading data from the specified sources. This method is optimized to load large quantities of data using import semantics that ignore some FHIR store configuration options and are not suitable for all use cases. It is primarily intended to load data into an empty FHIR store that is not being used by other clients. In cases where this method is not appropriate, consider using ExecuteBundle to load data. Every resource in the input must contain a client-supplied ID. Each resource is stored using the supplied ID regardless of the enable_update_create setting on the FHIR store. The import process does not enforce referential integrity, regardless of the disable_referential_integrity setting on the FHIR store. This allows the import of resources with arbitrary interdependencies without considering grouping or ordering, but if the input data contains invalid references or if some resources fail to be imported, the FHIR store might be left in a state that violates referential integrity. The import process does not trigger Pub/Sub notification or BigQuery streaming update, regardless of how those are configured on the FHIR store. If a resource with the specified ID already exists, the most recent version of the resource is overwritten without creating a new historical version, regardless of the disable_resource_versioning setting on the FHIR store. If transient failures occur during the import, it's possible that successfully imported resources will be overwritten more than once. The import operation is idempotent unless the input data contains multiple valid resources with the same ID but different contents. In that case, after the import completes, the store contains exactly one resource with that ID but there is no ordering guarantee on which version of the contents it will have. The operation result counters do not count duplicate IDs as an error and count one success for each resource in the input, which might result in a success count larger than the number of resources in the FHIR store. This often occurs when importing data organized in bundles produced by Patient-everything where each bundle contains its own copy of a resource such as Practitioner that might be referred to by many patients. If some resources fail to import, for example due to parsing errors, successfully imported resources are not rolled back. The location and format of the input data is specified by the parameters in ImportResourcesRequest. Note that if no format is specified, this method assumes the `BUNDLE` format. When using the `BUNDLE` format this method ignores the `Bundle.type` field, except that `history` bundles are rejected, and does not apply any of the bundle processing semantics for batch or transaction bundles. Unlike in ExecuteBundle, transaction bundles are not executed as a single transaction and bundle-internal references are not rewritten. The bundle is treated as a collection of resources to be written as provided in `Bundle.entry.resource`, ignoring `Bundle.entry.request`. As an example, this allows the import of `searchset` bundles produced by a FHIR search or Patient-everything operation. This method returns an Operation that can be used to track the status of the import by calling GetOperation. Immediate fatal errors appear in the error field, errors are also logged to Cloud Logging (see [Viewing logs](/healthcare/docs/how-tos/logging)). Otherwise, when the operation finishes, a detailed response of type ImportResourcesResponse is returned in the response field. The metadata field type for this operation is OperationMetadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2421,7 +1199,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}:import"
+     "v1/{+name}:import"
      #{:name}
      parameters)
     (merge-with
@@ -2435,29 +1213,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-capabilities$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/capabilities
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/capabilities
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the FHIR capability statement
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/capabilitystatement.html),
-  [R4](http://hl7.org/implement/standards/fhir/R4/capabilitystatement.html)),
-  or the [conformance
-  statement](http://hl7.org/implement/standards/fhir/DSTU2/conformance.html)
-  in the DSTU2 case for the store, which contains a description of
-  functionality supported by the server.
-  
-  Implements the FHIR standard capabilities interaction
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#capabilities),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#capabilities)),
-  or the [conformance
-  interaction](http://hl7.org/implement/standards/fhir/DSTU2/http.html#conformance)
-  in the DSTU2 case.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of a `CapabilityStatement` resource."
+  Gets the FHIR capability statement ([STU3](http://hl7.org/implement/standards/fhir/STU3/capabilitystatement.html), [R4](http://hl7.org/implement/standards/fhir/R4/capabilitystatement.html)), or the [conformance statement](http://hl7.org/implement/standards/fhir/DSTU2/conformance.html) in the DSTU2 case for the store, which contains a description of functionality supported by the server. Implements the FHIR standard capabilities interaction ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#capabilities), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#capabilities)), or the [conformance interaction](http://hl7.org/implement/standards/fhir/DSTU2/http.html#conformance) in the DSTU2 case. On success, the response body will contain a JSON-encoded representation of a `CapabilityStatement` resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2465,7 +1227,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/fhir/metadata"
+     "v1/{+name}/fhir/metadata"
      #{:name}
      parameters)
     (merge-with
@@ -2477,17 +1239,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-Resource-purge$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/Resource-purge
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/Resource-purge
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes all the historical versions of a resource (excluding the current
-  version) from the FHIR store. To remove all versions of a resource, first
-  delete the current version and then call this method.
-  
-  This is not a FHIR standard operation."
+  Deletes all the historical versions of a resource (excluding the current version) from the FHIR store. To remove all versions of a resource, first delete the current version and then call this method. This is not a FHIR standard operation. For samples that show how to call `Resource-purge`, see [Deleting historical versions of a FHIR resource](/healthcare/docs/how-tos/fhir-resources#deleting_historical_versions_of_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2495,7 +1253,7 @@
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/$purge"
+     "v1/{+name}/$purge"
      #{:name}
      parameters)
     (merge-with
@@ -2506,94 +1264,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-fhirStores-fhir-conditionalUpdate$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/conditionalUpdate
-  
-  Required parameters: type, parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:extensions [{}], :data string, :contentType string}
-  
-  If a resource is found based on the search criteria specified in the query
-  parameters, updates the entire contents of that resource.
-  
-  Implements the FHIR standard conditional update interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.10.2),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#cond-update),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#cond-update)).
-  
-  Search terms are provided as query parameters following the same pattern as
-  the search method.
-  
-  If the search criteria identify more than one match, the request will
-  return a `412 Precondition Failed` error.
-  If the search criteria identify zero matches, and the supplied resource
-  body contains an `id`, and the FHIR store has
-  enable_update_create set, creates the
-  resource with the client-specified ID. If the search criteria identify zero
-  matches, and the supplied resource body does not contain an `id`, the
-  resource will be created with a server-assigned ID as per the
-  create method.
-  
-  The request body must contain a JSON-encoded FHIR resource, and the request
-  headers must contain `Content-Type: application/fhir+json`.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the updated resource, including the server-assigned version ID.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent :type})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/{+type}"
-     #{:parent :type}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-datasets-fhirStores-fhir-read$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/read
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/read
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the contents of a FHIR resource.
-  
-  Implements the FHIR standard read interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#read),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#read),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#read)).
-  
-  Also supports the FHIR standard conditional read interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#cread),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#cread),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#cread))
-  specified by supplying an `If-Modified-Since` header with a date/time value
-  or an `If-None-Match` header with an ETag value.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the resource.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Gets the contents of a FHIR resource. Implements the FHIR standard read interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#read), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#read), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#read)). Also supports the FHIR standard conditional read interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#cread), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#cread), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#cread)) specified by supplying an `If-Modified-Since` header with a date/time value or an `If-None-Match` header with an ETag value. On success, the response body will contain a JSON-encoded representation of the resource. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `read`, see [Getting a FHIR resource](/healthcare/docs/how-tos/fhir-resources#getting_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2601,7 +1279,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2613,7 +1291,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/patch
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/patch
   
   Required parameters: name
   
@@ -2623,25 +1301,7 @@
   
   {:extensions [{}], :data string, :contentType string}
   
-  Updates part of an existing resource by applying the operations specified
-  in a [JSON Patch](http://jsonpatch.com/) document.
-  
-  Implements the FHIR standard patch interaction
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#patch),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#patch)).
-  
-  DSTU2 doesn't define a patch method, but the server supports it in the same
-  way it supports STU3.
-  
-  The request body must contain a JSON Patch document, and the request
-  headers must contain `Content-Type: application/json-patch+json`.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the updated resource, including the server-assigned version ID.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Updates part of an existing resource by applying the operations specified in a [JSON Patch](http://jsonpatch.com/) document. Implements the FHIR standard patch interaction ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#patch), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#patch)). DSTU2 doesn't define a patch method, but the server supports it in the same way it supports STU3. The request body must contain a JSON Patch document, and the request headers must contain `Content-Type: application/json-patch+json`. On success, the response body will contain a JSON-encoded representation of the updated resource, including the server-assigned version ID. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `patch`, see [Patching a FHIR resource](/healthcare/docs/how-tos/fhir-resources#patching_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2649,7 +1309,7 @@
    (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2663,7 +1323,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/create
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/create
   
   Required parameters: type, parent
   
@@ -2673,32 +1333,7 @@
   
   {:extensions [{}], :data string, :contentType string}
   
-  Creates a FHIR resource.
-  
-  Implements the FHIR standard create interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#create),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#create),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#create)),
-  which creates a new resource with a server-assigned resource ID.
-  
-  Also supports the FHIR standard conditional create interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#ccreate),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#ccreate),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#ccreate)),
-  specified by supplying an `If-None-Exist` header containing a FHIR search
-  query. If no resources match this search query, the server processes the
-  create operation as normal.
-  
-  The request body must contain a JSON-encoded FHIR resource, and the request
-  headers must contain `Content-Type: application/fhir+json`.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the resource as it was created on the server, including the
-  server-assigned resource ID and version ID.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Creates a FHIR resource. Implements the FHIR standard create interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#create), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#create), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#create)), which creates a new resource with a server-assigned resource ID. The request body must contain a JSON-encoded FHIR resource, and the request headers must contain `Content-Type: application/fhir+json`. On success, the response body will contain a JSON-encoded representation of the resource as it was created on the server, including the server-assigned resource ID and version ID. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `create`, see [Creating a FHIR resource](/healthcare/docs/how-tos/fhir-resources#creating_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent :type})]}
@@ -2706,7 +1341,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/{+type}"
+     "v1/{+parent}/fhir/{+type}"
      #{:parent :type}
      parameters)
     (merge-with
@@ -2720,27 +1355,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-history$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/history
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/history
   
   Required parameters: name
   
-  Optional parameters: _since, _at, _page_token, _count
+  Optional parameters: _page_token, _since, _count, _at
   
-  Lists all the versions of a resource (including the current version and
-  deleted versions) from the FHIR store.
-  
-  Implements the per-resource form of the FHIR standard history interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#history),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#history),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#history)).
-  
-  On success, the response body will contain a JSON-encoded representation
-  of a `Bundle` resource of type `history`, containing the version history
-  sorted from most recent to oldest versions.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Lists all the versions of a resource (including the current version and deleted versions) from the FHIR store. Implements the per-resource form of the FHIR standard history interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#history), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#history), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#history)). On success, the response body will contain a JSON-encoded representation of a `Bundle` resource of type `history`, containing the version history sorted from most recent to oldest versions. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `history`, see [Listing FHIR resource versions](/healthcare/docs/how-tos/fhir-resources#listing_fhir_resource_versions)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2748,7 +1369,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/_history"
+     "v1/{+name}/_history"
      #{:name}
      parameters)
     (merge-with
@@ -2760,7 +1381,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-update$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/update
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/update
   
   Required parameters: name
   
@@ -2770,29 +1391,7 @@
   
   {:extensions [{}], :data string, :contentType string}
   
-  Updates the entire contents of a resource.
-  
-  Implements the FHIR standard update interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#update),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#update),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#update)).
-  
-  If the specified resource does
-  not exist and the FHIR store has
-  enable_update_create set, creates the
-  resource with the client-specified ID.
-  
-  The request body must contain a JSON-encoded FHIR resource, and the request
-  headers must contain `Content-Type: application/fhir+json`. The resource
-  must contain an `id` element having an identical value to the ID in the
-  REST path of the request.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the updated resource, including the server-assigned version ID.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Updates the entire contents of a resource. Implements the FHIR standard update interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#update), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#update), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#update)). If the specified resource does not exist and the FHIR store has enable_update_create set, creates the resource with the client-specified ID. The request body must contain a JSON-encoded FHIR resource, and the request headers must contain `Content-Type: application/fhir+json`. The resource must contain an `id` element having an identical value to the ID in the REST path of the request. On success, the response body will contain a JSON-encoded representation of the updated resource, including the server-assigned version ID. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `update`, see [Updating a FHIR resource](/healthcare/docs/how-tos/fhir-resources#updating_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2800,7 +1399,7 @@
    (http/put
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2814,25 +1413,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/delete
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a FHIR resource.
-  
-  Implements the FHIR standard delete interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#delete),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#delete),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#delete)).
-  
-  Note: Unless resource versioning is disabled by setting the
-  disable_resource_versioning flag
-  on the FHIR store, the deleted resources will be moved to a history
-  repository that can still be retrieved through vread
-  and related methods, unless they are removed by the
-  purge method."
+  Deletes a FHIR resource. Implements the FHIR standard delete interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#delete), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#delete), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#delete)). Note: Unless resource versioning is disabled by setting the disable_resource_versioning flag on the FHIR store, the deleted resources will be moved to a history repository that can still be retrieved through vread and related methods, unless they are removed by the purge method. For samples that show how to call `delete`, see [Deleting a FHIR resource](/healthcare/docs/how-tos/fhir-resources#deleting_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2840,7 +1427,7 @@
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2852,19 +1439,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-Patient-everything$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/Patient-everything
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/Patient-everything
   
   Required parameters: name
   
-  Optional parameters: start, _page_token, end, _count
+  Optional parameters: _count, _page_token, _type, _since, end, start
   
-  On success, the response body will contain a JSON-encoded representation
-  of a `Bundle` resource of type `searchset`, containing the results of the
-  operation.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Retrieves a Patient resource and resources related to that patient. Implements the FHIR extended operation Patient-everything ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/patient-operations.html#everything), [STU3](http://hl7.org/implement/standards/fhir/STU3/patient-operations.html#everything), [R4](http://hl7.org/implement/standards/fhir/R4/patient-operations.html#everything)). On success, the response body will contain a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the operation. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The resources in scope for the response are: * The patient resource itself. * All the resources directly referenced by the patient resource. * Resources directly referencing the patient resource that meet the inclusion criteria. The inclusion criteria are based on the membership rules in the patient compartment definition ([DSTU2](http://hl7.org/fhir/DSTU2/compartment-patient.html), [STU3](http://www.hl7.org/fhir/stu3/compartmentdefinition-patient.html), [R4](http://hl7.org/fhir/R4/compartmentdefinition-patient.html)), which details the eligible resource types and referencing search parameters. For samples that show how to call `Patient-everything`, see [Getting all patient compartment resources](/healthcare/docs/how-tos/fhir-resources#getting_all_patient_compartment_resources)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -2872,7 +1453,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}/$everything"
+     "v1/{+name}/$everything"
      #{:name}
      parameters)
     (merge-with
@@ -2884,7 +1465,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-search$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/search
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/search
   
   Required parameters: parent
   
@@ -2894,65 +1475,7 @@
   
   {:resourceType string}
   
-  Searches for resources in the given FHIR store according to criteria
-  specified as query parameters.
-  
-  Implements the FHIR standard search interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search))
-  using the search semantics described in the FHIR Search specification
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html),
-  [R4](http://hl7.org/implement/standards/fhir/R4/search.html)).
-  
-  Supports three methods of search defined by the specification:
-  
-  *  `GET [base]?[parameters]` to search across all resources.
-  *  `GET [base]/[type]?[parameters]` to search resources of a specified
-  type.
-  *  `POST [base]/[type]/_search?[parameters]` as an alternate form having
-  the same semantics as the `GET` method.
-  
-  The `GET` methods do not support compartment searches. The `POST` method
-  does not support `application/x-www-form-urlencoded` search parameters.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of a `Bundle` resource of type `searchset`, containing the results of the
-  search.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead.
-  
-  The server's capability statement, retrieved through
-  capabilities, indicates what search parameters
-  are supported on each FHIR resource. A list of all search parameters
-  defined by the specification can be found in the FHIR Search Parameter
-  Registry
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html),
-  [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)).
-  FHIR search parameters for DSTU2 can be found on each resource's definition
-  page.
-  
-  Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`,
-  `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`.
-  
-  Supported search result parameters: `_sort`, `_count`, `_include`,
-  `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`.
-  
-  The maximum number of search results returned defaults to 100, which can
-  be overridden by the `_count` parameter up to a maximum limit of 1000. If
-  there are additional results, the returned `Bundle` will contain
-  pagination links.
-  
-  Resources with a total size larger than 5MB or a field count larger than
-  50,000 might not be fully searchable as the server might trim its generated
-  search index in those cases.
-  
-  Note: FHIR resources are indexed asynchronously, so there might be a slight
-  delay between the time a resource is created or changes and when the change
-  is reflected in search results."
+  Searches for resources in the given FHIR store according to criteria specified as query parameters. Implements the FHIR standard search interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search)) using the search semantics described in the FHIR Search specification ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html), [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html), [R4](http://hl7.org/implement/standards/fhir/R4/search.html)). Supports three methods of search defined by the specification: * `GET [base]?[parameters]` to search across all resources. * `GET [base]/[type]?[parameters]` to search resources of a specified type. * `POST [base]/[type]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method. The `GET` methods do not support compartment searches. The `POST` method does not support `application/x-www-form-urlencoded` search parameters. On success, the response body will contain a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the search. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The server's capability statement, retrieved through capabilities, indicates what search parameters are supported on each FHIR resource. A list of all search parameters defined by the specification can be found in the FHIR Search Parameter Registry ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html), [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)). FHIR search parameters for DSTU2 can be found on each resource's definition page. Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`, `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`. Supported search result parameters: `_sort`, `_count`, `_include`, `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`. The maximum number of search results returned defaults to 100, which can be overridden by the `_count` parameter up to a maximum limit of 1000. If there are additional results, the returned `Bundle` will contain pagination links. Resources with a total size larger than 5MB or a field count larger than 50,000 might not be fully searchable as the server might trim its generated search index in those cases. Note: FHIR resources are indexed asynchronously, so there might be a slight delay between the time a resource is created or changes and when the change is reflected in search results. For samples and detailed information, see [Searching for FHIR resources](/healthcare/docs/how-tos/fhir-search) and [Advanced FHIR search features](/healthcare/docs/how-tos/fhir-advanced-search)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -2960,7 +1483,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/_search"
+     "v1/{+parent}/fhir/_search"
      #{:parent}
      parameters)
     (merge-with
@@ -2974,7 +1497,7 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-executeBundle$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/executeBundle
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/executeBundle
   
   Required parameters: parent
   
@@ -2984,35 +1507,7 @@
   
   {:extensions [{}], :data string, :contentType string}
   
-  Executes all the requests in the given Bundle.
-  
-  Implements the FHIR standard batch/transaction interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#transaction),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#transaction),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#transaction)).
-  
-  Supports all interactions within a bundle, except search. This method
-  accepts Bundles of type `batch` and `transaction`, processing them
-  according to the batch processing rules
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.1),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.1),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#brules))
-  and transaction processing rules
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.2),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.2),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#trules)).
-  
-  The request body must contain a JSON-encoded FHIR `Bundle` resource, and
-  the request headers must contain `Content-Type: application/fhir+json`.
-  
-  For a batch bundle or a successful transaction the response body will
-  contain a JSON-encoded representation of a `Bundle` resource of type
-  `batch-response` or `transaction-response` containing one entry for each
-  entry in the request, with the outcome of processing the entry. In the
-  case of an error for a transaction bundle, the response body will contain
-  a JSON-encoded `OperationOutcome` resource describing the reason for the
-  error. If the request cannot be mapped to a valid API method on a FHIR
-  store, a generic GCP error might be returned instead."
+  Executes all the requests in the given Bundle. Implements the FHIR standard batch/transaction interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#transaction), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#transaction), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#transaction)). Supports all interactions within a bundle, except search. This method accepts Bundles of type `batch` and `transaction`, processing them according to the batch processing rules ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.1), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.1), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#brules)) and transaction processing rules ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.2), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.2), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#trules)). The request body must contain a JSON-encoded FHIR `Bundle` resource, and the request headers must contain `Content-Type: application/fhir+json`. For a batch bundle or a successful transaction the response body will contain a JSON-encoded representation of a `Bundle` resource of type `batch-response` or `transaction-response` containing one entry for each entry in the request, with the outcome of processing the entry. In the case of an error for a transaction bundle, the response body will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `executeBundle`, see [Managing FHIR resources using FHIR bundles](/healthcare/docs/how-tos/fhir-bundles)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -3020,7 +1515,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir"
+     "v1/{+parent}/fhir"
      #{:parent}
      parameters)
     (merge-with
@@ -3034,26 +1529,13 @@
      auth))))
 
 (defn locations-datasets-fhirStores-fhir-vread$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/vread
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/fhirStores/fhir/vread
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the contents of a version (current or historical) of a FHIR resource
-  by version ID.
-  
-  Implements the FHIR standard vread interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#vread),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#vread),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#vread)).
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the resource.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Gets the contents of a version (current or historical) of a FHIR resource by version ID. Implements the FHIR standard vread interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#vread), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#vread), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#vread)). On success, the response body will contain a JSON-encoded representation of the resource. Errors generated by the FHIR store will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `vread`, see [Retrieving a FHIR resource version](/healthcare/docs/how-tos/fhir-resources#retrieving_a_fhir_resource_version)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -3061,7 +1543,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -3072,58 +1554,23 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-fhirStores-fhir-Observation-lastn$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/Observation-lastn
+(defn locations-datasets-dicomStores-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/get
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
-  Retrieves the N most recent `Observation` resources for a subject matching
-  search criteria specified as query parameters, grouped by
-  `Observation.code`, sorted from most recent to oldest.
-  
-  Implements the FHIR extended operation Observation-lastn
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/observation-operations.html#lastn),
-  [R4](http://hl7.org/implement/standards/fhir/R4/observation-operations.html#lastn)).
-  
-  DSTU2 doesn't define the Observation-lastn method, but the server supports
-  it the same way it supports STU3.
-  
-  Search terms are provided as query parameters following the same pattern as
-  the search method. The following search parameters must
-  be provided:
-  
-      - `subject` or `patient` to specify a subject for the Observation.
-      - `code`, `category` or any of the composite parameters that include
-        `code`.
-  
-  Any other valid Observation search parameters can also be provided. This
-  operation accepts an additional query parameter `max`, which specifies N,
-  the maximum number of Observations to return from each group, with a
-  default of 1.
-  
-  Searches with over 1000 results are rejected. Results are counted before
-  grouping and limiting the results with `max`. To stay within the limit,
-  constrain these searches using Observation search parameters such as
-  `_lastUpdated` or `date`.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of a `Bundle` resource of type `searchset`, containing the results of the
-  operation.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Gets the specified DICOM store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/Observation/$lastn"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -3133,52 +1580,57 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-fhirStores-fhir-conditionalPatch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/conditionalPatch
+(defn locations-datasets-dicomStores-searchForSeries$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/searchForSeries
   
-  Required parameters: type, parent
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  SearchForSeries returns a list of matching series. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForSeries, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForSeries, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-setIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/setIamPolicy
+  
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {:extensions [{}], :data string, :contentType string}
+  {:policy {:version integer,
+            :auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :etag string},
+   :updateMask string}
   
-  If a resource is found based on the search criteria specified in the query
-  parameters, updates part of that resource by applying the operations
-  specified in a [JSON Patch](http://jsonpatch.com/) document.
-  
-  Implements the FHIR standard conditional patch interaction
-  ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#patch),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#patch)).
-  
-  DSTU2 doesn't define a conditional patch method, but the server supports it
-  in the same way it supports STU3.
-  
-  Search terms are provided as query parameters following the same pattern as
-  the search method.
-  
-  If the search criteria identify more than one match, the request will
-  return a `412 Precondition Failed` error.
-  
-  The request body must contain a JSON Patch document, and the request
-  headers must contain `Content-Type: application/json-patch+json`.
-  
-  On success, the response body will contain a JSON-encoded representation
-  of the updated resource, including the server-assigned version ID.
-  Errors generated by the FHIR store will contain a JSON-encoded
-  `OperationOutcome` resource describing the reason for the error. If the
-  request cannot be mapped to a valid API method on a FHIR store, a generic
-  GCP error might be returned instead."
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent :type})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/{+type}"
-     #{:parent :type}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -3190,39 +1642,779 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-fhirStores-fhir-conditionalDelete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1beta1/projects/locations/datasets/fhirStores/fhir/conditionalDelete
+(defn locations-datasets-dicomStores-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/patch
   
-  Required parameters: parent, type
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:notificationConfig {:pubsubTopic string}, :labels {}, :name string}
+  
+  Updates the specified DICOM store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-testIamPermissions$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/testIamPermissions
+  
+  Required parameters: resource
   
   Optional parameters: none
   
-  Deletes FHIR resources that match a search query.
+  Body: 
   
-  Implements the FHIR standard conditional delete interaction
-  ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.12.1),
-  [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.13.1),
-  [R4](http://hl7.org/implement/standards/fhir/R4/http.html#3.1.0.7.1)).
-  If multiple resources match, all of them will be deleted.
+  {:permissions [string]}
   
-  Search terms are provided as query parameters following the same pattern as
-  the search method.
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/create
   
-  Note: Unless resource versioning is disabled by setting the
-  disable_resource_versioning flag
-  on the FHIR store, the deleted resources will be moved to a history
-  repository that can still be retrieved through vread
-  and related methods, unless they are removed by the
-  purge method."
+  Required parameters: parent
+  
+  Optional parameters: dicomStoreId
+  
+  Body: 
+  
+  {:notificationConfig {:pubsubTopic string}, :labels {}, :name string}
+  
+  Creates a new DICOM store within the parent dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomStores"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified DICOM store and removes all images that are contained within it."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :type})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1beta1/{+parent}/fhir/{+type}"
-     #{:parent :type}
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-searchForStudies$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/searchForStudies
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  SearchForStudies returns a list of matching studies. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForStudies, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForStudies, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-export$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/export
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:gcsDestination {:uriPrefix string, :mimeType string},
+   :bigqueryDestination {:tableUri string, :force boolean}}
+  
+  Exports data to the specified destination by copying it from the DICOM store. Errors are also logged to Cloud Logging. For more information, see [Viewing logs](/healthcare/docs/how-tos/logging). The metadata field type is OperationMetadata."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:export"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-getIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-searchForInstances$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/searchForInstances
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  SearchForInstances returns a list of matching instances. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForInstances, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForInstances, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-deidentify$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/deidentify
+  
+  Required parameters: sourceStore
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:config {:fhir FhirConfig,
+            :image ImageConfig,
+            :text TextConfig,
+            :dicom DicomConfig},
+   :filterConfig {:resourcePathsGcsUri string},
+   :destinationStore string}
+  
+  De-identifies data from the source store and writes it to the destination store. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifyDicomStoreSummary. If errors occur, error is set. The LRO result may still be successful if de-identification fails for some DICOM instances. The output DICOM store will not contain these failed resources. Failed resource totals are tracked in Operation.metadata. Error details are also logged to Cloud Logging (see [Viewing logs](/healthcare/docs/how-tos/logging))."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sourceStore})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+sourceStore}:deidentify"
+     #{:sourceStore}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists the DICOM stores in the given dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomStores"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-import$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/import
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:gcsSource {:uri string}}
+  
+  Imports data into the DICOM store by copying it from the specified source. Errors are logged to Cloud Logging. For more information, see [Viewing logs](/healthcare/docs/how-tos/logging). The metadata field type is OperationMetadata."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:import"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-storeInstances$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/storeInstances
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:extensions [{}], :data string, :contentType string}
+  
+  StoreInstances stores DICOM instances associated with study instance unique identifiers (SUID). See [Store Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5). For details on the implementation of StoreInstances, see [Store transaction](https://cloud.google.com/healthcare/docs/dicom#store_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call StoreInstances, see [Storing DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#storing_dicom_data)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-searchForSeries$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/searchForSeries
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  SearchForSeries returns a list of matching series. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForSeries, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForSeries, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-searchForInstances$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/searchForInstances
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  SearchForInstances returns a list of matching instances. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForInstances, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForInstances, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/delete
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  DeleteStudy deletes all instances within the given study. Delete requests are equivalent to the GET requests specified in the Retrieve transaction. The method returns an Operation which will be marked successful when the deletion is complete. Warning: Inserting instances into a study while a delete operation is running for that study could result in the new instances not appearing in search results until the deletion operation finishes. For samples that show how to call DeleteStudy, see [Deleting a study, series, or instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#deleting_a_study_series_or_instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-retrieveMetadata$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveMetadata
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveStudyMetadata returns instance associated with the given study presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudyMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudyMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-storeInstances$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/storeInstances
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:extensions [{}], :data string, :contentType string}
+  
+  StoreInstances stores DICOM instances associated with study instance unique identifiers (SUID). See [Store Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5). For details on the implementation of StoreInstances, see [Store transaction](https://cloud.google.com/healthcare/docs/dicom#store_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call StoreInstances, see [Storing DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#storing_dicom_data)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-retrieveStudy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveStudy
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveStudy returns all instances within the given study. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudy, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudy, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-searchForInstances$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/searchForInstances
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  SearchForInstances returns a list of matching instances. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForInstances, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForInstances, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-retrieveSeries$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/retrieveSeries
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveSeries returns all instances within the given study and series. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveSeries, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveSeries, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-retrieveMetadata$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/retrieveMetadata
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveSeriesMetadata returns instance associated with the given study and series, presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveSeriesMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveSeriesMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/delete
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  DeleteSeries deletes all instances within the given study and series. Delete requests are equivalent to the GET requests specified in the Retrieve transaction. The method returns an Operation which will be marked successful when the deletion is complete. Warning: Inserting instances into a series while a delete operation is running for that series could result in the new instances not appearing in search results until the deletion operation finishes. For samples that show how to call DeleteSeries, see [Deleting a study, series, or instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#deleting_a_study_series_or_instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/delete
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  DeleteInstance deletes an instance associated with the given study, series, and SOP Instance UID. Delete requests are equivalent to the GET requests specified in the Retrieve transaction. Study and series search results can take a few seconds to be updated after an instance is deleted using DeleteInstance. For samples that show how to call DeleteInstance, see [Deleting a study, series, or instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#deleting_a_study_series_or_instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveMetadata
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  RetrieveInstanceMetadata returns instance associated with the given study, series, and SOP Instance UID presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstanceMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstanceMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveRendered$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveRendered
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  RetrieveRenderedInstance returns instance associated with the given study, series, and SOP Instance UID in an acceptable Rendered Media Type. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveRenderedInstance, see [Rendered resources](https://cloud.google.com/healthcare/docs/dicom#rendered_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveRenderedInstance, see [Retrieving consumer image formats](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_consumer_image_formats)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveInstance$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveInstance
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveInstance returns instance associated with the given study, series, and SOP Instance UID. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstance, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) and [DICOM instances](https://cloud.google.com/healthcare/docs/dicom#dicom_instances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstance, see [Retrieving an instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_an_instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveFrames$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveFrames
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  RetrieveFrames returns instances associated with the given study, series, SOP Instance UID and frame numbers. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4}. For details on the implementation of RetrieveFrames, see [DICOM frames](https://cloud.google.com/healthcare/docs/dicom#dicom_frames) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveFrames, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveRendered$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveRendered
+  
+  Required parameters: dicomWebPath, parent
+  
+  Optional parameters: none
+  
+  RetrieveRenderedFrames returns instances associated with the given study, series, SOP Instance UID and frame numbers in an acceptable Rendered Media Type. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveRenderedFrames, see [Rendered resources](https://cloud.google.com/healthcare/docs/dicom#rendered_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveRenderedFrames, see [Retrieving consumer image formats](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_consumer_image_formats)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
      parameters)
     (merge-with
      merge

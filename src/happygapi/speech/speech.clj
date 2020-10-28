@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn longrunningrecognize$
-  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/longrunningrecognize
+(defn recognize$
+  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/recognize
   
   Required parameters: none
   
@@ -15,7 +15,8 @@
   
   Body: 
   
-  {:config {:encoding string,
+  {:audio {:uri string, :content string},
+   :config {:encoding string,
             :maxAlternatives integer,
             :enableAutomaticPunctuation boolean,
             :enableWordTimeOffsets boolean,
@@ -28,15 +29,9 @@
             :metadata RecognitionMetadata,
             :useEnhanced boolean,
             :diarizationConfig SpeakerDiarizationConfig,
-            :model string},
-   :audio {:content string, :uri string}}
+            :model string}}
   
-  Performs asynchronous speech recognition: receive results via the
-  google.longrunning.Operations interface. Returns either an
-  `Operation.error` or an `Operation.response` which contains
-  a `LongRunningRecognizeResponse` message.
-  For more information on asynchronous speech recognition, see the
-  [how-to](https://cloud.google.com/speech-to-text/docs/async-recognize)."
+  Performs synchronous speech recognition: receive results after all audio has been sent and processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -44,7 +39,7 @@
    (http/post
     (util/get-url
      "https://speech.googleapis.com/"
-     "v1/speech:longrunningrecognize"
+     "v1/speech:recognize"
      #{}
      parameters)
     (merge-with
@@ -57,8 +52,8 @@
       :as :json}
      auth))))
 
-(defn recognize$
-  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/recognize
+(defn longrunningrecognize$
+  "https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech/longrunningrecognize
   
   Required parameters: none
   
@@ -66,7 +61,8 @@
   
   Body: 
   
-  {:config {:encoding string,
+  {:audio {:uri string, :content string},
+   :config {:encoding string,
             :maxAlternatives integer,
             :enableAutomaticPunctuation boolean,
             :enableWordTimeOffsets boolean,
@@ -79,11 +75,9 @@
             :metadata RecognitionMetadata,
             :useEnhanced boolean,
             :diarizationConfig SpeakerDiarizationConfig,
-            :model string},
-   :audio {:content string, :uri string}}
+            :model string}}
   
-  Performs synchronous speech recognition: receive results after all audio
-  has been sent and processed."
+  Performs asynchronous speech recognition: receive results via the google.longrunning.Operations interface. Returns either an `Operation.error` or an `Operation.response` which contains a `LongRunningRecognizeResponse` message. For more information on asynchronous speech recognition, see the [how-to](https://cloud.google.com/speech-to-text/docs/async-recognize)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -91,7 +85,7 @@
    (http/post
     (util/get-url
      "https://speech.googleapis.com/"
-     "v1/speech:recognize"
+     "v1/speech:longrunningrecognize"
      #{}
      parameters)
     (merge-with

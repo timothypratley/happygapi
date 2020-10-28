@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of addresses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -143,7 +143,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of addresses contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

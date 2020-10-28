@@ -1,6 +1,6 @@
 (ns happygapi.androidpublisher.systemapks
-  "Google Play Developer API: systemapks.
-  Accesses Android application developers' Google Play accounts.
+  "Google Play Android Developer API: systemapks.
+  Lets Android application developers access their Google Play accounts.
   See: https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -9,25 +9,26 @@
 (defn variants-create$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/create
   
-  Required parameters: packageName, versionCode
+  Required parameters: versionCode, packageName
   
   Optional parameters: none
   
   Body: 
   
-  {:deviceSpec {:screenDensity integer,
+  {:deviceSpec {:supportedLocales [string],
                 :supportedAbis [string],
-                :supportedLocales [string]}}
+                :screenDensity integer},
+   :variantId integer}
   
-  Creates a new variant of APK which is suitable for inclusion in a system image."
+  Creates an APK which is suitable for inclusion in a system image from an already uploaded Android App Bundle."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/androidpublisher/v3/applications/"
-     "{packageName}/systemApks/{versionCode}/variants"
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants"
      #{:packageName :versionCode}
      parameters)
     (merge-with
@@ -40,25 +41,23 @@
       :as :json}
      auth))))
 
-(defn variants-download$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/download
+(defn variants-list$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/list
   
-  Required parameters: packageName, variantId, versionCode
+  Required parameters: versionCode, packageName
   
   Optional parameters: none
   
-  Download a previously created APK which is suitable for inclusion in a system image."
+  Returns the list of previously created system APK variants."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:variantId :packageName :versionCode})]}
+  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidpublisher/v3/applications/"
-     "{packageName}/systemApks/{versionCode}/variants/{variantId}:download"
-     #{:variantId :packageName :versionCode}
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants"
+     #{:packageName :versionCode}
      parameters)
     (merge-with
      merge
@@ -71,7 +70,7 @@
 (defn variants-get$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/get
   
-  Required parameters: packageName, variantId, versionCode
+  Required parameters: versionCode, packageName, variantId
   
   Optional parameters: none
   
@@ -84,8 +83,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidpublisher/v3/applications/"
-     "{packageName}/systemApks/{versionCode}/variants/{variantId}"
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants/{variantId}"
      #{:variantId :packageName :versionCode}
      parameters)
     (merge-with
@@ -96,23 +95,25 @@
       :as :json}
      auth))))
 
-(defn variants-list$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/list
+(defn variants-download$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/download
   
-  Required parameters: packageName, versionCode
+  Required parameters: variantId, versionCode, packageName
   
   Optional parameters: none
   
-  Returns the list of previously created system APK variants."
+  Downloads a previously created system APK which is suitable for inclusion in a system image."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:variantId :packageName :versionCode})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidpublisher/v3/applications/"
-     "{packageName}/systemApks/{versionCode}/variants"
-     #{:packageName :versionCode}
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants/{variantId}:download"
+     #{:variantId :packageName :versionCode}
      parameters)
     (merge-with
      merge

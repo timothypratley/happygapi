@@ -6,314 +6,27 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn triggers-patch$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/patch
-  
-  Required parameters: triggerId, projectId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :tags [string],
-   :github {:pullRequest PullRequestFilter,
-            :push PushFilter,
-            :installationId string,
-            :owner string,
-            :name string},
-   :disabled boolean,
-   :name string,
-   :createTime string,
-   :ignoredFiles [string],
-   :substitutions {},
-   :includedFiles [string],
-   :filename string,
-   :build {:tags [string],
-           :statusDetail string,
-           :logsBucket string,
-           :startTime string,
-           :buildTriggerId string,
-           :images [string],
-           :secrets [Secret],
-           :steps [BuildStep],
-           :createTime string,
-           :substitutions {},
-           :source Source,
-           :logUrl string,
-           :finishTime string,
-           :status string,
-           :id string,
-           :timing {},
-           :queueTtl string,
-           :sourceProvenance SourceProvenance,
-           :projectId string,
-           :options BuildOptions,
-           :timeout string,
-           :artifacts Artifacts,
-           :results Results},
-   :id string,
-   :triggerTemplate {:repoName string,
-                     :projectId string,
-                     :commitSha string,
-                     :substitutions {},
-                     :invertRegex boolean,
-                     :dir string,
-                     :branchName string,
-                     :tagName string}}
-  
-  Updates a `BuildTrigger` by its project ID and trigger ID.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{:triggerId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-get$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/get
-  
-  Required parameters: triggerId, projectId
-  
-  Optional parameters: none
-  
-  Returns information about a `BuildTrigger`.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{:triggerId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-delete$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/delete
-  
-  Required parameters: triggerId, projectId
-  
-  Optional parameters: none
-  
-  Deletes a `BuildTrigger` by its project ID and trigger ID.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}"
-     #{:triggerId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-list$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/list
-  
-  Required parameters: projectId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists existing `BuildTrigger`s.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-create$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/create
-  
-  Required parameters: projectId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :tags [string],
-   :github {:pullRequest PullRequestFilter,
-            :push PushFilter,
-            :installationId string,
-            :owner string,
-            :name string},
-   :disabled boolean,
-   :name string,
-   :createTime string,
-   :ignoredFiles [string],
-   :substitutions {},
-   :includedFiles [string],
-   :filename string,
-   :build {:tags [string],
-           :statusDetail string,
-           :logsBucket string,
-           :startTime string,
-           :buildTriggerId string,
-           :images [string],
-           :secrets [Secret],
-           :steps [BuildStep],
-           :createTime string,
-           :substitutions {},
-           :source Source,
-           :logUrl string,
-           :finishTime string,
-           :status string,
-           :id string,
-           :timing {},
-           :queueTtl string,
-           :sourceProvenance SourceProvenance,
-           :projectId string,
-           :options BuildOptions,
-           :timeout string,
-           :artifacts Artifacts,
-           :results Results},
-   :id string,
-   :triggerTemplate {:repoName string,
-                     :projectId string,
-                     :commitSha string,
-                     :substitutions {},
-                     :invertRegex boolean,
-                     :dir string,
-                     :branchName string,
-                     :tagName string}}
-  
-  Creates a new `BuildTrigger`.
-  
-  This API is experimental."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn triggers-run$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/run
-  
-  Required parameters: projectId, triggerId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:repoName string,
-   :projectId string,
-   :commitSha string,
-   :substitutions {},
-   :invertRegex boolean,
-   :dir string,
-   :branchName string,
-   :tagName string}
-  
-  Runs a `BuildTrigger` at a particular source revision."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/triggers/{triggerId}:run"
-     #{:triggerId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn builds-cancel$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/cancel
+(defn builds-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/get
   
   Required parameters: projectId, id
   
-  Optional parameters: none
+  Optional parameters: name
   
-  Body: 
-  
-  {}
-  
-  Cancels a build in progress."
+  Returns information about a previously requested build. The `Build` that is returned includes its status (such as `SUCCESS`, `FAILURE`, or `WORKING`), and timing information."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:id :projectId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/builds/{id}:cancel"
+     "v1/projects/{projectId}/builds/{id}"
      #{:id :projectId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -322,41 +35,15 @@
 (defn builds-retry$
   "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/retry
   
-  Required parameters: id, projectId
+  Required parameters: projectId, id
   
   Optional parameters: none
   
   Body: 
   
-  {}
+  {:id string, :projectId string, :name string}
   
-  Creates a new build based on the specified build.
-  
-  This method creates a new build using the original build request, which may
-  or may not result in an identical build.
-  
-  For triggered builds:
-  
-  * Triggered builds resolve to a precise revision; therefore a retry of a
-  triggered build will result in a build that uses the same revision.
-  
-  For non-triggered builds that specify `RepoSource`:
-  
-  * If the original build built from the tip of a branch, the retried build
-  will build from the tip of that branch, which may not be the same revision
-  as the original build.
-  * If the original build specified a commit sha or revision ID, the retried
-  build will use the identical source.
-  
-  For builds that specify `StorageSource`:
-  
-  * If the original build pulled source from Google Cloud Storage without
-  specifying the generation of the object, the new build will use the current
-  object, which may be different from the original build source.
-  * If the original build pulled source from Cloud Storage and specified the
-  generation of the object, the new build will attempt to use the same
-  object, which may or may not be available depending on the bucket's
-  lifecycle management settings."
+  Creates a new build based on the specified build. This method creates a new build using the original build request, which may or may not result in an identical build. For triggered builds: * Triggered builds resolve to a precise revision; therefore a retry of a triggered build will result in a build that uses the same revision. For non-triggered builds that specify `RepoSource`: * If the original build built from the tip of a branch, the retried build will build from the tip of that branch, which may not be the same revision as the original build. * If the original build specified a commit sha or revision ID, the retried build will use the identical source. For builds that specify `StorageSource`: * If the original build pulled source from Google Cloud Storage without specifying the generation of the object, the new build will use the current object, which may be different from the original build source. * If the original build pulled source from Cloud Storage and specified the generation of the object, the new build will attempt to use the same object, which may or may not be available depending on the bucket's lifecycle management settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:id :projectId})]}
@@ -377,80 +64,24 @@
       :as :json}
      auth))))
 
-(defn builds-get$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/get
-  
-  Required parameters: projectId, id
-  
-  Optional parameters: none
-  
-  Returns information about a previously requested build.
-  
-  The `Build` that is returned includes its status (such as `SUCCESS`,
-  `FAILURE`, or `WORKING`), and timing information."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/builds/{id}"
-     #{:id :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn builds-list$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/list
-  
-  Required parameters: projectId
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists previously requested builds.
-  
-  Previously requested builds may still be in-progress, or may have finished
-  successfully or unsuccessfully."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v1/projects/{projectId}/builds"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn builds-create$
   "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/create
   
   Required parameters: projectId
   
-  Optional parameters: none
+  Optional parameters: parent
   
   Body: 
   
-  {:tags [string],
+  {:serviceAccount string,
+   :tags [string],
    :statusDetail string,
    :logsBucket string,
    :startTime string,
    :buildTriggerId string,
    :images [string],
    :secrets [{:kmsKeyName string, :secretEnv {}}],
+   :name string,
    :steps [{:args [string],
             :waitFor [string],
             :dir string,
@@ -473,11 +104,12 @@
    :id string,
    :timing {},
    :queueTtl string,
-   :sourceProvenance {:resolvedRepoSource RepoSource,
-                      :resolvedStorageSource StorageSource,
-                      :fileHashes {}},
+   :sourceProvenance {:fileHashes {},
+                      :resolvedRepoSource RepoSource,
+                      :resolvedStorageSource StorageSource},
    :projectId string,
-   :options {:sourceProvenanceHash [string],
+   :options {:dynamicSubstitutions boolean,
+             :sourceProvenanceHash [string],
              :machineType string,
              :env [string],
              :volumes [Volume],
@@ -490,18 +122,14 @@
              :requestedVerifyOption string},
    :timeout string,
    :artifacts {:images [string], :objects ArtifactObjects},
-   :results {:artifactTiming TimeSpan,
-             :buildStepOutputs [string],
+   :results {:buildStepImages [string],
+             :artifactTiming TimeSpan,
              :images [BuiltImage],
              :numArtifacts string,
-             :artifactManifest string,
-             :buildStepImages [string]}}
+             :buildStepOutputs [string],
+             :artifactManifest string}}
   
-  Starts a build with the specified configuration.
-  
-  This method returns a long-running `Operation`, which includes the build
-  ID. Pass the build ID to `GetBuild` to determine the build status (such as
-  `SUCCESS` or `FAILURE`)."
+  Starts a build with the specified configuration. This method returns a long-running `Operation`, which includes the build ID. Pass the build ID to `GetBuild` to determine the build status (such as `SUCCESS` or `FAILURE`)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:projectId})]}
@@ -511,6 +139,599 @@
      "https://cloudbuild.googleapis.com/"
      "v1/projects/{projectId}/builds"
      #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn builds-list$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/list
+  
+  Required parameters: projectId
+  
+  Optional parameters: pageSize, pageToken, parent, filter
+  
+  Lists previously requested builds. Previously requested builds may still be in-progress, or may have finished successfully or unsuccessfully."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/builds"
+     #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn builds-cancel$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/builds/cancel
+  
+  Required parameters: id, projectId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :projectId string, :name string}
+  
+  Cancels a build in progress."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/builds/{id}:cancel"
+     #{:id :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-list$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/list
+  
+  Required parameters: projectId
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists existing `BuildTrigger`s. This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers"
+     #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-patch$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/patch
+  
+  Required parameters: projectId, triggerId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :tags [string],
+   :github {:owner string,
+            :installationId string,
+            :name string,
+            :pullRequest PullRequestFilter,
+            :push PushFilter},
+   :disabled boolean,
+   :name string,
+   :createTime string,
+   :ignoredFiles [string],
+   :substitutions {},
+   :includedFiles [string],
+   :filename string,
+   :build {:serviceAccount string,
+           :tags [string],
+           :statusDetail string,
+           :logsBucket string,
+           :startTime string,
+           :buildTriggerId string,
+           :images [string],
+           :secrets [Secret],
+           :name string,
+           :steps [BuildStep],
+           :createTime string,
+           :substitutions {},
+           :source Source,
+           :logUrl string,
+           :finishTime string,
+           :status string,
+           :id string,
+           :timing {},
+           :queueTtl string,
+           :sourceProvenance SourceProvenance,
+           :projectId string,
+           :options BuildOptions,
+           :timeout string,
+           :artifacts Artifacts,
+           :results Results},
+   :id string,
+   :triggerTemplate {:tagName string,
+                     :dir string,
+                     :substitutions {},
+                     :repoName string,
+                     :projectId string,
+                     :invertRegex boolean,
+                     :branchName string,
+                     :commitSha string}}
+  
+  Updates a `BuildTrigger` by its project ID and trigger ID. This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{:triggerId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-create$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/create
+  
+  Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :tags [string],
+   :github {:owner string,
+            :installationId string,
+            :name string,
+            :pullRequest PullRequestFilter,
+            :push PushFilter},
+   :disabled boolean,
+   :name string,
+   :createTime string,
+   :ignoredFiles [string],
+   :substitutions {},
+   :includedFiles [string],
+   :filename string,
+   :build {:serviceAccount string,
+           :tags [string],
+           :statusDetail string,
+           :logsBucket string,
+           :startTime string,
+           :buildTriggerId string,
+           :images [string],
+           :secrets [Secret],
+           :name string,
+           :steps [BuildStep],
+           :createTime string,
+           :substitutions {},
+           :source Source,
+           :logUrl string,
+           :finishTime string,
+           :status string,
+           :id string,
+           :timing {},
+           :queueTtl string,
+           :sourceProvenance SourceProvenance,
+           :projectId string,
+           :options BuildOptions,
+           :timeout string,
+           :artifacts Artifacts,
+           :results Results},
+   :id string,
+   :triggerTemplate {:tagName string,
+                     :dir string,
+                     :substitutions {},
+                     :repoName string,
+                     :projectId string,
+                     :invertRegex boolean,
+                     :branchName string,
+                     :commitSha string}}
+  
+  Creates a new `BuildTrigger`. This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers"
+     #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/get
+  
+  Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Returns information about a `BuildTrigger`. This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{:triggerId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-run$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/run
+  
+  Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:tagName string,
+   :dir string,
+   :substitutions {},
+   :repoName string,
+   :projectId string,
+   :invertRegex boolean,
+   :branchName string,
+   :commitSha string}
+  
+  Runs a `BuildTrigger` at a particular source revision."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}:run"
+     #{:triggerId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn triggers-delete$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/triggers/delete
+  
+  Required parameters: triggerId, projectId
+  
+  Optional parameters: none
+  
+  Deletes a `BuildTrigger` by its project ID and trigger ID. This API is experimental."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:triggerId :projectId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/projects/{projectId}/triggers/{triggerId}"
+     #{:triggerId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-builds-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/builds/get
+  
+  Required parameters: name
+  
+  Optional parameters: projectId, id
+  
+  Returns information about a previously requested build. The `Build` that is returned includes its status (such as `SUCCESS`, `FAILURE`, or `WORKING`), and timing information."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-builds-create$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/builds/create
+  
+  Required parameters: parent
+  
+  Optional parameters: projectId
+  
+  Body: 
+  
+  {:serviceAccount string,
+   :tags [string],
+   :statusDetail string,
+   :logsBucket string,
+   :startTime string,
+   :buildTriggerId string,
+   :images [string],
+   :secrets [{:kmsKeyName string, :secretEnv {}}],
+   :name string,
+   :steps [{:args [string],
+            :waitFor [string],
+            :dir string,
+            :name string,
+            :pullTiming TimeSpan,
+            :env [string],
+            :volumes [Volume],
+            :status string,
+            :id string,
+            :secretEnv [string],
+            :timing TimeSpan,
+            :entrypoint string,
+            :timeout string}],
+   :createTime string,
+   :substitutions {},
+   :source {:storageSource StorageSource, :repoSource RepoSource},
+   :logUrl string,
+   :finishTime string,
+   :status string,
+   :id string,
+   :timing {},
+   :queueTtl string,
+   :sourceProvenance {:fileHashes {},
+                      :resolvedRepoSource RepoSource,
+                      :resolvedStorageSource StorageSource},
+   :projectId string,
+   :options {:dynamicSubstitutions boolean,
+             :sourceProvenanceHash [string],
+             :machineType string,
+             :env [string],
+             :volumes [Volume],
+             :logging string,
+             :secretEnv [string],
+             :diskSizeGb string,
+             :logStreamingOption string,
+             :workerPool string,
+             :substitutionOption string,
+             :requestedVerifyOption string},
+   :timeout string,
+   :artifacts {:images [string], :objects ArtifactObjects},
+   :results {:buildStepImages [string],
+             :artifactTiming TimeSpan,
+             :images [BuiltImage],
+             :numArtifacts string,
+             :buildStepOutputs [string],
+             :artifactManifest string}}
+  
+  Starts a build with the specified configuration. This method returns a long-running `Operation`, which includes the build ID. Pass the build ID to `GetBuild` to determine the build status (such as `SUCCESS` or `FAILURE`)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+parent}/builds"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-builds-cancel$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/builds/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :projectId string, :name string}
+  
+  Cancels a build in progress."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-builds-list$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/builds/list
+  
+  Required parameters: parent
+  
+  Optional parameters: projectId, pageToken, pageSize, filter
+  
+  Lists previously requested builds. Previously requested builds may still be in-progress, or may have finished successfully or unsuccessfully."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+parent}/builds"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-builds-retry$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/builds/retry
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :projectId string, :name string}
+  
+  Creates a new build based on the specified build. This method creates a new build using the original build request, which may or may not result in an identical build. For triggered builds: * Triggered builds resolve to a precise revision; therefore a retry of a triggered build will result in a build that uses the same revision. For non-triggered builds that specify `RepoSource`: * If the original build built from the tip of a branch, the retried build will build from the tip of that branch, which may not be the same revision as the original build. * If the original build specified a commit sha or revision ID, the retried build will use the identical source. For builds that specify `StorageSource`: * If the original build pulled source from Google Cloud Storage without specifying the generation of the object, the new build will use the current object, which may be different from the original build source. * If the original build pulled source from Cloud Storage and specified the generation of the object, the new build will attempt to use the same object, which may or may not be available depending on the bucket's lifecycle management settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+name}:retry"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects/locations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
      parameters)
     (merge-with
      merge

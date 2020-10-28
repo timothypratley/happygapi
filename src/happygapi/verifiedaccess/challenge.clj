@@ -1,13 +1,13 @@
 (ns happygapi.verifiedaccess.challenge
-  "Verified Access API: challenge.
+  "Chrome Verified Access API: challenge.
   API for Verified Access chrome extension to provide credential verification for chrome devices connecting to an enterprise network
-  See: https://www.google.com/work/chrome/api/reference/rest/v1/challenge"
+  See: https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn verify$
-  "https://www.google.com/work/chrome/api/reference/rest/v1/challenge/verify
+  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge/verify
   
   Required parameters: none
   
@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:challengeResponse {:signature string, :data string},
+  {:challengeResponse {:data string, :signature string},
    :expectedIdentity string}
   
   VerifyChallengeResponse API"
@@ -40,7 +40,7 @@
      auth))))
 
 (defn create$
-  "https://www.google.com/work/chrome/api/reference/rest/v1/challenge/create
+  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge/create
   
   Required parameters: none
   

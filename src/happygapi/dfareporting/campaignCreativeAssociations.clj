@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.campaignCreativeAssociations
   "DCM/DFA Reporting And Trafficking API: campaignCreativeAssociations.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/campaignCreativeAssociations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -24,7 +24,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
      parameters)
@@ -41,9 +41,9 @@
 (defn list$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/campaignCreativeAssociations/list
   
-  Required parameters: campaignId, profileId
+  Required parameters: profileId, campaignId
   
-  Optional parameters: maxResults, pageToken, sortOrder
+  Optional parameters: maxResults, sortOrder, pageToken
   
   Retrieves the list of creative IDs associated with the specified campaign. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -52,7 +52,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
      parameters)

@@ -15,7 +15,8 @@
   
   Body: 
   
-  {:message {:notification Notification,
+  {:validateOnly boolean,
+   :message {:notification Notification,
              :name string,
              :topic string,
              :token string,
@@ -24,11 +25,9 @@
              :condition string,
              :fcmOptions FcmOptions,
              :apns ApnsConfig,
-             :data {}},
-   :validateOnly boolean}
+             :data {}}}
   
-  Send a message to specified target (a registration token, topic
-  or condition)."
+  Send a message to specified target (a registration token, topic or condition)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}

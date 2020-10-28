@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of all HealthCheck resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -142,7 +142,12 @@
    :kind string,
    :checkIntervalSec integer,
    :timeoutSec integer,
-   :unhealthyThreshold integer}
+   :unhealthyThreshold integer,
+   :grpcHealthCheck {:grpcServiceName string,
+                     :port integer,
+                     :portName string,
+                     :portSpecification string},
+   :logConfig {:enable boolean}}
   
   Creates a HealthCheck resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -171,7 +176,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of HealthCheck resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -247,7 +252,12 @@
    :kind string,
    :checkIntervalSec integer,
    :timeoutSec integer,
-   :unhealthyThreshold integer}
+   :unhealthyThreshold integer,
+   :grpcHealthCheck {:grpcServiceName string,
+                     :port integer,
+                     :portName string,
+                     :portSpecification string},
+   :logConfig {:enable boolean}}
   
   Updates a HealthCheck resource in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -324,7 +334,12 @@
    :kind string,
    :checkIntervalSec integer,
    :timeoutSec integer,
-   :unhealthyThreshold integer}
+   :unhealthyThreshold integer,
+   :grpcHealthCheck {:grpcServiceName string,
+                     :port integer,
+                     :portName string,
+                     :portSpecification string},
+   :logConfig {:enable boolean}}
   
   Updates a HealthCheck resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

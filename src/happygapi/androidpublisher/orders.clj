@@ -1,6 +1,6 @@
 (ns happygapi.androidpublisher.orders
-  "Google Play Developer API: orders.
-  Accesses Android application developers' Google Play accounts.
+  "Google Play Android Developer API: orders.
+  Lets Android application developers access their Google Play accounts.
   See: https://developers.google.com/android-publisherapi/reference/rest/v3/orders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,8 +20,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/androidpublisher/v3/applications/"
-     "{packageName}/orders/{orderId}:refund"
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/orders/{orderId}:refund"
      #{:packageName :orderId}
      parameters)
     (merge-with

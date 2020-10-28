@@ -66,7 +66,7 @@
   
   Required parameters: project, resource
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -140,7 +140,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of licenses available in the specified project. This method does not get any licenses that belong to other projects, including licenses attached to publicly-available images, like Debian 9. If you want to get a list of publicly-available licenses, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud.  Caution This resource is intended for use only by third-party partners who are creating Cloud Marketplace images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -172,7 +172,10 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],

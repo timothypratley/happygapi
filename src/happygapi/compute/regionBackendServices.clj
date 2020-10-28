@@ -111,6 +111,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -175,7 +177,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Creates a regional BackendService resource in the specified project using the data included in the request. There are several restrictions and guidelines to keep in mind when creating a regional backend service. Read  Understanding backend services for more information."
+  Creates a regional BackendService resource in the specified project using the data included in the request. For more information, see  Backend services overview."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -202,7 +204,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of regional BackendService resources available to the specified project in the given region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -235,6 +237,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -299,7 +303,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified regional BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Updates the specified regional BackendService resource with the data included in the request. For more information, see  Understanding backend services This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -333,6 +337,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -397,7 +403,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified regional BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information."
+  Updates the specified regional BackendService resource with the data included in the request. For more information, see  Backend services overview."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]

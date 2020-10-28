@@ -1,35 +1,43 @@
 (ns happygapi.tagmanager.accounts
   "Tag Manager API: accounts.
-  This API allows clients to access and modify container and tag
-       configuration.
+  This API allows clients to access and modify container and tag configuration.
   See: https://developers.google.com/tag-managerapi/reference/rest/v2/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/list
+(defn update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/update
   
-  Required parameters: none
+  Required parameters: path
   
-  Optional parameters: pageToken
+  Optional parameters: fingerprint
   
-  Lists all GTM Accounts that a user has access to."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.manage.accounts"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  Body: 
+  
+  {:accountId string,
+   :name string,
+   :fingerprint string,
+   :tagManagerUrl string,
+   :shareData boolean,
+   :path string}
+  
+  Updates a GTM Account."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.accounts"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/accounts"
-     #{}
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -51,7 +59,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -63,186 +71,25 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/update
+(defn list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/list
   
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Body: 
-  
-  {:shareData boolean,
-   :fingerprint string,
-   :name string,
-   :accountId string,
-   :tagManagerUrl string,
-   :path string}
-  
-  Updates a GTM Account."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.accounts"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn user_permissions-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/list
-  
-  Required parameters: parent
+  Required parameters: none
   
   Optional parameters: pageToken
   
-  List all users that have access to the account along with Account and
-  Container user access granted to each of them."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
+  Lists all GTM Accounts that a user has access to."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.manage.accounts"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/user_permissions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn user_permissions-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/get
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Gets a user's Account & Container access."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn user_permissions-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/update
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:path string,
-   :emailAddress string,
-   :accountAccess {:permission string},
-   :accountId string,
-   :containerAccess [{:containerId string, :permission string}]}
-  
-  Updates a user's Account & Container access."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn user_permissions-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:path string,
-   :emailAddress string,
-   :accountAccess {:permission string},
-   :accountId string,
-   :containerAccess [{:containerId string, :permission string}]}
-  
-  Creates a user's Account & Container access."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/user_permissions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn user_permissions-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Removes a user from the account, revoking access to it and all of its
-  containers."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/accounts"
+     #{}
      parameters)
     (merge-with
      merge
@@ -267,13 +114,80 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/containers"
      #{:parent}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.delete.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:path string,
+   :name string,
+   :containerId string,
+   :domainName [string],
+   :notes string,
+   :tagManagerUrl string,
+   :publicId string,
+   :usageContext [string],
+   :accountId string,
+   :fingerprint string}
+  
+  Creates a Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/containers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -294,7 +208,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -333,7 +247,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -347,8 +261,135 @@
       :as :json}
      auth))))
 
-(defn containers-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/create
+(defn containers-version_headers-latest$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/version_headers/latest
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Gets the latest container version header"
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/version_headers:latest"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-version_headers-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/version_headers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, includeDeleted
+  
+  Lists all Container Versions of a GTM Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/version_headers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-environments-reauthorize$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/reauthorize
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :path string,
+   :workspaceId string,
+   :enableDebug boolean,
+   :name string,
+   :containerId string,
+   :type string,
+   :authorizationTimestamp string,
+   :environmentId string,
+   :containerVersionId string,
+   :authorizationCode string,
+   :url string,
+   :tagManagerUrl string,
+   :accountId string,
+   :fingerprint string}
+  
+  Re-generates the authorization code for a GTM Environment."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.publish"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:reauthorize"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-environments-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a GTM Environment."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-environments-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/create
   
   Required parameters: parent
   
@@ -356,26 +397,31 @@
   
   Body: 
   
-  {:path string,
+  {:description string,
+   :path string,
+   :workspaceId string,
+   :enableDebug boolean,
    :name string,
    :containerId string,
-   :domainName [string],
-   :notes string,
+   :type string,
+   :authorizationTimestamp string,
+   :environmentId string,
+   :containerVersionId string,
+   :authorizationCode string,
+   :url string,
    :tagManagerUrl string,
-   :publicId string,
-   :usageContext [string],
    :accountId string,
    :fingerprint string}
   
-  Creates a Container."
+  Creates a GTM Environment."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/containers"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/environments"
      #{:parent}
      parameters)
     (merge-with
@@ -388,23 +434,97 @@
       :as :json}
      auth))))
 
-(defn containers-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/delete
+(defn containers-environments-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/update
+  
+  Required parameters: path
+  
+  Optional parameters: fingerprint
+  
+  Body: 
+  
+  {:description string,
+   :path string,
+   :workspaceId string,
+   :enableDebug boolean,
+   :name string,
+   :containerId string,
+   :type string,
+   :authorizationTimestamp string,
+   :environmentId string,
+   :containerVersionId string,
+   :authorizationCode string,
+   :url string,
+   :tagManagerUrl string,
+   :accountId string,
+   :fingerprint string}
+  
+  Updates a GTM Environment."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-environments-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/get
   
   Required parameters: path
   
   Optional parameters: none
   
-  Deletes a Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.delete.containers"]}
+  Gets a GTM Environment."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-environments-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Environments of a GTM Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/environments"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -429,7 +549,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -448,15 +568,14 @@
   
   Optional parameters: none
   
-  Quick previews a workspace by creating a fake container version from all
-  entities in the provided workspace."
+  Quick previews a workspace by creating a fake container version from all entities in the provided workspace."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containerversions"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:quick_preview"
      #{:path}
      parameters)
@@ -477,14 +596,14 @@
   
   Body: 
   
-  {:fingerprint string,
-   :name string,
-   :accountId string,
-   :tagManagerUrl string,
-   :path string,
+  {:path string,
    :workspaceId string,
    :containerId string,
-   :description string}
+   :fingerprint string,
+   :description string,
+   :name string,
+   :accountId string,
+   :tagManagerUrl string}
   
   Creates a Workspace."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
@@ -493,7 +612,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/workspaces"
      #{:parent}
      parameters)
@@ -516,14 +635,14 @@
   
   Body: 
   
-  {:fingerprint string,
-   :name string,
-   :accountId string,
-   :tagManagerUrl string,
-   :path string,
+  {:path string,
    :workspaceId string,
    :containerId string,
-   :description string}
+   :fingerprint string,
+   :description string,
+   :name string,
+   :accountId string,
+   :tagManagerUrl string}
   
   Updates a Workspace."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
@@ -532,7 +651,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -560,7 +679,7 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -579,16 +698,14 @@
   
   Optional parameters: none
   
-  Syncs a workspace to the latest container version by updating all
-  unmodified workspace entities and displaying conflicts for modified
-  entities."
+  Syncs a workspace to the latest container version by updating all unmodified workspace entities and displaying conflicts for modified entities."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:sync"
      #{:path}
      parameters)
@@ -615,7 +732,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/workspaces"
      #{:parent}
      parameters)
@@ -662,7 +779,35 @@
          :parameter [Parameter],
          :fingerprint string,
          :liveOnly boolean},
-   :changeStatus string,
+   :client {:path string,
+            :clientId string,
+            :parentFolderId string,
+            :workspaceId string,
+            :name string,
+            :containerId string,
+            :type string,
+            :priority integer,
+            :tagManagerUrl string,
+            :accountId string,
+            :parameter [Parameter],
+            :fingerprint string},
+   :variable {:path string,
+              :parentFolderId string,
+              :workspaceId string,
+              :scheduleStartMs string,
+              :name string,
+              :containerId string,
+              :type string,
+              :enablingTriggerId [string],
+              :scheduleEndMs string,
+              :notes string,
+              :disablingTriggerId [string],
+              :tagManagerUrl string,
+              :variableId string,
+              :formatValue VariableFormatValue,
+              :accountId string,
+              :parameter [Parameter],
+              :fingerprint string},
    :trigger {:checkValidation Parameter,
              :path string,
              :parentFolderId string,
@@ -695,23 +840,6 @@
              :accountId string,
              :parameter [Parameter],
              :fingerprint string},
-   :variable {:path string,
-              :parentFolderId string,
-              :workspaceId string,
-              :scheduleStartMs string,
-              :name string,
-              :containerId string,
-              :type string,
-              :enablingTriggerId [string],
-              :scheduleEndMs string,
-              :notes string,
-              :disablingTriggerId [string],
-              :tagManagerUrl string,
-              :variableId string,
-              :formatValue VariableFormatValue,
-              :accountId string,
-              :parameter [Parameter],
-              :fingerprint string},
    :folder {:path string,
             :workspaceId string,
             :name string,
@@ -720,17 +848,17 @@
             :folderId string,
             :tagManagerUrl string,
             :accountId string,
-            :fingerprint string}}
+            :fingerprint string},
+   :changeStatus string}
   
-  Resolves a merge conflict for a workspace entity by updating it to the
-  resolved entity passed in the request."
+  Resolves a merge conflict for a workspace entity by updating it to the resolved entity passed in the request."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:resolve_conflict"
      #{:path}
      parameters)
@@ -759,7 +887,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}/status"
      #{:path}
      parameters)
@@ -780,327 +908,18 @@
   
   Body: 
   
-  {:name string, :notes string}
+  {:notes string, :name string}
   
-  Creates a Container Version from the entities present in the workspace,
-  deletes the workspace, and sets the base container version to the newly
-  created version."
+  Creates a Container Version from the entities present in the workspace, deletes the workspace, and sets the base container version to the newly created version."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containerversions"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:create_version"
      #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-revert$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/revert
-  
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Reverts changes to a GTM Template in a GTM Workspace."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:revert"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Deletes a GTM Template."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists all GTM Templates of a GTM container workspace."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/templates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:galleryReference {:isModified boolean,
-                      :signature string,
-                      :owner string,
-                      :repository string,
-                      :version string,
-                      :host string},
-   :path string,
-   :workspaceId string,
-   :name string,
-   :containerId string,
-   :templateData string,
-   :tagManagerUrl string,
-   :templateId string,
-   :accountId string,
-   :fingerprint string}
-  
-  Creates a GTM Custom Template."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/templates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/get
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Gets a GTM Template."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-templates-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/update
-  
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Body: 
-  
-  {:galleryReference {:isModified boolean,
-                      :signature string,
-                      :owner string,
-                      :repository string,
-                      :version string,
-                      :host string},
-   :path string,
-   :workspaceId string,
-   :name string,
-   :containerId string,
-   :templateData string,
-   :tagManagerUrl string,
-   :templateId string,
-   :accountId string,
-   :fingerprint string}
-  
-  Updates a GTM Template."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-variables-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Deletes a GTM Variable."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-variables-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists all GTM Variables of a Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/variables"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-variables-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:path string,
-   :parentFolderId string,
-   :workspaceId string,
-   :scheduleStartMs string,
-   :name string,
-   :containerId string,
-   :type string,
-   :enablingTriggerId [string],
-   :scheduleEndMs string,
-   :notes string,
-   :disablingTriggerId [string],
-   :tagManagerUrl string,
-   :variableId string,
-   :formatValue {:convertNullToValue Parameter,
-                 :convertTrueToValue Parameter,
-                 :convertFalseToValue Parameter,
-                 :convertUndefinedToValue Parameter,
-                 :caseConversionType string},
-   :accountId string,
-   :parameter [{:list [Parameter],
-                :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
-   :fingerprint string}
-  
-  Creates a GTM Variable."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/variables"
-     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1127,7 +946,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1161,17 +980,17 @@
    :disablingTriggerId [string],
    :tagManagerUrl string,
    :variableId string,
-   :formatValue {:convertNullToValue Parameter,
-                 :convertTrueToValue Parameter,
-                 :convertFalseToValue Parameter,
+   :formatValue {:convertFalseToValue Parameter,
                  :convertUndefinedToValue Parameter,
-                 :caseConversionType string},
+                 :convertTrueToValue Parameter,
+                 :caseConversionType string,
+                 :convertNullToValue Parameter},
    :accountId string,
-   :parameter [{:list [Parameter],
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
                 :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
+                :type string}],
    :fingerprint string}
   
   Updates a GTM Variable."
@@ -1181,7 +1000,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1209,7 +1028,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:revert"
      #{:path}
      parameters)
@@ -1221,22 +1040,77 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-zones-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/get
+(defn containers-workspaces-variables-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:path string,
+   :parentFolderId string,
+   :workspaceId string,
+   :scheduleStartMs string,
+   :name string,
+   :containerId string,
+   :type string,
+   :enablingTriggerId [string],
+   :scheduleEndMs string,
+   :notes string,
+   :disablingTriggerId [string],
+   :tagManagerUrl string,
+   :variableId string,
+   :formatValue {:convertFalseToValue Parameter,
+                 :convertUndefinedToValue Parameter,
+                 :convertTrueToValue Parameter,
+                 :caseConversionType string,
+                 :convertNullToValue Parameter},
+   :accountId string,
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
+                :key string,
+                :type string}],
+   :fingerprint string}
+  
+  Creates a GTM Variable."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/variables"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-variables-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/delete
   
   Required parameters: path
   
   Optional parameters: none
   
-  Gets a GTM Zone."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  Deletes a GTM Variable."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1248,8 +1122,115 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-zones-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/update
+(defn containers-workspaces-variables-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/variables/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Variables of a Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/variables"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-revert$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/revert
+  
+  Required parameters: path
+  
+  Optional parameters: fingerprint
+  
+  Reverts changes to a GTM Trigger in a GTM Workspace."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:revert"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/get
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Gets a GTM Trigger."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Triggers of a Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/triggers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/update
   
   Required parameters: path
   
@@ -1257,28 +1238,524 @@
   
   Body: 
   
-  {:path string,
-   :typeRestriction {:enable boolean, :whitelistedTypeId [string]},
+  {:checkValidation {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
+   :path string,
+   :parentFolderId string,
+   :selector {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
+   :eventName {:value string,
+               :map [Parameter],
+               :list [Parameter],
+               :key string,
+               :type string},
+   :customEventFilter [{:type string, :parameter [Parameter]}],
+   :visiblePercentageMax {:value string,
+                          :map [Parameter],
+                          :list [Parameter],
+                          :key string,
+                          :type string},
    :workspaceId string,
-   :zoneId string,
+   :triggerId string,
+   :limit {:value string,
+           :map [Parameter],
+           :list [Parameter],
+           :key string,
+           :type string},
+   :horizontalScrollPercentageList {:value string,
+                                    :map [Parameter],
+                                    :list [Parameter],
+                                    :key string,
+                                    :type string},
    :name string,
+   :verticalScrollPercentageList {:value string,
+                                  :map [Parameter],
+                                  :list [Parameter],
+                                  :key string,
+                                  :type string},
    :containerId string,
-   :childContainer [{:publicId string, :nickname string}],
-   :boundary {:customEvaluationTriggerId [string],
-              :condition [Condition]},
+   :visibilitySelector {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :type string,
+   :autoEventFilter [{:type string, :parameter [Parameter]}],
+   :waitForTags {:value string,
+                 :map [Parameter],
+                 :list [Parameter],
+                 :key string,
+                 :type string},
+   :waitForTagsTimeout {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :continuousTimeMinMilliseconds {:value string,
+                                   :map [Parameter],
+                                   :list [Parameter],
+                                   :key string,
+                                   :type string},
+   :filter [{:type string, :parameter [Parameter]}],
+   :visiblePercentageMin {:value string,
+                          :map [Parameter],
+                          :list [Parameter],
+                          :key string,
+                          :type string},
+   :uniqueTriggerId {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
    :notes string,
+   :maxTimerLengthSeconds {:value string,
+                           :map [Parameter],
+                           :list [Parameter],
+                           :key string,
+                           :type string},
+   :interval {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
    :tagManagerUrl string,
+   :totalTimeMinMilliseconds {:value string,
+                              :map [Parameter],
+                              :list [Parameter],
+                              :key string,
+                              :type string},
+   :intervalSeconds {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
    :accountId string,
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
+                :key string,
+                :type string}],
    :fingerprint string}
   
-  Updates a GTM Zone."
+  Updates a GTM Trigger."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:checkValidation {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
+   :path string,
+   :parentFolderId string,
+   :selector {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
+   :eventName {:value string,
+               :map [Parameter],
+               :list [Parameter],
+               :key string,
+               :type string},
+   :customEventFilter [{:type string, :parameter [Parameter]}],
+   :visiblePercentageMax {:value string,
+                          :map [Parameter],
+                          :list [Parameter],
+                          :key string,
+                          :type string},
+   :workspaceId string,
+   :triggerId string,
+   :limit {:value string,
+           :map [Parameter],
+           :list [Parameter],
+           :key string,
+           :type string},
+   :horizontalScrollPercentageList {:value string,
+                                    :map [Parameter],
+                                    :list [Parameter],
+                                    :key string,
+                                    :type string},
+   :name string,
+   :verticalScrollPercentageList {:value string,
+                                  :map [Parameter],
+                                  :list [Parameter],
+                                  :key string,
+                                  :type string},
+   :containerId string,
+   :visibilitySelector {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :type string,
+   :autoEventFilter [{:type string, :parameter [Parameter]}],
+   :waitForTags {:value string,
+                 :map [Parameter],
+                 :list [Parameter],
+                 :key string,
+                 :type string},
+   :waitForTagsTimeout {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :continuousTimeMinMilliseconds {:value string,
+                                   :map [Parameter],
+                                   :list [Parameter],
+                                   :key string,
+                                   :type string},
+   :filter [{:type string, :parameter [Parameter]}],
+   :visiblePercentageMin {:value string,
+                          :map [Parameter],
+                          :list [Parameter],
+                          :key string,
+                          :type string},
+   :uniqueTriggerId {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
+   :notes string,
+   :maxTimerLengthSeconds {:value string,
+                           :map [Parameter],
+                           :list [Parameter],
+                           :key string,
+                           :type string},
+   :interval {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
+   :tagManagerUrl string,
+   :totalTimeMinMilliseconds {:value string,
+                              :map [Parameter],
+                              :list [Parameter],
+                              :key string,
+                              :type string},
+   :intervalSeconds {:value string,
+                     :map [Parameter],
+                     :list [Parameter],
+                     :key string,
+                     :type string},
+   :accountId string,
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
+                :key string,
+                :type string}],
+   :fingerprint string}
+  
+  Creates a GTM Trigger."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/triggers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-triggers-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a GTM Trigger."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a GTM Tag."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/get
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Gets a GTM Tag."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-revert$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/revert
+  
+  Required parameters: path
+  
+  Optional parameters: fingerprint
+  
+  Reverts changes to a GTM Tag in a GTM Workspace."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:revert"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:monitoringMetadataTagNameKey string,
+   :path string,
+   :parentFolderId string,
+   :setupTag [{:tagName string, :stopOnSetupFailure boolean}],
+   :paused boolean,
+   :firingRuleId [string],
+   :tagFiringOption string,
+   :workspaceId string,
+   :scheduleStartMs string,
+   :firingTriggerId [string],
+   :name string,
+   :containerId string,
+   :type string,
+   :tagId string,
+   :blockingRuleId [string],
+   :teardownTag [{:tagName string, :stopTeardownOnFailure boolean}],
+   :priority {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
+   :monitoringMetadata {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :scheduleEndMs string,
+   :notes string,
+   :tagManagerUrl string,
+   :blockingTriggerId [string],
+   :accountId string,
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
+                :key string,
+                :type string}],
+   :fingerprint string,
+   :liveOnly boolean}
+  
+  Creates a GTM Tag."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/tags"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Tags of a Container."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/tags"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-tags-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/update
+  
+  Required parameters: path
+  
+  Optional parameters: fingerprint
+  
+  Body: 
+  
+  {:monitoringMetadataTagNameKey string,
+   :path string,
+   :parentFolderId string,
+   :setupTag [{:tagName string, :stopOnSetupFailure boolean}],
+   :paused boolean,
+   :firingRuleId [string],
+   :tagFiringOption string,
+   :workspaceId string,
+   :scheduleStartMs string,
+   :firingTriggerId [string],
+   :name string,
+   :containerId string,
+   :type string,
+   :tagId string,
+   :blockingRuleId [string],
+   :teardownTag [{:tagName string, :stopTeardownOnFailure boolean}],
+   :priority {:value string,
+              :map [Parameter],
+              :list [Parameter],
+              :key string,
+              :type string},
+   :monitoringMetadata {:value string,
+                        :map [Parameter],
+                        :list [Parameter],
+                        :key string,
+                        :type string},
+   :scheduleEndMs string,
+   :notes string,
+   :tagManagerUrl string,
+   :blockingTriggerId [string],
+   :accountId string,
+   :parameter [{:value string,
+                :map [Parameter],
+                :list [Parameter],
+                :key string,
+                :type string}],
+   :fingerprint string,
+   :liveOnly boolean}
+  
+  Updates a GTM Tag."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1306,9 +1783,107 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:revert"
      #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-zones-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/get
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Gets a GTM Zone."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-zones-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/update
+  
+  Required parameters: path
+  
+  Optional parameters: fingerprint
+  
+  Body: 
+  
+  {:path string,
+   :typeRestriction {:whitelistedTypeId [string], :enable boolean},
+   :workspaceId string,
+   :zoneId string,
+   :name string,
+   :containerId string,
+   :childContainer [{:publicId string, :nickname string}],
+   :boundary {:customEvaluationTriggerId [string],
+              :condition [Condition]},
+   :notes string,
+   :tagManagerUrl string,
+   :accountId string,
+   :fingerprint string}
+  
+  Updates a GTM Zone."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-zones-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Zones of a GTM container workspace."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/zones"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1332,36 +1907,9 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-zones-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/zones/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists all GTM Zones of a GTM container workspace."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/zones"
-     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1381,7 +1929,7 @@
   Body: 
   
   {:path string,
-   :typeRestriction {:enable boolean, :whitelistedTypeId [string]},
+   :typeRestriction {:whitelistedTypeId [string], :enable boolean},
    :workspaceId string,
    :zoneId string,
    :name string,
@@ -1401,7 +1949,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/zones"
      #{:parent}
      parameters)
@@ -1415,21 +1963,48 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-tags-revert$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/revert
+(defn containers-workspaces-templates-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists all GTM Templates of a GTM container workspace."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/templates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-templates-revert$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/revert
   
   Required parameters: path
   
   Optional parameters: fingerprint
   
-  Reverts changes to a GTM Tag in a GTM Workspace."
+  Reverts changes to a GTM Template in a GTM Workspace."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:revert"
      #{:path}
      parameters)
@@ -1441,21 +2016,21 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-tags-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/delete
+(defn containers-workspaces-templates-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/delete
   
   Required parameters: path
   
   Optional parameters: none
   
-  Deletes a GTM Tag."
+  Deletes a GTM Template."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1467,35 +2042,8 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-tags-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists all GTM Tags of a Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/tags"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-tags-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/create
+(defn containers-workspaces-templates-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/create
   
   Required parameters: parent
   
@@ -1503,54 +2051,31 @@
   
   Body: 
   
-  {:monitoringMetadataTagNameKey string,
+  {:galleryReference {:version string,
+                      :isModified boolean,
+                      :signature string,
+                      :repository string,
+                      :host string,
+                      :owner string},
    :path string,
-   :parentFolderId string,
-   :setupTag [{:stopOnSetupFailure boolean, :tagName string}],
-   :paused boolean,
-   :firingRuleId [string],
-   :tagFiringOption string,
    :workspaceId string,
-   :scheduleStartMs string,
-   :firingTriggerId [string],
    :name string,
    :containerId string,
-   :type string,
-   :tagId string,
-   :blockingRuleId [string],
-   :teardownTag [{:stopTeardownOnFailure boolean, :tagName string}],
-   :priority {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :monitoringMetadata {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :scheduleEndMs string,
-   :notes string,
+   :templateData string,
    :tagManagerUrl string,
-   :blockingTriggerId [string],
+   :templateId string,
    :accountId string,
-   :parameter [{:list [Parameter],
-                :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
-   :fingerprint string,
-   :liveOnly boolean}
+   :fingerprint string}
   
-  Creates a GTM Tag."
+  Creates a GTM Custom Template."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/tags"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/templates"
      #{:parent}
      parameters)
     (merge-with
@@ -1563,14 +2088,14 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-tags-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/get
+(defn containers-workspaces-templates-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/get
   
   Required parameters: path
   
   Optional parameters: none
   
-  Gets a GTM Tag."
+  Gets a GTM Template."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
             "https://www.googleapis.com/auth/tagmanager.readonly"]}
   [auth parameters]
@@ -1578,7 +2103,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1590,8 +2115,8 @@
       :as :json}
      auth))))
 
-(defn containers-workspaces-tags-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/tags/update
+(defn containers-workspaces-templates-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/templates/update
   
   Required parameters: path
   
@@ -1599,53 +2124,30 @@
   
   Body: 
   
-  {:monitoringMetadataTagNameKey string,
+  {:galleryReference {:version string,
+                      :isModified boolean,
+                      :signature string,
+                      :repository string,
+                      :host string,
+                      :owner string},
    :path string,
-   :parentFolderId string,
-   :setupTag [{:stopOnSetupFailure boolean, :tagName string}],
-   :paused boolean,
-   :firingRuleId [string],
-   :tagFiringOption string,
    :workspaceId string,
-   :scheduleStartMs string,
-   :firingTriggerId [string],
    :name string,
    :containerId string,
-   :type string,
-   :tagId string,
-   :blockingRuleId [string],
-   :teardownTag [{:stopTeardownOnFailure boolean, :tagName string}],
-   :priority {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :monitoringMetadata {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :scheduleEndMs string,
-   :notes string,
+   :templateData string,
    :tagManagerUrl string,
-   :blockingTriggerId [string],
+   :templateId string,
    :accountId string,
-   :parameter [{:list [Parameter],
-                :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
-   :fingerprint string,
-   :liveOnly boolean}
+   :fingerprint string}
   
-  Updates a GTM Tag."
+  Updates a GTM Template."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -1654,408 +2156,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists all GTM Triggers of a Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/triggers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:checkValidation {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :path string,
-   :parentFolderId string,
-   :selector {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :eventName {:list [Parameter],
-               :key string,
-               :type string,
-               :value string,
-               :map [Parameter]},
-   :customEventFilter [{:parameter [Parameter], :type string}],
-   :visiblePercentageMax {:list [Parameter],
-                          :key string,
-                          :type string,
-                          :value string,
-                          :map [Parameter]},
-   :workspaceId string,
-   :triggerId string,
-   :limit {:list [Parameter],
-           :key string,
-           :type string,
-           :value string,
-           :map [Parameter]},
-   :horizontalScrollPercentageList {:list [Parameter],
-                                    :key string,
-                                    :type string,
-                                    :value string,
-                                    :map [Parameter]},
-   :name string,
-   :verticalScrollPercentageList {:list [Parameter],
-                                  :key string,
-                                  :type string,
-                                  :value string,
-                                  :map [Parameter]},
-   :containerId string,
-   :visibilitySelector {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :type string,
-   :autoEventFilter [{:parameter [Parameter], :type string}],
-   :waitForTags {:list [Parameter],
-                 :key string,
-                 :type string,
-                 :value string,
-                 :map [Parameter]},
-   :waitForTagsTimeout {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :continuousTimeMinMilliseconds {:list [Parameter],
-                                   :key string,
-                                   :type string,
-                                   :value string,
-                                   :map [Parameter]},
-   :filter [{:parameter [Parameter], :type string}],
-   :visiblePercentageMin {:list [Parameter],
-                          :key string,
-                          :type string,
-                          :value string,
-                          :map [Parameter]},
-   :uniqueTriggerId {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :notes string,
-   :maxTimerLengthSeconds {:list [Parameter],
-                           :key string,
-                           :type string,
-                           :value string,
-                           :map [Parameter]},
-   :interval {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :tagManagerUrl string,
-   :totalTimeMinMilliseconds {:list [Parameter],
-                              :key string,
-                              :type string,
-                              :value string,
-                              :map [Parameter]},
-   :intervalSeconds {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :accountId string,
-   :parameter [{:list [Parameter],
-                :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
-   :fingerprint string}
-  
-  Creates a GTM Trigger."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/triggers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/get
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Gets a GTM Trigger."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/update
-  
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Body: 
-  
-  {:checkValidation {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :path string,
-   :parentFolderId string,
-   :selector {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :eventName {:list [Parameter],
-               :key string,
-               :type string,
-               :value string,
-               :map [Parameter]},
-   :customEventFilter [{:parameter [Parameter], :type string}],
-   :visiblePercentageMax {:list [Parameter],
-                          :key string,
-                          :type string,
-                          :value string,
-                          :map [Parameter]},
-   :workspaceId string,
-   :triggerId string,
-   :limit {:list [Parameter],
-           :key string,
-           :type string,
-           :value string,
-           :map [Parameter]},
-   :horizontalScrollPercentageList {:list [Parameter],
-                                    :key string,
-                                    :type string,
-                                    :value string,
-                                    :map [Parameter]},
-   :name string,
-   :verticalScrollPercentageList {:list [Parameter],
-                                  :key string,
-                                  :type string,
-                                  :value string,
-                                  :map [Parameter]},
-   :containerId string,
-   :visibilitySelector {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :type string,
-   :autoEventFilter [{:parameter [Parameter], :type string}],
-   :waitForTags {:list [Parameter],
-                 :key string,
-                 :type string,
-                 :value string,
-                 :map [Parameter]},
-   :waitForTagsTimeout {:list [Parameter],
-                        :key string,
-                        :type string,
-                        :value string,
-                        :map [Parameter]},
-   :continuousTimeMinMilliseconds {:list [Parameter],
-                                   :key string,
-                                   :type string,
-                                   :value string,
-                                   :map [Parameter]},
-   :filter [{:parameter [Parameter], :type string}],
-   :visiblePercentageMin {:list [Parameter],
-                          :key string,
-                          :type string,
-                          :value string,
-                          :map [Parameter]},
-   :uniqueTriggerId {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :notes string,
-   :maxTimerLengthSeconds {:list [Parameter],
-                           :key string,
-                           :type string,
-                           :value string,
-                           :map [Parameter]},
-   :interval {:list [Parameter],
-              :key string,
-              :type string,
-              :value string,
-              :map [Parameter]},
-   :tagManagerUrl string,
-   :totalTimeMinMilliseconds {:list [Parameter],
-                              :key string,
-                              :type string,
-                              :value string,
-                              :map [Parameter]},
-   :intervalSeconds {:list [Parameter],
-                     :key string,
-                     :type string,
-                     :value string,
-                     :map [Parameter]},
-   :accountId string,
-   :parameter [{:list [Parameter],
-                :key string,
-                :type string,
-                :value string,
-                :map [Parameter]}],
-   :fingerprint string}
-  
-  Updates a GTM Trigger."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-revert$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/revert
-  
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Reverts changes to a GTM Trigger in a GTM Workspace."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:revert"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-triggers-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/triggers/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Deletes a GTM Trigger."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-folders-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Deletes a GTM Folder."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -2076,116 +2176,9 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/folders"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-folders-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:path string,
-   :workspaceId string,
-   :name string,
-   :containerId string,
-   :notes string,
-   :folderId string,
-   :tagManagerUrl string,
-   :accountId string,
-   :fingerprint string}
-  
-  Creates a GTM Folder."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/folders"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-folders-move_entities_to_folder$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/move_entities_to_folder
-  
-  Required parameters: path
-  
-  Optional parameters: variableId, tagId, triggerId
-  
-  Body: 
-  
-  {:path string,
-   :workspaceId string,
-   :name string,
-   :containerId string,
-   :notes string,
-   :folderId string,
-   :tagManagerUrl string,
-   :accountId string,
-   :fingerprint string}
-  
-  Moves entities to a GTM Folder."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:move_entities_to_folder"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-folders-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/get
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Gets a GTM Folder."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
      parameters)
     (merge-with
      merge
@@ -2221,9 +2214,142 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-folders-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/get
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Gets a GTM Folder."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
+            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-folders-move_entities_to_folder$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/move_entities_to_folder
+  
+  Required parameters: path
+  
+  Optional parameters: triggerId, tagId, variableId
+  
+  Body: 
+  
+  {:path string,
+   :workspaceId string,
+   :name string,
+   :containerId string,
+   :notes string,
+   :folderId string,
+   :tagManagerUrl string,
+   :accountId string,
+   :fingerprint string}
+  
+  Moves entities to a GTM Folder."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:move_entities_to_folder"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-folders-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a GTM Folder."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-workspaces-folders-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/folders/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:path string,
+   :workspaceId string,
+   :name string,
+   :containerId string,
+   :notes string,
+   :folderId string,
+   :tagManagerUrl string,
+   :accountId string,
+   :fingerprint string}
+  
+  Creates a GTM Folder."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/folders"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -2249,7 +2375,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:revert"
      #{:path}
      parameters)
@@ -2276,7 +2402,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}:entities"
      #{:path}
      parameters)
@@ -2302,7 +2428,7 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -2329,33 +2455,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/built_in_variables"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-workspaces-built_in_variables-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/built_in_variables/create
-  
-  Required parameters: parent
-  
-  Optional parameters: type
-  
-  Creates one or more GTM Built-In Variables."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/built_in_variables"
      #{:parent}
      parameters)
@@ -2381,7 +2481,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}/built_in_variables:revert"
      #{:path}
      parameters)
@@ -2393,23 +2493,23 @@
       :as :json}
      auth))))
 
-(defn containers-versions-publish$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/publish
+(defn containers-workspaces-built_in_variables-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/workspaces/built_in_variables/create
   
-  Required parameters: path
+  Required parameters: parent
   
-  Optional parameters: fingerprint
+  Optional parameters: type
   
-  Publishes a Container Version."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.publish"]}
+  Creates one or more GTM Built-In Variables."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:publish"
-     #{:path}
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/built_in_variables"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -2419,49 +2519,22 @@
       :as :json}
      auth))))
 
-(defn containers-versions-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/delete
+(defn containers-versions-undelete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/undelete
   
   Required parameters: path
   
   Optional parameters: none
   
-  Deletes a Container Version."
+  Undeletes a Container Version."
   {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containerversions"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-versions-set_latest$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/set_latest
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Sets the latest version used for synchronization of workspaces when
-  detecting conflicts and errors."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:set_latest"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:undelete"
      #{:path}
      parameters)
     (merge-with
@@ -2488,7 +2561,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -2500,22 +2573,74 @@
       :as :json}
      auth))))
 
-(defn containers-versions-undelete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/undelete
+(defn containers-versions-publish$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/publish
   
   Required parameters: path
   
-  Optional parameters: none
+  Optional parameters: fingerprint
   
-  Undeletes a Container Version."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containerversions"]}
+  Publishes a Container Version."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.publish"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:undelete"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:publish"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-versions-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Deletes a Container Version."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containerversions"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn containers-versions-set_latest$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/versions/set_latest
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Sets the latest version used for synchronization of workspaces when detecting conflicts and errors."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}:set_latest"
      #{:path}
      parameters)
     (merge-with
@@ -2541,7 +2666,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+parent}/versions:live"
      #{:parent}
      parameters)
@@ -2617,6 +2742,7 @@
                      :fingerprint string}],
    :client [{:path string,
              :clientId string,
+             :parentFolderId string,
              :workspaceId string,
              :name string,
              :containerId string,
@@ -2637,12 +2763,12 @@
                :usageContext [string],
                :accountId string,
                :fingerprint string},
-   :builtInVariable [{:type string,
-                      :path string,
-                      :containerId string,
-                      :workspaceId string,
+   :builtInVariable [{:containerId string,
+                      :type string,
                       :name string,
-                      :accountId string}],
+                      :accountId string,
+                      :workspaceId string,
+                      :path string}],
    :tag [{:monitoringMetadataTagNameKey string,
           :path string,
           :parentFolderId string,
@@ -2712,7 +2838,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://tagmanager.googleapis.com/"
      "tagmanager/v2/{+path}"
      #{:path}
      parameters)
@@ -2726,168 +2852,22 @@
       :as :json}
      auth))))
 
-(defn containers-environments-get$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/get
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Gets a GTM Environment."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-environments-update$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/update
-  
-  Required parameters: path
-  
-  Optional parameters: fingerprint
-  
-  Body: 
-  
-  {:description string,
-   :path string,
-   :workspaceId string,
-   :enableDebug boolean,
-   :name string,
-   :containerId string,
-   :type string,
-   :authorizationTimestamp string,
-   :environmentId string,
-   :containerVersionId string,
-   :authorizationCode string,
-   :url string,
-   :tagManagerUrl string,
-   :accountId string,
-   :fingerprint string}
-  
-  Updates a GTM Environment."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-environments-reauthorize$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/reauthorize
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :path string,
-   :workspaceId string,
-   :enableDebug boolean,
-   :name string,
-   :containerId string,
-   :type string,
-   :authorizationTimestamp string,
-   :environmentId string,
-   :containerVersionId string,
-   :authorizationCode string,
-   :url string,
-   :tagManagerUrl string,
-   :accountId string,
-   :fingerprint string}
-  
-  Re-generates the authorization code for a GTM Environment."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.publish"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}:reauthorize"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-environments-delete$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/delete
-  
-  Required parameters: path
-  
-  Optional parameters: none
-  
-  Deletes a GTM Environment."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:path})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+path}"
-     #{:path}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-environments-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/list
+(defn user_permissions-list$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/list
   
   Required parameters: parent
   
   Optional parameters: pageToken
   
-  Lists all GTM Environments of a GTM Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  List all users that have access to the account along with Account and Container user access granted to each of them."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/environments"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/user_permissions"
      #{:parent}
      parameters)
     (merge-with
@@ -2898,8 +2878,70 @@
       :as :json}
      auth))))
 
-(defn containers-environments-create$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/environments/create
+(defn user_permissions-update$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/update
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:containerAccess [{:permission string, :containerId string}],
+   :accountAccess {:permission string},
+   :accountId string,
+   :emailAddress string,
+   :path string}
+  
+  Updates a user's Account & Container access."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn user_permissions-delete$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/delete
+  
+  Required parameters: path
+  
+  Optional parameters: none
+  
+  Removes a user from the account, revoking access to it and all of its containers."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:path})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn user_permissions-create$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/create
   
   Required parameters: parent
   
@@ -2907,31 +2949,21 @@
   
   Body: 
   
-  {:description string,
-   :path string,
-   :workspaceId string,
-   :enableDebug boolean,
-   :name string,
-   :containerId string,
-   :type string,
-   :authorizationTimestamp string,
-   :environmentId string,
-   :containerVersionId string,
-   :authorizationCode string,
-   :url string,
-   :tagManagerUrl string,
+  {:containerAccess [{:permission string, :containerId string}],
+   :accountAccess {:permission string},
    :accountId string,
-   :fingerprint string}
+   :emailAddress string,
+   :path string}
   
-  Creates a GTM Environment."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"]}
+  Creates a user's Account & Container access."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/environments"
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+parent}/user_permissions"
      #{:parent}
      parameters)
     (merge-with
@@ -2944,52 +2976,23 @@
       :as :json}
      auth))))
 
-(defn containers-version_headers-list$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/version_headers/list
+(defn user_permissions-get$
+  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/user_permissions/get
   
-  Required parameters: parent
-  
-  Optional parameters: includeDeleted, pageToken
-  
-  Lists all Container Versions of a GTM Container."
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/version_headers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn containers-version_headers-latest$
-  "https://developers.google.com/tag-managerapi/reference/rest/v2/accounts/containers/version_headers/latest
-  
-  Required parameters: parent
+  Required parameters: path
   
   Optional parameters: none
   
-  Gets the latest container version header"
-  {:scopes ["https://www.googleapis.com/auth/tagmanager.edit.containers"
-            "https://www.googleapis.com/auth/tagmanager.readonly"]}
+  Gets a user's Account & Container access."
+  {:scopes ["https://www.googleapis.com/auth/tagmanager.manage.users"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:path})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/"
-     "tagmanager/v2/{+parent}/version_headers:latest"
-     #{:parent}
+     "https://tagmanager.googleapis.com/"
+     "tagmanager/v2/{+path}"
+     #{:path}
      parameters)
     (merge-with
      merge

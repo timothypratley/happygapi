@@ -13,8 +13,7 @@
   
   Optional parameters: none
   
-  The RDAP API recognizes this command from the RDAP specification but
-  does not support it. The response is a formatted 501 error."
+  The RDAP API recognizes this command from the RDAP specification but does not support it. The response is a formatted 501 error."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:autnumId})]}

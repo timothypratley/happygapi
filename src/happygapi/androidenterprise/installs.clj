@@ -1,34 +1,40 @@
 (ns happygapi.androidenterprise.installs
   "Google Play EMM API: installs.
-  Manages the deployment of apps to Android for Work users.
+  Manages the deployment of apps to Android Enterprise devices.
   See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/delete
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/update
   
-  Required parameters: deviceId, enterpriseId, installId, userId
+  Required parameters: userId, installId, enterpriseId, deviceId
   
   Optional parameters: none
   
-  Requests to remove an app from a device. A call to get or list will still show the app as installed on the device until it is actually removed."
+  Body: 
+  
+  {:versionCode integer, :installState string, :productId string}
+  
+  Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys?
           parameters
           #{:enterpriseId :deviceId :installId :userId})]}
   (util/get-response
-   (http/delete
+   (http/put
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -37,7 +43,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/get
   
-  Required parameters: deviceId, enterpriseId, installId, userId
+  Required parameters: userId, deviceId, enterpriseId, installId
   
   Optional parameters: none
   
@@ -50,8 +56,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
      parameters)
     (merge-with
@@ -65,7 +71,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/list
   
-  Required parameters: deviceId, enterpriseId, userId
+  Required parameters: userId, enterpriseId, deviceId
   
   Optional parameters: none
   
@@ -78,8 +84,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs"
      #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
@@ -90,38 +96,29 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/update
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/delete
   
-  Required parameters: deviceId, enterpriseId, installId, userId
+  Required parameters: installId, userId, deviceId, enterpriseId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:installState string,
-   :kind string,
-   :productId string,
-   :versionCode integer}
-  
-  Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
+  Requests to remove an app from a device. A call to get or list will still show the app as installed on the device until it is actually removed."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys?
           parameters
           #{:enterpriseId :deviceId :installId :userId})]}
   (util/get-response
-   (http/put
+   (http/delete
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

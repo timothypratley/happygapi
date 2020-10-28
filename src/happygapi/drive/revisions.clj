@@ -123,6 +123,7 @@
    :keepForever boolean,
    :mimeType string,
    :md5Checksum string,
+   :publishedLink string,
    :originalFilename string,
    :published boolean}
   

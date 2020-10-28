@@ -1,32 +1,118 @@
 (ns happygapi.dfareporting.advertisers
   "DCM/DFA Reporting And Trafficking API: advertisers.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/get
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:idDimensionValue {:etag string,
+                      :value string,
+                      :id string,
+                      :kind string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
+                                             :id string,
+                                             :kind string,
+                                             :dimensionName string,
+                                             :matchType string},
+   :clickThroughUrlSuffix string,
+   :floodlightConfigurationId string,
+   :name string,
+   :advertiserGroupId string,
+   :suspended boolean,
+   :status string,
+   :id string,
+   :kind string,
+   :defaultEmail string,
+   :defaultClickThroughEventTagId string,
+   :subaccountId string,
+   :accountId string,
+   :originalFloodlightConfigurationId string}
+  
+  Updates an existing advertiser."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/advertisers"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/patch
   
   Required parameters: id, profileId
   
   Optional parameters: none
   
-  Gets one advertiser by ID."
+  Body: 
+  
+  {:idDimensionValue {:etag string,
+                      :value string,
+                      :id string,
+                      :kind string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
+                                             :id string,
+                                             :kind string,
+                                             :dimensionName string,
+                                             :matchType string},
+   :clickThroughUrlSuffix string,
+   :floodlightConfigurationId string,
+   :name string,
+   :advertiserGroupId string,
+   :suspended boolean,
+   :status string,
+   :id string,
+   :kind string,
+   :defaultEmail string,
+   :defaultClickThroughEventTagId string,
+   :subaccountId string,
+   :accountId string,
+   :originalFloodlightConfigurationId string}
+  
+  Updates an existing advertiser. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/advertisers/{id}"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/advertisers"
      #{:id :profileId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -41,18 +127,18 @@
   
   Body: 
   
-  {:idDimensionValue {:dimensionName string,
-                      :etag string,
+  {:idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
                                              :id string,
                                              :kind string,
-                                             :matchType string,
-                                             :value string},
+                                             :dimensionName string,
+                                             :matchType string},
    :clickThroughUrlSuffix string,
    :floodlightConfigurationId string,
    :name string,
@@ -74,7 +160,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/advertisers"
      #{:profileId}
      parameters)
@@ -102,7 +188,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/advertisers"
      #{:profileId}
      parameters)
@@ -114,113 +200,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/patch
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/get
   
   Required parameters: id, profileId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:idDimensionValue {:dimensionName string,
-                      :etag string,
-                      :id string,
-                      :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
-                                             :id string,
-                                             :kind string,
-                                             :matchType string,
-                                             :value string},
-   :clickThroughUrlSuffix string,
-   :floodlightConfigurationId string,
-   :name string,
-   :advertiserGroupId string,
-   :suspended boolean,
-   :status string,
-   :id string,
-   :kind string,
-   :defaultEmail string,
-   :defaultClickThroughEventTagId string,
-   :subaccountId string,
-   :accountId string,
-   :originalFloodlightConfigurationId string}
-  
-  Updates an existing advertiser. This method supports patch semantics."
+  Gets one advertiser by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/advertisers"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/advertisers/{id}"
      #{:id :profileId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/advertisers/update
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:idDimensionValue {:dimensionName string,
-                      :etag string,
-                      :id string,
-                      :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
-                                             :id string,
-                                             :kind string,
-                                             :matchType string,
-                                             :value string},
-   :clickThroughUrlSuffix string,
-   :floodlightConfigurationId string,
-   :name string,
-   :advertiserGroupId string,
-   :suspended boolean,
-   :status string,
-   :id string,
-   :kind string,
-   :defaultEmail string,
-   :defaultClickThroughEventTagId string,
-   :subaccountId string,
-   :accountId string,
-   :originalFloodlightConfigurationId string}
-  
-  Updates an existing advertiser."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/advertisers"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

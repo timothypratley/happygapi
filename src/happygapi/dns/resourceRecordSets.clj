@@ -1,17 +1,17 @@
 (ns happygapi.dns.resourceRecordSets
-  "Google Cloud DNS API: resourceRecordSets.
-  Configures and serves authoritative DNS records.
-  See: https://developers.google.com/cloud-dnsapi/reference/rest/v1/resourceRecordSets"
+  "Cloud DNS API: resourceRecordSets.
+  
+  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/resourceRecordSets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/cloud-dnsapi/reference/rest/v1/resourceRecordSets/list
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/resourceRecordSets/list
   
-  Required parameters: managedZone, project
+  Required parameters: project, managedZone
   
-  Optional parameters: maxResults, name, pageToken, type
+  Optional parameters: pageToken, maxResults, type, name
   
   Enumerate ResourceRecordSets that have been created but not yet deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -23,8 +23,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dns.googleapis.com/dns/v1/projects/"
-     "{project}/managedZones/{managedZone}/rrsets"
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}/rrsets"
      #{:managedZone :project}
      parameters)
     (merge-with

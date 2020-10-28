@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of commitments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -72,11 +72,15 @@
   Body: 
   
   {:description string,
+   :category string,
    :creationTimestamp string,
    :name string,
    :statusMessage string,
    :endTimestamp string,
    :selfLink string,
+   :licenseResource {:amount string,
+                     :coresPerLicense string,
+                     :license string},
    :region string,
    :status string,
    :id string,
@@ -123,7 +127,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of commitments contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

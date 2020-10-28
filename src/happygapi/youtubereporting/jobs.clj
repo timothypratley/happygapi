@@ -6,60 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/delete
-  
-  Required parameters: jobId
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Deletes a job."
-  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:jobId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtubereporting.googleapis.com/"
-     "v1/jobs/{jobId}"
-     #{:jobId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/list
-  
-  Required parameters: none
-  
-  Optional parameters: onBehalfOfContentOwner, pageToken, includeSystemManaged, pageSize
-  
-  Lists jobs."
-  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtubereporting.googleapis.com/"
-     "v1/jobs"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/get
   
@@ -87,6 +33,33 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, onBehalfOfContentOwner, pageToken, includeSystemManaged
+  
+  Lists jobs."
+  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtubereporting.googleapis.com/"
+     "v1/jobs"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn create$
   "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/create
   
@@ -96,12 +69,12 @@
   
   Body: 
   
-  {:createTime string,
+  {:expireTime string,
    :reportTypeId string,
-   :expireTime string,
+   :systemManaged boolean,
    :name string,
-   :id string,
-   :systemManaged boolean}
+   :createTime string,
+   :id string}
   
   Creates a job and returns it."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
@@ -125,15 +98,41 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/delete
+  
+  Required parameters: jobId
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Deletes a job."
+  {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:jobId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtubereporting.googleapis.com/"
+     "v1/jobs/{jobId}"
+     #{:jobId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn reports-list$
   "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/reports/list
   
   Required parameters: jobId
   
-  Optional parameters: createdAfter, startTimeAtOrAfter, pageToken, pageSize, onBehalfOfContentOwner, startTimeBefore
+  Optional parameters: startTimeBefore, pageSize, pageToken, startTimeAtOrAfter, createdAfter, onBehalfOfContentOwner
   
-  Lists reports created by a specific job.
-  Returns NOT_FOUND if the job does not exist."
+  Lists reports created by a specific job. Returns NOT_FOUND if the job does not exist."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
   [auth parameters]

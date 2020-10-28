@@ -1,6 +1,6 @@
 (ns happygapi.groupsmigration.archive
   "Groups Migration API: archive.
-  Groups Migration Api.
+  The Groups Migration API allows domain administrators to archive emails into Google groups.
   See: https://developers.google.com/google-apps/groups-migration/api/reference/rest/v1/archive"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,8 +20,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/groups/v1/groups/"
-     "{groupId}/archive"
+     "https://groupsmigration.googleapis.com/"
+     "groups/v1/groups/{groupId}/archive"
      #{:groupId}
      parameters)
     (merge-with

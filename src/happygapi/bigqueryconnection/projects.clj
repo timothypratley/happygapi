@@ -42,16 +42,13 @@
   
   Body: 
   
-  {:policy {:bindings [Binding],
-            :etag string,
+  {:updateMask string,
+   :policy {:etag string,
             :version integer,
-            :auditConfigs [AuditConfig]},
-   :updateMask string}
+            :bindings [Binding],
+            :auditConfigs [AuditConfig]}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy.
-  
-  Can return Public Errors: NOT_FOUND, INVALID_ARGUMENT and PERMISSION_DENIED"
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -83,18 +80,17 @@
   Body: 
   
   {:creationTime string,
-   :name string,
-   :cloudSql {:type string,
-              :credential CloudSqlCredential,
-              :database string,
-              :instanceId string},
    :hasCredential boolean,
    :friendlyName string,
-   :lastModifiedTime string,
-   :description string}
+   :description string,
+   :cloudSql {:database string,
+              :credential CloudSqlCredential,
+              :instanceId string,
+              :type string},
+   :name string,
+   :lastModifiedTime string}
   
-  Updates the specified connection. For security reasons, also resets
-  credential if connection properties are in the update field mask."
+  Updates the specified connection. For security reasons, also resets credential if connection properties are in the update field mask."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -127,13 +123,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error.
-  
-  Note: This operation is designed to be used for building permission-aware
-  UIs and command-line tools, not for authorization checking. This operation
-  may \"fail open\" without warning."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -165,15 +155,15 @@
   Body: 
   
   {:creationTime string,
-   :name string,
-   :cloudSql {:type string,
-              :credential CloudSqlCredential,
-              :database string,
-              :instanceId string},
    :hasCredential boolean,
    :friendlyName string,
-   :lastModifiedTime string,
-   :description string}
+   :description string,
+   :cloudSql {:database string,
+              :credential CloudSqlCredential,
+              :instanceId string,
+              :type string},
+   :name string,
+   :lastModifiedTime string}
   
   Creates a new connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -235,9 +225,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -268,7 +256,7 @@
   
   Body: 
   
-  {:cloudSql {:username string, :password string}}
+  {:cloudSql {:password string, :username string}}
   
   Sets the credential for the specified connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -297,7 +285,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   Returns a list of connections in the given project."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

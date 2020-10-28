@@ -1,19 +1,19 @@
 (ns happygapi.youtube.videoAbuseReportReasons
-  "YouTube Data API: videoAbuseReportReasons.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/videoAbuseReportReasons"
+  "YouTube Data API v3: videoAbuseReportReasons.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/videoAbuseReportReasons"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/videoAbuseReportReasons/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/videoAbuseReportReasons/list
   
   Required parameters: part
   
   Optional parameters: hl
   
-  Returns a list of abuse reasons that can be used for reporting abusive videos."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "videoAbuseReportReasons"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/videoAbuseReportReasons"
      #{:part}
      parameters)
     (merge-with

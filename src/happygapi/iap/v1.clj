@@ -7,6 +7,45 @@
             [happy.util :as util]))
 
 (defn $
+  "https://cloud.google.com/iapapi/reference/rest/v1/updateIapSettings
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:accessSettings {:gcipSettings GcipSettings,
+                    :oauthSettings OAuthSettings,
+                    :corsSettings CorsSettings,
+                    :policyDelegationSettings PolicyDelegationSettings},
+   :name string,
+   :applicationSettings {:csmSettings CsmSettings,
+                         :accessDeniedPageSettings AccessDeniedPageSettings,
+                         :cookieDomain string}}
+  
+  Updates the IAP settings on a particular IAP protected resource. It replaces all fields unless the `update_mask` is set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iap.googleapis.com/"
+     "v1/{+name}:iapSettings"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn $
   "https://cloud.google.com/iapapi/reference/rest/v1/setIamPolicy
   
   Required parameters: resource
@@ -15,12 +54,9 @@
   
   Body: 
   
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  {:policy {:bindings [Binding], :version integer, :etag string}}
   
-  Sets the access control policy for an Identity-Aware Proxy protected
-  resource. Replaces any existing policy.
-  More information about managing access via IAP can be found at:
-  https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
+  Sets the access control policy for an Identity-Aware Proxy protected resource. Replaces any existing policy. More information about managing access via IAP can be found at: https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -29,6 +65,38 @@
     (util/get-url
      "https://iap.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn $
+  "https://cloud.google.com/iapapi/reference/rest/v1/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for an Identity-Aware Proxy protected resource. More information about managing access via IAP can be found at: https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iap.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -52,10 +120,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the Identity-Aware Proxy protected
-  resource.
-  More information about managing access via IAP can be found at:
-  https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
+  Returns permissions that a caller has on the Identity-Aware Proxy protected resource. More information about managing access via IAP can be found at: https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
@@ -65,44 +130,6 @@
      "https://iap.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/updateIapSettings
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:accessSettings {:oauthSettings OAuthSettings,
-                    :corsSettings CorsSettings,
-                    :gcipSettings GcipSettings,
-                    :policyDelegationSettings PolicyDelegationSettings},
-   :name string,
-   :applicationSettings {:csmSettings CsmSettings}}
-  
-  Updates the IAP settings on a particular IAP protected resource. It
-  replaces all fields unless the `update_mask` is set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://iap.googleapis.com/"
-     "v1/{+name}:iapSettings"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -135,41 +162,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for an Identity-Aware Proxy protected
-  resource.
-  More information about managing access via IAP can be found at:
-  https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://iap.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

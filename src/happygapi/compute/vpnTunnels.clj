@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of VPN tunnels."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -148,7 +148,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of VpnTunnel resources contained in the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

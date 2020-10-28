@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:filter string,
+  {:pageSize integer,
    :pageToken string,
-   :pageSize integer,
+   :consolidationStrategy {:legacy Legacy, :none NoConsolidation},
+   :filter string,
    :ancestorName string,
-   :consolidationStrategy {:none NoConsolidation, :legacy Legacy},
    :itemName string}
   
   Query past activity in Google Drive."

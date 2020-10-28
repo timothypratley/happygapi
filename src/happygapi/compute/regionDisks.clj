@@ -34,6 +34,49 @@
       :as :json}
      auth))))
 
+(defn setIamPolicy$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDisks/setIamPolicy
+  
+  Required parameters: project, region, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
+   :etag string,
+   :policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :etag string,
+            :iamOwned boolean,
+            :rules [Rule],
+            :version integer}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/disks/{resource}/setIamPolicy"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDisks/insert
   
@@ -52,6 +95,7 @@
    :guestOsFeatures [{:type string}],
    :resourcePolicies [string],
    :sourceImage string,
+   :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
                               :kmsKeyServiceAccount string,
@@ -60,6 +104,7 @@
    :zone string,
    :name string,
    :sizeGb string,
+   :sourceDisk string,
    :physicalBlockSizeBytes string,
    :sourceImageId string,
    :lastDetachTimestamp string,
@@ -154,6 +199,7 @@
    :sourceDiskId string,
    :downloadBytes string,
    :creationTimestamp string,
+   :chainName string,
    :name string,
    :sourceDisk string,
    :licenses [string],
@@ -324,6 +370,34 @@
       :as :json}
      auth))))
 
+(defn getIamPolicy$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDisks/getIamPolicy
+  
+  Required parameters: project, region, resource
+  
+  Optional parameters: optionsRequestedPolicyVersion
+  
+  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/disks/{resource}/getIamPolicy"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn addResourcePolicies$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDisks/addResourcePolicies
   
@@ -362,7 +436,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of persistent disks contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

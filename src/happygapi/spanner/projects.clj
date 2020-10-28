@@ -6,33 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn instanceConfigs-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instanceConfigs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the supported instance configurations for a given project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/instanceConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn instanceConfigs-get$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instanceConfigs/get
   
@@ -60,6 +33,33 @@
       :as :json}
      auth))))
 
+(defn instanceConfigs-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instanceConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the supported instance configurations for a given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/instanceConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn instances-delete$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/delete
   
@@ -67,17 +67,7 @@
   
   Optional parameters: none
   
-  Deletes an instance.
-  
-  Immediately upon completion of the request:
-  
-    * Billing ceases for all of the instance's reserved resources.
-  
-  Soon afterward:
-  
-    * The instance and *all of its databases* immediately and
-      irrevocably disappear from the API. All data in the databases
-      is permanently deleted."
+  Deletes an instance. Immediately upon completion of the request: * Billing ceases for all of the instance's reserved resources. Soon afterward: * The instance and *all of its databases* immediately and irrevocably disappear from the API. All data in the databases is permanently deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -92,259 +82,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists all instances in the given project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-setIamPolicy$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer, :bindings [Binding], :etag string}}
-  
-  Sets the access control policy on an instance resource. Replaces any
-  existing policy.
-  
-  Authorization requires `spanner.instances.setIamPolicy` on
-  resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-create$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:instanceId string,
-   :instance {:displayName string,
-              :endpointUris [string],
-              :nodeCount integer,
-              :labels {},
-              :config string,
-              :state string,
-              :name string}}
-  
-  Creates an instance and begins preparing it to begin serving. The
-  returned long-running operation
-  can be used to track the progress of preparing the new
-  instance. The instance name is assigned by the caller. If the
-  named instance already exists, `CreateInstance` returns
-  `ALREADY_EXISTS`.
-  
-  Immediately upon completion of this request:
-  
-    * The instance is readable via the API, with all requested attributes
-      but no allocated resources. Its state is `CREATING`.
-  
-  Until completion of the returned operation:
-  
-    * Cancelling the operation renders the instance immediately unreadable
-      via the API.
-    * The instance can be deleted.
-    * All other attempts to modify the instance are rejected.
-  
-  Upon completion of the returned operation:
-  
-    * Billing for all successfully-allocated resources begins (some types
-      may have lower than the requested levels).
-    * Databases can be created in the instance.
-    * The instance's allocated resource levels are readable via the API.
-    * The instance's state becomes `READY`.
-  
-  The returned long-running operation will
-  have a name of the format `<instance_name>/operations/<operation_id>` and
-  can be used to track creation of the instance.  The
-  metadata field type is
-  CreateInstanceMetadata.
-  The response field type is
-  Instance, if successful."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-getIamPolicy$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for an instance resource. Returns an empty
-  policy if an instance exists but does not have a policy set.
-  
-  Authorization requires `spanner.instances.getIamPolicy` on
-  resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-patch$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/patch
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:instance {:displayName string,
-              :endpointUris [string],
-              :nodeCount integer,
-              :labels {},
-              :config string,
-              :state string,
-              :name string},
-   :fieldMask string}
-  
-  Updates an instance, and begins allocating or releasing resources
-  as requested. The returned long-running
-  operation can be used to track the
-  progress of updating the instance. If the named instance does not
-  exist, returns `NOT_FOUND`.
-  
-  Immediately upon completion of this request:
-  
-    * For resource types for which a decrease in the instance's allocation
-      has been requested, billing is based on the newly-requested level.
-  
-  Until completion of the returned operation:
-  
-    * Cancelling the operation sets its metadata's
-      cancel_time, and begins
-      restoring resources to their pre-request values. The operation
-      is guaranteed to succeed at undoing all resource changes,
-      after which point it terminates with a `CANCELLED` status.
-    * All other attempts to modify the instance are rejected.
-    * Reading the instance via the API continues to give the pre-request
-      resource levels.
-  
-  Upon completion of the returned operation:
-  
-    * Billing begins for all successfully-allocated resources (some types
-      may have lower than the requested levels).
-    * All newly-reserved resources are available for serving the instance's
-      tables.
-    * The instance's new resource levels are readable via the API.
-  
-  The returned long-running operation will
-  have a name of the format `<instance_name>/operations/<operation_id>` and
-  can be used to track the instance modification.  The
-  metadata field type is
-  UpdateInstanceMetadata.
-  The response field type is
-  Instance, if successful.
-  
-  Authorization requires `spanner.instances.update` permission on
-  resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -388,12 +125,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that the caller has on the specified instance resource.
-  
-  Attempting this RPC on a non-existent Cloud Spanner instance resource will
-  result in a NOT_FOUND error if the user has `spanner.instances.list`
-  permission on the containing Google Cloud Project. Otherwise returns an
-  empty set of permissions."
+  Returns permissions that the caller has on the specified instance resource. Attempting this RPC on a non-existent Cloud Spanner instance resource will result in a NOT_FOUND error if the user has `spanner.instances.list` permission on the containing Google Cloud Project. Otherwise returns an empty set of permissions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -415,6 +147,206 @@
       :as :json}
      auth))))
 
+(defn instances-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists all instances in the given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-getIamPolicy$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for an instance resource. Returns an empty policy if an instance exists but does not have a policy set. Authorization requires `spanner.instances.getIamPolicy` on resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-create$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:instance {:displayName string,
+              :state string,
+              :nodeCount integer,
+              :endpointUris [string],
+              :labels {},
+              :config string,
+              :name string},
+   :instanceId string}
+  
+  Creates an instance and begins preparing it to begin serving. The returned long-running operation can be used to track the progress of preparing the new instance. The instance name is assigned by the caller. If the named instance already exists, `CreateInstance` returns `ALREADY_EXISTS`. Immediately upon completion of this request: * The instance is readable via the API, with all requested attributes but no allocated resources. Its state is `CREATING`. Until completion of the returned operation: * Cancelling the operation renders the instance immediately unreadable via the API. * The instance can be deleted. * All other attempts to modify the instance are rejected. Upon completion of the returned operation: * Billing for all successfully-allocated resources begins (some types may have lower than the requested levels). * Databases can be created in the instance. * The instance's allocated resource levels are readable via the API. * The instance's state becomes `READY`. The returned long-running operation will have a name of the format `/operations/` and can be used to track creation of the instance. The metadata field type is CreateInstanceMetadata. The response field type is Instance, if successful."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-patch$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/patch
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:instance {:displayName string,
+              :state string,
+              :nodeCount integer,
+              :endpointUris [string],
+              :labels {},
+              :config string,
+              :name string},
+   :fieldMask string}
+  
+  Updates an instance, and begins allocating or releasing resources as requested. The returned long-running operation can be used to track the progress of updating the instance. If the named instance does not exist, returns `NOT_FOUND`. Immediately upon completion of this request: * For resource types for which a decrease in the instance's allocation has been requested, billing is based on the newly-requested level. Until completion of the returned operation: * Cancelling the operation sets its metadata's cancel_time, and begins restoring resources to their pre-request values. The operation is guaranteed to succeed at undoing all resource changes, after which point it terminates with a `CANCELLED` status. * All other attempts to modify the instance are rejected. * Reading the instance via the API continues to give the pre-request resource levels. Upon completion of the returned operation: * Billing begins for all successfully-allocated resources (some types may have lower than the requested levels). * All newly-reserved resources are available for serving the instance's tables. * The instance's new resource levels are readable via the API. The returned long-running operation will have a name of the format `/operations/` and can be used to track the instance modification. The metadata field type is UpdateInstanceMetadata. The response field type is Instance, if successful. Authorization requires `spanner.instances.update` permission on resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-setIamPolicy$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:bindings [Binding], :etag string, :version integer}}
+  
+  Sets the access control policy on an instance resource. Replaces any existing policy. Authorization requires `spanner.instances.setIamPolicy` on resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backupOperations-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backupOperations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists the backup long-running operations in the given instance. A backup operation has a name of the form `projects//instances//backups//operations/`. The long-running operation metadata field type `metadata.type_url` describes the type of the metadata. Operations returned include those that have completed/failed/canceled within the last 7 days, and pending operations. Operations returned are ordered by `operation.metadata.value.progress.start_time` in descending order starting from the most recently started operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/backupOperations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn instances-databases-getDdl$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/getDdl
   
@@ -422,9 +354,7 @@
   
   Optional parameters: none
   
-  Returns the schema of a Cloud Spanner database as a list of formatted
-  DDL statements. This method does not show pending schema updates, those may
-  be queried using the Operations API."
+  Returns the schema of a Cloud Spanner database as a list of formatted DDL statements. This method does not show pending schema updates, those may be queried using the Operations API."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -480,15 +410,9 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:bindings [Binding], :etag string, :version integer}}
   
-  Sets the access control policy on a database or backup resource.
-  Replaces any existing policy.
-  
-  Authorization requires `spanner.databases.setIamPolicy`
-  permission on resource.
-  For backups, authorization requires `spanner.backups.setIamPolicy`
-  permission on resource."
+  Sets the access control policy on a database or backup resource. Replaces any existing policy. Authorization requires `spanner.databases.setIamPolicy` permission on resource. For backups, authorization requires `spanner.backups.setIamPolicy` permission on resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -521,16 +445,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that the caller has on the specified database or backup
-  resource.
-  
-  Attempting this RPC on a non-existent Cloud Spanner database will
-  result in a NOT_FOUND error if the user has
-  `spanner.databases.list` permission on the containing Cloud
-  Spanner instance. Otherwise returns an empty set of permissions.
-  Calling this method on a backup that does not exist will
-  result in a NOT_FOUND error if the user has
-  `spanner.backups.list` permission on the containing instance."
+  Returns permissions that the caller has on the specified database or backup resource. Attempting this RPC on a non-existent Cloud Spanner database will result in a NOT_FOUND error if the user has `spanner.databases.list` permission on the containing Cloud Spanner instance. Otherwise returns an empty set of permissions. Calling this method on a backup that does not exist will result in a NOT_FOUND error if the user has `spanner.backups.list` permission on the containing instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -563,23 +478,7 @@
   
   {:backup string, :databaseId string}
   
-  Create a new database by restoring from a completed backup. The new
-  database must be in the same project and in an instance with the same
-  instance configuration as the instance containing
-  the backup. The returned database long-running
-  operation has a name of the format
-  `projects/<project>/instances/<instance>/databases/<database>/operations/<operation_id>`,
-  and can be used to track the progress of the operation, and to cancel it.
-  The metadata field type is
-  RestoreDatabaseMetadata.
-  The response type
-  is Database, if
-  successful. Cancelling the returned operation will stop the restore and
-  delete the database.
-  There can be only one database being restored into an instance at a time.
-  Once the restore operation completes, a new restore operation can be
-  initiated, without waiting for the optimize operation associated with the
-  first restore to complete."
+  Create a new database by restoring from a completed backup. The new database must be in the same project and in an instance with the same instance configuration as the instance containing the backup. The returned database long-running operation has a name of the format `projects//instances//databases//operations/`, and can be used to track the progress of the operation, and to cancel it. The metadata field type is RestoreDatabaseMetadata. The response type is Database, if successful. Cancelling the returned operation will stop the restore and delete the database. There can be only one database being restored into an instance at a time. Once the restore operation completes, a new restore operation can be initiated, without waiting for the optimize operation associated with the first restore to complete."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -610,16 +509,9 @@
   
   Body: 
   
-  {:createStatement string, :extraStatements [string]}
+  {:extraStatements [string], :createStatement string}
   
-  Creates a new Cloud Spanner database and starts to prepare it for serving.
-  The returned long-running operation will
-  have a name of the format `<database_name>/operations/<operation_id>` and
-  can be used to track preparation of the database. The
-  metadata field type is
-  CreateDatabaseMetadata. The
-  response field type is
-  Database, if successful."
+  Creates a new Cloud Spanner database and starts to prepare it for serving. The returned long-running operation will have a name of the format `/operations/` and can be used to track preparation of the database. The metadata field type is CreateDatabaseMetadata. The response field type is Database, if successful."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -652,13 +544,7 @@
   
   {:statements [string], :operationId string}
   
-  Updates the schema of a Cloud Spanner database by
-  creating/altering/dropping tables, columns, indexes, etc. The returned
-  long-running operation will have a name of
-  the format `<database_name>/operations/<operation_id>` and can be used to
-  track execution of the schema change(s). The
-  metadata field type is
-  UpdateDatabaseDdlMetadata.  The operation has no response."
+  Updates the schema of a Cloud Spanner database by creating/altering/dropping tables, columns, indexes, etc. The returned long-running operation will have a name of the format `/operations/` and can be used to track execution of the schema change(s). The metadata field type is UpdateDatabaseDdlMetadata. The operation has no response."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -691,14 +577,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a database or backup resource.
-  Returns an empty policy if a database or backup exists but does not have a
-  policy set.
-  
-  Authorization requires `spanner.databases.getIamPolicy` permission on
-  resource.
-  For backups, authorization requires `spanner.backups.getIamPolicy`
-  permission on resource."
+  Gets the access control policy for a database or backup resource. Returns an empty policy if a database or backup exists but does not have a policy set. Authorization requires `spanner.databases.getIamPolicy` permission on resource. For backups, authorization requires `spanner.backups.getIamPolicy` permission on resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -725,7 +604,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists Cloud Spanner databases."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -754,9 +633,7 @@
   
   Optional parameters: none
   
-  Drops (aka deletes) a Cloud Spanner database.
-  Completed backups for the database will be retained according to their
-  `expire_time`."
+  Drops (aka deletes) a Cloud Spanner database. Completed backups for the database will be retained according to their `expire_time`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -783,16 +660,7 @@
   
   Optional parameters: none
   
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -812,23 +680,20 @@
       :as :json}
      auth))))
 
-(defn instances-databases-operations-delete$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/delete
+(defn instances-databases-operations-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: pageToken, filter, pageSize
   
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
@@ -842,29 +707,20 @@
       :as :json}
      auth))))
 
-(defn instances-databases-operations-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/list
+(defn instances-databases-operations-delete$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/databases/operations/delete
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://spanner.googleapis.com/"
      "v1/{+name}"
@@ -885,9 +741,7 @@
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -918,14 +772,7 @@
   
   {:transactionId string}
   
-  Rolls back a transaction, releasing any locks it holds. It is a good
-  idea to call this for any transaction that includes one or more
-  Read or ExecuteSql requests and
-  ultimately decides not to commit.
-  
-  `Rollback` returns `OK` if it successfully aborts the transaction, the
-  transaction was already aborted, or the transaction is not
-  found. `Rollback` never returns `ABORTED`."
+  Rolls back a transaction, releasing any locks it holds. It is a good idea to call this for any transaction that includes one or more Read or ExecuteSql requests and ultimately decides not to commit. `Rollback` returns `OK` if it successfully aborts the transaction, the transaction was already aborted, or the transaction is not found. `Rollback` never returns `ABORTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -968,11 +815,7 @@
    :resumeToken string,
    :queryOptions {:optimizerVersion string}}
   
-  Like ExecuteSql, except returns the result
-  set as a stream. Unlike ExecuteSql, there
-  is no limit on the size of the returned result set. However, no
-  individual row in the result set can exceed 100 MiB, and no
-  column value can exceed 10 MiB."
+  Like ExecuteSql, except returns the result set as a stream. Unlike ExecuteSql, there is no limit on the size of the returned result set. However, no individual row in the result set can exceed 100 MiB, and no column value can exceed 10 MiB."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1001,9 +844,7 @@
   
   Optional parameters: none
   
-  Gets a session. Returns `NOT_FOUND` if the session does not exist.
-  This is mainly useful for determining whether a session is still
-  alive."
+  Gets a session. Returns `NOT_FOUND` if the session does not exist. This is mainly useful for determining whether a session is still alive."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters]
@@ -1044,17 +885,7 @@
    :resumeToken string,
    :queryOptions {:optimizerVersion string}}
   
-  Executes an SQL statement, returning all results in a single reply. This
-  method cannot be used to return a result set larger than 10 MiB;
-  if the query yields more data than that, the query fails with
-  a `FAILED_PRECONDITION` error.
-  
-  Operations inside read-write transactions might return `ABORTED`. If
-  this occurs, the application should restart the transaction from
-  the beginning. See Transaction for more details.
-  
-  Larger result sets can be fetched in streaming fashion by calling
-  ExecuteStreamingSql instead."
+  Executes an SQL statement, returning all results in a single reply. This method cannot be used to return a result set larger than 10 MiB; if the query yields more data than that, the query fails with a `FAILED_PRECONDITION` error. Operations inside read-write transactions might return `ABORTED`. If this occurs, the application should restart the transaction from the beginning. See Transaction for more details. Larger result sets can be fetched in streaming fashion by calling ExecuteStreamingSql instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1085,30 +916,18 @@
   
   Body: 
   
-  {:columns [string],
+  {:limit string,
+   :table string,
    :transaction {:id string,
                  :singleUse TransactionOptions,
                  :begin TransactionOptions},
-   :resumeToken string,
    :partitionToken string,
-   :table string,
-   :limit string,
    :index string,
-   :keySet {:ranges [KeyRange], :keys [[any]], :all boolean}}
+   :keySet {:all boolean, :ranges [KeyRange], :keys [[any]]},
+   :columns [string],
+   :resumeToken string}
   
-  Reads rows from the database using key lookups and scans, as a
-  simple key/value style alternative to
-  ExecuteSql.  This method cannot be used to
-  return a result set larger than 10 MiB; if the read matches more
-  data than that, the read fails with a `FAILED_PRECONDITION`
-  error.
-  
-  Reads inside read-write transactions might return `ABORTED`. If
-  this occurs, the application should restart the transaction from
-  the beginning. See Transaction for more details.
-  
-  Larger result sets can be yielded in streaming fashion by calling
-  StreamingRead instead."
+  Reads rows from the database using key lookups and scans, as a simple key/value style alternative to ExecuteSql. This method cannot be used to return a result set larger than 10 MiB; if the read matches more data than that, the read fails with a `FAILED_PRECONDITION` error. Reads inside read-write transactions might return `ABORTED`. If this occurs, the application should restart the transaction from the beginning. See Transaction for more details. Larger result sets can be yielded in streaming fashion by calling StreamingRead instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1139,28 +958,16 @@
   
   Body: 
   
-  {:index string,
-   :keySet {:ranges [KeyRange], :keys [[any]], :all boolean},
-   :columns [string],
-   :transaction {:id string,
+  {:transaction {:id string,
                  :singleUse TransactionOptions,
                  :begin TransactionOptions},
+   :columns [string],
    :table string,
-   :partitionOptions {:partitionSizeBytes string, :maxPartitions string}}
+   :keySet {:all boolean, :ranges [KeyRange], :keys [[any]]},
+   :index string,
+   :partitionOptions {:maxPartitions string, :partitionSizeBytes string}}
   
-  Creates a set of partition tokens that can be used to execute a read
-  operation in parallel.  Each of the returned partition tokens can be used
-  by StreamingRead to specify a subset of the read
-  result to read.  The same session and read-only transaction must be used by
-  the PartitionReadRequest used to create the partition tokens and the
-  ReadRequests that use the partition tokens.  There are no ordering
-  guarantees on rows returned among the returned partition tokens, or even
-  within each individual StreamingRead call issued with a partition_token.
-  
-  Partition tokens become invalid when the session used to create them
-  is deleted, is idle for too long, begins a new transaction, or becomes too
-  old.  When any of these happen, it is not possible to resume the read, and
-  the whole operation must be restarted from the beginning."
+  Creates a set of partition tokens that can be used to execute a read operation in parallel. Each of the returned partition tokens can be used by StreamingRead to specify a subset of the read result to read. The same session and read-only transaction must be used by the PartitionReadRequest used to create the partition tokens and the ReadRequests that use the partition tokens. There are no ordering guarantees on rows returned among the returned partition tokens, or even within each individual StreamingRead call issued with a partition_token. Partition tokens become invalid when the session used to create them is deleted, is idle for too long, begins a new transaction, or becomes too old. When any of these happen, it is not possible to resume the read, and the whole operation must be restarted from the beginning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1191,30 +998,12 @@
   
   Body: 
   
-  {:session {:name string,
+  {:session {:labels {},
+             :name string,
              :approximateLastUseTime string,
-             :labels {},
              :createTime string}}
   
-  Creates a new session. A session can be used to perform
-  transactions that read and/or modify data in a Cloud Spanner database.
-  Sessions are meant to be reused for many consecutive
-  transactions.
-  
-  Sessions can only execute one transaction at a time. To execute
-  multiple concurrent read-write/write-only transactions, create
-  multiple sessions. Note that standalone reads and queries use a
-  transaction internally, and count toward the one transaction
-  limit.
-  
-  Active sessions use additional server resources, so it is a good idea to
-  delete idle and unneeded sessions.
-  Aside from explicit deletes, Cloud Spanner may delete sessions for which no
-  operations are sent for more than an hour. If a session is deleted,
-  requests to it return `NOT_FOUND`.
-  
-  Idle sessions can be kept alive by sending a trivial SQL query
-  periodically, e.g., `\"SELECT 1\"`."
+  Creates a new session. A session can be used to perform transactions that read and/or modify data in a Cloud Spanner database. Sessions are meant to be reused for many consecutive transactions. Sessions can only execute one transaction at a time. To execute multiple concurrent read-write/write-only transactions, create multiple sessions. Note that standalone reads and queries use a transaction internally, and count toward the one transaction limit. Active sessions use additional server resources, so it is a good idea to delete idle and unneeded sessions. Aside from explicit deletes, Cloud Spanner may delete sessions for which no operations are sent for more than an hour. If a session is deleted, requests to it return `NOT_FOUND`. Idle sessions can be kept alive by sending a trivial SQL query periodically, e.g., `\"SELECT 1\"`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1245,16 +1034,13 @@
   
   Body: 
   
-  {:sessionTemplate {:name string,
+  {:sessionTemplate {:labels {},
+                     :name string,
                      :approximateLastUseTime string,
-                     :labels {},
                      :createTime string},
    :sessionCount integer}
   
-  Creates multiple new sessions.
-  
-  This API can be used to initialize a session cache on the clients.
-  See https://goo.gl/TgSFN2 for best practices on session cache management."
+  Creates multiple new sessions. This API can be used to initialize a session cache on the clients. See https://goo.gl/TgSFN2 for best practices on session cache management."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1283,9 +1069,7 @@
   
   Optional parameters: none
   
-  Ends a session, releasing server resources associated with it. This will
-  asynchronously trigger cancellation of any operations that are running with
-  this session."
+  Ends a session, releasing server resources associated with it. This will asynchronously trigger cancellation of any operations that are running with this session."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters]
@@ -1314,25 +1098,15 @@
   
   Body: 
   
-  {:sql string,
-   :transaction {:id string,
+  {:transaction {:id string,
                  :singleUse TransactionOptions,
                  :begin TransactionOptions},
-   :partitionOptions {:partitionSizeBytes string, :maxPartitions string},
-   :params {},
-   :paramTypes {}}
+   :partitionOptions {:maxPartitions string, :partitionSizeBytes string},
+   :paramTypes {},
+   :sql string,
+   :params {}}
   
-  Creates a set of partition tokens that can be used to execute a query
-  operation in parallel.  Each of the returned partition tokens can be used
-  by ExecuteStreamingSql to specify a subset
-  of the query result to read.  The same session and read-only transaction
-  must be used by the PartitionQueryRequest used to create the
-  partition tokens and the ExecuteSqlRequests that use the partition tokens.
-  
-  Partition tokens become invalid when the session used to create them
-  is deleted, is idle for too long, begins a new transaction, or becomes too
-  old.  When any of these happen, it is not possible to resume the query, and
-  the whole operation must be restarted from the beginning."
+  Creates a set of partition tokens that can be used to execute a query operation in parallel. Each of the returned partition tokens can be used by ExecuteStreamingSql to specify a subset of the query result to read. The same session and read-only transaction must be used by the PartitionQueryRequest used to create the partition tokens and the ExecuteSqlRequests that use the partition tokens. Partition tokens become invalid when the session used to create them is deleted, is idle for too long, begins a new transaction, or becomes too old. When any of these happen, it is not possible to resume the query, and the whole operation must be restarted from the beginning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1363,14 +1137,11 @@
   
   Body: 
   
-  {:options {:partitionedDml PartitionedDml,
-             :readWrite ReadWrite,
+  {:options {:readWrite ReadWrite,
+             :partitionedDml PartitionedDml,
              :readOnly ReadOnly}}
   
-  Begins a new transaction. This step can often be skipped:
-  Read, ExecuteSql and
-  Commit can begin a new transaction as a
-  side-effect."
+  Begins a new transaction. This step can often be skipped: Read, ExecuteSql and Commit can begin a new transaction as a side-effect."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1397,7 +1168,7 @@
   
   Required parameters: database
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: pageSize, filter, pageToken
   
   Lists all sessions in a given database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1428,24 +1199,17 @@
   
   Body: 
   
-  {:singleUseTransaction {:partitionedDml PartitionedDml,
-                          :readWrite ReadWrite,
-                          :readOnly ReadOnly},
-   :mutations [{:replace Write,
+  {:mutations [{:insert Write,
                 :delete Delete,
-                :insert Write,
+                :replace Write,
                 :insertOrUpdate Write,
                 :update Write}],
+   :singleUseTransaction {:readWrite ReadWrite,
+                          :partitionedDml PartitionedDml,
+                          :readOnly ReadOnly},
    :transactionId string}
   
-  Commits a transaction. The request includes the mutations to be
-  applied to rows in the database.
-  
-  `Commit` might return an `ABORTED` error. This can occur at any time;
-  commonly, the cause is conflicts with concurrent
-  transactions. However, it can also happen for a variety of other
-  reasons. If `Commit` returns `ABORTED`, the caller should re-attempt
-  the transaction from the beginning, re-using the same session."
+  Commits a transaction. The request includes the mutations to be applied to rows in the database. `Commit` might return an `ABORTED` error. This can occur at any time; commonly, the cause is conflicts with concurrent transactions. However, it can also happen for a variety of other reasons. If `Commit` returns `ABORTED`, the caller should re-attempt the transaction from the beginning, re-using the same session. On very rare occasions, `Commit` might return `UNKNOWN`. This can happen, for example, if the client job experiences a 1+ hour networking failure. At that point, Cloud Spanner has lost track of the transaction outcome and we recommend that you perform another read from the database to see the state of things as they are now."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1476,23 +1240,13 @@
   
   Body: 
   
-  {:seqno string,
-   :statements [{:sql string, :params {}, :paramTypes {}}],
+  {:statements [{:params {}, :sql string, :paramTypes {}}],
+   :seqno string,
    :transaction {:id string,
                  :singleUse TransactionOptions,
                  :begin TransactionOptions}}
   
-  Executes a batch of SQL DML statements. This method allows many statements
-  to be run with lower latency than submitting them sequentially with
-  ExecuteSql.
-  
-  Statements are executed in sequential order. A request can succeed even if
-  a statement fails. The ExecuteBatchDmlResponse.status field in the
-  response provides information about the statement that failed. Clients must
-  inspect this field to determine whether an error occurred.
-  
-  Execution stops after the first failed statement; the remaining statements
-  are not executed."
+  Executes a batch of SQL DML statements. This method allows many statements to be run with lower latency than submitting them sequentially with ExecuteSql. Statements are executed in sequential order. A request can succeed even if a statement fails. The ExecuteBatchDmlResponse.status field in the response provides information about the statement that failed. Clients must inspect this field to determine whether an error occurred. Execution stops after the first failed statement; the remaining statements are not executed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1523,22 +1277,18 @@
   
   Body: 
   
-  {:columns [string],
+  {:limit string,
+   :table string,
    :transaction {:id string,
                  :singleUse TransactionOptions,
                  :begin TransactionOptions},
-   :resumeToken string,
    :partitionToken string,
-   :table string,
-   :limit string,
    :index string,
-   :keySet {:ranges [KeyRange], :keys [[any]], :all boolean}}
+   :keySet {:all boolean, :ranges [KeyRange], :keys [[any]]},
+   :columns [string],
+   :resumeToken string}
   
-  Like Read, except returns the result set as a
-  stream. Unlike Read, there is no limit on the
-  size of the returned result set. However, no individual row in
-  the result set can exceed 100 MiB, and no column value can exceed
-  10 MiB."
+  Like Read, except returns the result set as a stream. Unlike Read, there is no limit on the size of the returned result set. However, no individual row in the result set can exceed 100 MiB, and no column value can exceed 10 MiB."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.data"]}
   [auth parameters body]
@@ -1560,78 +1310,6 @@
       :as :json}
      auth))))
 
-(defn instances-backupOperations-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backupOperations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists the backup long-running operations in
-  the given instance. A backup operation has a name of the form
-  `projects/<project>/instances/<instance>/backups/<backup>/operations/<operation>`.
-  The long-running operation
-  metadata field type
-  `metadata.type_url` describes the type of the metadata. Operations returned
-  include those that have completed/failed/canceled within the last 7 days,
-  and pending operations. Operations returned are ordered by
-  `operation.metadata.value.progress.start_time` in descending order starting
-  from the most recently started operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/backupOperations"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-operations-cancel$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn instances-operations-delete$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/delete
   
@@ -1639,10 +1317,7 @@
   
   Optional parameters: none
   
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -1662,23 +1337,41 @@
       :as :json}
      auth))))
 
+(defn instances-operations-cancel$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn instances-operations-list$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/operations/list
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -1705,9 +1398,7 @@
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -1727,46 +1418,6 @@
       :as :json}
      auth))))
 
-(defn instances-backups-getIamPolicy$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for a database or backup resource.
-  Returns an empty policy if a database or backup exists but does not have a
-  policy set.
-  
-  Authorization requires `spanner.databases.getIamPolicy` permission on
-  resource.
-  For backups, authorization requires `spanner.backups.getIamPolicy`
-  permission on resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn instances-backups-patch$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/patch
   
@@ -1776,13 +1427,13 @@
   
   Body: 
   
-  {:referencingDatabases [string],
-   :sizeBytes string,
-   :database string,
-   :createTime string,
+  {:name string,
    :expireTime string,
+   :database string,
+   :sizeBytes string,
    :state string,
-   :name string}
+   :referencingDatabases [string],
+   :createTime string}
   
   Updates a pending or completed Backup."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1844,16 +1495,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that the caller has on the specified database or backup
-  resource.
-  
-  Attempting this RPC on a non-existent Cloud Spanner database will
-  result in a NOT_FOUND error if the user has
-  `spanner.databases.list` permission on the containing Cloud
-  Spanner instance. Otherwise returns an empty set of permissions.
-  Calling this method on a backup that does not exist will
-  result in a NOT_FOUND error if the user has
-  `spanner.backups.list` permission on the containing instance."
+  Returns permissions that the caller has on the specified database or backup resource. Attempting this RPC on a non-existent Cloud Spanner database will result in a NOT_FOUND error if the user has `spanner.databases.list` permission on the containing Cloud Spanner instance. Otherwise returns an empty set of permissions. Calling this method on a backup that does not exist will result in a NOT_FOUND error if the user has `spanner.backups.list` permission on the containing instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -1864,6 +1506,45 @@
      "https://spanner.googleapis.com/"
      "v1/{+resource}:testIamPermissions"
      #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-create$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/create
+  
+  Required parameters: parent
+  
+  Optional parameters: backupId
+  
+  Body: 
+  
+  {:name string,
+   :expireTime string,
+   :database string,
+   :sizeBytes string,
+   :state string,
+   :referencingDatabases [string],
+   :createTime string}
+  
+  Starts creating a new Cloud Spanner Backup. The returned backup long-running operation will have a name of the format `projects//instances//backups//operations/` and can be used to track creation of the backup. The metadata field type is CreateBackupMetadata. The response field type is Backup, if successful. Cancelling the returned operation will stop the creation and delete the backup. There can be only one pending backup creation per database. Backup creation of different databases can run concurrently."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/backups"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1902,85 +1583,6 @@
       :as :json}
      auth))))
 
-(defn instances-backups-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists completed and pending backups.
-  Backups returned are ordered by `create_time` in descending order,
-  starting from the most recent `create_time`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/backups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-backups-create$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/create
-  
-  Required parameters: parent
-  
-  Optional parameters: backupId
-  
-  Body: 
-  
-  {:referencingDatabases [string],
-   :sizeBytes string,
-   :database string,
-   :createTime string,
-   :expireTime string,
-   :state string,
-   :name string}
-  
-  Starts creating a new Cloud Spanner Backup.
-  The returned backup long-running operation
-  will have a name of the format
-  `projects/<project>/instances/<instance>/backups/<backup>/operations/<operation_id>`
-  and can be used to track creation of the backup. The
-  metadata field type is
-  CreateBackupMetadata. The
-  response field type is
-  Backup, if successful. Cancelling the returned operation will stop the
-  creation and delete the backup.
-  There can be only one pending backup creation per database. Backup creation
-  of different databases can run concurrently."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/backups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn instances-backups-setIamPolicy$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/setIamPolicy
   
@@ -1990,15 +1592,9 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:bindings [Binding], :etag string, :version integer}}
   
-  Sets the access control policy on a database or backup resource.
-  Replaces any existing policy.
-  
-  Authorization requires `spanner.databases.setIamPolicy`
-  permission on resource.
-  For backups, authorization requires `spanner.backups.setIamPolicy`
-  permission on resource."
+  Sets the access control policy on a database or backup resource. Replaces any existing policy. Authorization requires `spanner.databases.setIamPolicy` permission on resource. For backups, authorization requires `spanner.backups.setIamPolicy` permission on resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
@@ -2020,32 +1616,110 @@
       :as :json}
      auth))))
 
-(defn instances-backups-operations-cancel$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/cancel
+(defn instances-backups-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists completed and pending backups. Backups returned are ordered by `create_time` in descending order, starting from the most recent `create_time`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-getIamPolicy$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a database or backup resource. Returns an empty policy if a database or backup exists but does not have a policy set. Authorization requires `spanner.databases.getIamPolicy` permission on resource. For backups, authorization requires `spanner.backups.getIamPolicy` permission on resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-operations-get$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Starts asynchronous cancellation on a long-running operation.  The server
-  makes a best effort to cancel the operation, but success is not
-  guaranteed.  If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-  Operations.GetOperation or
-  other methods to check whether the cancellation succeeded or whether the
-  operation completed despite cancellation. On successful cancellation,
-  the operation is not deleted; instead, it becomes an operation with
-  an Operation.error value with a google.rpc.Status.code of 1,
-  corresponding to `Code.CANCELLED`."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
-     "v1/{+name}:cancel"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-backups-operations-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -2063,10 +1737,7 @@
   
   Optional parameters: none
   
-  Deletes a long-running operation. This method indicates that the client is
-  no longer interested in the operation result. It does not cancel the
-  operation. If the server doesn't support this method, it returns
-  `google.rpc.Code.UNIMPLEMENTED`."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
@@ -2086,61 +1757,23 @@
       :as :json}
      auth))))
 
-(defn instances-backups-operations-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists operations that match the specified filter in the request. If the
-  server doesn't support this method, it returns `UNIMPLEMENTED`.
-  
-  NOTE: the `name` binding allows API services to override the binding
-  to use different resource name schemes, such as `users/*/operations`. To
-  override the binding, API services can add a binding such as
-  `\"/v1/{name=users/*}/operations\"` to their service configuration.
-  For backwards compatibility, the default name includes the operations
-  collection id, however overriding users must ensure the name binding
-  is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-backups-operations-get$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/get
+(defn instances-backups-operations-cancel$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/backups/operations/cancel
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation.  Clients can use this
-  method to poll the operation result at intervals as recommended by the API
-  service."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -2156,16 +1789,9 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, filter
   
-  Lists database longrunning-operations.
-  A database operation has a name of the form
-  `projects/<project>/instances/<instance>/databases/<database>/operations/<operation>`.
-  The long-running operation
-  metadata field type
-  `metadata.type_url` describes the type of the metadata. Operations returned
-  include those that have completed/failed/canceled within the last 7 days,
-  and pending operations."
+  Lists database longrunning-operations. A database operation has a name of the form `projects//instances//databases//operations/`. The long-running operation metadata field type `metadata.type_url` describes the type of the metadata. Operations returned include those that have completed/failed/canceled within the last 7 days, and pending operations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters]

@@ -1,7 +1,6 @@
 (ns happygapi.cloudiot.projects
   "Cloud IoT API: projects.
-  Registers and manages IoT (Internet of Things) devices that connect to the Google Cloud Platform.
-  
+  Registers and manages IoT (Internet of Things) devices that connect to the Google Cloud Platform. 
   See: https://cloud.google.com/iotapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -43,10 +42,9 @@
   
   Body: 
   
-  {:policy {:bindings [Binding], :etag string, :version integer}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -79,13 +77,13 @@
   
   {:id string,
    :mqttConfig {:mqttEnabledState string},
-   :stateNotificationConfig {:pubsubTopicName string},
    :credentials [{:publicKeyCertificate PublicKeyCertificate}],
+   :stateNotificationConfig {:pubsubTopicName string},
+   :httpConfig {:httpEnabledState string},
    :name string,
-   :eventNotificationConfigs [{:subfolderMatches string,
-                               :pubsubTopicName string}],
-   :logLevel string,
-   :httpConfig {:httpEnabledState string}}
+   :eventNotificationConfigs [{:pubsubTopicName string,
+                               :subfolderMatches string}],
+   :logLevel string}
   
   Updates a device registry configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -120,9 +118,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -155,13 +151,13 @@
   
   {:id string,
    :mqttConfig {:mqttEnabledState string},
-   :stateNotificationConfig {:pubsubTopicName string},
    :credentials [{:publicKeyCertificate PublicKeyCertificate}],
+   :stateNotificationConfig {:pubsubTopicName string},
+   :httpConfig {:httpEnabledState string},
    :name string,
-   :eventNotificationConfigs [{:subfolderMatches string,
-                               :pubsubTopicName string}],
-   :logLevel string,
-   :httpConfig {:httpEnabledState string}}
+   :eventNotificationConfigs [{:pubsubTopicName string,
+                               :subfolderMatches string}],
+   :logLevel string}
   
   Creates a device registry that contains devices."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -289,9 +285,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -349,10 +343,9 @@
   
   Body: 
   
-  {:policy {:bindings [Binding], :etag string, :version integer}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -362,41 +355,6 @@
     (util/get-url
      "https://cloudiot.googleapis.com/"
      "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-registries-groups-testIamPermissions$
-  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/groups/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource.
-  If the resource does not exist, this will return an empty set of
-  permissions, not a NOT_FOUND error."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudiot"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudiot.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -420,9 +378,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -432,6 +388,39 @@
     (util/get-url
      "https://cloudiot.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-registries-groups-testIamPermissions$
+  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/groups/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudiot"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudiot.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -471,33 +460,6 @@
       :as :json}
      auth))))
 
-(defn locations-registries-devices-delete$
-  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a device."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudiot"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudiot.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-registries-devices-list$
   "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/list
   
@@ -525,62 +487,6 @@
       :as :json}
      auth))))
 
-(defn locations-registries-devices-create$
-  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:gatewayConfig {:gatewayType string,
-                   :lastAccessedGatewayId string,
-                   :gatewayAuthMethod string,
-                   :lastAccessedGatewayTime string},
-   :numId string,
-   :lastConfigAckTime string,
-   :lastHeartbeatTime string,
-   :credentials [{:publicKey PublicKeyCredential,
-                  :expirationTime string}],
-   :config {:version string,
-            :cloudUpdateTime string,
-            :deviceAckTime string,
-            :binaryData string},
-   :lastConfigSendTime string,
-   :name string,
-   :lastStateTime string,
-   :state {:updateTime string, :binaryData string},
-   :lastErrorTime string,
-   :id string,
-   :lastEventTime string,
-   :logLevel string,
-   :lastErrorStatus {:code integer, :message string, :details [{}]},
-   :blocked boolean,
-   :metadata {}}
-  
-  Creates a device in a device registry."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudiot"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudiot.googleapis.com/"
-     "v1/{+parent}/devices"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-registries-devices-modifyCloudToDeviceConfig$
   "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/modifyCloudToDeviceConfig
   
@@ -590,11 +496,9 @@
   
   Body: 
   
-  {:versionToUpdate string, :binaryData string}
+  {:binaryData string, :versionToUpdate string}
   
-  Modifies the configuration for the device, which is eventually sent from
-  the Cloud IoT Core servers. Returns the modified configuration version and
-  its metadata."
+  Modifies the configuration for the device, which is eventually sent from the Cloud IoT Core servers. Returns the modified configuration version and its metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters body]
@@ -616,46 +520,28 @@
       :as :json}
      auth))))
 
-(defn locations-registries-devices-sendCommandToDevice$
-  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/sendCommandToDevice
+(defn locations-registries-devices-delete$
+  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:subfolder string, :binaryData string}
-  
-  Sends a command to the specified device. In order for a device to be able
-  to receive commands, it must:
-  1) be connected to Cloud IoT Core using the MQTT protocol, and
-  2) be subscribed to the group of MQTT topics specified by
-     /devices/{device-id}/commands/#. This subscription will receive commands
-     at the top-level topic /devices/{device-id}/commands as well as commands
-     for subfolders, like /devices/{device-id}/commands/subfolder.
-     Note that subscribing to specific subfolders is not supported.
-  If the command could not be delivered to the device, this method will
-  return an error; in particular, if the device is not subscribed, this
-  method will return FAILED_PRECONDITION. Otherwise, this method will
-  return OK. If the subscription is QoS 1, at least once delivery will be
-  guaranteed; for QoS 0, no acknowledgment will be expected from the device."
+  Deletes a device."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://cloudiot.googleapis.com/"
-     "v1/{+name}:sendCommandToDevice"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -670,23 +556,23 @@
   
   Body: 
   
-  {:gatewayConfig {:gatewayType string,
-                   :lastAccessedGatewayId string,
+  {:gatewayConfig {:lastAccessedGatewayId string,
                    :gatewayAuthMethod string,
+                   :gatewayType string,
                    :lastAccessedGatewayTime string},
    :numId string,
    :lastConfigAckTime string,
    :lastHeartbeatTime string,
    :credentials [{:publicKey PublicKeyCredential,
                   :expirationTime string}],
-   :config {:version string,
+   :config {:binaryData string,
+            :version string,
             :cloudUpdateTime string,
-            :deviceAckTime string,
-            :binaryData string},
+            :deviceAckTime string},
    :lastConfigSendTime string,
    :name string,
    :lastStateTime string,
-   :state {:updateTime string, :binaryData string},
+   :state {:binaryData string, :updateTime string},
    :lastErrorTime string,
    :id string,
    :lastEventTime string,
@@ -705,6 +591,39 @@
     (util/get-url
      "https://cloudiot.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-registries-devices-sendCommandToDevice$
+  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/sendCommandToDevice
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:binaryData string, :subfolder string}
+  
+  Sends a command to the specified device. In order for a device to be able to receive commands, it must: 1) be connected to Cloud IoT Core using the MQTT protocol, and 2) be subscribed to the group of MQTT topics specified by /devices/{device-id}/commands/#. This subscription will receive commands at the top-level topic /devices/{device-id}/commands as well as commands for subfolders, like /devices/{device-id}/commands/subfolder. Note that subscribing to specific subfolders is not supported. If the command could not be delivered to the device, this method will return an error; in particular, if the device is not subscribed, this method will return FAILED_PRECONDITION. Otherwise, this method will return OK. If the subscription is QoS 1, at least once delivery will be guaranteed; for QoS 0, no acknowledgment will be expected from the device."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudiot"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudiot.googleapis.com/"
+     "v1/{+name}:sendCommandToDevice"
      #{:name}
      parameters)
     (merge-with
@@ -744,6 +663,62 @@
       :as :json}
      auth))))
 
+(defn locations-registries-devices-create$
+  "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:gatewayConfig {:lastAccessedGatewayId string,
+                   :gatewayAuthMethod string,
+                   :gatewayType string,
+                   :lastAccessedGatewayTime string},
+   :numId string,
+   :lastConfigAckTime string,
+   :lastHeartbeatTime string,
+   :credentials [{:publicKey PublicKeyCredential,
+                  :expirationTime string}],
+   :config {:binaryData string,
+            :version string,
+            :cloudUpdateTime string,
+            :deviceAckTime string},
+   :lastConfigSendTime string,
+   :name string,
+   :lastStateTime string,
+   :state {:binaryData string, :updateTime string},
+   :lastErrorTime string,
+   :id string,
+   :lastEventTime string,
+   :logLevel string,
+   :lastErrorStatus {:code integer, :message string, :details [{}]},
+   :blocked boolean,
+   :metadata {}}
+  
+  Creates a device in a device registry."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudiot"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudiot.googleapis.com/"
+     "v1/{+parent}/devices"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-registries-devices-configVersions-list$
   "https://cloud.google.com/iotapi/reference/rest/v1/projects/locations/registries/devices/configVersions/list
   
@@ -751,8 +726,7 @@
   
   Optional parameters: numVersions
   
-  Lists the last few versions of the device configuration in descending
-  order (i.e.: newest first)."
+  Lists the last few versions of the device configuration in descending order (i.e.: newest first)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters]
@@ -779,8 +753,7 @@
   
   Optional parameters: numStates
   
-  Lists the last few versions of the device state in descending order (i.e.:
-  newest first)."
+  Lists the last few versions of the device state in descending order (i.e.: newest first)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudiot"]}
   [auth parameters]

@@ -1,6 +1,6 @@
 (ns happygapi.blogger.posts
-  "Blogger API: posts.
-  API for access to the data within Blogger.
+  "Blogger API v3: posts.
+  The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,9 +11,9 @@
   
   Required parameters: blogId, postId
   
-  Optional parameters: fetchBody, fetchImages, maxComments, view
+  Optional parameters: fetchBody, maxComments, view, fetchImages
   
-  Get a post by ID."
+  Gets a post by blog id and post id"
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -21,8 +21,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -38,7 +38,7 @@
   
   Required parameters: blogId
   
-  Optional parameters: fetchBody, fetchImages, isDraft
+  Optional parameters: isDraft, fetchBody, fetchImages
   
   Body: 
   
@@ -59,8 +59,8 @@
                       :updated string,
                       :selfLink string,
                       :author {:displayName string,
-                               :id string,
                                :image {:url string},
+                               :id string,
                                :url string},
                       :status string,
                       :id string,
@@ -68,27 +68,27 @@
                       :post {:id string},
                       :blog {:id string},
                       :published string}],
-             :selfLink string,
-             :totalItems string},
+             :totalItems string,
+             :selfLink string},
    :status string,
    :customMetaData string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lat number, :lng number, :name string, :span string},
+   :location {:lng number, :lat number, :name string, :span string},
    :blog {:id string},
    :published string}
   
-  Add a post."
+  Inserts a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts"
      #{:blogId}
      parameters)
     (merge-with
@@ -106,7 +106,7 @@
   
   Required parameters: blogId, postId
   
-  Optional parameters: fetchBody, fetchImages, maxComments, publish, revert
+  Optional parameters: revert, maxComments, publish, fetchBody, fetchImages
   
   Body: 
   
@@ -127,8 +127,8 @@
                       :updated string,
                       :selfLink string,
                       :author {:displayName string,
-                               :id string,
                                :image {:url string},
+                               :id string,
                                :url string},
                       :status string,
                       :id string,
@@ -136,27 +136,27 @@
                       :post {:id string},
                       :blog {:id string},
                       :published string}],
-             :selfLink string,
-             :totalItems string},
+             :totalItems string,
+             :selfLink string},
    :status string,
    :customMetaData string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lat number, :lng number, :name string, :span string},
+   :location {:lng number, :lat number, :name string, :span string},
    :blog {:id string},
    :published string}
   
-  Update a post. This method supports patch semantics."
+  Patches a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/patch
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -172,9 +172,9 @@
 (defn update$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/update
   
-  Required parameters: blogId, postId
+  Required parameters: postId, blogId
   
-  Optional parameters: fetchBody, fetchImages, maxComments, publish, revert
+  Optional parameters: revert, fetchImages, maxComments, fetchBody, publish
   
   Body: 
   
@@ -195,8 +195,8 @@
                       :updated string,
                       :selfLink string,
                       :author {:displayName string,
-                               :id string,
                                :image {:url string},
+                               :id string,
                                :url string},
                       :status string,
                       :id string,
@@ -204,27 +204,27 @@
                       :post {:id string},
                       :blog {:id string},
                       :published string}],
-             :selfLink string,
-             :totalItems string},
+             :totalItems string,
+             :selfLink string},
    :status string,
    :customMetaData string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lat number, :lng number, :name string, :span string},
+   :location {:lng number, :lat number, :name string, :span string},
    :blog {:id string},
    :published string}
   
-  Update a post."
+  Updates a post by blog id and post id."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -244,15 +244,15 @@
   
   Optional parameters: none
   
-  Delete a post by ID."
+  Deletes a post by blog id and post id."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -266,11 +266,11 @@
 (defn search$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/search
   
-  Required parameters: blogId, q
+  Required parameters: q, blogId
   
   Optional parameters: fetchBodies, orderBy
   
-  Search for a post."
+  Searches for posts matching given query terms in the specified blog."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -278,8 +278,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/search"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/search"
      #{:blogId :q}
      parameters)
     (merge-with
@@ -293,19 +293,19 @@
 (defn revert$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/revert
   
-  Required parameters: blogId, postId
+  Required parameters: postId, blogId
   
   Optional parameters: none
   
-  Revert a published or scheduled post to draft state."
+  Reverts a published or scheduled post to draft state."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}/revert"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}/revert"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -323,7 +323,7 @@
   
   Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, fetchImages, maxResults, view, orderBy
   
-  Retrieves a list of posts, possibly filtered."
+  Lists posts."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -331,8 +331,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts"
      #{:blogId}
      parameters)
     (merge-with
@@ -346,19 +346,19 @@
 (defn publish$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/publish
   
-  Required parameters: blogId, postId
+  Required parameters: postId, blogId
   
   Optional parameters: publishDate
   
-  Publishes a draft post, optionally at the specific time of the given publishDate parameter."
+  Publishes a post."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:blogId :postId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/{postId}/publish"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/{postId}/publish"
      #{:blogId :postId}
      parameters)
     (merge-with
@@ -372,11 +372,11 @@
 (defn getByPath$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/getByPath
   
-  Required parameters: blogId, path
+  Required parameters: path, blogId
   
   Optional parameters: maxComments, view
   
-  Retrieve a Post by Path."
+  Gets a post by path."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
@@ -384,8 +384,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/posts/bypath"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/posts/bypath"
      #{:blogId :path}
      parameters)
     (merge-with

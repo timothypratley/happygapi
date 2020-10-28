@@ -1,13 +1,13 @@
 (ns happygapi.content.pubsubnotificationsettings
   "Content API for Shopping: pubsubnotificationsettings.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/pubsubnotificationsettings"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pubsubnotificationsettings"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/pubsubnotificationsettings/get
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pubsubnotificationsettings/get
   
   Required parameters: merchantId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/pubsubnotificationsettings"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/pubsubnotificationsettings"
      #{:merchantId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/pubsubnotificationsettings/update
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pubsubnotificationsettings/update
   
   Required parameters: merchantId
   
@@ -41,7 +41,7 @@
   
   Body: 
   
-  {:cloudTopicName string, :kind string, :registeredEvents [string]}
+  {:registeredEvents [string], :kind string, :cloudTopicName string}
   
   Register a Merchant Center account for pubsub notifications. Note that cloud topic name should not be provided as part of the request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -50,8 +50,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/pubsubnotificationsettings"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/pubsubnotificationsettings"
      #{:merchantId}
      parameters)
     (merge-with

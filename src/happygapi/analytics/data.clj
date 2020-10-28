@@ -69,7 +69,7 @@
   
   Required parameters: ids, metrics
   
-  Optional parameters: dimensions, filters, max-results, sort
+  Optional parameters: max-results, sort, dimensions, filters
   
   Returns real time data for a view (profile)."
   {:scopes ["https://www.googleapis.com/auth/analytics"

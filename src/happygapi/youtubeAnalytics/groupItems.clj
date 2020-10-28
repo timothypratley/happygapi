@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner, id
+  Optional parameters: id, onBehalfOfContentOwner
   
   Removes an item from a group."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -45,12 +45,12 @@
   
   Body: 
   
-  {:kind string,
-   :etag string,
-   :resource {:kind string, :id string},
-   :groupId string,
+  {:groupId string,
+   :errors {:error [ErrorProto], :code string, :requestId string},
    :id string,
-   :errors {:error [ErrorProto], :code string, :requestId string}}
+   :resource {:kind string, :id string},
+   :etag string,
+   :kind string}
   
   Creates a group item."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -82,7 +82,7 @@
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner, groupId
+  Optional parameters: groupId, onBehalfOfContentOwner
   
   Returns a collection of group items that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube"

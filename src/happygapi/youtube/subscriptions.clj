@@ -1,19 +1,19 @@
 (ns happygapi.youtube.subscriptions
-  "YouTube Data API: subscriptions.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions"
+  "YouTube Data API v3: subscriptions.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/subscriptions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/delete
   
   Required parameters: id
   
   Optional parameters: none
   
-  Deletes a subscription."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -22,8 +22,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "subscriptions"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/subscriptions"
      #{:id}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/insert
   
   Required parameters: part
   
@@ -43,25 +43,25 @@
   
   Body: 
   
-  {:contentDetails {:activityType string,
-                    :newItemCount integer,
-                    :totalItemCount integer},
-   :etag string,
-   :id string,
-   :kind string,
-   :snippet {:channelId string,
-             :channelTitle string,
-             :description string,
-             :publishedAt string,
-             :resourceId ResourceId,
-             :thumbnails ThumbnailDetails,
-             :title string},
+  {:etag string,
    :subscriberSnippet {:channelId string,
                        :description string,
                        :thumbnails ThumbnailDetails,
-                       :title string}}
+                       :title string},
+   :snippet {:description string,
+             :resourceId ResourceId,
+             :publishedAt string,
+             :title string,
+             :channelId string,
+             :channelTitle string,
+             :thumbnails ThumbnailDetails},
+   :kind string,
+   :contentDetails {:newItemCount integer,
+                    :totalItemCount integer,
+                    :activityType string},
+   :id string}
   
-  Adds a subscription for the authenticated user's channel."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -70,8 +70,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "subscriptions"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/subscriptions"
      #{:part}
      parameters)
     (merge-with
@@ -85,13 +85,13 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/subscriptions/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/list
   
   Required parameters: part
   
   Optional parameters: forChannelId, onBehalfOfContentOwnerChannel, channelId, myRecentSubscribers, pageToken, mine, id, order, mySubscribers, onBehalfOfContentOwner, maxResults
   
-  Returns subscription resources that match the API request criteria."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
@@ -101,8 +101,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "subscriptions"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/subscriptions"
      #{:part}
      parameters)
     (merge-with

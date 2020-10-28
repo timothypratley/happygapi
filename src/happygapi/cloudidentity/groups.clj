@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Deletes a Group."
+  Deletes a `Group`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
@@ -33,112 +33,14 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, pageSize, view, parent
-  
-  Lists groups within a customer or a domain."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/groups"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn lookup$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/lookup
-  
-  Required parameters: none
-  
-  Optional parameters: groupKey.namespace, groupKey.id
-  
-  Looks up [resource
-  name](https://cloud.google.com/apis/design/resource_names) of a Group by
-  its EntityKey."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/groups:lookup"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:displayName string,
-   :description string,
-   :parent string,
-   :labels {},
-   :createTime string,
-   :updateTime string,
-   :name string,
-   :groupKey {:id string, :namespace string}}
-  
-  Creates a Group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/groups"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn search$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/search
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize, query, view
+  Optional parameters: pageToken, query, view, pageSize
   
-  Searches for Groups."
+  Searches for `Group`s matching a specified query."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
@@ -166,7 +68,7 @@
   
   Optional parameters: none
   
-  Retrieves a Group."
+  Retrieves a `Group`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
@@ -187,6 +89,34 @@
       :as :json}
      auth))))
 
+(defn lookup$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/lookup
+  
+  Required parameters: none
+  
+  Optional parameters: groupKey.namespace, groupKey.id
+  
+  Looks up the [resource name](https://cloud.google.com/apis/design/resource_names) of a `Group` by its `EntityKey`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/groups:lookup"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/patch
   
@@ -196,16 +126,16 @@
   
   Body: 
   
-  {:displayName string,
-   :description string,
-   :parent string,
-   :labels {},
+  {:labels {},
    :createTime string,
-   :updateTime string,
+   :groupKey {:namespace string, :id string},
    :name string,
-   :groupKey {:id string, :namespace string}}
+   :parent string,
+   :updateTime string,
+   :description string,
+   :displayName string}
   
-  Updates a Group."
+  Updates a `Group`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -227,25 +157,65 @@
       :as :json}
      auth))))
 
-(defn memberships-get$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/memberships/get
+(defn create$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/create
   
-  Required parameters: name
+  Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: initialGroupConfig
   
-  Retrieves a Membership."
+  Body: 
+  
+  {:labels {},
+   :createTime string,
+   :groupKey {:namespace string, :id string},
+   :name string,
+   :parent string,
+   :updateTime string,
+   :description string,
+   :displayName string}
+  
+  Creates a Group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/groups"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, view, pageSize, parent
+  
+  Lists the `Group`s under a customer or namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudidentity.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/groups"
+     #{}
      parameters)
     (merge-with
      merge
@@ -260,9 +230,9 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, view
+  Optional parameters: view, pageSize, pageToken
   
-  Lists Memberships within a Group."
+  Lists the `Membership`s within a `Group`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
@@ -292,13 +262,14 @@
   
   Body: 
   
-  {:preferredMemberKey {:id string, :namespace string},
-   :createTime string,
+  {:roles [{:name string}],
+   :type string,
+   :preferredMemberKey {:namespace string, :id string},
    :updateTime string,
-   :roles [{:name string}],
-   :name string}
+   :name string,
+   :createTime string}
   
-  Creates a Membership."
+  Creates a `Membership`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -320,6 +291,39 @@
       :as :json}
      auth))))
 
+(defn memberships-modifyMembershipRoles$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/memberships/modifyMembershipRoles
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:addRoles [{:name string}], :removeRoles [string]}
+  
+  Modifies the `MembershipRole`s of a `Membership`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/{+name}:modifyMembershipRoles"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn memberships-lookup$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/memberships/lookup
   
@@ -327,9 +331,7 @@
   
   Optional parameters: memberKey.id, memberKey.namespace
   
-  Looks up [resource
-  name](https://cloud.google.com/apis/design/resource_names) of a Membership
-  within a Group by member's EntityKey."
+  Looks up the [resource name](https://cloud.google.com/apis/design/resource_names) of a `Membership` by its `EntityKey`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
@@ -350,6 +352,34 @@
       :as :json}
      auth))))
 
+(defn memberships-get$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/memberships/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves a `Membership`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn memberships-delete$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/memberships/delete
   
@@ -357,7 +387,7 @@
   
   Optional parameters: none
   
-  Deletes a Membership."
+  Deletes a `Membership`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]

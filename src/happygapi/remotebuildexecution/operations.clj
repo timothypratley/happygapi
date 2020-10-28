@@ -17,12 +17,7 @@
   
   {}
   
-  Wait for an execution operation to complete. When the client initially
-  makes the request, the server immediately responds with the current status
-  of the execution. The server will leave the request stream open until the
-  operation completes, and then respond with the completed operation. The
-  server MAY choose to stream additional updates as execution progresses,
-  such as to provide an update as to the state of the execution."
+  Wait for an execution operation to complete. When the client initially makes the request, the server immediately responds with the current status of the execution. The server will leave the request stream open until the operation completes, and then respond with the completed operation. The server MAY choose to stream additional updates as execution progresses, such as to provide an update as to the state of the execution."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}

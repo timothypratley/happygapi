@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/adunits/list
+  
+  Required parameters: adClientId
+  
+  Optional parameters: includeInactive, maxResults, pageToken
+  
+  List all ad units in the specified ad client for this AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsense/v1.4/"
+     "adclients/{adClientId}/adunits"
+     #{:adClientId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/adsense/management/api/reference/rest/v1.4/adunits/get
   
@@ -24,33 +51,6 @@
      "https://www.googleapis.com/adsense/v1.4/"
      "adclients/{adClientId}/adunits/{adUnitId}"
      #{:adUnitId :adClientId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/adunits/list
-  
-  Required parameters: adClientId
-  
-  Optional parameters: includeInactive, pageToken, maxResults
-  
-  List all ad units in the specified ad client for this AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:adClientId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsense/v1.4/"
-     "adclients/{adClientId}/adunits"
-     #{:adClientId}
      parameters)
     (merge-with
      merge
@@ -92,7 +92,7 @@
   
   Required parameters: adClientId, adUnitId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   List all custom channels which the specified ad unit belongs to."
   {:scopes ["https://www.googleapis.com/auth/adsense"

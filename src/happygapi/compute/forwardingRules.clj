@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of forwarding rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -156,7 +156,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of ForwardingRule resources available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

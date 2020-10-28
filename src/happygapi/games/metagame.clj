@@ -1,13 +1,13 @@
 (ns happygapi.games.metagame
-  "Google Play Game Services API: metagame.
-  The API for Google Play Game Services.
-  See: https://developers.google.com/games/services/api/reference/rest/v1/metagame"
+  "Google Play Game Services: metagame.
+  The Google Play games service allows developers to enhance games with social leaderboards, achievements, game state, sign-in with Google, and more.
+  See: https://developers.google.com/games/api/reference/rest/v1/metagame"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn getMetagameConfig$
-  "https://developers.google.com/games/services/api/reference/rest/v1/metagame/getMetagameConfig
+  "https://developers.google.com/games/api/reference/rest/v1/metagame/getMetagameConfig
   
   Required parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/games/v1/"
-     "metagameConfig"
+     "https://games.googleapis.com/"
+     "games/v1/metagameConfig"
      #{}
      parameters)
     (merge-with
@@ -33,21 +33,21 @@
      auth))))
 
 (defn listCategoriesByPlayer$
-  "https://developers.google.com/games/services/api/reference/rest/v1/metagame/listCategoriesByPlayer
+  "https://developers.google.com/games/api/reference/rest/v1/metagame/listCategoriesByPlayer
   
   Required parameters: collection, playerId
   
   Optional parameters: language, maxResults, pageToken
   
-  List play data aggregated per category for the player corresponding to playerId."
+  List play data aggregated per category for the player corresponding to `playerId`."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:playerId :collection})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/games/v1/"
-     "players/{playerId}/categories/{collection}"
+     "https://games.googleapis.com/"
+     "games/v1/players/{playerId}/categories/{collection}"
      #{:playerId :collection}
      parameters)
     (merge-with

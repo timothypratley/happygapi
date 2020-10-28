@@ -1,17 +1,17 @@
 (ns happygapi.content.accounts
   "Content API for Shopping: accounts.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/get
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/get
   
   Required parameters: accountId, merchantId
   
-  Optional parameters: none
+  Optional parameters: view
   
   Retrieves a Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/insert
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/insert
   
   Required parameters: merchantId
   
@@ -42,8 +42,9 @@
   Body: 
   
   {:websiteUrl string,
+   :labelIds [string],
    :name string,
-   :adsLinks [{:adsId string, :status string}],
+   :adsLinks [{:status string, :adsId string}],
    :businessInformation {:address AccountAddress,
                          :customerService AccountCustomerService,
                          :phoneNumber string},
@@ -51,13 +52,16 @@
    :kind string,
    :sellerId string,
    :adultContent boolean,
+   :cssId string,
    :youtubeChannelLinks [{:channelId string, :status string}],
-   :googleMyBusinessLink {:gmbEmail string, :status string},
-   :users [{:admin boolean,
-            :emailAddress string,
+   :googleMyBusinessLink {:status string,
+                          :gmbEmail string,
+                          :gmbAccountId string},
+   :users [{:emailAddress string,
+            :admin boolean,
+            :paymentsManager boolean,
             :orderManager boolean,
-            :paymentsAnalyst boolean,
-            :paymentsManager boolean}]}
+            :paymentsAnalyst boolean}]}
   
   Creates a Merchant Center sub-account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -66,8 +70,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts"
      #{:merchantId}
      parameters)
     (merge-with
@@ -81,7 +85,7 @@
      auth))))
 
 (defn authinfo$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/authinfo
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/authinfo
   
   Required parameters: none
   
@@ -94,8 +98,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "accounts/authinfo"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/authinfo"
      #{}
      parameters)
     (merge-with
@@ -107,7 +111,7 @@
      auth))))
 
 (defn claimwebsite$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/claimwebsite
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/claimwebsite
   
   Required parameters: accountId, merchantId
   
@@ -120,8 +124,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}/claimwebsite"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}/claimwebsite"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -132,8 +136,40 @@
       :as :json}
      auth))))
 
+(defn updatelabels$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/updatelabels
+  
+  Required parameters: merchantId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labelIds [string]}
+  
+  Updates labels that are assigned to the Merchant Center account by CSS user."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}/updatelabels"
+     #{:accountId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/update
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/update
   
   Required parameters: accountId, merchantId
   
@@ -142,8 +178,9 @@
   Body: 
   
   {:websiteUrl string,
+   :labelIds [string],
    :name string,
-   :adsLinks [{:adsId string, :status string}],
+   :adsLinks [{:status string, :adsId string}],
    :businessInformation {:address AccountAddress,
                          :customerService AccountCustomerService,
                          :phoneNumber string},
@@ -151,23 +188,26 @@
    :kind string,
    :sellerId string,
    :adultContent boolean,
+   :cssId string,
    :youtubeChannelLinks [{:channelId string, :status string}],
-   :googleMyBusinessLink {:gmbEmail string, :status string},
-   :users [{:admin boolean,
-            :emailAddress string,
+   :googleMyBusinessLink {:status string,
+                          :gmbEmail string,
+                          :gmbAccountId string},
+   :users [{:emailAddress string,
+            :admin boolean,
+            :paymentsManager boolean,
             :orderManager boolean,
-            :paymentsAnalyst boolean,
-            :paymentsManager boolean}]}
+            :paymentsAnalyst boolean}]}
   
-  Updates a Merchant Center account."
+  Updates a Merchant Center account. Any fields that are not provided are deleted from the resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -181,9 +221,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/delete
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/delete
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: force
   
@@ -194,8 +234,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -207,11 +247,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/list
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/list
   
   Required parameters: merchantId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: label, maxResults, view, pageToken
   
   Lists the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -220,8 +260,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts"
      #{:merchantId}
      parameters)
     (merge-with
@@ -233,17 +273,17 @@
      auth))))
 
 (defn link$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/link
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/link
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   
   Body: 
   
-  {:action string,
-   :linkType string,
+  {:linkType string,
    :linkedAccountId string,
+   :action string,
    :services [string]}
   
   Performs an action on a link between two Merchant Center accounts, namely accountId and linkedAccountId."
@@ -253,8 +293,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}/link"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}/link"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -268,11 +308,11 @@
      auth))))
 
 (defn listlinks$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/listlinks
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/listlinks
   
   Required parameters: accountId, merchantId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Returns the list of accounts linked to your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -281,8 +321,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/accounts/{accountId}/listlinks"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/accounts/{accountId}/listlinks"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -294,7 +334,7 @@
      auth))))
 
 (defn custombatch$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/accounts/custombatch
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/custombatch
   
   Required parameters: none
   
@@ -302,14 +342,16 @@
   
   Body: 
   
-  {:entries [{:account Account,
-              :accountId string,
-              :batchId integer,
-              :force boolean,
-              :linkRequest AccountsCustomBatchRequestEntryLinkRequest,
-              :merchantId string,
+  {:entries [{:force boolean,
               :method string,
-              :overwrite boolean}]}
+              :labelIds [string],
+              :linkRequest AccountsCustomBatchRequestEntryLinkRequest,
+              :account Account,
+              :overwrite boolean,
+              :batchId integer,
+              :accountId string,
+              :merchantId string,
+              :view string}]}
   
   Retrieves, inserts, updates, and deletes multiple Merchant Center (sub-)accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -318,8 +360,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "accounts/batch"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/batch"
      #{}
      parameters)
     (merge-with
@@ -327,6 +369,128 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn labels-list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/labels/list
+  
+  Required parameters: accountId
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the labels assigned to an account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/{accountId}/labels"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn labels-patch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/labels/patch
+  
+  Required parameters: labelId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labelId string,
+   :description string,
+   :accountId string,
+   :name string}
+  
+  Updates a label."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:labelId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/{accountId}/labels/{labelId}"
+     #{:labelId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn labels-create$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/labels/create
+  
+  Required parameters: accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labelId string,
+   :description string,
+   :accountId string,
+   :name string}
+  
+  Creates a new label, not assigned to any account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/{accountId}/labels"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn labels-delete$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounts/labels/delete
+  
+  Required parameters: labelId, accountId
+  
+  Optional parameters: none
+  
+  Deletes a label and removes it from all accounts to which it was assigned."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:labelId :accountId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/accounts/{accountId}/labels/{labelId}"
+     #{:labelId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

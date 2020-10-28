@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/delete
-  
-  Required parameters: adClientId, urlChannelId
-  
-  Optional parameters: none
-  
-  Delete a URL channel from the host AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:urlChannelId :adClientId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/urlchannels/{urlChannelId}"
-     #{:urlChannelId :adClientId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/insert
   
@@ -41,7 +15,7 @@
   
   Body: 
   
-  {:id string, :urlPattern string, :kind string}
+  {:urlPattern string, :id string, :kind string}
   
   Add a new URL channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
@@ -59,6 +33,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/delete
+  
+  Required parameters: urlChannelId, adClientId
+  
+  Optional parameters: none
+  
+  Delete a URL channel from the host AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:urlChannelId :adClientId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "adclients/{adClientId}/urlchannels/{urlChannelId}"
+     #{:urlChannelId :adClientId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

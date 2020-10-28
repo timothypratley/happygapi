@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of machine types."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -67,7 +67,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of machine types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

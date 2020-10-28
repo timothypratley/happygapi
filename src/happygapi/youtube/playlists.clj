@@ -1,19 +1,19 @@
 (ns happygapi.youtube.playlists
-  "YouTube Data API: playlists.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/playlists"
+  "YouTube Data API v3: playlists.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/playlists"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlists/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/delete
   
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
   
-  Deletes a playlist."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -22,8 +22,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlists"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
      #{:id}
      parameters)
     (merge-with
@@ -34,21 +34,45 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlists/insert
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/list
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwnerChannel, channelId, pageToken, mine, hl, id, onBehalfOfContentOwner, maxResults
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/update
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner
   
   Body: 
   
-  {:contentDetails {:itemCount integer},
-   :etag string,
-   :id string,
-   :kind string,
-   :localizations {},
-   :player {:embedHtml string},
+  {:etag string,
    :snippet {:description string,
              :tags [string],
              :publishedAt string,
@@ -58,19 +82,24 @@
              :localized PlaylistLocalization,
              :channelTitle string,
              :defaultLanguage string},
-   :status {:privacyStatus string}}
+   :kind string,
+   :status {:privacyStatus string},
+   :contentDetails {:itemCount integer},
+   :id string,
+   :player {:embedHtml string},
+   :localizations {}}
   
-  Creates a playlist."
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlists"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
      #{:part}
      parameters)
     (merge-with
@@ -83,50 +112,16 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlists/list
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/insert
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwnerChannel, channelId, pageToken, mine, hl, id, onBehalfOfContentOwner, maxResults
-  
-  Returns a collection of playlists that match the API request parameters. For example, you can retrieve all playlists that the authenticated user owns, or you can retrieve one or more playlists by their unique IDs."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlists"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlists/update
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
   
   Body: 
   
-  {:contentDetails {:itemCount integer},
-   :etag string,
-   :id string,
-   :kind string,
-   :localizations {},
-   :player {:embedHtml string},
+  {:etag string,
    :snippet {:description string,
              :tags [string],
              :publishedAt string,
@@ -136,19 +131,24 @@
              :localized PlaylistLocalization,
              :channelTitle string,
              :defaultLanguage string},
-   :status {:privacyStatus string}}
+   :kind string,
+   :status {:privacyStatus string},
+   :contentDetails {:itemCount integer},
+   :id string,
+   :player {:embedHtml string},
+   :localizations {}}
   
-  Modifies a playlist. For example, you could change a playlist's title, description, or privacy status."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlists"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
      #{:part}
      parameters)
     (merge-with

@@ -49,11 +49,14 @@
    :name string,
    :quicOverride string,
    :selfLink string,
+   :serverTlsPolicy string,
    :region string,
    :id string,
    :kind string,
    :sslPolicy string,
-   :sslCertificates [string]}
+   :sslCertificates [string],
+   :authorizationPolicy string,
+   :proxyBind boolean}
   
   Creates a TargetHttpsProxy resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -181,7 +184,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of all TargetHttpsProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -269,7 +272,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of TargetHttpsProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

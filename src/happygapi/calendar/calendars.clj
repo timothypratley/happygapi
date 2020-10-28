@@ -6,27 +6,40 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn clear$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/clear
+(defn patch$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
   
   Required parameters: calendarId
   
   Optional parameters: none
   
-  Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
+  Body: 
+  
+  {:etag string,
+   :timeZone string,
+   :conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :location string,
+   :summary string,
+   :kind string,
+   :description string,
+   :id string}
+  
+  Updates metadata for a calendar. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}/clear"
+     "calendars/{calendarId}"
      #{:calendarId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -53,6 +66,71 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clear$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/clear
+  
+  Required parameters: calendarId
+  
+  Optional parameters: none
+  
+  Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
+  {:scopes ["https://www.googleapis.com/auth/calendar"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/calendar/v3/"
+     "calendars/{calendarId}/clear"
+     #{:calendarId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string,
+   :timeZone string,
+   :conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :location string,
+   :summary string,
+   :kind string,
+   :description string,
+   :id string}
+  
+  Creates a secondary calendar."
+  {:scopes ["https://www.googleapis.com/auth/calendar"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/calendar/v3/"
+     "calendars"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -85,84 +163,6 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
-   :description string,
-   :etag string,
-   :id string,
-   :kind string,
-   :location string,
-   :summary string,
-   :timeZone string}
-  
-  Creates a secondary calendar."
-  {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/calendar/v3/"
-     "calendars"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
-  
-  Required parameters: calendarId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
-   :description string,
-   :etag string,
-   :id string,
-   :kind string,
-   :location string,
-   :summary string,
-   :timeZone string}
-  
-  Updates metadata for a calendar. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:calendarId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}"
-     #{:calendarId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
   
@@ -172,14 +172,14 @@
   
   Body: 
   
-  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
-   :description string,
-   :etag string,
-   :id string,
-   :kind string,
+  {:etag string,
+   :timeZone string,
+   :conferenceProperties {:allowedConferenceSolutionTypes [string]},
    :location string,
    :summary string,
-   :timeZone string}
+   :kind string,
+   :description string,
+   :id string}
   
   Updates metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}

@@ -1,41 +1,15 @@
 (ns happygapi.books.myconfig
   "Books API: myconfig.
-  Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig"
+  The Google Books API allows clients to access the Google Books repository.
+  See: https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getUserSettings$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig/getUserSettings
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Gets the current settings for the user."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "myconfig/getUserSettings"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn releaseDownloadAccess$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig/releaseDownloadAccess
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/releaseDownloadAccess
   
-  Required parameters: cpksver, volumeIds
+  Required parameters: volumeIds, cpksver
   
   Optional parameters: locale, source
   
@@ -46,8 +20,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "myconfig/releaseDownloadAccess"
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/releaseDownloadAccess"
      #{:cpksver :volumeIds}
      parameters)
     (merge-with
@@ -58,10 +32,74 @@
       :as :json}
      auth))))
 
-(defn requestAccess$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig/requestAccess
+(defn updateUserSettings$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/updateUserSettings
   
-  Required parameters: cpksver, nonce, source, volumeId
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:notesExport {:folderName string, :isEnabled boolean},
+   :notification {:priceDrop {:opted_state string},
+                  :moreFromAuthors {:opted_state string},
+                  :rewardExpirations {:opted_state string},
+                  :moreFromSeries {:opted_state string},
+                  :matchMyInterests {:opted_state string}},
+   :kind string}
+  
+  Sets the settings for the user. If a sub-object is specified, it will overwrite the existing sub-object stored in the server. Unspecified sub-objects will retain the existing value."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/updateUserSettings"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn syncVolumeLicenses$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/syncVolumeLicenses
+  
+  Required parameters: nonce, source, cpksver
+  
+  Optional parameters: locale, volumeIds, showPreorders, features, includeNonComicsSeries
+  
+  Request downloaded content access for specified volumes on the My eBooks shelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:source :cpksver :nonce})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/syncVolumeLicenses"
+     #{:source :cpksver :nonce}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn requestAccess$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/requestAccess
+  
+  Required parameters: source, cpksver, nonce, volumeId
   
   Optional parameters: licenseTypes, locale
   
@@ -74,8 +112,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "myconfig/requestAccess"
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/requestAccess"
      #{:volumeId :source :cpksver :nonce}
      parameters)
     (merge-with
@@ -86,65 +124,27 @@
       :as :json}
      auth))))
 
-(defn syncVolumeLicenses$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig/syncVolumeLicenses
-  
-  Required parameters: cpksver, nonce, source
-  
-  Optional parameters: features, includeNonComicsSeries, locale, showPreorders, volumeIds
-  
-  Request downloaded content access for specified volumes on the My eBooks shelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:source :cpksver :nonce})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "myconfig/syncVolumeLicenses"
-     #{:source :cpksver :nonce}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn updateUserSettings$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/myconfig/updateUserSettings
+(defn getUserSettings$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/getUserSettings
   
   Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: country
   
-  Body: 
-  
-  {:kind string,
-   :notesExport {:folderName string, :isEnabled boolean},
-   :notification {:matchMyInterests {:opted_state string},
-                  :moreFromAuthors {:opted_state string},
-                  :moreFromSeries {:opted_state string},
-                  :priceDrop {:opted_state string},
-                  :rewardExpirations {:opted_state string}}}
-  
-  Sets the settings for the user. If a sub-object is specified, it will overwrite the existing sub-object stored in the server. Unspecified sub-objects will retain the existing value."
+  Gets the current settings for the user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "myconfig/updateUserSettings"
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/getUserSettings"
      #{}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

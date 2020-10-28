@@ -13,8 +13,7 @@
   
   Optional parameters: none
   
-  Method for media download. Download is supported
-  on the URI `/v1/media/{+name}?alt=media`."
+  Method for media download. Download is supported on the URI `/v1/media/{+name}?alt=media`."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
   [auth parameters]

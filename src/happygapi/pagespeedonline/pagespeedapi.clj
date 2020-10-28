@@ -1,7 +1,6 @@
 (ns happygapi.pagespeedonline.pagespeedapi
   "PageSpeed Insights API: pagespeedapi.
-  The PageSpeed Insights API lets you analyze the performance of your website with a simple API.  It offers tailored suggestions for how you can optimize your site, and lets you easily integrate PageSpeed Insights analysis into your development tools and workflow.
-  
+  The PageSpeed Insights API lets you analyze the performance of your website with a simple API. It offers tailored suggestions for how you can optimize your site, and lets you easily integrate PageSpeed Insights analysis into your development tools and workflow. 
   See: https://developers.google.com/speed/docs/insights/v5/aboutapi/reference/rest/v5/pagespeedapi"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -12,11 +11,9 @@
   
   Required parameters: none
   
-  Optional parameters: locale, url, utm_campaign, captchaToken, strategy, category, utm_source
+  Optional parameters: category, utm_source, url, locale, utm_campaign, captchaToken, strategy
   
-  Runs PageSpeed analysis on the page at the specified URL, and returns
-  PageSpeed scores, a list of suggestions to make that page faster, and other
-  information."
+  Runs PageSpeed analysis on the page at the specified URL, and returns PageSpeed scores, a list of suggestions to make that page faster, and other information."
   {:scopes ["openid"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}

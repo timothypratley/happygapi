@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.directorySites
   "DCM/DFA Reporting And Trafficking API: directorySites.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/directorySites"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/directorySites/{id}"
      #{:id :profileId}
      parameters)
@@ -41,21 +41,21 @@
   
   Body: 
   
-  {:id string,
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+  {:inpageTagFormats [string],
+   :name string,
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :inpageTagFormats [string],
-   :interstitialTagFormats [string],
+                      :dimensionName string,
+                      :matchType string},
    :kind string,
-   :name string,
-   :settings {:activeViewOptOut boolean,
-              :dfpSettings DfpSettings,
-              :instreamVideoPlacementAccepted boolean,
-              :interstitialPlacementAccepted boolean},
+   :settings {:dfpSettings DfpSettings,
+              :activeViewOptOut boolean,
+              :interstitialPlacementAccepted boolean,
+              :instreamVideoPlacementAccepted boolean},
+   :interstitialTagFormats [string],
+   :id string,
    :url string}
   
   Inserts a new directory site."
@@ -65,7 +65,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/directorySites"
      #{:profileId}
      parameters)
@@ -93,7 +93,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/directorySites"
      #{:profileId}
      parameters)

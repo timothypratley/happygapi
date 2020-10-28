@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, maxResults
+  
+  List all saved ad styles in the user's account."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsense/v1.4/"
+     "savedadstyles"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles/get
   
@@ -24,33 +51,6 @@
      "https://www.googleapis.com/adsense/v1.4/"
      "savedadstyles/{savedAdStyleId}"
      #{:savedAdStyleId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/adsense/management/api/reference/rest/v1.4/savedadstyles/list
-  
-  Required parameters: none
-  
-  Optional parameters: maxResults, pageToken
-  
-  List all saved ad styles in the user's account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsense/v1.4/"
-     "savedadstyles"
-     #{}
      parameters)
     (merge-with
      merge

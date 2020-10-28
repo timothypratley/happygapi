@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   List all ad clients in this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"

@@ -87,7 +87,8 @@
                        :loadBalancingUtilization AutoscalingPolicyLoadBalancingUtilization,
                        :maxNumReplicas integer,
                        :minNumReplicas integer,
-                       :mode string},
+                       :mode string,
+                       :scaleInControl AutoscalingPolicyScaleInControl},
    :target string}
   
   Creates an autoscaler in the specified project using the data included in the request."
@@ -117,7 +118,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of autoscalers contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -166,7 +167,8 @@
                        :loadBalancingUtilization AutoscalingPolicyLoadBalancingUtilization,
                        :maxNumReplicas integer,
                        :minNumReplicas integer,
-                       :mode string},
+                       :mode string,
+                       :scaleInControl AutoscalingPolicyScaleInControl},
    :target string}
   
   Updates an autoscaler in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
@@ -217,7 +219,8 @@
                        :loadBalancingUtilization AutoscalingPolicyLoadBalancingUtilization,
                        :maxNumReplicas integer,
                        :minNumReplicas integer,
-                       :mode string},
+                       :mode string,
+                       :scaleInControl AutoscalingPolicyScaleInControl},
    :target string}
   
   Updates an autoscaler in the specified project using the data included in the request."

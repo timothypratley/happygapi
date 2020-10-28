@@ -43,7 +43,10 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
@@ -92,6 +95,7 @@
    :guestOsFeatures [{:type string}],
    :resourcePolicies [string],
    :sourceImage string,
+   :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
                               :kmsKeyServiceAccount string,
@@ -100,6 +104,7 @@
    :zone string,
    :name string,
    :sizeGb string,
+   :sourceDisk string,
    :physicalBlockSizeBytes string,
    :sourceImageId string,
    :lastDetachTimestamp string,
@@ -123,7 +128,7 @@
    :users [string],
    :labelFingerprint string}
   
-  Creates a persistent disk in the specified project using the data in the request. You can create a disk with a sourceImage, a sourceSnapshot, or create an empty 500 GB data disk by omitting all properties. You can also create a disk that is larger than the default size by specifying the sizeGb property."
+  Creates a persistent disk in the specified project using the data in the request. You can create a disk from a source (sourceImage, sourceSnapshot, or sourceDisk) or create an empty 500 GB data disk by omitting all properties. You can also create a disk that is larger than the default size by specifying the sizeGb property."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -194,6 +199,7 @@
    :sourceDiskId string,
    :downloadBytes string,
    :creationTimestamp string,
+   :chainName string,
    :name string,
    :sourceDisk string,
    :licenses [string],
@@ -276,7 +282,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of persistent disks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -397,7 +403,7 @@
   
   Required parameters: project, resource, zone
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -458,7 +464,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of persistent disks contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

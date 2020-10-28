@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.cities
   "DCM/DFA Reporting And Trafficking API: cities.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/cities"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: countryDartIds, dartIds, namePrefix, regionDartIds
+  Optional parameters: countryDartIds, namePrefix, regionDartIds, dartIds
   
   Retrieves a list of cities, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/cities"
      #{:profileId}
      parameters)

@@ -74,14 +74,16 @@
   
   Body: 
   
-  {:creationTimestamp string,
-   :description string,
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :selfLink string,
+   :region string,
    :id string,
    :kind string,
-   :name string,
-   :region string,
-   :selfLink string,
-   :urlMap string}
+   :fingerprint string,
+   :proxyBind boolean}
   
   Creates a TargetHttpProxy resource in the specified project and region using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -110,7 +112,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of TargetHttpProxy resources available to the specified project in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

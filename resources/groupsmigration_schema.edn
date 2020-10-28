@@ -1,8 +1,7 @@
-{:Groups {:id "Groups",
-          :type "object",
-          :description "JSON response template for groups migration API.",
+{:Groups {:type "object",
           :properties {:kind {:type "string",
-                              :description "The kind of insert resource this is.",
-                              :default "groupsmigration#groups"},
-                       :responseCode {:type "string",
-                                      :description "The status of the insert request."}}}}
+                              :description "The kind of insert resource this is."},
+                       :responseCode {:description "The status of the insert request.",
+                                      :type "string"}},
+          :id "Groups",
+          :description "JSON response template for groups migration API."}}

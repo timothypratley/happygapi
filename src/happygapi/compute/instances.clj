@@ -35,6 +35,34 @@
       :as :json}
      auth))))
 
+(defn getScreenshot$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getScreenshot
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: none
+  
+  Returns the screenshot from the specified instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/zones/{zone}/instances/{instance}/screenshot"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/get
   
@@ -146,7 +174,10 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
@@ -194,11 +225,15 @@
                             :enableSecureBoot boolean,
                             :enableVtpm boolean},
    :scheduling {:automaticRestart boolean,
+                :minNodeCpus integer,
                 :nodeAffinities [SchedulingNodeAffinity],
                 :onHostMaintenance string,
                 :preemptible boolean},
+   :resourcePolicies [string],
+   :lastSuspendedTimestamp string,
    :creationTimestamp string,
    :zone string,
+   :privateIpv6GoogleAccess string,
    :name string,
    :canIpForward boolean,
    :statusMessage string,
@@ -208,8 +243,10 @@
    :hostname string,
    :machineType string,
    :displayDevice {:enableDisplay boolean},
+   :confidentialInstanceConfig {:enableConfidentialCompute boolean},
    :status string,
    :id string,
+   :lastStopTimestamp string,
    :kind string,
    :disks [{:interface string,
             :guestOsFeatures [GuestOsFeature],
@@ -226,17 +263,19 @@
             :diskSizeGb string,
             :diskEncryptionKey CustomerEncryptionKey,
             :shieldedInstanceInitialState InitialStateConfig}],
+   :lastStartTimestamp string,
    :cpuPlatform string,
    :reservationAffinity {:consumeReservationType string,
                          :key string,
                          :values [string]},
    :networkInterfaces [{:accessConfigs [AccessConfig],
-                        :aliasIpRanges [AliasIpRange],
-                        :fingerprint string,
-                        :kind string,
                         :name string,
+                        :aliasIpRanges [AliasIpRange],
+                        :ipv6Address string,
+                        :kind string,
                         :network string,
                         :networkIP string,
+                        :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
    :metadata {:fingerprint string,
@@ -403,7 +442,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves aggregated list of all of the instances in your project across all regions and zones."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -442,12 +481,13 @@
                     :publicPtrDomainName string,
                     :setPublicPtr boolean,
                     :type string}],
-   :aliasIpRanges [{:ipCidrRange string, :subnetworkRangeName string}],
-   :fingerprint string,
-   :kind string,
    :name string,
+   :aliasIpRanges [{:ipCidrRange string, :subnetworkRangeName string}],
+   :ipv6Address string,
+   :kind string,
    :network string,
    :networkIP string,
+   :fingerprint string,
    :subnetwork string}
   
   Updates an instance's network interface. This method follows PATCH semantics."
@@ -654,11 +694,15 @@
                             :enableSecureBoot boolean,
                             :enableVtpm boolean},
    :scheduling {:automaticRestart boolean,
+                :minNodeCpus integer,
                 :nodeAffinities [SchedulingNodeAffinity],
                 :onHostMaintenance string,
                 :preemptible boolean},
+   :resourcePolicies [string],
+   :lastSuspendedTimestamp string,
    :creationTimestamp string,
    :zone string,
+   :privateIpv6GoogleAccess string,
    :name string,
    :canIpForward boolean,
    :statusMessage string,
@@ -668,8 +712,10 @@
    :hostname string,
    :machineType string,
    :displayDevice {:enableDisplay boolean},
+   :confidentialInstanceConfig {:enableConfidentialCompute boolean},
    :status string,
    :id string,
+   :lastStopTimestamp string,
    :kind string,
    :disks [{:interface string,
             :guestOsFeatures [GuestOsFeature],
@@ -686,17 +732,19 @@
             :diskSizeGb string,
             :diskEncryptionKey CustomerEncryptionKey,
             :shieldedInstanceInitialState InitialStateConfig}],
+   :lastStartTimestamp string,
    :cpuPlatform string,
    :reservationAffinity {:consumeReservationType string,
                          :key string,
                          :values [string]},
    :networkInterfaces [{:accessConfigs [AccessConfig],
-                        :aliasIpRanges [AliasIpRange],
-                        :fingerprint string,
-                        :kind string,
                         :name string,
+                        :aliasIpRanges [AliasIpRange],
+                        :ipv6Address string,
+                        :kind string,
                         :network string,
                         :networkIP string,
+                        :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
    :metadata {:fingerprint string,
@@ -791,7 +839,7 @@
   
   Required parameters: project, resource, zone
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -847,9 +895,9 @@
   
   Required parameters: instance, project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Retrieves the list of referrers to instances contained within the specified zone. For more information, read Viewing Referrers to VM Instances."
+  Retrieves a list of resources that refer to the VM instance specified in the request. For example, if the VM instance is part of a managed or unmanaged instance group, the referrers list includes the instance group. For more information, read Viewing referrers to VM instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -1058,7 +1106,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of instances contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1152,11 +1200,12 @@
   Body: 
   
   {:automaticRestart boolean,
+   :minNodeCpus integer,
    :nodeAffinities [{:key string, :operator string, :values [string]}],
    :onHostMaintenance string,
    :preemptible boolean}
   
-  Sets an instance's scheduling options."
+  Sets an instance's scheduling options. You can only call this method on a stopped instance, that is, a VM instance that is in a `TERMINATED` state. See Instance Life Cycle for more information on the possible instance states."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]

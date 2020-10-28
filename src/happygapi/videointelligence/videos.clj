@@ -15,23 +15,22 @@
   
   Body: 
   
-  {:features [string],
+  {:inputContent string,
    :outputUri string,
-   :videoContext {:labelDetectionConfig GoogleCloudVideointelligenceV1_LabelDetectionConfig,
-                  :explicitContentDetectionConfig GoogleCloudVideointelligenceV1_ExplicitContentDetectionConfig,
-                  :objectTrackingConfig GoogleCloudVideointelligenceV1_ObjectTrackingConfig,
-                  :speechTranscriptionConfig GoogleCloudVideointelligenceV1_SpeechTranscriptionConfig,
-                  :segments [GoogleCloudVideointelligenceV1_VideoSegment],
+   :videoContext {:explicitContentDetectionConfig GoogleCloudVideointelligenceV1_ExplicitContentDetectionConfig,
+                  :personDetectionConfig GoogleCloudVideointelligenceV1_PersonDetectionConfig,
                   :textDetectionConfig GoogleCloudVideointelligenceV1_TextDetectionConfig,
-                  :shotChangeDetectionConfig GoogleCloudVideointelligenceV1_ShotChangeDetectionConfig},
-   :locationId string,
+                  :labelDetectionConfig GoogleCloudVideointelligenceV1_LabelDetectionConfig,
+                  :shotChangeDetectionConfig GoogleCloudVideointelligenceV1_ShotChangeDetectionConfig,
+                  :segments [GoogleCloudVideointelligenceV1_VideoSegment],
+                  :speechTranscriptionConfig GoogleCloudVideointelligenceV1_SpeechTranscriptionConfig,
+                  :faceDetectionConfig GoogleCloudVideointelligenceV1_FaceDetectionConfig,
+                  :objectTrackingConfig GoogleCloudVideointelligenceV1_ObjectTrackingConfig},
+   :features [string],
    :inputUri string,
-   :inputContent string}
+   :locationId string}
   
-  Performs asynchronous video annotation. Progress and results can be
-  retrieved through the `google.longrunning.Operations` interface.
-  `Operation.metadata` contains `AnnotateVideoProgress` (progress).
-  `Operation.response` contains `AnnotateVideoResponse` (results)."
+  Performs asynchronous video annotation. Progress and results can be retrieved through the `google.longrunning.Operations` interface. `Operation.metadata` contains `AnnotateVideoProgress` (progress). `Operation.response` contains `AnnotateVideoResponse` (results)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

@@ -1,58 +1,103 @@
 (ns happygapi.androidenterprise.devices
   "Google Play EMM API: devices.
-  Manages the deployment of apps to Android for Work users.
+  Manages the deployment of apps to Android Enterprise devices.
   See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn forceReportUpload$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/forceReportUpload
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/update
   
   Required parameters: deviceId, enterpriseId, userId
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
-  Uploads a report containing any changes in app states on the device since the last report was generated. You can call this method up to 3 times every 24 hours for a given device."
+  Body: 
+  
+  {:report {:lastUpdatedTimestampMillis string, :appState [AppState]},
+   :policy {:autoUpdatePolicy string,
+            :deviceReportPolicy string,
+            :productPolicy [ProductPolicy],
+            :productAvailabilityPolicy string,
+            :maintenanceWindow MaintenanceWindow},
+   :managementType string,
+   :androidId string}
+  
+  Updates the device policy"
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys?
           parameters
           #{:enterpriseId :deviceId :userId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/forceReportUpload"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}"
      #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/get
+(defn setState$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/setState
   
-  Required parameters: deviceId, enterpriseId, userId
+  Required parameters: enterpriseId, deviceId, userId
   
   Optional parameters: none
   
-  Retrieves the details of a device."
+  Body: 
+  
+  {:accountState string}
+  
+  Sets whether a device's access to Google services is enabled or disabled. The device state takes effect only if enforcing EMM policies on Android devices is enabled in the Google Admin Console. Otherwise, the device state is ignored and all devices are allowed access to Google services. This is only supported for Google-managed users."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys?
           parameters
           #{:enterpriseId :deviceId :userId})]}
   (util/get-response
+   (http/put
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/state"
+     #{:enterpriseId :deviceId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/list
+  
+  Required parameters: enterpriseId, userId
+  
+  Optional parameters: none
+  
+  Retrieves the IDs of all of a user's devices."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
+  (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}"
-     #{:enterpriseId :deviceId :userId}
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices"
+     #{:enterpriseId :userId}
      parameters)
     (merge-with
      merge
@@ -78,8 +123,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/state"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/state"
      #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
@@ -90,23 +135,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/list
+(defn get$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/get
   
-  Required parameters: enterpriseId, userId
+  Required parameters: deviceId, userId, enterpriseId
   
   Optional parameters: none
   
-  Retrieves the IDs of all of a user's devices."
+  Retrieves the details of a device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :deviceId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices"
-     #{:enterpriseId :userId}
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}"
+     #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
      merge
@@ -116,77 +163,29 @@
       :as :json}
      auth))))
 
-(defn setState$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/setState
+(defn forceReportUpload$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/forceReportUpload
   
-  Required parameters: deviceId, enterpriseId, userId
+  Required parameters: userId, deviceId, enterpriseId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:accountState string, :kind string}
-  
-  Sets whether a device's access to Google services is enabled or disabled. The device state takes effect only if enforcing EMM policies on Android devices is enabled in the Google Admin Console. Otherwise, the device state is ignored and all devices are allowed access to Google services. This is only supported for Google-managed users."
+  Uploads a report containing any changes in app states on the device since the last report was generated. You can call this method up to 3 times every 24 hours for a given device. If you exceed the quota, then the Google Play EMM API returns HTTP 429 Too Many Requests."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys?
           parameters
           #{:enterpriseId :deviceId :userId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/state"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/forceReportUpload"
      #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/update
-  
-  Required parameters: deviceId, enterpriseId, userId
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:androidId string,
-   :kind string,
-   :managementType string,
-   :policy {:autoUpdatePolicy string,
-            :deviceReportPolicy string,
-            :maintenanceWindow MaintenanceWindow,
-            :productAvailabilityPolicy string,
-            :productPolicy [ProductPolicy]},
-   :report {:appState [AppState], :lastUpdatedTimestampMillis string}}
-  
-  Updates the device policy"
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :deviceId :userId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}"
-     #{:enterpriseId :deviceId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

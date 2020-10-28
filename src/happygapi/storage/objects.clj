@@ -37,6 +37,7 @@
                  :kind string,
                  :mediaLink string,
                  :kmsKeyName string,
+                 :customTime string,
                  :componentCount integer,
                  :acl [ObjectAccessControl],
                  :customerEncryption {:encryptionAlgorithm string,
@@ -157,7 +158,7 @@
   
   Required parameters: destinationBucket, sourceBucket, destinationObject, sourceObject
   
-  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
+  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
   
   Body: 
   
@@ -183,6 +184,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :customTime string,
    :componentCount integer,
    :acl [{:role string,
           :email string,
@@ -310,6 +312,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :customTime string,
    :componentCount integer,
    :acl [{:role string,
           :email string,
@@ -386,6 +389,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :customTime string,
    :componentCount integer,
    :acl [{:role string,
           :email string,
@@ -491,6 +495,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :customTime string,
    :componentCount integer,
    :acl [{:role string,
           :email string,
@@ -654,6 +659,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :customTime string,
    :componentCount integer,
    :acl [{:role string,
           :email string,

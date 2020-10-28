@@ -1,19 +1,19 @@
 (ns happygapi.youtube.thumbnails
-  "YouTube Data API: thumbnails.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/thumbnails"
+  "YouTube Data API v3: thumbnails.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/thumbnails"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn set$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/thumbnails/set
+  "https://developers.google.com/youtube/api/reference/rest/v3/thumbnails/set
   
   Required parameters: videoId
   
   Optional parameters: onBehalfOfContentOwner
   
-  Uploads a custom video thumbnail to YouTube and sets it for a video."
+  As this is not an insert in a strict sense (it supports uploading/setting of a thumbnail for multiple videos, which doesn't result in creation of a single resource), I use a custom verb here."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.upload"
@@ -23,8 +23,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "thumbnails/set"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/thumbnails/set"
      #{:videoId}
      parameters)
     (merge-with

@@ -1,15 +1,15 @@
 (ns happygapi.deploymentmanager.deployments
-  "Google Cloud Deployment Manager API: deployments.
-  Declares, configures, and deploys complex solutions on Google Cloud Platform.
-  See: https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments"
+  "Cloud Deployment Manager V2 API: deployments.
+  The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
+  See: http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn cancelPreview$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/cancelPreview
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/cancelPreview
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
   Optional parameters: none
   
@@ -25,8 +25,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}/cancelPreview"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}/cancelPreview"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -40,9 +40,9 @@
      auth))))
 
 (defn get$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/get
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/get
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
   Optional parameters: none
   
@@ -56,8 +56,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -69,9 +69,9 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/setIamPolicy
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/setIamPolicy
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: none
   
@@ -80,11 +80,9 @@
   {:bindings [{:condition Expr, :members [string], :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
-            :bindings [Binding],
             :etag string,
-            :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -94,8 +92,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{resource}/setIamPolicy"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{resource}/setIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with
@@ -109,16 +107,16 @@
      auth))))
 
 (defn insert$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/insert
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/insert
   
   Required parameters: project
   
-  Optional parameters: createPolicy, preview
+  Optional parameters: preview, createPolicy
   
   Body: 
   
   {:description string,
-   :labels [{:key string, :value string}],
+   :labels [{:value string, :key string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -148,8 +146,8 @@
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
-            :labels [DeploymentUpdateLabelEntry],
+   :update {:labels [DeploymentUpdateLabelEntry],
+            :description string,
             :manifest string},
    :manifest string,
    :updateTime string,
@@ -166,8 +164,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments"
      #{:project}
      parameters)
     (merge-with
@@ -181,7 +179,7 @@
      auth))))
 
 (defn patch$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/patch
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/patch
   
   Required parameters: deployment, project
   
@@ -190,7 +188,7 @@
   Body: 
   
   {:description string,
-   :labels [{:key string, :value string}],
+   :labels [{:value string, :key string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -220,8 +218,8 @@
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
-            :labels [DeploymentUpdateLabelEntry],
+   :update {:labels [DeploymentUpdateLabelEntry],
+            :description string,
             :manifest string},
    :manifest string,
    :updateTime string,
@@ -230,7 +228,7 @@
    :target {:config ConfigFile, :imports [ImportFile]},
    :fingerprint string}
   
-  Updates a deployment and all of the resources described by the deployment manifest. This method supports patch semantics."
+  Patches a deployment and all of the resources described by the deployment manifest."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.cloudman"]}
   [auth parameters body]
@@ -238,8 +236,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -253,9 +251,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/testIamPermissions
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/testIamPermissions
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: none
   
@@ -271,8 +269,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{resource}/testIamPermissions"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{resource}/testIamPermissions"
      #{:project :resource}
      parameters)
     (merge-with
@@ -286,16 +284,16 @@
      auth))))
 
 (defn update$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/update
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/update
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
-  Optional parameters: createPolicy, deletePolicy, preview
+  Optional parameters: createPolicy, preview, deletePolicy
   
   Body: 
   
   {:description string,
-   :labels [{:key string, :value string}],
+   :labels [{:value string, :key string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -325,8 +323,8 @@
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
-            :labels [DeploymentUpdateLabelEntry],
+   :update {:labels [DeploymentUpdateLabelEntry],
+            :description string,
             :manifest string},
    :manifest string,
    :updateTime string,
@@ -343,8 +341,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -358,7 +356,7 @@
      auth))))
 
 (defn delete$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/delete
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/delete
   
   Required parameters: deployment, project
   
@@ -372,8 +370,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -385,11 +383,11 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/getIamPolicy
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/getIamPolicy
   
   Required parameters: project, resource
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -399,8 +397,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{resource}/getIamPolicy"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{resource}/getIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with
@@ -412,9 +410,9 @@
      auth))))
 
 (defn stop$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/stop
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/stop
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
   Optional parameters: none
   
@@ -430,8 +428,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}/stop"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}/stop"
      #{:project :deployment}
      parameters)
     (merge-with
@@ -445,11 +443,11 @@
      auth))))
 
 (defn list$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/deployments/list
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: returnPartialSuccess, maxResults, pageToken, filter, orderBy
   
   Lists all deployments for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -461,8 +459,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments"
      #{:project}
      parameters)
     (merge-with

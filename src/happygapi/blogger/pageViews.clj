@@ -1,6 +1,6 @@
 (ns happygapi.blogger.pageViews
-  "Blogger API: pageViews.
-  API for access to the data within Blogger.
+  "Blogger API v3: pageViews.
+  The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pageViews"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -13,15 +13,15 @@
   
   Optional parameters: range
   
-  Retrieve pageview stats for a Blog."
+  Gets page views by blog id."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "blogs/{blogId}/pageviews"
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/pageviews"
      #{:blogId}
      parameters)
     (merge-with

@@ -1,19 +1,19 @@
 (ns happygapi.youtube.channelSections
-  "YouTube Data API: channelSections.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/channelSections"
+  "YouTube Data API v3: channelSections.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/channelSections"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/channelSections/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/delete
   
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
   
-  Deletes a channelSection."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -22,8 +22,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "channelSections"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
      #{:id}
      parameters)
     (merge-with
@@ -35,31 +35,31 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/channelSections/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/insert
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
   
   Body: 
   
-  {:contentDetails {:channels [string], :playlists [string]},
+  {:contentDetails {:playlists [string], :channels [string]},
+   :targeting {:regions [string],
+               :countries [string],
+               :languages [string]},
+   :kind string,
    :etag string,
    :id string,
-   :kind string,
-   :localizations {},
-   :snippet {:channelId string,
-             :defaultLanguage string,
+   :snippet {:style string,
              :localized ChannelSectionLocalization,
              :position integer,
-             :style string,
              :title string,
-             :type string},
-   :targeting {:countries [string],
-               :languages [string],
-               :regions [string]}}
+             :channelId string,
+             :type string,
+             :defaultLanguage string},
+   :localizations {}}
   
-  Adds a channelSection for the authenticated user's channel."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -68,8 +68,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "channelSections"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
      #{:part}
      parameters)
     (merge-with
@@ -83,13 +83,13 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/channelSections/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/list
   
   Required parameters: part
   
-  Optional parameters: channelId, hl, id, mine, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, channelId, hl, id, mine
   
-  Returns channelSection resources that match the API request criteria."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
@@ -99,8 +99,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "channelSections"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
      #{:part}
      parameters)
     (merge-with
@@ -112,7 +112,7 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/channelSections/update
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/update
   
   Required parameters: part
   
@@ -120,23 +120,23 @@
   
   Body: 
   
-  {:contentDetails {:channels [string], :playlists [string]},
+  {:contentDetails {:playlists [string], :channels [string]},
+   :targeting {:regions [string],
+               :countries [string],
+               :languages [string]},
+   :kind string,
    :etag string,
    :id string,
-   :kind string,
-   :localizations {},
-   :snippet {:channelId string,
-             :defaultLanguage string,
+   :snippet {:style string,
              :localized ChannelSectionLocalization,
              :position integer,
-             :style string,
              :title string,
-             :type string},
-   :targeting {:countries [string],
-               :languages [string],
-               :regions [string]}}
+             :channelId string,
+             :type string,
+             :defaultLanguage string},
+   :localizations {}}
   
-  Update a channelSection."
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -145,8 +145,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "channelSections"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
      #{:part}
      parameters)
     (merge-with

@@ -1,6 +1,6 @@
 (ns happygapi.androidenterprise.managedconfigurationssettings
   "Google Play EMM API: managedconfigurationssettings.
-  Manages the deployment of apps to Android for Work users.
+  Manages the deployment of apps to Android Enterprise devices.
   See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationssettings"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -9,7 +9,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationssettings/list
   
-  Required parameters: enterpriseId, productId
+  Required parameters: productId, enterpriseId
   
   Optional parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/products/{productId}/managedConfigurationsSettings"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/products/{productId}/managedConfigurationsSettings"
      #{:enterpriseId :productId}
      parameters)
     (merge-with

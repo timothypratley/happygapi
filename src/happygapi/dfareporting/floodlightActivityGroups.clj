@@ -1,36 +1,10 @@
 (ns happygapi.dfareporting.floodlightActivityGroups
   "DCM/DFA Reporting And Trafficking API: floodlightActivityGroups.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/get
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Gets one floodlight activity group by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/floodlightActivityGroups/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/insert
@@ -42,25 +16,25 @@
   Body: 
   
   {:tagString string,
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
                                              :id string,
                                              :kind string,
-                                             :matchType string,
-                                             :value string},
+                                             :dimensionName string,
+                                             :matchType string},
    :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
                                 :id string,
                                 :kind string,
-                                :matchType string,
-                                :value string},
+                                :dimensionName string,
+                                :matchType string},
    :name string,
    :type string,
    :advertiserId string,
@@ -76,9 +50,125 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/floodlightActivityGroups"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:tagString string,
+   :idDimensionValue {:etag string,
+                      :value string,
+                      :id string,
+                      :kind string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
+                                             :id string,
+                                             :kind string,
+                                             :dimensionName string,
+                                             :matchType string},
+   :floodlightConfigurationId string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
+                                :id string,
+                                :kind string,
+                                :dimensionName string,
+                                :matchType string},
+   :name string,
+   :type string,
+   :advertiserId string,
+   :id string,
+   :kind string,
+   :subaccountId string,
+   :accountId string}
+  
+  Updates an existing floodlight activity group."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/floodlightActivityGroups"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:tagString string,
+   :idDimensionValue {:etag string,
+                      :value string,
+                      :id string,
+                      :kind string,
+                      :dimensionName string,
+                      :matchType string},
+   :floodlightConfigurationIdDimensionValue {:etag string,
+                                             :value string,
+                                             :id string,
+                                             :kind string,
+                                             :dimensionName string,
+                                             :matchType string},
+   :floodlightConfigurationId string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
+                                :id string,
+                                :kind string,
+                                :dimensionName string,
+                                :matchType string},
+   :name string,
+   :type string,
+   :advertiserId string,
+   :id string,
+   :kind string,
+   :subaccountId string,
+   :accountId string}
+  
+  Updates an existing floodlight activity group. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/floodlightActivityGroups"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge
@@ -104,7 +194,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/floodlightActivityGroups"
      #{:profileId}
      parameters)
@@ -116,117 +206,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/patch
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/get
   
   Required parameters: id, profileId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:tagString string,
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
-                      :id string,
-                      :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
-                                             :id string,
-                                             :kind string,
-                                             :matchType string,
-                                             :value string},
-   :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
-                                :id string,
-                                :kind string,
-                                :matchType string,
-                                :value string},
-   :name string,
-   :type string,
-   :advertiserId string,
-   :id string,
-   :kind string,
-   :subaccountId string,
-   :accountId string}
-  
-  Updates an existing floodlight activity group. This method supports patch semantics."
+  Gets one floodlight activity group by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/floodlightActivityGroups"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/floodlightActivityGroups/{id}"
      #{:id :profileId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/floodlightActivityGroups/update
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:tagString string,
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
-                      :id string,
-                      :kind string,
-                      :matchType string,
-                      :value string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :etag string,
-                                             :id string,
-                                             :kind string,
-                                             :matchType string,
-                                             :value string},
-   :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
-                                :id string,
-                                :kind string,
-                                :matchType string,
-                                :value string},
-   :name string,
-   :type string,
-   :advertiserId string,
-   :id string,
-   :kind string,
-   :subaccountId string,
-   :accountId string}
-  
-  Updates an existing floodlight activity group."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/floodlightActivityGroups"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

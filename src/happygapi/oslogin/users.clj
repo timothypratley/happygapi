@@ -16,13 +16,11 @@
   Body: 
   
   {:key string,
-   :name string,
    :expirationTimeUsec string,
-   :fingerprint string}
+   :fingerprint string,
+   :name string}
   
-  Adds an SSH public key and returns the profile information. Default POSIX
-  account information is set when no username and UID exist as part of the
-  login profile."
+  Adds an SSH public key and returns the profile information. Default POSIX account information is set when no username and UID exist as part of the login profile."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -51,8 +49,7 @@
   
   Optional parameters: projectId, systemId
   
-  Retrieves the profile information used for logging in to a virtual machine
-  on Google Compute Engine."
+  Retrieves the profile information used for logging in to a virtual machine on Google Compute Engine."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
@@ -136,12 +133,11 @@
   Body: 
   
   {:key string,
-   :name string,
    :expirationTimeUsec string,
-   :fingerprint string}
+   :fingerprint string,
+   :name string}
   
-  Updates an SSH public key and returns the profile information. This method
-  supports patch semantics."
+  Updates an SSH public key and returns the profile information. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]

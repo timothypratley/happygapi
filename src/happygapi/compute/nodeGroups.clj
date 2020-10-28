@@ -43,7 +43,10 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
+  {:bindings [{:bindingId string,
+               :condition Expr,
+               :members [string],
+               :role string}],
    :etag string,
    :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
@@ -148,7 +151,7 @@
                        :mode string},
    :fingerprint string}
   
-  Patch the node group."
+  Updates the specified node group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -209,7 +212,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of node groups. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -330,7 +333,7 @@
   
   Required parameters: project, resource, zone
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
   Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -358,7 +361,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of node groups available to the specified project. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -419,7 +422,7 @@
   
   Required parameters: nodeGroup, project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists nodes in the node group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

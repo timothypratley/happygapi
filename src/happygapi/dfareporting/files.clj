@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.files
   "DCM/DFA Reporting And Trafficking API: files.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/files"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/files/get
   
-  Required parameters: fileId, reportId
+  Required parameters: reportId, fileId
   
   Optional parameters: none
   
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "reports/{reportId}/files/{fileId}"
      #{:reportId :fileId}
      parameters)
@@ -37,7 +37,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: maxResults, pageToken, scope, sortField, sortOrder
+  Optional parameters: sortField, maxResults, sortOrder, pageToken, scope
   
   Lists files for a user profile."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
@@ -46,7 +46,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/files"
      #{:profileId}
      parameters)

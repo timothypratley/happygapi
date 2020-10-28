@@ -15,15 +15,14 @@
   
   Body: 
   
-  {:listUpdateRequests [{:platformType string,
+  {:listUpdateRequests [{:threatEntryType string,
+                         :platformType string,
                          :threatType string,
-                         :constraints Constraints,
-                         :threatEntryType string,
-                         :state string}],
-   :client {:clientVersion string, :clientId string}}
+                         :state string,
+                         :constraints Constraints}],
+   :client {:clientId string, :clientVersion string}}
   
-  Fetches the most recent threat list updates. A client can request updates
-  for multiple lists at once."
+  Fetches the most recent threat list updates. A client can request updates for multiple lists at once."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

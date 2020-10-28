@@ -1,6 +1,6 @@
 (ns happygapi.androidenterprise.users
   "Google Play EMM API: users.
-  Manages the deployment of apps to Android for Work users.
+  Manages the deployment of apps to Android Enterprise devices.
   See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -41,26 +41,22 @@
   
   Body: 
   
-  {:accountIdentifier string,
-   :accountType string,
-   :displayName string,
-   :id string,
-   :kind string,
+  {:id string,
    :managementType string,
-   :primaryEmail string}
+   :displayName string,
+   :primaryEmail string,
+   :accountType string,
+   :accountIdentifier string}
   
-  Creates a new EMM-managed user.
-  
-  The Users resource passed in the body of the request should include an accountIdentifier and an accountType.
-  If a corresponding user already exists with the same account identifier, the user will be updated with the resource. In this case only the displayName field can be changed."
+  Creates a new EMM-managed user. The Users resource passed in the body of the request should include an accountIdentifier and an accountType. If a corresponding user already exists with the same account identifier, the user will be updated with the resource. In this case only the displayName field can be changed."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:enterpriseId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users"
      #{:enterpriseId}
      parameters)
     (merge-with
@@ -73,34 +69,6 @@
       :as :json}
      auth))))
 
-(defn generateToken$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/generateToken
-  
-  Required parameters: enterpriseId, userId
-  
-  Optional parameters: none
-  
-  Generates a token (activation code) to allow this user to configure their managed account in the Android Setup Wizard. Revokes any previously generated token.
-  
-  This call only works with Google managed accounts."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/token"
-     #{:enterpriseId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn generateAuthenticationToken$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/generateAuthenticationToken
   
@@ -108,19 +76,15 @@
   
   Optional parameters: none
   
-  Generates an authentication token which the device policy client can use to provision the given EMM-managed user account on a device. The generated token is single-use and expires after a few minutes.
-  
-  You can provision a maximum of 10 devices per user.
-  
-  This call only works with EMM-managed accounts."
+  Generates an authentication token which the device policy client can use to provision the given EMM-managed user account on a device. The generated token is single-use and expires after a few minutes. You can provision a maximum of 10 devices per user. This call only works with EMM-managed accounts."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/authenticationToken"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/authenticationToken"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -140,25 +104,22 @@
   
   Body: 
   
-  {:accountIdentifier string,
-   :accountType string,
-   :displayName string,
-   :id string,
-   :kind string,
+  {:id string,
    :managementType string,
-   :primaryEmail string}
+   :displayName string,
+   :primaryEmail string,
+   :accountType string,
+   :accountIdentifier string}
   
-  Updates the details of an EMM-managed user.
-  
-  Can be used with EMM-managed users only (not Google managed users). Pass the new details in the Users resource in the request body. Only the displayName field can be changed. Other fields must either be unset or have the currently active value."
+  Updates the details of an EMM-managed user. Can be used with EMM-managed users only (not Google managed users). Pass the new details in the Users resource in the request body. Only the displayName field can be changed. Other fields must either be unset or have the currently active value."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -174,7 +135,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/delete
   
-  Required parameters: enterpriseId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
@@ -185,8 +146,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -200,21 +161,19 @@
 (defn revokeDeviceAccess$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/revokeDeviceAccess
   
-  Required parameters: enterpriseId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
-  Revokes access to all devices currently provisioned to the user. The user will no longer be able to use the managed Play store on any of their managed devices.
-  
-  This call only works with EMM-managed accounts."
+  Revokes access to all devices currently provisioned to the user. The user will no longer be able to use the managed Play store on any of their managed devices. This call only works with EMM-managed accounts."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/deviceAccess"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/deviceAccess"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -239,8 +198,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users"
      #{:email :enterpriseId}
      parameters)
     (merge-with
@@ -265,34 +224,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/availableProductSet"
-     #{:enterpriseId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn revokeToken$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/revokeToken
-  
-  Required parameters: enterpriseId, userId
-  
-  Optional parameters: none
-  
-  Revokes a previously generated token (activation code) for the user."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/token"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/availableProductSet"
      #{:enterpriseId :userId}
      parameters)
     (merge-with
@@ -312,22 +245,21 @@
   
   Body: 
   
-  {:kind string,
-   :productId [string],
-   :productSetBehavior string,
+  {:productId [string],
    :productVisibility [{:productId string,
                         :trackIds [string],
-                        :tracks [string]}]}
+                        :tracks [string]}],
+   :productSetBehavior string}
   
-  Modifies the set of products that a user is entitled to access (referred to as whitelisted products). Only products that are approved or products that were previously approved (products with revoked approval) can be whitelisted."
+  Modifies the set of products that a user is entitled to access (referred to as *whitelisted* products). Only products that are approved or products that were previously approved (products with revoked approval) can be whitelisted."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/androidenterprise/v1/"
-     "enterprises/{enterpriseId}/users/{userId}/availableProductSet"
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/availableProductSet"
      #{:enterpriseId :userId}
      parameters)
     (merge-with

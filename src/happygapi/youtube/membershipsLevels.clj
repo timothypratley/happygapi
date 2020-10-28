@@ -1,20 +1,21 @@
 (ns happygapi.youtube.membershipsLevels
-  "YouTube Data API: membershipsLevels.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/membershipsLevels"
+  "YouTube Data API v3: membershipsLevels.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/membershipsLevels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/membershipsLevels/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/membershipsLevels/list
   
   Required parameters: part
   
   Optional parameters: none
   
-  Lists pricing levels for a channel."
+  Retrieves a list of all pricing levels offered by a creator to the fans."
   {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -23,8 +24,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "membershipsLevels"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/membershipsLevels"
      #{:part}
      parameters)
     (merge-with

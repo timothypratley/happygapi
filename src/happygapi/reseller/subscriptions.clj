@@ -1,5 +1,5 @@
 (ns happygapi.reseller.subscriptions
-  "Enterprise Apps Reseller API: subscriptions.
+  "Workspace Reseller API: subscriptions.
   Creates and manages your customers and their subscriptions.
   See: https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions"
   (:require [cheshire.core :as json]
@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/get
   
-  Required parameters: customerId, subscriptionId
+  Required parameters: subscriptionId, customerId
   
   Optional parameters: none
   
@@ -46,7 +46,7 @@
    :creationTime string,
    :purchaseOrderId string,
    :billingMethod string,
-   :trialSettings {:isInTrial boolean, :trialEndTime string},
+   :trialSettings {:trialEndTime string, :isInTrial boolean},
    :suspensionReasons [string],
    :resourceUiUrl string,
    :customerId string,
@@ -56,14 +56,14 @@
    :status string,
    :kind string,
    :skuId string,
-   :seats {:kind string,
-           :licensedNumberOfSeats integer,
+   :seats {:numberOfSeats integer,
+           :kind string,
            :maximumNumberOfSeats integer,
-           :numberOfSeats integer},
+           :licensedNumberOfSeats integer},
    :plan {:commitmentInterval {:endTime string, :startTime string},
-          :isCommitmentPlan boolean,
-          :planName string},
-   :renewalSettings {:kind string, :renewalType string},
+          :planName string,
+          :isCommitmentPlan boolean},
+   :renewalSettings {:renewalType string, :kind string},
    :dealCode string,
    :subscriptionId string}
   
@@ -97,7 +97,7 @@
   
   Body: 
   
-  {:kind string, :renewalType string}
+  {:renewalType string, :kind string}
   
   Update a user license's renewal settings. This is applicable for accounts with annual commitment plans only."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -123,7 +123,7 @@
 (defn delete$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/delete
   
-  Required parameters: customerId, deletionType, subscriptionId
+  Required parameters: subscriptionId, customerId, deletionType
   
   Optional parameters: none
   
@@ -179,7 +179,7 @@
   
   Required parameters: none
   
-  Optional parameters: customerAuthToken, customerId, customerNamePrefix, maxResults, pageToken
+  Optional parameters: customerAuthToken, pageToken, maxResults, customerNamePrefix, customerId
   
   List of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
@@ -210,14 +210,14 @@
   
   Body: 
   
-  {:dealCode string,
-   :kind string,
-   :planName string,
-   :purchaseOrderId string,
-   :seats {:kind string,
-           :licensedNumberOfSeats integer,
+  {:purchaseOrderId string,
+   :dealCode string,
+   :seats {:numberOfSeats integer,
+           :kind string,
            :maximumNumberOfSeats integer,
-           :numberOfSeats integer}}
+           :licensedNumberOfSeats integer},
+   :kind string,
+   :planName string}
   
   Update a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -249,10 +249,10 @@
   
   Body: 
   
-  {:kind string,
-   :licensedNumberOfSeats integer,
+  {:numberOfSeats integer,
+   :kind string,
    :maximumNumberOfSeats integer,
-   :numberOfSeats integer}
+   :licensedNumberOfSeats integer}
   
   Update a subscription's user license settings."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -278,7 +278,7 @@
 (defn activate$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/activate
   
-  Required parameters: customerId, subscriptionId
+  Required parameters: subscriptionId, customerId
   
   Optional parameters: none
   
@@ -304,7 +304,7 @@
 (defn startPaidService$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/startPaidService
   
-  Required parameters: customerId, subscriptionId
+  Required parameters: subscriptionId, customerId
   
   Optional parameters: none
   

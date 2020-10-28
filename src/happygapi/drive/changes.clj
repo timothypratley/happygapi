@@ -43,7 +43,7 @@
   
   Required parameters: pageToken
   
-  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
+  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
   
   Lists the changes for a user or shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -75,7 +75,7 @@
   
   Required parameters: pageToken
   
-  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
+  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
   
   Body: 
   

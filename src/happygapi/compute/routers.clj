@@ -209,7 +209,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of routers."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -407,7 +407,7 @@
   
   Required parameters: project, region, router
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves runtime Nat mapping information of VM endpoints."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -435,7 +435,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of Router resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

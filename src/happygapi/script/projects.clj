@@ -1,54 +1,10 @@
 (ns happygapi.script.projects
   "Apps Script API: projects.
-  Manages and executes Google Apps Script projects.
-  
+  Manages and executes Google Apps Script projects. 
   See: https://developers.google.com/apps-script/api/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn updateContent$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/updateContent
-  
-  Required parameters: scriptId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:files [{:createTime string,
-            :functionSet GoogleAppsScriptTypeFunctionSet,
-            :updateTime string,
-            :name string,
-            :type string,
-            :lastModifyUser GoogleAppsScriptTypeUser,
-            :source string}],
-   :scriptId string}
-  
-  Updates the content of the specified script project.
-  This content is stored as the HEAD version, and is used when the script is
-  executed as a trigger, in the script editor, in add-on preview mode, or as
-  a web app or Apps Script API in development mode. This clears all the
-  existing files in the project."
-  {:scopes ["https://www.googleapis.com/auth/script.projects"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:scriptId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/content"
-     #{:scriptId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn create$
   "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/create
@@ -59,10 +15,9 @@
   
   Body: 
   
-  {:parentId string, :title string}
+  {:title string, :parentId string}
   
-  Creates a new, empty script project with no script files and a base
-  manifest file."
+  Creates a new, empty script project with no script files and a base manifest file."
   {:scopes ["https://www.googleapis.com/auth/script.projects"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -90,8 +45,7 @@
   
   Optional parameters: versionNumber
   
-  Gets the content of the script project, including the code source and
-  metadata for each script file."
+  Gets the content of the script project, including the code source and metadata for each script file."
   {:scopes ["https://www.googleapis.com/auth/script.projects"
             "https://www.googleapis.com/auth/script.projects.readonly"]}
   [auth parameters]
@@ -111,28 +65,40 @@
       :as :json}
      auth))))
 
-(defn getMetrics$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/getMetrics
+(defn updateContent$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/updateContent
   
   Required parameters: scriptId
   
-  Optional parameters: metricsGranularity, metricsFilter.deploymentId
+  Optional parameters: none
   
-  Get metrics data for scripts, such as number of executions and
-  active users."
-  {:scopes ["https://www.googleapis.com/auth/script.metrics"]}
-  [auth parameters]
+  Body: 
+  
+  {:scriptId string,
+   :files [{:functionSet GoogleAppsScriptTypeFunctionSet,
+            :createTime string,
+            :type string,
+            :source string,
+            :lastModifyUser GoogleAppsScriptTypeUser,
+            :name string,
+            :updateTime string}]}
+  
+  Updates the content of the specified script project. This content is stored as the HEAD version, and is used when the script is executed as a trigger, in the script editor, in add-on preview mode, or as a web app or Apps Script API in development mode. This clears all the existing files in the project."
+  {:scopes ["https://www.googleapis.com/auth/script.projects"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:scriptId})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/metrics"
+     "v1/projects/{scriptId}/content"
      #{:scriptId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -165,6 +131,67 @@
       :as :json}
      auth))))
 
+(defn getMetrics$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/getMetrics
+  
+  Required parameters: scriptId
+  
+  Optional parameters: metricsGranularity, metricsFilter.deploymentId
+  
+  Get metrics data for scripts, such as number of executions and active users."
+  {:scopes ["https://www.googleapis.com/auth/script.metrics"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:scriptId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://script.googleapis.com/"
+     "v1/projects/{scriptId}/metrics"
+     #{:scriptId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn deployments-update$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/update
+  
+  Required parameters: deploymentId, scriptId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:deploymentConfig {:manifestFileName string,
+                      :versionNumber integer,
+                      :scriptId string,
+                      :description string}}
+  
+  Updates a deployment of an Apps Script project."
+  {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:deploymentId :scriptId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://script.googleapis.com/"
+     "v1/projects/{scriptId}/deployments/{deploymentId}"
+     #{:deploymentId :scriptId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn deployments-delete$
   "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/delete
   
@@ -191,39 +218,12 @@
       :as :json}
      auth))))
 
-(defn deployments-get$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/get
-  
-  Required parameters: scriptId, deploymentId
-  
-  Optional parameters: none
-  
-  Gets a deployment of an Apps Script project."
-  {:scopes ["https://www.googleapis.com/auth/script.deployments"
-            "https://www.googleapis.com/auth/script.deployments.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:deploymentId :scriptId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/deployments/{deploymentId}"
-     #{:deploymentId :scriptId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn deployments-list$
   "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/list
   
   Required parameters: scriptId
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the deployments of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"
@@ -245,41 +245,6 @@
       :as :json}
      auth))))
 
-(defn deployments-update$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/update
-  
-  Required parameters: scriptId, deploymentId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:deploymentConfig {:description string,
-                      :versionNumber integer,
-                      :scriptId string,
-                      :manifestFileName string}}
-  
-  Updates a deployment of an Apps Script project."
-  {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:deploymentId :scriptId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/deployments/{deploymentId}"
-     #{:deploymentId :scriptId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn deployments-create$
   "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/create
   
@@ -289,10 +254,10 @@
   
   Body: 
   
-  {:description string,
+  {:manifestFileName string,
    :versionNumber integer,
    :scriptId string,
-   :manifestFileName string}
+   :description string}
   
   Creates a deployment of an Apps Script project."
   {:scopes ["https://www.googleapis.com/auth/script.deployments"]}
@@ -315,37 +280,28 @@
       :as :json}
      auth))))
 
-(defn versions-create$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/versions/create
+(defn deployments-get$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/deployments/get
   
-  Required parameters: scriptId
+  Required parameters: deploymentId, scriptId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:description string,
-   :versionNumber integer,
-   :scriptId string,
-   :createTime string}
-  
-  Creates a new immutable version using the current code, with a unique
-  version number."
-  {:scopes ["https://www.googleapis.com/auth/script.projects"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:scriptId})]}
+  Gets a deployment of an Apps Script project."
+  {:scopes ["https://www.googleapis.com/auth/script.deployments"
+            "https://www.googleapis.com/auth/script.deployments.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:deploymentId :scriptId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://script.googleapis.com/"
-     "v1/projects/{scriptId}/versions"
-     #{:scriptId}
+     "v1/projects/{scriptId}/deployments/{deploymentId}"
+     #{:deploymentId :scriptId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -400,6 +356,41 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn versions-create$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/projects/versions/create
+  
+  Required parameters: scriptId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:scriptId string,
+   :versionNumber integer,
+   :createTime string,
+   :description string}
+  
+  Creates a new immutable version using the current code, with a unique version number."
+  {:scopes ["https://www.googleapis.com/auth/script.projects"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:scriptId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://script.googleapis.com/"
+     "v1/projects/{scriptId}/versions"
+     #{:scriptId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

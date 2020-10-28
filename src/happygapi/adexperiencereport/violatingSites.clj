@@ -13,8 +13,7 @@
   
   Optional parameters: none
   
-  Lists sites that are failing in the Ad Experience Report on at least one
-  platform."
+  Lists sites that are failing in the Ad Experience Report on at least one platform."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}

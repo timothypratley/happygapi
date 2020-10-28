@@ -1,7 +1,6 @@
 (ns happygapi.poly.assets
   "Poly API: assets.
-  The Poly API provides read access to assets hosted on <a href=\"https://poly.google.com\">poly.google.com</a> to all, and upload access to <a href=\"https://poly.google.com\">poly.google.com</a> for whitelisted accounts.
-  
+  The Poly API provides read access to assets hosted on poly.google.com to all, and upload access to poly.google.com for whitelisted accounts. 
   See: https://developers.google.com/poly/api/reference/rest/v1/assets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -14,10 +13,7 @@
   
   Optional parameters: none
   
-  Returns detailed information about an asset given its name.
-  PRIVATE assets are returned only if
-   the currently authenticated user (via OAuth token) is the author of the
-   asset."
+  Returns detailed information about an asset given its name. PRIVATE assets are returned only if the currently authenticated user (via OAuth token) is the author of the asset."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -41,11 +37,9 @@
   
   Required parameters: none
   
-  Optional parameters: keywords, orderBy, format, curated, category, pageToken, maxComplexity, pageSize
+  Optional parameters: category, pageToken, orderBy, curated, maxComplexity, pageSize, format, keywords
   
-  Lists all public, remixable assets. These are assets with an access level
-  of PUBLIC and published under the
-  CC-By license."
+  Lists all public, remixable assets. These are assets with an access level of PUBLIC and published under the CC-By license."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}

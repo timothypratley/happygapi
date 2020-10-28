@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/delete
+  
+  Required parameters: logName
+  
+  Optional parameters: none
+  
+  Deletes all the log entries in a log. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:logName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+logName}"
+     #{:logName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/list
   
@@ -26,33 +53,6 @@
      "https://logging.googleapis.com/"
      "v2/{+parent}/logs"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/delete
-  
-  Required parameters: logName
-  
-  Optional parameters: none
-  
-  Deletes all the log entries in a log. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:logName})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+logName}"
-     #{:logName}
      parameters)
     (merge-with
      merge

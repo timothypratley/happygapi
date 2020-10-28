@@ -1,13 +1,41 @@
 (ns happygapi.youtube.liveChatMessages
-  "YouTube Data API: liveChatMessages.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatMessages"
+  "YouTube Data API v3: liveChatMessages.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/list
+  
+  Required parameters: liveChatId, part
+  
+  Optional parameters: profileImageSize, hl, pageToken, maxResults
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/messages"
+     #{:part :liveChatId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatMessages/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/delete
   
   Required parameters: id
   
@@ -21,8 +49,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/messages"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/messages"
      #{:id}
      parameters)
     (merge-with
@@ -34,7 +62,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatMessages/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/insert
   
   Required parameters: part
   
@@ -42,16 +70,16 @@
   
   Body: 
   
-  {:authorDetails {:channelId string,
-                   :channelUrl string,
-                   :displayName string,
+  {:id string,
+   :authorDetails {:displayName string,
                    :isChatModerator boolean,
-                   :isChatOwner boolean,
                    :isChatSponsor boolean,
+                   :isChatOwner boolean,
+                   :profileImageUrl string,
+                   :channelId string,
                    :isVerified boolean,
-                   :profileImageUrl string},
+                   :channelUrl string},
    :etag string,
-   :id string,
    :kind string,
    :snippet {:publishedAt string,
              :superChatDetails LiveChatSuperChatDetails,
@@ -59,19 +87,15 @@
              :hasDisplayContent boolean,
              :superStickerDetails LiveChatSuperStickerDetails,
              :type string,
-             :pollOpenedDetails LiveChatPollOpenedDetails,
              :fanFundingEventDetails LiveChatFanFundingEventDetails,
              :textMessageDetails LiveChatTextMessageDetails,
              :authorChannelId string,
-             :pollClosedDetails LiveChatPollClosedDetails,
              :userBannedDetails LiveChatUserBannedMessageDetails,
              :liveChatId string,
-             :pollVotedDetails LiveChatPollVotedDetails,
-             :pollEditedDetails LiveChatPollEditedDetails,
              :displayMessage string,
              :messageRetractedDetails LiveChatMessageRetractedDetails}}
   
-  Adds a message to a live chat."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters body]
@@ -79,8 +103,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/messages"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/messages"
      #{:part}
      parameters)
     (merge-with
@@ -88,34 +112,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatMessages/list
-  
-  Required parameters: liveChatId, part
-  
-  Optional parameters: hl, maxResults, pageToken, profileImageSize
-  
-  Lists live chat messages for a specific chat."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/messages"
-     #{:part :liveChatId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

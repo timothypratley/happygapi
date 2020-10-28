@@ -85,7 +85,7 @@
    :sourceServiceAccounts [string],
    :targetServiceAccounts [string],
    :network string,
-   :logConfig {:enable boolean},
+   :logConfig {:enable boolean, :metadata string},
    :direction string,
    :sourceRanges [string],
    :allowed [{:IPProtocol string, :ports [string]}]}
@@ -117,7 +117,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of firewall rules available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -164,7 +164,7 @@
    :sourceServiceAccounts [string],
    :targetServiceAccounts [string],
    :network string,
-   :logConfig {:enable boolean},
+   :logConfig {:enable boolean, :metadata string},
    :direction string,
    :sourceRanges [string],
    :allowed [{:IPProtocol string, :ports [string]}]}
@@ -215,7 +215,7 @@
    :sourceServiceAccounts [string],
    :targetServiceAccounts [string],
    :network string,
-   :logConfig {:enable boolean},
+   :logConfig {:enable boolean, :metadata string},
    :direction string,
    :sourceRanges [string],
    :allowed [{:IPProtocol string, :ports [string]}]}

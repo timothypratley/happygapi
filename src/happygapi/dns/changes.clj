@@ -1,64 +1,15 @@
 (ns happygapi.dns.changes
-  "Google Cloud DNS API: changes.
-  Configures and serves authoritative DNS records.
-  See: https://developers.google.com/cloud-dnsapi/reference/rest/v1/changes"
+  "Cloud DNS API: changes.
+  
+  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/changes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://developers.google.com/cloud-dnsapi/reference/rest/v1/changes/create
-  
-  Required parameters: managedZone, project
-  
-  Optional parameters: clientOperationId
-  
-  Body: 
-  
-  {:additions [{:kind string,
-                :name string,
-                :rrdatas [string],
-                :signatureRrdatas [string],
-                :ttl integer,
-                :type string}],
-   :deletions [{:kind string,
-                :name string,
-                :rrdatas [string],
-                :signatureRrdatas [string],
-                :ttl integer,
-                :type string}],
-   :id string,
-   :isServing boolean,
-   :kind string,
-   :startTime string,
-   :status string}
-  
-  Atomically update the ResourceRecordSet collection."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dns.googleapis.com/dns/v1/projects/"
-     "{project}/managedZones/{managedZone}/changes"
-     #{:managedZone :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
-  "https://developers.google.com/cloud-dnsapi/reference/rest/v1/changes/get
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/get
   
-  Required parameters: changeId, managedZone, project
+  Required parameters: managedZone, changeId, project
   
   Optional parameters: clientOperationId
   
@@ -74,8 +25,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dns.googleapis.com/dns/v1/projects/"
-     "{project}/managedZones/{managedZone}/changes/{changeId}"
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}/changes/{changeId}"
      #{:managedZone :project :changeId}
      parameters)
     (merge-with
@@ -86,12 +37,63 @@
       :as :json}
      auth))))
 
+(defn create$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/create
+  
+  Required parameters: project, managedZone
+  
+  Optional parameters: clientOperationId
+  
+  Body: 
+  
+  {:startTime string,
+   :isServing boolean,
+   :status string,
+   :additions [{:signatureRrdatas [string],
+                :ttl integer,
+                :rrdatas [string],
+                :routingPolicy RRSetRoutingPolicy,
+                :kind string,
+                :name string,
+                :type string}],
+   :deletions [{:signatureRrdatas [string],
+                :ttl integer,
+                :rrdatas [string],
+                :routingPolicy RRSetRoutingPolicy,
+                :kind string,
+                :name string,
+                :type string}],
+   :id string,
+   :kind string}
+  
+  Atomically update the ResourceRecordSet collection."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}/changes"
+     #{:managedZone :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
-  "https://developers.google.com/cloud-dnsapi/reference/rest/v1/changes/list
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/list
   
-  Required parameters: managedZone, project
+  Required parameters: project, managedZone
   
-  Optional parameters: maxResults, pageToken, sortBy, sortOrder
+  Optional parameters: sortBy, maxResults, sortOrder, pageToken
   
   Enumerate Changes to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -103,8 +105,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dns.googleapis.com/dns/v1/projects/"
-     "{project}/managedZones/{managedZone}/changes"
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}/changes"
      #{:managedZone :project}
      parameters)
     (merge-with

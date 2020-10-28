@@ -6,30 +6,151 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getQueryResults$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/getQueryResults
+(defn list$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/list
   
-  Required parameters: jobId, projectId
+  Required parameters: projectId
   
-  Optional parameters: location, startIndex, pageToken, timeoutMs, maxResults
+  Optional parameters: allUsers, maxCreationTime, pageToken, parentJobId, stateFilter, projection, maxResults, minCreationTime
   
-  Retrieves the results of a query job."
+  Lists all jobs that you started in the specified project. Job information is available for a six month period after creation. The job list is sorted in reverse chronological order, by job creation time. Requires the Can View project role, or the Is Owner project role if you set the allUsers property."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId :jobId})]}
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/queries/{jobId}"
-     #{:projectId :jobId}
+     "projects/{projectId}/jobs"
+     #{:projectId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/insert
+  
+  Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:selfLink string,
+   :etag string,
+   :user_email string,
+   :jobReference {:projectId string, :jobId string, :location string},
+   :statistics {:reservation_id string,
+                :creationTime string,
+                :load JobStatistics3,
+                :transactionInfoTemplate TransactionInfo,
+                :startTime string,
+                :reservationUsage [{:name string, :slotMs string}],
+                :endTime string,
+                :totalSlotMs string,
+                :completionRatio number,
+                :numChildJobs string,
+                :parentJobId string,
+                :rowLevelSecurityStatistics RowLevelSecurityStatistics,
+                :extract JobStatistics4,
+                :totalBytesProcessed string,
+                :scriptStatistics ScriptStatistics,
+                :quotaDeferments [string],
+                :query JobStatistics2},
+   :status {:errorResult ErrorProto,
+            :errors [ErrorProto],
+            :state string},
+   :id string,
+   :kind string,
+   :configuration {:labels {},
+                   :jobTimeoutMs string,
+                   :extract JobConfigurationExtract,
+                   :dryRun boolean,
+                   :jobType string,
+                   :copy JobConfigurationTableCopy,
+                   :load JobConfigurationLoad,
+                   :query JobConfigurationQuery}}
+  
+  Starts a new asynchronous job. Requires the Can View project role."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/devstorage.full_control"
+            "https://www.googleapis.com/auth/devstorage.read_only"
+            "https://www.googleapis.com/auth/devstorage.read_write"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/jobs"
+     #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn query$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/query
+  
+  Required parameters: projectId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:dryRun boolean,
+   :labels {},
+   :maximumBytesBilled string,
+   :queryParameters [{:parameterValue QueryParameterValue,
+                      :name string,
+                      :parameterType QueryParameterType}],
+   :parameterMode string,
+   :connectionProperties [{:value string, :key string}],
+   :defaultDataset {:projectId string, :datasetId string},
+   :preserveNulls boolean,
+   :timeoutMs integer,
+   :requestId string,
+   :kind string,
+   :useQueryCache boolean,
+   :query string,
+   :useLegacySql boolean,
+   :location string,
+   :maxResults integer}
+  
+  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/queries"
+     #{:projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -62,77 +183,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/insert
-  
-  Required parameters: projectId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:selfLink string,
-   :etag string,
-   :user_email string,
-   :jobReference {:location string, :jobId string, :projectId string},
-   :statistics {:reservation_id string,
-                :creationTime string,
-                :load JobStatistics3,
-                :startTime string,
-                :reservationUsage [{:slotMs string, :name string}],
-                :endTime string,
-                :totalSlotMs string,
-                :completionRatio number,
-                :numChildJobs string,
-                :parentJobId string,
-                :extract JobStatistics4,
-                :totalBytesProcessed string,
-                :scriptStatistics ScriptStatistics,
-                :quotaDeferments [string],
-                :query JobStatistics2},
-   :status {:errorResult ErrorProto,
-            :errors [ErrorProto],
-            :state string},
-   :id string,
-   :kind string,
-   :configuration {:query JobConfigurationQuery,
-                   :load JobConfigurationLoad,
-                   :labels {},
-                   :dryRun boolean,
-                   :jobType string,
-                   :extract JobConfigurationExtract,
-                   :copy JobConfigurationTableCopy,
-                   :jobTimeoutMs string}}
-  
-  Starts a new asynchronous job. Requires the Can View project role."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/devstorage.full_control"
-            "https://www.googleapis.com/auth/devstorage.read_only"
-            "https://www.googleapis.com/auth/devstorage.read_write"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/get
   
-  Required parameters: jobId, projectId
+  Required parameters: projectId, jobId
   
   Optional parameters: location
   
@@ -158,74 +212,26 @@
       :as :json}
      auth))))
 
-(defn query$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/query
+(defn getQueryResults$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/getQueryResults
   
-  Required parameters: projectId
+  Required parameters: jobId, projectId
   
-  Optional parameters: none
+  Optional parameters: startIndex, timeoutMs, location, maxResults, pageToken
   
-  Body: 
-  
-  {:dryRun boolean,
-   :queryParameters [{:name string,
-                      :parameterType QueryParameterType,
-                      :parameterValue QueryParameterValue}],
-   :parameterMode string,
-   :defaultDataset {:projectId string, :datasetId string},
-   :preserveNulls boolean,
-   :timeoutMs integer,
-   :kind string,
-   :useQueryCache boolean,
-   :query string,
-   :useLegacySql boolean,
-   :location string,
-   :maxResults integer}
-  
-  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/queries"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/list
-  
-  Required parameters: projectId
-  
-  Optional parameters: allUsers, maxCreationTime, pageToken, parentJobId, stateFilter, projection, maxResults, minCreationTime
-  
-  Lists all jobs that you started in the specified project. Job information is available for a six month period after creation. The job list is sorted in reverse chronological order, by job creation time. Requires the Can View project role, or the Is Owner project role if you set the allUsers property."
+  Retrieves the results of a query job."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
+  {:pre [(util/has-keys? parameters #{:projectId :jobId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs"
-     #{:projectId}
+     "projects/{projectId}/queries/{jobId}"
+     #{:projectId :jobId}
      parameters)
     (merge-with
      merge

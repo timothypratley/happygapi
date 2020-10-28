@@ -6,41 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn sync$
-  "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/devices/sync
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requestId string, :agentUserId string}
-  
-  Gets all the devices associated with the given third-party user.
-  The third-party user's identity is passed in as `agent_user_id`. The agent
-  is identified by the JWT signed by the third-party partner's service
-  account."
-  {:scopes nil}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://homegraph.googleapis.com/"
-     "v1/devices:sync"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn reportStateAndNotification$
   "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/devices/reportStateAndNotification
   
@@ -50,28 +15,14 @@
   
   Body: 
   
-  {:eventId string,
-   :agentUserId string,
-   :payload {:devices ReportStateAndNotificationDevice},
+  {:followUpToken string,
    :requestId string,
-   :followUpToken string}
+   :eventId string,
+   :payload {:devices ReportStateAndNotificationDevice},
+   :agentUserId string}
   
-  Reports device state and optionally sends device notifications. Called by
-  an agent when the device state of a third-party changes or the agent wants
-  to send a notification about the device. See
-  [Implement Report State](/actions/smarthome/report-state) for more
-  information.
-  This method updates a predefined set of states for a device, which all
-  devices have according to their prescribed traits (for example, a light
-  will have the [OnOff](/actions/smarthome/traits/onoff) trait that reports
-  the state `on` as a boolean value).
-  A new state may not be created and an INVALID_ARGUMENT code will be thrown
-  if so. It also optionally takes in a list of Notifications that may be
-  created, which are associated to this state change.
-  
-  The third-party user's identity is passed in as `agent_user_id`.
-  The agent is identified by the JWT signed by the partner's service account."
-  {:scopes nil}
+  Reports device state and optionally sends device notifications. Called by your smart home Action when the state of a third-party device changes or you need to send a notification about the device. See [Implement Report State](https://developers.google.com/assistant/smarthome/develop/report-state) for more information. This method updates the device state according to its declared [traits](https://developers.google.com/assistant/smarthome/concepts/devices-traits). Publishing a new state value outside of these traits will result in an `INVALID_ARGUMENT` error response. The third-party user's identity is passed in via the `agent_user_id` (see ReportStateAndNotificationRequest). This request must be authorized using service account credentials from your Actions console project."
+  {:scopes ["https://www.googleapis.com/auth/homegraph"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
@@ -79,45 +30,6 @@
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:reportStateAndNotification"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn requestSync$
-  "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/devices/requestSync
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:agentUserId string, :async boolean}
-  
-  Requests a `SYNC` call from Google to a 3p partner's home control agent for
-  a user.
-  
-  
-  The third-party user's identity is passed in as `agent_user_id`
-  (see RequestSyncDevicesRequest) and forwarded back to the agent.
-  The agent is identified by the API key or JWT signed by the partner's
-  service account."
-  {:scopes nil}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://homegraph.googleapis.com/"
-     "v1/devices:requestSync"
      #{}
      parameters)
     (merge-with
@@ -139,15 +51,12 @@
   
   Body: 
   
-  {:requestId string,
-   :inputs [{:payload QueryRequestPayload}],
-   :agentUserId string}
+  {:agentUserId string,
+   :requestId string,
+   :inputs [{:payload QueryRequestPayload}]}
   
-  Gets the device states for the devices in QueryRequest.
-  The third-party user's identity is passed in as `agent_user_id`. The agent
-  is identified by the JWT signed by the third-party partner's service
-  account."
-  {:scopes nil}
+  Gets the current states in Home Graph for the given set of the third-party user's devices. The third-party user's identity is passed in via the `agent_user_id` (see QueryRequest). This request must be authorized using service account credentials from your Actions console project."
+  {:scopes ["https://www.googleapis.com/auth/homegraph"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
@@ -155,6 +64,70 @@
     (util/get-url
      "https://homegraph.googleapis.com/"
      "v1/devices:query"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn requestSync$
+  "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/devices/requestSync
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:async boolean, :agentUserId string}
+  
+  Requests Google to send an `action.devices.SYNC` [intent](https://developers.google.com/assistant/smarthome/reference/intent/sync) to your smart home Action to update device metadata for the given user. The third-party user's identity is passed via the `agent_user_id` (see RequestSyncDevicesRequest). This request must be authorized using service account credentials from your Actions console project."
+  {:scopes ["https://www.googleapis.com/auth/homegraph"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://homegraph.googleapis.com/"
+     "v1/devices:requestSync"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sync$
+  "https://developers.google.com/actions/smarthome/create-app#request-syncapi/reference/rest/v1/devices/sync
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:agentUserId string, :requestId string}
+  
+  Gets all the devices associated with the given third-party user. The third-party user's identity is passed in via the `agent_user_id` (see SyncRequest). This request must be authorized using service account credentials from your Actions console project."
+  {:scopes ["https://www.googleapis.com/auth/homegraph"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://homegraph.googleapis.com/"
+     "v1/devices:sync"
      #{}
      parameters)
     (merge-with

@@ -73,7 +73,8 @@
             :productRevisionNumber string,
             :deliveryControl DeliveryControl,
             :sellerContacts [ContactInformation],
-            :dealId string}],
+            :dealId string,
+            :makegoodRequestedReason string}],
    :proposalRevisionNumber string,
    :updateAction string}
   
@@ -157,7 +158,8 @@
             :productRevisionNumber string,
             :deliveryControl DeliveryControl,
             :sellerContacts [ContactInformation],
-            :dealId string}],
+            :dealId string,
+            :makegoodRequestedReason string}],
    :proposal {:hasBuyerSignedOff boolean,
               :labels [MarketplaceLabel],
               :isSetupComplete boolean,

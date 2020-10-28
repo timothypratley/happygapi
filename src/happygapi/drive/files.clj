@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: enforceSingleParent
   
   Permanently deletes all of the user's trashed files."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
@@ -37,7 +37,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: acknowledgeAbuse, supportsAllDrives, supportsTeamDrives
+  Optional parameters: acknowledgeAbuse, includePermissionsForView, supportsAllDrives, supportsTeamDrives
   
   Gets a file's metadata or content by ID."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -69,7 +69,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives
+  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, includePermissionsForView, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives
   
   Body: 
   
@@ -81,6 +81,7 @@
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
+                  :canAddFolderFromAnotherDrive boolean,
                   :canTrashChildren boolean,
                   :canMoveChildrenWithinDrive boolean,
                   :canDownload boolean,
@@ -94,6 +95,7 @@
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
                   :canRemoveMyDriveParent boolean,
+                  :canModifyContentRestriction boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -151,6 +153,7 @@
                   :id string,
                   :kind string,
                   :domain string,
+                  :view string,
                   :photoLink string}],
    :owners [{:displayName string,
              :emailAddress string,
@@ -164,6 +167,11 @@
    :starred boolean,
    :fullFileExtension string,
    :exportLinks {},
+   :contentRestrictions [{:readOnly boolean,
+                          :reason string,
+                          :restrictingUser User,
+                          :restrictionTime string,
+                          :type string}],
    :name string,
    :viewersCanCopyContent boolean,
    :iconLink string,
@@ -224,7 +232,7 @@
    :ownedByMe boolean,
    :webContentLink string}
   
-  Creates a copy of a file and applies any requested updates with patch semantics."
+  Creates a copy of a file and applies any requested updates with patch semantics. Folders cannot be copied."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"
@@ -253,7 +261,7 @@
   
   Required parameters: none
   
-  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
+  Optional parameters: enforceSingleParent, ignoreDefaultVisibility, includePermissionsForView, keepRevisionForever, ocrLanguage, supportsAllDrives, supportsTeamDrives, useContentAsIndexableText
   
   Body: 
   
@@ -265,6 +273,7 @@
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
+                  :canAddFolderFromAnotherDrive boolean,
                   :canTrashChildren boolean,
                   :canMoveChildrenWithinDrive boolean,
                   :canDownload boolean,
@@ -278,6 +287,7 @@
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
                   :canRemoveMyDriveParent boolean,
+                  :canModifyContentRestriction boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -335,6 +345,7 @@
                   :id string,
                   :kind string,
                   :domain string,
+                  :view string,
                   :photoLink string}],
    :owners [{:displayName string,
              :emailAddress string,
@@ -348,6 +359,11 @@
    :starred boolean,
    :fullFileExtension string,
    :exportLinks {},
+   :contentRestrictions [{:readOnly boolean,
+                          :reason string,
+                          :restrictingUser User,
+                          :restrictionTime string,
+                          :type string}],
    :name string,
    :viewersCanCopyContent boolean,
    :iconLink string,
@@ -436,7 +452,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: removeParents, addParents, enforceSingleParent, supportsAllDrives, useContentAsIndexableText, ocrLanguage, supportsTeamDrives, keepRevisionForever
+  Optional parameters: includePermissionsForView, removeParents, addParents, enforceSingleParent, supportsAllDrives, useContentAsIndexableText, ocrLanguage, supportsTeamDrives, keepRevisionForever
   
   Body: 
   
@@ -448,6 +464,7 @@
                   :canTrash boolean,
                   :canMoveChildrenOutOfTeamDrive boolean,
                   :canCopy boolean,
+                  :canAddFolderFromAnotherDrive boolean,
                   :canTrashChildren boolean,
                   :canMoveChildrenWithinDrive boolean,
                   :canDownload boolean,
@@ -461,6 +478,7 @@
                   :canReadRevisions boolean,
                   :canMoveItemIntoTeamDrive boolean,
                   :canRemoveMyDriveParent boolean,
+                  :canModifyContentRestriction boolean,
                   :canMoveItemOutOfDrive boolean,
                   :canEdit boolean,
                   :canComment boolean,
@@ -518,6 +536,7 @@
                   :id string,
                   :kind string,
                   :domain string,
+                  :view string,
                   :photoLink string}],
    :owners [{:displayName string,
              :emailAddress string,
@@ -531,6 +550,11 @@
    :starred boolean,
    :fullFileExtension string,
    :exportLinks {},
+   :contentRestrictions [{:readOnly boolean,
+                          :reason string,
+                          :restrictingUser User,
+                          :restrictionTime string,
+                          :type string}],
    :name string,
    :viewersCanCopyContent boolean,
    :iconLink string,
@@ -591,7 +615,7 @@
    :ownedByMe boolean,
    :webContentLink string}
   
-  Updates a file's metadata and/or content with patch semantics."
+  Updates a file's metadata and/or content. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"
@@ -621,7 +645,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: supportsAllDrives, supportsTeamDrives
+  Optional parameters: enforceSingleParent, supportsAllDrives, supportsTeamDrives
   
   Permanently deletes a file owned by the user without moving it to the trash. If the file belongs to a shared drive the user must be an organizer on the parent. If the target is a folder, all descendants owned by the user are also deleted."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -677,7 +701,7 @@
   
   Required parameters: none
   
-  Optional parameters: q, includeItemsFromAllDrives, corpora, supportsAllDrives, corpus, teamDriveId, pageToken, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives, orderBy
+  Optional parameters: q, includePermissionsForView, includeItemsFromAllDrives, corpora, supportsAllDrives, corpus, teamDriveId, pageToken, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives, orderBy
   
   Lists or searches files."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -709,7 +733,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: acknowledgeAbuse, supportsAllDrives, supportsTeamDrives
+  Optional parameters: acknowledgeAbuse, includePermissionsForView, supportsAllDrives, supportsTeamDrives
   
   Body: 
   

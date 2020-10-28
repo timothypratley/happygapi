@@ -1,6 +1,6 @@
 (ns happygapi.iam.permissions
   "Identity and Access Management (IAM) API: permissions.
-  Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls.
+  Manages identity and access control for Google Cloud Platform resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls. 
   See: https://cloud.google.com/iam/api/reference/rest/v1/permissions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,10 +15,9 @@
   
   Body: 
   
-  {:fullResourceName string, :pageToken string, :pageSize integer}
+  {:fullResourceName string, :pageSize integer, :pageToken string}
   
-  Lists the permissions testable on a resource.
-  A permission is testable if it can be tested for an identity on a resource."
+  Lists every permission that you can test on a resource. A permission is testable if you can check whether a member has that permission on the resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

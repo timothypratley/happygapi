@@ -1,19 +1,70 @@
 (ns happygapi.youtube.playlistItems
-  "YouTube Data API: playlistItems.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/playlistItems"
+  "YouTube Data API v3: playlistItems.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/playlistItems"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/update
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:id string,
+   :snippet {:description string,
+             :publishedAt string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :resourceId ResourceId,
+             :position integer,
+             :channelTitle string,
+             :playlistId string},
+   :kind string,
+   :status {:privacyStatus string},
+   :contentDetails {:endAt string,
+                    :videoId string,
+                    :videoPublishedAt string,
+                    :note string,
+                    :startAt string},
+   :etag string}
+  
+  Updates an existing resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlistItems"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlistItems/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/delete
   
   Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
   
-  Deletes a playlist item."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -22,8 +73,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlistItems"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlistItems"
      #{:id}
      parameters)
     (merge-with
@@ -35,7 +86,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlistItems/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/insert
   
   Required parameters: part
   
@@ -43,14 +94,7 @@
   
   Body: 
   
-  {:contentDetails {:endAt string,
-                    :note string,
-                    :startAt string,
-                    :videoId string,
-                    :videoPublishedAt string},
-   :etag string,
-   :id string,
-   :kind string,
+  {:id string,
    :snippet {:description string,
              :publishedAt string,
              :channelId string,
@@ -60,9 +104,16 @@
              :position integer,
              :channelTitle string,
              :playlistId string},
-   :status {:privacyStatus string}}
+   :kind string,
+   :status {:privacyStatus string},
+   :contentDetails {:endAt string,
+                    :videoId string,
+                    :videoPublishedAt string,
+                    :note string,
+                    :startAt string},
+   :etag string}
   
-  Adds a resource to a playlist."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
@@ -71,8 +122,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlistItems"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlistItems"
      #{:part}
      parameters)
     (merge-with
@@ -86,13 +137,13 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlistItems/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/list
   
   Required parameters: part
   
-  Optional parameters: id, maxResults, onBehalfOfContentOwner, pageToken, playlistId, videoId
+  Optional parameters: id, playlistId, pageToken, onBehalfOfContentOwner, videoId, maxResults
   
-  Returns a collection of playlist items that match the API request parameters. You can retrieve all of the playlist items in a specified playlist or retrieve one or more playlist items by their unique IDs."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"
@@ -102,64 +153,13 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlistItems"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlistItems"
      #{:part}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/playlistItems/update
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:contentDetails {:endAt string,
-                    :note string,
-                    :startAt string,
-                    :videoId string,
-                    :videoPublishedAt string},
-   :etag string,
-   :id string,
-   :kind string,
-   :snippet {:description string,
-             :publishedAt string,
-             :channelId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :resourceId ResourceId,
-             :position integer,
-             :channelTitle string,
-             :playlistId string},
-   :status {:privacyStatus string}}
-  
-  Modifies a playlist item. For example, you could update the item's position in the playlist."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "playlistItems"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

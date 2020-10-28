@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner, pageToken, includeSystemManaged, pageSize
+  Optional parameters: pageToken, onBehalfOfContentOwner, pageSize, includeSystemManaged
   
   Lists report types."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"

@@ -112,7 +112,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists all the SSL policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -140,7 +140,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists all features that can be specified in the SSL policy when using custom profile."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

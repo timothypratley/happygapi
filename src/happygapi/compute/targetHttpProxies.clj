@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of all TargetHttpProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -98,14 +98,16 @@
   
   Body: 
   
-  {:creationTimestamp string,
-   :description string,
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :selfLink string,
+   :region string,
    :id string,
    :kind string,
-   :name string,
-   :region string,
-   :selfLink string,
-   :urlMap string}
+   :fingerprint string,
+   :proxyBind boolean}
   
   Creates a TargetHttpProxy resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -134,7 +136,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of TargetHttpProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -152,6 +154,48 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpProxies/patch
+  
+  Required parameters: project, targetHttpProxy
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :selfLink string,
+   :region string,
+   :id string,
+   :kind string,
+   :fingerprint string,
+   :proxyBind boolean}
+  
+  Patches the specified TargetHttpProxy resource with the data included in the request. This method supports PATCH semantics and uses JSON merge patch format and processing rules. (== suppress_warning http-rest-shadowed ==)"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetHttpProxy :project})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/global/targetHttpProxies/{targetHttpProxy}"
+     #{:targetHttpProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

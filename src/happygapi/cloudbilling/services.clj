@@ -1,7 +1,6 @@
 (ns happygapi.cloudbilling.services
   "Cloud Billing API: services.
-  Allows developers to manage billing for their Google Cloud Platform projects
-      programmatically.
+  Allows developers to manage billing for their Google Cloud Platform projects programmatically.
   See: https://cloud.google.com/billing/api/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,7 +14,9 @@
   Optional parameters: pageToken, pageSize
   
   Lists all public cloud services."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-billing.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
@@ -38,10 +39,12 @@
   
   Required parameters: parent
   
-  Optional parameters: currencyCode, endTime, pageToken, startTime, pageSize
+  Optional parameters: startTime, currencyCode, endTime, pageToken, pageSize
   
   Lists all publicly available SKUs for a given cloud service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-billing.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response

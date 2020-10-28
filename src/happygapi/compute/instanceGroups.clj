@@ -13,7 +13,9 @@
   
   Optional parameters: none
   
-  Returns the specified instance group. Gets a list of available instance groups by making a list() request."
+  Returns the specified zonal instance group. Get a list of available zonal instance groups by making a list() request.
+  
+  For managed instance groups, use the instanceGroupManagers or regionInstanceGroupManagers methods instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -117,7 +119,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of instance groups and sorts them by zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -205,9 +207,11 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Retrieves the list of instance groups that are located in the specified project and zone."
+  Retrieves the list of zonal instance group resources contained within the specified zone.
+  
+  For managed instance groups, use the instanceGroupManagers or regionInstanceGroupManagers methods instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -233,13 +237,13 @@
   
   Required parameters: instanceGroup, project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Body: 
   
   {:instanceState string}
   
-  Lists the instances in the specified instance group."
+  Lists the instances in the specified instance group. The orderBy query parameter is not supported."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}

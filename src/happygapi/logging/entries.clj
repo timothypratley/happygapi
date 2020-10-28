@@ -15,14 +15,14 @@
   
   Body: 
   
-  {:projectIds [string],
-   :filter string,
+  {:filter string,
    :pageToken string,
-   :pageSize integer,
    :orderBy string,
-   :resourceNames [string]}
+   :resourceNames [string],
+   :projectIds [string],
+   :pageSize integer}
   
-  Lists log entries. Use this method to retrieve log entries that originated from a project/folder/organization/billing account. For ways to export log entries, see Exporting Logs."
+  Lists log entries. Use this method to retrieve log entries that originated from a project/folder/organization/billing account. For ways to export log entries, see Exporting Logs (https://cloud.google.com/logging/docs/export)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/logging.admin"
@@ -55,7 +55,11 @@
   
   Body: 
   
-  {:logName string,
+  {:partialSuccess boolean,
+   :resource {:labels {}, :type string},
+   :dryRun boolean,
+   :labels {},
+   :logName string,
    :entries [{:traceSampled boolean,
               :jsonPayload {},
               :labels {},
@@ -72,11 +76,7 @@
               :httpRequest HttpRequest,
               :protoPayload {},
               :timestamp string,
-              :metadata MonitoredResourceMetadata}],
-   :partialSuccess boolean,
-   :dryRun boolean,
-   :labels {},
-   :resource {:labels {}, :type string}}
+              :metadata MonitoredResourceMetadata}]}
   
   Writes log entries to Logging. This API method is the only way to send log entries to Logging. This method is used, directly or indirectly, by the Logging agent (fluentd) and all logging libraries configured to use Logging. A single request may contain log entries for a maximum of 1000 different resources (projects, organizations, billing accounts or folders)"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

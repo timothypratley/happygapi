@@ -20,7 +20,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/"
+     "https://gamesconfiguration.googleapis.com/"
      "games/v1configuration/images/{resourceId}/imageType/{imageType}"
      #{:imageType :resourceId}
      parameters)

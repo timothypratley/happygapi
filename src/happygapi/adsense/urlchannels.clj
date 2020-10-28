@@ -11,7 +11,7 @@
   
   Required parameters: adClientId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   List all URL channels in the specified ad client for this AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsense"

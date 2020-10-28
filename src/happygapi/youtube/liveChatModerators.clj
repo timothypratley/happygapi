@@ -1,19 +1,19 @@
 (ns happygapi.youtube.liveChatModerators
-  "YouTube Data API: liveChatModerators.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatModerators"
+  "YouTube Data API v3: liveChatModerators.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatModerators/delete
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/delete
   
   Required parameters: id
   
   Optional parameters: none
   
-  Removes a chat moderator."
+  Deletes a chat moderator."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters]
@@ -21,8 +21,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/moderators"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/moderators"
      #{:id}
      parameters)
     (merge-with
@@ -34,7 +34,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatModerators/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/insert
   
   Required parameters: part
   
@@ -43,12 +43,12 @@
   Body: 
   
   {:etag string,
-   :id string,
    :kind string,
+   :id string,
    :snippet {:liveChatId string,
              :moderatorDetails ChannelProfileDetails}}
   
-  Adds a new moderator for the chat."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters body]
@@ -56,8 +56,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/moderators"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/moderators"
      #{:part}
      parameters)
     (merge-with
@@ -71,13 +71,13 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/liveChatModerators/list
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
   
   Required parameters: liveChatId, part
   
   Optional parameters: maxResults, pageToken
   
-  Lists moderators for a live chat."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtube.readonly"]}
@@ -86,8 +86,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "liveChat/moderators"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/moderators"
      #{:part :liveChatId}
      parameters)
     (merge-with

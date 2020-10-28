@@ -11,11 +11,9 @@
   
   Required parameters: none
   
-  Optional parameters: ids, limit, prefix, query, types, indent, languages
+  Optional parameters: limit, ids, indent, query, types, languages, prefix
   
-  Searches Knowledge Graph for entities that match the constraints.
-  A list of matched entities will be returned in response, which will be in
-  JSON-LD format and compatible with http://schema.org"
+  Searches Knowledge Graph for entities that match the constraints. A list of matched entities will be returned in response, which will be in JSON-LD format and compatible with http://schema.org"
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}

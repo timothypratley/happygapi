@@ -17,7 +17,9 @@
   
   {:host string, :path string}
   
-  Initiates a cache invalidation operation, invalidating the specified path, scoped to the specified UrlMap."
+  Initiates a cache invalidation operation, invalidating the specified path, scoped to the specified UrlMap.
+  
+  For more information, see [Invalidating cached content](/cdn/docs/invalidating-cached-content)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -265,7 +267,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of all UrlMap resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -393,7 +395,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of UrlMap resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

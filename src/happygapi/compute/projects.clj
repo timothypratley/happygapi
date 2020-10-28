@@ -168,7 +168,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Gets service resources (a.k.a service project) associated with this host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -383,7 +383,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Body: 
   

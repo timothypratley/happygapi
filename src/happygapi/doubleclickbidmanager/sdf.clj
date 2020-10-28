@@ -1,6 +1,6 @@
 (ns happygapi.doubleclickbidmanager.sdf
   "DoubleClick Bid Manager API: sdf.
-  API for viewing and managing your reports in DoubleClick Bid Manager.
+  DoubleClick Bid Manager API allows users to manage and create campaigns and reports.
   See: https://developers.google.com/bid-manager/api/reference/rest/v1.1/sdf"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:fileTypes [string],
-   :filterIds [string],
-   :filterType string,
-   :version string}
+  {:filterType string,
+   :version string,
+   :fileTypes [string],
+   :filterIds [string]}
   
   Retrieves entities in SDF format."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
@@ -27,7 +27,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/doubleclickbidmanager/v1.1/"
+     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
      "sdf/download"
      #{}
      parameters)

@@ -17,9 +17,7 @@
   
   {:resource string}
   
-  Gets the access control policy for a resource.
-  Returns an empty policy if the resource exists and does not have a policy
-  set."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -49,7 +47,7 @@
   
   Body: 
   
-  {:resource string, :permissions [string]}
+  {:permissions [string], :resource string}
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -84,8 +82,7 @@
   {:resource string,
    :policy {:etag string, :assignments [SasPortalAssignment]}}
   
-  Sets the access control policy on the specified resource. Replaces any
-  existing policy."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

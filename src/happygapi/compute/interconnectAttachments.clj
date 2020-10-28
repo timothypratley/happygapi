@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves an aggregated list of interconnect attachments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -156,7 +156,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of interconnect attachments contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

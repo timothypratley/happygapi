@@ -1,36 +1,41 @@
 (ns happygapi.content.localinventory
   "Content API for Shopping: localinventory.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/localinventory"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/localinventory/custombatch
+(defn insert$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory/insert
   
-  Required parameters: none
+  Required parameters: productId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:batchId integer,
-              :localInventory LocalInventory,
-              :merchantId string,
-              :method string,
-              :productId string}]}
+  {:availability string,
+   :pickupSla string,
+   :salePrice {:value string, :currency string},
+   :instoreProductLocation string,
+   :pickupMethod string,
+   :kind string,
+   :storeCode string,
+   :quantity integer,
+   :price {:value string, :currency string},
+   :salePriceEffectiveDate string}
   
-  Updates local inventory for multiple products or stores in a single request."
+  Updates the local inventory of a product in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "localinventory/batch"
-     #{}
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/products/{productId}/localinventory"
+     #{:productId :merchantId}
      parameters)
     (merge-with
      merge
@@ -42,36 +47,31 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/localinventory/insert
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory/custombatch
   
-  Required parameters: merchantId, productId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:availability string,
-   :pickupSla string,
-   :salePrice {:currency string, :value string},
-   :instoreProductLocation string,
-   :pickupMethod string,
-   :kind string,
-   :storeCode string,
-   :quantity integer,
-   :price {:currency string, :value string},
-   :salePriceEffectiveDate string}
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :localInventory LocalInventory,
+              :method string,
+              :productId string}]}
   
-  Update the local inventory of a product in your Merchant Center account."
+  Updates local inventory for multiple products or stores in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/products/{productId}/localinventory"
-     #{:productId :merchantId}
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/localinventory/batch"
+     #{}
      parameters)
     (merge-with
      merge

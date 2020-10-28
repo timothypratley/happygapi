@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.videoFormats
   "DCM/DFA Reporting And Trafficking API: videoFormats.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/videoFormats"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/videoFormats/{id}"
      #{:id :profileId}
      parameters)
@@ -46,7 +46,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/videoFormats"
      #{:profileId}
      parameters)

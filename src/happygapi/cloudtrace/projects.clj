@@ -1,7 +1,6 @@
 (ns happygapi.cloudtrace.projects
   "Cloud Trace API: projects.
-  Sends application trace data to Cloud Trace for viewing. Trace data is collected for all App Engine applications by default. Trace data from other applications can be provided using this API. This library is used to interact with the Cloud Trace API directly. If you are looking to instrument your application for Cloud Trace, we recommend using OpenCensus.
-  
+  Sends application trace data to Cloud Trace for viewing. Trace data is collected for all App Engine applications by default. Trace data from other applications can be provided using this API. This library is used to interact with the Cloud Trace API directly. If you are looking to instrument your application for Cloud Trace, we recommend using OpenCensus. 
   See: https://cloud.google.com/traceapi/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -31,10 +30,7 @@
             :stackTrace StackTrace,
             :links Links}]}
   
-  Sends new spans to new or existing traces. You cannot update
-  existing spans.
-  In this case, writing traces is not considered an active developer
-  method since traces are machine generated."
+  Sends new spans to new or existing traces. You cannot update existing spans."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/trace.append"]}
   [auth parameters body]
@@ -70,21 +66,19 @@
    :displayName {:truncatedByteCount integer, :value string},
    :name string,
    :endTime string,
-   :timeEvents {:droppedAnnotationsCount integer,
-                :droppedMessageEventsCount integer,
+   :timeEvents {:droppedMessageEventsCount integer,
+                :droppedAnnotationsCount integer,
                 :timeEvent [TimeEvent]},
    :childSpanCount integer,
-   :status {:message string, :details [{}], :code integer},
+   :status {:details [{}], :code integer, :message string},
    :sameProcessAsParentSpan boolean,
    :parentSpanId string,
    :spanKind string,
-   :attributes {:droppedAttributesCount integer, :attributeMap {}},
-   :stackTrace {:stackTraceHashId string, :stackFrames StackFrames},
+   :attributes {:attributeMap {}, :droppedAttributesCount integer},
+   :stackTrace {:stackFrames StackFrames, :stackTraceHashId string},
    :links {:link [Link], :droppedLinksCount integer}}
   
-  Creates a new span.
-  In this case, writing traces is not considered an active developer
-  method since traces are machine generated."
+  Creates a new span."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/trace.append"]}
   [auth parameters body]

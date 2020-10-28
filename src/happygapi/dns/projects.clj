@@ -1,13 +1,13 @@
 (ns happygapi.dns.projects
-  "Google Cloud DNS API: projects.
-  Configures and serves authoritative DNS records.
-  See: https://developers.google.com/cloud-dnsapi/reference/rest/v1/projects"
+  "Cloud DNS API: projects.
+  
+  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/cloud-dnsapi/reference/rest/v1/projects/get
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/projects/get
   
   Required parameters: project
   
@@ -23,8 +23,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dns.googleapis.com/dns/v1/projects/"
-     "{project}"
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}"
      #{:project}
      parameters)
     (merge-with

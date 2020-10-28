@@ -1,7 +1,6 @@
 (ns happygapi.admob.accounts
   "AdMob API: accounts.
-  The Google AdMob API lets you programmatically get reports on earnings.
-  
+  The AdMob API allows publishers to programmatically get information about their AdMob account. 
   See: https://developers.google.com/admob/api/api/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,7 +14,7 @@
   Optional parameters: none
   
   Gets information about the specified AdMob publisher account."
-  {:scopes nil}
+  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -38,11 +37,10 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
-  Lists the AdMob publisher account accessible with the client credential.
-  Currently, all credentials have access to at most one AdMob account."
-  {:scopes nil}
+  Lists the AdMob publisher account accessible with the client credential. Currently, all credentials have access to at most one AdMob account."
+  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
@@ -60,8 +58,8 @@
       :as :json}
      auth))))
 
-(defn mediationReport-generate$
-  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/mediationReport/generate
+(defn networkReport-generate$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/networkReport/generate
   
   Required parameters: parent
   
@@ -69,25 +67,24 @@
   
   Body: 
   
-  {:reportSpec {:timeZone string,
-                :dimensions [string],
-                :dateRange DateRange,
-                :maxReportRows integer,
-                :dimensionFilters [MediationReportSpecDimensionFilter],
-                :metrics [string],
+  {:reportSpec {:dateRange DateRange,
                 :localizationSettings LocalizationSettings,
-                :sortConditions [MediationReportSpecSortCondition]}}
+                :timeZone string,
+                :sortConditions [NetworkReportSpecSortCondition],
+                :metrics [string],
+                :dimensions [string],
+                :maxReportRows integer,
+                :dimensionFilters [NetworkReportSpecDimensionFilter]}}
   
-  Generates an AdMob Mediation report based on the provided report
-  specification."
-  {:scopes nil}
+  Generates an AdMob Network report based on the provided report specification."
+  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://admob.googleapis.com/"
-     "v1/{+parent}/mediationReport:generate"
+     "v1/{+parent}/networkReport:generate"
      #{:parent}
      parameters)
     (merge-with
@@ -100,8 +97,8 @@
       :as :json}
      auth))))
 
-(defn networkReport-generate$
-  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/networkReport/generate
+(defn mediationReport-generate$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/mediationReport/generate
   
   Required parameters: parent
   
@@ -109,25 +106,24 @@
   
   Body: 
   
-  {:reportSpec {:timeZone string,
+  {:reportSpec {:localizationSettings LocalizationSettings,
+                :sortConditions [MediationReportSpecSortCondition],
                 :dimensions [string],
-                :dateRange DateRange,
+                :dimensionFilters [MediationReportSpecDimensionFilter],
                 :maxReportRows integer,
-                :localizationSettings LocalizationSettings,
                 :metrics [string],
-                :dimensionFilters [NetworkReportSpecDimensionFilter],
-                :sortConditions [NetworkReportSpecSortCondition]}}
+                :timeZone string,
+                :dateRange DateRange}}
   
-  Generates an AdMob Network report based on the provided report
-  specification."
-  {:scopes nil}
+  Generates an AdMob Mediation report based on the provided report specification."
+  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://admob.googleapis.com/"
-     "v1/{+parent}/networkReport:generate"
+     "v1/{+parent}/mediationReport:generate"
      #{:parent}
      parameters)
     (merge-with

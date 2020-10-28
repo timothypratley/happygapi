@@ -6,6 +6,84 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn create$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :schedule {:scheduleStartDate Date,
+              :scheduleEndDate Date,
+              :startTimeOfDay TimeOfDay},
+   :name string,
+   :lastModificationTime string,
+   :latestOperationName string,
+   :deletionTime string,
+   :status string,
+   :notificationConfig {:pubsubTopic string,
+                        :payloadFormat string,
+                        :eventTypes [string]},
+   :projectId string,
+   :transferSpec {:objectConditions ObjectConditions,
+                  :azureBlobStorageDataSource AzureBlobStorageData,
+                  :awsS3DataSource AwsS3Data,
+                  :httpDataSource HttpData,
+                  :transferOptions TransferOptions,
+                  :gcsDataSink GcsData,
+                  :gcsDataSource GcsData}}
+  
+  Creates a transfer job that runs periodically."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://storagetransfer.googleapis.com/"
+     "v1/transferJobs"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/list
+  
+  Required parameters: filter
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists transfer jobs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:filter})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://storagetransfer.googleapis.com/"
+     "v1/transferJobs"
+     #{:filter}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/patch
   
@@ -15,28 +93,21 @@
   
   Body: 
   
-  {:transferJob {:creationTime string,
+  {:projectId string,
+   :updateTransferJobFieldMask string,
+   :transferJob {:creationTime string,
                  :description string,
                  :schedule Schedule,
                  :name string,
                  :lastModificationTime string,
+                 :latestOperationName string,
                  :deletionTime string,
                  :status string,
                  :notificationConfig NotificationConfig,
                  :projectId string,
-                 :transferSpec TransferSpec},
-   :projectId string,
-   :updateTransferJobFieldMask string}
+                 :transferSpec TransferSpec}}
   
-  Updates a transfer job. Updating a job's transfer spec does not affect
-  transfer operations that are running already. Updating a job's schedule
-  is not allowed.
-  
-  **Note:** The job's status field can be modified
-  using this RPC (for example, to set a job's status to
-  DELETED,
-  DISABLED, or
-  ENABLED)."
+  Updates a transfer job. Updating a job's transfer spec does not affect transfer operations that are running already. Updating a job's schedule is not allowed. **Note:** The job's status field can be modified using this RPC (for example, to set a job's status to DELETED, DISABLED, or ENABLED)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:jobName})]}
@@ -60,101 +131,24 @@
 (defn get$
   "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/get
   
-  Required parameters: jobName
+  Required parameters: projectId, jobName
   
-  Optional parameters: projectId
+  Optional parameters: none
   
   Gets a transfer job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:jobName})]}
+  {:pre [(util/has-keys? parameters #{:jobName :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://storagetransfer.googleapis.com/"
      "v1/{+jobName}"
-     #{:jobName}
+     #{:jobName :projectId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/list
-  
-  Required parameters: none
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists transfer jobs."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://storagetransfer.googleapis.com/"
-     "v1/transferJobs"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :schedule {:scheduleStartDate Date,
-              :scheduleEndDate Date,
-              :startTimeOfDay TimeOfDay},
-   :name string,
-   :lastModificationTime string,
-   :deletionTime string,
-   :status string,
-   :notificationConfig {:payloadFormat string,
-                        :eventTypes [string],
-                        :pubsubTopic string},
-   :projectId string,
-   :transferSpec {:httpDataSource HttpData,
-                  :objectConditions ObjectConditions,
-                  :gcsDataSink GcsData,
-                  :gcsDataSource GcsData,
-                  :azureBlobStorageDataSource AzureBlobStorageData,
-                  :transferOptions TransferOptions,
-                  :awsS3DataSource AwsS3Data}}
-  
-  Creates a transfer job that runs periodically."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://storagetransfer.googleapis.com/"
-     "v1/transferJobs"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

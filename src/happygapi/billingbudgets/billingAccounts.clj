@@ -1,68 +1,93 @@
 (ns happygapi.billingbudgets.billingAccounts
   "Cloud Billing Budget API: billingAccounts.
   The Cloud Billing Budget API stores Cloud Billing budgets, which define a budget plan and the rules to execute as spend is tracked against that plan.
-  See: https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts"
+  See: https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn budgets-delete$
-  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts/budgets/delete
+(defn budgets-create$
+  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts/budgets/create
   
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
   
-  Deletes a budget. Returns successfully if already deleted."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  Body: 
+  
+  {:displayName string,
+   :notificationsRule {:disableDefaultIamRecipients boolean,
+                       :monitoringNotificationChannels [string],
+                       :schemaVersion string,
+                       :pubsubTopic string},
+   :thresholdRules [{:spendBasis string, :thresholdPercent number}],
+   :budgetFilter {:projects [string],
+                  :services [string],
+                  :labels {},
+                  :subaccounts [string],
+                  :creditTypesTreatment string},
+   :name string,
+   :amount {:specifiedAmount GoogleTypeMoney,
+            :lastPeriodAmount GoogleCloudBillingBudgetsV1LastPeriodAmount},
+   :etag string}
+  
+  Creates a new budget. See [Quotas and limits](https://cloud.google.com/billing/quotas) for more information on the limits of the number of budgets you can create."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://billingbudgets.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
+     "v1/{+parent}/budgets"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
 (defn budgets-patch$
-  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts/budgets/patch
+  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts/budgets/patch
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
-  {:budget {:budgetFilter GoogleCloudBillingBudgetsV1beta1Filter,
-            :allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
-            :displayName string,
-            :etag string,
-            :thresholdRules [GoogleCloudBillingBudgetsV1beta1ThresholdRule],
-            :name string,
-            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount},
-   :updateMask string}
+  {:displayName string,
+   :notificationsRule {:disableDefaultIamRecipients boolean,
+                       :monitoringNotificationChannels [string],
+                       :schemaVersion string,
+                       :pubsubTopic string},
+   :thresholdRules [{:spendBasis string, :thresholdPercent number}],
+   :budgetFilter {:projects [string],
+                  :services [string],
+                  :labels {},
+                  :subaccounts [string],
+                  :creditTypesTreatment string},
+   :name string,
+   :amount {:specifiedAmount GoogleTypeMoney,
+            :lastPeriodAmount GoogleCloudBillingBudgetsV1LastPeriodAmount},
+   :etag string}
   
-  Updates a budget and returns the updated budget.
-  
-  WARNING: There are some fields exposed on the Google Cloud Console that
-  aren't available on this API. Budget fields that are not exposed in
-  this API will not be changed by this method."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Updates a budget and returns the updated budget. WARNING: There are some fields exposed on the Google Cloud Console that aren't available on this API. Budget fields that are not exposed in this API will not be changed by this method."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://billingbudgets.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -75,27 +100,23 @@
       :as :json}
      auth))))
 
-(defn budgets-get$
-  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts/budgets/get
+(defn budgets-delete$
+  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts/budgets/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Returns a budget.
-  
-  WARNING: There are some fields exposed on the Google Cloud Console that
-  aren't available on this API. When reading from the API, you will not
-  see these fields in the return value, though they may have been set
-  in the Cloud Console."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Deletes a budget. Returns successfully if already deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://billingbudgets.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -107,26 +128,22 @@
      auth))))
 
 (defn budgets-list$
-  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts/budgets/list
+  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts/budgets/list
   
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
   
-  Returns a list of budgets for a billing account.
-  
-  WARNING: There are some fields exposed on the Google Cloud Console that
-  aren't available on this API. When reading from the API, you will not
-  see these fields in the return value, though they may have been set
-  in the Cloud Console."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Returns a list of budgets for a billing account. WARNING: There are some fields exposed on the Google Cloud Console that aren't available on this API. When reading from the API, you will not see these fields in the return value, though they may have been set in the Cloud Console."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://billingbudgets.googleapis.com/"
-     "v1beta1/{+parent}/budgets"
+     "v1/{+parent}/budgets"
      #{:parent}
      parameters)
     (merge-with
@@ -137,41 +154,28 @@
       :as :json}
      auth))))
 
-(defn budgets-create$
-  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1beta1/billingAccounts/budgets/create
+(defn budgets-get$
+  "https://cloud.google.com/billing/docs/how-to/budget-api-overviewapi/reference/rest/v1/billingAccounts/budgets/get
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:budget {:budgetFilter GoogleCloudBillingBudgetsV1beta1Filter,
-            :allUpdatesRule GoogleCloudBillingBudgetsV1beta1AllUpdatesRule,
-            :displayName string,
-            :etag string,
-            :thresholdRules [GoogleCloudBillingBudgetsV1beta1ThresholdRule],
-            :name string,
-            :amount GoogleCloudBillingBudgetsV1beta1BudgetAmount}}
-  
-  Creates a new budget. See
-  <a href=\"https://cloud.google.com/billing/quotas\">Quotas and limits</a>
-  for more information on the limits of the number of budgets you can create."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  Returns a budget. WARNING: There are some fields exposed on the Google Cloud Console that aren't available on this API. When reading from the API, you will not see these fields in the return value, though they may have been set in the Cloud Console."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://billingbudgets.googleapis.com/"
-     "v1beta1/{+parent}/budgets"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

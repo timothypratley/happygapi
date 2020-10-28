@@ -15,13 +15,13 @@
   
   Body: 
   
-  {:code string,
-   :idToken string,
-   :operation string,
-   :phoneNumber string,
-   :sessionInfo string,
+  {:verificationProof string,
    :temporaryProof string,
-   :verificationProof string}
+   :sessionInfo string,
+   :phoneNumber string,
+   :code string,
+   :idToken string,
+   :operation string}
   
   Verifies ownership of a phone number and creates/updates the user account accordingly."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -53,7 +53,7 @@
   
   Body: 
   
-  {:delegatedProjectNumber string, :idToken string, :localId string}
+  {:idToken string, :localId string, :delegatedProjectNumber string}
   
   Delete user account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -132,40 +132,40 @@
   
   {:allowPasswordUser boolean,
    :authorizedDomains [string],
-   :legacyResetPasswordTemplate {:body string,
-                                 :format string,
-                                 :from string,
-                                 :fromDisplayName string,
+   :legacyResetPasswordTemplate {:from string,
                                  :replyTo string,
-                                 :subject string},
-   :changeEmailTemplate {:body string,
-                         :format string,
-                         :from string,
-                         :fromDisplayName string,
+                                 :subject string,
+                                 :format string,
+                                 :fromDisplayName string,
+                                 :body string},
+   :changeEmailTemplate {:from string,
                          :replyTo string,
-                         :subject string},
+                         :subject string,
+                         :format string,
+                         :fromDisplayName string,
+                         :body string},
    :idpConfig [{:clientId string,
-                :enabled boolean,
-                :experimentPercent integer,
-                :provider string,
                 :secret string,
-                :whitelistedAudiences [string]}],
+                :whitelistedAudiences [string],
+                :experimentPercent integer,
+                :enabled boolean,
+                :provider string}],
    :apiKey string,
    :enableAnonymousUser boolean,
-   :verifyEmailTemplate {:body string,
-                         :format string,
-                         :from string,
-                         :fromDisplayName string,
+   :verifyEmailTemplate {:from string,
                          :replyTo string,
-                         :subject string},
+                         :subject string,
+                         :format string,
+                         :fromDisplayName string,
+                         :body string},
    :useEmailSending boolean,
    :delegatedProjectNumber string,
-   :resetPasswordTemplate {:body string,
-                           :format string,
-                           :from string,
-                           :fromDisplayName string,
+   :resetPasswordTemplate {:from string,
                            :replyTo string,
-                           :subject string}}
+                           :subject string,
+                           :format string,
+                           :fromDisplayName string,
+                           :body string}}
   
   Set project configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -193,7 +193,7 @@
   
   Required parameters: none
   
-  Optional parameters: delegatedProjectNumber, projectNumber
+  Optional parameters: projectNumber, delegatedProjectNumber
   
   Get project configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -265,9 +265,9 @@
   
   Body: 
   
-  {:iosReceipt string,
-   :iosSecret string,
+  {:iosSecret string,
    :phoneNumber string,
+   :iosReceipt string,
    :recaptchaToken string}
   
   Send SMS verification code."
@@ -379,7 +379,7 @@
   
   Body: 
   
-  {:email string, :idToken string, :oobCode string}
+  {:idToken string, :email string, :oobCode string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -411,11 +411,11 @@
   
   Body: 
   
-  {:delegatedProjectNumber string,
-   :email [string],
-   :idToken string,
+  {:idToken string,
+   :phoneNumber [string],
    :localId [string],
-   :phoneNumber [string]}
+   :email [string],
+   :delegatedProjectNumber string}
   
   Returns the account info."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -447,10 +447,10 @@
   
   Body: 
   
-  {:email string,
+  {:oobCode string,
+   :email string,
    :newPassword string,
-   :oldPassword string,
-   :oobCode string}
+   :oldPassword string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -528,7 +528,7 @@
   
   Body: 
   
-  {:instanceId string, :localId string}
+  {:localId string, :instanceId string}
   
   Sign out user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -658,14 +658,14 @@
             :validSince string,
             :disabled boolean,
             :displayName string,
-            :providerUserInfo [{:displayName string,
+            :providerUserInfo [{:federatedId string,
+                                :displayName string,
                                 :email string,
-                                :federatedId string,
+                                :screenName string,
                                 :phoneNumber string,
-                                :photoUrl string,
                                 :providerId string,
-                                :rawId string,
-                                :screenName string}],
+                                :photoUrl string,
+                                :rawId string}],
             :customAttributes string,
             :createdAt string,
             :emailVerified boolean,
@@ -712,8 +712,8 @@
   Body: 
   
   {:delegatedProjectNumber string,
-   :maxResults integer,
    :nextPageToken string,
+   :maxResults integer,
    :targetProjectId string}
   
   Batch download user accounts."

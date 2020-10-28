@@ -1,36 +1,10 @@
 (ns happygapi.dfareporting.ads
   "DCM/DFA Reporting And Trafficking API: ads.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/ads"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/ads/get
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Gets one ad by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/ads/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/ads/insert
@@ -44,34 +18,34 @@
   {:archived boolean,
    :dynamicClickTracker boolean,
    :dayPartTargeting {:daysOfWeek [string],
-                      :hoursOfDay [integer],
-                      :userLocalTime boolean},
+                      :userLocalTime boolean,
+                      :hoursOfDay [integer]},
    :languageTargeting {:languages [Language]},
-   :geoTargeting {:cities [City],
-                  :countries [Country],
+   :geoTargeting {:countries [Country],
                   :excludeCountries boolean,
-                  :metros [Metro],
                   :postalCodes [PostalCode],
-                  :regions [Region]},
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+                  :cities [City],
+                  :regions [Region],
+                  :metros [Metro]},
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :clickThroughUrl {:computedClickThroughUrl string,
-                     :customClickThroughUrl string,
+                      :dimensionName string,
+                      :matchType string},
+   :clickThroughUrl {:landingPageId string,
                      :defaultLandingPage boolean,
-                     :landingPageId string},
+                     :computedClickThroughUrl string,
+                     :customClickThroughUrl string},
    :startTime string,
    :compatibility string,
    :sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
                                 :id string,
                                 :kind string,
-                                :matchType string,
-                                :value string},
+                                :dimensionName string,
+                                :matchType string},
    :name string,
    :creativeRotation {:creativeAssignments [CreativeAssignment],
                       :creativeOptimizationConfigurationId string,
@@ -83,44 +57,44 @@
    :type string,
    :createInfo {:time string},
    :audienceSegmentId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
+   :eventTagOverrides [{:id string, :enabled boolean}],
    :remarketingListExpression {:expression string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :etag string,
+   :campaignIdDimensionValue {:etag string,
+                              :value string,
                               :id string,
                               :kind string,
-                              :matchType string,
-                              :value string},
-   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
-                                           :overrideInheritedEventTag boolean},
-   :size {:height integer,
-          :iab boolean,
-          :id string,
+                              :dimensionName string,
+                              :matchType string},
+   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
+                                           :defaultClickThroughEventTagId string},
+   :size {:width integer,
           :kind string,
-          :width integer},
-   :clickThroughUrlSuffixProperties {:clickThroughUrlSuffix string,
-                                     :overrideInheritedSuffix boolean},
+          :height integer,
+          :id string,
+          :iab boolean},
+   :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
+                                     :clickThroughUrlSuffix string},
    :advertiserId string,
    :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:browsers [Browser],
-                         :connectionTypes [ConnectionType],
+   :technologyTargeting {:operatingSystems [OperatingSystem],
+                         :browsers [Browser],
+                         :platformTypes [PlatformType],
                          :mobileCarriers [MobileCarrier],
-                         :operatingSystemVersions [OperatingSystemVersion],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType]},
+                         :connectionTypes [ConnectionType],
+                         :operatingSystemVersions [OperatingSystemVersion]},
    :sslRequired boolean,
    :active boolean,
    :id string,
    :kind string,
-   :deliverySchedule {:frequencyCap FrequencyCap,
-                      :hardCutoff boolean,
+   :deliverySchedule {:priority string,
                       :impressionRatio string,
-                      :priority string},
+                      :frequencyCap FrequencyCap,
+                      :hardCutoff boolean},
    :creativeGroupAssignments [{:creativeGroupId string,
                                :creativeGroupNumber string}],
-   :placementAssignments [{:active boolean,
+   :placementAssignments [{:placementIdDimensionValue DimensionValue,
+                           :active boolean,
                            :placementId string,
-                           :placementIdDimensionValue DimensionValue,
                            :sslRequired boolean}],
    :lastModifiedInfo {:time string},
    :subaccountId string,
@@ -134,7 +108,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/ads"
      #{:profileId}
      parameters)
@@ -162,7 +136,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/ads"
      #{:profileId}
      parameters)
@@ -186,34 +160,34 @@
   {:archived boolean,
    :dynamicClickTracker boolean,
    :dayPartTargeting {:daysOfWeek [string],
-                      :hoursOfDay [integer],
-                      :userLocalTime boolean},
+                      :userLocalTime boolean,
+                      :hoursOfDay [integer]},
    :languageTargeting {:languages [Language]},
-   :geoTargeting {:cities [City],
-                  :countries [Country],
+   :geoTargeting {:countries [Country],
                   :excludeCountries boolean,
-                  :metros [Metro],
                   :postalCodes [PostalCode],
-                  :regions [Region]},
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+                  :cities [City],
+                  :regions [Region],
+                  :metros [Metro]},
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :clickThroughUrl {:computedClickThroughUrl string,
-                     :customClickThroughUrl string,
+                      :dimensionName string,
+                      :matchType string},
+   :clickThroughUrl {:landingPageId string,
                      :defaultLandingPage boolean,
-                     :landingPageId string},
+                     :computedClickThroughUrl string,
+                     :customClickThroughUrl string},
    :startTime string,
    :compatibility string,
    :sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
                                 :id string,
                                 :kind string,
-                                :matchType string,
-                                :value string},
+                                :dimensionName string,
+                                :matchType string},
    :name string,
    :creativeRotation {:creativeAssignments [CreativeAssignment],
                       :creativeOptimizationConfigurationId string,
@@ -225,44 +199,44 @@
    :type string,
    :createInfo {:time string},
    :audienceSegmentId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
+   :eventTagOverrides [{:id string, :enabled boolean}],
    :remarketingListExpression {:expression string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :etag string,
+   :campaignIdDimensionValue {:etag string,
+                              :value string,
                               :id string,
                               :kind string,
-                              :matchType string,
-                              :value string},
-   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
-                                           :overrideInheritedEventTag boolean},
-   :size {:height integer,
-          :iab boolean,
-          :id string,
+                              :dimensionName string,
+                              :matchType string},
+   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
+                                           :defaultClickThroughEventTagId string},
+   :size {:width integer,
           :kind string,
-          :width integer},
-   :clickThroughUrlSuffixProperties {:clickThroughUrlSuffix string,
-                                     :overrideInheritedSuffix boolean},
+          :height integer,
+          :id string,
+          :iab boolean},
+   :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
+                                     :clickThroughUrlSuffix string},
    :advertiserId string,
    :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:browsers [Browser],
-                         :connectionTypes [ConnectionType],
+   :technologyTargeting {:operatingSystems [OperatingSystem],
+                         :browsers [Browser],
+                         :platformTypes [PlatformType],
                          :mobileCarriers [MobileCarrier],
-                         :operatingSystemVersions [OperatingSystemVersion],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType]},
+                         :connectionTypes [ConnectionType],
+                         :operatingSystemVersions [OperatingSystemVersion]},
    :sslRequired boolean,
    :active boolean,
    :id string,
    :kind string,
-   :deliverySchedule {:frequencyCap FrequencyCap,
-                      :hardCutoff boolean,
+   :deliverySchedule {:priority string,
                       :impressionRatio string,
-                      :priority string},
+                      :frequencyCap FrequencyCap,
+                      :hardCutoff boolean},
    :creativeGroupAssignments [{:creativeGroupId string,
                                :creativeGroupNumber string}],
-   :placementAssignments [{:active boolean,
+   :placementAssignments [{:placementIdDimensionValue DimensionValue,
+                           :active boolean,
                            :placementId string,
-                           :placementIdDimensionValue DimensionValue,
                            :sslRequired boolean}],
    :lastModifiedInfo {:time string},
    :subaccountId string,
@@ -276,7 +250,7 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/ads"
      #{:id :profileId}
      parameters)
@@ -285,6 +259,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/ads/get
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Gets one ad by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/ads/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -302,34 +302,34 @@
   {:archived boolean,
    :dynamicClickTracker boolean,
    :dayPartTargeting {:daysOfWeek [string],
-                      :hoursOfDay [integer],
-                      :userLocalTime boolean},
+                      :userLocalTime boolean,
+                      :hoursOfDay [integer]},
    :languageTargeting {:languages [Language]},
-   :geoTargeting {:cities [City],
-                  :countries [Country],
+   :geoTargeting {:countries [Country],
                   :excludeCountries boolean,
-                  :metros [Metro],
                   :postalCodes [PostalCode],
-                  :regions [Region]},
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+                  :cities [City],
+                  :regions [Region],
+                  :metros [Metro]},
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
-   :clickThroughUrl {:computedClickThroughUrl string,
-                     :customClickThroughUrl string,
+                      :dimensionName string,
+                      :matchType string},
+   :clickThroughUrl {:landingPageId string,
                      :defaultLandingPage boolean,
-                     :landingPageId string},
+                     :computedClickThroughUrl string,
+                     :customClickThroughUrl string},
    :startTime string,
    :compatibility string,
    :sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
                                 :id string,
                                 :kind string,
-                                :matchType string,
-                                :value string},
+                                :dimensionName string,
+                                :matchType string},
    :name string,
    :creativeRotation {:creativeAssignments [CreativeAssignment],
                       :creativeOptimizationConfigurationId string,
@@ -341,44 +341,44 @@
    :type string,
    :createInfo {:time string},
    :audienceSegmentId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
+   :eventTagOverrides [{:id string, :enabled boolean}],
    :remarketingListExpression {:expression string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :etag string,
+   :campaignIdDimensionValue {:etag string,
+                              :value string,
                               :id string,
                               :kind string,
-                              :matchType string,
-                              :value string},
-   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
-                                           :overrideInheritedEventTag boolean},
-   :size {:height integer,
-          :iab boolean,
-          :id string,
+                              :dimensionName string,
+                              :matchType string},
+   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
+                                           :defaultClickThroughEventTagId string},
+   :size {:width integer,
           :kind string,
-          :width integer},
-   :clickThroughUrlSuffixProperties {:clickThroughUrlSuffix string,
-                                     :overrideInheritedSuffix boolean},
+          :height integer,
+          :id string,
+          :iab boolean},
+   :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
+                                     :clickThroughUrlSuffix string},
    :advertiserId string,
    :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:browsers [Browser],
-                         :connectionTypes [ConnectionType],
+   :technologyTargeting {:operatingSystems [OperatingSystem],
+                         :browsers [Browser],
+                         :platformTypes [PlatformType],
                          :mobileCarriers [MobileCarrier],
-                         :operatingSystemVersions [OperatingSystemVersion],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType]},
+                         :connectionTypes [ConnectionType],
+                         :operatingSystemVersions [OperatingSystemVersion]},
    :sslRequired boolean,
    :active boolean,
    :id string,
    :kind string,
-   :deliverySchedule {:frequencyCap FrequencyCap,
-                      :hardCutoff boolean,
+   :deliverySchedule {:priority string,
                       :impressionRatio string,
-                      :priority string},
+                      :frequencyCap FrequencyCap,
+                      :hardCutoff boolean},
    :creativeGroupAssignments [{:creativeGroupId string,
                                :creativeGroupNumber string}],
-   :placementAssignments [{:active boolean,
+   :placementAssignments [{:placementIdDimensionValue DimensionValue,
+                           :active boolean,
                            :placementId string,
-                           :placementIdDimensionValue DimensionValue,
                            :sslRequired boolean}],
    :lastModifiedInfo {:time string},
    :subaccountId string,
@@ -392,7 +392,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/ads"
      #{:profileId}
      parameters)

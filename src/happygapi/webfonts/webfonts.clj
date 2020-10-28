@@ -1,6 +1,6 @@
 (ns happygapi.webfonts.webfonts
-  "Google Fonts Developer API: webfonts.
-  Accesses the metadata for all families served by Google Fonts, providing a list of families currently available (including available styles and a list of supported script subsets).
+  "Web Fonts Developer API: webfonts.
+  The Google Web Fonts Developer API lets you retrieve information about web fonts served by Google.
   See: https://developers.google.com/fonts/docs/developer_apiapi/reference/rest/v1/webfonts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -13,15 +13,15 @@
   
   Optional parameters: sort
   
-  Retrieves the list of fonts currently served by the Google Fonts Developer API"
+  Retrieves the list of fonts currently served by the Google Fonts Developer API."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/webfonts/v1/"
-     "webfonts"
+     "https://webfonts.googleapis.com/"
+     "v1/webfonts"
      #{}
      parameters)
     (merge-with

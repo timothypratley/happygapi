@@ -1,56 +1,29 @@
 (ns happygapi.youtube.captions
-  "YouTube Data API: captions.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/captions"
+  "YouTube Data API v3: captions.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/captions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/captions/delete
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/list
   
-  Required parameters: id
+  Required parameters: videoId, part
   
-  Optional parameters: onBehalfOf, onBehalfOfContentOwner
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner, id
   
-  Deletes a specified caption track."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "captions"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn download$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/captions/download
-  
-  Required parameters: id
-  
-  Optional parameters: onBehalfOf, onBehalfOfContentOwner, tfmt, tlang
-  
-  Downloads a caption track. The caption track is returned in its original format unless the request specifies a value for the tfmt parameter and in its original language unless the request specifies a value for the tlang parameter."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  {:pre [(util/has-keys? parameters #{:part :videoId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "captions/{id}"
-     #{:id}
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions"
+     #{:part :videoId}
      parameters)
     (merge-with
      merge
@@ -61,11 +34,11 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/captions/insert
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/insert
   
   Required parameters: part
   
-  Optional parameters: onBehalfOf, onBehalfOfContentOwner, sync
+  Optional parameters: onBehalfOfContentOwner, sync, onBehalfOf
   
   Body: 
   
@@ -86,7 +59,7 @@
              :failureReason string,
              :isAutoSynced boolean}}
   
-  Uploads a caption track."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
@@ -94,8 +67,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "captions"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions"
      #{:part}
      parameters)
     (merge-with
@@ -108,24 +81,51 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/captions/list
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/delete
   
-  Required parameters: part, videoId
+  Required parameters: id
   
-  Optional parameters: id, onBehalfOf, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOf
   
-  Returns a list of caption tracks that are associated with a specified video. Note that the API response does not contain the actual captions and that the captions.download method provides the ability to retrieve a caption track."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :videoId})]}
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn download$
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/download
+  
+  Required parameters: id
+  
+  Optional parameters: tlang, tfmt, onBehalfOf, onBehalfOfContentOwner
+  
+  Downloads a caption track."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "captions"
-     #{:part :videoId}
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions/{id}"
+     #{:id}
      parameters)
     (merge-with
      merge
@@ -136,11 +136,11 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/captions/update
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/update
   
   Required parameters: part
   
-  Optional parameters: onBehalfOf, onBehalfOfContentOwner, sync
+  Optional parameters: onBehalfOf, sync, onBehalfOfContentOwner
   
   Body: 
   
@@ -161,7 +161,7 @@
              :failureReason string,
              :isAutoSynced boolean}}
   
-  Updates a caption track. When updating a caption track, you can change the track's draft status, upload a new caption file for the track, or both."
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
@@ -169,8 +169,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "captions"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions"
      #{:part}
      parameters)
     (merge-with

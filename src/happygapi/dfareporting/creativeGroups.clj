@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.creativeGroups
   "DCM/DFA Reporting And Trafficking API: creativeGroups.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -20,7 +20,7 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeGroups/{id}"
      #{:id :profileId}
      parameters)
@@ -41,19 +41,19 @@
   
   Body: 
   
-  {:accountId string,
-   :advertiserId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
-                                :id string,
-                                :kind string,
-                                :matchType string,
-                                :value string},
+  {:advertiserId string,
    :groupNumber integer,
-   :id string,
    :kind string,
    :name string,
-   :subaccountId string}
+   :accountId string,
+   :id string,
+   :subaccountId string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
+                                :id string,
+                                :kind string,
+                                :dimensionName string,
+                                :matchType string}}
   
   Inserts a new creative group."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -62,9 +62,53 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeGroups"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeGroups/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:advertiserId string,
+   :groupNumber integer,
+   :kind string,
+   :name string,
+   :accountId string,
+   :id string,
+   :subaccountId string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
+                                :id string,
+                                :kind string,
+                                :dimensionName string,
+                                :matchType string}}
+  
+  Updates an existing creative group. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
+     "userprofiles/{profileId}/creativeGroups"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge
@@ -90,57 +134,13 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeGroups"
      #{:profileId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeGroups/patch
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:accountId string,
-   :advertiserId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
-                                :id string,
-                                :kind string,
-                                :matchType string,
-                                :value string},
-   :groupNumber integer,
-   :id string,
-   :kind string,
-   :name string,
-   :subaccountId string}
-  
-  Updates an existing creative group. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creativeGroups"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -155,19 +155,19 @@
   
   Body: 
   
-  {:accountId string,
-   :advertiserId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :etag string,
-                                :id string,
-                                :kind string,
-                                :matchType string,
-                                :value string},
+  {:advertiserId string,
    :groupNumber integer,
-   :id string,
    :kind string,
    :name string,
-   :subaccountId string}
+   :accountId string,
+   :id string,
+   :subaccountId string,
+   :advertiserIdDimensionValue {:etag string,
+                                :value string,
+                                :id string,
+                                :kind string,
+                                :dimensionName string,
+                                :matchType string}}
   
   Updates an existing creative group."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -176,7 +176,7 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeGroups"
      #{:profileId}
      parameters)

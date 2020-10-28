@@ -1,13 +1,13 @@
 (ns happygapi.content.productstatuses
   "Content API for Shopping: productstatuses.
-  Manages product items, inventory, and Merchant Center accounts for Google Shopping.
-  See: https://developers.google.com/shopping-contentapi/reference/rest/v2.1/productstatuses"
+  Manage your product listings and accounts for Google Shopping
+  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn custombatch$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/productstatuses/custombatch
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/custombatch
   
   Required parameters: none
   
@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:entries [{:batchId integer,
+  {:entries [{:method string,
               :destinations [string],
-              :includeAttributes boolean,
               :merchantId string,
-              :method string,
-              :productId string}]}
+              :includeAttributes boolean,
+              :productId string,
+              :batchId integer}]}
   
   Gets the statuses of multiple products in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -29,8 +29,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "productstatuses/batch"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/productstatuses/batch"
      #{}
      parameters)
     (merge-with
@@ -43,8 +43,34 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: pageToken, destinations, maxResults
+  
+  Lists the statuses of the products in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/productstatuses"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/productstatuses/get
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/get
   
   Required parameters: merchantId, productId
   
@@ -57,35 +83,9 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/productstatuses/{productId}"
+     "https://shoppingcontent.googleapis.com/"
+     "content/v2.1/{merchantId}/productstatuses/{productId}"
      #{:productId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/shopping-contentapi/reference/rest/v2.1/productstatuses/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: destinations, maxResults, pageToken
-  
-  Lists the statuses of the products in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/content/v2.1/"
-     "{merchantId}/productstatuses"
-     #{:merchantId}
      parameters)
     (merge-with
      merge

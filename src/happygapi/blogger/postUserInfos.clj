@@ -1,29 +1,29 @@
 (ns happygapi.blogger.postUserInfos
-  "Blogger API: postUserInfos.
-  API for access to the data within Blogger.
+  "Blogger API v3: postUserInfos.
+  The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos/get
+(defn list$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos/list
   
-  Required parameters: blogId, postId, userId
+  Required parameters: blogId, userId
   
-  Optional parameters: maxComments
+  Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, maxResults, view, orderBy
   
-  Gets one post and user info pair, by post ID and user ID. The post user info contains per-user information about the post, such as access rights, specific to the user."
+  Lists post and user info pairs."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId :postId :userId})]}
+  {:pre [(util/has-keys? parameters #{:blogId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "users/{userId}/blogs/{blogId}/posts/{postId}"
-     #{:blogId :postId :userId}
+     "https://blogger.googleapis.com/"
+     "v3/users/{userId}/blogs/{blogId}/posts"
+     #{:blogId :userId}
      parameters)
     (merge-with
      merge
@@ -33,24 +33,24 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos/list
+(defn get$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos/get
   
-  Required parameters: blogId, userId
+  Required parameters: blogId, userId, postId
   
-  Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, maxResults, view, orderBy
+  Optional parameters: maxComments
   
-  Retrieves a list of post and post user info pairs, possibly filtered. The post user info contains per-user information about the post, such as access rights, specific to the user."
+  Gets one post and user info pair, by post_id and user_id."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId :userId})]}
+  {:pre [(util/has-keys? parameters #{:blogId :postId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/blogger/v3/"
-     "users/{userId}/blogs/{blogId}/posts"
-     #{:blogId :userId}
+     "https://blogger.googleapis.com/"
+     "v3/users/{userId}/blogs/{blogId}/posts/{postId}"
+     #{:blogId :postId :userId}
      parameters)
     (merge-with
      merge

@@ -1,17 +1,17 @@
 (ns happygapi.books.notification
   "Books API: notification.
-  Searches for books and manages your Google Books library.
-  See: https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/notification"
+  The Google Books API allows clients to access the Google Books repository.
+  See: https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/notification"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/books/docs/v1/getting_startedapi/reference/rest/v1/notification/get
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/notification/get
   
   Required parameters: notification_id
   
-  Optional parameters: locale, source
+  Optional parameters: source, locale
   
   Returns notification details for a given notification id."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/books/v1/"
-     "notification/get"
+     "https://books.googleapis.com/"
+     "books/v1/notification/get"
      #{:notification_id}
      parameters)
     (merge-with

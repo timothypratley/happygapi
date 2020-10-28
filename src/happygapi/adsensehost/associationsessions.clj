@@ -9,7 +9,7 @@
 (defn start$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/associationsessions/start
   
-  Required parameters: productCode, websiteUrl
+  Required parameters: websiteUrl, productCode
   
   Optional parameters: callbackUrl, websiteLocale, userLocale
   

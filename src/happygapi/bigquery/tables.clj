@@ -6,99 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/insert
-  
-  Required parameters: datasetId, projectId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :numBytes string,
-   :schema {:fields [TableFieldSchema]},
-   :labels {},
-   :numLongTermBytes string,
-   :numPhysicalBytes string,
-   :numRows string,
-   :expirationTime string,
-   :selfLink string,
-   :type string,
-   :etag string,
-   :timePartitioning {:field string,
-                      :expirationMs string,
-                      :type string,
-                      :requirePartitionFilter boolean},
-   :requirePartitionFilter boolean,
-   :externalDataConfiguration {:schema TableSchema,
-                               :bigtableOptions BigtableOptions,
-                               :csvOptions CsvOptions,
-                               :autodetect boolean,
-                               :compression string,
-                               :sourceFormat string,
-                               :hivePartitioningMode string,
-                               :ignoreUnknownValues boolean,
-                               :googleSheetsOptions GoogleSheetsOptions,
-                               :hivePartitioningOptions HivePartitioningOptions,
-                               :sourceUris [string],
-                               :maxBadRecords integer},
-   :lastModifiedTime string,
-   :clustering {:fields [string]},
-   :friendlyName string,
-   :tableReference {:tableId string,
-                    :projectId string,
-                    :datasetId string},
-   :id string,
-   :rangePartitioning {:range {:interval string,
-                               :start string,
-                               :end string},
-                       :field string},
-   :kind string,
-   :streamingBuffer {:estimatedBytes string,
-                     :estimatedRows string,
-                     :oldestEntryTime string},
-   :location string,
-   :materializedView {:query string,
-                      :enableRefresh boolean,
-                      :refreshIntervalMs string,
-                      :lastRefreshTime string},
-   :encryptionConfiguration {:kmsKeyName string},
-   :view {:query string,
-          :userDefinedFunctionResources [UserDefinedFunctionResource],
-          :useLegacySql boolean},
-   :model {:modelOptions {:lossType string,
-                          :modelType string,
-                          :labels [string]},
-           :trainingRuns [BqmlTrainingRun]}}
-  
-  Creates a new, empty table in the dataset."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables"
-     #{:datasetId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/get
   
-  Required parameters: projectId, datasetId, tableId
+  Required parameters: tableId, datasetId, projectId
   
   Optional parameters: selectedFields
   
@@ -124,10 +35,47 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/patch
+(defn setIamPolicy$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/setIamPolicy
   
-  Required parameters: projectId, datasetId, tableId
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateMask string,
+   :policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :etag string,
+            :version integer}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/insert
+  
+  Required parameters: projectId, datasetId
   
   Optional parameters: none
   
@@ -145,18 +93,18 @@
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:field string,
-                      :expirationMs string,
+   :timePartitioning {:expirationMs string,
                       :type string,
-                      :requirePartitionFilter boolean},
+                      :requirePartitionFilter boolean,
+                      :field string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
+                               :connectionId string,
                                :csvOptions CsvOptions,
                                :autodetect boolean,
                                :compression string,
                                :sourceFormat string,
-                               :hivePartitioningMode string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
@@ -165,30 +113,123 @@
    :lastModifiedTime string,
    :clustering {:fields [string]},
    :friendlyName string,
-   :tableReference {:tableId string,
-                    :projectId string,
-                    :datasetId string},
+   :tableReference {:datasetId string,
+                    :tableId string,
+                    :projectId string},
    :id string,
-   :rangePartitioning {:range {:interval string,
+   :rangePartitioning {:range {:end string,
                                :start string,
-                               :end string},
+                               :interval string},
                        :field string},
    :kind string,
    :streamingBuffer {:estimatedBytes string,
                      :estimatedRows string,
                      :oldestEntryTime string},
    :location string,
-   :materializedView {:query string,
+   :materializedView {:refreshIntervalMs string,
                       :enableRefresh boolean,
-                      :refreshIntervalMs string,
+                      :query string,
                       :lastRefreshTime string},
    :encryptionConfiguration {:kmsKeyName string},
-   :view {:query string,
-          :userDefinedFunctionResources [UserDefinedFunctionResource],
+   :snapshotDefinition {:snapshotTime string,
+                        :baseTableReference TableReference},
+   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+          :query string,
           :useLegacySql boolean},
-   :model {:modelOptions {:lossType string,
+   :model {:modelOptions {:labels [string],
                           :modelType string,
-                          :labels [string]},
+                          :lossType string},
+           :trainingRuns [BqmlTrainingRun]}}
+  
+  Creates a new, empty table in the dataset."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/datasets/{datasetId}/tables"
+     #{:datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/patch
+  
+  Required parameters: datasetId, projectId, tableId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :numBytes string,
+   :schema {:fields [TableFieldSchema]},
+   :labels {},
+   :numLongTermBytes string,
+   :numPhysicalBytes string,
+   :numRows string,
+   :expirationTime string,
+   :selfLink string,
+   :type string,
+   :etag string,
+   :timePartitioning {:expirationMs string,
+                      :type string,
+                      :requirePartitionFilter boolean,
+                      :field string},
+   :requirePartitionFilter boolean,
+   :externalDataConfiguration {:schema TableSchema,
+                               :bigtableOptions BigtableOptions,
+                               :connectionId string,
+                               :csvOptions CsvOptions,
+                               :autodetect boolean,
+                               :compression string,
+                               :sourceFormat string,
+                               :ignoreUnknownValues boolean,
+                               :googleSheetsOptions GoogleSheetsOptions,
+                               :hivePartitioningOptions HivePartitioningOptions,
+                               :sourceUris [string],
+                               :maxBadRecords integer},
+   :lastModifiedTime string,
+   :clustering {:fields [string]},
+   :friendlyName string,
+   :tableReference {:datasetId string,
+                    :tableId string,
+                    :projectId string},
+   :id string,
+   :rangePartitioning {:range {:end string,
+                               :start string,
+                               :interval string},
+                       :field string},
+   :kind string,
+   :streamingBuffer {:estimatedBytes string,
+                     :estimatedRows string,
+                     :oldestEntryTime string},
+   :location string,
+   :materializedView {:refreshIntervalMs string,
+                      :enableRefresh boolean,
+                      :query string,
+                      :lastRefreshTime string},
+   :encryptionConfiguration {:kmsKeyName string},
+   :snapshotDefinition {:snapshotTime string,
+                        :baseTableReference TableReference},
+   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+          :query string,
+          :useLegacySql boolean},
+   :model {:modelOptions {:labels [string],
+                          :modelType string,
+                          :lossType string},
            :trainingRuns [BqmlTrainingRun]}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource. This method supports patch semantics."
@@ -213,10 +254,45 @@
       :as :json}
      auth))))
 
+(defn testIamPermissions$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/update
   
-  Required parameters: datasetId, tableId, projectId
+  Required parameters: projectId, datasetId, tableId
   
   Optional parameters: none
   
@@ -234,18 +310,18 @@
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:field string,
-                      :expirationMs string,
+   :timePartitioning {:expirationMs string,
                       :type string,
-                      :requirePartitionFilter boolean},
+                      :requirePartitionFilter boolean,
+                      :field string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
+                               :connectionId string,
                                :csvOptions CsvOptions,
                                :autodetect boolean,
                                :compression string,
                                :sourceFormat string,
-                               :hivePartitioningMode string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
@@ -254,30 +330,32 @@
    :lastModifiedTime string,
    :clustering {:fields [string]},
    :friendlyName string,
-   :tableReference {:tableId string,
-                    :projectId string,
-                    :datasetId string},
+   :tableReference {:datasetId string,
+                    :tableId string,
+                    :projectId string},
    :id string,
-   :rangePartitioning {:range {:interval string,
+   :rangePartitioning {:range {:end string,
                                :start string,
-                               :end string},
+                               :interval string},
                        :field string},
    :kind string,
    :streamingBuffer {:estimatedBytes string,
                      :estimatedRows string,
                      :oldestEntryTime string},
    :location string,
-   :materializedView {:query string,
+   :materializedView {:refreshIntervalMs string,
                       :enableRefresh boolean,
-                      :refreshIntervalMs string,
+                      :query string,
                       :lastRefreshTime string},
    :encryptionConfiguration {:kmsKeyName string},
-   :view {:query string,
-          :userDefinedFunctionResources [UserDefinedFunctionResource],
+   :snapshotDefinition {:snapshotTime string,
+                        :baseTableReference TableReference},
+   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+          :query string,
           :useLegacySql boolean},
-   :model {:modelOptions {:lossType string,
+   :model {:modelOptions {:labels [string],
                           :modelType string,
-                          :labels [string]},
+                          :lossType string},
            :trainingRuns [BqmlTrainingRun]}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource."
@@ -329,10 +407,45 @@
       :as :json}
      auth))))
 
+(defn getIamPolicy$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
   Optional parameters: maxResults, pageToken
   

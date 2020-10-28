@@ -139,7 +139,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of UrlMap resources available to the specified project in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

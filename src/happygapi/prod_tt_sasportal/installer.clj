@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:installerId string, :secret string, :encodedSecret string}
+  {:encodedSecret string, :secret string, :installerId string}
   
   Validates the identity of a Certified Professional Installer (CPI)."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}

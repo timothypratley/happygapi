@@ -111,7 +111,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of HttpsHealthCheck resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

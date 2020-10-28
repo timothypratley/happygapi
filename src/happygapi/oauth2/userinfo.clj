@@ -1,13 +1,13 @@
 (ns happygapi.oauth2.userinfo
   "Google OAuth2 API: userinfo.
   Obtains end-user authorization grants for use with other Google APIs.
-  See: https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo"
+  See: https://developers.google.com/identity/protocols/oauth2/api/reference/rest/v2/userinfo"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo/get
+  "https://developers.google.com/identity/protocols/oauth2/api/reference/rest/v2/userinfo/get
   
   Required parameters: none
   
@@ -35,7 +35,7 @@
      auth))))
 
 (defn v2-me-get$
-  "https://developers.google.com/accounts/docs/OAuth2api/reference/rest/v2/userinfo/v2/me/get
+  "https://developers.google.com/identity/protocols/oauth2/api/reference/rest/v2/userinfo/v2/me/get
   
   Required parameters: none
   

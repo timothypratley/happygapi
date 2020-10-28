@@ -32,6 +32,38 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/patch
+  
+  Required parameters: adClientId, customChannelId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :kind string, :name string, :code string}
+  
+  Update a custom channel in the host AdSense account. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "adclients/{adClientId}/customchannels"
+     #{:adClientId :customChannelId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/list
   
@@ -58,42 +90,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/insert
-  
-  Required parameters: adClientId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:code string, :id string, :name string, :kind string}
-  
-  Add a new custom channel to the host AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:adClientId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/customchannels"
-     #{:adClientId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/get
   
-  Required parameters: adClientId, customChannelId
+  Required parameters: customChannelId, adClientId
   
   Optional parameters: none
   
@@ -116,27 +116,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/patch
+(defn update$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/update
   
-  Required parameters: adClientId, customChannelId
+  Required parameters: adClientId
   
   Optional parameters: none
   
   Body: 
   
-  {:code string, :id string, :name string, :kind string}
+  {:id string, :kind string, :name string, :code string}
   
-  Update a custom channel in the host AdSense account. This method supports patch semantics."
+  Update a custom channel in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
-   (http/patch
+   (http/put
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"
-     #{:adClientId :customChannelId}
+     #{:adClientId}
      parameters)
     (merge-with
      merge
@@ -148,8 +148,8 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/update
+(defn insert$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/insert
   
   Required parameters: adClientId
   
@@ -157,14 +157,14 @@
   
   Body: 
   
-  {:code string, :id string, :name string, :kind string}
+  {:id string, :kind string, :name string, :code string}
   
-  Update a custom channel in the host AdSense account."
+  Add a new custom channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
      "adclients/{adClientId}/customchannels"

@@ -1,6 +1,6 @@
 (ns happygapi.dfareporting.creativeAssets
   "DCM/DFA Reporting And Trafficking API: creativeAssets.
-  Manages your DoubleClick Campaign Manager ad campaigns and reports.
+  Manage your DoubleClick Campaign Manager ad campaigns and reports.
   See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creativeAssets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -26,12 +26,12 @@
                           :exitClickThroughUrl CreativeClickThroughUrl,
                           :advertiserCustomEventType string}],
    :richMedia boolean,
-   :idDimensionValue {:dimensionName string,
-                      :etag string,
+   :idDimensionValue {:etag string,
+                      :value string,
                       :id string,
                       :kind string,
-                      :matchType string,
-                      :value string},
+                      :dimensionName string,
+                      :matchType string},
    :timerCustomEvents [{:advertiserCustomEventName string,
                         :popupWindowProperties PopupWindowProperties,
                         :artworkType string,
@@ -56,9 +56,9 @@
    :warnedValidationRules [string],
    :id string,
    :kind string,
-   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+   :clickTags [{:name string,
                 :eventName string,
-                :name string}],
+                :clickThroughUrl CreativeClickThroughUrl}],
    :assetIdentifier {:name string, :type string}}
   
   Inserts a new creative asset."
@@ -68,7 +68,7 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/dfareporting/v3.4/"
+     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
      "userprofiles/{profileId}/creativeAssets/{advertiserId}/creativeAssets"
      #{:advertiserId :profileId}
      parameters)

@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:deletionRequestTime string,
-   :firebaseProjectId string,
+  {:firebaseProjectId string,
+   :propertyId string,
    :id {:type string, :userId string},
    :kind string,
-   :propertyId string,
+   :deletionRequestTime string,
    :webPropertyId string}
   
   Insert or update a user deletion requests."

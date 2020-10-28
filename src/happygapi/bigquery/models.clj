@@ -6,35 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
-  
-  Required parameters: datasetId, modelId, projectId
-  
-  Optional parameters: none
-  
-  Gets the specified model resource by model ID."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
-     #{:modelId :datasetId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/models/list
   
@@ -42,8 +13,7 @@
   
   Optional parameters: pageToken, maxResults
   
-  Lists all models in the specified dataset. Requires the READER dataset
-  role."
+  Lists all models in the specified dataset. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
@@ -83,10 +53,11 @@
    :lastModifiedTime string,
    :friendlyName string,
    :trainingRuns [{:startTime string,
-                   :results [IterationResult],
+                   :dataSplitResult DataSplitResult,
                    :evaluationMetrics EvaluationMetrics,
+                   :results [IterationResult],
                    :trainingOptions TrainingOptions,
-                   :dataSplitResult DataSplitResult}],
+                   :globalExplanations [GlobalExplanation]}],
    :featureColumns [{:name string, :type StandardSqlDataType}],
    :labelColumns [{:name string, :type StandardSqlDataType}],
    :location string,
@@ -131,6 +102,35 @@
   {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
   (util/get-response
    (http/delete
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
+     #{:modelId :datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
+  
+  Required parameters: datasetId, modelId, projectId
+  
+  Optional parameters: none
+  
+  Gets the specified model resource by model ID."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/bigquery.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"

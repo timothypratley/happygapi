@@ -1,103 +1,28 @@
 (ns happygapi.youtube.comments
-  "YouTube Data API: comments.
-  Supports core YouTube features, such as uploading videos, creating and managing playlists, searching for content, and much more.
-  See: https://developers.google.com/youtube/v3api/reference/rest/v3/comments"
+  "YouTube Data API v3: comments.
+  The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
+  See: https://developers.google.com/youtube/api/reference/rest/v3/comments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/delete
+(defn setModerationStatus$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/setModerationStatus
   
-  Required parameters: id
+  Required parameters: moderationStatus, id
   
-  Optional parameters: none
+  Optional parameters: banAuthor
   
-  Deletes a comment."
+  Sets the moderation status of one or more comments."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/insert
-  
-  Required parameters: part
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string,
-   :id string,
-   :kind string,
-   :snippet {:authorProfileImageUrl string,
-             :likeCount integer,
-             :publishedAt string,
-             :canRate boolean,
-             :viewerRating string,
-             :updatedAt string,
-             :authorChannelUrl string,
-             :textOriginal string,
-             :channelId string,
-             :authorDisplayName string,
-             :textDisplay string,
-             :authorChannelId any,
-             :videoId string,
-             :parentId string,
-             :moderationStatus string}}
-  
-  Creates a reply to an existing comment. Note: To create a top-level comment, use the commentThreads.insert method."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
+  {:pre [(util/has-keys? parameters #{:id :moderationStatus})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/list
-  
-  Required parameters: part
-  
-  Optional parameters: id, maxResults, pageToken, parentId, textFormat
-  
-  Returns a list of comments that match the API request parameters."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments"
-     #{:part}
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments/setModerationStatus"
+     #{:id :moderationStatus}
      parameters)
     (merge-with
      merge
@@ -108,7 +33,7 @@
      auth))))
 
 (defn markAsSpam$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/markAsSpam
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/markAsSpam
   
   Required parameters: id
   
@@ -121,8 +46,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments/markAsSpam"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments/markAsSpam"
      #{:id}
      parameters)
     (merge-with
@@ -133,23 +58,23 @@
       :as :json}
      auth))))
 
-(defn setModerationStatus$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/setModerationStatus
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/list
   
-  Required parameters: id, moderationStatus
+  Required parameters: part
   
-  Optional parameters: banAuthor
+  Optional parameters: textFormat, pageToken, maxResults, id, parentId
   
-  Sets the moderation status of one or more comments. The API request must be authorized by the owner of the channel or video associated with the comments."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :moderationStatus})]}
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments/setModerationStatus"
-     #{:id :moderationStatus}
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments"
+     #{:part}
      parameters)
     (merge-with
      merge
@@ -159,8 +84,34 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/youtube/v3api/reference/rest/v3/comments/update
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/delete
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Deletes a resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/insert
   
   Required parameters: part
   
@@ -169,8 +120,6 @@
   Body: 
   
   {:etag string,
-   :id string,
-   :kind string,
    :snippet {:authorProfileImageUrl string,
              :likeCount integer,
              :publishedAt string,
@@ -182,20 +131,71 @@
              :channelId string,
              :authorDisplayName string,
              :textDisplay string,
-             :authorChannelId any,
+             :authorChannelId CommentSnippetAuthorChannelId,
              :videoId string,
              :parentId string,
-             :moderationStatus string}}
+             :moderationStatus string},
+   :id string,
+   :kind string}
   
-  Modifies a comment."
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/update
+  
+  Required parameters: part
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string,
+   :snippet {:authorProfileImageUrl string,
+             :likeCount integer,
+             :publishedAt string,
+             :canRate boolean,
+             :viewerRating string,
+             :updatedAt string,
+             :authorChannelUrl string,
+             :textOriginal string,
+             :channelId string,
+             :authorDisplayName string,
+             :textDisplay string,
+             :authorChannelId CommentSnippetAuthorChannelId,
+             :videoId string,
+             :parentId string,
+             :moderationStatus string},
+   :id string,
+   :kind string}
+  
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
     (util/get-url
-     "https://www.googleapis.com/youtube/v3/"
-     "comments"
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments"
      #{:part}
      parameters)
     (merge-with

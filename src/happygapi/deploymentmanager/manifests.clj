@@ -1,15 +1,44 @@
 (ns happygapi.deploymentmanager.manifests
-  "Google Cloud Deployment Manager API: manifests.
-  Declares, configures, and deploys complex solutions on Google Cloud Platform.
-  See: https://cloud.google.com/deployment-manager/api/reference/rest/v2/manifests"
+  "Cloud Deployment Manager V2 API: manifests.
+  The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
+  See: http://cloud.google.com/deployment-managerapi/reference/rest/v2/manifests"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/manifests/get
+(defn list$
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/manifests/list
   
-  Required parameters: deployment, manifest, project
+  Required parameters: project, deployment
+  
+  Optional parameters: returnPartialSuccess, maxResults, filter, orderBy, pageToken
+  
+  Lists all manifests for a given deployment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/ndev.cloudman"
+            "https://www.googleapis.com/auth/ndev.cloudman.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :deployment})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}/manifests"
+     #{:project :deployment}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/manifests/get
+  
+  Required parameters: deployment, project, manifest
   
   Optional parameters: none
   
@@ -23,38 +52,9 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}/manifests/{manifest}"
+     "https://deploymentmanager.googleapis.com/"
+     "deploymentmanager/v2/projects/{project}/global/deployments/{deployment}/manifests/{manifest}"
      #{:manifest :project :deployment}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/deployment-manager/api/reference/rest/v2/manifests/list
-  
-  Required parameters: deployment, project
-  
-  Optional parameters: filter, maxResults, orderBy, pageToken
-  
-  Lists all manifests for a given deployment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/ndev.cloudman"
-            "https://www.googleapis.com/auth/ndev.cloudman.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :deployment})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/deploymentmanager/v2/projects/"
-     "{project}/global/deployments/{deployment}/manifests"
-     #{:project :deployment}
      parameters)
     (merge-with
      merge

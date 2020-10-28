@@ -11,9 +11,9 @@
   
   Required parameters: instanceGroupManager, project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Lists the instances in the managed instance group and instances that are scheduled to be created. The list includes any current actions that the group has scheduled for its instances."
+  Lists the instances in the managed instance group and instances that are scheduled to be created. The list includes any current actions that the group has scheduled for its instances. The orderBy query parameter is not supported."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -76,9 +76,9 @@
   
   Required parameters: instanceGroupManager, project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Lists all errors thrown by actions on instances for a given regional managed instance group."
+  Lists all errors thrown by actions on instances for a given regional managed instance group. The filter and orderBy query parameters are not supported."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -165,11 +165,13 @@
    :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
    :status {:autoscaler string,
             :isStable boolean,
+            :stateful InstanceGroupManagerStatusStateful,
             :versionTarget InstanceGroupManagerStatusVersionTarget},
    :instanceGroup string,
    :id string,
    :kind string,
    :distributionPolicy {:zones [DistributionPolicyZoneConfiguration]},
+   :statefulPolicy {:preservedState StatefulPolicyPreservedState},
    :baseInstanceName string,
    :versions [{:instanceTemplate string,
                :name string,
@@ -242,6 +244,44 @@
       :as :json}
      auth))))
 
+(defn updatePerInstanceConfigs$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/updatePerInstanceConfigs
+  
+  Required parameters: instanceGroupManager, project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:perInstanceConfigs [{:fingerprint string,
+                         :name string,
+                         :preservedState PreservedState,
+                         :status string}]}
+  
+  Insert or update (for the ones that already exist) per-instance configs for the managed instance group. perInstanceConfig.instance serves as a key used to distinguish whether to perform insert or patch."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instanceGroupManager :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/updatePerInstanceConfigs"
+     #{:instanceGroupManager :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn recreateInstances$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/recreateInstances
   
@@ -290,7 +330,8 @@
   
   Body: 
   
-  {:instances [string],
+  {:allInstances boolean,
+   :instances [string],
    :minimalAction string,
    :mostDisruptiveAllowedAction string}
   
@@ -352,11 +393,13 @@
    :autoHealingPolicies [{:healthCheck string, :initialDelaySec integer}],
    :status {:autoscaler string,
             :isStable boolean,
+            :stateful InstanceGroupManagerStatusStateful,
             :versionTarget InstanceGroupManagerStatusVersionTarget},
    :instanceGroup string,
    :id string,
    :kind string,
    :distributionPolicy {:zones [DistributionPolicyZoneConfiguration]},
+   :statefulPolicy {:preservedState StatefulPolicyPreservedState},
    :baseInstanceName string,
    :versions [{:instanceTemplate string,
                :name string,
@@ -378,6 +421,41 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/projects/"
      "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}"
+     #{:instanceGroupManager :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn deletePerInstanceConfigs$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/deletePerInstanceConfigs
+  
+  Required parameters: instanceGroupManager, project, region
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:names [string]}
+  
+  Deletes selected per-instance configs for the managed instance group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instanceGroupManager :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/deletePerInstanceConfigs"
      #{:instanceGroupManager :region :project}
      parameters)
     (merge-with
@@ -452,6 +530,36 @@
       :as :json}
      auth))))
 
+(defn listPerInstanceConfigs$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/listPerInstanceConfigs
+  
+  Required parameters: instanceGroupManager, project, region
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Lists all of the per-instance configs defined for the managed instance group. The orderBy query parameter is not supported."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instanceGroupManager :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/listPerInstanceConfigs"
+     #{:instanceGroupManager :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setTargetPools$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/setTargetPools
   
@@ -492,7 +600,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of managed instance groups that are contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -515,6 +623,44 @@
       :as :json}
      auth))))
 
+(defn patchPerInstanceConfigs$
+  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/patchPerInstanceConfigs
+  
+  Required parameters: instanceGroupManager, project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:perInstanceConfigs [{:fingerprint string,
+                         :name string,
+                         :preservedState PreservedState,
+                         :status string}]}
+  
+  Insert or patch (for the ones that already exist) per-instance configs for the managed instance group. perInstanceConfig.instance serves as a key used to distinguish whether to perform insert or patch."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instanceGroupManager :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/projects/"
+     "{project}/regions/{region}/instanceGroupManagers/{instanceGroupManager}/patchPerInstanceConfigs"
+     #{:instanceGroupManager :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn createInstances$
   "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionInstanceGroupManagers/createInstances
   
@@ -524,7 +670,10 @@
   
   Body: 
   
-  {:instances [{:fingerprint string, :name string}]}
+  {:instances [{:fingerprint string,
+                :name string,
+                :preservedState PreservedState,
+                :status string}]}
   
   Creates instances with per-instance configs in this regional managed instance group. Instances are created using the current instance template. The create instances operation is marked DONE if the createInstances request is successful. The underlying actions take additional time. You must separately verify the status of the creating or actions with the listmanagedinstances method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

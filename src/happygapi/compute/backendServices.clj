@@ -50,7 +50,11 @@
   
   {:group string}
   
-  Gets the most recent health check results for this BackendService."
+  Gets the most recent health check results for this BackendService.
+  
+  Example request body:
+  
+  { \"group\": \"/zones/us-east1-b/instanceGroups/lb-backend-example\" }"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -111,6 +115,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -175,7 +181,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Creates a BackendService resource in the specified project using the data included in the request. There are several restrictions and guidelines to keep in mind when creating a backend service. Read  Understanding backend services for more information."
+  Creates a BackendService resource in the specified project using the data included in the request. For more information, see  Backend services overview."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -207,6 +213,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -271,7 +279,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Patches the specified BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Patches the specified BackendService resource with the data included in the request. For more information, see  Backend services overview. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -298,7 +306,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of all BackendService resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -331,6 +339,8 @@
   Body: 
   
   {:description string,
+   :securitySettings {:clientTlsPolicy string,
+                      :subjectAltNames [string]},
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
@@ -395,7 +405,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified BackendService resource with the data included in the request. There are several Understanding backend services to keep in mind when updating a backend service. Read  Understanding backend services for more information."
+  Updates the specified BackendService resource with the data included in the request. For more information, see Backend services overview."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -449,7 +459,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of BackendService resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
