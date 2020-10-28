@@ -8,9 +8,9 @@
             [happy.oauth2 :as oauth2]
             [ring.adapter.jetty :as jetty]))
 
-(defn wait-for-redirect [{:as config :keys [redirect-uri redirect-uris]}]
+(defn wait-for-redirect [{:as config :keys [redirect_uri redirect_uris]}]
   (let [code (promise)
-        port (or (some-> (or redirect-uri (last redirect-uris))
+        port (or (some-> (or redirect_uri (last redirect_uris))
                          (str/split #":")
                          (last)
                          (Integer/parseInt))
@@ -51,8 +51,8 @@
     (oauth2/valid? credentials)
     credentials
 
-    (oauth2/refreshable? credentials)
-    (oauth2/refresh-credentials config credentials)
+    (oauth2/refreshable? config credentials)
+    (oauth2/refresh-credentials config scopes credentials)
 
     :else
     (oauth2/exchange-code config (request-code config scopes optional))))

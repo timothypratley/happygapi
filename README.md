@@ -76,18 +76,30 @@ The `auth` argument is merged into the request.
 You can specify additional request options if you want to.
 
 To participate in oauth2 you need to fetch and store tokens.
-The [`happy.oauth2-credentials`](src/happy/oauth2_credentials.clj) namespace provides a working reference for how you can go about this.
-By default it tries to read `secret.json` from disk in the current directory.
-This file can be downloaded from the [Google Console](https://console.cloud.google.com/).
-Do not add this file to source control, keep it secured.
-To create an app in the Google Console, follow [Setting up OAuth 2.0](https://support.google.com/googleapi/answer/6158849?hl=en).
-If you use `happy.oauth2-credentials`, you will need to include [ring](https://github.com/ring-clojure/ring) as a dependency.
 
+To create an app in the Google Console, follow [Setting up OAuth 2.0](https://support.google.com/googleapi/answer/6158849?hl=en).
+
+There are two methods for obtaining a token:
+* User redirects, which prompt a user to authorize your app.
+  Download the `secret.json` from the [Google Console](https://console.cloud.google.com/).
+  Do not add this file to source control, keep it secured.
+  This method is suitable if you want users to grant your app access to their data.
+* Service account private key (suitable for server to server).
+  [Create a Service account](https://developers.google.com/identity/protocols/oauth2/service-account)
+  and download a `service.json` key file.
+  Do not add this file to source control, keep it secured.
+  This method is suitable for automated jobs.
+
+The [`happy.oauth2-credentials`](src/happy/oauth2_credentials.clj) namespace provides a convenient way to
+manage authorization.
+By default, it tries to read `secret.json` or `service.json` from disk in the current directory.
+You can pass in configuration map of the same shape instead.
 `happy.oauth2-credentials` stores tokens on disk.
 If you want to use happygapi in a web app, you should instead store and fetch tokens from your database.
 This can be done by calling `init!` with a `fetch` and `store` function, or by creating your own implementation of `auth!`.
 
-The [`happy.oauth2-capture-redirect`](src/happy/oauth2_capture_redirect.clj) namespace provides a reference listener to capture a code when the user is redirected to your site from the oauth2 provider.
+The [`happy.oauth2-capture-redirect`](src/happy/oauth2_capture_redirect.clj)
+namespace provides a listener to capture a code when the user is redirected to your site from the oauth2 provider.
 If you use it, you will need to include [ring](https://github.com/ring-clojure/ring) as a dependency.
 Web applications should instead define a route to capture the code.
 

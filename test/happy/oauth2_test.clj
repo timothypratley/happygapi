@@ -11,6 +11,6 @@
       (is code)
       (let [credentials (oauth2/exchange-code config code)]
         (is credentials)
-        (let [new-credentials (oauth2/refresh-credentials config credentials)]
+        (let [new-credentials (oauth2/refresh-credentials config scopes credentials)]
           (is new-credentials)
           (oauth2/revoke-token new-credentials))))))

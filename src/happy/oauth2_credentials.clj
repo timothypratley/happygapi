@@ -10,15 +10,22 @@
             [cheshire.core :as json]))
 
 (def secret
-  "If you download secret.json from your Google Console, do not add it to source control."
-  (atom (let [secret-file (io/file "secret.json")]
-          (when (.exists secret-file)
-            (:installed (json/parse-string (slurp secret-file) true))))))
+  "If you download secret.json or service.json from your Google Console,
+  do not add it to source control."
+  (atom (merge
+          (let [secret-file (io/file "secret.json")]
+            (when (.exists secret-file)
+              (:installed (json/parse-string (slurp secret-file) true))))
+          (let [service-file (io/file "service.json")]
+            (when (.exists service-file))
+            (json/parse-string (slurp service-file) true)))))
+
 (def scopes
   (atom ["https://www.googleapis.com/auth/spreadsheets"
          "https://www.googleapis.com/auth/drive"]))
 
-(def credentials-cache (atom nil))
+(def credentials-cache
+  (atom nil))
 
 (defn fetch-credentials [user]
   (or (get @credentials-cache user)

@@ -1,5 +1,6 @@
-secret.json
-tokens
+/secret.json
+/service.json
+/tokens
 /target
 /classes
 /checkouts

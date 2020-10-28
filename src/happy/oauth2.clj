@@ -3,7 +3,9 @@
   See https://developers.google.com/identity/protocols/OAuth2WebServer"
   (:require [clj-http.client :as http]
             [clojure.string :as str]
-            [clojure.set :as set])
+            [clojure.set :as set]
+            [buddy.sign.jwt :as jwt]
+            [buddy.core.keys :as keys])
   (:import (java.util Date)))
 
 (defn- redirect-to-google
@@ -74,31 +76,49 @@
   (exchange-code config code))
 
 (defn refresh-credentials
-  "Given a config map, and a credentials map containing a refresh_token,
+  "Given a config map, and a credentials map containing either a refresh_token or private_key,
   fetches a new access token.
   Returns the response if successful, which is a map of credentials containing an access token.
   Refresh tokens eventually expire, and attempts to refresh will fail with 401.
   Therefore, calls that could cause a refresh should catch 401 exceptions,
   call set-authorization-parameters and redirect."
-  [{:as config :keys [client_id client_secret]} {:as credentials :keys [refresh_token]}]
-  {:pre [client_id client_secret refresh_token]}
-  (with-timestamp
-    (merge credentials
-           (:body (http/post "https://oauth2.googleapis.com/token"
-                             {:form-params {:client_id     client_id
-                                            :client_secret client_secret
-                                            :grant_type    "refresh_token"
-                                            :refresh_token refresh_token}
-                              :accept      :json
-                              :as          :json})))))
+  [{:as config :keys [client_id client_secret client_email private_key]} scopes {:as credentials :keys [refresh_token]}]
+  {:pre [(or (and client_id client_secret refresh_token)
+             (and client_email private_key))]}
+  (let [now (quot (.getTime (Date.)) 1000)
+        params (cond private_key
+                     {:grant_type "urn:ietf:params:oauth:grant-type:jwt-bearer"
+                      :assertion  (jwt/sign
+                                    {:iss   client_email,
+                                     :scope (str/join " " scopes),
+                                     :aud   "https://oauth2.googleapis.com/token",
+                                     :exp   (+ now 3600)
+                                     :iat   now}
+                                    (keys/str->private-key private_key)
+                                    {:alg    :rs256
+                                     :header {:alg "RS256"
+                                              :typ "JWT"}})}
+
+                     refresh_token
+                     {:client_id     client_id
+                      :client_secret client_secret
+                      :grant_type    "refresh_token"
+                      :refresh_token refresh_token})]
+    (with-timestamp
+      (merge
+        credentials
+        (:body (http/post "https://oauth2.googleapis.com/token"
+                          {:form-params params
+                           :accept      :json
+                           :as          :json}))))))
 
 (defn revoke-token
   "Given a credentials map containing either an access token or refresh token, revokes them."
   [{:keys [access_token refresh_token]}]
   {:pre [(or access_token refresh_token)]}
   (http/post "https://oauth2.googleapis.com/revoke"
-             {:accept :json
-              :as :json
+             {:accept      :json
+              :as          :json
               :form-params {"token" (or access_token refresh_token)}}))
 
 (defn valid? [{:as credentials :keys [expires_at access_token]}]
@@ -106,8 +126,8 @@
     (and access_token expires_at
          (neg? (.compareTo (Date.) expires_at)))))
 
-(defn refreshable? [{:as credentials :keys [refresh_token]}]
-  (boolean refresh_token))
+(defn refreshable? [{:as config :keys [private_key]} {:as credentials :keys [refresh_token]}]
+  (boolean (or refresh_token private_key)))
 
 (defn has-scopes? [credentials scopes]
   ;; TODO: scopes have a hierarchy
