@@ -105,6 +105,34 @@ Web applications should instead define a route to capture the code.
 
 The [`happy.oauth2`](src/happy/oauth2.clj) namespace provides generic functions to support oauth2 authorization so that you can assemble only the parts you need.
 
+## Retries
+
+HappyGAPI leaves retries up to the consuming application.
+However if you are doing many requests, it is likely you will want to retry failed requests,
+as failures can happen for a variety of availability reasons.
+
+Providing your own retry strategy can be done by redefining the `happy.util/get-response` behavior:
+
+```clj
+(defmacro with-get-response-retries
+  [& body]
+  (let [get-response @#'hu/get-response]
+    (with-redefs [hu/get-response (fn get-response-with-retries [& args]
+                                    (again/with-retries [2000 5000 10000 15000]
+                                                        (apply get-response args)))]
+      ~@body)))
+```
+
+Now you can wrap calls using `with-get-response-retries`:
+
+```clj
+(with-get-response-retries
+  (g.sheets/create$ (credentials/auth!)
+                    {}
+                    {:properties {:title title}}))
+```
+
+This example uses the [again](https://github.com/liwp/again) library.
 
 ## Contributing
 
