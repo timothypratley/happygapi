@@ -116,11 +116,11 @@ Providing your own retry strategy can be done by redefining the `happy.util/get-
 ```clj
 (defmacro with-get-response-retries
   [& body]
-  (let [get-response @#'hu/get-response]
-    (with-redefs [hu/get-response (fn get-response-with-retries [& args]
-                                    (again/with-retries [2000 5000 10000 15000]
-                                                        (apply get-response args)))]
-      ~@body)))
+  `(let [get-response# @#'hu/get-response]
+     (with-redefs [hu/get-response (fn get-response-with-retries# [& args#]
+                                     (again/with-retries [2000 5000 10000 15000]
+                                                         (apply get-response# args#)))]
+       ~@body)))
 ```
 
 Now you can wrap calls using `with-get-response-retries`:
