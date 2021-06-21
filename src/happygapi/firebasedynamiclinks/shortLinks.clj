@@ -16,7 +16,7 @@
   Body: 
   
   {:sdkVersion string,
-   :suffix {:option string, :customSuffix string},
+   :suffix {:customSuffix string, :option string},
    :dynamicLinkInfo {:socialMetaTagInfo SocialMetaTagInfo,
                      :analyticsInfo AnalyticsInfo,
                      :desktopInfo DesktopInfo,

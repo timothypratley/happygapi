@@ -9,7 +9,7 @@
 (defn upload$
   "https://developers.google.com/games/api/reference/rest/v1configuration/imageConfigurations/upload
   
-  Required parameters: imageType, resourceId
+  Required parameters: resourceId, imageType
   
   Optional parameters: none
   

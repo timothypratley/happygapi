@@ -1,15 +1,15 @@
 (ns happygapi.compute.regionDiskTypes
   "Compute Engine API: regionDiskTypes.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDiskTypes"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/regionDiskTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDiskTypes/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDiskTypes/get
   
-  Required parameters: diskType, project, region
+  Required parameters: project, diskType, region
   
   Optional parameters: none
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/diskTypes/{diskType}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/diskTypes/{diskType}"
      #{:region :project :diskType}
      parameters)
     (merge-with
@@ -35,11 +35,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionDiskTypes/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDiskTypes/list
   
-  Required parameters: project, region
+  Required parameters: region, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, orderBy, pageToken, maxResults, filter
   
   Retrieves a list of regional disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -50,8 +50,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/diskTypes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/diskTypes"
      #{:region :project}
      parameters)
     (merge-with

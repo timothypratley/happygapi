@@ -6,38 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn representativeInfoByDivision$
-  "https://developers.google.com/civic-information/api/reference/rest/v2/representatives/representativeInfoByDivision
-  
-  Required parameters: ocdId
-  
-  Optional parameters: levels, roles, recursive
-  
-  Looks up representative information for a single geographic division."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:ocdId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://civicinfo.googleapis.com/"
-     "civicinfo/v2/representatives/{ocdId}"
-     #{:ocdId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn representativeInfoByAddress$
   "https://developers.google.com/civic-information/api/reference/rest/v2/representatives/representativeInfoByAddress
   
   Required parameters: none
   
-  Optional parameters: address, roles, levels, includeOffices
+  Optional parameters: levels, address, roles, includeOffices
   
   Looks up political geography and representative information for a single address."
   {:scopes nil}
@@ -49,6 +23,32 @@
      "https://civicinfo.googleapis.com/"
      "civicinfo/v2/representatives"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn representativeInfoByDivision$
+  "https://developers.google.com/civic-information/api/reference/rest/v2/representatives/representativeInfoByDivision
+  
+  Required parameters: ocdId
+  
+  Optional parameters: levels, recursive, roles
+  
+  Looks up representative information for a single geographic division."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:ocdId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://civicinfo.googleapis.com/"
+     "civicinfo/v2/representatives/{ocdId}"
+     #{:ocdId}
      parameters)
     (merge-with
      merge

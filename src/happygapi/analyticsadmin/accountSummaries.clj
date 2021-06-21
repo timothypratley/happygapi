@@ -14,7 +14,8 @@
   Optional parameters: pageToken, pageSize
   
   Returns summaries of all accounts accessible by the caller."
-  {:scopes ["https://www.googleapis.com/auth/analytics.readonly"]}
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response

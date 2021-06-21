@@ -34,56 +34,6 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/insert
-  
-  Required parameters: part
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string,
-   :subscriberSnippet {:channelId string,
-                       :description string,
-                       :thumbnails ThumbnailDetails,
-                       :title string},
-   :snippet {:description string,
-             :resourceId ResourceId,
-             :publishedAt string,
-             :title string,
-             :channelId string,
-             :channelTitle string,
-             :thumbnails ThumbnailDetails},
-   :kind string,
-   :contentDetails {:newItemCount integer,
-                    :totalItemCount integer,
-                    :activityType string},
-   :id string}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/subscriptions"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/list
   
@@ -108,6 +58,56 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/insert
+  
+  Required parameters: part
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:contentDetails {:totalItemCount integer,
+                    :newItemCount integer,
+                    :activityType string},
+   :subscriberSnippet {:channelId string,
+                       :description string,
+                       :title string,
+                       :thumbnails ThumbnailDetails},
+   :kind string,
+   :snippet {:description string,
+             :channelTitle string,
+             :channelId string,
+             :publishedAt string,
+             :resourceId ResourceId,
+             :thumbnails ThumbnailDetails,
+             :title string},
+   :etag string,
+   :id string}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/subscriptions"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

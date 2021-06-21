@@ -11,7 +11,7 @@
   
   Required parameters: playerId
   
-  Optional parameters: maxResults, pageToken, language
+  Optional parameters: pageToken, language, maxResults
   
   Retrieves a list of snapshots created by your application for the player corresponding to the player ID."
   {:scopes ["https://www.googleapis.com/auth/drive.appdata"

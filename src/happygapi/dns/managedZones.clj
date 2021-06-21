@@ -6,22 +6,46 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/get
+(defn update$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/update
   
   Required parameters: managedZone, project
   
   Optional parameters: clientOperationId
   
-  Fetch the representation of an existing ManagedZone."
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :labels {},
+   :peeringConfig {:kind string,
+                   :targetNetwork ManagedZonePeeringConfigTargetNetwork},
+   :dnssecConfig {:state string,
+                  :nonExistence string,
+                  :defaultKeySpecs [DnsKeySpec],
+                  :kind string},
+   :name string,
+   :nameServerSet string,
+   :reverseLookupConfig {:kind string},
+   :privateVisibilityConfig {:networks [ManagedZonePrivateVisibilityConfigNetwork],
+                             :kind string},
+   :serviceDirectoryConfig {:namespace ManagedZoneServiceDirectoryConfigNamespace,
+                            :kind string},
+   :forwardingConfig {:kind string,
+                      :targetNameServers [ManagedZoneForwardingConfigNameServerTarget]},
+   :dnsName string,
+   :id string,
+   :kind string,
+   :nameServers [string],
+   :visibility string}
+  
+  Updates an existing ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://dns.googleapis.com/"
      "dns/v1/projects/{project}/managedZones/{managedZone}"
@@ -29,7 +53,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -51,22 +77,24 @@
                    :targetNetwork ManagedZonePeeringConfigTargetNetwork},
    :dnssecConfig {:state string,
                   :nonExistence string,
-                  :kind string,
-                  :defaultKeySpecs [DnsKeySpec]},
+                  :defaultKeySpecs [DnsKeySpec],
+                  :kind string},
    :name string,
    :nameServerSet string,
    :reverseLookupConfig {:kind string},
    :privateVisibilityConfig {:networks [ManagedZonePrivateVisibilityConfigNetwork],
                              :kind string},
-   :forwardingConfig {:targetNameServers [ManagedZoneForwardingConfigNameServerTarget],
-                      :kind string},
+   :serviceDirectoryConfig {:namespace ManagedZoneServiceDirectoryConfigNamespace,
+                            :kind string},
+   :forwardingConfig {:kind string,
+                      :targetNameServers [ManagedZoneForwardingConfigNameServerTarget]},
    :dnsName string,
    :id string,
    :kind string,
    :nameServers [string],
    :visibility string}
   
-  Apply a partial update to an existing ManagedZone."
+  Applies a partial update to an existing ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
   [auth parameters body]
@@ -88,6 +116,62 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/delete
+  
+  Required parameters: managedZone, project
+  
+  Optional parameters: clientOperationId
+  
+  Deletes a previously created ManagedZone."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}"
+     #{:managedZone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/get
+  
+  Required parameters: project, managedZone
+  
+  Optional parameters: clientOperationId
+  
+  Fetches the representation of an existing ManagedZone."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/ndev.clouddns.readonly"
+            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dns.googleapis.com/"
+     "dns/v1/projects/{project}/managedZones/{managedZone}"
+     #{:managedZone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn create$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/create
   
@@ -104,22 +188,24 @@
                    :targetNetwork ManagedZonePeeringConfigTargetNetwork},
    :dnssecConfig {:state string,
                   :nonExistence string,
-                  :kind string,
-                  :defaultKeySpecs [DnsKeySpec]},
+                  :defaultKeySpecs [DnsKeySpec],
+                  :kind string},
    :name string,
    :nameServerSet string,
    :reverseLookupConfig {:kind string},
    :privateVisibilityConfig {:networks [ManagedZonePrivateVisibilityConfigNetwork],
                              :kind string},
-   :forwardingConfig {:targetNameServers [ManagedZoneForwardingConfigNameServerTarget],
-                      :kind string},
+   :serviceDirectoryConfig {:namespace ManagedZoneServiceDirectoryConfigNamespace,
+                            :kind string},
+   :forwardingConfig {:kind string,
+                      :targetNameServers [ManagedZoneForwardingConfigNameServerTarget]},
    :dnsName string,
    :id string,
    :kind string,
    :nameServers [string],
    :visibility string}
   
-  Create a new ManagedZone."
+  Creates a new ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
   [auth parameters body]
@@ -141,41 +227,14 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/delete
-  
-  Required parameters: project, managedZone
-  
-  Optional parameters: clientOperationId
-  
-  Delete a previously created ManagedZone."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dns.googleapis.com/"
-     "dns/v1/projects/{project}/managedZones/{managedZone}"
-     #{:managedZone :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/list
   
   Required parameters: project
   
-  Optional parameters: maxResults, dnsName, pageToken
+  Optional parameters: pageToken, maxResults, dnsName
   
-  Enumerate ManagedZones that have been created but not yet deleted."
+  Enumerates ManagedZones that have been created but not yet deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
@@ -192,59 +251,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZones/update
-  
-  Required parameters: managedZone, project
-  
-  Optional parameters: clientOperationId
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :labels {},
-   :peeringConfig {:kind string,
-                   :targetNetwork ManagedZonePeeringConfigTargetNetwork},
-   :dnssecConfig {:state string,
-                  :nonExistence string,
-                  :kind string,
-                  :defaultKeySpecs [DnsKeySpec]},
-   :name string,
-   :nameServerSet string,
-   :reverseLookupConfig {:kind string},
-   :privateVisibilityConfig {:networks [ManagedZonePrivateVisibilityConfigNetwork],
-                             :kind string},
-   :forwardingConfig {:targetNameServers [ManagedZoneForwardingConfigNameServerTarget],
-                      :kind string},
-   :dnsName string,
-   :id string,
-   :kind string,
-   :nameServers [string],
-   :visibility string}
-  
-  Update an existing ManagedZone."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:managedZone :project})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dns.googleapis.com/"
-     "dns/v1/projects/{project}/managedZones/{managedZone}"
-     #{:managedZone :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1/players/list
+  
+  Required parameters: collection
+  
+  Optional parameters: language, pageToken, maxResults
+  
+  Get the collection of players for the currently authenticated user."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collection})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/players/me/players/{collection}"
+     #{:collection}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/games/api/reference/rest/v1/players/get
   
@@ -23,32 +49,6 @@
      "https://games.googleapis.com/"
      "games/v1/players/{playerId}"
      #{:playerId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1/players/list
-  
-  Required parameters: collection
-  
-  Optional parameters: pageToken, language, maxResults
-  
-  Get the collection of players for the currently authenticated user."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:collection})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/players/me/players/{collection}"
-     #{:collection}
      parameters)
     (merge-with
      merge

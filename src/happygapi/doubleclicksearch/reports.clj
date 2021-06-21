@@ -6,90 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn generate$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/reports/generate
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:timeRange {:changedMetricsSinceTimestamp string,
-               :startDate string,
-               :changedAttributesSinceTimestamp string,
-               :endDate string},
-   :filters [{:values [any],
-              :operator string,
-              :column {:productReportPerspective string,
-                       :customMetricName string,
-                       :startDate string,
-                       :headerText string,
-                       :endDate string,
-                       :groupByColumn boolean,
-                       :platformSource string,
-                       :customDimensionName string,
-                       :savedColumnName string,
-                       :columnName string}}],
-   :columns [{:productReportPerspective string,
-              :customMetricName string,
-              :startDate string,
-              :headerText string,
-              :endDate string,
-              :groupByColumn boolean,
-              :platformSource string,
-              :customDimensionName string,
-              :savedColumnName string,
-              :columnName string}],
-   :includeRemovedEntities boolean,
-   :verifySingleTimeZone boolean,
-   :includeDeletedEntities boolean,
-   :statisticsCurrency string,
-   :reportScope {:agencyId string,
-                 :engineAccountId string,
-                 :adGroupId string,
-                 :advertiserId string,
-                 :adId string,
-                 :campaignId string,
-                 :keywordId string},
-   :reportType string,
-   :startRow integer,
-   :maxRowsPerFile integer,
-   :rowCount integer,
-   :downloadFormat string,
-   :orderBy [{:column {:productReportPerspective string,
-                       :customMetricName string,
-                       :startDate string,
-                       :headerText string,
-                       :endDate string,
-                       :groupByColumn boolean,
-                       :platformSource string,
-                       :customDimensionName string,
-                       :savedColumnName string,
-                       :columnName string},
-              :sortOrder string}]}
-  
-  Generates and returns a report immediately."
-  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://doubleclicksearch.googleapis.com/"
-     "doubleclicksearch/v2/reports/generate"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/search-adsapi/reference/rest/v2/reports/get
   
@@ -116,8 +32,8 @@
       :as :json}
      auth))))
 
-(defn request$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/reports/request
+(defn generate$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/reports/generate
   
   Required parameters: none
   
@@ -125,13 +41,11 @@
   
   Body: 
   
-  {:timeRange {:changedMetricsSinceTimestamp string,
-               :startDate string,
+  {:timeRange {:endDate string,
                :changedAttributesSinceTimestamp string,
-               :endDate string},
-   :filters [{:values [any],
-              :operator string,
-              :column {:productReportPerspective string,
+               :changedMetricsSinceTimestamp string,
+               :startDate string},
+   :filters [{:column {:productReportPerspective string,
                        :customMetricName string,
                        :startDate string,
                        :headerText string,
@@ -140,7 +54,9 @@
                        :platformSource string,
                        :customDimensionName string,
                        :savedColumnName string,
-                       :columnName string}}],
+                       :columnName string},
+              :operator string,
+              :values [any]}],
    :columns [{:productReportPerspective string,
               :customMetricName string,
               :startDate string,
@@ -155,19 +71,65 @@
    :verifySingleTimeZone boolean,
    :includeDeletedEntities boolean,
    :statisticsCurrency string,
-   :reportScope {:agencyId string,
-                 :engineAccountId string,
-                 :adGroupId string,
-                 :advertiserId string,
+   :reportScope {:campaignId string,
+                 :agencyId string,
                  :adId string,
-                 :campaignId string,
-                 :keywordId string},
+                 :keywordId string,
+                 :advertiserId string,
+                 :engineAccountId string,
+                 :adGroupId string},
    :reportType string,
    :startRow integer,
    :maxRowsPerFile integer,
    :rowCount integer,
    :downloadFormat string,
-   :orderBy [{:column {:productReportPerspective string,
+   :orderBy [{:sortOrder string,
+              :column {:productReportPerspective string,
+                       :customMetricName string,
+                       :startDate string,
+                       :headerText string,
+                       :endDate string,
+                       :groupByColumn boolean,
+                       :platformSource string,
+                       :customDimensionName string,
+                       :savedColumnName string,
+                       :columnName string}}]}
+  
+  Generates and returns a report immediately."
+  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://doubleclicksearch.googleapis.com/"
+     "doubleclicksearch/v2/reports/generate"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn request$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/reports/request
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:timeRange {:endDate string,
+               :changedAttributesSinceTimestamp string,
+               :changedMetricsSinceTimestamp string,
+               :startDate string},
+   :filters [{:column {:productReportPerspective string,
                        :customMetricName string,
                        :startDate string,
                        :headerText string,
@@ -177,7 +139,45 @@
                        :customDimensionName string,
                        :savedColumnName string,
                        :columnName string},
-              :sortOrder string}]}
+              :operator string,
+              :values [any]}],
+   :columns [{:productReportPerspective string,
+              :customMetricName string,
+              :startDate string,
+              :headerText string,
+              :endDate string,
+              :groupByColumn boolean,
+              :platformSource string,
+              :customDimensionName string,
+              :savedColumnName string,
+              :columnName string}],
+   :includeRemovedEntities boolean,
+   :verifySingleTimeZone boolean,
+   :includeDeletedEntities boolean,
+   :statisticsCurrency string,
+   :reportScope {:campaignId string,
+                 :agencyId string,
+                 :adId string,
+                 :keywordId string,
+                 :advertiserId string,
+                 :engineAccountId string,
+                 :adGroupId string},
+   :reportType string,
+   :startRow integer,
+   :maxRowsPerFile integer,
+   :rowCount integer,
+   :downloadFormat string,
+   :orderBy [{:sortOrder string,
+              :column {:productReportPerspective string,
+                       :customMetricName string,
+                       :startDate string,
+                       :headerText string,
+                       :endDate string,
+                       :groupByColumn boolean,
+                       :platformSource string,
+                       :customDimensionName string,
+                       :savedColumnName string,
+                       :columnName string}}]}
   
   Inserts a report request into the reporting system."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}

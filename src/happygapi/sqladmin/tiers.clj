@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Lists all available machine types (tiers) for Cloud SQL, for example, db-n1-standard-1. For related information, see Pricing."
+  Lists all available machine types (tiers) for Cloud SQL, for example, db-custom-1-3840. For related information, see Pricing."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]

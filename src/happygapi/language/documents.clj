@@ -6,6 +6,79 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn analyzeSyntax$
+  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeSyntax
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string},
+   :encodingType string}
+  
+  Analyzes the syntax of the text and provides sentence boundaries and tokenization along with part of speech tags, dependency trees, and other properties."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:analyzeSyntax"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn classifyText$
+  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/classifyText
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string}}
+  
+  Classifies a document into categories."
+  {:scopes ["https://www.googleapis.com/auth/cloud-language"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://language.googleapis.com/"
+     "v1/documents:classifyText"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn analyzeSentiment$
   "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeSentiment
   
@@ -15,10 +88,10 @@
   
   Body: 
   
-  {:document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string},
+  {:document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string},
    :encodingType string}
   
   Analyzes the sentiment of the provided text."
@@ -52,16 +125,16 @@
   
   Body: 
   
-  {:encodingType string,
-   :features {:extractSyntax boolean,
+  {:features {:extractDocumentSentiment boolean,
               :extractEntities boolean,
-              :classifyText boolean,
-              :extractDocumentSentiment boolean,
-              :extractEntitySentiment boolean},
-   :document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string}}
+              :extractEntitySentiment boolean,
+              :extractSyntax boolean,
+              :classifyText boolean},
+   :document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string},
+   :encodingType string}
   
   A convenience method that provides all the features that analyzeSentiment, analyzeEntities, and analyzeSyntax provide in one call."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
@@ -95,10 +168,10 @@
   Body: 
   
   {:encodingType string,
-   :document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string}}
+   :document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string}}
   
   Finds entities, similar to AnalyzeEntities in the text and analyzes sentiment associated with each entity and its mentions."
   {:scopes ["https://www.googleapis.com/auth/cloud-language"
@@ -122,42 +195,6 @@
       :as :json}
      auth))))
 
-(defn classifyText$
-  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/classifyText
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string}}
-  
-  Classifies a document into categories."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:classifyText"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn analyzeEntities$
   "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeEntities
   
@@ -167,10 +204,10 @@
   
   Body: 
   
-  {:document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string},
+  {:document {:language string,
+              :gcsContentUri string,
+              :content string,
+              :type string},
    :encodingType string}
   
   Finds named entities (currently proper names and common nouns) in the text along with entity types, salience, mentions for each entity, and other properties."
@@ -183,43 +220,6 @@
     (util/get-url
      "https://language.googleapis.com/"
      "v1/documents:analyzeEntities"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn analyzeSyntax$
-  "https://cloud.google.com/natural-language/api/reference/rest/v1/documents/analyzeSyntax
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:document {:content string,
-              :language string,
-              :type string,
-              :gcsContentUri string},
-   :encodingType string}
-  
-  Analyzes the syntax of the text and provides sentence boundaries and tokenization along with part of speech tags, dependency trees, and other properties."
-  {:scopes ["https://www.googleapis.com/auth/cloud-language"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://language.googleapis.com/"
-     "v1/documents:analyzeSyntax"
      #{}
      parameters)
     (merge-with

@@ -32,6 +32,38 @@
       :as :json}
      auth))))
 
+(defn resetMultipleForAllPlayers$
+  "https://developers.google.com/games/api/reference/rest/v1management/scores/resetMultipleForAllPlayers
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:leaderboard_ids [string], :kind string}
+  
+  Resets scores for the leaderboards with the given IDs for all players. This method is only available to user accounts for your developer console. Only draft leaderboards may be reset."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/scores/resetMultipleForAllPlayers"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn reset$
   "https://developers.google.com/games/api/reference/rest/v1management/scores/reset
   
@@ -79,38 +111,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn resetMultipleForAllPlayers$
-  "https://developers.google.com/games/api/reference/rest/v1management/scores/resetMultipleForAllPlayers
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:kind string, :leaderboard_ids [string]}
-  
-  Resets scores for the leaderboards with the given IDs for all players. This method is only available to user accounts for your developer console. Only draft leaderboards may be reset."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://gamesmanagement.googleapis.com/"
-     "games/v1management/scores/resetMultipleForAllPlayers"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

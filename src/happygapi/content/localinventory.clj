@@ -6,6 +6,42 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory/custombatch
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:localInventory LocalInventory,
+              :productId string,
+              :batchId integer,
+              :merchantId string,
+              :method string}]}
+  
+  Updates local inventory for multiple products or stores in a single request."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "localinventory/batch"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory/insert
   
@@ -33,45 +69,9 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/products/{productId}/localinventory"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/products/{productId}/localinventory"
      #{:productId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/localinventory/custombatch
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entries [{:batchId integer,
-              :merchantId string,
-              :localInventory LocalInventory,
-              :method string,
-              :productId string}]}
-  
-  Updates local inventory for multiple products or stores in a single request."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/localinventory/batch"
-     #{}
      parameters)
     (merge-with
      merge

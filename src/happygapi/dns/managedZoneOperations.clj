@@ -11,9 +11,9 @@
   
   Required parameters: managedZone, project
   
-  Optional parameters: maxResults, sortBy, pageToken
+  Optional parameters: sortBy, pageToken, maxResults
   
-  Enumerate Operations for the given ManagedZone."
+  Enumerates Operations for the given ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"
@@ -38,11 +38,11 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZoneOperations/get
   
-  Required parameters: managedZone, project, operation
+  Required parameters: operation, managedZone, project
   
   Optional parameters: clientOperationId
   
-  Fetch the representation of an existing Operation."
+  Fetches the representation of an existing Operation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"

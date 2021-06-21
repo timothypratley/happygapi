@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pubsubnotificationsettings"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pubsubnotificationsettings"
      #{:merchantId}
      parameters)
     (merge-with
@@ -41,7 +41,7 @@
   
   Body: 
   
-  {:registeredEvents [string], :kind string, :cloudTopicName string}
+  {:kind string, :cloudTopicName string, :registeredEvents [string]}
   
   Register a Merchant Center account for pubsub notifications. Note that cloud topic name should not be provided as part of the request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -50,8 +50,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pubsubnotificationsettings"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pubsubnotificationsettings"
      #{:merchantId}
      parameters)
     (merge-with

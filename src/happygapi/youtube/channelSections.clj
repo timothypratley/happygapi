@@ -6,88 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/delete
-  
-  Required parameters: id
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Deletes a resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/channelSections"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/insert
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:contentDetails {:playlists [string], :channels [string]},
-   :targeting {:regions [string],
-               :countries [string],
-               :languages [string]},
-   :kind string,
-   :etag string,
-   :id string,
-   :snippet {:style string,
-             :localized ChannelSectionLocalization,
-             :position integer,
-             :title string,
-             :channelId string,
-             :type string,
-             :defaultLanguage string},
-   :localizations {}}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/channelSections"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/list
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, channelId, hl, id, mine
+  Optional parameters: id, hl, mine, onBehalfOfContentOwner, channelId
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -120,21 +44,21 @@
   
   Body: 
   
-  {:contentDetails {:playlists [string], :channels [string]},
-   :targeting {:regions [string],
-               :countries [string],
+  {:contentDetails {:channels [string], :playlists [string]},
+   :targeting {:countries [string],
+               :regions [string],
                :languages [string]},
-   :kind string,
-   :etag string,
-   :id string,
-   :snippet {:style string,
-             :localized ChannelSectionLocalization,
-             :position integer,
-             :title string,
+   :snippet {:localized ChannelSectionLocalization,
              :channelId string,
+             :position integer,
              :type string,
-             :defaultLanguage string},
-   :localizations {}}
+             :style string,
+             :defaultLanguage string,
+             :title string},
+   :kind string,
+   :localizations {},
+   :etag string,
+   :id string}
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -154,6 +78,82 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/insert
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:contentDetails {:channels [string], :playlists [string]},
+   :targeting {:countries [string],
+               :regions [string],
+               :languages [string]},
+   :snippet {:localized ChannelSectionLocalization,
+             :channelId string,
+             :position integer,
+             :type string,
+             :style string,
+             :defaultLanguage string,
+             :title string},
+   :kind string,
+   :localizations {},
+   :etag string,
+   :id string}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/delete
+  
+  Required parameters: id
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Deletes a resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

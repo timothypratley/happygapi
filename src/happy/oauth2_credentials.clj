@@ -49,7 +49,7 @@
             ;; do not add them to source control.
             (let [secret-file (io/file "secret.json")]
               (when (.exists secret-file)
-                (:installed (json/parse-string (slurp secret-file) true))))
+                (first (vals (json/parse-string (slurp secret-file) true)))))
             (let [service-file (io/file "service.json")]
               (when (.exists service-file)
                 (json/parse-string (slurp service-file) true))))

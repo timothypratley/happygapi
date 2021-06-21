@@ -6,6 +6,45 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn set$
+  "https://developers.google.com/youtube/api/reference/rest/v3/watermarks/set
+  
+  Required parameters: channelId
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:targetChannelId string,
+   :timing {:durationMs string, :type string, :offsetMs string},
+   :imageBytes string,
+   :imageUrl string,
+   :position {:type string, :cornerPosition string}}
+  
+  Allows upload of watermark image and setting it for a channel."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.upload"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:channelId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/watermarks/set"
+     #{:channelId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn unset$
   "https://developers.google.com/youtube/api/reference/rest/v3/watermarks/unset
   
@@ -29,45 +68,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn set$
-  "https://developers.google.com/youtube/api/reference/rest/v3/watermarks/set
-  
-  Required parameters: channelId
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:targetChannelId string,
-   :position {:cornerPosition string, :type string},
-   :imageBytes string,
-   :timing {:durationMs string, :type string, :offsetMs string},
-   :imageUrl string}
-  
-  Allows upload of watermark image and setting it for a channel."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.upload"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:channelId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/watermarks/set"
-     #{:channelId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

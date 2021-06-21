@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:effectiveConnectionType string,
-   :formFactor string,
-   :url string,
+  {:formFactor string,
    :metrics [string],
-   :origin string}
+   :url string,
+   :origin string,
+   :effectiveConnectionType string}
   
   Queries the Chrome User Experience for a single `record` for a given site. Returns a `record` that contains one or more `metrics` corresponding to performance data about the requested site."
   {:scopes nil}

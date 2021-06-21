@@ -6,22 +6,22 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/list
+(defn getsupportedholidays$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/getsupportedholidays
   
   Required parameters: merchantId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: none
   
-  Lists the shipping settings of the sub-accounts in your Merchant Center account."
+  Retrieves supported holidays for an account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/shippingsettings"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/supportedHolidays"
      #{:merchantId}
      parameters)
     (merge-with
@@ -46,71 +46,9 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/supportedPickupServices"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/supportedPickupServices"
      #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/custombatch
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entries [{:batchId integer,
-              :method string,
-              :accountId string,
-              :shippingSettings ShippingSettings,
-              :merchantId string}]}
-  
-  Retrieves and updates the shipping settings of multiple accounts in a single request."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/shippingsettings/batch"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/get
-  
-  Required parameters: merchantId, accountId
-  
-  Optional parameters: none
-  
-  Retrieves the shipping settings of the account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/shippingsettings/{accountId}"
-     #{:accountId :merchantId}
      parameters)
     (merge-with
      merge
@@ -134,34 +72,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/supportedCarriers"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getsupportedholidays$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/getsupportedholidays
-  
-  Required parameters: merchantId
-  
-  Optional parameters: none
-  
-  Retrieves supported holidays for an account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/supportedHolidays"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/supportedCarriers"
      #{:merchantId}
      parameters)
     (merge-with
@@ -175,14 +87,13 @@
 (defn update$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/update
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   
   Body: 
   
-  {:accountId string,
-   :services [{:deliveryTime DeliveryTime,
+  {:services [{:deliveryTime DeliveryTime,
                :deliveryCountry string,
                :minimumOrderValueTable MinimumOrderValueTable,
                :name string,
@@ -193,9 +104,10 @@
                :currency string,
                :active boolean,
                :shipmentType string}],
-   :postalCodeGroups [{:name string,
-                       :country string,
-                       :postalCodeRanges [PostalCodeRange]}]}
+   :postalCodeGroups [{:country string,
+                       :name string,
+                       :postalCodeRanges [PostalCodeRange]}],
+   :accountId string}
   
   Updates the shipping settings of the account. Any fields that are not provided are deleted from the resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -204,9 +116,97 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/shippingsettings/{accountId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/shippingsettings/{accountId}"
      #{:accountId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/get
+  
+  Required parameters: accountId, merchantId
+  
+  Optional parameters: none
+  
+  Retrieves the shipping settings of the account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/shippingsettings/{accountId}"
+     #{:accountId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: maxResults, pageToken
+  
+  Lists the shipping settings of the sub-accounts in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/shippingsettings"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/shippingsettings/custombatch
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:shippingSettings ShippingSettings,
+              :accountId string,
+              :method string,
+              :merchantId string,
+              :batchId integer}]}
+  
+  Retrieves and updates the shipping settings of multiple accounts in a single request."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "shippingsettings/batch"
+     #{}
      parameters)
     (merge-with
      merge

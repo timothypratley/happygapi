@@ -6,71 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/insert
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:conversion [{:productLanguage string,
-                 :countMillis string,
-                 :segmentationName string,
-                 :customDimension [CustomDimension],
-                 :conversionTimestamp string,
-                 :customMetric [CustomMetric],
-                 :adId string,
-                 :dsConversionId string,
-                 :attributionModel string,
-                 :adGroupId string,
-                 :campaignId string,
-                 :conversionModifiedTimestamp string,
-                 :channel string,
-                 :type string,
-                 :segmentationType string,
-                 :state string,
-                 :productId string,
-                 :criterionId string,
-                 :engineAccountId string,
-                 :advertiserId string,
-                 :storeId string,
-                 :revenueMicros string,
-                 :segmentationId string,
-                 :deviceType string,
-                 :conversionId string,
-                 :productCountry string,
-                 :agencyId string,
-                 :productGroupId string,
-                 :currencyCode string,
-                 :inventoryAccountId string,
-                 :quantityMillis string,
-                 :clickId string,
-                 :floodlightOrderId string}],
-   :kind string}
-  
-  Inserts a batch of new conversions into DoubleClick Search."
-  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://doubleclicksearch.googleapis.com/"
-     "doubleclicksearch/v2/conversion"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn updateAvailability$
   "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/updateAvailability
   
@@ -80,12 +15,12 @@
   
   Body: 
   
-  {:availabilities [{:availabilityTimestamp string,
-                     :segmentationType string,
-                     :agencyId string,
-                     :advertiserId string,
+  {:availabilities [{:advertiserId string,
                      :segmentationName string,
-                     :segmentationId string}]}
+                     :segmentationId string,
+                     :segmentationType string,
+                     :availabilityTimestamp string,
+                     :agencyId string}]}
   
   Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -148,8 +83,8 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/update
+(defn insert$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/insert
   
   Required parameters: none
   
@@ -157,7 +92,8 @@
   
   Body: 
   
-  {:conversion [{:productLanguage string,
+  {:kind string,
+   :conversion [{:productLanguage string,
                  :countMillis string,
                  :segmentationName string,
                  :customDimension [CustomDimension],
@@ -189,8 +125,72 @@
                  :inventoryAccountId string,
                  :quantityMillis string,
                  :clickId string,
-                 :floodlightOrderId string}],
-   :kind string}
+                 :floodlightOrderId string}]}
+  
+  Inserts a batch of new conversions into DoubleClick Search."
+  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://doubleclicksearch.googleapis.com/"
+     "doubleclicksearch/v2/conversion"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/update
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :conversion [{:productLanguage string,
+                 :countMillis string,
+                 :segmentationName string,
+                 :customDimension [CustomDimension],
+                 :conversionTimestamp string,
+                 :customMetric [CustomMetric],
+                 :adId string,
+                 :dsConversionId string,
+                 :attributionModel string,
+                 :adGroupId string,
+                 :campaignId string,
+                 :conversionModifiedTimestamp string,
+                 :channel string,
+                 :type string,
+                 :segmentationType string,
+                 :state string,
+                 :productId string,
+                 :criterionId string,
+                 :engineAccountId string,
+                 :advertiserId string,
+                 :storeId string,
+                 :revenueMicros string,
+                 :segmentationId string,
+                 :deviceType string,
+                 :conversionId string,
+                 :productCountry string,
+                 :agencyId string,
+                 :productGroupId string,
+                 :currencyCode string,
+                 :inventoryAccountId string,
+                 :quantityMillis string,
+                 :clickId string,
+                 :floodlightOrderId string}]}
   
   Updates a batch of conversions in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}

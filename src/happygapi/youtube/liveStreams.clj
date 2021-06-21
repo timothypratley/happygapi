@@ -6,59 +6,31 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/list
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner, maxResults, pageToken, mine, id
-  
-  Retrieve the list of streams associated with the given channel. --"
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveStreams"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/insert
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
   
   Body: 
   
-  {:snippet {:channelId string,
-             :description string,
-             :publishedAt string,
+  {:snippet {:publishedAt string,
              :isDefaultStream boolean,
-             :title string},
-   :status {:healthStatus LiveStreamHealthStatus, :streamStatus string},
+             :title string,
+             :channelId string,
+             :description string},
    :contentDetails {:isReusable boolean,
                     :closedCaptionsIngestionUrl string},
-   :kind string,
+   :status {:healthStatus LiveStreamHealthStatus, :streamStatus string},
    :etag string,
    :id string,
-   :cdn {:resolution string,
-         :ingestionType string,
-         :ingestionInfo IngestionInfo,
+   :cdn {:ingestionType string,
+         :resolution string,
          :format string,
-         :frameRate string}}
+         :frameRate string,
+         :ingestionInfo IngestionInfo},
+   :kind string}
   
   Inserts a new stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -87,26 +59,26 @@
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
   
   Body: 
   
-  {:snippet {:channelId string,
-             :description string,
-             :publishedAt string,
+  {:snippet {:publishedAt string,
              :isDefaultStream boolean,
-             :title string},
-   :status {:healthStatus LiveStreamHealthStatus, :streamStatus string},
+             :title string,
+             :channelId string,
+             :description string},
    :contentDetails {:isReusable boolean,
                     :closedCaptionsIngestionUrl string},
-   :kind string,
+   :status {:healthStatus LiveStreamHealthStatus, :streamStatus string},
    :etag string,
    :id string,
-   :cdn {:resolution string,
-         :ingestionType string,
-         :ingestionInfo IngestionInfo,
+   :cdn {:ingestionType string,
+         :resolution string,
          :format string,
-         :frameRate string}}
+         :frameRate string,
+         :ingestionInfo IngestionInfo},
+   :kind string}
   
   Updates an existing stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -130,12 +102,40 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/list
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner, maxResults, onBehalfOfContentOwnerChannel, id, mine, pageToken
+  
+  Retrieve the list of streams associated with the given channel. --"
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveStreams"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/delete
   
   Required parameters: id
   
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
   
   Deletes an existing stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"

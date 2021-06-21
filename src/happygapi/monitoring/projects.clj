@@ -71,13 +71,13 @@
   
   Body: 
   
-  {:timeSeries [{:points [Point],
-                 :unit string,
-                 :metricKind string,
-                 :valueType string,
-                 :resource MonitoredResource,
+  {:timeSeries [{:unit string,
+                 :metric Metric,
                  :metadata MonitoredResourceMetadata,
-                 :metric Metric}]}
+                 :metricKind string,
+                 :points [Point],
+                 :valueType string,
+                 :resource MonitoredResource}]}
   
   Creates or adds data to one or more time series. The response is empty if all time series in the request were written. If any time series could not be written, a corresponding failure message is included in the error response."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -90,40 +90,6 @@
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}/timeSeries"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn timeSeries-query$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/timeSeries/query
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:pageSize integer, :query string, :pageToken string}
-  
-  Queries time series using Monitoring Query Language. This method does not require a Workspace."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/timeSeries:query"
      #{:name}
      parameters)
     (merge-with
@@ -164,30 +130,35 @@
       :as :json}
      auth))))
 
-(defn monitoredResourceDescriptors-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/monitoredResourceDescriptors/list
+(defn timeSeries-query$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/timeSeries/query
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: none
   
-  Lists monitored resource descriptors that match a filter. This method does not require a Workspace."
+  Body: 
+  
+  {:pageSize integer, :pageToken string, :query string}
+  
+  Queries time series using Monitoring Query Language. This method does not require a Workspace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"
-            "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}/monitoredResourceDescriptors"
+     "v3/{+name}/timeSeries:query"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -222,24 +193,25 @@
       :as :json}
      auth))))
 
-(defn alertPolicies-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/list
+(defn monitoredResourceDescriptors-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/monitoredResourceDescriptors/list
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize, orderBy
+  Optional parameters: pageSize, filter, pageToken
   
-  Lists the existing alerting policies for the workspace."
+  Lists monitored resource descriptors that match a filter. This method does not require a Workspace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
+            "https://www.googleapis.com/auth/monitoring.read"
+            "https://www.googleapis.com/auth/monitoring.write"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}/alertPolicies"
+     "v3/{+name}/monitoredResourceDescriptors"
      #{:name}
      parameters)
     (merge-with
@@ -250,41 +222,41 @@
       :as :json}
      auth))))
 
-(defn alertPolicies-create$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/create
+(defn alertPolicies-patch$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/patch
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
   {:displayName string,
    :name string,
-   :documentation {:mimeType string, :content string},
+   :documentation {:content string, :mimeType string},
    :combiner string,
-   :conditions [{:conditionMonitoringQueryLanguage MonitoringQueryLanguageCondition,
-                 :displayName string,
-                 :conditionAbsent MetricAbsence,
+   :conditions [{:conditionAbsent MetricAbsence,
                  :conditionThreshold MetricThreshold,
-                 :name string}],
+                 :displayName string,
+                 :name string,
+                 :conditionMonitoringQueryLanguage MonitoringQueryLanguageCondition}],
    :creationRecord {:mutatedBy string, :mutateTime string},
    :mutationRecord {:mutatedBy string, :mutateTime string},
    :userLabels {},
    :enabled boolean,
-   :validity {:message string, :details [{}], :code integer},
+   :validity {:code integer, :message string, :details [{}]},
    :notificationChannels [string]}
   
-  Creates a new alerting policy."
+  Updates an alerting policy. You can either replace the entire policy with a new one or replace only certain fields in the current alerting policy by specifying the fields to be updated via updateMask. Returns the updated alerting policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}/alertPolicies"
+     "v3/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -352,8 +324,138 @@
       :as :json}
      auth))))
 
-(defn alertPolicies-patch$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/patch
+(defn alertPolicies-create$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/create
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:displayName string,
+   :name string,
+   :documentation {:content string, :mimeType string},
+   :combiner string,
+   :conditions [{:conditionAbsent MetricAbsence,
+                 :conditionThreshold MetricThreshold,
+                 :displayName string,
+                 :name string,
+                 :conditionMonitoringQueryLanguage MonitoringQueryLanguageCondition}],
+   :creationRecord {:mutatedBy string, :mutateTime string},
+   :mutationRecord {:mutatedBy string, :mutateTime string},
+   :userLabels {},
+   :enabled boolean,
+   :validity {:code integer, :message string, :details [{}]},
+   :notificationChannels [string]}
+  
+  Creates a new alerting policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/alertPolicies"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn alertPolicies-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/alertPolicies/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, orderBy, pageSize, filter
+  
+  Lists the existing alerting policies for the workspace."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/alertPolicies"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uptimeCheckConfigs-delete$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an Uptime check configuration. Note that this method will fail if the Uptime check configuration is referenced by an alert policy or other dependent configs that would be rendered invalid by the deletion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uptimeCheckConfigs-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the existing valid Uptime check configurations for the project (leaving out any invalid configurations)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+parent}/uptimeCheckConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn uptimeCheckConfigs-patch$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/patch
   
   Required parameters: name
   
@@ -361,23 +463,34 @@
   
   Body: 
   
-  {:displayName string,
+  {:httpCheck {:path string,
+               :useSsl boolean,
+               :port integer,
+               :headers {},
+               :authInfo BasicAuthentication,
+               :maskHeaders boolean,
+               :contentType string,
+               :requestMethod string,
+               :body string,
+               :validateSsl boolean},
+   :displayName string,
    :name string,
-   :documentation {:mimeType string, :content string},
-   :combiner string,
-   :conditions [{:conditionMonitoringQueryLanguage MonitoringQueryLanguageCondition,
-                 :displayName string,
-                 :conditionAbsent MetricAbsence,
-                 :conditionThreshold MetricThreshold,
-                 :name string}],
-   :creationRecord {:mutatedBy string, :mutateTime string},
-   :mutationRecord {:mutatedBy string, :mutateTime string},
-   :userLabels {},
-   :enabled boolean,
-   :validity {:message string, :details [{}], :code integer},
-   :notificationChannels [string]}
+   :monitoredResource {:labels {}, :type string},
+   :contentMatchers [{:content string, :matcher string}],
+   :selectedRegions [string],
+   :internalCheckers [{:peerProjectId string,
+                       :name string,
+                       :displayName string,
+                       :gcpZone string,
+                       :state string,
+                       :network string}],
+   :resourceGroup {:resourceType string, :groupId string},
+   :tcpCheck {:port integer},
+   :period string,
+   :timeout string,
+   :isInternal boolean}
   
-  Updates an alerting policy. You can either replace the entire policy with a new one or replace only certain fields in the current alerting policy by specifying the fields to be updated via updateMask. Returns the updated alerting policy."
+  Updates an Uptime check configuration. You can either replace the entire configuration with a new one or replace only certain fields in the current configuration by specifying the fields to be updated via updateMask. Returns the updated configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
   [auth parameters body]
@@ -427,91 +540,6 @@
       :as :json}
      auth))))
 
-(defn uptimeCheckConfigs-patch$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:httpCheck {:path string,
-               :useSsl boolean,
-               :port integer,
-               :headers {},
-               :authInfo BasicAuthentication,
-               :maskHeaders boolean,
-               :contentType string,
-               :requestMethod string,
-               :body string,
-               :validateSsl boolean},
-   :displayName string,
-   :name string,
-   :monitoredResource {:labels {}, :type string},
-   :contentMatchers [{:content string, :matcher string}],
-   :selectedRegions [string],
-   :internalCheckers [{:name string,
-                       :network string,
-                       :gcpZone string,
-                       :state string,
-                       :peerProjectId string,
-                       :displayName string}],
-   :resourceGroup {:resourceType string, :groupId string},
-   :tcpCheck {:port integer},
-   :period string,
-   :timeout string,
-   :isInternal boolean}
-  
-  Updates an Uptime check configuration. You can either replace the entire configuration with a new one or replace only certain fields in the current configuration by specifying the fields to be updated via updateMask. Returns the updated configuration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn uptimeCheckConfigs-delete$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an Uptime check configuration. Note that this method will fail if the Uptime check configuration is referenced by an alert policy or other dependent configs that would be rendered invalid by the deletion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn uptimeCheckConfigs-create$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/create
   
@@ -536,12 +564,12 @@
    :monitoredResource {:labels {}, :type string},
    :contentMatchers [{:content string, :matcher string}],
    :selectedRegions [string],
-   :internalCheckers [{:name string,
-                       :network string,
+   :internalCheckers [{:peerProjectId string,
+                       :name string,
+                       :displayName string,
                        :gcpZone string,
                        :state string,
-                       :peerProjectId string,
-                       :displayName string}],
+                       :network string}],
    :resourceGroup {:resourceType string, :groupId string},
    :tcpCheck {:port integer},
    :period string,
@@ -570,109 +598,6 @@
       :as :json}
      auth))))
 
-(defn uptimeCheckConfigs-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/uptimeCheckConfigs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the existing valid Uptime check configurations for the project (leaving out any invalid configurations)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+parent}/uptimeCheckConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn metricDescriptors-create$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/metricDescriptors/create
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :labels [{:key string, :description string, :valueType string}],
-   :valueType string,
-   :monitoredResourceTypes [string],
-   :unit string,
-   :displayName string,
-   :name string,
-   :type string,
-   :metricKind string,
-   :launchStage string,
-   :metadata {:samplePeriod string,
-              :launchStage string,
-              :ingestDelay string}}
-  
-  Creates a new metric descriptor. User-created metric descriptors define custom metrics (https://cloud.google.com/monitoring/custom-metrics)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/metricDescriptors"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn metricDescriptors-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/metricDescriptors/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists metric descriptors that match a filter. This method does not require a Workspace."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"
-            "https://www.googleapis.com/auth/monitoring.write"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/metricDescriptors"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn metricDescriptors-delete$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/metricDescriptors/delete
   
@@ -695,6 +620,52 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn metricDescriptors-create$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/metricDescriptors/create
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :labels [{:key string, :valueType string, :description string}],
+   :valueType string,
+   :monitoredResourceTypes [string],
+   :unit string,
+   :displayName string,
+   :name string,
+   :type string,
+   :metricKind string,
+   :launchStage string,
+   :metadata {:launchStage string,
+              :ingestDelay string,
+              :samplePeriod string}}
+  
+  Creates a new metric descriptor. User-created metric descriptors define custom metrics (https://cloud.google.com/monitoring/custom-metrics)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.write"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/metricDescriptors"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -729,6 +700,35 @@
       :as :json}
      auth))))
 
+(defn metricDescriptors-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/metricDescriptors/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists metric descriptors that match a filter. This method does not require a Workspace."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"
+            "https://www.googleapis.com/auth/monitoring.write"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/metricDescriptors"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn collectdTimeSeries-create$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/collectdTimeSeries/create
   
@@ -738,16 +738,16 @@
   
   Body: 
   
-  {:collectdPayloads [{:values [CollectdValue],
+  {:resource {:labels {}, :type string},
+   :collectdVersion string,
+   :collectdPayloads [{:values [CollectdValue],
                        :metadata {},
-                       :type string,
-                       :endTime string,
                        :startTime string,
+                       :type string,
+                       :pluginInstance string,
+                       :endTime string,
                        :plugin string,
-                       :typeInstance string,
-                       :pluginInstance string}],
-   :resource {:labels {}, :type string},
-   :collectdVersion string}
+                       :typeInstance string}]}
   
   Stackdriver Monitoring Agent only: Creates a new time series.This method is only for use by the Stackdriver Monitoring Agent. Use projects.timeSeries.create instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -772,6 +772,61 @@
       :as :json}
      auth))))
 
+(defn groups-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, childrenOfGroup, descendantsOfGroup, ancestorsOfGroup
+  
+  Lists the existing groups."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/groups"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn groups-delete$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/delete
+  
+  Required parameters: name
+  
+  Optional parameters: recursive
+  
+  Deletes an existing group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn groups-update$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/update
   
@@ -781,11 +836,11 @@
   
   Body: 
   
-  {:name string,
-   :parentName string,
-   :filter string,
+  {:filter string,
+   :name string,
    :displayName string,
-   :isCluster boolean}
+   :isCluster boolean,
+   :parentName string}
   
   Updates an existing group. You can change any group attributes except name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -797,43 +852,6 @@
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn groups-create$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/create
-  
-  Required parameters: name
-  
-  Optional parameters: validateOnly
-  
-  Body: 
-  
-  {:name string,
-   :parentName string,
-   :filter string,
-   :displayName string,
-   :isCluster boolean}
-  
-  Creates a new group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/groups"
      #{:name}
      parameters)
     (merge-with
@@ -874,48 +892,28 @@
       :as :json}
      auth))))
 
-(defn groups-delete$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/delete
+(defn groups-create$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/create
   
   Required parameters: name
   
-  Optional parameters: recursive
+  Optional parameters: validateOnly
   
-  Deletes an existing group."
+  Body: 
+  
+  {:filter string,
+   :name string,
+   :displayName string,
+   :isCluster boolean,
+   :parentName string}
+  
+  Creates a new group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn groups-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/groups/list
-  
-  Required parameters: name
-  
-  Optional parameters: childrenOfGroup, descendantsOfGroup, ancestorsOfGroup, pageToken, pageSize
-  
-  Lists the existing groups."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}/groups"
@@ -923,7 +921,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -934,7 +934,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, interval.startTime, filter, interval.endTime, pageSize
+  Optional parameters: interval.endTime, pageSize, interval.startTime, pageToken, filter
   
   Lists the monitored resources that are members of a group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -984,74 +984,6 @@
       :as :json}
      auth))))
 
-(defn notificationChannels-patch$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:enabled boolean,
-   :verificationStatus string,
-   :userLabels {},
-   :labels {},
-   :description string,
-   :name string,
-   :displayName string,
-   :type string}
-  
-  Updates a notification channel. Fields not specified in the field mask remain unchanged."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationChannels-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/list
-  
-  Required parameters: name
-  
-  Optional parameters: orderBy, filter, pageSize, pageToken
-  
-  Lists the notification channels that have been created for the project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}/notificationChannels"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn notificationChannels-create$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/create
   
@@ -1061,14 +993,16 @@
   
   Body: 
   
-  {:enabled boolean,
+  {:description string,
+   :labels {},
+   :displayName string,
+   :name string,
+   :type string,
+   :mutationRecords [{:mutatedBy string, :mutateTime string}],
+   :creationRecord {:mutatedBy string, :mutateTime string},
    :verificationStatus string,
    :userLabels {},
-   :labels {},
-   :description string,
-   :name string,
-   :displayName string,
-   :type string}
+   :enabled boolean}
   
   Creates a new notification channel, representing a single notification endpoint such as an email address, SMS number, or PagerDuty service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1080,72 +1014,6 @@
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}/notificationChannels"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationChannels-sendVerificationCode$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/sendVerificationCode
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Causes a verification code to be delivered to the channel. The code can then be supplied in VerifyNotificationChannel to verify the channel."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}:sendVerificationCode"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationChannels-getVerificationCode$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/getVerificationCode
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:expireTime string}
-  
-  Requests a verification code for an already verified channel that can then be used in a call to VerifyNotificationChannel() on a different channel with an equivalent identity in the same or in a different project. This makes it possible to copy a channel between projects without requiring manual reverification of the channel. If the channel is not in the verified state, this method will fail (in other words, this may only be used if the SendNotificationChannelVerificationCode and VerifyNotificationChannel paths have already been used to put the given channel into the verified state).There is no guarantee that the verification codes returned by this method will be of a similar structure or form as the ones that are delivered to the channel via SendNotificationChannelVerificationCode; while VerifyNotificationChannel() will recognize both the codes delivered via SendNotificationChannelVerificationCode() and returned from GetNotificationChannelVerificationCode(), it is typically the case that the verification codes delivered via SendNotificationChannelVerificationCode() will be shorter and also have a shorter expiration (e.g. codes such as \"G-123456\") whereas GetVerificationCode() will typically return a much longer, websafe base 64 encoded string that has a longer expiration time."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}:getVerificationCode"
      #{:name}
      parameters)
     (merge-with
@@ -1186,6 +1054,39 @@
       :as :json}
      auth))))
 
+(defn notificationChannels-sendVerificationCode$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/sendVerificationCode
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Causes a verification code to be delivered to the channel. The code can then be supplied in VerifyNotificationChannel to verify the channel."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}:sendVerificationCode"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn notificationChannels-verify$
   "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/verify
   
@@ -1207,6 +1108,109 @@
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}:verify"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationChannels-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, orderBy, filter
+  
+  Lists the notification channels that have been created for the project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}/notificationChannels"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationChannels-getVerificationCode$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/getVerificationCode
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:expireTime string}
+  
+  Requests a verification code for an already verified channel that can then be used in a call to VerifyNotificationChannel() on a different channel with an equivalent identity in the same or in a different project. This makes it possible to copy a channel between projects without requiring manual reverification of the channel. If the channel is not in the verified state, this method will fail (in other words, this may only be used if the SendNotificationChannelVerificationCode and VerifyNotificationChannel paths have already been used to put the given channel into the verified state).There is no guarantee that the verification codes returned by this method will be of a similar structure or form as the ones that are delivered to the channel via SendNotificationChannelVerificationCode; while VerifyNotificationChannel() will recognize both the codes delivered via SendNotificationChannelVerificationCode() and returned from GetNotificationChannelVerificationCode(), it is typically the case that the verification codes delivered via SendNotificationChannelVerificationCode() will be shorter and also have a shorter expiration (e.g. codes such as \"G-123456\") whereas GetVerificationCode() will typically return a much longer, websafe base 64 encoded string that has a longer expiration time."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}:getVerificationCode"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationChannels-patch$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/projects/notificationChannels/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :labels {},
+   :displayName string,
+   :name string,
+   :type string,
+   :mutationRecords [{:mutatedBy string, :mutateTime string}],
+   :creationRecord {:mutatedBy string, :mutateTime string},
+   :verificationStatus string,
+   :userLabels {},
+   :enabled boolean}
+  
+  Updates a notification channel. Fields not specified in the field mask remain unchanged."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+name}"
      #{:name}
      parameters)
     (merge-with

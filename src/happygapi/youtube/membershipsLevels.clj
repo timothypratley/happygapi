@@ -14,11 +14,7 @@
   Optional parameters: none
   
   Retrieves a list of all pricing levels offered by a creator to the fans."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
-            "https://www.googleapis.com/auth/youtubepartner"]}
+  {:scopes ["https://www.googleapis.com/auth/youtube.channel-memberships.creator"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response

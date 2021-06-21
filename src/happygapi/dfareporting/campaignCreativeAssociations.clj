@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.campaignCreativeAssociations
-  "DCM/DFA Reporting And Trafficking API: campaignCreativeAssociations.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/campaignCreativeAssociations"
+  "Campaign Manager 360 API: campaignCreativeAssociations.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaignCreativeAssociations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/campaignCreativeAssociations/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaignCreativeAssociations/insert
   
   Required parameters: campaignId, profileId
   
@@ -24,8 +24,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
      parameters)
     (merge-with
@@ -39,11 +39,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/campaignCreativeAssociations/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaignCreativeAssociations/list
   
   Required parameters: profileId, campaignId
   
-  Optional parameters: maxResults, sortOrder, pageToken
+  Optional parameters: pageToken, sortOrder, maxResults
   
   Retrieves the list of creative IDs associated with the specified campaign. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -52,8 +52,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/campaigns/{campaignId}/campaignCreativeAssociations"
      #{:campaignId :profileId}
      parameters)
     (merge-with

@@ -6,34 +6,35 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/custombatch
+(defn sale$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/sale
   
-  Required parameters: none
+  Required parameters: targetMerchantId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:inventory PosInventory,
-              :storeCode string,
-              :method string,
-              :merchantId string,
-              :store PosStore,
-              :sale PosSale,
-              :batchId integer,
-              :targetMerchantId string}]}
+  {:saleId string,
+   :contentLanguage string,
+   :storeCode string,
+   :gtin string,
+   :quantity string,
+   :targetCountry string,
+   :timestamp string,
+   :price {:value string, :currency string},
+   :itemId string}
   
-  Batches multiple POS-related calls in a single request."
+  Submit a sale event for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/pos/batch"
-     #{}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/sale"
+     #{:targetMerchantId :merchantId}
      parameters)
     (merge-with
      merge
@@ -59,8 +60,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/store"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/store"
      #{:targetMerchantId :merchantId}
      parameters)
     (merge-with
@@ -71,80 +72,29 @@
       :as :json}
      auth))))
 
-(defn inventory$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/inventory
+(defn get$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/get
   
-  Required parameters: merchantId, targetMerchantId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:contentLanguage string,
-   :price {:value string, :currency string},
-   :quantity string,
-   :timestamp string,
-   :gtin string,
-   :storeCode string,
-   :itemId string,
-   :targetCountry string}
-  
-  Submit inventory for the given merchant."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/inventory"
-     #{:targetMerchantId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sale$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/sale
-  
-  Required parameters: merchantId, targetMerchantId
+  Required parameters: targetMerchantId, merchantId, storeCode
   
   Optional parameters: none
   
-  Body: 
-  
-  {:saleId string,
-   :contentLanguage string,
-   :storeCode string,
-   :gtin string,
-   :quantity string,
-   :targetCountry string,
-   :timestamp string,
-   :price {:value string, :currency string},
-   :itemId string}
-  
-  Submit a sale event for the given merchant."
+  Retrieves information about the given store."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetMerchantId :storeCode :merchantId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/sale"
-     #{:targetMerchantId :merchantId}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
+     #{:targetMerchantId :storeCode :merchantId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -168,8 +118,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/store"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/store"
      #{:targetMerchantId :merchantId}
      parameters)
     (merge-with
@@ -182,29 +132,79 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/get
+(defn inventory$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/inventory
   
-  Required parameters: merchantId, targetMerchantId, storeCode
+  Required parameters: merchantId, targetMerchantId
   
   Optional parameters: none
   
-  Retrieves information about the given store."
+  Body: 
+  
+  {:timestamp string,
+   :targetCountry string,
+   :quantity string,
+   :gtin string,
+   :contentLanguage string,
+   :storeCode string,
+   :itemId string,
+   :price {:value string, :currency string}}
+  
+  Submit inventory for the given merchant."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetMerchantId :storeCode :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetMerchantId :merchantId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
-     #{:targetMerchantId :storeCode :merchantId}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/inventory"
+     #{:targetMerchantId :merchantId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/pos/custombatch
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entries [{:method string,
+              :targetMerchantId string,
+              :storeCode string,
+              :merchantId string,
+              :batchId integer,
+              :store PosStore,
+              :inventory PosInventory,
+              :sale PosSale}]}
+  
+  Batches multiple POS-related calls in a single request."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "pos/batch"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -226,8 +226,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/pos/{targetMerchantId}/store/{storeCode}"
      #{:targetMerchantId :storeCode :merchantId}
      parameters)
     (merge-with

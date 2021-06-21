@@ -9,9 +9,9 @@
 (defn get$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/get
   
-  Required parameters: summaryId, volumeId
+  Required parameters: volumeId, summaryId
   
-  Optional parameters: source, contentVersion
+  Optional parameters: contentVersion, source
   
   Gets the layer summary for a volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -37,7 +37,7 @@
   
   Required parameters: volumeId
   
-  Optional parameters: source, contentVersion, pageToken, maxResults
+  Optional parameters: contentVersion, pageToken, source, maxResults
   
   List the layer summaries for a volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -49,34 +49,6 @@
      "https://books.googleapis.com/"
      "books/v1/volumes/{volumeId}/layersummary"
      #{:volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn volumeAnnotations-list$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/volumeAnnotations/list
-  
-  Required parameters: volumeId, contentVersion, layerId
-  
-  Optional parameters: startOffset, endPosition, locale, endOffset, source, pageToken, startPosition, volumeAnnotationsVersion, updatedMax, showDeleted, updatedMin, maxResults
-  
-  Gets the volume annotations for a volume and layer."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:volumeId :contentVersion :layerId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/volumes/{volumeId}/layers/{layerId}"
-     #{:volumeId :contentVersion :layerId}
      parameters)
     (merge-with
      merge
@@ -114,14 +86,14 @@
       :as :json}
      auth))))
 
-(defn annotationData-list$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/annotationData/list
+(defn volumeAnnotations-list$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/volumeAnnotations/list
   
   Required parameters: volumeId, contentVersion, layerId
   
-  Optional parameters: scale, locale, w, source, pageToken, h, updatedMax, annotationDataId, updatedMin, maxResults
+  Optional parameters: startOffset, endPosition, locale, endOffset, source, pageToken, startPosition, volumeAnnotationsVersion, updatedMax, showDeleted, updatedMin, maxResults
   
-  Gets the annotation data for a volume and layer."
+  Gets the volume annotations for a volume and layer."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth parameters]
   {:pre [(util/has-keys?
@@ -131,7 +103,7 @@
    (http/get
     (util/get-url
      "https://books.googleapis.com/"
-     "books/v1/volumes/{volumeId}/layers/{layerId}/data"
+     "books/v1/volumes/{volumeId}/layers/{layerId}"
      #{:volumeId :contentVersion :layerId}
      parameters)
     (merge-with
@@ -161,6 +133,34 @@
      "https://books.googleapis.com/"
      "books/v1/volumes/{volumeId}/layers/{layerId}/data/{annotationDataId}"
      #{:volumeId :contentVersion :layerId :annotationDataId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn annotationData-list$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/annotationData/list
+  
+  Required parameters: volumeId, contentVersion, layerId
+  
+  Optional parameters: scale, locale, w, source, pageToken, h, updatedMax, annotationDataId, updatedMin, maxResults
+  
+  Gets the annotation data for a volume and layer."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:volumeId :contentVersion :layerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/volumes/{volumeId}/layers/{layerId}/data"
+     #{:volumeId :contentVersion :layerId}
      parameters)
     (merge-with
      merge

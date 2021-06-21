@@ -9,20 +9,20 @@
 (defn runpagespeed$
   "https://developers.google.com/speed/docs/insights/v5/aboutapi/reference/rest/v5/pagespeedapi/runpagespeed
   
-  Required parameters: none
+  Required parameters: url
   
-  Optional parameters: category, utm_source, url, locale, utm_campaign, captchaToken, strategy
+  Optional parameters: locale, utm_source, category, strategy, captchaToken, utm_campaign
   
   Runs PageSpeed analysis on the page at the specified URL, and returns PageSpeed scores, a list of suggestions to make that page faster, and other information."
   {:scopes ["openid"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:url})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://pagespeedonline.googleapis.com/"
      "pagespeedonline/v5/runPagespeed"
-     #{}
+     #{:url}
      parameters)
     (merge-with
      merge

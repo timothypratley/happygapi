@@ -7,32 +7,26 @@
             [happy.util :as util]))
 
 (defn $
-  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/reopenAttribution
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/getLinkStats
   
-  Required parameters: none
+  Required parameters: dynamicLink
   
-  Optional parameters: none
+  Optional parameters: durationDays, sdkVersion
   
-  Body: 
-  
-  {:sdkVersion string, :bundleId string, :requestedLink string}
-  
-  Get iOS reopen attribution for app universal link open deeplinking."
+  Fetches analytics stats of a short Dynamic Link for a given duration. Metrics include number of clicks, redirects, installs, app first opens, and app reopens."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:dynamicLink})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
-     "v1/reopenAttribution"
-     #{}
+     "v1/{dynamicLink}/linkStats"
+     #{:dynamicLink}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -47,18 +41,18 @@
   
   Body: 
   
-  {:appInstallationTime string,
-   :retrievalMethod string,
-   :device {:screenResolutionWidth string,
-            :languageCode string,
-            :deviceModelName string,
-            :languageCodeRaw string,
-            :screenResolutionHeight string,
-            :languageCodeFromWebview string,
-            :timezone string},
+  {:bundleId string,
    :sdkVersion string,
+   :appInstallationTime string,
+   :retrievalMethod string,
    :visualStyle string,
-   :bundleId string,
+   :device {:screenResolutionWidth string,
+            :deviceModelName string,
+            :screenResolutionHeight string,
+            :timezone string,
+            :languageCode string,
+            :languageCodeFromWebview string,
+            :languageCodeRaw string},
    :uniqueMatchLinkToCheck string,
    :iosVersion string}
   
@@ -84,26 +78,32 @@
      auth))))
 
 (defn $
-  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/getLinkStats
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/reopenAttribution
   
-  Required parameters: dynamicLink
+  Required parameters: none
   
-  Optional parameters: durationDays, sdkVersion
+  Optional parameters: none
   
-  Fetches analytics stats of a short Dynamic Link for a given duration. Metrics include number of clicks, redirects, installs, app first opens, and app reopens."
+  Body: 
+  
+  {:requestedLink string, :bundleId string, :sdkVersion string}
+  
+  Get iOS reopen attribution for app universal link open deeplinking."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:dynamicLink})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
-     "v1/{dynamicLink}/linkStats"
-     #{:dynamicLink}
+     "v1/reopenAttribution"
+     #{}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

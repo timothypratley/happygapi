@@ -6,40 +6,27 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn roles-create$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/create
+(defn roles-delete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: etag
   
-  Body: 
-  
-  {:roleId string,
-   :role {:deleted boolean,
-          :etag string,
-          :name string,
-          :title string,
-          :includedPermissions [string],
-          :stage string,
-          :description string}}
-  
-  Creates a new custom Role."
+  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://iam.googleapis.com/"
-     "v1/{+parent}/roles"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -50,7 +37,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, showDeleted, pageSize, view
+  Optional parameters: showDeleted, pageSize, view, pageToken
   
   Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -62,70 +49,6 @@
      "https://iam.googleapis.com/"
      "v1/{+parent}/roles"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-patch$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:deleted boolean,
-   :etag string,
-   :name string,
-   :title string,
-   :includedPermissions [string],
-   :stage string,
-   :description string}
-  
-  Updates the definition of a custom Role."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn roles-get$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the definition of a Role."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -167,19 +90,19 @@
       :as :json}
      auth))))
 
-(defn roles-delete$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/delete
+(defn roles-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/get
   
   Required parameters: name
   
-  Optional parameters: etag
+  Optional parameters: none
   
-  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
+  Gets the definition of a Role."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
@@ -188,6 +111,83 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-create$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:role {:name string,
+          :includedPermissions [string],
+          :description string,
+          :etag string,
+          :deleted boolean,
+          :title string,
+          :stage string},
+   :roleId string}
+  
+  Creates a new custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/roles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :includedPermissions [string],
+   :description string,
+   :etag string,
+   :deleted boolean,
+   :title string,
+   :stage string}
+  
+  Updates the definition of a custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

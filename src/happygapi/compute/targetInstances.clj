@@ -1,30 +1,30 @@
 (ns happygapi.compute.targetInstances
   "Compute Engine API: targetInstances.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/targetInstances"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances/aggregatedList
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetInstances/list
   
-  Required parameters: project
+  Required parameters: zone, project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, maxResults, filter, orderBy, pageToken
   
-  Retrieves an aggregated list of target instances."
+  Retrieves a list of TargetInstance resources available to the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/targetInstances"
-     #{:project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/targetInstances"
+     #{:zone :project}
      parameters)
     (merge-with
      merge
@@ -35,9 +35,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetInstances/delete
   
-  Required parameters: project, targetInstance, zone
+  Required parameters: zone, project, targetInstance
   
   Optional parameters: requestId
   
@@ -49,8 +49,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/targetInstances/{targetInstance}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/targetInstances/{targetInstance}"
      #{:zone :targetInstance :project}
      parameters)
     (merge-with
@@ -61,25 +61,25 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances/get
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetInstances/aggregatedList
   
-  Required parameters: project, targetInstance, zone
+  Required parameters: project
   
-  Optional parameters: none
+  Optional parameters: orderBy, includeAllScopes, filter, returnPartialSuccess, pageToken, maxResults
   
-  Returns the specified TargetInstance resource. Gets a list of available target instances by making a list() request."
+  Retrieves an aggregated list of target instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :targetInstance :project})]}
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/targetInstances/{targetInstance}"
-     #{:zone :targetInstance :project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/targetInstances"
+     #{:project}
      parameters)
     (merge-with
      merge
@@ -90,9 +90,9 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetInstances/insert
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
   Optional parameters: requestId
   
@@ -116,8 +116,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/targetInstances"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/targetInstances"
      #{:zone :project}
      parameters)
     (merge-with
@@ -130,25 +130,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetInstances/list
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetInstances/get
   
-  Required parameters: project, zone
+  Required parameters: targetInstance, project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: none
   
-  Retrieves a list of TargetInstance resources available to the specified project and zone."
+  Returns the specified TargetInstance resource. Gets a list of available target instances by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :project})]}
+  {:pre [(util/has-keys? parameters #{:zone :targetInstance :project})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/targetInstances"
-     #{:zone :project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/targetInstances/{targetInstance}"
+     #{:zone :targetInstance :project}
      parameters)
     (merge-with
      merge

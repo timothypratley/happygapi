@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-get$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-list$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/list
   
@@ -32,27 +58,33 @@
       :as :json}
      auth))))
 
-(defn locations-get$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/get
+(defn locations-global-operations-cancel$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/cancel
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets information about a location."
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -89,7 +121,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: pageToken, filter, pageSize
   
   Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -136,38 +168,6 @@
       :as :json}
      auth))))
 
-(defn locations-global-operations-cancel$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-global-domains-get$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/get
   
@@ -203,7 +203,7 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:bindings [Binding], :version integer, :etag string}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -311,6 +311,47 @@
       :as :json}
      auth))))
 
+(defn locations-global-domains-updateLdapssettings$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/updateLdapssettings
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:certificatePassword string,
+   :name string,
+   :updateTime string,
+   :state string,
+   :certificatePfx string,
+   :certificate {:thumbprint string,
+                 :subjectAlternativeName [string],
+                 :expireTime string,
+                 :issuingCertificate Certificate,
+                 :subject string}}
+  
+  Patches a single ldaps settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}/ldapssettings"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-domains-create$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/create
   
@@ -401,6 +442,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-getLdapssettings$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/getLdapssettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the domain ldaps settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}/ldapssettings"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -505,7 +572,7 @@
   
   Required parameters: parent
   
-  Optional parameters: orderBy, pageToken, pageSize, filter
+  Optional parameters: orderBy, pageSize, filter, pageToken
   
   Lists domains in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -609,7 +676,7 @@
   
   Body: 
   
-  {:targetDnsIpAddresses [string], :targetDomainName string}
+  {:targetDomainName string, :targetDnsIpAddresses [string]}
   
   Updates the DNS conditional forwarder."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -627,6 +694,58 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-sqlIntegrations-list$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/sqlIntegrations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, orderBy, filter
+  
+  Lists SqlIntegrations in a given domain."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+parent}/sqlIntegrations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-sqlIntegrations-get$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/sqlIntegrations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets details of a single sqlIntegration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

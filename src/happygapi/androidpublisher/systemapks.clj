@@ -6,36 +6,29 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn variants-create$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/create
+(defn variants-get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/get
   
-  Required parameters: versionCode, packageName
+  Required parameters: versionCode, packageName, variantId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:deviceSpec {:supportedLocales [string],
-                :supportedAbis [string],
-                :screenDensity integer},
-   :variantId integer}
-  
-  Creates an APK which is suitable for inclusion in a system image from an already uploaded Android App Bundle."
+  Returns a previously created system APK variant."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:variantId :packageName :versionCode})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants"
-     #{:packageName :versionCode}
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants/{variantId}"
+     #{:variantId :packageName :versionCode}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -67,38 +60,10 @@
       :as :json}
      auth))))
 
-(defn variants-get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/get
-  
-  Required parameters: versionCode, packageName, variantId
-  
-  Optional parameters: none
-  
-  Returns a previously created system APK variant."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:variantId :packageName :versionCode})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants/{variantId}"
-     #{:variantId :packageName :versionCode}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn variants-download$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/download
   
-  Required parameters: variantId, versionCode, packageName
+  Required parameters: packageName, versionCode, variantId
   
   Optional parameters: none
   
@@ -118,6 +83,41 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn variants-create$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/systemapks/variants/create
+  
+  Required parameters: versionCode, packageName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:variantId integer,
+   :deviceSpec {:screenDensity integer,
+                :supportedAbis [string],
+                :supportedLocales [string]}}
+  
+  Creates an APK which is suitable for inclusion in a system image from an already uploaded Android App Bundle."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :versionCode})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/systemApks/{versionCode}/variants"
+     #{:packageName :versionCode}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

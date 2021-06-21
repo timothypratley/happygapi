@@ -1,17 +1,17 @@
 (ns happygapi.compute.targetVpnGateways
   "Compute Engine API: targetVpnGateways.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: filter, pageToken, includeAllScopes, returnPartialSuccess, maxResults, orderBy
   
   Retrieves an aggregated list of target VPN gateways."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/targetVpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/targetVpnGateways"
      #{:project}
      parameters)
     (merge-with
@@ -34,39 +34,10 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways/delete
-  
-  Required parameters: project, region, targetVpnGateway
-  
-  Optional parameters: requestId
-  
-  Deletes the specified target VPN gateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetVpnGateway :region :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
-     #{:targetVpnGateway :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/get
   
-  Required parameters: project, region, targetVpnGateway
+  Required parameters: project, targetVpnGateway, region
   
   Optional parameters: none
   
@@ -81,8 +52,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
      #{:targetVpnGateway :region :project}
      parameters)
     (merge-with
@@ -94,7 +65,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/insert
   
   Required parameters: project, region
   
@@ -122,8 +93,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetVpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways"
      #{:region :project}
      parameters)
     (merge-with
@@ -136,12 +107,41 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/delete
+  
+  Required parameters: region, project, targetVpnGateway
+  
+  Optional parameters: requestId
+  
+  Deletes the specified target VPN gateway."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetVpnGateway :region :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
+     #{:targetVpnGateway :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetVpnGateways/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/list
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, maxResults, returnPartialSuccess, orderBy, filter
   
   Retrieves a list of target VPN gateways available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -152,8 +152,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetVpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways"
      #{:region :project}
      parameters)
     (merge-with

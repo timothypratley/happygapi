@@ -6,36 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "api/reference/rest/v1/tasks/delete
-  
-  Required parameters: tasklist, task
-  
-  Optional parameters: none
-  
-  Deletes the specified task from the task list."
-  {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://tasks.googleapis.com/"
-     "tasks/v1/lists/{tasklist}/tasks/{task}"
-     #{:task :tasklist}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "api/reference/rest/v1/tasks/patch
   
-  Required parameters: task, tasklist
+  Required parameters: tasklist, task
   
   Optional parameters: none
   
@@ -78,96 +52,23 @@
       :as :json}
      auth))))
 
-(defn update$
-  "api/reference/rest/v1/tasks/update
+(defn delete$
+  "api/reference/rest/v1/tasks/delete
   
-  Required parameters: task, tasklist
+  Required parameters: tasklist, task
   
   Optional parameters: none
   
-  Body: 
-  
-  {:deleted boolean,
-   :parent string,
-   :updated string,
-   :completed string,
-   :selfLink string,
-   :etag string,
-   :due string,
-   :title string,
-   :status string,
-   :hidden boolean,
-   :id string,
-   :kind string,
-   :notes string,
-   :position string,
-   :links [{:description string, :link string, :type string}]}
-  
-  Updates the specified task."
+  Deletes the specified task from the task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:task :tasklist})]}
   (util/get-response
-   (http/put
+   (http/delete
     (util/get-url
      "https://tasks.googleapis.com/"
      "tasks/v1/lists/{tasklist}/tasks/{task}"
      #{:task :tasklist}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clear$
-  "api/reference/rest/v1/tasks/clear
-  
-  Required parameters: tasklist
-  
-  Optional parameters: none
-  
-  Clears all completed tasks from the specified task list. The affected tasks will be marked as 'hidden' and no longer be returned by default when retrieving all tasks for a task list."
-  {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:tasklist})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://tasks.googleapis.com/"
-     "tasks/v1/lists/{tasklist}/clear"
-     #{:tasklist}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "api/reference/rest/v1/tasks/list
-  
-  Required parameters: tasklist
-  
-  Optional parameters: completedMin, showCompleted, completedMax, pageToken, showHidden, dueMin, showDeleted, updatedMin, dueMax, maxResults
-  
-  Returns all tasks in the specified task list."
-  {:scopes ["https://www.googleapis.com/auth/tasks"
-            "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:tasklist})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://tasks.googleapis.com/"
-     "tasks/v1/lists/{tasklist}/tasks"
-     #{:tasklist}
      parameters)
     (merge-with
      merge
@@ -182,7 +83,7 @@
   
   Required parameters: tasklist
   
-  Optional parameters: parent, previous
+  Optional parameters: previous, parent
   
   Body: 
   
@@ -223,10 +124,36 @@
       :as :json}
      auth))))
 
+(defn clear$
+  "api/reference/rest/v1/tasks/clear
+  
+  Required parameters: tasklist
+  
+  Optional parameters: none
+  
+  Clears all completed tasks from the specified task list. The affected tasks will be marked as 'hidden' and no longer be returned by default when retrieving all tasks for a task list."
+  {:scopes ["https://www.googleapis.com/auth/tasks"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://tasks.googleapis.com/"
+     "tasks/v1/lists/{tasklist}/clear"
+     #{:tasklist}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn move$
   "api/reference/rest/v1/tasks/move
   
-  Required parameters: task, tasklist
+  Required parameters: tasklist, task
   
   Optional parameters: parent, previous
   
@@ -244,6 +171,79 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "api/reference/rest/v1/tasks/list
+  
+  Required parameters: tasklist
+  
+  Optional parameters: completedMin, showCompleted, completedMax, pageToken, showHidden, dueMin, showDeleted, updatedMin, dueMax, maxResults
+  
+  Returns all tasks in the specified task list."
+  {:scopes ["https://www.googleapis.com/auth/tasks"
+            "https://www.googleapis.com/auth/tasks.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tasks.googleapis.com/"
+     "tasks/v1/lists/{tasklist}/tasks"
+     #{:tasklist}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "api/reference/rest/v1/tasks/update
+  
+  Required parameters: tasklist, task
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:deleted boolean,
+   :parent string,
+   :updated string,
+   :completed string,
+   :selfLink string,
+   :etag string,
+   :due string,
+   :title string,
+   :status string,
+   :hidden boolean,
+   :id string,
+   :kind string,
+   :notes string,
+   :position string,
+   :links [{:description string, :link string, :type string}]}
+  
+  Updates the specified task."
+  {:scopes ["https://www.googleapis.com/auth/tasks"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:task :tasklist})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tasks.googleapis.com/"
+     "tasks/v1/lists/{tasklist}/tasks/{task}"
+     #{:task :tasklist}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

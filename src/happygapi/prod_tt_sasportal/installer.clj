@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:encodedSecret string, :secret string, :installerId string}
+  {:secret string, :installerId string, :encodedSecret string}
   
   Validates the identity of a Certified Professional Installer (CPI)."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -49,7 +49,7 @@
   
   {}
   
-  Generates a secret to be used with the ValidateInstaller method"
+  Generates a secret to be used with the ValidateInstaller."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

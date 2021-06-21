@@ -6,34 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/delete
-  
-  Required parameters: id
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Deletes a resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/playlists"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/playlists/list
   
@@ -63,16 +35,48 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/update
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/delete
   
-  Required parameters: part
+  Required parameters: id
   
   Optional parameters: onBehalfOfContentOwner
   
+  Deletes a resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/insert
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  
   Body: 
   
-  {:etag string,
+  {:kind string,
+   :localizations {},
+   :player {:embedHtml string},
+   :id string,
+   :etag string,
    :snippet {:description string,
              :tags [string],
              :publishedAt string,
@@ -81,22 +85,19 @@
              :title string,
              :localized PlaylistLocalization,
              :channelTitle string,
+             :thumbnailVideoId string,
              :defaultLanguage string},
-   :kind string,
    :status {:privacyStatus string},
-   :contentDetails {:itemCount integer},
-   :id string,
-   :player {:embedHtml string},
-   :localizations {}}
+   :contentDetails {:itemCount integer}}
   
-  Updates an existing resource."
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/playlists"
@@ -112,16 +113,20 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/insert
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/update
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwner
   
   Body: 
   
-  {:etag string,
+  {:kind string,
+   :localizations {},
+   :player {:embedHtml string},
+   :id string,
+   :etag string,
    :snippet {:description string,
              :tags [string],
              :publishedAt string,
@@ -130,22 +135,19 @@
              :title string,
              :localized PlaylistLocalization,
              :channelTitle string,
+             :thumbnailVideoId string,
              :defaultLanguage string},
-   :kind string,
    :status {:privacyStatus string},
-   :contentDetails {:itemCount integer},
-   :id string,
-   :player {:embedHtml string},
-   :localizations {}}
+   :contentDetails {:itemCount integer}}
   
-  Inserts a new resource into this collection."
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/playlists"

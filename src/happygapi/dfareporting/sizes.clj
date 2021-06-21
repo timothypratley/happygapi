@@ -1,17 +1,17 @@
 (ns happygapi.dfareporting.sizes
-  "DCM/DFA Reporting And Trafficking API: sizes.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes"
+  "Campaign Manager 360 API: sizes.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/list
   
   Required parameters: profileId
   
-  Optional parameters: ids, width, height, iabStandard
+  Optional parameters: height, width, ids, iabStandard
   
   Retrieves a list of sizes, possibly filtered. Retrieved sizes are globally unique and may include values not currently in use by your account. Due to this, the list of sizes returned by this method may differ from the list seen in the Trafficking UI."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/sizes"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/sizes"
      #{:profileId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/insert
   
   Required parameters: profileId
   
@@ -41,11 +41,11 @@
   
   Body: 
   
-  {:width integer,
-   :kind string,
+  {:kind string,
+   :iab boolean,
    :height integer,
-   :id string,
-   :iab boolean}
+   :width integer,
+   :id string}
   
   Inserts a new size."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -54,8 +54,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/sizes"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/sizes"
      #{:profileId}
      parameters)
     (merge-with
@@ -69,7 +69,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/sizes/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/get
   
   Required parameters: id, profileId
   
@@ -82,8 +82,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/sizes/{id}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/sizes/{id}"
      #{:id :profileId}
      parameters)
     (merge-with

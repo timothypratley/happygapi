@@ -1,17 +1,17 @@
 (ns happygapi.domains.projects
   "Cloud Domains API: projects.
   Enables management and configuration of domain names.
-  See: https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects"
+  See: https://cloud.google.com/domains/api/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn locations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/list
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageSize, filter, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -21,7 +21,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}/locations"
+     "v1beta1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn locations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/get
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/get
   
   Required parameters: name
   
@@ -47,59 +47,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://domains.googleapis.com/"
-     "v1alpha2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://domains.googleapis.com/"
-     "v1alpha2/{+name}/operations"
+     "v1beta1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -111,7 +59,7 @@
      auth))))
 
 (defn locations-registrations-retrieveRegisterParameters$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/retrieveRegisterParameters
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/retrieveRegisterParameters
   
   Required parameters: location
   
@@ -125,7 +73,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+location}/registrations:retrieveRegisterParameters"
+     "v1beta1/{+location}/registrations:retrieveRegisterParameters"
      #{:location}
      parameters)
     (merge-with
@@ -137,7 +85,7 @@
      auth))))
 
 (defn locations-registrations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/get
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/get
   
   Required parameters: name
   
@@ -151,7 +99,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}"
+     "v1beta1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -163,7 +111,7 @@
      auth))))
 
 (defn locations-registrations-setIamPolicy$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/setIamPolicy
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/setIamPolicy
   
   Required parameters: resource
   
@@ -171,11 +119,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:version integer,
-            :auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
             :etag string,
-            :bindings [Binding]}}
+            :version integer},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -185,7 +133,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+resource}:setIamPolicy"
+     "v1beta1/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -199,7 +147,7 @@
      auth))))
 
 (defn locations-registrations-configureManagementSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/configureManagementSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureManagementSettings
   
   Required parameters: registration
   
@@ -207,9 +155,9 @@
   
   Body: 
   
-  {:updateMask string,
-   :managementSettings {:transferLockState string,
-                        :renewalMethod string}}
+  {:managementSettings {:renewalMethod string,
+                        :transferLockState string},
+   :updateMask string}
   
   Updates a `Registration`'s management settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -219,7 +167,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+registration}:configureManagementSettings"
+     "v1beta1/{+registration}:configureManagementSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -233,7 +181,7 @@
      auth))))
 
 (defn locations-registrations-patch$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/patch
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/patch
   
   Required parameters: name
   
@@ -244,23 +192,23 @@
   {:labels {},
    :supportedPrivacy [string],
    :dnsSettings {:googleDomainsDns GoogleDomainsDns,
-                 :customDns CustomDns,
-                 :glueRecords [GlueRecord]},
+                 :glueRecords [GlueRecord],
+                 :customDns CustomDns},
    :issues [string],
    :name string,
    :createTime string,
-   :managementSettings {:transferLockState string,
-                        :renewalMethod string},
-   :contactSettings {:technicalContact Contact,
-                     :adminContact Contact,
+   :managementSettings {:renewalMethod string,
+                        :transferLockState string},
+   :contactSettings {:adminContact Contact,
                      :privacy string,
+                     :technicalContact Contact,
                      :registrantContact Contact},
    :state string,
    :domainName string,
    :expireTime string,
-   :pendingContactSettings {:technicalContact Contact,
-                            :adminContact Contact,
+   :pendingContactSettings {:adminContact Contact,
                             :privacy string,
+                            :technicalContact Contact,
                             :registrantContact Contact}}
   
   Updates select fields of a `Registration` resource, notably `labels`. To update other fields, use the appropriate custom update method: * To update management settings, see `ConfigureManagementSettings` * To update DNS configuration, see `ConfigureDnsSettings` * To update contact information, see `ConfigureContactSettings`"
@@ -271,7 +219,7 @@
    (http/patch
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}"
+     "v1beta1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -285,7 +233,7 @@
      auth))))
 
 (defn locations-registrations-testIamPermissions$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/testIamPermissions
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/testIamPermissions
   
   Required parameters: resource
   
@@ -303,7 +251,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+resource}:testIamPermissions"
+     "v1beta1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -317,7 +265,7 @@
      auth))))
 
 (defn locations-registrations-resetAuthorizationCode$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/resetAuthorizationCode
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/resetAuthorizationCode
   
   Required parameters: registration
   
@@ -335,7 +283,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+registration}:resetAuthorizationCode"
+     "v1beta1/{+registration}:resetAuthorizationCode"
      #{:registration}
      parameters)
     (merge-with
@@ -349,7 +297,7 @@
      auth))))
 
 (defn locations-registrations-configureContactSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/configureContactSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureContactSettings
   
   Required parameters: registration
   
@@ -357,13 +305,13 @@
   
   Body: 
   
-  {:contactSettings {:technicalContact Contact,
-                     :adminContact Contact,
+  {:updateMask string,
+   :contactSettings {:adminContact Contact,
                      :privacy string,
+                     :technicalContact Contact,
                      :registrantContact Contact},
-   :updateMask string,
-   :validateOnly boolean,
-   :contactNotices [string]}
+   :contactNotices [string],
+   :validateOnly boolean}
   
   Updates a `Registration`'s contact settings. Some changes require confirmation by the domain's registrant contact ."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -373,7 +321,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+registration}:configureContactSettings"
+     "v1beta1/{+registration}:configureContactSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -387,7 +335,7 @@
      auth))))
 
 (defn locations-registrations-configureDnsSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/configureDnsSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureDnsSettings
   
   Required parameters: registration
   
@@ -395,10 +343,10 @@
   
   Body: 
   
-  {:validateOnly boolean,
-   :dnsSettings {:googleDomainsDns GoogleDomainsDns,
-                 :customDns CustomDns,
-                 :glueRecords [GlueRecord]},
+  {:dnsSettings {:googleDomainsDns GoogleDomainsDns,
+                 :glueRecords [GlueRecord],
+                 :customDns CustomDns},
+   :validateOnly boolean,
    :updateMask string}
   
   Updates a `Registration`'s DNS settings."
@@ -409,7 +357,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+registration}:configureDnsSettings"
+     "v1beta1/{+registration}:configureDnsSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -423,7 +371,7 @@
      auth))))
 
 (defn locations-registrations-delete$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/delete
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/delete
   
   Required parameters: name
   
@@ -437,7 +385,7 @@
    (http/delete
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}"
+     "v1beta1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -449,7 +397,7 @@
      auth))))
 
 (defn locations-registrations-export$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/export
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/export
   
   Required parameters: name
   
@@ -467,7 +415,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+name}:export"
+     "v1beta1/{+name}:export"
      #{:name}
      parameters)
     (merge-with
@@ -481,7 +429,7 @@
      auth))))
 
 (defn locations-registrations-getIamPolicy$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/getIamPolicy
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/getIamPolicy
   
   Required parameters: resource
   
@@ -495,7 +443,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+resource}:getIamPolicy"
+     "v1beta1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -507,11 +455,11 @@
      auth))))
 
 (defn locations-registrations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/list
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists the `Registration` resources in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -521,7 +469,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+parent}/registrations"
+     "v1beta1/{+parent}/registrations"
      #{:parent}
      parameters)
     (merge-with
@@ -533,7 +481,7 @@
      auth))))
 
 (defn locations-registrations-register$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/register
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/register
   
   Required parameters: parent
   
@@ -541,8 +489,8 @@
   
   Body: 
   
-  {:validateOnly boolean,
-   :domainNotices [string],
+  {:yearlyPrice {:currencyCode string, :nanos integer, :units string},
+   :validateOnly boolean,
    :registration {:labels {},
                   :supportedPrivacy [string],
                   :dnsSettings DnsSettings,
@@ -556,7 +504,7 @@
                   :expireTime string,
                   :pendingContactSettings ContactSettings},
    :contactNotices [string],
-   :yearlyPrice {:currencyCode string, :nanos integer, :units string}}
+   :domainNotices [string]}
   
   Registers a new domain name and creates a corresponding `Registration` resource. Call `RetrieveRegisterParameters` first to check availability of the domain name and determine parameters like price that are needed to build a call to this method. A successful call creates a `Registration` resource in state `REGISTRATION_PENDING`, which resolves to `ACTIVE` within 1-2 minutes, indicating that the domain was successfully registered. If the resource ends up in state `REGISTRATION_FAILED`, it indicates that the domain was not registered successfully, and you can safely delete the resource and retry registration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -566,7 +514,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+parent}/registrations:register"
+     "v1beta1/{+parent}/registrations:register"
      #{:parent}
      parameters)
     (merge-with
@@ -580,7 +528,7 @@
      auth))))
 
 (defn locations-registrations-retrieveAuthorizationCode$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/retrieveAuthorizationCode
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/retrieveAuthorizationCode
   
   Required parameters: registration
   
@@ -594,7 +542,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+registration}:retrieveAuthorizationCode"
+     "v1beta1/{+registration}:retrieveAuthorizationCode"
      #{:registration}
      parameters)
     (merge-with
@@ -606,7 +554,7 @@
      auth))))
 
 (defn locations-registrations-searchDomains$
-  "https://cloud.google.com/domains/api/reference/rest/v1alpha2/projects/locations/registrations/searchDomains
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/searchDomains
   
   Required parameters: location
   
@@ -620,8 +568,60 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1alpha2/{+location}/registrations:searchDomains"
+     "v1beta1/{+location}/registrations:searchDomains"
      #{:location}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1beta1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

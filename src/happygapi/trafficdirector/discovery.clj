@@ -1,13 +1,13 @@
 (ns happygapi.trafficdirector.discovery
   "Traffic Director API: discovery.
   
-  See: https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/v2_overview#management-serverapi/reference/rest/v2/discovery"
+  See: https://cloud.google.com/traffic-directorapi/reference/rest/v2/discovery"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn client_status$
-  "https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/v2_overview#management-serverapi/reference/rest/v2/discovery/client_status
+  "https://cloud.google.com/traffic-directorapi/reference/rest/v2/discovery/client_status
   
   Required parameters: none
   
@@ -15,8 +15,8 @@
   
   Body: 
   
-  {:nodeMatchers [{:nodeMetadatas [StructMatcher],
-                   :nodeId StringMatcher}]}
+  {:nodeMatchers [{:nodeId StringMatcher,
+                   :nodeMetadatas [StructMatcher]}]}
   
   "
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

@@ -11,11 +11,11 @@
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwnerChannel, channelId, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner, channelId
   
   Body: 
   
-  {:url string, :etag string, :kind string}
+  {:etag string, :url string, :kind string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"

@@ -6,76 +6,49 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/insert
+(defn delete$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/delete
   
-  Required parameters: merchantId
+  Required parameters: datafeedId, merchantId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:format {:columnDelimiter string,
-            :quotingMode string,
-            :fileEncoding string},
-   :name string,
-   :fileName string,
-   :fetchSchedule {:timeZone string,
-                   :paused boolean,
-                   :hour integer,
-                   :minuteOfHour integer,
-                   :password string,
-                   :username string,
-                   :dayOfMonth integer,
-                   :weekday string,
-                   :fetchUrl string},
-   :targets [{:excludedDestinations [string],
-              :language string,
-              :includedDestinations [string],
-              :country string}],
-   :id string,
-   :attributeLanguage string,
-   :kind string,
-   :contentType string}
-  
-  Registers a datafeed configuration with your Merchant Center account."
+  Deletes a datafeed configuration from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds"
-     #{:merchantId}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds/{datafeedId}"
+     #{:datafeedId :merchantId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/list
+(defn fetchnow$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/fetchnow
   
-  Required parameters: merchantId
+  Required parameters: merchantId, datafeedId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: none
   
-  Lists the configurations for datafeeds in your Merchant Center account."
+  Invokes a fetch for the datafeed in your Merchant Center account. If you need to call this method more than once per day, we recommend you use the Products service to update your product data."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds"
-     #{:merchantId}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds/{datafeedId}/fetchNow"
+     #{:datafeedId :merchantId}
      parameters)
     (merge-with
      merge
@@ -88,7 +61,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/get
   
-  Required parameters: datafeedId, merchantId
+  Required parameters: merchantId, datafeedId
   
   Optional parameters: none
   
@@ -99,8 +72,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds/{datafeedId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds/{datafeedId}"
      #{:datafeedId :merchantId}
      parameters)
     (merge-with
@@ -111,57 +84,48 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/delete
+(defn insert$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/insert
   
-  Required parameters: merchantId, datafeedId
-  
-  Optional parameters: none
-  
-  Deletes a datafeed configuration from your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds/{datafeedId}"
-     #{:datafeedId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/custombatch
-  
-  Required parameters: none
+  Required parameters: merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:method string,
-              :merchantId string,
-              :batchId integer,
-              :datafeedId string,
-              :datafeed Datafeed}]}
+  {:format {:columnDelimiter string,
+            :fileEncoding string,
+            :quotingMode string},
+   :name string,
+   :fileName string,
+   :fetchSchedule {:timeZone string,
+                   :paused boolean,
+                   :hour integer,
+                   :minuteOfHour integer,
+                   :password string,
+                   :username string,
+                   :dayOfMonth integer,
+                   :weekday string,
+                   :fetchUrl string},
+   :targets [{:excludedDestinations [string],
+              :includedDestinations [string],
+              :country string,
+              :language string}],
+   :id string,
+   :attributeLanguage string,
+   :kind string,
+   :contentType string}
   
-  Deletes, fetches, gets, inserts and updates multiple datafeeds in a single request."
+  Registers a datafeed configuration with your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/datafeeds/batch"
-     #{}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds"
+     #{:merchantId}
      parameters)
     (merge-with
      merge
@@ -183,8 +147,8 @@
   Body: 
   
   {:format {:columnDelimiter string,
-            :quotingMode string,
-            :fileEncoding string},
+            :fileEncoding string,
+            :quotingMode string},
    :name string,
    :fileName string,
    :fetchSchedule {:timeZone string,
@@ -197,9 +161,9 @@
                    :weekday string,
                    :fetchUrl string},
    :targets [{:excludedDestinations [string],
-              :language string,
               :includedDestinations [string],
-              :country string}],
+              :country string,
+              :language string}],
    :id string,
    :attributeLanguage string,
    :kind string,
@@ -212,8 +176,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds/{datafeedId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds/{datafeedId}"
      #{:datafeedId :merchantId}
      parameters)
     (merge-with
@@ -226,23 +190,59 @@
       :as :json}
      auth))))
 
-(defn fetchnow$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/fetchnow
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/custombatch
   
-  Required parameters: merchantId, datafeedId
+  Required parameters: none
   
   Optional parameters: none
   
-  Invokes a fetch for the datafeed in your Merchant Center account."
+  Body: 
+  
+  {:entries [{:datafeedId string,
+              :method string,
+              :batchId integer,
+              :datafeed Datafeed,
+              :merchantId string}]}
+  
+  Deletes, fetches, gets, inserts and updates multiple datafeeds in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:datafeedId :merchantId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeeds/{datafeedId}/fetchNow"
-     #{:datafeedId :merchantId}
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "datafeeds/batch"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeeds/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: pageToken, maxResults
+  
+  Lists the configurations for datafeeds in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeeds"
+     #{:merchantId}
      parameters)
     (merge-with
      merge

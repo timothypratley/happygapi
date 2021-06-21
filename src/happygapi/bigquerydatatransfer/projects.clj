@@ -1,13 +1,103 @@
 (ns happygapi.bigquerydatatransfer.projects
   "BigQuery Data Transfer API: projects.
   Schedule queries or transfer external data from SaaS applications to Google BigQuery on a regular basis.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn dataSources-get$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/dataSources/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves a supported data source and returns its settings, which can be used for UI rendering."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn dataSources-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/dataSources/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists supported data sources and returns their settings, which can be used for UI rendering."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}/dataSources"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn dataSources-checkValidCreds$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/dataSources/checkValidCreds
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Returns true if valid credentials exist for the given data source and requesting user. Some data sources doesn't support service account, so we need to talk to them on behalf of the end user. This API just checks whether we have OAuth token for the particular user, which is a pre-requisite before user can create a transfer config."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}:checkValidCreds"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/get
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/get
   
   Required parameters: name
   
@@ -15,7 +105,6 @@
   
   Gets information about a location."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -36,15 +125,14 @@
      auth))))
 
 (defn locations-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/list
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -64,12 +152,162 @@
       :as :json}
      auth))))
 
-(defn locations-transferConfigs-patch$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/patch
+(defn locations-dataSources-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/dataSources/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists supported data sources and returns their settings, which can be used for UI rendering."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}/dataSources"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-dataSources-checkValidCreds$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/dataSources/checkValidCreds
   
   Required parameters: name
   
-  Optional parameters: versionInfo, updateMask, authorizationCode, serviceAccountName
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Returns true if valid credentials exist for the given data source and requesting user. Some data sources doesn't support service account, so we need to talk to them on behalf of the end user. This API just checks whether we have OAuth token for the particular user, which is a pre-requisite before user can create a transfer config."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}:checkValidCreds"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-dataSources-get$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/dataSources/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves a supported data source and returns its settings, which can be used for UI rendering."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-transferConfigs-scheduleRuns$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/scheduleRuns
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:endTime string, :startTime string}
+  
+  Creates transfer runs for a time range [start_time, end_time]. For each date - or whatever granularity the data source supports - in the range, one transfer run is created. Note that runs are created per UTC time in the time range. DEPRECATED: use StartManualTransferRuns instead."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}:scheduleRuns"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-transferConfigs-delete$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a data transfer configuration, including any associated transfer runs and logs."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-transferConfigs-patch$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/patch
+  
+  Required parameters: name
+  
+  Optional parameters: authorizationCode, serviceAccountName, versionInfo, updateMask
   
   Body: 
   
@@ -83,9 +321,9 @@
    :params {},
    :emailPreferences {:enableFailureEmail boolean},
    :state string,
-   :scheduleOptions {:disableAutoScheduling boolean,
-                     :startTime string,
-                     :endTime string},
+   :scheduleOptions {:startTime string,
+                     :endTime string,
+                     :disableAutoScheduling boolean},
    :updateTime string,
    :dataRefreshWindowDays integer,
    :dataSourceId string,
@@ -113,41 +351,36 @@
       :as :json}
      auth))))
 
-(defn locations-transferConfigs-scheduleRuns$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/scheduleRuns
+(defn locations-transferConfigs-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: dataSourceIds, pageToken, pageSize
   
-  Body: 
-  
-  {:startTime string, :endTime string}
-  
-  Creates transfer runs for a time range [start_time, end_time]. For each date - or whatever granularity the data source supports - in the range, one transfer run is created. Note that runs are created per UTC time in the time range. DEPRECATED: use StartManualTransferRuns instead."
+  Returns information about all data transfers in the project."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}:scheduleRuns"
+     "v1/{+parent}/transferConfigs"
      #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
 (defn locations-transferConfigs-startManualRuns$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/startManualRuns
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/startManualRuns
   
   Required parameters: parent
   
@@ -155,8 +388,8 @@
   
   Body: 
   
-  {:requestedRunTime string,
-   :requestedTimeRange {:endTime string, :startTime string}}
+  {:requestedTimeRange {:endTime string, :startTime string},
+   :requestedRunTime string}
   
   Start manual transfer runs to be executed now with schedule_time equal to current time. The transfer runs can be created for a time range where the run_time is between start_time (inclusive) and end_time (exclusive), or for a specific run_time."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -180,97 +413,12 @@
       :as :json}
      auth))))
 
-(defn locations-transferConfigs-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns information about a data transfer config."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-transferConfigs-delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a data transfer configuration, including any associated transfer runs and logs."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-transferConfigs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, dataSourceIds
-  
-  Returns information about all data transfers in the project."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}/transferConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-transferConfigs-create$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/create
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/create
   
   Required parameters: parent
   
-  Optional parameters: versionInfo, serviceAccountName, authorizationCode
+  Optional parameters: serviceAccountName, versionInfo, authorizationCode
   
   Body: 
   
@@ -284,9 +432,9 @@
    :params {},
    :emailPreferences {:enableFailureEmail boolean},
    :state string,
-   :scheduleOptions {:disableAutoScheduling boolean,
-                     :startTime string,
-                     :endTime string},
+   :scheduleOptions {:startTime string,
+                     :endTime string,
+                     :disableAutoScheduling boolean},
    :updateTime string,
    :dataRefreshWindowDays integer,
    :dataSourceId string,
@@ -314,26 +462,25 @@
       :as :json}
      auth))))
 
-(defn locations-transferConfigs-runs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/runs/list
+(defn locations-transferConfigs-get$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageToken, runAttempt, pageSize, states
+  Optional parameters: none
   
-  Returns information about running and completed jobs."
+  Returns information about a data transfer config."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}/runs"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -344,7 +491,7 @@
      auth))))
 
 (defn locations-transferConfigs-runs-delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/runs/delete
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/runs/delete
   
   Required parameters: name
   
@@ -371,7 +518,7 @@
      auth))))
 
 (defn locations-transferConfigs-runs-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/runs/get
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/runs/get
   
   Required parameters: name
   
@@ -379,7 +526,6 @@
   
   Returns information about the particular transfer run."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -399,16 +545,43 @@
       :as :json}
      auth))))
 
-(defn locations-transferConfigs-runs-transferLogs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/transferConfigs/runs/transferLogs/list
+(defn locations-transferConfigs-runs-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/runs/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, messageTypes, pageSize
+  Optional parameters: pageSize, states, runAttempt, pageToken
+  
+  Returns information about running and completed jobs."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}/runs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-transferConfigs-runs-transferLogs-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/locations/transferConfigs/runs/transferLogs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, messageTypes
   
   Returns user facing log messages for the data transfer run."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -428,225 +601,12 @@
       :as :json}
      auth))))
 
-(defn locations-dataSources-checkValidCreds$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/dataSources/checkValidCreds
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Returns true if valid credentials exist for the given data source and requesting user. Some data sources doesn't support service account, so we need to talk to them on behalf of the end user. This API just checks whether we have OAuth token for the particular user, which is a pre-requisite before user can create a transfer config."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}:checkValidCreds"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-dataSources-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/dataSources/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves a supported data source and returns its settings, which can be used for UI rendering."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-dataSources-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/dataSources/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists supported data sources and returns their settings, which can be used for UI rendering."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}/dataSources"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dataSources-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/dataSources/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves a supported data source and returns its settings, which can be used for UI rendering."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dataSources-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/dataSources/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists supported data sources and returns their settings, which can be used for UI rendering."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}/dataSources"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dataSources-checkValidCreds$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/dataSources/checkValidCreds
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Returns true if valid credentials exist for the given data source and requesting user. Some data sources doesn't support service account, so we need to talk to them on behalf of the end user. This API just checks whether we have OAuth token for the particular user, which is a pre-requisite before user can create a transfer config."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}:checkValidCreds"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn transferConfigs-delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a data transfer configuration, including any associated transfer runs and logs."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn transferConfigs-patch$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/patch
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/patch
   
   Required parameters: name
   
-  Optional parameters: authorizationCode, versionInfo, serviceAccountName, updateMask
+  Optional parameters: versionInfo, authorizationCode, updateMask, serviceAccountName
   
   Body: 
   
@@ -660,9 +620,9 @@
    :params {},
    :emailPreferences {:enableFailureEmail boolean},
    :state string,
-   :scheduleOptions {:disableAutoScheduling boolean,
-                     :startTime string,
-                     :endTime string},
+   :scheduleOptions {:startTime string,
+                     :endTime string,
+                     :disableAutoScheduling boolean},
    :updateTime string,
    :dataRefreshWindowDays integer,
    :dataSourceId string,
@@ -691,7 +651,7 @@
      auth))))
 
 (defn transferConfigs-startManualRuns$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/startManualRuns
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/startManualRuns
   
   Required parameters: parent
   
@@ -699,8 +659,8 @@
   
   Body: 
   
-  {:requestedRunTime string,
-   :requestedTimeRange {:endTime string, :startTime string}}
+  {:requestedTimeRange {:endTime string, :startTime string},
+   :requestedRunTime string}
   
   Start manual transfer runs to be executed now with schedule_time equal to current time. The transfer runs can be created for a time range where the run_time is between start_time (inclusive) and end_time (exclusive), or for a specific run_time."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -724,74 +684,12 @@
       :as :json}
      auth))))
 
-(defn transferConfigs-scheduleRuns$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/scheduleRuns
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:startTime string, :endTime string}
-  
-  Creates transfer runs for a time range [start_time, end_time]. For each date - or whatever granularity the data source supports - in the range, one transfer run is created. Note that runs are created per UTC time in the time range. DEPRECATED: use StartManualTransferRuns instead."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}:scheduleRuns"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn transferConfigs-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns information about a data transfer config."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn transferConfigs-create$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/create
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/create
   
   Required parameters: parent
   
-  Optional parameters: serviceAccountName, versionInfo, authorizationCode
+  Optional parameters: versionInfo, authorizationCode, serviceAccountName
   
   Body: 
   
@@ -805,9 +703,9 @@
    :params {},
    :emailPreferences {:enableFailureEmail boolean},
    :state string,
-   :scheduleOptions {:disableAutoScheduling boolean,
-                     :startTime string,
-                     :endTime string},
+   :scheduleOptions {:startTime string,
+                     :endTime string,
+                     :disableAutoScheduling boolean},
    :updateTime string,
    :dataRefreshWindowDays integer,
    :dataSourceId string,
@@ -835,26 +733,24 @@
       :as :json}
      auth))))
 
-(defn transferConfigs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/list
+(defn transferConfigs-delete$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken, dataSourceIds
+  Optional parameters: none
   
-  Returns information about all data transfers in the project."
+  Deletes a data transfer configuration, including any associated transfer runs and logs."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+            "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://bigquerydatatransfer.googleapis.com/"
-     "v1/{+parent}/transferConfigs"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -864,16 +760,48 @@
       :as :json}
      auth))))
 
-(defn transferConfigs-runs-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/runs/get
+(defn transferConfigs-scheduleRuns$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/scheduleRuns
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:endTime string, :startTime string}
+  
+  Creates transfer runs for a time range [start_time, end_time]. For each date - or whatever granularity the data source supports - in the range, one transfer run is created. Note that runs are created per UTC time in the time range. DEPRECATED: use StartManualTransferRuns instead."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}:scheduleRuns"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn transferConfigs-get$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Returns information about the particular transfer run."
+  Returns information about a data transfer config."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -893,8 +821,36 @@
       :as :json}
      auth))))
 
+(defn transferConfigs-list$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, dataSourceIds
+  
+  Returns information about all data transfers in the project."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+parent}/transferConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn transferConfigs-runs-delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/runs/delete
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/runs/delete
   
   Required parameters: name
   
@@ -921,15 +877,14 @@
      auth))))
 
 (defn transferConfigs-runs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/runs/list
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/runs/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, states, runAttempt
+  Optional parameters: runAttempt, states, pageSize, pageToken
   
   Returns information about running and completed jobs."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -949,16 +904,43 @@
       :as :json}
      auth))))
 
+(defn transferConfigs-runs-get$
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/runs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns information about the particular transfer run."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquerydatatransfer.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn transferConfigs-runs-transferLogs-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/transferConfigs/runs/transferLogs/list
+  "https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects/transferConfigs/runs/transferLogs/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, messageTypes
+  Optional parameters: messageTypes, pageToken, pageSize
   
   Returns user facing log messages for the data transfer run."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]

@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:pageSize integer,
-   :viewId string,
-   :activityTypes [string],
-   :user {:type string, :userId string},
+  {:activityTypes [string],
+   :pageSize integer,
+   :dateRange {:startDate string, :endDate string},
+   :user {:userId string, :type string},
    :pageToken string,
-   :dateRange {:startDate string, :endDate string}}
+   :viewId string}
   
   Returns User Activity data."
   {:scopes ["https://www.googleapis.com/auth/analytics"

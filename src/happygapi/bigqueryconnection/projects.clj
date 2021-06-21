@@ -42,11 +42,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
+  {:policy {:bindings [Binding],
             :version integer,
-            :bindings [Binding],
-            :auditConfigs [AuditConfig]}}
+            :etag string,
+            :auditConfigs [AuditConfig]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -79,16 +79,16 @@
   
   Body: 
   
-  {:creationTime string,
-   :hasCredential boolean,
-   :friendlyName string,
-   :description string,
-   :cloudSql {:database string,
-              :credential CloudSqlCredential,
+  {:cloudSql {:credential CloudSqlCredential,
               :instanceId string,
-              :type string},
+              :type string,
+              :database string},
+   :friendlyName string,
+   :hasCredential boolean,
    :name string,
-   :lastModifiedTime string}
+   :description string,
+   :lastModifiedTime string,
+   :creationTime string}
   
   Updates the specified connection. For security reasons, also resets credential if connection properties are in the update field mask."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -154,16 +154,16 @@
   
   Body: 
   
-  {:creationTime string,
-   :hasCredential boolean,
-   :friendlyName string,
-   :description string,
-   :cloudSql {:database string,
-              :credential CloudSqlCredential,
+  {:cloudSql {:credential CloudSqlCredential,
               :instanceId string,
-              :type string},
+              :type string,
+              :database string},
+   :friendlyName string,
+   :hasCredential boolean,
    :name string,
-   :lastModifiedTime string}
+   :description string,
+   :lastModifiedTime string,
+   :creationTime string}
   
   Creates a new connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -256,7 +256,7 @@
   
   Body: 
   
-  {:cloudSql {:password string, :username string}}
+  {:cloudSql {:username string, :password string}}
   
   Sets the credential for the specified connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -285,7 +285,7 @@
   
   Required parameters: parent
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Returns a list of connections in the given project."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

@@ -1,6 +1,6 @@
 (ns happygapi.cloudsearch.debug
   "Cloud Search API: debug.
-  Cloud Search provides cloud-based search capabilities over G Suite data. The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
+  Cloud Search provides cloud-based search capabilities over Google Workspace data. The Cloud Search API allows indexing of non-Google Workspace data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/debug"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: debugOptions.enableDebugging, pageSize, resolutionStatusCode, pageToken
+  Optional parameters: pageSize, pageToken, resolutionStatusCode, debugOptions.enableDebugging
   
   Lists unmapped user identities for an identity source. **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -38,7 +38,7 @@
   
   Required parameters: parent
   
-  Optional parameters: debugOptions.enableDebugging, groupResourceName, pageToken, userResourceName, pageSize
+  Optional parameters: pageToken, groupResourceName, userResourceName, debugOptions.enableDebugging, pageSize
   
   Lists names of items associated with an unmapped identity. **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -70,8 +70,8 @@
   Body: 
   
   {:pageToken string,
-   :debugOptions {:enableDebugging boolean},
-   :viewUrl string}
+   :viewUrl string,
+   :debugOptions {:enableDebugging boolean}}
   
   Fetches the item whose viewUrl exactly matches that of the URL provided in the request. **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -104,10 +104,10 @@
   
   Body: 
   
-  {:gsuitePrincipal {:gsuiteUserEmail string,
+  {:userResourceName string,
+   :gsuitePrincipal {:gsuiteUserEmail string,
                      :gsuiteGroupEmail string,
                      :gsuiteDomain boolean},
-   :userResourceName string,
    :groupResourceName string}
   
   Checks whether an item is accessible by specified principal. **Note:** This API requires an admin account to execute."
@@ -137,7 +137,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, debugOptions.enableDebugging, pageToken
+  Optional parameters: debugOptions.enableDebugging, pageToken, pageSize
   
   List all unmapped identities for a specific item. **Note:** This API requires an admin account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"

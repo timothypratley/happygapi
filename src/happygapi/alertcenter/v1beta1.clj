@@ -1,5 +1,5 @@
 (ns happygapi.alertcenter.v1beta1
-  "G Suite Alert Center API: v1beta1.
+  "Google Workspace Alert Center API: v1beta1.
   Manages alerts on issues affecting your domain.
   See: https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/v1beta1"
   (:require [cheshire.core :as json]

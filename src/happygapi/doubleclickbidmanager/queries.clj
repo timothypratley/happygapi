@@ -32,6 +32,32 @@
       :as :json}
      auth))))
 
+(defn listqueries$
+  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/listqueries
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, pageSize
+  
+  Retrieves stored queries."
+  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
+     "queries"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn runquery$
   "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/runquery
   
@@ -41,9 +67,9 @@
   
   Body: 
   
-  {:reportDataEndTimeMs string,
+  {:reportDataStartTimeMs string,
+   :reportDataEndTimeMs string,
    :timezoneCode string,
-   :reportDataStartTimeMs string,
    :dataRange string}
   
   Runs a stored query to generate a report."
@@ -102,8 +128,15 @@
   
   Body: 
   
-  {:reportDataStartTimeMs string,
+  {:schedule {:startTimeMs string,
+              :endTimeMs string,
+              :frequency string,
+              :nextRunTimezoneCode string,
+              :nextRunMinuteOfDay integer},
    :kind string,
+   :reportDataEndTimeMs string,
+   :queryId string,
+   :timezoneCode string,
    :metadata {:format string,
               :locale string,
               :sendNotification boolean,
@@ -115,20 +148,13 @@
               :reportCount integer,
               :shareEmailAddress [string],
               :googleDrivePathForLatestReport string},
-   :schedule {:nextRunTimezoneCode string,
-              :endTimeMs string,
-              :frequency string,
-              :nextRunMinuteOfDay integer,
-              :startTimeMs string},
-   :params {:filters [FilterPair],
-            :metrics [string],
+   :params {:groupBys [string],
+            :options Options,
             :type string,
-            :groupBys [string],
             :includeInviteData boolean,
-            :options Options},
-   :timezoneCode string,
-   :reportDataEndTimeMs string,
-   :queryId string}
+            :metrics [string],
+            :filters [FilterPair]},
+   :reportDataStartTimeMs string}
   
   Creates a query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
@@ -146,32 +172,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn listqueries$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/listqueries
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, pageSize
-  
-  Retrieves stored queries."
-  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
-     "queries"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

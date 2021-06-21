@@ -6,6 +6,58 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/list
+  
+  Required parameters: packageName
+  
+  Optional parameters: maxResults, startIndex, token
+  
+  Lists all in-app products - both managed products and subscriptions."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/inappproducts"
+     #{:packageName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/delete
+  
+  Required parameters: sku, packageName
+  
+  Optional parameters: none
+  
+  Deletes an in-app product (i.e. a managed product or a subscriptions)."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :sku})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/inappproducts/{sku}"
+     #{:packageName :sku}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/update
   
@@ -23,7 +75,7 @@
    :status string,
    :subscriptionPeriod string,
    :gracePeriod string,
-   :defaultPrice {:priceMicros string, :currency string},
+   :defaultPrice {:currency string, :priceMicros string},
    :listings {},
    :defaultLanguage string}
   
@@ -48,19 +100,19 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/delete
+(defn get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/get
   
-  Required parameters: packageName, sku
+  Required parameters: sku, packageName
   
   Optional parameters: none
   
-  Deletes an in-app product (i.e. a managed product or a subscriptions)."
+  Gets an in-app product, which can be a managed product or a subscription."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:packageName :sku})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://androidpublisher.googleapis.com/"
      "androidpublisher/v3/applications/{packageName}/inappproducts/{sku}"
@@ -91,7 +143,7 @@
    :status string,
    :subscriptionPeriod string,
    :gracePeriod string,
-   :defaultPrice {:priceMicros string, :currency string},
+   :defaultPrice {:currency string, :priceMicros string},
    :listings {},
    :defaultLanguage string}
   
@@ -116,36 +168,10 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/get
-  
-  Required parameters: packageName, sku
-  
-  Optional parameters: none
-  
-  Gets an in-app product, which can be a managed product or a subscription."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :sku})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/inappproducts/{sku}"
-     #{:packageName :sku}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/patch
   
-  Required parameters: packageName, sku
+  Required parameters: sku, packageName
   
   Optional parameters: autoConvertMissingPrices
   
@@ -159,7 +185,7 @@
    :status string,
    :subscriptionPeriod string,
    :gracePeriod string,
-   :defaultPrice {:priceMicros string, :currency string},
+   :defaultPrice {:currency string, :priceMicros string},
    :listings {},
    :defaultLanguage string}
   
@@ -179,32 +205,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/inappproducts/list
-  
-  Required parameters: packageName
-  
-  Optional parameters: startIndex, maxResults, token
-  
-  Lists all in-app products - both managed products and subscriptions."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/inappproducts"
-     #{:packageName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

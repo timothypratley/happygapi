@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: source, locale, maxAllowedMaturityRating
+  Optional parameters: maxAllowedMaturityRating, locale, source
   
   Returns a stream of personalized book clusters"
   {:scopes ["https://www.googleapis.com/auth/books"]}

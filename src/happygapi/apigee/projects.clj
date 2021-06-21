@@ -1,6 +1,6 @@
 (ns happygapi.apigee.projects
   "Apigee API: projects.
-  Use the Apigee API to programmatically develop and manage APIs with a set of RESTful operations. Develop and secure API proxies, deploy and undeploy API proxy revisions, monitor APIs, configure environments, manage users, and more. Get started using the APIs. *Note:* This product is available as a free trial for a time period of 60 days.
+  Use the Apigee API to programmatically develop and manage APIs with a set of RESTful operations. Develop and secure API proxies, deploy and undeploy API proxy revisions, monitor APIs, configure environments, manage users, and more. Note: This product is available as a free trial for a time period of 60 days.
   See: https://cloud.google.com/apigee-api-management/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,8 +15,8 @@
   
   Body: 
   
-  {:runtimeLocation string,
-   :authorizedNetwork string,
+  {:authorizedNetwork string,
+   :runtimeLocation string,
    :analyticsRegion string}
   
   Provisions a new Apigee organization with a functioning runtime. This is the standard way to create trial organizations for a free Apigee trial."

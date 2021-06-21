@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, filter, advertiserId, orderBy, pageSize
+  Optional parameters: filter, advertiserId, pageToken, orderBy, pageSize
   
   Lists custom lists. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

@@ -15,8 +15,7 @@
   
   Body: 
   
-  {:audio {:uri string, :content string},
-   :config {:encoding string,
+  {:config {:encoding string,
             :maxAlternatives integer,
             :enableAutomaticPunctuation boolean,
             :enableWordTimeOffsets boolean,
@@ -29,7 +28,8 @@
             :metadata RecognitionMetadata,
             :useEnhanced boolean,
             :diarizationConfig SpeakerDiarizationConfig,
-            :model string}}
+            :model string},
+   :audio {:content string, :uri string}}
   
   Performs synchronous speech recognition: receive results after all audio has been sent and processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -61,7 +61,7 @@
   
   Body: 
   
-  {:audio {:uri string, :content string},
+  {:audio {:content string, :uri string},
    :config {:encoding string,
             :maxAlternatives integer,
             :enableAutomaticPunctuation boolean,

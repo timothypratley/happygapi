@@ -1,68 +1,13 @@
 (ns happygapi.compute.httpHealthChecks
   "Compute Engine API: httpHealthChecks.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/delete
-  
-  Required parameters: httpHealthCheck, project
-  
-  Optional parameters: requestId
-  
-  Deletes the specified HttpHealthCheck resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:httpHealthCheck :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks/{httpHealthCheck}"
-     #{:httpHealthCheck :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/get
-  
-  Required parameters: httpHealthCheck, project
-  
-  Optional parameters: none
-  
-  Returns the specified HttpHealthCheck resource. Gets a list of available HTTP health checks by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:httpHealthCheck :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks/{httpHealthCheck}"
-     #{:httpHealthCheck :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/insert
   
   Required parameters: project
   
@@ -92,8 +37,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks"
      #{:project}
      parameters)
     (merge-with
@@ -106,25 +51,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/list
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/get
   
-  Required parameters: project
+  Required parameters: project, httpHealthCheck
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: none
   
-  Retrieves the list of HttpHealthCheck resources available to the specified project."
+  Returns the specified HttpHealthCheck resource. Gets a list of available HTTP health checks by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:httpHealthCheck :project})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks"
-     #{:project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks/{httpHealthCheck}"
+     #{:httpHealthCheck :project}
      parameters)
     (merge-with
      merge
@@ -135,7 +80,7 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/patch
   
   Required parameters: httpHealthCheck, project
   
@@ -165,8 +110,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks/{httpHealthCheck}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks/{httpHealthCheck}"
      #{:httpHealthCheck :project}
      parameters)
     (merge-with
@@ -180,9 +125,9 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpHealthChecks/update
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/update
   
-  Required parameters: httpHealthCheck, project
+  Required parameters: project, httpHealthCheck
   
   Optional parameters: requestId
   
@@ -210,8 +155,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpHealthChecks/{httpHealthCheck}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks/{httpHealthCheck}"
      #{:httpHealthCheck :project}
      parameters)
     (merge-with
@@ -219,6 +164,61 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/list
+  
+  Required parameters: project
+  
+  Optional parameters: pageToken, filter, orderBy, maxResults, returnPartialSuccess
+  
+  Retrieves the list of HttpHealthCheck resources available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpHealthChecks/delete
+  
+  Required parameters: httpHealthCheck, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified HttpHealthCheck resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:httpHealthCheck :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpHealthChecks/{httpHealthCheck}"
+     #{:httpHealthCheck :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

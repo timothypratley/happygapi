@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.accounts
-  "DCM/DFA Reporting And Trafficking API: accounts.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/accounts"
+  "Campaign Manager 360 API: accounts.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/accounts/patch
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/patch
   
   Required parameters: profileId, id
   
@@ -23,9 +23,9 @@
    :activeAdsLimitTier string,
    :maximumImageSize string,
    :accountProfile string,
-   :reportsConfiguration {:lookbackConfiguration LookbackConfiguration,
-                          :reportGenerationTimeZoneId string,
-                          :exposureToConversionEnabled boolean},
+   :reportsConfiguration {:reportGenerationTimeZoneId string,
+                          :exposureToConversionEnabled boolean,
+                          :lookbackConfiguration LookbackConfiguration},
    :availablePermissionIds [string],
    :active boolean,
    :defaultCreativeSizeId string,
@@ -44,8 +44,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/accounts"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/accounts"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -59,7 +59,7 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/accounts/update
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/update
   
   Required parameters: profileId
   
@@ -75,9 +75,9 @@
    :activeAdsLimitTier string,
    :maximumImageSize string,
    :accountProfile string,
-   :reportsConfiguration {:lookbackConfiguration LookbackConfiguration,
-                          :reportGenerationTimeZoneId string,
-                          :exposureToConversionEnabled boolean},
+   :reportsConfiguration {:reportGenerationTimeZoneId string,
+                          :exposureToConversionEnabled boolean,
+                          :lookbackConfiguration LookbackConfiguration},
    :availablePermissionIds [string],
    :active boolean,
    :defaultCreativeSizeId string,
@@ -96,8 +96,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/accounts"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/accounts"
      #{:profileId}
      parameters)
     (merge-with
@@ -110,10 +110,36 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/accounts/get
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/list
   
-  Required parameters: id, profileId
+  Required parameters: profileId
+  
+  Optional parameters: ids, sortOrder, active, pageToken, searchString, maxResults, sortField
+  
+  Retrieves the list of accounts, possibly filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/accounts"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/get
+  
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -124,35 +150,9 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/accounts/{id}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/accounts/{id}"
      #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/accounts/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: ids, searchString, sortOrder, maxResults, pageToken, active, sortField
-  
-  Retrieves the list of accounts, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/accounts"
-     #{:profileId}
      parameters)
     (merge-with
      merge

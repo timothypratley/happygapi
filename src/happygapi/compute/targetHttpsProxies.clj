@@ -1,13 +1,13 @@
 (ns happygapi.compute.targetHttpsProxies
   "Compute Engine API: targetHttpsProxies.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/get
   
   Required parameters: project, targetHttpsProxy
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies/{targetHttpsProxy}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/insert
   
   Required parameters: project
   
@@ -56,6 +56,7 @@
    :sslPolicy string,
    :sslCertificates [string],
    :authorizationPolicy string,
+   :fingerprint string,
    :proxyBind boolean}
   
   Creates a TargetHttpsProxy resource in the specified project using the data included in the request."
@@ -66,8 +67,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies"
      #{:project}
      parameters)
     (merge-with
@@ -81,9 +82,9 @@
      auth))))
 
 (defn setQuicOverride$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/setQuicOverride
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setQuicOverride
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: requestId
   
@@ -99,8 +100,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies/{targetHttpsProxy}/setQuicOverride"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}/setQuicOverride"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -114,9 +115,9 @@
      auth))))
 
 (defn setSslPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/setSslPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setSslPolicy
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: requestId
   
@@ -132,8 +133,55 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies/{targetHttpsProxy}/setSslPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}/setSslPolicy"
+     #{:targetHttpsProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/patch
+  
+  Required parameters: project, targetHttpsProxy
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :quicOverride string,
+   :selfLink string,
+   :serverTlsPolicy string,
+   :region string,
+   :id string,
+   :kind string,
+   :sslPolicy string,
+   :sslCertificates [string],
+   :authorizationPolicy string,
+   :fingerprint string,
+   :proxyBind boolean}
+  
+  Patches the specified TargetHttpsProxy resource with the data included in the request. This method supports PATCH semantics and uses JSON merge patch format and processing rules."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetHttpsProxy :project})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -147,7 +195,7 @@
      auth))))
 
 (defn setUrlMap$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/setUrlMap
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setUrlMap
   
   Required parameters: project, targetHttpsProxy
   
@@ -165,8 +213,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/targetHttpsProxies/{targetHttpsProxy}/setUrlMap"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/targetHttpsProxies/{targetHttpsProxy}/setUrlMap"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -180,11 +228,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, includeAllScopes, pageToken, orderBy, filter, returnPartialSuccess
   
   Retrieves the list of all TargetHttpsProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -195,8 +243,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/targetHttpsProxies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/targetHttpsProxies"
      #{:project}
      parameters)
     (merge-with
@@ -208,9 +256,9 @@
      auth))))
 
 (defn setSslCertificates$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/setSslCertificates
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setSslCertificates
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: requestId
   
@@ -226,8 +274,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/targetHttpsProxies/{targetHttpsProxy}/setSslCertificates"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/targetHttpsProxies/{targetHttpsProxy}/setSslCertificates"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -241,9 +289,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/delete
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: requestId
   
@@ -255,8 +303,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies/{targetHttpsProxy}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}"
      #{:targetHttpsProxy :project}
      parameters)
     (merge-with
@@ -268,11 +316,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetHttpsProxies/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, pageToken, filter, maxResults, orderBy
   
   Retrieves the list of TargetHttpsProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -283,8 +331,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/targetHttpsProxies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies"
      #{:project}
      parameters)
     (merge-with

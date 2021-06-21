@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1/leaderboards/list
+  
+  Required parameters: none
+  
+  Optional parameters: language, maxResults, pageToken
+  
+  Lists all the leaderboard metadata for your application."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/leaderboards"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/games/api/reference/rest/v1/leaderboards/get
   
@@ -23,32 +49,6 @@
      "https://games.googleapis.com/"
      "games/v1/leaderboards/{leaderboardId}"
      #{:leaderboardId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1/leaderboards/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, language, maxResults
-  
-  Lists all the leaderboard metadata for your application."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/leaderboards"
-     #{}
      parameters)
     (merge-with
      merge

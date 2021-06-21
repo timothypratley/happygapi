@@ -11,7 +11,7 @@
   
   Required parameters: settlementId, merchantId
   
-  Optional parameters: maxResults, pageToken, transactionIds
+  Optional parameters: pageToken, maxResults, transactionIds
   
   Retrieves a list of transactions for the settlement."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/settlementreports/{settlementId}/transactions"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/settlementreports/{settlementId}/transactions"
      #{:settlementId :merchantId}
      parameters)
     (merge-with

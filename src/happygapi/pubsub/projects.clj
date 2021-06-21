@@ -221,14 +221,14 @@
    :messageRetentionDuration string,
    :detached boolean,
    :topic string,
-   :deadLetterPolicy {:deadLetterTopic string,
-                      :maxDeliveryAttempts integer},
+   :deadLetterPolicy {:maxDeliveryAttempts integer,
+                      :deadLetterTopic string},
    :retainAckedMessages boolean,
    :filter string,
    :enableMessageOrdering boolean,
-   :pushConfig {:attributes {},
+   :pushConfig {:pushEndpoint string,
                 :oidcToken OidcToken,
-                :pushEndpoint string},
+                :attributes {}},
    :ackDeadlineSeconds integer}
   
   Creates a subscription to a given topic. See the [resource name rules] (https://cloud.google.com/pubsub/docs/admin#resource_names). If the subscription already exists, returns `ALREADY_EXISTS`. If the corresponding topic doesn't exist, returns `NOT_FOUND`. If the name is not provided in the request, the server will assign a random name for this subscription on the same project as the topic, conforming to the [resource name format] (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated name is populated in the returned Subscription object. Note that for REST API requests, you must specify a name in the request."
@@ -262,7 +262,7 @@
   
   Body: 
   
-  {:ackDeadlineSeconds integer, :ackIds [string]}
+  {:ackIds [string], :ackDeadlineSeconds integer}
   
   Modifies the ack deadline for a specific message. This method is useful to indicate that more time is needed to process a message by the subscriber, or to make the message available for redelivery if the processing was interrupted. Note that this does not modify the subscription-level `ackDeadlineSeconds` used for subsequent messages."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -349,9 +349,9 @@
   
   Body: 
   
-  {:pushConfig {:attributes {},
+  {:pushConfig {:pushEndpoint string,
                 :oidcToken OidcToken,
-                :pushEndpoint string}}
+                :attributes {}}}
   
   Modifies the `PushConfig` for a specified subscription. This may be used to change a push subscription to a pull one (signified by an empty `PushConfig`) or vice versa, or change the endpoint URL and other attributes of a push subscription. Messages will accumulate for delivery continuously through the call regardless of changes to the `PushConfig`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -380,7 +380,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists matching subscriptions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -444,7 +444,7 @@
   
   Body: 
   
-  {:maxMessages integer, :returnImmediately boolean}
+  {:returnImmediately boolean, :maxMessages integer}
   
   Pulls messages from the server. The server may return `UNAVAILABLE` if there are too many concurrent pull requests pending for the given subscription."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -501,55 +501,38 @@
       :as :json}
      auth))))
 
-(defn snapshots-getIamPolicy$
-  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/getIamPolicy
+(defn snapshots-patch$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/patch
   
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/pubsub"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://pubsub.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn snapshots-delete$
-  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/delete
-  
-  Required parameters: snapshot
+  Required parameters: name
   
   Optional parameters: none
   
-  Removes an existing snapshot. Snapshots are used in [Seek] (https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot. When the snapshot is deleted, all messages retained in the snapshot are immediately dropped. After a snapshot is deleted, a new one may be created with the same name, but the new one has no association with the old snapshot or its subscription, unless the same subscription is specified."
+  Body: 
+  
+  {:updateMask string,
+   :snapshot {:topic string,
+              :expireTime string,
+              :labels {},
+              :name string}}
+  
+  Updates an existing snapshot. Snapshots are used in Seek operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:snapshot})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/patch
     (util/get-url
      "https://pubsub.googleapis.com/"
-     "v1/{+snapshot}"
-     #{:snapshot}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -560,7 +543,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the existing snapshots. Snapshots are used in [Seek]( https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -609,8 +592,35 @@
       :as :json}
      auth))))
 
-(defn snapshots-patch$
-  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/patch
+(defn snapshots-delete$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/delete
+  
+  Required parameters: snapshot
+  
+  Optional parameters: none
+  
+  Removes an existing snapshot. Snapshots are used in [Seek] (https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot. When the snapshot is deleted, all messages retained in the snapshot are immediately dropped. After a snapshot is deleted, a new one may be created with the same name, but the new one has no association with the old snapshot or its subscription, unless the same subscription is specified."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:snapshot})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+snapshot}"
+     #{:snapshot}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn snapshots-create$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/create
   
   Required parameters: name
   
@@ -618,19 +628,15 @@
   
   Body: 
   
-  {:snapshot {:labels {},
-              :topic string,
-              :expireTime string,
-              :name string},
-   :updateMask string}
+  {:subscription string, :labels {}}
   
-  Updates an existing snapshot. Snapshots are used in Seek operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot."
+  Creates a snapshot from the requested subscription. Snapshots are used in [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot. If the snapshot already exists, returns `ALREADY_EXISTS`. If the requested subscription doesn't exist, returns `NOT_FOUND`. If the backlog in the subscription is too old -- and the resulting snapshot would expire in less than 1 hour -- then `FAILED_PRECONDITION` is returned. See also the `Snapshot.expire_time` field. If the name is not provided in the request, the server will assign a random name for this snapshot on the same project as the subscription, conforming to the [resource name format] (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated name is populated in the returned Snapshot object. Note that for REST API requests, you must specify a name in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/put
     (util/get-url
      "https://pubsub.googleapis.com/"
      "v1/{+name}"
@@ -679,34 +685,28 @@
       :as :json}
      auth))))
 
-(defn snapshots-create$
-  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/create
+(defn snapshots-getIamPolicy$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/snapshots/getIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
-  Optional parameters: none
+  Optional parameters: options.requestedPolicyVersion
   
-  Body: 
-  
-  {:labels {}, :subscription string}
-  
-  Creates a snapshot from the requested subscription. Snapshots are used in [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot. If the snapshot already exists, returns `ALREADY_EXISTS`. If the requested subscription doesn't exist, returns `NOT_FOUND`. If the backlog in the subscription is too old -- and the resulting snapshot would expire in less than 1 hour -- then `FAILED_PRECONDITION` is returned. See also the `Snapshot.expire_time` field. If the name is not provided in the request, the server will assign a random name for this snapshot on the same project as the subscription, conforming to the [resource name format] (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated name is populated in the returned Snapshot object. Note that for REST API requests, you must specify a name in the request."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/pubsub"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/put
+   (http/get
     (util/get-url
      "https://pubsub.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -781,11 +781,13 @@
   
   Body: 
   
-  {:topic {:labels {},
+  {:updateMask string,
+   :topic {:labels {},
            :kmsKeyName string,
            :messageStoragePolicy MessageStoragePolicy,
-           :name string},
-   :updateMask string}
+           :name string,
+           :schemaSettings SchemaSettings,
+           :satisfiesPzs boolean}}
   
   Updates an existing topic. Note that certain properties of a topic are not modifiable."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -854,7 +856,9 @@
   {:labels {},
    :kmsKeyName string,
    :messageStoragePolicy {:allowedPersistenceRegions [string]},
-   :name string}
+   :name string,
+   :schemaSettings {:schema string, :encoding string},
+   :satisfiesPzs boolean}
   
   Creates the given topic with the given name. See the [resource name rules] (https://cloud.google.com/pubsub/docs/admin#resource_names)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -968,11 +972,11 @@
   
   Body: 
   
-  {:messages [{:attributes {},
-               :orderingKey string,
+  {:messages [{:publishTime string,
                :data string,
-               :messageId string,
-               :publishTime string}]}
+               :orderingKey string,
+               :attributes {},
+               :messageId string}]}
   
   Adds one or more messages to the topic. Returns `NOT_FOUND` if the topic does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1001,7 +1005,7 @@
   
   Required parameters: topic
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists the names of the snapshots on this topic. Snapshots are used in [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations, which allow you to manage message acknowledgments in bulk. That is, you can set the acknowledgment state of messages in an existing subscription to the state captured by a snapshot."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1028,7 +1032,7 @@
   
   Required parameters: topic
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists the names of the attached subscriptions on this topic."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1045,6 +1049,282 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-get$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/get
+  
+  Required parameters: name
+  
+  Optional parameters: view
+  
+  Gets a schema."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-setIamPolicy$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-validate$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/validate
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:schema {:name string, :type string, :definition string}}
+  
+  Validates a schema."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+parent}/schemas:validate"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-testIamPermissions$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-create$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/create
+  
+  Required parameters: parent
+  
+  Optional parameters: schemaId
+  
+  Body: 
+  
+  {:name string, :type string, :definition string}
+  
+  Creates a schema."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+parent}/schemas"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-delete$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a schema."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-getIamPolicy$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-list$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, view
+  
+  Lists schemas in a project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+parent}/schemas"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn schemas-validateMessage$
+  "https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects/schemas/validateMessage
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:encoding string,
+   :name string,
+   :schema {:name string, :type string, :definition string},
+   :message string}
+  
+  Validates a message against a schema."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/pubsub"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsub.googleapis.com/"
+     "v1/{+parent}/schemas:validateMessage"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -11,7 +11,7 @@
   
   Required parameters: encodedRequest
   
-  Optional parameters: clientVersion, clientId
+  Optional parameters: clientId, clientVersion
   
   "
   {:scopes nil}

@@ -15,15 +15,15 @@
   
   Body: 
   
-  {:entry {:digest string, :hash string, :url string},
-   :userInfo {:regionCode string, :userId string},
+  {:entry {:digest string, :url string, :hash string},
    :clientInfo {:clientId string, :clientVersion string},
    :platformType string,
+   :userInfo {:userId string, :regionCode string},
    :threatType string,
-   :resources [{:type string,
+   :resources [{:url string,
                 :remoteIp string,
-                :url string,
-                :referrer string}]}
+                :referrer string,
+                :type string}]}
   
   Reports a Safe Browsing threat list hit to Google. Only projects with TRUSTED_REPORTER visibility can use this method."
   {:scopes nil}

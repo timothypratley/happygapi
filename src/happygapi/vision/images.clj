@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:requests [{:image Image,
-               :features [Feature],
-               :imageContext ImageContext}],
-   :parent string}
+  {:parent string,
+   :requests [{:features [Feature],
+               :image Image,
+               :imageContext ImageContext}]}
   
   Run image detection and annotation for a batch of images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -52,8 +52,8 @@
   Body: 
   
   {:parent string,
-   :requests [{:image Image,
-               :features [Feature],
+   :requests [{:features [Feature],
+               :image Image,
                :imageContext ImageContext}],
    :outputConfig {:gcsDestination GcsDestination, :batchSize integer}}
   

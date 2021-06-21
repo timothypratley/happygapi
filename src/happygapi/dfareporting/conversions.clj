@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.conversions
-  "DCM/DFA Reporting And Trafficking API: conversions.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/conversions"
+  "Campaign Manager 360 API: conversions.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/conversions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn batchinsert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/conversions/batchinsert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/conversions/batchinsert
   
   Required parameters: profileId
   
@@ -16,6 +16,10 @@
   Body: 
   
   {:kind string,
+   :encryptionInfo {:kind string,
+                    :encryptionEntityId string,
+                    :encryptionEntityType string,
+                    :encryptionSource string},
    :conversions [{:encryptedUserId string,
                   :childDirectedTreatment boolean,
                   :treatmentForUnderage boolean,
@@ -33,11 +37,7 @@
                   :customVariables [CustomFloodlightVariable],
                   :quantity string,
                   :gclid string,
-                  :floodlightActivityId string}],
-   :encryptionInfo {:encryptionEntityType string,
-                    :kind string,
-                    :encryptionEntityId string,
-                    :encryptionSource string}}
+                  :floodlightActivityId string}]}
   
   Inserts conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
@@ -46,8 +46,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/conversions/batchinsert"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/conversions/batchinsert"
      #{:profileId}
      parameters)
     (merge-with
@@ -61,7 +61,7 @@
      auth))))
 
 (defn batchupdate$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/conversions/batchupdate
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/conversions/batchupdate
   
   Required parameters: profileId
   
@@ -70,6 +70,10 @@
   Body: 
   
   {:kind string,
+   :encryptionInfo {:kind string,
+                    :encryptionEntityId string,
+                    :encryptionEntityType string,
+                    :encryptionSource string},
    :conversions [{:encryptedUserId string,
                   :childDirectedTreatment boolean,
                   :treatmentForUnderage boolean,
@@ -87,11 +91,7 @@
                   :customVariables [CustomFloodlightVariable],
                   :quantity string,
                   :gclid string,
-                  :floodlightActivityId string}],
-   :encryptionInfo {:encryptionEntityType string,
-                    :kind string,
-                    :encryptionEntityId string,
-                    :encryptionSource string}}
+                  :floodlightActivityId string}]}
   
   Updates existing conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
@@ -100,8 +100,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/conversions/batchupdate"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/conversions/batchupdate"
      #{:profileId}
      parameters)
     (merge-with

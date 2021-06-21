@@ -6,64 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/delete
-  
-  Required parameters: instance, database, project
-  
-  Optional parameters: none
-  
-  Deletes a database from a Cloud SQL instance."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
-     #{:instance :project :database}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/list
-  
-  Required parameters: project, instance
-  
-  Optional parameters: none
-  
-  Lists databases in the specified Cloud SQL instance."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/databases"
-     #{:instance :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/update
   
-  Required parameters: instance, database, project
+  Required parameters: database, instance, project
   
   Optional parameters: none
   
@@ -102,10 +48,64 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/get
+  
+  Required parameters: database, project, instance
+  
+  Optional parameters: none
+  
+  Retrieves a resource containing information about a database inside a Cloud SQL instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
+     #{:instance :project :database}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/delete
+  
+  Required parameters: database, instance, project
+  
+  Optional parameters: none
+  
+  Deletes a database from a Cloud SQL instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
+     #{:instance :project :database}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/insert
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -186,24 +186,24 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/get
+(defn list$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/databases/list
   
-  Required parameters: instance, database, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
-  Retrieves a resource containing information about a database inside a Cloud SQL instance."
+  Lists databases in the specified Cloud SQL instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project :database})]}
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/databases/{database}"
-     #{:instance :project :database}
+     "sql/v1beta4/projects/{project}/instances/{instance}/databases"
+     #{:instance :project}
      parameters)
     (merge-with
      merge

@@ -6,33 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patch$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/patch
+(defn create$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/create
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
   Body: 
   
-  {:filter string,
-   :createTime string,
+  {:createTime string,
    :description string,
+   :updateTime string,
    :disabled boolean,
    :name string,
-   :updateTime string}
+   :filter string}
   
-  Changes one or more properties of an existing exclusion."
+  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
+     "v2/{+parent}/exclusions"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -73,6 +73,44 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:createTime string,
+   :description string,
+   :updateTime string,
+   :disabled boolean,
+   :name string,
+   :filter string}
+  
+  Changes one or more properties of an existing exclusion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/delete
   
@@ -105,7 +143,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists all the exclusions in a parent resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -124,44 +162,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:filter string,
-   :createTime string,
-   :description string,
-   :disabled boolean,
-   :name string,
-   :updateTime string}
-  
-  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/exclusions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

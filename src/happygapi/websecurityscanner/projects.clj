@@ -32,27 +32,47 @@
       :as :json}
      auth))))
 
-(defn scanConfigs-list$
-  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/list
+(defn scanConfigs-patch$
+  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: updateMask
   
-  Lists ScanConfigs under a given project."
+  Body: 
+  
+  {:schedule {:intervalDurationDays integer, :scheduleTime string},
+   :maxQps integer,
+   :displayName string,
+   :name string,
+   :riskLevel string,
+   :managedScan boolean,
+   :staticIpScan boolean,
+   :exportToSecurityCommandCenter string,
+   :startingUrls [string],
+   :authentication {:customAccount CustomAccount,
+                    :iapCredential IapCredential,
+                    :googleAccount GoogleAccount},
+   :userAgent string,
+   :blacklistPatterns [string],
+   :ignoreHttpStatusErrors boolean}
+  
+  Updates a ScanConfig. This method support partial update of a ScanConfig."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://websecurityscanner.googleapis.com/"
-     "v1/{+parent}/scanConfigs"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -90,51 +110,6 @@
       :as :json}
      auth))))
 
-(defn scanConfigs-patch$
-  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:schedule {:scheduleTime string, :intervalDurationDays integer},
-   :maxQps integer,
-   :displayName string,
-   :name string,
-   :riskLevel string,
-   :managedScan boolean,
-   :staticIpScan boolean,
-   :exportToSecurityCommandCenter string,
-   :startingUrls [string],
-   :authentication {:customAccount CustomAccount,
-                    :googleAccount GoogleAccount,
-                    :iapCredential IapCredential},
-   :userAgent string,
-   :blacklistPatterns [string]}
-  
-  Updates a ScanConfig. This method support partial update of a ScanConfig."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://websecurityscanner.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn scanConfigs-create$
   "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/create
   
@@ -144,7 +119,7 @@
   
   Body: 
   
-  {:schedule {:scheduleTime string, :intervalDurationDays integer},
+  {:schedule {:intervalDurationDays integer, :scheduleTime string},
    :maxQps integer,
    :displayName string,
    :name string,
@@ -154,10 +129,11 @@
    :exportToSecurityCommandCenter string,
    :startingUrls [string],
    :authentication {:customAccount CustomAccount,
-                    :googleAccount GoogleAccount,
-                    :iapCredential IapCredential},
+                    :iapCredential IapCredential,
+                    :googleAccount GoogleAccount},
    :userAgent string,
-   :blacklistPatterns [string]}
+   :blacklistPatterns [string],
+   :ignoreHttpStatusErrors boolean}
   
   Creates a new ScanConfig."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -197,6 +173,58 @@
      "https://websecurityscanner.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-list$
+  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists ScanConfigs under a given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://websecurityscanner.googleapis.com/"
+     "v1/{+parent}/scanConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-scanRuns-list$
+  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists ScanRuns under a given ScanConfig, in descending order of ScanRun stop time."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://websecurityscanner.googleapis.com/"
+     "v1/{+parent}/scanRuns"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -264,14 +292,40 @@
       :as :json}
      auth))))
 
-(defn scanConfigs-scanRuns-list$
-  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/list
+(defn scanConfigs-scanRuns-findings-get$
+  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/findings/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a Finding."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://websecurityscanner.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-scanRuns-findings-list$
+  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/findings/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: filter, pageToken, pageSize
   
-  Lists ScanRuns under a given ScanConfig, in descending order of ScanRun stop time."
+  List Findings under a given ScanRun."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -279,7 +333,7 @@
    (http/get
     (util/get-url
      "https://websecurityscanner.googleapis.com/"
-     "v1/{+parent}/scanRuns"
+     "v1/{+parent}/findings"
      #{:parent}
      parameters)
     (merge-with
@@ -307,58 +361,6 @@
      "https://websecurityscanner.googleapis.com/"
      "v1/{+parent}/crawledUrls"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn scanConfigs-scanRuns-findings-list$
-  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/findings/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  List Findings under a given ScanRun."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://websecurityscanner.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn scanConfigs-scanRuns-findings-get$
-  "https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/api/reference/rest/v1/projects/scanConfigs/scanRuns/findings/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a Finding."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://websecurityscanner.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge

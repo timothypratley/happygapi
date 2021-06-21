@@ -9,7 +9,7 @@
 (defn get$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves/get
   
-  Required parameters: shelf, userId
+  Required parameters: userId, shelf
   
   Optional parameters: source
   
@@ -61,9 +61,9 @@
 (defn volumes-list$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/bookshelves/volumes/list
   
-  Required parameters: shelf, userId
+  Required parameters: userId, shelf
   
-  Optional parameters: startIndex, showPreorders, maxResults, source
+  Optional parameters: source, showPreorders, maxResults, startIndex
   
   Retrieves volumes in a specific bookshelf for the specified user."
   {:scopes ["https://www.googleapis.com/auth/books"]}

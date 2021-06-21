@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Returns the list of IP addresses that checkers run from"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

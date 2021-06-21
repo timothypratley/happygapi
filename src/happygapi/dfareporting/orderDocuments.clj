@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.orderDocuments
-  "DCM/DFA Reporting And Trafficking API: orderDocuments.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments"
+  "Campaign Manager 360 API: orderDocuments.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orderDocuments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orderDocuments/list
   
   Required parameters: profileId, projectId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/projects/{projectId}/orderDocuments"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/projects/{projectId}/orderDocuments"
      #{:profileId :projectId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orderDocuments/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orderDocuments/get
   
   Required parameters: id, profileId, projectId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/projects/{projectId}/orderDocuments/{id}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/projects/{projectId}/orderDocuments/{id}"
      #{:id :profileId :projectId}
      parameters)
     (merge-with

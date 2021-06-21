@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: orderBy, pageToken, pageSize, partnerId, advertiserId, filter
+  Optional parameters: pageSize, pageToken, orderBy, filter, advertiserId, partnerId
   
   Lists Google audiences. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -37,7 +37,7 @@
   
   Required parameters: googleAudienceId
   
-  Optional parameters: partnerId, advertiserId
+  Optional parameters: advertiserId, partnerId
   
   Gets a Google audience."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

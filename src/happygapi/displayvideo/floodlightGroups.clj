@@ -41,16 +41,16 @@
   
   Body: 
   
-  {:webTagType string,
-   :floodlightGroupId string,
-   :customVariables {},
-   :activeViewConfig {:displayName string,
-                      :minimumDuration string,
+  {:floodlightGroupId string,
+   :lookbackWindow {:impressionDays integer, :clickDays integer},
+   :activeViewConfig {:minimumVolume string,
                       :minimumViewability string,
-                      :minimumVolume string,
+                      :displayName string,
+                      :minimumDuration string,
                       :minimumQuartile string},
-   :lookbackWindow {:clickDays integer, :impressionDays integer},
    :displayName string,
+   :webTagType string,
+   :customVariables {},
    :name string}
   
   Updates an existing Floodlight group. Returns the updated Floodlight group if successful."

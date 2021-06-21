@@ -6,101 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/list
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Get the list of your verified websites and domains."
-  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/siteVerification/v1/"
-     "webResource"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/patch
-  
-  Required parameters: id
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:owners [string],
-   :id string,
-   :site {:type string, :identifier string}}
-  
-  Modify the list of owners for your website or domain. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/siteVerification/v1/"
-     "webResource/{id}"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/insert
-  
-  Required parameters: verificationMethod
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:owners [string],
-   :id string,
-   :site {:type string, :identifier string}}
-  
-  Attempt verification of a website or domain."
-  {:scopes ["https://www.googleapis.com/auth/siteverification"
-            "https://www.googleapis.com/auth/siteverification.verify_only"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:verificationMethod})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/siteVerification/v1/"
-     "webResource"
-     #{:verificationMethod}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/delete
   
@@ -127,6 +32,32 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/get
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Get the most current data for a website or domain."
+  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/siteVerification/v1/"
+     "webResource/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/update
   
@@ -136,8 +67,8 @@
   
   Body: 
   
-  {:owners [string],
-   :id string,
+  {:id string,
+   :owners [string],
    :site {:type string, :identifier string}}
   
   Modify the list of owners for your website or domain."
@@ -161,6 +92,66 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/patch
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string,
+   :owners [string],
+   :site {:type string, :identifier string}}
+  
+  Modify the list of owners for your website or domain. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/siteVerification/v1/"
+     "webResource/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/list
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Get the list of your verified websites and domains."
+  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/siteVerification/v1/"
+     "webResource"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn getToken$
   "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/getToken
   
@@ -170,7 +161,7 @@
   
   Body: 
   
-  {:verificationMethod string, :site {:type string, :identifier string}}
+  {:site {:type string, :identifier string}, :verificationMethod string}
   
   Get a verification token for placing on a website or domain."
   {:scopes ["https://www.googleapis.com/auth/siteverification"
@@ -194,27 +185,36 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/get
+(defn insert$
+  "https://developers.google.com/site-verification/api/reference/rest/v1/webResource/insert
   
-  Required parameters: id
+  Required parameters: verificationMethod
   
   Optional parameters: none
   
-  Get the most current data for a website or domain."
-  {:scopes ["https://www.googleapis.com/auth/siteverification"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  Body: 
+  
+  {:id string,
+   :owners [string],
+   :site {:type string, :identifier string}}
+  
+  Attempt verification of a website or domain."
+  {:scopes ["https://www.googleapis.com/auth/siteverification"
+            "https://www.googleapis.com/auth/siteverification.verify_only"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:verificationMethod})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://www.googleapis.com/siteVerification/v1/"
-     "webResource/{id}"
-     #{:id}
+     "webResource"
+     #{:verificationMethod}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

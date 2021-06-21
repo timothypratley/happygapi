@@ -11,7 +11,7 @@
   
   Required parameters: liveChatId, part
   
-  Optional parameters: profileImageSize, hl, pageToken, maxResults
+  Optional parameters: profileImageSize, maxResults, pageToken, hl
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -71,14 +71,14 @@
   Body: 
   
   {:id string,
-   :authorDetails {:displayName string,
-                   :isChatModerator boolean,
+   :authorDetails {:isChatOwner boolean,
+                   :channelUrl string,
+                   :isVerified boolean,
                    :isChatSponsor boolean,
-                   :isChatOwner boolean,
+                   :displayName string,
                    :profileImageUrl string,
                    :channelId string,
-                   :isVerified boolean,
-                   :channelUrl string},
+                   :isChatModerator boolean},
    :etag string,
    :kind string,
    :snippet {:publishedAt string,

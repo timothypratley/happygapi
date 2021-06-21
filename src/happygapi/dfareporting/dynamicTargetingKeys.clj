@@ -1,41 +1,15 @@
 (ns happygapi.dfareporting.dynamicTargetingKeys
-  "DCM/DFA Reporting And Trafficking API: dynamicTargetingKeys.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys"
+  "Campaign Manager 360 API: dynamicTargetingKeys.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: objectType, objectId, names, advertiserId
-  
-  Retrieves a list of dynamic targeting keys."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/dynamicTargetingKeys"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/delete
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/delete
   
-  Required parameters: objectId, profileId, objectType, name
+  Required parameters: objectId, name, objectType, profileId
   
   Optional parameters: none
   
@@ -48,8 +22,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/dynamicTargetingKeys/{objectId}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/dynamicTargetingKeys/{objectId}"
      #{:name :objectId :objectType :profileId}
      parameters)
     (merge-with
@@ -61,7 +35,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/dynamicTargetingKeys/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/insert
   
   Required parameters: profileId
   
@@ -78,8 +52,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/dynamicTargetingKeys"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/dynamicTargetingKeys"
      #{:profileId}
      parameters)
     (merge-with
@@ -87,6 +61,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: objectType, advertiserId, objectId, names
+  
+  Retrieves a list of dynamic targeting keys."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/dynamicTargetingKeys"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

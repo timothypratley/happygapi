@@ -1,0 +1,158 @@
+{:GoogleChromeManagementV1FindInstalledAppDevicesResponse {:description "Response containing a list of devices with queried app installed.",
+                                                           :id "GoogleChromeManagementV1FindInstalledAppDevicesResponse",
+                                                           :type "object",
+                                                           :properties {:nextPageToken {:description "Token to specify the next page of the request.",
+                                                                                        :type "string"},
+                                                                        :totalSize {:type "integer",
+                                                                                    :format "int32",
+                                                                                    :description "Total number of devices matching request."},
+                                                                        :devices {:items {:$ref "GoogleChromeManagementV1Device"},
+                                                                                  :type "array",
+                                                                                  :description "A list of devices which have the app installed. Sorted in ascending alphabetical order on the Device.machine field."}}},
+ :GoogleChromeManagementV1BrowserVersion {:type "object",
+                                          :description "Describes a browser version and its install count.",
+                                          :properties {:system {:description "Output only. The device operating system.",
+                                                                :type "string",
+                                                                :enum ["DEVICE_SYSTEM_UNSPECIFIED"
+                                                                       "SYSTEM_OTHER"
+                                                                       "SYSTEM_ANDROID"
+                                                                       "SYSTEM_IOS"
+                                                                       "SYSTEM_CROS"
+                                                                       "SYSTEM_WINDOWS"
+                                                                       "SYSTEM_MAC"
+                                                                       "SYSTEM_LINUX"],
+                                                                :enumDescriptions ["No operating system specified."
+                                                                                   "Other operating system."
+                                                                                   "Android operating system."
+                                                                                   "Apple iOS operating system."
+                                                                                   "Chrome OS operating system."
+                                                                                   "Microsoft Windows operating system."
+                                                                                   "Apple macOS operating system."
+                                                                                   "Linux operating system."],
+                                                                :readOnly true},
+                                                       :count {:readOnly true,
+                                                               :description "Output only. Count grouped by device_system and major version",
+                                                               :format "int64",
+                                                               :type "string"},
+                                                       :channel {:enum ["RELEASE_CHANNEL_UNSPECIFIED"
+                                                                        "CANARY"
+                                                                        "DEV"
+                                                                        "BETA"
+                                                                        "STABLE"],
+                                                                 :description "Output only. The release channel of the installed browser.",
+                                                                 :enumDescriptions ["No release channel specified."
+                                                                                    "Canary release channel."
+                                                                                    "Dev release channel."
+                                                                                    "Beta release channel."
+                                                                                    "Stable release channel."],
+                                                                 :type "string",
+                                                                 :readOnly true},
+                                                       :version {:readOnly true,
+                                                                 :description "Output only. The full version of the installed browser.",
+                                                                 :type "string"},
+                                                       :deviceOsVersion {:description "Output only. Version of the system-specified operating system.",
+                                                                         :type "string",
+                                                                         :readOnly true}},
+                                          :id "GoogleChromeManagementV1BrowserVersion"},
+ :GoogleChromeManagementV1InstalledApp {:type "object",
+                                        :description "Describes an installed app.",
+                                        :properties {:description {:description "Output only. Description of the installed app.",
+                                                                   :readOnly true,
+                                                                   :type "string"},
+                                                     :permissions {:description "Output only. Permissions of the installed app.",
+                                                                   :readOnly true,
+                                                                   :type "array",
+                                                                   :items {:type "string"}},
+                                                     :disabled {:readOnly true,
+                                                                :type "boolean",
+                                                                :description "Output only. Whether the app is disabled."},
+                                                     :appInstallType {:enumDescriptions ["Application install type not specified."
+                                                                                         "Multiple app install types."
+                                                                                         "Normal app install type."
+                                                                                         "Administrator app install type."
+                                                                                         "Development app install type."
+                                                                                         "Sideloaded app install type."
+                                                                                         "Other app install type."],
+                                                                      :type "string",
+                                                                      :description "Output only. How the app was installed.",
+                                                                      :enum ["APP_INSTALL_TYPE_UNSPECIFIED"
+                                                                             "MULTIPLE"
+                                                                             "NORMAL"
+                                                                             "ADMIN"
+                                                                             "DEVELOPMENT"
+                                                                             "SIDELOAD"
+                                                                             "OTHER"],
+                                                                      :readOnly true},
+                                                     :displayName {:description "Output only. Name of the installed app.",
+                                                                   :readOnly true,
+                                                                   :type "string"},
+                                                     :homepageUri {:readOnly true,
+                                                                   :description "Output only. Homepage uri of the installed app.",
+                                                                   :type "string"},
+                                                     :appSource {:enumDescriptions ["Application source not specified."
+                                                                                    "Generally for extensions and Chrome apps."
+                                                                                    "Play Store app."],
+                                                                 :type "string",
+                                                                 :enum ["APP_SOURCE_UNSPECIFIED"
+                                                                        "CHROME_WEBSTORE"
+                                                                        "PLAY_STORE"],
+                                                                 :description "Output only. Source of the installed app.",
+                                                                 :readOnly true},
+                                                     :appId {:type "string",
+                                                             :readOnly true,
+                                                             :description "Output only. Unique identifier of the app. For Chrome apps and extensions, the 32-character id (e.g. ehoadneljpdggcbbknedodolkkjodefl). For Android apps, the package name (e.g. com.evernote)."},
+                                                     :appType {:readOnly true,
+                                                               :enumDescriptions ["App type not specified."
+                                                                                  "Chrome extension."
+                                                                                  "Chrome app."
+                                                                                  "Chrome theme."
+                                                                                  "Chrome hosted app."
+                                                                                  "ARC++ app."],
+                                                               :enum ["APP_TYPE_UNSPECIFIED"
+                                                                      "EXTENSION"
+                                                                      "APP"
+                                                                      "THEME"
+                                                                      "HOSTED_APP"
+                                                                      "ANDROID_APP"],
+                                                               :description "Output only. Type of the app.",
+                                                               :type "string"},
+                                                     :browserDeviceCount {:type "string",
+                                                                          :format "int64",
+                                                                          :description "Output only. Count of browser devices with this app installed.",
+                                                                          :readOnly true},
+                                                     :osUserCount {:readOnly true,
+                                                                   :format "int64",
+                                                                   :description "Output only. Count of ChromeOS users with this app installed.",
+                                                                   :type "string"}},
+                                        :id "GoogleChromeManagementV1InstalledApp"},
+ :GoogleChromeManagementV1Device {:type "object",
+                                  :id "GoogleChromeManagementV1Device",
+                                  :description "Describes a device reporting Chrome browser information.",
+                                  :properties {:deviceId {:type "string",
+                                                          :readOnly true,
+                                                          :description "Output only. The ID of the device that reported this Chrome browser information."},
+                                               :machine {:type "string",
+                                                         :readOnly true,
+                                                         :description "Output only. The name of the machine within its local network."}}},
+ :GoogleChromeManagementV1CountInstalledAppsResponse {:type "object",
+                                                      :properties {:installedApps {:items {:$ref "GoogleChromeManagementV1InstalledApp"},
+                                                                                   :type "array",
+                                                                                   :description "List of installed apps matching request."},
+                                                                   :nextPageToken {:type "string",
+                                                                                   :description "Token to specify the next page of the request."},
+                                                                   :totalSize {:format "int32",
+                                                                               :type "integer",
+                                                                               :description "Total number of installed apps matching request."}},
+                                                      :description "Response containing details of queried installed apps.",
+                                                      :id "GoogleChromeManagementV1CountInstalledAppsResponse"},
+ :GoogleChromeManagementV1CountChromeVersionsResponse {:description "Response containing requested browser versions details and counts.",
+                                                       :id "GoogleChromeManagementV1CountChromeVersionsResponse",
+                                                       :type "object",
+                                                       :properties {:nextPageToken {:type "string",
+                                                                                    :description "Token to specify the next page of the request."},
+                                                                    :browserVersions {:items {:$ref "GoogleChromeManagementV1BrowserVersion"},
+                                                                                      :description "List of all browser versions and their install counts.",
+                                                                                      :type "array"},
+                                                                    :totalSize {:format "int32",
+                                                                                :type "integer",
+                                                                                :description "Total number browser versions matching request."}}}}

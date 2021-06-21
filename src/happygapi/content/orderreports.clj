@@ -11,7 +11,7 @@
   
   Required parameters: disbursementId, merchantId
   
-  Optional parameters: transactionStartDate, pageToken, maxResults, transactionEndDate
+  Optional parameters: transactionStartDate, transactionEndDate, maxResults, pageToken
   
   Retrieves a list of transactions for a disbursement from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/orderreports/disbursements/{disbursementId}/transactions"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/orderreports/disbursements/{disbursementId}/transactions"
      #{:disbursementId :merchantId}
      parameters)
     (merge-with
@@ -37,7 +37,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: pageToken, disbursementStartDate, disbursementEndDate, maxResults
+  Optional parameters: disbursementStartDate, pageToken, maxResults, disbursementEndDate
   
   Retrieves a report for disbursements from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/orderreports/disbursements"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/orderreports/disbursements"
      #{:merchantId}
      parameters)
     (merge-with

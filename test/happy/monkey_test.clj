@@ -9,5 +9,5 @@
 
 (deftest list-apis-test
   (let [api-list (monkey/list-apis)]
-    (is (<= 170 (count api-list) 200)
+    (is (<= 100 (count api-list) 500)
         "should find a good number of Google APIs")))

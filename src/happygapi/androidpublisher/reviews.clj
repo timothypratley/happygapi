@@ -11,7 +11,7 @@
   
   Required parameters: packageName
   
-  Optional parameters: startIndex, maxResults, token, translationLanguage
+  Optional parameters: token, startIndex, maxResults, translationLanguage
   
   Lists all reviews."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -35,7 +35,7 @@
 (defn reply$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/reply
   
-  Required parameters: packageName, reviewId
+  Required parameters: reviewId, packageName
   
   Optional parameters: none
   

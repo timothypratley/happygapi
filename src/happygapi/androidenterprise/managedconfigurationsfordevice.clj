@@ -6,44 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/delete
-  
-  Required parameters: deviceId, enterpriseId, managedConfigurationForDeviceId, userId
-  
-  Optional parameters: none
-  
-  Removes a per-device managed configuration for an app for the specified device."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId
-            :deviceId
-            :userId
-            :managedConfigurationForDeviceId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice/{managedConfigurationForDeviceId}"
-     #{:enterpriseId
-       :deviceId
-       :userId
-       :managedConfigurationForDeviceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/get
   
-  Required parameters: deviceId, managedConfigurationForDeviceId, userId, enterpriseId
+  Required parameters: managedConfigurationForDeviceId, deviceId, enterpriseId, userId
   
   Optional parameters: none
   
@@ -77,22 +43,22 @@
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/update
   
-  Required parameters: userId, managedConfigurationForDeviceId, deviceId, enterpriseId
+  Required parameters: userId, enterpriseId, deviceId, managedConfigurationForDeviceId
   
   Optional parameters: none
   
   Body: 
   
-  {:productId string,
+  {:configurationVariables {:variableSet [VariableSet], :mcmId string},
+   :kind string,
+   :productId string,
    :managedProperty [{:valueStringArray [string],
-                      :valueInteger integer,
+                      :key string,
                       :valueBundle ManagedPropertyBundle,
-                      :valueBundleArray [ManagedPropertyBundle],
                       :valueBool boolean,
-                      :valueString string,
-                      :key string}],
-   :configurationVariables {:variableSet [VariableSet], :mcmId string},
-   :kind string}
+                      :valueBundleArray [ManagedPropertyBundle],
+                      :valueInteger integer,
+                      :valueString string}]}
   
   Adds or updates a per-device managed configuration for an app for the specified device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -126,7 +92,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/list
   
-  Required parameters: deviceId, userId, enterpriseId
+  Required parameters: deviceId, enterpriseId, userId
   
   Optional parameters: none
   
@@ -142,6 +108,40 @@
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice"
      #{:enterpriseId :deviceId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsfordevice/delete
+  
+  Required parameters: managedConfigurationForDeviceId, deviceId, enterpriseId, userId
+  
+  Optional parameters: none
+  
+  Removes a per-device managed configuration for an app for the specified device."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId
+            :deviceId
+            :userId
+            :managedConfigurationForDeviceId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/managedConfigurationsForDevice/{managedConfigurationForDeviceId}"
+     #{:enterpriseId
+       :deviceId
+       :userId
+       :managedConfigurationForDeviceId}
      parameters)
     (merge-with
      merge

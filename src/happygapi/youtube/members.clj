@@ -11,14 +11,10 @@
   
   Required parameters: part
   
-  Optional parameters: hasAccessToLevel, mode, pageToken, maxResults, filterByMemberChannelId
+  Optional parameters: pageToken, hasAccessToLevel, maxResults, filterByMemberChannelId, mode
   
   Retrieves a list of members that match the request criteria for a channel."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
-            "https://www.googleapis.com/auth/youtubepartner"]}
+  {:scopes ["https://www.googleapis.com/auth/youtube.channel-memberships.creator"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response

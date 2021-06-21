@@ -1,18 +1,36 @@
-{:BatchGetAmpUrlsResponse {:id "BatchGetAmpUrlsResponse",
-                           :description "Batch AMP URL response.",
-                           :type "object",
+{:BatchGetAmpUrlsResponse {:type "object",
+                           :id "BatchGetAmpUrlsResponse",
                            :properties {:urlErrors {:description "The errors for requested URLs that have no AMP URL.",
                                                     :items {:$ref "AmpUrlError"},
                                                     :type "array"},
-                                        :ampUrls {:type "array",
-                                                  :description "For each URL in BatchAmpUrlsRequest, the URL response. The response might not be in the same order as URLs in the batch request. If BatchAmpUrlsRequest contains duplicate URLs, AmpUrl is generated only once.",
-                                                  :items {:$ref "AmpUrl"}}}},
+                                        :ampUrls {:description "For each URL in BatchAmpUrlsRequest, the URL response. The response might not be in the same order as URLs in the batch request. If BatchAmpUrlsRequest contains duplicate URLs, AmpUrl is generated only once.",
+                                                  :items {:$ref "AmpUrl"},
+                                                  :type "array"}},
+                           :description "Batch AMP URL response."},
+ :BatchGetAmpUrlsRequest {:type "object",
+                          :description "AMP URL request for a batch of URLs.",
+                          :properties {:lookupStrategy {:enumDescriptions ["FETCH_LIVE_DOC strategy involves live document fetch of URLs not found in the index. Any request URL not found in the index is crawled in realtime to validate if there is a corresponding AMP URL. This strategy has higher coverage but with extra latency introduced by realtime crawling. This is the default strategy. Applications using this strategy should set higher HTTP timeouts of the API calls."
+                                                                           "IN_INDEX_DOC strategy skips fetching live documents of URL(s) not found in index. For applications which need low latency use of IN_INDEX_DOC strategy is recommended."],
+                                                        :type "string",
+                                                        :description "The lookup_strategy being requested.",
+                                                        :enum ["FETCH_LIVE_DOC"
+                                                               "IN_INDEX_DOC"]},
+                                       :urls {:items {:type "string"},
+                                              :description "List of URLs to look up for the paired AMP URLs. The URLs are case-sensitive. Up to 50 URLs per lookup (see [Usage Limits](/amp/cache/reference/limits)).",
+                                              :type "array"}},
+                          :id "BatchGetAmpUrlsRequest"},
  :AmpUrlError {:type "object",
+               :description "AMP URL Error resource for a requested URL that couldn't be found.",
                :properties {:errorMessage {:type "string",
                                            :description "An optional descriptive error message."},
-                            :originalUrl {:description "The original non-AMP URL.",
-                                          :type "string"},
-                            :errorCode {:description "The error code of an API call.",
+                            :originalUrl {:type "string",
+                                          :description "The original non-AMP URL."},
+                            :errorCode {:enum ["ERROR_CODE_UNSPECIFIED"
+                                               "INPUT_URL_NOT_FOUND"
+                                               "NO_AMP_URL"
+                                               "APPLICATION_ERROR"
+                                               "URL_IS_VALID_AMP"
+                                               "URL_IS_INVALID_AMP"],
                                         :type "string",
                                         :enumDescriptions ["Not specified error."
                                                            "Indicates the requested URL is not found in the index, possibly because it's unable to be found, not able to be accessed by Googlebot, or some other error."
@@ -20,32 +38,14 @@
                                                            "Indicates some kind of application error occurred at the server. Client advised to retry."
                                                            "DEPRECATED: Indicates the requested URL is a valid AMP URL. This is a non-error state, should not be relied upon as a sign of success or failure. It will be removed in future versions of the API."
                                                            "Indicates that an AMP URL has been found that corresponds to the request URL, but it is not valid AMP HTML."],
-                                        :enum ["ERROR_CODE_UNSPECIFIED"
-                                               "INPUT_URL_NOT_FOUND"
-                                               "NO_AMP_URL"
-                                               "APPLICATION_ERROR"
-                                               "URL_IS_VALID_AMP"
-                                               "URL_IS_INVALID_AMP"]}},
-               :description "AMP URL Error resource for a requested URL that couldn't be found.",
+                                        :description "The error code of an API call."}},
                :id "AmpUrlError"},
  :AmpUrl {:type "object",
-          :id "AmpUrl",
-          :properties {:cdnAmpUrl {:description "The [AMP Cache URL](/amp/cache/overview#amp-cache-url-format) pointing to the cached document in the Google AMP Cache.",
+          :properties {:originalUrl {:description "The original non-AMP URL.",
+                                     :type "string"},
+                       :cdnAmpUrl {:description "The [AMP Cache URL](/amp/cache/overview#amp-cache-url-format) pointing to the cached document in the Google AMP Cache.",
                                    :type "string"},
-                       :originalUrl {:type "string",
-                                     :description "The original non-AMP URL."},
                        :ampUrl {:description "The AMP URL pointing to the publisher's web server.",
                                 :type "string"}},
-          :description "AMP URL response for a requested URL."},
- :BatchGetAmpUrlsRequest {:type "object",
-                          :description "AMP URL request for a batch of URLs.",
-                          :id "BatchGetAmpUrlsRequest",
-                          :properties {:urls {:items {:type "string"},
-                                              :type "array",
-                                              :description "List of URLs to look up for the paired AMP URLs. The URLs are case-sensitive. Up to 50 URLs per lookup (see [Usage Limits](/amp/cache/reference/limits))."},
-                                       :lookupStrategy {:description "The lookup_strategy being requested.",
-                                                        :type "string",
-                                                        :enumDescriptions ["FETCH_LIVE_DOC strategy involves live document fetch of URLs not found in the index. Any request URL not found in the index is crawled in realtime to validate if there is a corresponding AMP URL. This strategy has higher coverage but with extra latency introduced by realtime crawling. This is the default strategy. Applications using this strategy should set higher HTTP timeouts of the API calls."
-                                                                           "IN_INDEX_DOC strategy skips fetching live documents of URL(s) not found in index. For applications which need low latency use of IN_INDEX_DOC strategy is recommended."],
-                                                        :enum ["FETCH_LIVE_DOC"
-                                                               "IN_INDEX_DOC"]}}}}
+          :id "AmpUrl",
+          :description "AMP URL response for a requested URL."}}

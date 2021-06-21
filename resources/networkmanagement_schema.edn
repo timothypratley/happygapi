@@ -1,21 +1,27 @@
-{:LoadBalancerInfo {:description "For display only. Metadata associated with a load balancer.",
+{:LoadBalancerInfo {:id "LoadBalancerInfo",
+                    :description "For display only. Metadata associated with a load balancer.",
                     :type "object",
                     :properties {:backendUri {:description "Backend configuration URI.",
                                               :type "string"},
-                                 :backendType {:enum ["BACKEND_TYPE_UNSPECIFIED"
-                                                      "BACKEND_SERVICE"
-                                                      "TARGET_POOL"],
-                                               :enumDescriptions ["Type is unspecified."
+                                 :backends {:description "Information for the loadbalancer backends.",
+                                            :type "array",
+                                            :items {:$ref "LoadBalancerBackend"}},
+                                 :backendType {:enumDescriptions ["Type is unspecified."
                                                                   "Backend Service as the load balancer's backend."
                                                                   "Target Pool as the load balancer's backend."],
                                                :description "Type of load balancer's backend configuration.",
-                                               :type "string"},
-                                 :backends {:description "Information for the loadbalancer backends.",
-                                            :items {:$ref "LoadBalancerBackend"},
-                                            :type "array"},
+                                               :type "string",
+                                               :enum ["BACKEND_TYPE_UNSPECIFIED"
+                                                      "BACKEND_SERVICE"
+                                                      "TARGET_POOL"]},
                                  :healthCheckUri {:type "string",
                                                   :description "URI of the health check for the load balancer."},
-                                 :loadBalancerType {:description "Type of the load balancer.",
+                                 :loadBalancerType {:enum ["LOAD_BALANCER_TYPE_UNSPECIFIED"
+                                                           "INTERNAL_TCP_UDP"
+                                                           "NETWORK_TCP_UDP"
+                                                           "HTTP_PROXY"
+                                                           "TCP_PROXY"
+                                                           "SSL_PROXY"],
                                                     :type "string",
                                                     :enumDescriptions ["Type is unspecified."
                                                                        "Internal TCP/UDP load balancer."
@@ -23,88 +29,85 @@
                                                                        "HTTP(S) proxy load balancer."
                                                                        "TCP proxy load balancer."
                                                                        "SSL proxy load balancer."],
-                                                    :enum ["LOAD_BALANCER_TYPE_UNSPECIFIED"
-                                                           "INTERNAL_TCP_UDP"
-                                                           "NETWORK_TCP_UDP"
-                                                           "HTTP_PROXY"
-                                                           "TCP_PROXY"
-                                                           "SSL_PROXY"]}},
-                    :id "LoadBalancerInfo"},
- :ForwardingRuleInfo {:id "ForwardingRuleInfo",
+                                                    :description "Type of the load balancer."}}},
+ :ForwardingRuleInfo {:description "For display only. Metadata associated with a Compute Engine forwarding rule.",
+                      :type "object",
+                      :id "ForwardingRuleInfo",
                       :properties {:displayName {:type "string",
                                                  :description "Name of a Compute Engine forwarding rule."},
-                                   :vip {:description "VIP of the forwarding rule.",
-                                         :type "string"},
-                                   :target {:type "string",
-                                            :description "Target type of the forwarding rule."},
-                                   :matchedPortRange {:description "Port range defined in the forwarding rule that matches the test.",
-                                                      :type "string"},
-                                   :networkUri {:type "string",
-                                                :description "Network URI. Only valid for Internal Load Balancer."},
+                                   :matchedProtocol {:type "string",
+                                                     :description "Protocol defined in the forwarding rule that matches the test."},
                                    :uri {:type "string",
                                          :description "URI of a Compute Engine forwarding rule."},
-                                   :matchedProtocol {:description "Protocol defined in the forwarding rule that matches the test.",
-                                                     :type "string"}},
-                      :type "object",
-                      :description "For display only. Metadata associated with a Compute Engine forwarding rule."},
- :NetworkInfo {:properties {:matchedIpRange {:description "The IP range that matches the test.",
-                                             :type "string"},
-                            :displayName {:type "string",
-                                          :description "Name of a Compute Engine network."},
-                            :uri {:description "URI of a Compute Engine network.",
-                                  :type "string"}},
-               :type "object",
-               :description "For display only. Metadata associated with a Compute Engine network.",
-               :id "NetworkInfo"},
- :VpnTunnelInfo {:description "For display only. Metadata associated with a Compute Engine VPN tunnel.",
-                 :properties {:sourceGatewayIp {:description "Local VPN gateway's IP address.",
+                                   :vip {:type "string",
+                                         :description "VIP of the forwarding rule."},
+                                   :networkUri {:type "string",
+                                                :description "Network URI. Only valid for Internal Load Balancer."},
+                                   :matchedPortRange {:description "Port range defined in the forwarding rule that matches the test.",
+                                                      :type "string"},
+                                   :target {:type "string",
+                                            :description "Target type of the forwarding rule."}}},
+ :NetworkInfo {:type "object",
+               :id "NetworkInfo",
+               :properties {:uri {:description "URI of a Compute Engine network.",
+                                  :type "string"},
+                            :matchedIpRange {:type "string",
+                                             :description "The IP range that matches the test."},
+                            :displayName {:description "Name of a Compute Engine network.",
+                                          :type "string"}},
+               :description "For display only. Metadata associated with a Compute Engine network."},
+ :VpnTunnelInfo {:type "object",
+                 :properties {:sourceGatewayIp {:type "string",
+                                                :description "Local VPN gateway's IP address."},
+                              :remoteGatewayIp {:description "Remote VPN gateway's IP address.",
                                                 :type "string"},
-                              :remoteGatewayIp {:type "string",
-                                                :description "Remote VPN gateway's IP address."},
-                              :displayName {:type "string",
-                                            :description "Name of a VPN tunnel."},
-                              :region {:type "string",
-                                       :description "Name of a GCP region where this VPN tunnel is configured."},
+                              :displayName {:description "Name of a VPN tunnel.",
+                                            :type "string"},
+                              :region {:description "Name of a Google Cloud region where this VPN tunnel is configured.",
+                                       :type "string"},
                               :networkUri {:description "URI of a Compute Engine network where the VPN tunnel is configured.",
                                            :type "string"},
                               :uri {:description "URI of a VPN tunnel.",
                                     :type "string"},
-                              :remoteGateway {:type "string",
-                                              :description "URI of a VPN gateway at remote end of the tunnel."},
+                              :remoteGateway {:description "URI of a VPN gateway at remote end of the tunnel.",
+                                              :type "string"},
                               :sourceGateway {:description "URI of the VPN gateway at local end of the tunnel.",
                                               :type "string"},
                               :routingType {:enum ["ROUTING_TYPE_UNSPECIFIED"
                                                    "ROUTE_BASED"
                                                    "POLICY_BASED"
                                                    "DYNAMIC"],
+                                            :description "Type of the routing policy.",
                                             :type "string",
                                             :enumDescriptions ["Unspecified type. Default value."
                                                                "Route based VPN."
                                                                "Policy based routing."
-                                                               "Dynamic (BGP) routing."],
-                                            :description "Type of the routing policy."}},
+                                                               "Dynamic (BGP) routing."]}},
                  :id "VpnTunnelInfo",
-                 :type "object"},
- :Step {:properties {:description {:type "string",
+                 :description "For display only. Metadata associated with a Compute Engine VPN tunnel."},
+ :Step {:type "object",
+        :description "A simulated forwarding path is composed of multiple steps. Each step has a well-defined state and an associated configuration.",
+        :properties {:description {:type "string",
                                    :description "A description of the step. Usually this is a summary of the state."},
                      :deliver {:$ref "DeliverInfo",
-                               :description "Display info of the final state \"deliver\" and reason."},
+                               :description "Display information of the final state \"deliver\" and reason."},
                      :instance {:$ref "InstanceInfo",
-                                :description "Display info of a Compute Engine instance."},
-                     :loadBalancer {:description "Display info of the load balancers.",
-                                    :$ref "LoadBalancerInfo"},
+                                :description "Display information of a Compute Engine instance."},
+                     :loadBalancer {:$ref "LoadBalancerInfo",
+                                    :description "Display information of the load balancers."},
                      :forward {:$ref "ForwardInfo",
-                               :description "Display info of the final state \"forward\" and reason."},
+                               :description "Display information of the final state \"forward\" and reason."},
                      :drop {:$ref "DropInfo",
-                            :description "Display info of the final state \"drop\" and reason."},
+                            :description "Display information of the final state \"drop\" and reason."},
                      :causesDrop {:description "This is a step that leads to the final state Drop.",
                                   :type "boolean"},
-                     :state {:type "string",
-                             :description "Each step is in one of the pre-defined states.",
+                     :state {:description "Each step is in one of the pre-defined states.",
                              :enum ["STATE_UNSPECIFIED"
                                     "START_FROM_INSTANCE"
                                     "START_FROM_INTERNET"
                                     "START_FROM_PRIVATE_NETWORK"
+                                    "START_FROM_GKE_MASTER"
+                                    "START_FROM_CLOUD_SQL_INSTANCE"
                                     "APPLY_INGRESS_FIREWALL_RULE"
                                     "APPLY_EGRESS_FIREWALL_RULE"
                                     "APPLY_ROUTE"
@@ -122,10 +125,13 @@
                                     "FORWARD"
                                     "ABORT"
                                     "VIEWER_PERMISSION_MISSING"],
+                             :type "string",
                              :enumDescriptions ["Unspecified state."
-                                                "Initial state: packet originating from a Compute Engine instance. An InstanceInfo will be populated with starting instance info."
-                                                "Initial state: packet originating from Internet. The endpoint info will be populated."
-                                                "Initial state: packet originating from a VPC or on-premises network with internal source IP. If the source is a VPC network visible to the user, a NetworkInfo will be populated with details of the network."
+                                                "Initial state: packet originating from a Compute Engine instance. An InstanceInfo is populated with starting instance information."
+                                                "Initial state: packet originating from the internet. The endpoint information is populated."
+                                                "Initial state: packet originating from a VPC or on-premises network with internal source IP. If the source is a VPC network visible to the user, a NetworkInfo is populated with details of the network."
+                                                "Initial state: packet originating from a Google Kubernetes Engine cluster master. A GKEMasterInfo is populated with starting instance information."
+                                                "Initial state: packet originating from a Cloud SQL instance. A CloudSQLInstanceInfo is populated with starting instance information."
                                                 "Config checking state: verify ingress firewall rule."
                                                 "Config checking state: verify egress firewall rule."
                                                 "Config checking state: verify route."
@@ -138,157 +144,180 @@
                                                 "Forwarding state: arriving at a Cloud VPN tunnel."
                                                 "Transition state: packet header translated."
                                                 "Transition state: original connection is terminated and a new proxied connection is initiated."
-                                                "Final state: packet delivered."
-                                                "Final state: packet dropped."
-                                                "Final state: packet forwarded to a network with an unknown configuration."
+                                                "Final state: packet could be delivered."
+                                                "Final state: packet could be dropped."
+                                                "Final state: packet could be forwarded to a network with an unknown configuration."
                                                 "Final state: analysis is aborted."
                                                 "Special state: viewer of the test result does not have permission to see the configuration in this step."]},
                      :route {:$ref "RouteInfo",
-                             :description "Display info of a Compute Engine route."},
-                     :abort {:description "Display info of the final state \"abort\" and reason.",
-                             :$ref "AbortInfo"},
-                     :vpnTunnel {:description "Display info of a Compute Engine VPN tunnel.",
-                                 :$ref "VpnTunnelInfo"},
+                             :description "Display information of a Compute Engine route."},
+                     :abort {:$ref "AbortInfo",
+                             :description "Display information of the final state \"abort\" and reason."},
+                     :vpnTunnel {:$ref "VpnTunnelInfo",
+                                 :description "Display information of a Compute Engine VPN tunnel."},
+                     :cloudSqlInstance {:$ref "CloudSQLInstanceInfo",
+                                        :description "Display information of a Cloud SQL instance."},
                      :firewall {:$ref "FirewallInfo",
-                                :description "Display info of a Compute Engine firewall rule."},
-                     :forwardingRule {:$ref "ForwardingRuleInfo",
-                                      :description "Display info of a Compute Engine forwarding rule."},
+                                :description "Display information of a Compute Engine firewall rule."},
+                     :forwardingRule {:description "Display information of a Compute Engine forwarding rule.",
+                                      :$ref "ForwardingRuleInfo"},
                      :projectId {:type "string",
                                  :description "Project ID that contains the configuration this step is validating."},
                      :vpnGateway {:$ref "VpnGatewayInfo",
-                                  :description "Display info of a Compute Engine VPN gateway."},
-                     :network {:description "Display info of a GCP network.",
+                                  :description "Display information of a Compute Engine VPN gateway."},
+                     :network {:description "Display information of a Google Cloud network.",
                                :$ref "NetworkInfo"},
+                     :gkeMaster {:$ref "GKEMasterInfo",
+                                 :description "Display information of a Google Kubernetes Engine cluster master."},
                      :endpoint {:$ref "EndpointInfo",
-                                :description "Display info of the source and destination under analysis. The endpiont info in an intermediate state may differ with the initial input, as it might be modified by state like NAT, or Connection Proxy."}},
-        :description "A simulated forwarding path is composed of multiple steps. Each step has a well-defined state and an associated configuration.",
-        :id "Step",
-        :type "object"},
- :RerunConnectivityTestRequest {:properties {},
-                                :type "object",
+                                :description "Display information of the source and destination under analysis. The endpoint information in an intermediate state may differ with the initial input, as it might be modified by state like NAT, or Connection Proxy."}},
+        :id "Step"},
+ :RerunConnectivityTestRequest {:description "Request for the `RerunConnectivityTest` method.",
+                                :properties {},
                                 :id "RerunConnectivityTestRequest",
-                                :description "Request for the `RerunConnectivityTest` method."},
- :Endpoint {:description "Source or destination of the Connectivity Test.",
-            :type "object",
-            :properties {:projectId {:type "string",
-                                     :description "Project ID where the endpoint is located. The Project ID can be derived from the URI if you provide a VM instance or network URI. The following are two cases where you must provide the project ID: 1. Only the IP address is specified, and the IP address is within a GCP project. 2. When you are using Shared VPC and the IP address that you provide is from the service project. In this case, the network that the IP address resides in is defined in the host project."},
-                         :port {:description "The IP protocol port of the endpoint. Only applicable when protocol is TCP or UDP.",
-                                :type "integer",
-                                :format "int32"},
-                         :network {:description "A Compute Engine network URI.",
-                                   :type "string"},
-                         :networkType {:description "Type of the network where the endpoint is located. Applicable only to source endpoint, as destination network type can be inferred from the source.",
-                                       :type "string",
-                                       :enumDescriptions ["Default type if unspecified."
-                                                          "A network hosted within Google Cloud Platform. To receive more detailed output, specify the URI for the source or destination network."
-                                                          "A network hosted outside of Google Cloud Platform. This can be an on-premises network, or a network hosted by another cloud provider."],
-                                       :enum ["NETWORK_TYPE_UNSPECIFIED"
-                                              "GCP_NETWORK"
-                                              "NON_GCP_NETWORK"]},
+                                :type "object"},
+ :Endpoint {:type "object",
+            :description "Source or destination of the Connectivity Test.",
+            :id "Endpoint",
+            :properties {:projectId {:description "Project ID where the endpoint is located. The Project ID can be derived from the URI if you provide a VM instance or network URI. The following are two cases where you must provide the project ID: 1. Only the IP address is specified, and the IP address is within a GCP project. 2. When you are using Shared VPC and the IP address that you provide is from the service project. In this case, the network that the IP address resides in is defined in the host project.",
+                                     :type "string"},
+                         :gkeMasterCluster {:description "A cluster URI for [Google Kubernetes Engine master](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture).",
+                                            :type "string"},
                          :instance {:description "A Compute Engine instance URI.",
                                     :type "string"},
                          :ipAddress {:description "The IP address of the endpoint, which can be an external or internal IP. An IPv6 address is only allowed when the test's destination is a [global load balancer VIP](/load-balancing/docs/load-balancing-overview).",
-                                     :type "string"}},
-            :id "Endpoint"},
- :Operation {:description "This resource represents a long-running operation that is the result of a network API call.",
-             :type "object",
-             :properties {:done {:description "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.",
-                                 :type "boolean"},
-                          :error {:description "The error result of the operation in case of failure or cancellation.",
-                                  :$ref "Status"},
-                          :response {:description "The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.",
-                                     :additionalProperties {:type "any",
-                                                            :description "Properties of the object. Contains field @type with type URL."},
-                                     :type "object"},
+                                     :type "string"},
+                         :network {:type "string",
+                                   :description "A Compute Engine network URI."},
+                         :networkType {:description "Type of the network where the endpoint is located. Applicable only to source endpoint, as destination network type can be inferred from the source.",
+                                       :enumDescriptions ["Default type if unspecified."
+                                                          "A network hosted within Google Cloud Platform. To receive more detailed output, specify the URI for the source or destination network."
+                                                          "A network hosted outside of Google Cloud Platform. This can be an on-premises network, or a network hosted by another cloud provider."],
+                                       :type "string",
+                                       :enum ["NETWORK_TYPE_UNSPECIFIED"
+                                              "GCP_NETWORK"
+                                              "NON_GCP_NETWORK"]},
+                         :port {:type "integer",
+                                :description "The IP protocol port of the endpoint. Only applicable when protocol is TCP or UDP.",
+                                :format "int32"},
+                         :cloudSqlInstance {:description "A [Cloud SQL](https://cloud.google.com/sql) instance URI.",
+                                            :type "string"}}},
+ :Operation {:id "Operation",
+             :properties {:response {:type "object",
+                                     :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                                            :type "any"},
+                                     :description "The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`."},
+                          :error {:$ref "Status",
+                                  :description "The error result of the operation in case of failure or cancellation."},
                           :name {:type "string",
                                  :description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`."},
                           :metadata {:type "object",
+                                     :description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
                                      :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
-                                                            :type "any"},
-                                     :description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any."}},
-             :id "Operation"},
- :SetIamPolicyRequest {:properties {:updateMask {:description "OPTIONAL: A FieldMask specifying which fields of the policy to modify. Only the fields in the mask will be modified. If no mask is provided, the following default mask is used: `paths: \"bindings, etag\"`",
-                                                 :format "google-fieldmask",
-                                                 :type "string"},
-                                    :policy {:$ref "Policy",
-                                             :description "REQUIRED: The complete policy to be applied to the `resource`. The size of the policy is limited to a few 10s of KB. An empty policy is a valid policy but certain Cloud Platform services (such as Projects) might reject them."}},
+                                                            :type "any"}},
+                          :done {:description "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.",
+                                 :type "boolean"}},
+             :description "This resource represents a long-running operation that is the result of a network API call.",
+             :type "object"},
+ :SetIamPolicyRequest {:description "Request message for `SetIamPolicy` method.",
                        :type "object",
                        :id "SetIamPolicyRequest",
-                       :description "Request message for `SetIamPolicy` method."},
- :AuditConfig {:id "AuditConfig",
+                       :properties {:updateMask {:type "string",
+                                                 :format "google-fieldmask",
+                                                 :description "OPTIONAL: A FieldMask specifying which fields of the policy to modify. Only the fields in the mask will be modified. If no mask is provided, the following default mask is used: `paths: \"bindings, etag\"`"},
+                                    :policy {:description "REQUIRED: The complete policy to be applied to the `resource`. The size of the policy is limited to a few 10s of KB. An empty policy is a valid policy but certain Cloud Platform services (such as Projects) might reject them.",
+                                             :$ref "Policy"}}},
+ :AuditConfig {:properties {:auditLogConfigs {:items {:$ref "AuditLogConfig"},
+                                              :description "The configuration for logging of each type of permission.",
+                                              :type "array"},
+                            :service {:description "Specifies a service that will be enabled for audit logging. For example, `storage.googleapis.com`, `cloudsql.googleapis.com`. `allServices` is a special value that covers all services.",
+                                      :type "string"}},
                :description "Specifies the audit configuration for a service. The configuration determines which permission types are logged, and what identities, if any, are exempted from logging. An AuditConfig must have one or more AuditLogConfigs. If there are AuditConfigs for both `allServices` and a specific service, the union of the two AuditConfigs is used for that service: the log_types specified in each AuditConfig are enabled, and the exempted_members in each AuditLogConfig are exempted. Example Policy with multiple AuditConfigs: { \"audit_configs\": [ { \"service\": \"allServices\", \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\", \"exempted_members\": [ \"user:jose@example.com\" ] }, { \"log_type\": \"DATA_WRITE\" }, { \"log_type\": \"ADMIN_READ\" } ] }, { \"service\": \"sampleservice.googleapis.com\", \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\" }, { \"log_type\": \"DATA_WRITE\", \"exempted_members\": [ \"user:aliya@example.com\" ] } ] } ] } For sampleservice, this policy enables DATA_READ, DATA_WRITE and ADMIN_READ logging. It also exempts jose@example.com from DATA_READ logging, and aliya@example.com from DATA_WRITE logging.",
                :type "object",
-               :properties {:auditLogConfigs {:items {:$ref "AuditLogConfig"},
-                                              :type "array",
-                                              :description "The configuration for logging of each type of permission."},
-                            :service {:description "Specifies a service that will be enabled for audit logging. For example, `storage.googleapis.com`, `cloudsql.googleapis.com`. `allServices` is a special value that covers all services.",
-                                      :type "string"}}},
- :AuditLogConfig {:description "Provides the configuration for logging a type of permissions. Example: { \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\", \"exempted_members\": [ \"user:jose@example.com\" ] }, { \"log_type\": \"DATA_WRITE\" } ] } This enables 'DATA_READ' and 'DATA_WRITE' logging, while exempting jose@example.com from DATA_READ logging.",
+               :id "AuditConfig"},
+ :CloudSQLInstanceInfo {:type "object",
+                        :properties {:internalIp {:type "string",
+                                                  :description "Internal IP address of a Cloud SQL instance."},
+                                     :displayName {:description "Name of a Cloud SQL instance.",
+                                                   :type "string"},
+                                     :uri {:description "URI of a Cloud SQL instance.",
+                                           :type "string"},
+                                     :region {:description "Region in which the Cloud SQL instance is running.",
+                                              :type "string"},
+                                     :networkUri {:type "string",
+                                                  :description "URI of a Cloud SQL instance network or empty string if the instance does not have one."},
+                                     :externalIp {:description "External IP address of a Cloud SQL instance.",
+                                                  :type "string"}},
+                        :id "CloudSQLInstanceInfo",
+                        :description "For display only. Metadata associated with a Cloud SQL instance."},
+ :AuditLogConfig {:id "AuditLogConfig",
                   :type "object",
-                  :properties {:exemptedMembers {:items {:type "string"},
-                                                 :description "Specifies the identities that do not cause logging for this type of permission. Follows the same format of Binding.members.",
-                                                 :type "array"},
-                               :logType {:enumDescriptions ["Default case. Should never be this."
-                                                            "Admin reads. Example: CloudIAM getIamPolicy"
-                                                            "Data writes. Example: CloudSQL Users create"
-                                                            "Data reads. Example: CloudSQL Users list"],
-                                         :description "The log type that this config enables.",
-                                         :enum ["LOG_TYPE_UNSPECIFIED"
+                  :properties {:logType {:enum ["LOG_TYPE_UNSPECIFIED"
                                                 "ADMIN_READ"
                                                 "DATA_WRITE"
                                                 "DATA_READ"],
-                                         :type "string"}},
-                  :id "AuditLogConfig"},
- :CancelOperationRequest {:properties {},
+                                         :enumDescriptions ["Default case. Should never be this."
+                                                            "Admin reads. Example: CloudIAM getIamPolicy"
+                                                            "Data writes. Example: CloudSQL Users create"
+                                                            "Data reads. Example: CloudSQL Users list"],
+                                         :type "string",
+                                         :description "The log type that this config enables."},
+                               :exemptedMembers {:items {:type "string"},
+                                                 :description "Specifies the identities that do not cause logging for this type of permission. Follows the same format of Binding.members.",
+                                                 :type "array"}},
+                  :description "Provides the configuration for logging a type of permissions. Example: { \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\", \"exempted_members\": [ \"user:jose@example.com\" ] }, { \"log_type\": \"DATA_WRITE\" } ] } This enables 'DATA_READ' and 'DATA_WRITE' logging, while exempting jose@example.com from DATA_READ logging."},
+ :CancelOperationRequest {:type "object",
+                          :properties {},
                           :description "The request message for Operations.CancelOperation.",
-                          :id "CancelOperationRequest",
-                          :type "object"},
- :ListConnectivityTestsResponse {:properties {:unreachable {:description "Locations that could not be reached (when querying all locations with `-`).",
-                                                            :items {:type "string"},
-                                                            :type "array"},
-                                              :resources {:description "List of Connectivity Tests.",
-                                                          :items {:$ref "ConnectivityTest"},
-                                                          :type "array"},
-                                              :nextPageToken {:description "Page token to fetch the next set of Connectivity Tests.",
-                                                              :type "string"}},
+                          :id "CancelOperationRequest"},
+ :ListConnectivityTestsResponse {:description "Response for the `ListConnectivityTests` method.",
                                  :id "ListConnectivityTestsResponse",
                                  :type "object",
-                                 :description "Response for the `ListConnectivityTests` method."},
- :EndpointInfo {:type "object",
-                :id "EndpointInfo",
-                :properties {:sourceIp {:type "string",
-                                        :description "Source IP address."},
+                                 :properties {:unreachable {:type "array",
+                                                            :items {:type "string"},
+                                                            :description "Locations that could not be reached (when querying all locations with `-`)."},
+                                              :nextPageToken {:description "Page token to fetch the next set of Connectivity Tests.",
+                                                              :type "string"},
+                                              :resources {:items {:$ref "ConnectivityTest"},
+                                                          :type "array",
+                                                          :description "List of Connectivity Tests."}}},
+ :EndpointInfo {:properties {:sourceNetworkUri {:type "string",
+                                                :description "URI of the network where this packet originates from."},
                              :sourcePort {:description "Source port. Only valid when protocol is TCP or UDP.",
-                                          :format "int32",
-                                          :type "integer"},
-                             :destinationPort {:format "int32",
-                                               :description "Destination port. Only valid when protocol is TCP or UDP.",
-                                               :type "integer"},
+                                          :type "integer",
+                                          :format "int32"},
                              :protocol {:description "IP protocol in string format, for example: \"TCP\", \"UDP\", \"ICMP\".",
                                         :type "string"},
-                             :destinationNetworkUri {:type "string",
-                                                     :description "URI of the network where this packet is sent to."},
-                             :sourceNetworkUri {:type "string",
-                                                :description "URI of the network where this packet originates from."},
                              :destinationIp {:description "Destination IP address.",
-                                             :type "string"}},
-                :description "For display only. The specification of the endpoints for the test. EndpointInfo is derived from source and destination Endpoint and validated by the backend data plane model."},
- :VpnGatewayInfo {:properties {:ipAddress {:description "IP address of the VPN gateway.",
-                                           :type "string"},
-                               :region {:type "string",
-                                        :description "Name of a GCP region where this VPN gateway is configured."},
-                               :vpnTunnelUri {:description "A VPN tunnel that is associated with this VPN gateway. There may be multiple VPN tunnels configured on a VPN gateway, and only the one relevant to the test is displayed.",
-                                              :type "string"},
+                                             :type "string"},
+                             :destinationPort {:description "Destination port. Only valid when protocol is TCP or UDP.",
+                                               :type "integer",
+                                               :format "int32"},
+                             :sourceIp {:description "Source IP address.",
+                                        :type "string"},
+                             :destinationNetworkUri {:type "string",
+                                                     :description "URI of the network where this packet is sent to."}},
+                :type "object",
+                :description "For display only. The specification of the endpoints for the test. EndpointInfo is derived from source and destination Endpoint and validated by the backend data plane model.",
+                :id "EndpointInfo"},
+ :VpnGatewayInfo {:properties {:displayName {:description "Name of a VPN gateway.",
+                                             :type "string"},
+                               :uri {:type "string",
+                                     :description "URI of a VPN gateway."},
                                :networkUri {:description "URI of a Compute Engine network where the VPN gateway is configured.",
                                             :type "string"},
-                               :displayName {:type "string",
-                                             :description "Name of a VPN gateway."},
-                               :uri {:type "string",
-                                     :description "URI of a VPN gateway."}},
-                  :description "For display only. Metadata associated with a Compute Engine VPN gateway.",
+                               :ipAddress {:description "IP address of the VPN gateway.",
+                                           :type "string"},
+                               :region {:type "string",
+                                        :description "Name of a Google Cloud region where this VPN gateway is configured."},
+                               :vpnTunnelUri {:type "string",
+                                              :description "A VPN tunnel that is associated with this VPN gateway. There may be multiple VPN tunnels configured on a VPN gateway, and only the one relevant to the test is displayed."}},
                   :type "object",
-                  :id "VpnGatewayInfo"},
- :DropInfo {:properties {:cause {:enum ["CAUSE_UNSPECIFIED"
+                  :id "VpnGatewayInfo",
+                  :description "For display only. Metadata associated with a Compute Engine VPN gateway."},
+ :DropInfo {:id "DropInfo",
+            :properties {:cause {:type "string",
+                                 :enum ["CAUSE_UNSPECIFIED"
                                         "UNKNOWN_EXTERNAL_ADDRESS"
                                         "FOREIGN_IP_DISALLOWED"
                                         "FIREWALL_RULE"
@@ -304,44 +333,53 @@
                                         "FIREWALL_BLOCKING_LOAD_BALANCER_BACKEND_HEALTH_CHECK"
                                         "INSTANCE_NOT_RUNNING"
                                         "TRAFFIC_TYPE_BLOCKED"
-                                        "GKE_MASTER_UNAUTHORIZED_ACCESS"],
+                                        "GKE_MASTER_UNAUTHORIZED_ACCESS"
+                                        "CLOUD_SQL_INSTANCE_UNAUTHORIZED_ACCESS"
+                                        "DROPPED_INSIDE_GKE_SERVICE"
+                                        "DROPPED_INSIDE_CLOUD_SQL_SERVICE"
+                                        "GOOGLE_MANAGED_SERVICE_NO_PEERING"
+                                        "CLOUD_SQL_INSTANCE_NO_IP_ADDRESS"],
+                                 :description "Cause that the packet is dropped.",
                                  :enumDescriptions ["Cause is unspecified."
-                                                    "Destination external address cannot be resolved to a known target."
-                                                    "a Compute Engine instance can only send or receive a packet with a foreign IP if ip_forward is enabled."
-                                                    "Dropped due to a firewall rule unless allowed due to connection tracking."
+                                                    "Destination external address cannot be resolved to a known target. If the address is used in a Google Cloud project, provide the project ID as test input."
+                                                    "A Compute Engine instance can only send or receive a packet with a foreign IP address if ip_forward is enabled."
+                                                    "Dropped due to a firewall rule, unless allowed due to connection tracking."
                                                     "Dropped due to no routes."
                                                     "Dropped due to invalid route. Route's next hop is a blackhole."
-                                                    "Packet is sent to a wrong (unintended) network. Example: user traces a packet from VM1:Network1 to VM2:Network2, however, the route configured in Network1 sends the packet destined for VM2's IP addresss to Network3."
-                                                    "Packet with internal destination address sent to Internet gateway."
-                                                    "Instance with only an internal IP tries to access Google API and Services, and private Google access is not enabled."
-                                                    "Instance with only internal IP tries to access external hosts, but Cloud NAT is not enabled in the subnet, unless special configurations on a VM allows this connection. See [Special Configurations for VM instances](/vpc/docs/special-configurations) for details."
-                                                    "Destination internal address cannot be resolved to a known target."
+                                                    "Packet is sent to a wrong (unintended) network. Example: you trace a packet from VM1:Network1 to VM2:Network2, however, the route configured in Network1 sends the packet destined for VM2's IP addresss to Network3."
+                                                    "Packet with internal destination address sent to the internet gateway."
+                                                    "Instance with only an internal IP address tries to access Google API and services, but private Google access is not enabled."
+                                                    "Instance with only an internal IP address tries to access external hosts, but Cloud NAT is not enabled in the subnet, unless special configurations on a VM allow this connection. For more details, see [Special configurations for VM instances](https://cloud.google.com/vpc/docs/special-configurations)."
+                                                    "Destination internal address cannot be resolved to a known target. If this is a shared VPC scenario, verify if the service project ID is provided as test input. Otherwise, verify if the IP address is being used in the project."
                                                     "Forwarding rule's protocol and ports do not match the packet header."
                                                     "Forwarding rule does not have backends configured."
-                                                    "Firewalls block the health check probes to the backends and cause the backends to be unavailable for traffic from the load balancer. See [Health check firewall rules](/load-balancing/docs/ health-checks#firewall_rules) for more details."
+                                                    "Firewalls block the health check probes to the backends and cause the backends to be unavailable for traffic from the load balancer. For more details, see [Health check firewall rules](https://cloud.google.com/load-balancing/docs/health-checks#firewall_rules)."
                                                     "Packet is sent from or to a Compute Engine instance that is not in a running state."
-                                                    "The type of traffic is blocked and the user cannot configure a firewall rule to enable it. See [Always blocked traffic](/vpc/docs/firewalls# blockedtraffic) for more details."
-                                                    "Access to GKE master's endpoint is not authorized. See [Access to the cluster endpoints](/kubernetes-engine/docs/how-to/ private-clusters#access_to_the_cluster_endpoints) for more details."],
-                                 :type "string",
-                                 :description "Cause that the packet is dropped."},
+                                                    "The type of traffic is blocked and the user cannot configure a firewall rule to enable it. See [Always blocked traffic](https://cloud.google.com/vpc/docs/firewalls#blockedtraffic) for more details."
+                                                    "Access to Google Kubernetes Engine cluster master's endpoint is not authorized. See [Access to the cluster endpoints](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#access_to_the_cluster_endpoints) for more details."
+                                                    "Access to the Cloud SQL instance endpoint is not authorized. See [Authorizing with authorized networks](https://cloud.google.com/sql/docs/mysql/authorize-networks) for more details."
+                                                    "Packet was dropped inside Google Kubernetes Engine Service."
+                                                    "Packet was dropped inside Cloud SQL Service."
+                                                    "Packet was dropped because there is no peering between the originating network and the Google Managed Services Network."
+                                                    "Packet was dropped because the Cloud SQL instance has neither a private nor a public IP address."]},
                          :resourceUri {:type "string",
                                        :description "URI of the resource that caused the drop."}},
             :type "object",
-            :id "DropInfo",
             :description "Details of the final state \"drop\" and associated resource."},
  :Binding {:type "object",
+           :description "Associates `members` with a `role`.",
            :id "Binding",
-           :properties {:condition {:$ref "Expr",
-                                    :description "The condition that is associated with this binding. If the condition evaluates to `true`, then this binding applies to the current request. If the condition evaluates to `false`, then this binding does not apply to the current request. However, a different role binding might grant the same role to one or more of the members in this binding. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies)."},
-                        :members {:items {:type "string"},
-                                  :description "Specifies the identities requesting access for a Cloud Platform resource. `members` can have the following values: * `allUsers`: A special identifier that represents anyone who is on the internet; with or without a Google account. * `allAuthenticatedUsers`: A special identifier that represents anyone who is authenticated with a Google account or a service account. * `user:{emailid}`: An email address that represents a specific Google account. For example, `alice@example.com` . * `serviceAccount:{emailid}`: An email address that represents a service account. For example, `my-other-app@appspot.gserviceaccount.com`. * `group:{emailid}`: An email address that represents a Google group. For example, `admins@example.com`. * `deleted:user:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a user that has been recently deleted. For example, `alice@example.com?uid=123456789012345678901`. If the user is recovered, this value reverts to `user:{emailid}` and the recovered user retains the role in the binding. * `deleted:serviceAccount:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a service account that has been recently deleted. For example, `my-other-app@appspot.gserviceaccount.com?uid=123456789012345678901`. If the service account is undeleted, this value reverts to `serviceAccount:{emailid}` and the undeleted service account retains the role in the binding. * `deleted:group:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a Google group that has been recently deleted. For example, `admins@example.com?uid=123456789012345678901`. If the group is recovered, this value reverts to `group:{emailid}` and the recovered group retains the role in the binding. * `domain:{domain}`: The G Suite domain (primary) that represents all the users of that domain. For example, `google.com` or `example.com`. ",
-                                  :type "array"},
+           :properties {:condition {:description "The condition that is associated with this binding. If the condition evaluates to `true`, then this binding applies to the current request. If the condition evaluates to `false`, then this binding does not apply to the current request. However, a different role binding might grant the same role to one or more of the members in this binding. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies).",
+                                    :$ref "Expr"},
+                        :members {:description "Specifies the identities requesting access for a Cloud Platform resource. `members` can have the following values: * `allUsers`: A special identifier that represents anyone who is on the internet; with or without a Google account. * `allAuthenticatedUsers`: A special identifier that represents anyone who is authenticated with a Google account or a service account. * `user:{emailid}`: An email address that represents a specific Google account. For example, `alice@example.com` . * `serviceAccount:{emailid}`: An email address that represents a service account. For example, `my-other-app@appspot.gserviceaccount.com`. * `group:{emailid}`: An email address that represents a Google group. For example, `admins@example.com`. * `deleted:user:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a user that has been recently deleted. For example, `alice@example.com?uid=123456789012345678901`. If the user is recovered, this value reverts to `user:{emailid}` and the recovered user retains the role in the binding. * `deleted:serviceAccount:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a service account that has been recently deleted. For example, `my-other-app@appspot.gserviceaccount.com?uid=123456789012345678901`. If the service account is undeleted, this value reverts to `serviceAccount:{emailid}` and the undeleted service account retains the role in the binding. * `deleted:group:{emailid}?uid={uniqueid}`: An email address (plus unique identifier) representing a Google group that has been recently deleted. For example, `admins@example.com?uid=123456789012345678901`. If the group is recovered, this value reverts to `group:{emailid}` and the recovered group retains the role in the binding. * `domain:{domain}`: The G Suite domain (primary) that represents all the users of that domain. For example, `google.com` or `example.com`. ",
+                                  :type "array",
+                                  :items {:type "string"}},
                         :role {:type "string",
-                               :description "Role that is assigned to `members`. For example, `roles/viewer`, `roles/editor`, or `roles/owner`."}},
-           :description "Associates `members` with a `role`."},
- :AbortInfo {:properties {:resourceUri {:description "URI of the resource that caused the abort.",
-                                        :type "string"},
-                          :cause {:description "Causes that the analysis is aborted.",
+                               :description "Role that is assigned to `members`. For example, `roles/viewer`, `roles/editor`, or `roles/owner`."}}},
+ :AbortInfo {:description "Details of the final state \"abort\" and associated resource.",
+             :type "object",
+             :id "AbortInfo",
+             :properties {:cause {:type "string",
                                   :enum ["CAUSE_UNSPECIFIED"
                                          "UNKNOWN_NETWORK"
                                          "UNKNOWN_IP"
@@ -352,7 +390,12 @@
                                          "NO_EXTERNAL_IP"
                                          "UNINTENDED_DESTINATION"
                                          "TRACE_TOO_LONG"
-                                         "INTERNAL_ERROR"],
+                                         "INTERNAL_ERROR"
+                                         "SOURCE_ENDPOINT_NOT_FOUND"
+                                         "MISMATCHED_SOURCE_NETWORK"
+                                         "DESTINATION_ENDPOINT_NOT_FOUND"
+                                         "MISMATCHED_DESTINATION_NETWORK"],
+                                  :description "Causes that the analysis is aborted.",
                                   :enumDescriptions ["Cause is unspecified."
                                                      "Aborted due to unknown network. The reachability analysis cannot proceed because the user does not have access to the host project's network configurations, including firewall rules and routes. This happens when the project is a service project and the endpoints being traced are in the host project's network."
                                                      "Aborted because the IP address(es) are unknown."
@@ -363,108 +406,135 @@
                                                      "Aborted because traffic is sent from a public IP to an instance without an external IP."
                                                      "Aborted because none of the traces matches destination information specified in the input test request."
                                                      "Aborted because the number of steps in the trace exceeding a certain limit which may be caused by routing loop."
-                                                     "Aborted due to internal server error."],
-                                  :type "string"}},
-             :type "object",
-             :description "Details of the final state \"abort\" and associated resource.",
-             :id "AbortInfo"},
- :Empty {:properties {},
-         :type "object",
+                                                     "Aborted due to internal server error."
+                                                     "Aborted because the source endpoint could not be found."
+                                                     "Aborted because the source network does not match the source endpoint."
+                                                     "Aborted because the destination endpoint could not be found."
+                                                     "Aborted because the destination network does not match the destination endpoint."]},
+                          :resourceUri {:description "URI of the resource that caused the abort.",
+                                        :type "string"}}},
+ :Empty {:id "Empty",
          :description "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.",
-         :id "Empty"},
- :DeliverInfo {:id "DeliverInfo",
+         :properties {},
+         :type "object"},
+ :DeliverInfo {:type "object",
+               :id "DeliverInfo",
                :properties {:target {:enumDescriptions ["Target not specified."
                                                         "Target is a Compute Engine instance."
-                                                        "Target is the Internet."
-                                                        "Target is a Google API."],
+                                                        "Target is the internet."
+                                                        "Target is a Google API."
+                                                        "Target is a Google Kubernetes Engine cluster master."
+                                                        "Target is a Cloud SQL instance."],
+                                     :type "string",
                                      :description "Target type where the packet is delivered to.",
                                      :enum ["TARGET_UNSPECIFIED"
                                             "INSTANCE"
                                             "INTERNET"
-                                            "GOOGLE_API"],
-                                     :type "string"},
+                                            "GOOGLE_API"
+                                            "GKE_MASTER"
+                                            "CLOUD_SQL_INSTANCE"]},
                             :resourceUri {:type "string",
                                           :description "URI of the resource that the packet is delivered to."}},
-               :type "object",
                :description "Details of the final state \"deliver\" and associated resource."},
- :Trace {:id "Trace",
-         :description "Trace represents one simulated packet forwarding path. - Each trace contains multiple ordered steps. - Each step is in a particular state and has an associated configuration. - State is categorized as a final or non-final state. - Each final state has a reason associated with it. - Each trace must end with a final state (the last step). |---------------------Trace----------------------| Step1(State) Step2(State) --- StepN(State(final)) ",
-         :type "object",
-         :properties {:endpointInfo {:description "Derived from the source and destination endpoints definition, and validated by the data plane model. If there are multiple traces starting from different source locations, then the endpoint_info may be different between traces.",
-                                     :$ref "EndpointInfo"},
-                      :steps {:type "array",
-                              :description "A trace of a test contains multiple steps from the initial state to the final state (delivered, dropped, forwarded, or aborted). The steps are ordered by the processing sequence within the simulated network state machine. It is critical to preserve the order of the steps and avoid reordering or sorting them.",
-                              :items {:$ref "Step"}}}},
- :ConnectivityTest {:properties {:description {:description "The user-supplied description of the Connectivity Test. Maximum of 512 characters.",
-                                               :type "string"},
-                                 :labels {:description "Resource labels to represent user-provided metadata.",
-                                          :additionalProperties {:type "string"},
-                                          :type "object"},
+ :Trace {:type "object",
+         :id "Trace",
+         :properties {:steps {:items {:$ref "Step"},
+                              :type "array",
+                              :description "A trace of a test contains multiple steps from the initial state to the final state (delivered, dropped, forwarded, or aborted). The steps are ordered by the processing sequence within the simulated network state machine. It is critical to preserve the order of the steps and avoid reordering or sorting them."},
+                      :endpointInfo {:description "Derived from the source and destination endpoints definition specified by user request, and validated by the data plane model. If there are multiple traces starting from different source locations, then the endpoint_info may be different between traces.",
+                                     :$ref "EndpointInfo"}},
+         :description "Trace represents one simulated packet forwarding path. * Each trace contains multiple ordered steps. * Each step is in a particular state with associated configuration. * State is categorized as final or non-final states. * Each final state has a reason associated. * Each trace must end with a final state (the last step). ``` |---------------------Trace----------------------| Step1(State) Step2(State) --- StepN(State(final)) ```"},
+ :ConnectivityTest {:id "ConnectivityTest",
+                    :properties {:description {:type "string",
+                                               :description "The user-supplied description of the Connectivity Test. Maximum of 512 characters."},
+                                 :labels {:additionalProperties {:type "string"},
+                                          :type "object",
+                                          :description "Resource labels to represent user-provided metadata."},
                                  :protocol {:description "IP Protocol of the test. When not provided, \"TCP\" is assumed.",
                                             :type "string"},
                                  :displayName {:type "string",
-                                               :readOnly true,
-                                               :description "Output only. The display name of a Connectivity Test."},
+                                               :description "Output only. The display name of a Connectivity Test.",
+                                               :readOnly true},
                                  :name {:description "Required. Unique name of the resource using the form: `projects/{project_id}/locations/global/connectivityTests/{test_id}`",
                                         :type "string"},
-                                 :createTime {:format "google-datetime",
-                                              :description "Output only. The time the test was created.",
+                                 :createTime {:description "Output only. The time the test was created.",
                                               :type "string",
+                                              :format "google-datetime",
                                               :readOnly true},
-                                 :relatedProjects {:type "array",
-                                                   :items {:type "string"},
-                                                   :description "Other projects that may be relevant for reachability analysis. This is applicable to scenarios where a test can cross project boundaries."},
+                                 :relatedProjects {:description "Other projects that may be relevant for reachability analysis. This is applicable to scenarios where a test can cross project boundaries.",
+                                                   :type "array",
+                                                   :items {:type "string"}},
                                  :source {:description "Required. Source specification of the Connectivity Test. You can use a combination of source IP address, virtual machine (VM) instance, or Compute Engine network to uniquely identify the source location. Examples: If the source IP address is an internal IP address within a Google Cloud Virtual Private Cloud (VPC) network, then you must also specify the VPC network. Otherwise, specify the VM instance, which already contains its internal IP address and VPC network information. If the source of the test is within an on-premises network, then you must provide the destination VPC network. If the source endpoint is a Compute Engine VM instance with multiple network interfaces, the instance itself is not sufficient to identify the endpoint. So, you must also specify the source IP address or VPC network. A reachability analysis proceeds even if the source location is ambiguous. However, the test result may include endpoints that you don't intend to test.",
                                           :$ref "Endpoint"},
                                  :updateTime {:readOnly true,
+                                              :type "string",
                                               :format "google-datetime",
-                                              :description "Output only. The time the test's configuration was updated.",
-                                              :type "string"},
-                                 :reachabilityDetails {:readOnly true,
-                                                       :$ref "ReachabilityDetails",
-                                                       :description "Output only. The reachability details of this test from the latest run. The details are updated when creating a new test, updating an existing test, or triggering a one-time rerun of an existing test."},
+                                              :description "Output only. The time the test's configuration was updated."},
+                                 :reachabilityDetails {:description "Output only. The reachability details of this test from the latest run. The details are updated when creating a new test, updating an existing test, or triggering a one-time rerun of an existing test.",
+                                                       :readOnly true,
+                                                       :$ref "ReachabilityDetails"},
                                  :destination {:description "Required. Destination specification of the Connectivity Test. You can use a combination of destination IP address, Compute Engine VM instance, or VPC network to uniquely identify the destination location. Even if the destination IP address is not unique, the source IP location is unique. Usually, the analysis can infer the destination endpoint from route information. If the destination you specify is a VM instance and the instance has multiple network interfaces, then you must also specify either a destination IP address or VPC network to identify the destination interface. A reachability analysis proceeds even if the destination location is ambiguous. However, the result can include endpoints that you don't intend to test.",
                                                :$ref "Endpoint"}},
                     :type "object",
-                    :description "A Connectivity Test for a network reachability analysis.",
-                    :id "ConnectivityTest"},
- :ListLocationsResponse {:description "The response message for Locations.ListLocations.",
+                    :description "A Connectivity Test for a network reachability analysis."},
+ :ListLocationsResponse {:type "object",
                          :properties {:locations {:items {:$ref "Location"},
                                                   :description "A list of locations that matches the specified filter in the request.",
                                                   :type "array"},
                                       :nextPageToken {:description "The standard List next-page token.",
                                                       :type "string"}},
-                         :type "object",
+                         :description "The response message for Locations.ListLocations.",
                          :id "ListLocationsResponse"},
- :ReachabilityDetails {:type "object",
-                       :properties {:traces {:items {:$ref "Trace"},
-                                             :description "Result may contain a list of traces if a test has multiple possible paths in the network, such as when destination endpoint is a load balancer with multiple backends.",
-                                             :type "array"},
-                                    :error {:description "The details of a failure or a cancellation of reachability analysis.",
-                                            :$ref "Status"},
-                                    :result {:enumDescriptions ["Result is not specified."
-                                                                "Packet originating from source is expected to reach destination."
-                                                                "Packet originating from source is expected to be dropped before reaching destination."
-                                                                "If the source and destination endpoint does not uniquely identify the test location in the network, and the reachability result contains multiple traces with mixed reachable and unreachable states, then this result is returned."
-                                                                "The reachability could not be determined. Possible reasons are: * Analysis is aborted due to permission error. User does not have read permission to the projects listed in the test. * Analysis is aborted due to internal errors. * Analysis is partially complete based on configurations where the user has permission. The Final state indicates that the packet is forwarded to another network where the user has no permission to access the configurations."],
-                                             :type "string",
-                                             :description "The overall reachability result of the test.",
-                                             :enum ["RESULT_UNSPECIFIED"
+ :ReachabilityDetails {:id "ReachabilityDetails",
+                       :properties {:error {:$ref "Status",
+                                            :description "The details of a failure or a cancellation of reachability analysis."},
+                                    :result {:enum ["RESULT_UNSPECIFIED"
                                                     "REACHABLE"
                                                     "UNREACHABLE"
                                                     "AMBIGUOUS"
-                                                    "UNDETERMINED"]},
+                                                    "UNDETERMINED"],
+                                             :enumDescriptions ["No result was specified."
+                                                                "Possible scenarios are: * The configuration analysis determined that a packet originating from the source is expected to reach the destination. * The analysis didn't complete because the user lacks permission for some of the resources in the trace. However, at the time the user's permission became insufficient, the trace had been successful so far."
+                                                                "A packet originating from the source is expected to be dropped before reaching the destination."
+                                                                "The source and destination endpoints do not uniquely identify the test location in the network, and the reachability result contains multiple traces. For some traces, a packet could be delivered, and for others, it would not be."
+                                                                "The configuration analysis did not complete. Possible reasons are: * A permissions error occurred--for example, the user might not have read permission for all of the resources named in the test. * An internal error occurred. * The analyzer received an invalid or unsupported argument or was unable to identify a known endpoint."],
+                                             :type "string",
+                                             :description "The overall result of the test's configuration analysis."},
                                     :verifyTime {:type "string",
-                                                 :description "The time the reachability state was verified.",
-                                                 :format "google-datetime"}},
-                       :description "The details of reachability state from the latest run.",
-                       :id "ReachabilityDetails"},
- :RouteInfo {:properties {:destIpRange {:description "Destination IP range of the route.",
+                                                 :description "The time of the configuration analysis.",
+                                                 :format "google-datetime"},
+                                    :traces {:description "Result may contain a list of traces if a test has multiple possible paths in the network, such as when destination endpoint is a load balancer with multiple backends.",
+                                             :items {:$ref "Trace"},
+                                             :type "array"}},
+                       :description "Results of the configuration analysis from the last run of the test.",
+                       :type "object"},
+ :GKEMasterInfo {:type "object",
+                 :properties {:externalIp {:description "External IP address of a GKE cluster master.",
+                                           :type "string"},
+                              :clusterNetworkUri {:description "URI of a GKE cluster network.",
+                                                  :type "string"},
+                              :internalIp {:type "string",
+                                           :description "Internal IP address of a GKE cluster master."},
+                              :clusterUri {:description "URI of a GKE cluster.",
+                                           :type "string"}},
+                 :description "For display only. Metadata associated with a Google Kubernetes Engine (GKE) cluster master.",
+                 :id "GKEMasterInfo"},
+ :RouteInfo {:description "For display only. Metadata associated with a Compute Engine route.",
+             :properties {:destIpRange {:description "Destination IP range of the route.",
                                         :type "string"},
                           :displayName {:type "string",
                                         :description "Name of a Compute Engine route."},
-                          :nextHopType {:description "Type of next hop.",
-                                        :type "string",
+                          :nextHopType {:enumDescriptions ["Unspecified type. Default value."
+                                                           "Next hop is an IP address."
+                                                           "Next hop is a Compute Engine instance."
+                                                           "Next hop is a VPC network gateway."
+                                                           "Next hop is a peering VPC."
+                                                           "Next hop is an interconnect."
+                                                           "Next hop is a VPN tunnel."
+                                                           "Next hop is a VPN gateway. This scenario only happens when tracing connectivity from an on-premises network to Google Cloud through a VPN. The analysis simulates a packet departing from the on-premises network through a VPN tunnel and arriving at a Cloud VPN gateway."
+                                                           "Next hop is an internet gateway."
+                                                           "Next hop is blackhole; that is, the next hop either does not exist or is not running."
+                                                           "Next hop is the forwarding rule of an Internal Load Balancer."],
                                         :enum ["NEXT_HOP_TYPE_UNSPECIFIED"
                                                "NEXT_HOP_IP"
                                                "NEXT_HOP_INSTANCE"
@@ -476,30 +546,28 @@
                                                "NEXT_HOP_INTERNET_GATEWAY"
                                                "NEXT_HOP_BLACKHOLE"
                                                "NEXT_HOP_ILB"],
-                                        :enumDescriptions ["Unspecified type. Default value."
-                                                           "Next hop is an IP address."
-                                                           "Next hop is a Compute Engine instance."
-                                                           "Next hop is a VPC network gateway."
-                                                           "Next hop is a peering VPC."
-                                                           "Next hop is an interconnect."
-                                                           "Next hop is a VPN tunnel."
-                                                           "Next hop is a VPN Gateway. This scenario only happens when tracing connectivity from an on-premises network to GCP through a VPN. The analysis simulates a packet departing from the on-premises network through a VPN tunnel and arrives at a Cloud VPN gateway."
-                                                           "Next hop is an internet gateway."
-                                                           "Next hop is blackhole; that is, the next hop either does not exist or is not running."
-                                                           "Next hop is the forwarding rule of an Internal Load Balancer."]},
-                          :priority {:type "integer",
-                                     :description "Priority of the route.",
-                                     :format "int32"},
+                                        :type "string",
+                                        :description "Type of next hop."},
+                          :priority {:format "int32",
+                                     :type "integer",
+                                     :description "Priority of the route."},
                           :networkUri {:type "string",
                                        :description "URI of a Compute Engine network."},
-                          :nextHop {:type "string",
-                                    :description "Next hop of the route."},
-                          :uri {:type "string",
-                                :description "URI of a Compute Engine route. Dynamic route from cloud router does not have a URI. Advertised route from Google Cloud VPC to on-premises network also does not have a URI."},
+                          :nextHop {:description "Next hop of the route.",
+                                    :type "string"},
+                          :uri {:description "URI of a Compute Engine route. Dynamic route from cloud router does not have a URI. Advertised route from Google Cloud VPC to on-premises network also does not have a URI.",
+                                :type "string"},
                           :instanceTags {:items {:type "string"},
-                                         :description "Instance tags of the route.",
-                                         :type "array"},
-                          :routeType {:enum ["ROUTE_TYPE_UNSPECIFIED"
+                                         :type "array",
+                                         :description "Instance tags of the route."},
+                          :routeType {:enumDescriptions ["Unspecified type. Default value."
+                                                         "Route is a subnet route automatically created by the system."
+                                                         "Static route created by the user, including the default route to the internet."
+                                                         "Dynamic route exchanged between BGP peers."
+                                                         "A subnet route received from peering network."
+                                                         "A static route received from peering network."
+                                                         "A dynamic route received from peering network."],
+                                      :enum ["ROUTE_TYPE_UNSPECIFIED"
                                              "SUBNET"
                                              "STATIC"
                                              "DYNAMIC"
@@ -507,190 +575,196 @@
                                              "PEERING_STATIC"
                                              "PEERING_DYNAMIC"],
                                       :type "string",
-                                      :description "Type of route.",
-                                      :enumDescriptions ["Unspecified type. Default value."
-                                                         "Route is a subnet route automatically created by the system."
-                                                         "Static route created by the user including the default route to the Internet."
-                                                         "Dynamic route exchanged between BGP peers."
-                                                         "A subnet route received from peering network."
-                                                         "A static route received from peering network."
-                                                         "A dynamic route received from peering network."]}},
+                                      :description "Type of route."}},
              :type "object",
-             :description "For display only. Metadata associated with a Compute Engine route.",
              :id "RouteInfo"},
- :TestIamPermissionsRequest {:description "Request message for `TestIamPermissions` method.",
+ :TestIamPermissionsRequest {:id "TestIamPermissionsRequest",
+                             :description "Request message for `TestIamPermissions` method.",
                              :type "object",
-                             :id "TestIamPermissionsRequest",
-                             :properties {:permissions {:description "The set of permissions to check for the `resource`. Permissions with wildcards (such as '*' or 'storage.*') are not allowed. For more information see [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).",
-                                                        :items {:type "string"},
+                             :properties {:permissions {:items {:type "string"},
+                                                        :description "The set of permissions to check for the `resource`. Permissions with wildcards (such as '*' or 'storage.*') are not allowed. For more information see [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).",
                                                         :type "array"}}},
- :FirewallInfo {:properties {:displayName {:type "string",
-                                           :description "Name of a Compute Engine firewall rule."},
-                             :uri {:description "URI of a Compute Engine firewall rule. Implied default rule does not have URI.",
-                                   :type "string"},
+ :FirewallInfo {:id "FirewallInfo",
+                :type "object",
+                :description "For display only. Metadata associated with a VPC firewall rule, an implied VPC firewall rule, or a hierarchical firewall policy rule.",
+                :properties {:displayName {:type "string",
+                                           :description "The display name of the VPC firewall rule. This field is not applicable to hierarchical firewall policy rules."},
+                             :targetTags {:type "array",
+                                          :items {:type "string"},
+                                          :description "The target tags defined by the VPC firewall rule. This field is not applicable to hierarchical firewall policy rules."},
+                             :policy {:type "string",
+                                      :description "The hierarchical firewall policy that this rule is associated with. This field is not applicable to VPC firewall rules."},
                              :priority {:format "int32",
-                                        :description "Priority of the firewall rule.",
-                                        :type "integer"},
-                             :networkUri {:type "string",
-                                          :description "URI of a Compute Engine network."},
-                             :targetServiceAccounts {:items {:type "string"},
-                                                     :type "array",
-                                                     :description "Target service accounts of the firewall rule."},
-                             :direction {:description "Possible values: INGRESS, EGRESS",
-                                         :type "string"},
-                             :targetTags {:items {:type "string"},
-                                          :type "array",
-                                          :description "Target tags of the firewall rule."},
+                                        :type "integer",
+                                        :description "The priority of the firewall rule."},
+                             :networkUri {:description "The URI of the VPC network that the firewall rule is associated with. This field is not applicable to hierarchical firewall policy rules.",
+                                          :type "string"},
+                             :targetServiceAccounts {:type "array",
+                                                     :items {:type "string"},
+                                                     :description "The target service accounts specified by the firewall rule."},
                              :action {:description "Possible values: ALLOW, DENY",
-                                      :type "string"}},
-                :id "FirewallInfo",
-                :description "For display only. Metadata associated with a Compute Engine firewall rule.",
-                :type "object"},
- :ForwardInfo {:type "object",
-               :properties {:target {:description "Target type where this packet is forwarded to.",
-                                     :type "string",
-                                     :enum ["TARGET_UNSPECIFIED"
+                                      :type "string"},
+                             :uri {:type "string",
+                                   :description "The URI of the VPC firewall rule. This field is not applicable to implied firewall rules or hierarchical firewall policy rules."},
+                             :firewallRuleType {:type "string",
+                                                :enum ["FIREWALL_RULE_TYPE_UNSPECIFIED"
+                                                       "HIERARCHICAL_FIREWALL_POLICY_RULE"
+                                                       "VPC_FIREWALL_RULE"
+                                                       "IMPLIED_VPC_FIREWALL_RULE"],
+                                                :enumDescriptions ["Unspecified type."
+                                                                   "Hierarchical firewall policy rule. For details, see [Hierarchical firewall policies overview](https://cloud.google.com/vpc/docs/firewall-policies)."
+                                                                   "VPC firewall rule. For details, see [VPC firewall rules overview](https://cloud.google.com/vpc/docs/firewalls)."
+                                                                   "Implied VPC firewall rule. For details, see [Implied rules](https://cloud.google.com/vpc/docs/firewalls#default_firewall_rules)."],
+                                                :description "The firewall rule's type."},
+                             :direction {:description "Possible values: INGRESS, EGRESS",
+                                         :type "string"}}},
+ :ForwardInfo {:id "ForwardInfo",
+               :description "Details of the final state \"forward\" and associated resource.",
+               :type "object",
+               :properties {:resourceUri {:type "string",
+                                          :description "URI of the resource that the packet is forwarded to."},
+                            :target {:enum ["TARGET_UNSPECIFIED"
                                             "PEERING_VPC"
                                             "VPN_GATEWAY"
                                             "INTERCONNECT"
                                             "GKE_MASTER"
-                                            "IMPORTED_CUSTOM_ROUTE_NEXT_HOP"],
+                                            "IMPORTED_CUSTOM_ROUTE_NEXT_HOP"
+                                            "CLOUD_SQL_INSTANCE"],
+                                     :type "string",
+                                     :description "Target type where this packet is forwarded to.",
                                      :enumDescriptions ["Target not specified."
                                                         "Forwarded to a VPC peering network."
                                                         "Forwarded to a Cloud VPN gateway."
-                                                        "Forwarded to an Cloud Interconnect connection."
+                                                        "Forwarded to a Cloud Interconnect connection."
                                                         "Forwarded to a Google Kubernetes Engine Container cluster master."
-                                                        "Forwarded to the next hop of a custom route imported from a peering VPC."]},
-                            :resourceUri {:description "URI of the resource that the packet is forwarded to.",
-                                          :type "string"}},
-               :id "ForwardInfo",
-               :description "Details of the final state \"forward\" and associated resource."},
+                                                        "Forwarded to the next hop of a custom route imported from a peering VPC."
+                                                        "Forwarded to a Cloud SQL instance."]}}},
  :TestIamPermissionsResponse {:id "TestIamPermissionsResponse",
-                              :type "object",
                               :description "Response message for `TestIamPermissions` method.",
+                              :type "object",
                               :properties {:permissions {:description "A subset of `TestPermissionsRequest.permissions` that the caller is allowed.",
                                                          :items {:type "string"},
                                                          :type "array"}}},
- :OperationMetadata {:type "object",
-                     :properties {:target {:type "string",
-                                           :description "Target of the operation - for example projects/project-1/locations/global/connectivityTests/test-1"},
-                                  :cancelRequested {:type "boolean",
-                                                    :description "Specifies if cancellation was requested for the operation."},
-                                  :createTime {:type "string",
-                                               :description "The time the operation was created.",
-                                               :format "google-datetime"},
-                                  :endTime {:format "google-datetime",
-                                            :type "string",
-                                            :description "The time the operation finished running."},
-                                  :statusDetail {:type "string",
-                                                 :description "Human-readable status of the operation, if any."},
+ :OperationMetadata {:properties {:endTime {:type "string",
+                                            :description "The time the operation finished running.",
+                                            :format "google-datetime"},
                                   :verb {:description "Name of the verb executed by the operation.",
                                          :type "string"},
                                   :apiVersion {:type "string",
-                                               :description "API version."}},
+                                               :description "API version."},
+                                  :createTime {:format "google-datetime",
+                                               :type "string",
+                                               :description "The time the operation was created."},
+                                  :cancelRequested {:type "boolean",
+                                                    :description "Specifies if cancellation was requested for the operation."},
+                                  :statusDetail {:type "string",
+                                                 :description "Human-readable status of the operation, if any."},
+                                  :target {:type "string",
+                                           :description "Target of the operation - for example projects/project-1/locations/global/connectivityTests/test-1"}},
                      :description "Metadata describing an Operation",
-                     :id "OperationMetadata"},
+                     :id "OperationMetadata",
+                     :type "object"},
  :Expr {:id "Expr",
-        :description "Represents a textual expression in the Common Expression Language (CEL) syntax. CEL is a C-like expression language. The syntax and semantics of CEL are documented at https://github.com/google/cel-spec. Example (Comparison): title: \"Summary size limit\" description: \"Determines if a summary is less than 100 chars\" expression: \"document.summary.size() < 100\" Example (Equality): title: \"Requestor is owner\" description: \"Determines if requestor is the document owner\" expression: \"document.owner == request.auth.claims.email\" Example (Logic): title: \"Public documents\" description: \"Determine whether the document should be publicly visible\" expression: \"document.type != 'private' && document.type != 'internal'\" Example (Data Manipulation): title: \"Notification string\" description: \"Create a notification string with a timestamp.\" expression: \"'New message received at ' + string(document.create_time)\" The exact variables and functions that may be referenced within an expression are determined by the service that evaluates it. See the service documentation for additional information.",
-        :properties {:description {:description "Optional. Description of the expression. This is a longer text which describes the expression, e.g. when hovered over it in a UI.",
-                                   :type "string"},
+        :type "object",
+        :properties {:location {:description "Optional. String indicating the location of the expression for error reporting, e.g. a file name and a position in the file.",
+                                :type "string"},
                      :title {:description "Optional. Title for the expression, i.e. a short string describing its purpose. This can be used e.g. in UIs which allow to enter the expression.",
                              :type "string"},
+                     :description {:description "Optional. Description of the expression. This is a longer text which describes the expression, e.g. when hovered over it in a UI.",
+                                   :type "string"},
                      :expression {:type "string",
-                                  :description "Textual representation of an expression in Common Expression Language syntax."},
-                     :location {:type "string",
-                                :description "Optional. String indicating the location of the expression for error reporting, e.g. a file name and a position in the file."}},
-        :type "object"},
- :ListOperationsResponse {:id "ListOperationsResponse",
-                          :description "The response message for Operations.ListOperations.",
-                          :properties {:nextPageToken {:type "string",
-                                                       :description "The standard List next-page token."},
-                                       :operations {:type "array",
+                                  :description "Textual representation of an expression in Common Expression Language syntax."}},
+        :description "Represents a textual expression in the Common Expression Language (CEL) syntax. CEL is a C-like expression language. The syntax and semantics of CEL are documented at https://github.com/google/cel-spec. Example (Comparison): title: \"Summary size limit\" description: \"Determines if a summary is less than 100 chars\" expression: \"document.summary.size() < 100\" Example (Equality): title: \"Requestor is owner\" description: \"Determines if requestor is the document owner\" expression: \"document.owner == request.auth.claims.email\" Example (Logic): title: \"Public documents\" description: \"Determine whether the document should be publicly visible\" expression: \"document.type != 'private' && document.type != 'internal'\" Example (Data Manipulation): title: \"Notification string\" description: \"Create a notification string with a timestamp.\" expression: \"'New message received at ' + string(document.create_time)\" The exact variables and functions that may be referenced within an expression are determined by the service that evaluates it. See the service documentation for additional information."},
+ :ListOperationsResponse {:description "The response message for Operations.ListOperations.",
+                          :properties {:operations {:items {:$ref "Operation"},
                                                     :description "A list of operations that matches the specified filter in the request.",
-                                                    :items {:$ref "Operation"}}},
+                                                    :type "array"},
+                                       :nextPageToken {:description "The standard List next-page token.",
+                                                       :type "string"}},
+                          :id "ListOperationsResponse",
                           :type "object"},
- :Location {:description "A resource that represents Google Cloud Platform location.",
-            :type "object",
-            :properties {:locationId {:type "string",
-                                      :description "The canonical id for this location. For example: `\"us-east1\"`."},
-                         :metadata {:additionalProperties {:type "any",
-                                                           :description "Properties of the object. Contains field @type with type URL."},
-                                    :description "Service-specific metadata. For example the available capacity at the given location.",
-                                    :type "object"},
+ :Location {:type "object",
+            :id "Location",
+            :properties {:metadata {:type "object",
+                                    :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                                           :type "any"},
+                                    :description "Service-specific metadata. For example the available capacity at the given location."},
                          :displayName {:description "The friendly name for this location, typically a nearby city name. For example, \"Tokyo\".",
                                        :type "string"},
+                         :locationId {:type "string",
+                                      :description "The canonical id for this location. For example: `\"us-east1\"`."},
                          :labels {:type "object",
                                   :additionalProperties {:type "string"},
                                   :description "Cross-service attributes for the location. For example {\"cloud.googleapis.com/region\": \"us-east1\"}"},
                          :name {:description "Resource name for the location, which may vary between implementations. For example: `\"projects/example-project/locations/us-east1\"`",
                                 :type "string"}},
-            :id "Location"},
- :InstanceInfo {:properties {:interface {:type "string",
+            :description "A resource that represents Google Cloud Platform location."},
+ :InstanceInfo {:type "object",
+                :properties {:uri {:description "URI of a Compute Engine instance.",
+                                   :type "string"},
+                             :displayName {:type "string",
+                                           :description "Name of a Compute Engine instance."},
+                             :interface {:type "string",
                                          :description "Name of the network interface of a Compute Engine instance."},
+                             :externalIp {:description "External IP address of the network interface.",
+                                          :type "string"},
                              :networkUri {:description "URI of a Compute Engine network.",
                                           :type "string"},
                              :internalIp {:type "string",
                                           :description "Internal IP address of the network interface."},
-                             :uri {:type "string",
-                                   :description "URI of a Compute Engine instance."},
-                             :serviceAccount {:description "Service account authorized for the instance.",
-                                              :type "string"},
+                             :serviceAccount {:type "string",
+                                              :description "Service account authorized for the instance."},
                              :networkTags {:items {:type "string"},
                                            :description "Network tags configured on the instance.",
-                                           :type "array"},
-                             :displayName {:description "Name of a Compute Engine instance.",
-                                           :type "string"},
-                             :externalIp {:type "string",
-                                          :description "External IP address of the network interface."}},
-                :type "object",
-                :description "For display only. Metadata associated with a Compute Engine instance.",
-                :id "InstanceInfo"},
- :LoadBalancerBackend {:type "object",
-                       :properties {:healthCheckFirewallState {:enumDescriptions ["State is unspecified. Default state if not populated."
+                                           :type "array"}},
+                :id "InstanceInfo",
+                :description "For display only. Metadata associated with a Compute Engine instance."},
+ :LoadBalancerBackend {:properties {:healthCheckFirewallState {:enumDescriptions ["State is unspecified. Default state if not populated."
                                                                                   "There are configured firewall rules to allow health check probes to the backend."
                                                                                   "There are firewall rules configured to allow partial health check ranges or block all health check ranges. If a health check probe is sent from denied IP ranges, the health check to the backend will fail. Then, the backend will be marked unhealthy and will not receive traffic sent to the load balancer."],
-                                                               :description "State of the health check firewall configuration.",
                                                                :type "string",
                                                                :enum ["HEALTH_CHECK_FIREWALL_STATE_UNSPECIFIED"
                                                                       "CONFIGURED"
-                                                                      "MISCONFIGURED"]},
+                                                                      "MISCONFIGURED"],
+                                                               :description "State of the health check firewall configuration."},
+                                    :healthCheckAllowingFirewallRules {:description "A list of firewall rule URIs allowing probes from health check IP ranges.",
+                                                                       :items {:type "string"},
+                                                                       :type "array"},
+                                    :uri {:description "URI of a Compute Engine instance or network endpoint.",
+                                          :type "string"},
                                     :displayName {:type "string",
                                                   :description "Name of a Compute Engine instance or network endpoint."},
-                                    :healthCheckBlockingFirewallRules {:type "array",
+                                    :healthCheckBlockingFirewallRules {:items {:type "string"},
                                                                        :description "A list of firewall rule URIs blocking probes from health check IP ranges.",
-                                                                       :items {:type "string"}},
-                                    :healthCheckAllowingFirewallRules {:description "A list of firewall rule URIs allowing probes from health check IP ranges.",
-                                                                       :type "array",
-                                                                       :items {:type "string"}},
-                                    :uri {:description "URI of a Compute Engine instance or network endpoint.",
-                                          :type "string"}},
+                                                                       :type "array"}},
+                       :type "object",
                        :description "For display only. Metadata associated with a specific load balancer backend.",
                        :id "LoadBalancerBackend"},
- :Policy {:description "An Identity and Access Management (IAM) policy, which specifies access controls for Google Cloud resources. A `Policy` is a collection of `bindings`. A `binding` binds one or more `members` to a single `role`. Members can be user accounts, service accounts, Google groups, and domains (such as G Suite). A `role` is a named list of permissions; each `role` can be an IAM predefined role or a user-created custom role. For some types of Google Cloud resources, a `binding` can also specify a `condition`, which is a logical expression that allows access to a resource only if the expression evaluates to `true`. A condition can add constraints based on attributes of the request, the resource, or both. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies). **JSON example:** { \"bindings\": [ { \"role\": \"roles/resourcemanager.organizationAdmin\", \"members\": [ \"user:mike@example.com\", \"group:admins@example.com\", \"domain:google.com\", \"serviceAccount:my-project-id@appspot.gserviceaccount.com\" ] }, { \"role\": \"roles/resourcemanager.organizationViewer\", \"members\": [ \"user:eve@example.com\" ], \"condition\": { \"title\": \"expirable access\", \"description\": \"Does not grant access after Sep 2020\", \"expression\": \"request.time < timestamp('2020-10-01T00:00:00.000Z')\", } } ], \"etag\": \"BwWWja0YfJA=\", \"version\": 3 } **YAML example:** bindings: - members: - user:mike@example.com - group:admins@example.com - domain:google.com - serviceAccount:my-project-id@appspot.gserviceaccount.com role: roles/resourcemanager.organizationAdmin - members: - user:eve@example.com role: roles/resourcemanager.organizationViewer condition: title: expirable access description: Does not grant access after Sep 2020 expression: request.time < timestamp('2020-10-01T00:00:00.000Z') - etag: BwWWja0YfJA= - version: 3 For a description of IAM and its features, see the [IAM documentation](https://cloud.google.com/iam/docs/).",
-          :properties {:auditConfigs {:items {:$ref "AuditConfig"},
-                                      :description "Specifies cloud audit logging configuration for this policy.",
+ :Policy {:properties {:auditConfigs {:description "Specifies cloud audit logging configuration for this policy.",
+                                      :items {:$ref "AuditConfig"},
                                       :type "array"},
-                       :bindings {:type "array",
+                       :version {:type "integer",
+                                 :format "int32",
+                                 :description "Specifies the format of the policy. Valid values are `0`, `1`, and `3`. Requests that specify an invalid value are rejected. Any operation that affects conditional role bindings must specify version `3`. This requirement applies to the following operations: * Getting a policy that includes a conditional role binding * Adding a conditional role binding to a policy * Changing a conditional role binding in a policy * Removing any role binding, with or without a condition, from a policy that includes conditions **Important:** If you use IAM Conditions, you must include the `etag` field whenever you call `setIamPolicy`. If you omit this field, then IAM allows you to overwrite a version `3` policy with a version `1` policy, and all of the conditions in the version `3` policy are lost. If a policy does not include any conditions, operations on that policy may specify any valid version or leave the field unset. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies)."},
+                       :bindings {:description "Associates a list of `members` to a `role`. Optionally, may specify a `condition` that determines how and when the `bindings` are applied. Each of the `bindings` must contain at least one member.",
                                   :items {:$ref "Binding"},
-                                  :description "Associates a list of `members` to a `role`. Optionally, may specify a `condition` that determines how and when the `bindings` are applied. Each of the `bindings` must contain at least one member."},
-                       :etag {:type "string",
-                              :description "`etag` is used for optimistic concurrency control as a way to help prevent simultaneous updates of a policy from overwriting each other. It is strongly suggested that systems make use of the `etag` in the read-modify-write cycle to perform policy updates in order to avoid race conditions: An `etag` is returned in the response to `getIamPolicy`, and systems are expected to put that etag in the request to `setIamPolicy` to ensure that their change will be applied to the same version of the policy. **Important:** If you use IAM Conditions, you must include the `etag` field whenever you call `setIamPolicy`. If you omit this field, then IAM allows you to overwrite a version `3` policy with a version `1` policy, and all of the conditions in the version `3` policy are lost.",
-                              :format "byte"},
-                       :version {:format "int32",
-                                 :type "integer",
-                                 :description "Specifies the format of the policy. Valid values are `0`, `1`, and `3`. Requests that specify an invalid value are rejected. Any operation that affects conditional role bindings must specify version `3`. This requirement applies to the following operations: * Getting a policy that includes a conditional role binding * Adding a conditional role binding to a policy * Changing a conditional role binding in a policy * Removing any role binding, with or without a condition, from a policy that includes conditions **Important:** If you use IAM Conditions, you must include the `etag` field whenever you call `setIamPolicy`. If you omit this field, then IAM allows you to overwrite a version `3` policy with a version `1` policy, and all of the conditions in the version `3` policy are lost. If a policy does not include any conditions, operations on that policy may specify any valid version or leave the field unset. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies)."}},
-          :type "object",
-          :id "Policy"},
+                                  :type "array"},
+                       :etag {:format "byte",
+                              :type "string",
+                              :description "`etag` is used for optimistic concurrency control as a way to help prevent simultaneous updates of a policy from overwriting each other. It is strongly suggested that systems make use of the `etag` in the read-modify-write cycle to perform policy updates in order to avoid race conditions: An `etag` is returned in the response to `getIamPolicy`, and systems are expected to put that etag in the request to `setIamPolicy` to ensure that their change will be applied to the same version of the policy. **Important:** If you use IAM Conditions, you must include the `etag` field whenever you call `setIamPolicy`. If you omit this field, then IAM allows you to overwrite a version `3` policy with a version `1` policy, and all of the conditions in the version `3` policy are lost."}},
+          :description "An Identity and Access Management (IAM) policy, which specifies access controls for Google Cloud resources. A `Policy` is a collection of `bindings`. A `binding` binds one or more `members` to a single `role`. Members can be user accounts, service accounts, Google groups, and domains (such as G Suite). A `role` is a named list of permissions; each `role` can be an IAM predefined role or a user-created custom role. For some types of Google Cloud resources, a `binding` can also specify a `condition`, which is a logical expression that allows access to a resource only if the expression evaluates to `true`. A condition can add constraints based on attributes of the request, the resource, or both. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies). **JSON example:** { \"bindings\": [ { \"role\": \"roles/resourcemanager.organizationAdmin\", \"members\": [ \"user:mike@example.com\", \"group:admins@example.com\", \"domain:google.com\", \"serviceAccount:my-project-id@appspot.gserviceaccount.com\" ] }, { \"role\": \"roles/resourcemanager.organizationViewer\", \"members\": [ \"user:eve@example.com\" ], \"condition\": { \"title\": \"expirable access\", \"description\": \"Does not grant access after Sep 2020\", \"expression\": \"request.time < timestamp('2020-10-01T00:00:00.000Z')\", } } ], \"etag\": \"BwWWja0YfJA=\", \"version\": 3 } **YAML example:** bindings: - members: - user:mike@example.com - group:admins@example.com - domain:google.com - serviceAccount:my-project-id@appspot.gserviceaccount.com role: roles/resourcemanager.organizationAdmin - members: - user:eve@example.com role: roles/resourcemanager.organizationViewer condition: title: expirable access description: Does not grant access after Sep 2020 expression: request.time < timestamp('2020-10-01T00:00:00.000Z') - etag: BwWWja0YfJA= - version: 3 For a description of IAM and its features, see the [IAM documentation](https://cloud.google.com/iam/docs/).",
+          :id "Policy",
+          :type "object"},
  :Status {:id "Status",
           :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
-          :type "object",
-          :properties {:message {:description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
+          :properties {:code {:description "The status code, which should be an enum value of google.rpc.Code.",
+                              :format "int32",
+                              :type "integer"},
+                       :message {:description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
                                  :type "string"},
                        :details {:type "array",
                                  :description "A list of messages that carry the error details. There is a common set of message types for APIs to use.",
-                                 :items {:type "object",
-                                         :additionalProperties {:type "any",
-                                                                :description "Properties of the object. Contains field @type with type URL."}}},
-                       :code {:format "int32",
-                              :description "The status code, which should be an enum value of google.rpc.Code.",
-                              :type "integer"}}}}
+                                 :items {:additionalProperties {:type "any",
+                                                                :description "Properties of the object. Contains field @type with type URL."},
+                                         :type "object"}}},
+          :type "object"}}

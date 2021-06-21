@@ -1,13 +1,13 @@
 (ns happygapi.compute.networks
   "Compute Engine API: networks.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/networks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/get
   
   Required parameters: network, project
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}"
      #{:project :network}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/insert
   
   Required parameters: project
   
@@ -75,8 +75,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks"
      #{:project}
      parameters)
     (merge-with
@@ -89,8 +89,36 @@
       :as :json}
      auth))))
 
+(defn getEffectiveFirewalls$
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/getEffectiveFirewalls
+  
+  Required parameters: network, project
+  
+  Optional parameters: none
+  
+  Returns the effective firewalls on a given network."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :network})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/getEffectiveFirewalls"
+     #{:project :network}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/patch
   
   Required parameters: network, project
   
@@ -130,8 +158,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}"
      #{:project :network}
      parameters)
     (merge-with
@@ -145,7 +173,7 @@
      auth))))
 
 (defn listPeeringRoutes$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/listPeeringRoutes
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/listPeeringRoutes
   
   Required parameters: project, network
   
@@ -160,8 +188,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}/listPeeringRoutes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/listPeeringRoutes"
      #{:project :network}
      parameters)
     (merge-with
@@ -173,7 +201,7 @@
      auth))))
 
 (defn removePeering$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/removePeering
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/removePeering
   
   Required parameters: network, project
   
@@ -191,8 +219,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}/removePeering"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/removePeering"
      #{:project :network}
      parameters)
     (merge-with
@@ -206,7 +234,7 @@
      auth))))
 
 (defn addPeering$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/addPeering
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/addPeering
   
   Required parameters: network, project
   
@@ -214,8 +242,9 @@
   
   Body: 
   
-  {:autoCreateRoutes boolean,
-   :name string,
+  {:name string,
+   :autoCreateRoutes boolean,
+   :peerNetwork string,
    :networkPeering {:exportCustomRoutes boolean,
                     :peerMtu integer,
                     :importSubnetRoutesWithPublicIp boolean,
@@ -226,8 +255,7 @@
                     :autoCreateRoutes boolean,
                     :network string,
                     :exportSubnetRoutesWithPublicIp boolean,
-                    :importCustomRoutes boolean},
-   :peerNetwork string}
+                    :importCustomRoutes boolean}}
   
   Adds a peering to the specified network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -237,8 +265,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}/addPeering"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/addPeering"
      #{:project :network}
      parameters)
     (merge-with
@@ -252,7 +280,7 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/delete
   
   Required parameters: network, project
   
@@ -266,8 +294,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}"
      #{:project :network}
      parameters)
     (merge-with
@@ -279,11 +307,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, filter, returnPartialSuccess, maxResults, orderBy
   
   Retrieves the list of networks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -294,8 +322,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks"
      #{:project}
      parameters)
     (merge-with
@@ -307,7 +335,7 @@
      auth))))
 
 (defn switchToCustomMode$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/switchToCustomMode
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/switchToCustomMode
   
   Required parameters: network, project
   
@@ -321,8 +349,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}/switchToCustomMode"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/switchToCustomMode"
      #{:project :network}
      parameters)
     (merge-with
@@ -334,9 +362,9 @@
      auth))))
 
 (defn updatePeering$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networks/updatePeering
+  "https://cloud.google.com/compute/api/reference/rest/v1/networks/updatePeering
   
-  Required parameters: network, project
+  Required parameters: project, network
   
   Optional parameters: requestId
   
@@ -362,8 +390,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/networks/{network}/updatePeering"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networks/{network}/updatePeering"
      #{:project :network}
      parameters)
     (merge-with

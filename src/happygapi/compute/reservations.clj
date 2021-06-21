@@ -1,13 +1,13 @@
 (ns happygapi.compute.reservations
   "Compute Engine API: reservations.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/reservations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/get
   
   Required parameters: project, reservation, zone
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{reservation}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{reservation}"
      #{:zone :reservation :project}
      parameters)
     (merge-with
@@ -35,25 +35,25 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/setIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/setIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: resource, project, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:bindingId string,
-               :condition Expr,
-               :members [string],
-               :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
+  {:etag string,
+   :policy {:rules [Rule],
             :bindings [Binding],
-            :etag string,
+            :auditConfigs [AuditConfig],
             :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :etag string},
+   :bindings [{:condition Expr,
+               :members [string],
+               :bindingId string,
+               :role string}]}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -63,8 +63,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{resource}/setIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{resource}/setIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -78,9 +78,9 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/insert
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
   Optional parameters: requestId
   
@@ -93,9 +93,10 @@
    :specificReservationRequired boolean,
    :commitment string,
    :selfLink string,
+   :satisfiesPzs boolean,
    :specificReservation {:count string,
-                         :inUseCount string,
-                         :instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties},
+                         :instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties,
+                         :inUseCount string},
    :status string,
    :id string,
    :kind string}
@@ -108,8 +109,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations"
      #{:zone :project}
      parameters)
     (merge-with
@@ -123,7 +124,7 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/testIamPermissions
   
   Required parameters: project, resource, zone
   
@@ -142,8 +143,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{resource}/testIamPermissions"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -157,11 +158,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, includeAllScopes, pageToken, maxResults, orderBy, filter
   
   Retrieves an aggregated list of reservations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -172,8 +173,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/reservations"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/reservations"
      #{:project}
      parameters)
     (merge-with
@@ -185,9 +186,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/delete
   
-  Required parameters: project, reservation, zone
+  Required parameters: project, zone, reservation
   
   Optional parameters: requestId
   
@@ -199,8 +200,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{reservation}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{reservation}"
      #{:zone :reservation :project}
      parameters)
     (merge-with
@@ -212,9 +213,9 @@
      auth))))
 
 (defn resize$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/resize
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/resize
   
-  Required parameters: project, reservation, zone
+  Required parameters: zone, project, reservation
   
   Optional parameters: requestId
   
@@ -230,8 +231,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{reservation}/resize"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{reservation}/resize"
      #{:zone :reservation :project}
      parameters)
     (merge-with
@@ -245,9 +246,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/getIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/getIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, project, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -260,8 +261,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations/{resource}/getIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{resource}/getIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -273,11 +274,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/reservations/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/list
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
   
   A list of all the reservations that have been configured for the specified project in specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -288,8 +289,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/reservations"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations"
      #{:zone :project}
      parameters)
     (merge-with

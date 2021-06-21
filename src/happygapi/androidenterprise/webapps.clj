@@ -6,48 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/insert
-  
-  Required parameters: enterpriseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:webAppId string,
-   :title string,
-   :displayMode string,
-   :startUrl string,
-   :isPublished boolean,
-   :icons [{:imageData string}],
-   :versionCode string}
-  
-  Creates a new web app for the enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
-     #{:enterpriseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/get
   
-  Required parameters: enterpriseId, webAppId
+  Required parameters: webAppId, enterpriseId
   
   Optional parameters: none
   
@@ -70,48 +32,22 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/delete
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/update
   
   Required parameters: enterpriseId, webAppId
   
   Optional parameters: none
   
-  Deletes an existing web app."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :webAppId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/webApps/{webAppId}"
-     #{:enterpriseId :webAppId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/update
-  
-  Required parameters: webAppId, enterpriseId
-  
-  Optional parameters: none
-  
   Body: 
   
-  {:webAppId string,
-   :title string,
+  {:startUrl string,
    :displayMode string,
-   :startUrl string,
+   :webAppId string,
+   :versionCode string,
    :isPublished boolean,
-   :icons [{:imageData string}],
-   :versionCode string}
+   :title string,
+   :icons [{:imageData string}]}
   
   Updates an existing web app."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -129,6 +65,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/delete
+  
+  Required parameters: webAppId, enterpriseId
+  
+  Optional parameters: none
+  
+  Deletes an existing web app."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :webAppId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/webApps/{webAppId}"
+     #{:enterpriseId :webAppId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -155,6 +117,44 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/insert
+  
+  Required parameters: enterpriseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:startUrl string,
+   :displayMode string,
+   :webAppId string,
+   :versionCode string,
+   :isPublished boolean,
+   :title string,
+   :icons [{:imageData string}]}
+  
+  Creates a new web app for the enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
+     #{:enterpriseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

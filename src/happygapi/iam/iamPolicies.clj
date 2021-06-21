@@ -47,9 +47,9 @@
   
   Body: 
   
-  {:condition {:expression string,
+  {:condition {:title string,
+               :expression string,
                :description string,
-               :title string,
                :location string},
    :fullResourceName string}
   

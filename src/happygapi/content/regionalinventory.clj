@@ -15,15 +15,15 @@
   
   Body: 
   
-  {:salePriceEffectiveDate string,
+  {:salePrice {:value string, :currency string},
    :price {:value string, :currency string},
    :regionId string,
    :customAttributes [{:groupValues [CustomAttribute],
                        :value string,
                        :name string}],
-   :kind string,
-   :salePrice {:value string, :currency string},
-   :availability string}
+   :availability string,
+   :salePriceEffectiveDate string,
+   :kind string}
   
   Update the regional inventory of a product in your Merchant Center account. If a regional inventory with the same region ID already exists, this method updates that entry."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -32,8 +32,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/products/{productId}/regionalinventory"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/products/{productId}/regionalinventory"
      #{:productId :merchantId}
      parameters)
     (merge-with
@@ -55,11 +55,11 @@
   
   Body: 
   
-  {:entries [{:merchantId string,
-              :regionalInventory RegionalInventory,
-              :productId string,
+  {:entries [{:productId string,
               :batchId integer,
-              :method string}]}
+              :method string,
+              :regionalInventory RegionalInventory,
+              :merchantId string}]}
   
   Updates regional inventory for multiple products or regions in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -68,8 +68,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/regionalinventory/batch"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "regionalinventory/batch"
      #{}
      parameters)
     (merge-with

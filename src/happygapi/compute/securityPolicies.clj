@@ -1,15 +1,15 @@
 (ns happygapi.compute.securityPolicies
   "Compute Engine API: securityPolicies.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn removeRule$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/removeRule
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/removeRule
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: priority
   
@@ -21,8 +21,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}/removeRule"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}/removeRule"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -34,9 +34,9 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/get
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: none
   
@@ -49,8 +49,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -62,7 +62,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/insert
   
   Required parameters: project
   
@@ -70,19 +70,20 @@
   
   Body: 
   
-  {:creationTimestamp string,
-   :description string,
-   :fingerprint string,
+  {:description string,
+   :creationTimestamp string,
+   :name string,
+   :selfLink string,
+   :rules [{:kind string,
+            :action string,
+            :description string,
+            :priority integer,
+            :match SecurityPolicyRuleMatcher,
+            :preview boolean}],
    :id string,
    :kind string,
-   :name string,
-   :rules [{:action string,
-            :description string,
-            :kind string,
-            :match SecurityPolicyRuleMatcher,
-            :preview boolean,
-            :priority integer}],
-   :selfLink string}
+   :advancedOptionsConfig {:jsonParsing string, :logLevel string},
+   :fingerprint string}
   
   Creates a new policy in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -92,8 +93,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies"
      #{:project}
      parameters)
     (merge-with
@@ -107,22 +108,23 @@
      auth))))
 
 (defn listPreconfiguredExpressionSets$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/listPreconfiguredExpressionSets
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/listPreconfiguredExpressionSets
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, returnPartialSuccess, orderBy, pageToken, filter
   
   Gets the current list of preconfigured Web Application Firewall (WAF) expressions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/listPreconfiguredExpressionSets"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/listPreconfiguredExpressionSets"
      #{:project}
      parameters)
     (merge-with
@@ -134,7 +136,7 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/patch
   
   Required parameters: project, securityPolicy
   
@@ -142,21 +144,22 @@
   
   Body: 
   
-  {:creationTimestamp string,
-   :description string,
-   :fingerprint string,
+  {:description string,
+   :creationTimestamp string,
+   :name string,
+   :selfLink string,
+   :rules [{:kind string,
+            :action string,
+            :description string,
+            :priority integer,
+            :match SecurityPolicyRuleMatcher,
+            :preview boolean}],
    :id string,
    :kind string,
-   :name string,
-   :rules [{:action string,
-            :description string,
-            :kind string,
-            :match SecurityPolicyRuleMatcher,
-            :preview boolean,
-            :priority integer}],
-   :selfLink string}
+   :advancedOptionsConfig {:jsonParsing string, :logLevel string},
+   :fingerprint string}
   
-  Patches the specified policy with the data included in the request."
+  Patches the specified policy with the data included in the request. This cannot be used to be update the rules in the policy. Please use the per rule methods like addRule, patchRule, and removeRule instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -164,8 +167,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -179,9 +182,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/delete
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: requestId
   
@@ -193,8 +196,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -206,22 +209,22 @@
      auth))))
 
 (defn patchRule$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/patchRule
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/patchRule
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: priority
   
   Body: 
   
-  {:action string,
+  {:kind string,
+   :action string,
    :description string,
-   :kind string,
+   :priority integer,
    :match {:config SecurityPolicyRuleMatcherConfig,
-           :expr Expr,
-           :versionedExpr string},
-   :preview boolean,
-   :priority integer}
+           :versionedExpr string,
+           :expr Expr},
+   :preview boolean}
   
   Patches a rule at the specified priority."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -231,8 +234,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}/patchRule"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}/patchRule"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -246,7 +249,7 @@
      auth))))
 
 (defn addRule$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/addRule
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/addRule
   
   Required parameters: project, securityPolicy
   
@@ -254,14 +257,14 @@
   
   Body: 
   
-  {:action string,
+  {:kind string,
+   :action string,
    :description string,
-   :kind string,
+   :priority integer,
    :match {:config SecurityPolicyRuleMatcherConfig,
-           :expr Expr,
-           :versionedExpr string},
-   :preview boolean,
-   :priority integer}
+           :versionedExpr string,
+           :expr Expr},
+   :preview boolean}
   
   Inserts a rule into a security policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -271,8 +274,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}/addRule"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}/addRule"
      #{:project :securityPolicy}
      parameters)
     (merge-with
@@ -286,11 +289,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
   
   List all the policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -301,8 +304,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies"
      #{:project}
      parameters)
     (merge-with
@@ -314,9 +317,9 @@
      auth))))
 
 (defn getRule$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/securityPolicies/getRule
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/getRule
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: priority
   
@@ -329,8 +332,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/securityPolicies/{securityPolicy}/getRule"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{securityPolicy}/getRule"
      #{:project :securityPolicy}
      parameters)
     (merge-with

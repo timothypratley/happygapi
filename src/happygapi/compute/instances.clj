@@ -1,15 +1,15 @@
 (ns happygapi.compute.instances
   "Compute Engine API: instances.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/instances"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn deleteAccessConfig$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/deleteAccessConfig
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/deleteAccessConfig
   
-  Required parameters: accessConfig, instance, networkInterface, project, zone
+  Required parameters: networkInterface, zone, accessConfig, project, instance
   
   Optional parameters: requestId
   
@@ -23,8 +23,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/deleteAccessConfig"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/deleteAccessConfig"
      #{:instance :zone :networkInterface :project :accessConfig}
      parameters)
     (merge-with
@@ -36,7 +36,7 @@
      auth))))
 
 (defn getScreenshot$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getScreenshot
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getScreenshot
   
   Required parameters: instance, project, zone
   
@@ -51,8 +51,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/screenshot"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/screenshot"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -64,7 +64,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/get
   
   Required parameters: instance, project, zone
   
@@ -79,8 +79,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -92,15 +92,15 @@
      auth))))
 
 (defn startWithEncryptionKey$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/startWithEncryptionKey
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/startWithEncryptionKey
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: requestId
   
   Body: 
   
-  {:disks [{:diskEncryptionKey CustomerEncryptionKey, :source string}]}
+  {:disks [{:source string, :diskEncryptionKey CustomerEncryptionKey}]}
   
   Starts an instance that was stopped using the instances().stop method. For more information, see Restart an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -110,8 +110,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/startWithEncryptionKey"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/startWithEncryptionKey"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -125,21 +125,23 @@
      auth))))
 
 (defn updateAccessConfig$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/updateAccessConfig
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateAccessConfig
   
-  Required parameters: instance, networkInterface, project, zone
+  Required parameters: networkInterface, zone, instance, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:kind string,
+  {:publicPtrDomainName string,
    :name string,
    :natIP string,
+   :type string,
+   :externalIpv6 string,
+   :kind string,
    :networkTier string,
-   :publicPtrDomainName string,
    :setPublicPtr boolean,
-   :type string}
+   :externalIpv6PrefixLength integer}
   
   Updates the specified access config from an instance's network interface with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -151,8 +153,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/updateAccessConfig"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/updateAccessConfig"
      #{:instance :zone :networkInterface :project}
      parameters)
     (merge-with
@@ -166,25 +168,25 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: project, zone, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:bindingId string,
-               :condition Expr,
-               :members [string],
-               :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
+  {:etag string,
+   :policy {:rules [Rule],
             :bindings [Binding],
-            :etag string,
+            :auditConfigs [AuditConfig],
             :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :etag string},
+   :bindings [{:condition Expr,
+               :members [string],
+               :bindingId string,
+               :role string}]}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -194,8 +196,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{resource}/setIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{resource}/setIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -209,11 +211,11 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/insert
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
-  Optional parameters: requestId, sourceInstanceTemplate
+  Optional parameters: sourceInstanceTemplate, requestId
   
   Body: 
   
@@ -221,14 +223,15 @@
    :tags {:fingerprint string, :items [string]},
    :labels {},
    :startRestricted boolean,
-   :shieldedInstanceConfig {:enableIntegrityMonitoring boolean,
-                            :enableSecureBoot boolean,
-                            :enableVtpm boolean},
+   :shieldedInstanceConfig {:enableVtpm boolean,
+                            :enableIntegrityMonitoring boolean,
+                            :enableSecureBoot boolean},
    :scheduling {:automaticRestart boolean,
-                :minNodeCpus integer,
-                :nodeAffinities [SchedulingNodeAffinity],
+                :locationHint string,
                 :onHostMaintenance string,
-                :preemptible boolean},
+                :preemptible boolean,
+                :nodeAffinities [SchedulingNodeAffinity],
+                :minNodeCpus integer},
    :resourcePolicies [string],
    :lastSuspendedTimestamp string,
    :creationTimestamp string,
@@ -237,14 +240,17 @@
    :name string,
    :canIpForward boolean,
    :statusMessage string,
-   :guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}],
+   :guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}],
    :selfLink string,
    :hostname string,
    :machineType string,
    :displayDevice {:enableDisplay boolean},
    :confidentialInstanceConfig {:enableConfidentialCompute boolean},
+   :satisfiesPzs boolean,
    :status string,
+   :advancedMachineFeatures {:threadsPerCore integer,
+                             :enableNestedVirtualization boolean},
    :id string,
    :lastStopTimestamp string,
    :kind string,
@@ -265,26 +271,30 @@
             :shieldedInstanceInitialState InitialStateConfig}],
    :lastStartTimestamp string,
    :cpuPlatform string,
-   :reservationAffinity {:consumeReservationType string,
-                         :key string,
-                         :values [string]},
-   :networkInterfaces [{:accessConfigs [AccessConfig],
+   :reservationAffinity {:values [string],
+                         :consumeReservationType string,
+                         :key string},
+   :networkInterfaces [{:ipv6AccessType string,
+                        :stackType string,
+                        :accessConfigs [AccessConfig],
                         :name string,
                         :aliasIpRanges [AliasIpRange],
+                        :nicType string,
                         :ipv6Address string,
+                        :ipv6AccessConfigs [AccessConfig],
                         :kind string,
                         :network string,
                         :networkIP string,
                         :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
-   :metadata {:fingerprint string,
+   :metadata {:kind string,
               :items [{:key string, :value string}],
-              :kind string},
+              :fingerprint string},
    :fingerprint string,
    :shieldedInstanceIntegrityPolicy {:updateAutoLearnPolicy boolean},
    :labelFingerprint string,
-   :serviceAccounts [{:email string, :scopes [string]}],
+   :serviceAccounts [{:scopes [string], :email string}],
    :minCpuPlatform string}
   
   Creates an instance resource in the specified project using the data included in the request."
@@ -295,8 +305,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances"
      #{:zone :project}
      parameters)
     (merge-with
@@ -310,16 +320,16 @@
      auth))))
 
 (defn setMachineResources$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setMachineResources
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMachineResources
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: requestId
   
   Body: 
   
-  {:guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}]}
+  {:guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}]}
   
   Changes the number and/or type of accelerator for a stopped instance to the values specified in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -329,8 +339,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setMachineResources"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setMachineResources"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -343,10 +353,40 @@
       :as :json}
      auth))))
 
-(defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/testIamPermissions
+(defn getEffectiveFirewalls$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getEffectiveFirewalls
   
-  Required parameters: project, resource, zone
+  Required parameters: project, networkInterface, instance, zone
+  
+  Optional parameters: none
+  
+  Returns effective firewalls applied to an interface of the instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instance :zone :networkInterface :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/getEffectiveFirewalls"
+     #{:instance :zone :networkInterface :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn testIamPermissions$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/testIamPermissions
+  
+  Required parameters: resource, zone, project
   
   Optional parameters: none
   
@@ -363,8 +403,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{resource}/testIamPermissions"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -378,9 +418,9 @@
      auth))))
 
 (defn reset$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/reset
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/reset
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, instance, project
   
   Optional parameters: requestId
   
@@ -392,8 +432,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/reset"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/reset"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -405,9 +445,9 @@
      auth))))
 
 (defn setLabels$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setLabels
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setLabels
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, project, instance
   
   Optional parameters: requestId
   
@@ -423,8 +463,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setLabels"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setLabels"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -438,11 +478,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: includeAllScopes, pageToken, returnPartialSuccess, maxResults, filter, orderBy
   
   Retrieves aggregated list of all of the instances in your project across all regions and zones."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -453,8 +493,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/instances"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/instances"
      #{:project}
      parameters)
     (merge-with
@@ -466,31 +506,45 @@
      auth))))
 
 (defn updateNetworkInterface$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/updateNetworkInterface
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateNetworkInterface
   
-  Required parameters: instance, networkInterface, project, zone
+  Required parameters: zone, instance, networkInterface, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:accessConfigs [{:kind string,
+  {:ipv6AccessType string,
+   :stackType string,
+   :accessConfigs [{:publicPtrDomainName string,
                     :name string,
                     :natIP string,
+                    :type string,
+                    :externalIpv6 string,
+                    :kind string,
                     :networkTier string,
-                    :publicPtrDomainName string,
                     :setPublicPtr boolean,
-                    :type string}],
+                    :externalIpv6PrefixLength integer}],
    :name string,
-   :aliasIpRanges [{:ipCidrRange string, :subnetworkRangeName string}],
+   :aliasIpRanges [{:subnetworkRangeName string, :ipCidrRange string}],
+   :nicType string,
    :ipv6Address string,
+   :ipv6AccessConfigs [{:publicPtrDomainName string,
+                        :name string,
+                        :natIP string,
+                        :type string,
+                        :externalIpv6 string,
+                        :kind string,
+                        :networkTier string,
+                        :setPublicPtr boolean,
+                        :externalIpv6PrefixLength integer}],
    :kind string,
    :network string,
    :networkIP string,
    :fingerprint string,
    :subnetwork string}
   
-  Updates an instance's network interface. This method follows PATCH semantics."
+  Updates an instance's network interface. This method can only update an interface's alias IP range and attached network. See Modifying alias IP ranges for an existing instance for instructions on changing alias IP ranges. See Migrating a VM between networks for instructions on migrating an interface. This method follows PATCH semantics."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -500,8 +554,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/updateNetworkInterface"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/updateNetworkInterface"
      #{:instance :zone :networkInterface :project}
      parameters)
     (merge-with
@@ -515,9 +569,9 @@
      auth))))
 
 (defn removeResourcePolicies$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/removeResourcePolicies
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/removeResourcePolicies
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, instance, project
   
   Optional parameters: requestId
   
@@ -533,8 +587,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/removeResourcePolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/removeResourcePolicies"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -548,17 +602,17 @@
      auth))))
 
 (defn updateShieldedInstanceConfig$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/updateShieldedInstanceConfig
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateShieldedInstanceConfig
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: requestId
   
   Body: 
   
-  {:enableIntegrityMonitoring boolean,
-   :enableSecureBoot boolean,
-   :enableVtpm boolean}
+  {:enableVtpm boolean,
+   :enableIntegrityMonitoring boolean,
+   :enableSecureBoot boolean}
   
   Updates the Shielded Instance config for an instance. You can only use this method on a stopped instance. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -568,8 +622,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/updateShieldedInstanceConfig"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/updateShieldedInstanceConfig"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -583,9 +637,9 @@
      auth))))
 
 (defn start$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/start
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/start
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
   Optional parameters: requestId
   
@@ -597,8 +651,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/start"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/start"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -610,21 +664,23 @@
      auth))))
 
 (defn addAccessConfig$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/addAccessConfig
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/addAccessConfig
   
-  Required parameters: instance, networkInterface, project, zone
+  Required parameters: zone, networkInterface, project, instance
   
   Optional parameters: requestId
   
   Body: 
   
-  {:kind string,
+  {:publicPtrDomainName string,
    :name string,
    :natIP string,
+   :type string,
+   :externalIpv6 string,
+   :kind string,
    :networkTier string,
-   :publicPtrDomainName string,
    :setPublicPtr boolean,
-   :type string}
+   :externalIpv6PrefixLength integer}
   
   Adds an access config to an instance's network interface."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -636,8 +692,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/addAccessConfig"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/addAccessConfig"
      #{:instance :zone :networkInterface :project}
      parameters)
     (merge-with
@@ -651,11 +707,11 @@
      auth))))
 
 (defn setDeletionProtection$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setDeletionProtection
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setDeletionProtection
   
-  Required parameters: project, resource, zone
+  Required parameters: resource, project, zone
   
-  Optional parameters: deletionProtection, requestId
+  Optional parameters: requestId, deletionProtection
   
   Sets deletion protection on the instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -665,8 +721,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{resource}/setDeletionProtection"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{resource}/setDeletionProtection"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -678,11 +734,11 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/update
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/update
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, project, instance
   
-  Optional parameters: minimalAction, mostDisruptiveAllowedAction, requestId
+  Optional parameters: requestId, minimalAction, mostDisruptiveAllowedAction
   
   Body: 
   
@@ -690,14 +746,15 @@
    :tags {:fingerprint string, :items [string]},
    :labels {},
    :startRestricted boolean,
-   :shieldedInstanceConfig {:enableIntegrityMonitoring boolean,
-                            :enableSecureBoot boolean,
-                            :enableVtpm boolean},
+   :shieldedInstanceConfig {:enableVtpm boolean,
+                            :enableIntegrityMonitoring boolean,
+                            :enableSecureBoot boolean},
    :scheduling {:automaticRestart boolean,
-                :minNodeCpus integer,
-                :nodeAffinities [SchedulingNodeAffinity],
+                :locationHint string,
                 :onHostMaintenance string,
-                :preemptible boolean},
+                :preemptible boolean,
+                :nodeAffinities [SchedulingNodeAffinity],
+                :minNodeCpus integer},
    :resourcePolicies [string],
    :lastSuspendedTimestamp string,
    :creationTimestamp string,
@@ -706,14 +763,17 @@
    :name string,
    :canIpForward boolean,
    :statusMessage string,
-   :guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}],
+   :guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}],
    :selfLink string,
    :hostname string,
    :machineType string,
    :displayDevice {:enableDisplay boolean},
    :confidentialInstanceConfig {:enableConfidentialCompute boolean},
+   :satisfiesPzs boolean,
    :status string,
+   :advancedMachineFeatures {:threadsPerCore integer,
+                             :enableNestedVirtualization boolean},
    :id string,
    :lastStopTimestamp string,
    :kind string,
@@ -734,29 +794,33 @@
             :shieldedInstanceInitialState InitialStateConfig}],
    :lastStartTimestamp string,
    :cpuPlatform string,
-   :reservationAffinity {:consumeReservationType string,
-                         :key string,
-                         :values [string]},
-   :networkInterfaces [{:accessConfigs [AccessConfig],
+   :reservationAffinity {:values [string],
+                         :consumeReservationType string,
+                         :key string},
+   :networkInterfaces [{:ipv6AccessType string,
+                        :stackType string,
+                        :accessConfigs [AccessConfig],
                         :name string,
                         :aliasIpRanges [AliasIpRange],
+                        :nicType string,
                         :ipv6Address string,
+                        :ipv6AccessConfigs [AccessConfig],
                         :kind string,
                         :network string,
                         :networkIP string,
                         :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
-   :metadata {:fingerprint string,
+   :metadata {:kind string,
               :items [{:key string, :value string}],
-              :kind string},
+              :fingerprint string},
    :fingerprint string,
    :shieldedInstanceIntegrityPolicy {:updateAutoLearnPolicy boolean},
    :labelFingerprint string,
-   :serviceAccounts [{:email string, :scopes [string]}],
+   :serviceAccounts [{:scopes [string], :email string}],
    :minCpuPlatform string}
   
-  Updates an instance only if the necessary resources are available. This method can update only a specific set of instance properties. See  Updating a running instance for a list of updatable instance properties."
+  Updates an instance only if the necessary resources are available. This method can update only a specific set of instance properties. See Updating a running instance for a list of updatable instance properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -764,8 +828,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -779,13 +843,13 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/delete
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
   Optional parameters: requestId
   
-  Deletes the specified Instance resource. For more information, see Stopping or Deleting an Instance."
+  Deletes the specified Instance resource. For more information, see Deleting an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
@@ -793,8 +857,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -806,9 +870,9 @@
      auth))))
 
 (defn setDiskAutoDelete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setDiskAutoDelete
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setDiskAutoDelete
   
-  Required parameters: autoDelete, deviceName, instance, project, zone
+  Required parameters: zone, project, instance, autoDelete, deviceName
   
   Optional parameters: requestId
   
@@ -822,8 +886,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setDiskAutoDelete"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setDiskAutoDelete"
      #{:deviceName :instance :zone :autoDelete :project}
      parameters)
     (merge-with
@@ -835,9 +899,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, project, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -850,8 +914,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{resource}/getIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{resource}/getIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -863,9 +927,9 @@
      auth))))
 
 (defn getShieldedInstanceIdentity$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getShieldedInstanceIdentity
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getShieldedInstanceIdentity
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: none
   
@@ -878,8 +942,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/getShieldedInstanceIdentity"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/getShieldedInstanceIdentity"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -891,11 +955,11 @@
      auth))))
 
 (defn listReferrers$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/listReferrers
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/listReferrers
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, pageToken, orderBy, returnPartialSuccess, filter
   
   Retrieves a list of resources that refer to the VM instance specified in the request. For example, if the VM instance is part of a managed or unmanaged instance group, the referrers list includes the instance group. For more information, read Viewing referrers to VM instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -906,8 +970,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/referrers"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/referrers"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -919,9 +983,9 @@
      auth))))
 
 (defn detachDisk$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/detachDisk
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/detachDisk
   
-  Required parameters: deviceName, instance, project, zone
+  Required parameters: project, zone, instance, deviceName
   
   Optional parameters: requestId
   
@@ -935,8 +999,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/detachDisk"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/detachDisk"
      #{:deviceName :instance :zone :project}
      parameters)
     (merge-with
@@ -948,9 +1012,9 @@
      auth))))
 
 (defn setServiceAccount$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setServiceAccount
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setServiceAccount
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
   Optional parameters: requestId
   
@@ -966,8 +1030,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setServiceAccount"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setServiceAccount"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -981,9 +1045,9 @@
      auth))))
 
 (defn getSerialPortOutput$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getSerialPortOutput
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getSerialPortOutput
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, project, instance
   
   Optional parameters: port, start
   
@@ -996,8 +1060,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/serialPort"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/serialPort"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1009,9 +1073,9 @@
      auth))))
 
 (defn stop$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/stop
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/stop
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
   Optional parameters: requestId
   
@@ -1023,8 +1087,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/stop"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/stop"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1036,9 +1100,9 @@
      auth))))
 
 (defn setMinCpuPlatform$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setMinCpuPlatform
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMinCpuPlatform
   
-  Required parameters: instance, project, zone
+  Required parameters: instance, zone, project
   
   Optional parameters: requestId
   
@@ -1054,8 +1118,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setMinCpuPlatform"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setMinCpuPlatform"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1069,9 +1133,9 @@
      auth))))
 
 (defn addResourcePolicies$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/addResourcePolicies
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/addResourcePolicies
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: requestId
   
@@ -1087,8 +1151,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/addResourcePolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/addResourcePolicies"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1102,11 +1166,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/list
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, filter, maxResults, pageToken, returnPartialSuccess
   
   Retrieves the list of instances contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1117,8 +1181,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances"
      #{:zone :project}
      parameters)
     (merge-with
@@ -1130,11 +1194,11 @@
      auth))))
 
 (defn getGuestAttributes$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/getGuestAttributes
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/getGuestAttributes
   
   Required parameters: instance, project, zone
   
-  Optional parameters: queryPath, variableKey
+  Optional parameters: variableKey, queryPath
   
   Returns the specified guest attributes entry."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1145,8 +1209,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/getGuestAttributes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/getGuestAttributes"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1158,9 +1222,9 @@
      auth))))
 
 (defn updateDisplayDevice$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/updateDisplayDevice
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateDisplayDevice
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, instance, project
   
   Optional parameters: requestId
   
@@ -1176,8 +1240,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/updateDisplayDevice"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/updateDisplayDevice"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1191,19 +1255,20 @@
      auth))))
 
 (defn setScheduling$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setScheduling
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setScheduling
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, instance, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:automaticRestart boolean,
-   :minNodeCpus integer,
-   :nodeAffinities [{:key string, :operator string, :values [string]}],
+   :locationHint string,
    :onHostMaintenance string,
-   :preemptible boolean}
+   :preemptible boolean,
+   :nodeAffinities [{:values [string], :operator string, :key string}],
+   :minNodeCpus integer}
   
   Sets an instance's scheduling options. You can only call this method on a stopped instance, that is, a VM instance that is in a `TERMINATED` state. See Instance Life Cycle for more information on the possible instance states."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1213,8 +1278,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setScheduling"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setScheduling"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1228,9 +1293,9 @@
      auth))))
 
 (defn simulateMaintenanceEvent$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/simulateMaintenanceEvent
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/simulateMaintenanceEvent
   
-  Required parameters: instance, project, zone
+  Required parameters: project, instance, zone
   
   Optional parameters: none
   
@@ -1242,8 +1307,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/simulateMaintenanceEvent"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/simulateMaintenanceEvent"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1255,11 +1320,11 @@
      auth))))
 
 (defn attachDisk$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/attachDisk
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/attachDisk
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, instance, project
   
-  Optional parameters: forceAttach, requestId
+  Optional parameters: requestId, forceAttach
   
   Body: 
   
@@ -1284,16 +1349,17 @@
                       :diskType string,
                       :onUpdateAction string,
                       :diskSizeGb string,
-                      :diskName string},
+                      :diskName string,
+                      :provisionedIops string},
    :diskSizeGb string,
    :diskEncryptionKey {:kmsKeyName string,
-                       :kmsKeyServiceAccount string,
                        :rawKey string,
+                       :kmsKeyServiceAccount string,
                        :sha256 string},
    :shieldedInstanceInitialState {:dbs [FileContentBuffer],
+                                  :pk FileContentBuffer,
                                   :dbxs [FileContentBuffer],
-                                  :keks [FileContentBuffer],
-                                  :pk FileContentBuffer}}
+                                  :keks [FileContentBuffer]}}
   
   Attaches an existing Disk resource to an instance. You must first create the disk before you can attach it. It is not possible to create and attach a disk at the same time. For more information, read Adding a persistent disk to your instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1303,8 +1369,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/attachDisk"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/attachDisk"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1318,17 +1384,17 @@
      auth))))
 
 (defn setMetadata$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setMetadata
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMetadata
   
-  Required parameters: instance, project, zone
+  Required parameters: project, zone, instance
   
   Optional parameters: requestId
   
   Body: 
   
-  {:fingerprint string,
+  {:kind string,
    :items [{:key string, :value string}],
-   :kind string}
+   :fingerprint string}
   
   Sets metadata for the specified instance to the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1338,8 +1404,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setMetadata"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setMetadata"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1353,9 +1419,9 @@
      auth))))
 
 (defn setShieldedInstanceIntegrityPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setShieldedInstanceIntegrityPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setShieldedInstanceIntegrityPolicy
   
-  Required parameters: instance, project, zone
+  Required parameters: zone, project, instance
   
   Optional parameters: requestId
   
@@ -1371,8 +1437,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setShieldedInstanceIntegrityPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setShieldedInstanceIntegrityPolicy"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1386,7 +1452,7 @@
      auth))))
 
 (defn setMachineType$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setMachineType
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMachineType
   
   Required parameters: instance, project, zone
   
@@ -1404,8 +1470,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setMachineType"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setMachineType"
      #{:instance :zone :project}
      parameters)
     (merge-with
@@ -1418,8 +1484,64 @@
       :as :json}
      auth))))
 
+(defn bulkInsert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/bulkInsert
+  
+  Required parameters: zone, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:sourceInstanceTemplate string,
+   :locationPolicy {:locations {}},
+   :instanceProperties {:description string,
+                        :tags Tags,
+                        :labels {},
+                        :shieldedInstanceConfig ShieldedInstanceConfig,
+                        :scheduling Scheduling,
+                        :resourcePolicies [string],
+                        :privateIpv6GoogleAccess string,
+                        :canIpForward boolean,
+                        :guestAccelerators [AcceleratorConfig],
+                        :machineType string,
+                        :confidentialInstanceConfig ConfidentialInstanceConfig,
+                        :advancedMachineFeatures AdvancedMachineFeatures,
+                        :disks [AttachedDisk],
+                        :reservationAffinity ReservationAffinity,
+                        :networkInterfaces [NetworkInterface],
+                        :metadata Metadata,
+                        :serviceAccounts [ServiceAccount],
+                        :minCpuPlatform string},
+   :namePattern string,
+   :count string,
+   :perInstanceProperties {},
+   :minCount string}
+  
+  Creates multiple instances. Count specifies the number of instances to create."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/bulkInsert"
+     #{:zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setTags$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/instances/setTags
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setTags
   
   Required parameters: instance, project, zone
   
@@ -1437,8 +1559,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/instances/{instance}/setTags"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setTags"
      #{:instance :zone :project}
      parameters)
     (merge-with

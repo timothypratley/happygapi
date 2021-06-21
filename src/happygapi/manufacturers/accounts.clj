@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn products-delete$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
+  
+  Required parameters: name, parent
+  
+  Optional parameters: none
+  
+  Deletes the product from a Manufacturer Center account."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products/{+name}"
+     #{:parent :name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn products-update$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/update
   
@@ -24,18 +50,18 @@
    :flavor string,
    :color string,
    :productLine string,
-   :capacity {:unit string, :value string},
+   :capacity {:value string, :unit string},
    :includedDestination [string],
    :additionalImageLink [{:imageUrl string,
                           :status string,
                           :type string}],
    :productPageUrl string,
    :releaseDate string,
-   :productDetail [{:attributeName string,
-                    :attributeValue string,
-                    :sectionName string}],
+   :productDetail [{:sectionName string,
+                    :attributeName string,
+                    :attributeValue string}],
    :productName string,
-   :sizeType string,
+   :sizeType [string],
    :size string,
    :brand string,
    :title string,
@@ -52,6 +78,7 @@
    :gtin [string],
    :gender string,
    :targetClientId string,
+   :productHighlight [string],
    :imageLink {:imageUrl string, :status string, :type string},
    :pattern string,
    :richProductContent [string]}
@@ -80,7 +107,7 @@
 (defn products-get$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/get
   
-  Required parameters: parent, name
+  Required parameters: name, parent
   
   Optional parameters: include
   
@@ -108,7 +135,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, include, pageToken
+  Optional parameters: include, pageSize, pageToken
   
   Lists all the products in a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
@@ -120,32 +147,6 @@
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn products-delete$
-  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
-  
-  Required parameters: parent, name
-  
-  Optional parameters: none
-  
-  Deletes the product from a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products/{+name}"
-     #{:parent :name}
      parameters)
     (merge-with
      merge

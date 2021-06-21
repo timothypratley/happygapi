@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/settlementreports"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/settlementreports"
      #{:merchantId}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/settlementreports/get
   
-  Required parameters: merchantId, settlementId
+  Required parameters: settlementId, merchantId
   
   Optional parameters: none
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/settlementreports/{settlementId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/settlementreports/{settlementId}"
      #{:settlementId :merchantId}
      parameters)
     (merge-with

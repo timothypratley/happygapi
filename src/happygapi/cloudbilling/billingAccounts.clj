@@ -6,31 +6,29 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/create
+(defn testIamPermissions$
+  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/testIamPermissions
   
-  Required parameters: none
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {:open boolean,
-   :displayName string,
-   :masterBillingAccount string,
-   :name string}
+  {:permissions [string]}
   
-  Creates a billing account. This method can only be used to create [billing subaccounts](https://cloud.google.com/billing/docs/concepts) by Google Cloud resellers. When creating a subaccount, the current authenticated user must have the `billing.accounts.update` IAM permission on the master account, which is typically given to billing account [administrators](https://cloud.google.com/billing/docs/how-to/billing-access). This method will return an error if the master account has not been provisioned as a reseller account."
+  Tests the access control policy for a billing account. This method takes the resource and a set of permissions as input and returns the subset of the input permissions that the caller is allowed for that resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-billing.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudbilling.googleapis.com/"
-     "v1/billingAccounts"
-     #{}
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -70,34 +68,6 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about a billing account. The current authenticated user must be a [viewer of the billing account](https://cloud.google.com/billing/docs/how-to/billing-access)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
-            "https://www.googleapis.com/auth/cloud-billing.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbilling.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/patch
   
@@ -107,10 +77,10 @@
   
   Body: 
   
-  {:open boolean,
+  {:name string,
    :displayName string,
-   :masterBillingAccount string,
-   :name string}
+   :open boolean,
+   :masterBillingAccount string}
   
   Updates a billing account's fields. Currently the only field that can be edited is `display_name`. The current authenticated user must have the `billing.accounts.update` IAM permission, which is typically given to the [administrator](https://cloud.google.com/billing/docs/how-to/billing-access) of the billing account."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
@@ -134,6 +104,34 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/list
+  
+  Required parameters: none
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists the billing accounts that the current authenticated user has permission to [view](https://cloud.google.com/billing/docs/how-to/billing-access)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-billing"
+            "https://www.googleapis.com/auth/cloud-billing.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbilling.googleapis.com/"
+     "v1/billingAccounts"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setIamPolicy$
   "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/setIamPolicy
   
@@ -144,10 +142,10 @@
   Body: 
   
   {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
-            :etag string,
+   :policy {:etag string,
+            :version integer,
             :bindings [Binding],
-            :version integer}}
+            :auditConfigs [AuditConfig]}}
   
   Sets the access control policy for a billing account. Replaces any existing policy. The caller must have the `billing.accounts.setIamPolicy` permission on the account, which is often given to billing account [administrators](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
@@ -171,29 +169,31 @@
       :as :json}
      auth))))
 
-(defn testIamPermissions$
-  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/testIamPermissions
+(defn create$
+  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/create
   
-  Required parameters: resource
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:permissions [string]}
+  {:name string,
+   :displayName string,
+   :open boolean,
+   :masterBillingAccount string}
   
-  Tests the access control policy for a billing account. This method takes the resource and a set of permissions as input and returns the subset of the input permissions that the caller is allowed for that resource."
+  This method creates [billing subaccounts](https://cloud.google.com/billing/docs/concepts#subaccounts). Google Cloud resellers should use the Channel Services APIs, [accounts.customers.create](https://cloud.google.com/channel/docs/reference/rest/v1/accounts.customers/create) and [accounts.customers.entitlements.create](https://cloud.google.com/channel/docs/reference/rest/v1/accounts.customers.entitlements/create). When creating a subaccount, the current authenticated user must have the `billing.accounts.update` IAM permission on the parent account, which is typically given to billing account [administrators](https://cloud.google.com/billing/docs/how-to/billing-access). This method will return an error if the parent account has not been provisioned as a reseller account."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
-            "https://www.googleapis.com/auth/cloud-billing.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudbilling.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
+     "v1/billingAccounts"
+     #{}
      parameters)
     (merge-with
      merge
@@ -205,25 +205,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/list
+(defn get$
+  "https://cloud.google.com/billing/api/reference/rest/v1/billingAccounts/get
   
-  Required parameters: none
+  Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: none
   
-  Lists the billing accounts that the current authenticated user has permission to [view](https://cloud.google.com/billing/docs/how-to/billing-access)."
+  Gets information about a billing account. The current authenticated user must be a [viewer of the billing account](https://cloud.google.com/billing/docs/how-to/billing-access)."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
             "https://www.googleapis.com/auth/cloud-billing.readonly"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudbilling.googleapis.com/"
-     "v1/billingAccounts"
-     #{}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

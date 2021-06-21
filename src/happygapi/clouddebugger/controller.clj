@@ -50,37 +50,10 @@
       :as :json}
      auth))))
 
-(defn debuggees-breakpoints-list$
-  "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/breakpoints/list
-  
-  Required parameters: debuggeeId
-  
-  Optional parameters: agentId, successOnTimeout, waitToken
-  
-  Returns the list of all active breakpoints for the debuggee. The breakpoint specification (`location`, `condition`, and `expressions` fields) is semantically immutable, although the field values may change. For example, an agent may update the location line number to reflect the actual line where the breakpoint was set, but this doesn't change the breakpoint semantics. This means that an agent does not need to check if a breakpoint has changed when it encounters the same breakpoint on a successive call. Moreover, an agent should remember the breakpoints that are completed until the controller removes them from the active list to avoid setting those breakpoints again."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud_debugger"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:debuggeeId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://clouddebugger.googleapis.com/"
-     "v2/controller/debuggees/{debuggeeId}/breakpoints"
-     #{:debuggeeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn debuggees-breakpoints-update$
   "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/breakpoints/update
   
-  Required parameters: debuggeeId, id
+  Required parameters: id, debuggeeId
   
   Optional parameters: none
   
@@ -122,6 +95,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn debuggees-breakpoints-list$
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/controller/debuggees/breakpoints/list
+  
+  Required parameters: debuggeeId
+  
+  Optional parameters: agentId, successOnTimeout, waitToken
+  
+  Returns the list of all active breakpoints for the debuggee. The breakpoint specification (`location`, `condition`, and `expressions` fields) is semantically immutable, although the field values may change. For example, an agent may update the location line number to reflect the actual line where the breakpoint was set, but this doesn't change the breakpoint semantics. This means that an agent does not need to check if a breakpoint has changed when it encounters the same breakpoint on a successive call. Moreover, an agent should remember the breakpoints that are completed until the controller removes them from the active list to avoid setting those breakpoints again."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud_debugger"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:debuggeeId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://clouddebugger.googleapis.com/"
+     "v2/controller/debuggees/{debuggeeId}/breakpoints"
+     #{:debuggeeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,15 +1,15 @@
 (ns happygapi.dfareporting.orders
-  "DCM/DFA Reporting And Trafficking API: orders.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orders"
+  "Campaign Manager 360 API: orders.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orders/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orders/get
   
-  Required parameters: profileId, id, projectId
+  Required parameters: projectId, id, profileId
   
   Optional parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/projects/{projectId}/orders/{id}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/projects/{projectId}/orders/{id}"
      #{:id :profileId :projectId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/orders/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/orders/list
   
   Required parameters: profileId, projectId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/projects/{projectId}/orders"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/projects/{projectId}/orders"
      #{:profileId :projectId}
      parameters)
     (merge-with

@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:entries [{:method string,
-              :destinations [string],
+  {:entries [{:includeAttributes boolean,
               :merchantId string,
-              :includeAttributes boolean,
+              :method string,
               :productId string,
+              :destinations [string],
               :batchId integer}]}
   
   Gets the statuses of multiple products in a single request."
@@ -29,8 +29,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/productstatuses/batch"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "productstatuses/batch"
      #{}
      parameters)
     (merge-with
@@ -48,7 +48,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: pageToken, destinations, maxResults
+  Optional parameters: destinations, maxResults, pageToken
   
   Lists the statuses of the products in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -57,8 +57,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/productstatuses"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/productstatuses"
      #{:merchantId}
      parameters)
     (merge-with
@@ -72,7 +72,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/get
   
-  Required parameters: merchantId, productId
+  Required parameters: productId, merchantId
   
   Optional parameters: destinations
   
@@ -83,8 +83,34 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/productstatuses/{productId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/productstatuses/{productId}"
+     #{:productId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn repricingreports-list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/repricingreports/list
+  
+  Required parameters: productId, merchantId
+  
+  Optional parameters: pageSize, ruleId, endDate, startDate, pageToken
+  
+  Lists the metrics report for a given Repricing product."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/productstatuses/{productId}/repricingreports"
      #{:productId :merchantId}
      parameters)
     (merge-with

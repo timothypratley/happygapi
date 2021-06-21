@@ -1,65 +1,13 @@
 (ns happygapi.dfareporting.contentCategories
-  "DCM/DFA Reporting And Trafficking API: contentCategories.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories"
+  "Campaign Manager 360 API: contentCategories.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/delete
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Deletes an existing content category."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/get
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Gets one content category by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/insert
   
   Required parameters: profileId
   
@@ -67,7 +15,7 @@
   
   Body: 
   
-  {:id string, :name string, :kind string, :accountId string}
+  {:name string, :kind string, :id string, :accountId string}
   
   Inserts a new content category."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -76,8 +24,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories"
      #{:profileId}
      parameters)
     (merge-with
@@ -91,7 +39,7 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/patch
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/patch
   
   Required parameters: profileId, id
   
@@ -99,7 +47,7 @@
   
   Body: 
   
-  {:id string, :name string, :kind string, :accountId string}
+  {:name string, :kind string, :id string, :accountId string}
   
   Updates an existing content category. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -108,8 +56,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -122,8 +70,34 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/get
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Gets one content category by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/update
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/update
   
   Required parameters: profileId
   
@@ -131,7 +105,7 @@
   
   Body: 
   
-  {:id string, :name string, :kind string, :accountId string}
+  {:name string, :kind string, :id string, :accountId string}
   
   Updates an existing content category."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -140,8 +114,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories"
      #{:profileId}
      parameters)
     (merge-with
@@ -155,11 +129,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/contentCategories/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/list
   
   Required parameters: profileId
   
-  Optional parameters: searchString, sortField, maxResults, sortOrder, pageToken, ids
+  Optional parameters: sortField, sortOrder, searchString, ids, maxResults, pageToken
   
   Retrieves a list of content categories, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -168,9 +142,35 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/contentCategories"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/contentCategories/delete
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Deletes an existing content category."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/contentCategories/{id}"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge

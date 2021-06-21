@@ -1,13 +1,41 @@
 (ns happygapi.compute.regionBackendServices
   "Compute Engine API: regionBackendServices.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: pageToken, maxResults, orderBy, filter, returnPartialSuccess
+  
+  Retrieves the list of regional BackendService resources available to the specified project in the given region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/delete
   
   Required parameters: backendService, project, region
   
@@ -23,8 +51,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
      parameters)
     (merge-with
@@ -35,8 +63,228 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/insert
+  
+  Required parameters: region, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
+   :creationTimestamp string,
+   :protocol string,
+   :enableCDN boolean,
+   :connectionDraining {:drainingTimeoutSec integer},
+   :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
+   :portName string,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
+               :signedUrlCacheMaxAgeSec string,
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
+   :outlierDetection {:successRateStdevFactor integer,
+                      :successRateMinimumHosts integer,
+                      :enforcingSuccessRate integer,
+                      :maxEjectionPercent integer,
+                      :successRateRequestVolume integer,
+                      :interval Duration,
+                      :consecutiveGatewayFailure integer,
+                      :baseEjectionTime Duration,
+                      :enforcingConsecutiveGatewayFailure integer,
+                      :consecutiveErrors integer,
+                      :enforcingConsecutiveErrors integer},
+   :selfLink string,
+   :loadBalancingScheme string,
+   :consistentHash {:minimumRingSize string,
+                    :httpHeaderName string,
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
+   :port integer,
+   :healthChecks [string],
+   :region string,
+   :circuitBreakers {:maxConnections integer,
+                     :maxPendingRequests integer,
+                     :maxRequests integer,
+                     :maxRequestsPerConnection integer,
+                     :maxRetries integer},
+   :iap {:oauth2ClientSecretSha256 string,
+         :oauth2ClientSecret string,
+         :oauth2ClientId string,
+         :enabled boolean},
+   :id string,
+   :kind string,
+   :localityLbPolicy string,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
+                    :failoverRatio number},
+   :sessionAffinity string,
+   :timeoutSec integer,
+   :network string,
+   :backends [{:description string,
+               :failover boolean,
+               :capacityScaler number,
+               :group string,
+               :maxRatePerInstance number,
+               :maxConnectionsPerEndpoint integer,
+               :balancingMode string,
+               :maxConnections integer,
+               :maxRatePerEndpoint number,
+               :maxConnectionsPerInstance integer,
+               :maxUtilization number,
+               :maxRate integer}],
+   :customRequestHeaders [string],
+   :logConfig {:enable boolean, :sampleRate number},
+   :fingerprint string,
+   :affinityCookieTtlSec integer,
+   :securityPolicy string}
+  
+  Creates a regional BackendService resource in the specified project using the data included in the request. For more information, see Backend services overview."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/update
+  
+  Required parameters: region, project, backendService
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
+   :creationTimestamp string,
+   :protocol string,
+   :enableCDN boolean,
+   :connectionDraining {:drainingTimeoutSec integer},
+   :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
+   :portName string,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
+               :signedUrlCacheMaxAgeSec string,
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
+   :outlierDetection {:successRateStdevFactor integer,
+                      :successRateMinimumHosts integer,
+                      :enforcingSuccessRate integer,
+                      :maxEjectionPercent integer,
+                      :successRateRequestVolume integer,
+                      :interval Duration,
+                      :consecutiveGatewayFailure integer,
+                      :baseEjectionTime Duration,
+                      :enforcingConsecutiveGatewayFailure integer,
+                      :consecutiveErrors integer,
+                      :enforcingConsecutiveErrors integer},
+   :selfLink string,
+   :loadBalancingScheme string,
+   :consistentHash {:minimumRingSize string,
+                    :httpHeaderName string,
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
+   :port integer,
+   :healthChecks [string],
+   :region string,
+   :circuitBreakers {:maxConnections integer,
+                     :maxPendingRequests integer,
+                     :maxRequests integer,
+                     :maxRequestsPerConnection integer,
+                     :maxRetries integer},
+   :iap {:oauth2ClientSecretSha256 string,
+         :oauth2ClientSecret string,
+         :oauth2ClientId string,
+         :enabled boolean},
+   :id string,
+   :kind string,
+   :localityLbPolicy string,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
+                    :failoverRatio number},
+   :sessionAffinity string,
+   :timeoutSec integer,
+   :network string,
+   :backends [{:description string,
+               :failover boolean,
+               :capacityScaler number,
+               :group string,
+               :maxRatePerInstance number,
+               :maxConnectionsPerEndpoint integer,
+               :balancingMode string,
+               :maxConnections integer,
+               :maxRatePerEndpoint number,
+               :maxConnectionsPerInstance integer,
+               :maxUtilization number,
+               :maxRate integer}],
+   :customRequestHeaders [string],
+   :logConfig {:enable boolean, :sampleRate number},
+   :fingerprint string,
+   :affinityCookieTtlSec integer,
+   :securityPolicy string}
+  
+  Updates the specified regional BackendService resource with the data included in the request. For more information, see Backend services overview ."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:backendService :region :project})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices/{backendService}"
+     #{:backendService :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/get
   
   Required parameters: backendService, project, region
   
@@ -53,8 +301,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
      parameters)
     (merge-with
@@ -66,9 +314,9 @@
      auth))))
 
 (defn getHealth$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/getHealth
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/getHealth
   
-  Required parameters: backendService, project, region
+  Required parameters: project, backendService, region
   
   Optional parameters: none
   
@@ -87,8 +335,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices/{backendService}/getHealth"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices/{backendService}/getHealth"
      #{:backendService :region :project}
      parameters)
     (merge-with
@@ -101,153 +349,38 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/insert
-  
-  Required parameters: project, region
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
-   :creationTimestamp string,
-   :protocol string,
-   :enableCDN boolean,
-   :connectionDraining {:drainingTimeoutSec integer},
-   :name string,
-   :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
-               :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
-   :outlierDetection {:successRateStdevFactor integer,
-                      :successRateMinimumHosts integer,
-                      :enforcingSuccessRate integer,
-                      :maxEjectionPercent integer,
-                      :successRateRequestVolume integer,
-                      :interval Duration,
-                      :consecutiveGatewayFailure integer,
-                      :baseEjectionTime Duration,
-                      :enforcingConsecutiveGatewayFailure integer,
-                      :consecutiveErrors integer,
-                      :enforcingConsecutiveErrors integer},
-   :selfLink string,
-   :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
-                    :httpHeaderName string,
-                    :minimumRingSize string},
-   :port integer,
-   :healthChecks [string],
-   :region string,
-   :circuitBreakers {:maxConnections integer,
-                     :maxPendingRequests integer,
-                     :maxRequests integer,
-                     :maxRequestsPerConnection integer,
-                     :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
-         :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
-   :id string,
-   :kind string,
-   :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
-                    :failoverRatio number},
-   :sessionAffinity string,
-   :timeoutSec integer,
-   :network string,
-   :backends [{:description string,
-               :failover boolean,
-               :capacityScaler number,
-               :group string,
-               :maxRatePerInstance number,
-               :maxConnectionsPerEndpoint integer,
-               :balancingMode string,
-               :maxConnections integer,
-               :maxRatePerEndpoint number,
-               :maxConnectionsPerInstance integer,
-               :maxUtilization number,
-               :maxRate integer}],
-   :customRequestHeaders [string],
-   :logConfig {:enable boolean, :sampleRate number},
-   :fingerprint string,
-   :affinityCookieTtlSec integer,
-   :securityPolicy string}
-  
-  Creates a regional BackendService resource in the specified project using the data included in the request. For more information, see  Backend services overview."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/list
-  
-  Required parameters: project, region
-  
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
-  
-  Retrieves the list of regional BackendService resources available to the specified project in the given region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionBackendServices/patch
   
-  Required parameters: backendService, project, region
+  Required parameters: project, region, backendService
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
    :connectionDraining {:drainingTimeoutSec integer},
    :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
    :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
                :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
    :outlierDetection {:successRateStdevFactor integer,
                       :successRateMinimumHosts integer,
                       :enforcingSuccessRate integer,
@@ -261,9 +394,9 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
+   :consistentHash {:minimumRingSize string,
                     :httpHeaderName string,
-                    :minimumRingSize string},
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
    :port integer,
    :healthChecks [string],
    :region string,
@@ -272,15 +405,15 @@
                      :maxRequests integer,
                      :maxRequestsPerConnection integer,
                      :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
+   :iap {:oauth2ClientSecretSha256 string,
          :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
+         :oauth2ClientId string,
+         :enabled boolean},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
                     :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
@@ -303,7 +436,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Updates the specified regional BackendService resource with the data included in the request. For more information, see  Understanding backend services This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Updates the specified regional BackendService resource with the data included in the request. For more information, see Understanding backend services This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -313,108 +446,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices/{backendService}"
-     #{:backendService :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionBackendServices/update
-  
-  Required parameters: backendService, project, region
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
-   :creationTimestamp string,
-   :protocol string,
-   :enableCDN boolean,
-   :connectionDraining {:drainingTimeoutSec integer},
-   :name string,
-   :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
-               :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
-   :outlierDetection {:successRateStdevFactor integer,
-                      :successRateMinimumHosts integer,
-                      :enforcingSuccessRate integer,
-                      :maxEjectionPercent integer,
-                      :successRateRequestVolume integer,
-                      :interval Duration,
-                      :consecutiveGatewayFailure integer,
-                      :baseEjectionTime Duration,
-                      :enforcingConsecutiveGatewayFailure integer,
-                      :consecutiveErrors integer,
-                      :enforcingConsecutiveErrors integer},
-   :selfLink string,
-   :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
-                    :httpHeaderName string,
-                    :minimumRingSize string},
-   :port integer,
-   :healthChecks [string],
-   :region string,
-   :circuitBreakers {:maxConnections integer,
-                     :maxPendingRequests integer,
-                     :maxRequests integer,
-                     :maxRequestsPerConnection integer,
-                     :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
-         :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
-   :id string,
-   :kind string,
-   :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
-                    :failoverRatio number},
-   :sessionAffinity string,
-   :timeoutSec integer,
-   :network string,
-   :backends [{:description string,
-               :failover boolean,
-               :capacityScaler number,
-               :group string,
-               :maxRatePerInstance number,
-               :maxConnectionsPerEndpoint integer,
-               :balancingMode string,
-               :maxConnections integer,
-               :maxRatePerEndpoint number,
-               :maxConnectionsPerInstance integer,
-               :maxUtilization number,
-               :maxRate integer}],
-   :customRequestHeaders [string],
-   :logConfig {:enable boolean, :sampleRate number},
-   :fingerprint string,
-   :affinityCookieTtlSec integer,
-   :securityPolicy string}
-  
-  Updates the specified regional BackendService resource with the data included in the request. For more information, see  Backend services overview."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:backendService :region :project})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/backendServices/{backendService}"
      #{:backendService :region :project}
      parameters)
     (merge-with

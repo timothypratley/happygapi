@@ -3,4 +3,5 @@
   (:require [happy.oauth2-credentials :as credentials]))
 
 (deftest auth!-test
+  (credentials/init!)
   (is (credentials/auth!)))

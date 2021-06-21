@@ -41,11 +41,11 @@
   
   Body: 
   
-  {:id string,
-   :managementType string,
+  {:primaryEmail string,
+   :id string,
    :displayName string,
-   :primaryEmail string,
    :accountType string,
+   :managementType string,
    :accountIdentifier string}
   
   Creates a new EMM-managed user. The Users resource passed in the body of the request should include an accountIdentifier and an accountType. If a corresponding user already exists with the same account identifier, the user will be updated with the resource. In this case only the displayName field can be changed."
@@ -104,11 +104,11 @@
   
   Body: 
   
-  {:id string,
-   :managementType string,
+  {:primaryEmail string,
+   :id string,
    :displayName string,
-   :primaryEmail string,
    :accountType string,
+   :managementType string,
    :accountIdentifier string}
   
   Updates the details of an EMM-managed user. Can be used with EMM-managed users only (not Google managed users). Pass the new details in the Users resource in the request body. Only the displayName field can be changed. Other fields must either be unset or have the currently active value."
@@ -135,7 +135,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/delete
   
-  Required parameters: userId, enterpriseId
+  Required parameters: enterpriseId, userId
   
   Optional parameters: none
   
@@ -187,7 +187,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/list
   
-  Required parameters: email, enterpriseId
+  Required parameters: enterpriseId, email
   
   Optional parameters: none
   
@@ -246,9 +246,9 @@
   Body: 
   
   {:productId [string],
-   :productVisibility [{:productId string,
-                        :trackIds [string],
-                        :tracks [string]}],
+   :productVisibility [{:tracks [string],
+                        :productId string,
+                        :trackIds [string]}],
    :productSetBehavior string}
   
   Modifies the set of products that a user is entitled to access (referred to as *whitelisted* products). Only products that are approved or products that were previously approved (products with revoked approval) can be whitelisted."

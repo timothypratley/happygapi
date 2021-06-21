@@ -69,47 +69,20 @@
       :as :json}
      auth))))
 
-(defn sshPublicKeys-delete$
-  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/delete
+(defn projects-delete$
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/projects/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes an SSH public key."
+  Deletes a POSIX account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://oslogin.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sshPublicKeys-get$
-  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves an SSH public key."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://oslogin.googleapis.com/"
      "v1/{+name}"
@@ -159,14 +132,41 @@
       :as :json}
      auth))))
 
-(defn projects-delete$
-  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/projects/delete
+(defn sshPublicKeys-get$
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a POSIX account."
+  Retrieves an SSH public key."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://oslogin.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sshPublicKeys-delete$
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an SSH public key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]

@@ -6,6 +6,43 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/insert
+  
+  Required parameters: part
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :snippet {:liveChatId string,
+             :moderatorDetails ChannelProfileDetails},
+   :etag string,
+   :id string}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/moderators"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/delete
   
@@ -33,47 +70,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/insert
-  
-  Required parameters: part
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string,
-   :kind string,
-   :id string,
-   :snippet {:liveChatId string,
-             :moderatorDetails ChannelProfileDetails}}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveChat/moderators"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
   
-  Required parameters: liveChatId, part
+  Required parameters: part, liveChatId
   
   Optional parameters: maxResults, pageToken
   

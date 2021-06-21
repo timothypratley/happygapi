@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:enrolledServices [{:cloudProduct string, :enrollmentLevel string}],
+  {:enrolledServices [{:enrollmentLevel string, :cloudProduct string}],
    :name string,
-   :notificationEmails [string],
-   :enrolledAncestor boolean}
+   :enrolledAncestor boolean,
+   :notificationEmails [string]}
   
   Updates the settings associated with a project, folder, or organization. Settings to update are determined by the value of field_mask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -93,27 +93,33 @@
       :as :json}
      auth))))
 
-(defn approvalRequests-get$
-  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/organizations/approvalRequests/get
+(defn approvalRequests-approve$
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/organizations/approvalRequests/approve
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets an approval request. Returns NOT_FOUND if the request does not exist."
+  Body: 
+  
+  {:expireTime string}
+  
+  Approves a request and returns the updated ApprovalRequest. Returns NOT_FOUND if the request does not exist. Returns FAILED_PRECONDITION if the request exists but is not in a pending state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://accessapproval.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:approve"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -156,7 +162,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, filter, pageSize
   
   Lists approval requests associated with a project, folder, or organization. Approval requests can be filtered by state (pending, active, dismissed). The order is reverse chronological."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -177,33 +183,27 @@
       :as :json}
      auth))))
 
-(defn approvalRequests-approve$
-  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/organizations/approvalRequests/approve
+(defn approvalRequests-get$
+  "https://cloud.google.com/access-approval/docsapi/reference/rest/v1/organizations/approvalRequests/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:expireTime string}
-  
-  Approves a request and returns the updated ApprovalRequest. Returns NOT_FOUND if the request does not exist. Returns FAILED_PRECONDITION if the request exists but is not in a pending state."
+  Gets an approval request. Returns NOT_FOUND if the request does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://accessapproval.googleapis.com/"
-     "v1/{+name}:approve"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

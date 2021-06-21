@@ -1,94 +1,94 @@
-{:AnalyzeSyntaxResponse {:type "object",
-                         :id "AnalyzeSyntaxResponse",
-                         :properties {:sentences {:description "Sentences in the input document.",
+{:AnalyzeSyntaxResponse {:description "The syntax analysis response message.",
+                         :properties {:sentences {:items {:$ref "Sentence"},
                                                   :type "array",
-                                                  :items {:$ref "Sentence"}},
+                                                  :description "Sentences in the input document."},
+                                      :tokens {:description "Tokens, along with their syntactic information, in the input document.",
+                                               :items {:$ref "Token"},
+                                               :type "array"},
                                       :language {:type "string",
-                                                 :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."},
-                                      :tokens {:items {:$ref "Token"},
-                                               :type "array",
-                                               :description "Tokens, along with their syntactic information, in the input document."}},
-                         :description "The syntax analysis response message."},
- :AnalyzeSyntaxRequest {:description "The syntax analysis request message.",
-                        :type "object",
-                        :properties {:document {:$ref "Document",
-                                                :description "Required. Input document."},
-                                     :encodingType {:description "The encoding type used by the API to calculate offsets.",
+                                                 :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."}},
+                         :id "AnalyzeSyntaxResponse",
+                         :type "object"},
+ :AnalyzeSyntaxRequest {:type "object",
+                        :description "The syntax analysis request message.",
+                        :id "AnalyzeSyntaxRequest",
+                        :properties {:document {:description "Required. Input document.",
+                                                :$ref "Document"},
+                                     :encodingType {:type "string",
+                                                    :description "The encoding type used by the API to calculate offsets.",
                                                     :enum ["NONE"
                                                            "UTF8"
                                                            "UTF16"
                                                            "UTF32"],
-                                                    :type "string",
                                                     :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
                                                                        "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
                                                                        "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
-                                                                       "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."]}},
-                        :id "AnalyzeSyntaxRequest"},
- :ClassifyTextRequest {:description "The document classification request message.",
+                                                                       "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."]}}},
+ :ClassifyTextRequest {:id "ClassifyTextRequest",
+                       :type "object",
                        :properties {:document {:description "Required. Input document.",
                                                :$ref "Document"}},
-                       :type "object",
-                       :id "ClassifyTextRequest"},
- :ClassifyTextResponse {:description "The document classification response message.",
-                        :type "object",
+                       :description "The document classification request message."},
+ :ClassifyTextResponse {:type "object",
+                        :id "ClassifyTextResponse",
+                        :description "The document classification response message.",
                         :properties {:categories {:description "Categories representing the input document.",
                                                   :type "array",
-                                                  :items {:$ref "ClassificationCategory"}}},
-                        :id "ClassifyTextResponse"},
- :AnalyzeEntitySentimentRequest {:properties {:encodingType {:description "The encoding type used by the API to calculate offsets.",
+                                                  :items {:$ref "ClassificationCategory"}}}},
+ :AnalyzeEntitySentimentRequest {:description "The entity-level sentiment analysis request message.",
+                                 :properties {:encodingType {:type "string",
+                                                             :description "The encoding type used by the API to calculate offsets.",
                                                              :enum ["NONE"
                                                                     "UTF8"
                                                                     "UTF16"
                                                                     "UTF32"],
-                                                             :type "string",
                                                              :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
                                                                                 "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
                                                                                 "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
                                                                                 "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."]},
                                               :document {:$ref "Document",
                                                          :description "Required. Input document."}},
-                                 :description "The entity-level sentiment analysis request message.",
-                                 :id "AnalyzeEntitySentimentRequest",
-                                 :type "object"},
+                                 :type "object",
+                                 :id "AnalyzeEntitySentimentRequest"},
  :EntityMention {:id "EntityMention",
                  :type "object",
-                 :description "Represents a mention for an entity in the text. Currently, proper noun mentions are supported.",
-                 :properties {:type {:enum ["TYPE_UNKNOWN"
-                                            "PROPER"
-                                            "COMMON"],
-                                     :enumDescriptions ["Unknown"
+                 :properties {:sentiment {:$ref "Sentiment",
+                                          :description "For calls to AnalyzeEntitySentiment or if AnnotateTextRequest.Features.extract_entity_sentiment is set to true, this field will contain the sentiment expressed for this mention of the entity in the provided document."},
+                              :text {:description "The mention text.",
+                                     :$ref "TextSpan"},
+                              :type {:enumDescriptions ["Unknown"
                                                         "Proper name"
                                                         "Common noun (or noun compound)"],
-                                     :type "string",
-                                     :description "The type of the entity mention."},
-                              :sentiment {:$ref "Sentiment",
-                                          :description "For calls to AnalyzeEntitySentiment or if AnnotateTextRequest.Features.extract_entity_sentiment is set to true, this field will contain the sentiment expressed for this mention of the entity in the provided document."},
-                              :text {:$ref "TextSpan",
-                                     :description "The mention text."}}},
+                                     :description "The type of the entity mention.",
+                                     :enum ["TYPE_UNKNOWN"
+                                            "PROPER"
+                                            "COMMON"],
+                                     :type "string"}},
+                 :description "Represents a mention for an entity in the text. Currently, proper noun mentions are supported."},
  :AnalyzeEntitiesResponse {:type "object",
                            :description "The entity analysis response message.",
-                           :id "AnalyzeEntitiesResponse",
-                           :properties {:entities {:items {:$ref "Entity"},
+                           :properties {:entities {:type "array",
                                                    :description "The recognized entities in the input document.",
-                                                   :type "array"},
+                                                   :items {:$ref "Entity"}},
                                         :language {:type "string",
-                                                   :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."}}},
- :Token {:type "object",
-         :id "Token",
-         :properties {:dependencyEdge {:description "Dependency tree parse for this token.",
-                                       :$ref "DependencyEdge"},
-                      :text {:$ref "TextSpan",
+                                                   :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."}},
+                           :id "AnalyzeEntitiesResponse"},
+ :Token {:properties {:text {:$ref "TextSpan",
                              :description "The token text."},
-                      :lemma {:type "string",
-                              :description "[Lemma](https://en.wikipedia.org/wiki/Lemma_%28morphology%29) of the token."},
-                      :partOfSpeech {:$ref "PartOfSpeech",
-                                     :description "Parts of speech tag for this token."}},
-         :description "Represents the smallest syntactic building block of the text."},
+                      :dependencyEdge {:$ref "DependencyEdge",
+                                       :description "Dependency tree parse for this token."},
+                      :partOfSpeech {:description "Parts of speech tag for this token.",
+                                     :$ref "PartOfSpeech"},
+                      :lemma {:description "[Lemma](https://en.wikipedia.org/wiki/Lemma_%28morphology%29) of the token.",
+                              :type "string"}},
+         :description "Represents the smallest syntactic building block of the text.",
+         :type "object",
+         :id "Token"},
  :DependencyEdge {:id "DependencyEdge",
-                  :description "Represents dependency parse tree information for a token. (For more information on dependency labels, see http://www.aclweb.org/anthology/P13-2017",
-                  :type "object",
-                  :properties {:label {:description "The parse label for the token.",
-                                       :enum ["UNKNOWN"
+                  :properties {:headTokenIndex {:format "int32",
+                                                :description "Represents the head of this token in the dependency tree. This is the index of the token which has an arc going to this token. The index is the position of the token in the array of tokens returned by the API method. If this token is a root token, then the `head_token_index` is its own index.",
+                                                :type "integer"},
+                               :label {:enum ["UNKNOWN"
                                               "ABBREV"
                                               "ACOMP"
                                               "ADVCL"
@@ -172,6 +172,7 @@
                                               "MES"
                                               "NCOMP"],
                                        :type "string",
+                                       :description "The parse label for the token.",
                                        :enumDescriptions ["Unknown"
                                                           "Abbreviation modifier"
                                                           "Adjectival complement"
@@ -254,63 +255,54 @@
                                                           "Genitive object"
                                                           "Infinitival modifier"
                                                           "Measure"
-                                                          "Nominal complement of a noun"]},
-                               :headTokenIndex {:format "int32",
-                                                :description "Represents the head of this token in the dependency tree. This is the index of the token which has an arc going to this token. The index is the position of the token in the array of tokens returned by the API method. If this token is a root token, then the `head_token_index` is its own index.",
-                                                :type "integer"}}},
- :ClassificationCategory {:properties {:name {:description "The name of the category representing the document, from the [predefined taxonomy](https://cloud.google.com/natural-language/docs/categories).",
-                                              :type "string"},
-                                       :confidence {:description "The classifier's confidence of the category. Number represents how certain the classifier is that this category represents the given text.",
+                                                          "Nominal complement of a noun"]}},
+                  :description "Represents dependency parse tree information for a token. (For more information on dependency labels, see http://www.aclweb.org/anthology/P13-2017",
+                  :type "object"},
+ :ClassificationCategory {:type "object",
+                          :id "ClassificationCategory",
+                          :properties {:name {:type "string",
+                                              :description "The name of the category representing the document, from the [predefined taxonomy](https://cloud.google.com/natural-language/docs/categories)."},
+                                       :confidence {:type "number",
                                                     :format "float",
-                                                    :type "number"}},
-                          :description "Represents a category returned from the text classifier.",
-                          :type "object",
-                          :id "ClassificationCategory"},
+                                                    :description "The classifier's confidence of the category. Number represents how certain the classifier is that this category represents the given text."}},
+                          :description "Represents a category returned from the text classifier."},
  :Sentence {:description "Represents a sentence in the input document.",
             :type "object",
-            :id "Sentence",
-            :properties {:text {:$ref "TextSpan",
-                                :description "The sentence text."},
-                         :sentiment {:description "For calls to AnalyzeSentiment or if AnnotateTextRequest.Features.extract_document_sentiment is set to true, this field will contain the sentiment for the sentence.",
-                                     :$ref "Sentiment"}}},
- :AnnotateTextResponse {:id "AnnotateTextResponse",
-                        :description "The text annotations response message.",
-                        :properties {:entities {:type "array",
-                                                :description "Entities, along with their semantic information, in the input document. Populated if the user enables AnnotateTextRequest.Features.extract_entities.",
-                                                :items {:$ref "Entity"}},
-                                     :sentences {:type "array",
-                                                 :description "Sentences in the input document. Populated if the user enables AnnotateTextRequest.Features.extract_syntax.",
-                                                 :items {:$ref "Sentence"}},
+            :properties {:sentiment {:description "For calls to AnalyzeSentiment or if AnnotateTextRequest.Features.extract_document_sentiment is set to true, this field will contain the sentiment for the sentence.",
+                                     :$ref "Sentiment"},
+                         :text {:description "The sentence text.",
+                                :$ref "TextSpan"}},
+            :id "Sentence"},
+ :AnnotateTextResponse {:properties {:documentSentiment {:$ref "Sentiment",
+                                                         :description "The overall sentiment for the document. Populated if the user enables AnnotateTextRequest.Features.extract_document_sentiment."},
                                      :tokens {:type "array",
                                               :description "Tokens, along with their syntactic information, in the input document. Populated if the user enables AnnotateTextRequest.Features.extract_syntax.",
                                               :items {:$ref "Token"}},
-                                     :documentSentiment {:description "The overall sentiment for the document. Populated if the user enables AnnotateTextRequest.Features.extract_document_sentiment.",
-                                                         :$ref "Sentiment"},
                                      :language {:type "string",
                                                 :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."},
-                                     :categories {:type "array",
-                                                  :description "Categories identified in the input document.",
-                                                  :items {:$ref "ClassificationCategory"}}},
-                        :type "object"},
+                                     :entities {:type "array",
+                                                :items {:$ref "Entity"},
+                                                :description "Entities, along with their semantic information, in the input document. Populated if the user enables AnnotateTextRequest.Features.extract_entities."},
+                                     :sentences {:description "Sentences in the input document. Populated if the user enables AnnotateTextRequest.Features.extract_syntax.",
+                                                 :type "array",
+                                                 :items {:$ref "Sentence"}},
+                                     :categories {:description "Categories identified in the input document.",
+                                                  :items {:$ref "ClassificationCategory"},
+                                                  :type "array"}},
+                        :type "object",
+                        :description "The text annotations response message.",
+                        :id "AnnotateTextResponse"},
  :AnalyzeEntitySentimentResponse {:description "The entity-level sentiment analysis response message.",
-                                  :id "AnalyzeEntitySentimentResponse",
                                   :type "object",
-                                  :properties {:language {:description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details.",
-                                                          :type "string"},
-                                               :entities {:description "The recognized entities in the input document with associated sentiments.",
-                                                          :items {:$ref "Entity"},
-                                                          :type "array"}}},
- :PartOfSpeech {:description "Represents part of speech information for a token. Parts of speech are as defined in http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf",
-                :type "object",
+                                  :id "AnalyzeEntitySentimentResponse",
+                                  :properties {:language {:type "string",
+                                                          :description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details."},
+                                               :entities {:type "array",
+                                                          :description "The recognized entities in the input document with associated sentiments.",
+                                                          :items {:$ref "Entity"}}}},
+ :PartOfSpeech {:type "object",
                 :id "PartOfSpeech",
-                :properties {:tense {:enum ["TENSE_UNKNOWN"
-                                            "CONDITIONAL_TENSE"
-                                            "FUTURE"
-                                            "PAST"
-                                            "PRESENT"
-                                            "IMPERFECT"
-                                            "PLUPERFECT"],
-                                     :enumDescriptions ["Tense is not applicable in the analyzed language or is not predicted."
+                :properties {:tense {:enumDescriptions ["Tense is not applicable in the analyzed language or is not predicted."
                                                         "Conditional"
                                                         "Future"
                                                         "Past"
@@ -318,49 +310,56 @@
                                                         "Imperfect"
                                                         "Pluperfect"],
                                      :description "The grammatical tense.",
+                                     :enum ["TENSE_UNKNOWN"
+                                            "CONDITIONAL_TENSE"
+                                            "FUTURE"
+                                            "PAST"
+                                            "PRESENT"
+                                            "IMPERFECT"
+                                            "PLUPERFECT"],
                                      :type "string"},
                              :aspect {:enum ["ASPECT_UNKNOWN"
                                              "PERFECTIVE"
                                              "IMPERFECTIVE"
                                              "PROGRESSIVE"],
-                                      :description "The grammatical aspect.",
-                                      :type "string",
                                       :enumDescriptions ["Aspect is not applicable in the analyzed language or is not predicted."
                                                          "Perfective"
                                                          "Imperfective"
-                                                         "Progressive"]},
-                             :person {:description "The grammatical person.",
+                                                         "Progressive"],
+                                      :type "string",
+                                      :description "The grammatical aspect."},
+                             :person {:type "string",
                                       :enum ["PERSON_UNKNOWN"
                                              "FIRST"
                                              "SECOND"
                                              "THIRD"
                                              "REFLEXIVE_PERSON"],
+                                      :description "The grammatical person.",
                                       :enumDescriptions ["Person is not applicable in the analyzed language or is not predicted."
                                                          "First"
                                                          "Second"
                                                          "Third"
-                                                         "Reflexive"],
-                                      :type "string"},
-                             :number {:description "The grammatical number.",
-                                      :type "string",
+                                                         "Reflexive"]},
+                             :number {:enum ["NUMBER_UNKNOWN"
+                                             "SINGULAR"
+                                             "PLURAL"
+                                             "DUAL"],
                                       :enumDescriptions ["Number is not applicable in the analyzed language or is not predicted."
                                                          "Singular"
                                                          "Plural"
                                                          "Dual"],
-                                      :enum ["NUMBER_UNKNOWN"
-                                             "SINGULAR"
-                                             "PLURAL"
-                                             "DUAL"]},
+                                      :type "string",
+                                      :description "The grammatical number."},
                              :voice {:enumDescriptions ["Voice is not applicable in the analyzed language or is not predicted."
                                                         "Active"
                                                         "Causative"
                                                         "Passive"],
+                                     :description "The grammatical voice.",
+                                     :type "string",
                                      :enum ["VOICE_UNKNOWN"
                                             "ACTIVE"
                                             "CAUSATIVE"
-                                            "PASSIVE"],
-                                     :type "string",
-                                     :description "The grammatical voice."},
+                                            "PASSIVE"]},
                              :mood {:type "string",
                                     :enumDescriptions ["Mood is not applicable in the analyzed language or is not predicted."
                                                        "Conditional"
@@ -377,15 +376,30 @@
                                            "JUSSIVE"
                                            "SUBJUNCTIVE"],
                                     :description "The grammatical mood."},
-                             :proper {:description "The grammatical properness.",
-                                      :enum ["PROPER_UNKNOWN"
+                             :proper {:enum ["PROPER_UNKNOWN"
                                              "PROPER"
                                              "NOT_PROPER"],
+                                      :description "The grammatical properness.",
                                       :enumDescriptions ["Proper is not applicable in the analyzed language or is not predicted."
                                                          "Proper"
                                                          "Not proper"],
                                       :type "string"},
-                             :case {:type "string",
+                             :case {:enum ["CASE_UNKNOWN"
+                                           "ACCUSATIVE"
+                                           "ADVERBIAL"
+                                           "COMPLEMENTIVE"
+                                           "DATIVE"
+                                           "GENITIVE"
+                                           "INSTRUMENTAL"
+                                           "LOCATIVE"
+                                           "NOMINATIVE"
+                                           "OBLIQUE"
+                                           "PARTITIVE"
+                                           "PREPOSITIONAL"
+                                           "REFLEXIVE_CASE"
+                                           "RELATIVE_CASE"
+                                           "VOCATIVE"],
+                                    :description "The grammatical case.",
                                     :enumDescriptions ["Case is not applicable in the analyzed language or is not predicted."
                                                        "Accusative"
                                                        "Adverbial"
@@ -401,23 +415,9 @@
                                                        "Reflexive"
                                                        "Relative"
                                                        "Vocative"],
-                                    :enum ["CASE_UNKNOWN"
-                                           "ACCUSATIVE"
-                                           "ADVERBIAL"
-                                           "COMPLEMENTIVE"
-                                           "DATIVE"
-                                           "GENITIVE"
-                                           "INSTRUMENTAL"
-                                           "LOCATIVE"
-                                           "NOMINATIVE"
-                                           "OBLIQUE"
-                                           "PARTITIVE"
-                                           "PREPOSITIONAL"
-                                           "REFLEXIVE_CASE"
-                                           "RELATIVE_CASE"
-                                           "VOCATIVE"],
-                                    :description "The grammatical case."},
-                             :form {:enum ["FORM_UNKNOWN"
+                                    :type "string"},
+                             :form {:description "The grammatical form.",
+                                    :enum ["FORM_UNKNOWN"
                                            "ADNOMIAL"
                                            "AUXILIARY"
                                            "COMPLEMENTIZER"
@@ -429,7 +429,6 @@
                                            "LONG"
                                            "ORDER"
                                            "SPECIFIC"],
-                                    :description "The grammatical form.",
                                     :type "string",
                                     :enumDescriptions ["Form is not applicable in the analyzed language or is not predicted."
                                                        "Adnomial"
@@ -443,7 +442,9 @@
                                                        "Long form"
                                                        "Order form"
                                                        "Specific form"]},
-                             :tag {:enumDescriptions ["Unknown"
+                             :tag {:type "string",
+                                   :description "The part of speech tag.",
+                                   :enumDescriptions ["Unknown"
                                                       "Adjective"
                                                       "Adposition (preposition and postposition)"
                                                       "Adverb"
@@ -457,7 +458,6 @@
                                                       "Verb (all tenses and modes)"
                                                       "Other: foreign words, typos, abbreviations"
                                                       "Affix"],
-                                   :description "The part of speech tag.",
                                    :enum ["UNKNOWN"
                                           "ADJ"
                                           "ADP"
@@ -471,132 +471,137 @@
                                           "PUNCT"
                                           "VERB"
                                           "X"
-                                          "AFFIX"],
-                                   :type "string"},
+                                          "AFFIX"]},
                              :gender {:type "string",
                                       :enumDescriptions ["Gender is not applicable in the analyzed language or is not predicted."
                                                          "Feminine"
                                                          "Masculine"
                                                          "Neuter"],
+                                      :description "The grammatical gender.",
                                       :enum ["GENDER_UNKNOWN"
                                              "FEMININE"
                                              "MASCULINE"
-                                             "NEUTER"],
-                                      :description "The grammatical gender."},
-                             :reciprocity {:enumDescriptions ["Reciprocity is not applicable in the analyzed language or is not predicted."
-                                                              "Reciprocal"
-                                                              "Non-reciprocal"],
-                                           :type "string",
-                                           :enum ["RECIPROCITY_UNKNOWN"
+                                             "NEUTER"]},
+                             :reciprocity {:enum ["RECIPROCITY_UNKNOWN"
                                                   "RECIPROCAL"
                                                   "NON_RECIPROCAL"],
-                                           :description "The grammatical reciprocity."}}},
+                                           :description "The grammatical reciprocity.",
+                                           :enumDescriptions ["Reciprocity is not applicable in the analyzed language or is not predicted."
+                                                              "Reciprocal"
+                                                              "Non-reciprocal"],
+                                           :type "string"}},
+                :description "Represents part of speech information for a token. Parts of speech are as defined in http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf"},
  :AnalyzeSentimentResponse {:description "The sentiment analysis response message.",
-                            :type "object",
-                            :properties {:documentSentiment {:$ref "Sentiment",
-                                                             :description "The overall sentiment of the input document."},
-                                         :sentences {:type "array",
-                                                     :items {:$ref "Sentence"},
-                                                     :description "The sentiment for all the sentences in the document."},
-                                         :language {:description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details.",
-                                                    :type "string"}},
-                            :id "AnalyzeSentimentResponse"},
- :AnalyzeSentimentRequest {:id "AnalyzeSentimentRequest",
-                           :type "object",
+                            :properties {:language {:description "The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language. See Document.language field for more details.",
+                                                    :type "string"},
+                                         :sentences {:description "The sentiment for all the sentences in the document.",
+                                                     :type "array",
+                                                     :items {:$ref "Sentence"}},
+                                         :documentSentiment {:$ref "Sentiment",
+                                                             :description "The overall sentiment of the input document."}},
+                            :id "AnalyzeSentimentResponse",
+                            :type "object"},
+ :AnalyzeSentimentRequest {:type "object",
                            :description "The sentiment analysis request message.",
                            :properties {:document {:$ref "Document",
                                                    :description "Required. Input document."},
-                                        :encodingType {:enum ["NONE"
-                                                              "UTF8"
-                                                              "UTF16"
-                                                              "UTF32"],
-                                                       :description "The encoding type used by the API to calculate sentence offsets.",
-                                                       :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
+                                        :encodingType {:enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
                                                                           "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
                                                                           "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
                                                                           "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."],
-                                                       :type "string"}}},
- :Sentiment {:type "object",
-             :id "Sentiment",
-             :properties {:magnitude {:type "number",
-                                      :description "A non-negative number in the [0, +inf) range, which represents the absolute magnitude of sentiment regardless of score (positive or negative).",
-                                      :format "float"},
-                          :score {:format "float",
-                                  :type "number",
-                                  :description "Sentiment score between -1.0 (negative sentiment) and 1.0 (positive sentiment)."}},
-             :description "Represents the feeling associated with the entire text or entities in the text."},
- :AnnotateTextRequest {:properties {:encodingType {:description "The encoding type used by the API to calculate offsets.",
+                                                       :type "string",
+                                                       :description "The encoding type used by the API to calculate sentence offsets.",
+                                                       :enum ["NONE"
+                                                              "UTF8"
+                                                              "UTF16"
+                                                              "UTF32"]}},
+                           :id "AnalyzeSentimentRequest"},
+ :Sentiment {:id "Sentiment",
+             :description "Represents the feeling associated with the entire text or entities in the text.",
+             :properties {:magnitude {:description "A non-negative number in the [0, +inf) range, which represents the absolute magnitude of sentiment regardless of score (positive or negative).",
+                                      :format "float",
+                                      :type "number"},
+                          :score {:type "number",
+                                  :description "Sentiment score between -1.0 (negative sentiment) and 1.0 (positive sentiment).",
+                                  :format "float"}},
+             :type "object"},
+ :AnnotateTextRequest {:properties {:features {:description "Required. The enabled features.",
+                                               :$ref "Features"},
+                                    :document {:description "Required. Input document.",
+                                               :$ref "Document"},
+                                    :encodingType {:description "The encoding type used by the API to calculate offsets.",
                                                    :type "string",
-                                                   :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
-                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
-                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
-                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."],
                                                    :enum ["NONE"
                                                           "UTF8"
                                                           "UTF16"
-                                                          "UTF32"]},
-                                    :features {:$ref "Features",
-                                               :description "Required. The enabled features."},
-                                    :document {:description "Required. Input document.",
-                                               :$ref "Document"}},
-                       :description "The request message for the text annotation API, which can perform multiple analysis types (sentiment, entities, and syntax) in one call.",
+                                                          "UTF32"],
+                                                   :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
+                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
+                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
+                                                                      "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."]}},
+                       :type "object",
                        :id "AnnotateTextRequest",
-                       :type "object"},
- :AnalyzeEntitiesRequest {:properties {:document {:description "Required. Input document.",
-                                                  :$ref "Document"},
-                                       :encodingType {:description "The encoding type used by the API to calculate offsets.",
-                                                      :type "string",
+                       :description "The request message for the text annotation API, which can perform multiple analysis types (sentiment, entities, and syntax) in one call."},
+ :AnalyzeEntitiesRequest {:properties {:document {:$ref "Document",
+                                                  :description "Required. Input document."},
+                                       :encodingType {:enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
+                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
+                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
+                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."],
                                                       :enum ["NONE"
                                                              "UTF8"
                                                              "UTF16"
                                                              "UTF32"],
-                                                      :enumDescriptions ["If `EncodingType` is not specified, encoding-dependent information (such as `begin_offset`) will be set at `-1`."
-                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-8 encoding of the input. C++ and Go are examples of languages that use this encoding natively."
-                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-16 encoding of the input. Java and JavaScript are examples of languages that use this encoding natively."
-                                                                         "Encoding-dependent information (such as `begin_offset`) is calculated based on the UTF-32 encoding of the input. Python is an example of a language that uses this encoding natively."]}},
+                                                      :type "string",
+                                                      :description "The encoding type used by the API to calculate offsets."}},
                           :description "The entity analysis request message.",
                           :type "object",
                           :id "AnalyzeEntitiesRequest"},
- :Features {:description "All available features for sentiment, syntax, and semantic analysis. Setting each one to true will enable that specific analysis for the input.",
+ :Features {:id "Features",
+            :description "All available features for sentiment, syntax, and semantic analysis. Setting each one to true will enable that specific analysis for the input.",
             :type "object",
-            :properties {:extractSyntax {:description "Extract syntax information.",
-                                         :type "boolean"},
+            :properties {:extractDocumentSentiment {:description "Extract document-level sentiment.",
+                                                    :type "boolean"},
                          :extractEntities {:description "Extract entities.",
                                            :type "boolean"},
-                         :classifyText {:type "boolean",
-                                        :description "Classify the full document into categories."},
-                         :extractDocumentSentiment {:description "Extract document-level sentiment.",
-                                                    :type "boolean"},
                          :extractEntitySentiment {:type "boolean",
-                                                  :description "Extract entities and their associated sentiment."}},
-            :id "Features"},
- :Document {:properties {:content {:type "string",
+                                                  :description "Extract entities and their associated sentiment."},
+                         :extractSyntax {:type "boolean",
+                                         :description "Extract syntax information."},
+                         :classifyText {:description "Classify the full document into categories.",
+                                        :type "boolean"}}},
+ :Document {:type "object",
+            :description "################################################################ # Represents the input to API methods.",
+            :properties {:language {:description "The language of the document (if not specified, the language is automatically detected). Both ISO and BCP-47 language codes are accepted. [Language Support](https://cloud.google.com/natural-language/docs/languages) lists currently supported languages for each API method. If the language (either specified by the caller or automatically detected) is not supported by the called API method, an `INVALID_ARGUMENT` error is returned.",
+                                    :type "string"},
+                         :gcsContentUri {:type "string",
+                                         :description "The Google Cloud Storage URI where the file content is located. This URI must be of the form: gs://bucket_name/object_name. For more details, see https://cloud.google.com/storage/docs/reference-uris. NOTE: Cloud Storage object versioning is not supported."},
+                         :content {:type "string",
                                    :description "The content of the input in string format. Cloud audit logging exempt since it is based on user data."},
-                         :language {:type "string",
-                                    :description "The language of the document (if not specified, the language is automatically detected). Both ISO and BCP-47 language codes are accepted. [Language Support](https://cloud.google.com/natural-language/docs/languages) lists currently supported languages for each API method. If the language (either specified by the caller or automatically detected) is not supported by the called API method, an `INVALID_ARGUMENT` error is returned."},
-                         :type {:enum ["TYPE_UNSPECIFIED"
+                         :type {:description "Required. If the type is not set or is `TYPE_UNSPECIFIED`, returns an `INVALID_ARGUMENT` error.",
+                                :type "string",
+                                :enum ["TYPE_UNSPECIFIED"
                                        "PLAIN_TEXT"
                                        "HTML"],
-                                :type "string",
                                 :enumDescriptions ["The content type is not specified."
                                                    "Plain text"
-                                                   "HTML"],
-                                :description "Required. If the type is not set or is `TYPE_UNSPECIFIED`, returns an `INVALID_ARGUMENT` error."},
-                         :gcsContentUri {:description "The Google Cloud Storage URI where the file content is located. This URI must be of the form: gs://bucket_name/object_name. For more details, see https://cloud.google.com/storage/docs/reference-uris. NOTE: Cloud Storage object versioning is not supported.",
-                                         :type "string"}},
-            :description "################################################################ # Represents the input to API methods.",
-            :id "Document",
-            :type "object"},
- :Entity {:description "Represents a phrase in the text that is a known entity, such as a person, an organization, or location. The API associates information, such as salience and mentions, with entities.",
-          :properties {:metadata {:type "object",
-                                  :additionalProperties {:type "string"},
-                                  :description "Metadata associated with the entity. For most entity types, the metadata is a Wikipedia URL (`wikipedia_url`) and Knowledge Graph MID (`mid`), if they are available. For the metadata associated with other entity types, see the Type table below."},
-                       :mentions {:description "The mentions of this entity in the input document. The API currently supports proper noun mentions.",
-                                  :items {:$ref "EntityMention"},
-                                  :type "array"},
-                       :sentiment {:description "For calls to AnalyzeEntitySentiment or if AnnotateTextRequest.Features.extract_entity_sentiment is set to true, this field will contain the aggregate sentiment expressed for this entity in the provided document.",
-                                   :$ref "Sentiment"},
-                       :type {:enum ["UNKNOWN"
+                                                   "HTML"]}},
+            :id "Document"},
+ :Entity {:id "Entity",
+          :description "Represents a phrase in the text that is a known entity, such as a person, an organization, or location. The API associates information, such as salience and mentions, with entities.",
+          :type "object",
+          :properties {:sentiment {:$ref "Sentiment",
+                                   :description "For calls to AnalyzeEntitySentiment or if AnnotateTextRequest.Features.extract_entity_sentiment is set to true, this field will contain the aggregate sentiment expressed for this entity in the provided document."},
+                       :salience {:type "number",
+                                  :description "The salience score associated with the entity in the [0, 1.0] range. The salience score for an entity provides information about the importance or centrality of that entity to the entire document text. Scores closer to 0 are less salient, while scores closer to 1.0 are highly salient.",
+                                  :format "float"},
+                       :name {:description "The representative name for the entity.",
+                              :type "string"},
+                       :metadata {:type "object",
+                                  :description "Metadata associated with the entity. For most entity types, the metadata is a Wikipedia URL (`wikipedia_url`) and Knowledge Graph MID (`mid`), if they are available. For the metadata associated with other entity types, see the Type table below.",
+                                  :additionalProperties {:type "string"}},
+                       :type {:description "The entity type.",
+                              :enum ["UNKNOWN"
                                      "PERSON"
                                      "LOCATION"
                                      "ORGANIZATION"
@@ -609,7 +614,6 @@
                                      "DATE"
                                      "NUMBER"
                                      "PRICE"],
-                              :type "string",
                               :enumDescriptions ["Unknown"
                                                  "Person"
                                                  "Location"
@@ -623,32 +627,28 @@
                                                  "Date The metadata identifies the components of the date: * `year` - four digit year, if detected * `month` - two digit month number, if detected * `day` - two digit day number, if detected"
                                                  "Number The metadata is the number itself."
                                                  "Price The metadata identifies the `value` and `currency`."],
-                              :description "The entity type."},
-                       :name {:type "string",
-                              :description "The representative name for the entity."},
-                       :salience {:description "The salience score associated with the entity in the [0, 1.0] range. The salience score for an entity provides information about the importance or centrality of that entity to the entire document text. Scores closer to 0 are less salient, while scores closer to 1.0 are highly salient.",
-                                  :type "number",
-                                  :format "float"}},
-          :type "object",
-          :id "Entity"},
- :TextSpan {:description "Represents an output piece of text.",
-            :type "object",
-            :properties {:beginOffset {:format "int32",
+                              :type "string"},
+                       :mentions {:description "The mentions of this entity in the input document. The API currently supports proper noun mentions.",
+                                  :items {:$ref "EntityMention"},
+                                  :type "array"}}},
+ :TextSpan {:properties {:content {:type "string",
+                                   :description "The content of the output text."},
+                         :beginOffset {:description "The API calculates the beginning offset of the content in the original document according to the EncodingType specified in the API request.",
                                        :type "integer",
-                                       :description "The API calculates the beginning offset of the content in the original document according to the EncodingType specified in the API request."},
-                         :content {:description "The content of the output text.",
-                                   :type "string"}},
+                                       :format "int32"}},
+            :description "Represents an output piece of text.",
+            :type "object",
             :id "TextSpan"},
- :Status {:type "object",
-          :id "Status",
-          :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
-          :properties {:code {:format "int32",
+ :Status {:description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
+          :properties {:code {:description "The status code, which should be an enum value of google.rpc.Code.",
                               :type "integer",
-                              :description "The status code, which should be an enum value of google.rpc.Code."},
-                       :details {:items {:additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                              :format "int32"},
+                       :details {:type "array",
+                                 :items {:additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
                                                                 :type "any"},
                                          :type "object"},
-                                 :type "array",
                                  :description "A list of messages that carry the error details. There is a common set of message types for APIs to use."},
                        :message {:type "string",
-                                 :description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client."}}}}
+                                 :description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client."}},
+          :type "object",
+          :id "Status"}}

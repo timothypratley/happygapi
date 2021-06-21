@@ -45,10 +45,10 @@
   Body: 
   
   {:updateMask string,
-   :policy {:etag string,
+   :policy {:bindings [Binding],
             :version integer,
             :auditConfigs [AuditConfig],
-            :bindings [Binding]}}
+            :etag string}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -81,7 +81,7 @@
   
   Body: 
   
-  {:oldConfig {}, :newConfig {}}
+  {:newConfig {}, :oldConfig {}}
   
   Generates and returns a report (errors, warnings and changes from existing configurations) associated with GenerateConfigReportRequest.new_value If GenerateConfigReportRequest.old_value is specified, GenerateConfigReportRequest will contain a single ChangeReport based on the comparison between GenerateConfigReportRequest.new_value and GenerateConfigReportRequest.old_value. If GenerateConfigReportRequest.old_value is not specified, this method will compare GenerateConfigReportRequest.new_value with the last pushed service configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -94,39 +94,6 @@
      "https://servicemanagement.googleapis.com/"
      "v1/services:generateConfigReport"
      #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn enable$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/enable
-  
-  Required parameters: serviceName
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:consumerId string}
-  
-  Enables a service for a project, so it can be used for the project. See [Cloud Auth Guide](https://cloud.google.com/docs/authentication) for more information. Operation"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}:enable"
-     #{:serviceName}
      parameters)
     (merge-with
      merge
@@ -182,7 +149,7 @@
   
   Body: 
   
-  {:producerProjectId string, :serviceName string}
+  {:serviceName string, :producerProjectId string}
   
   Creates a new managed service. A managed service is immutable, and is subject to mandatory 30-day data retention. You cannot move a service or recreate it within 30 days after deletion. One producer project can own no more than 500 services. For security and reliability purposes, a production service should be hosted in a dedicated producer project. Operation"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -329,9 +296,9 @@
   
   Required parameters: none
   
-  Optional parameters: producerProjectId, consumerId, pageSize, pageToken
+  Optional parameters: producerProjectId, pageSize, consumerId, pageToken
   
-  Lists managed services. Returns all public services. For authenticated users, also returns all services the calling user has \"servicemanagement.services.get\" permission for. **BETA:** If the caller specifies the `consumer_id`, it returns only the services enabled on the consumer. The `consumer_id` must have the format of \"project:{PROJECT-ID}\"."
+  Lists managed services. Returns all public services. For authenticated users, also returns all services the calling user has \"servicemanagement.services.get\" permission for."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/service.management"
@@ -353,32 +320,291 @@
       :as :json}
      auth))))
 
-(defn consumers-setIamPolicy$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/consumers/setIamPolicy
+(defn rollouts-list$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/list
   
-  Required parameters: resource
+  Required parameters: serviceName
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists the history of the service configuration rollouts for a managed service, from the newest to the oldest."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:serviceName})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/rollouts"
+     #{:serviceName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn rollouts-create$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/create
+  
+  Required parameters: serviceName
   
   Optional parameters: none
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
-            :version integer,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding]}}
+  {:rolloutId string,
+   :createdBy string,
+   :trafficPercentStrategy {:percentages {}},
+   :status string,
+   :createTime string,
+   :serviceName string,
+   :deleteServiceStrategy {}}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  Creates a new service configuration rollout. Based on rollout, the Google Service Management will roll out the service configurations to different backend services. For example, the logging configuration will be pushed to Google Cloud Logging. Please note that any previous pending and running Rollouts and associated Operations will be automatically cancelled so that the latest Rollout will not be blocked by previous Rollouts. Only the 100 most recent (in any state) and the last 10 successful (if not already part of the set of 100 most recent) rollouts are kept for each service. The rest will be deleted eventually. Operation"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{:serviceName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicemanagement.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
+     "v1/services/{serviceName}/rollouts"
+     #{:serviceName}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn rollouts-get$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/get
+  
+  Required parameters: serviceName, rolloutId
+  
+  Optional parameters: none
+  
+  Gets a service configuration rollout."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:serviceName :rolloutId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/rollouts/{rolloutId}"
+     #{:serviceName :rolloutId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configs-list$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/list
+  
+  Required parameters: serviceName
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the history of the service configuration for a managed service, from the newest to the oldest."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:serviceName})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/configs"
+     #{:serviceName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configs-get$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/get
+  
+  Required parameters: configId, serviceName
+  
+  Optional parameters: view
+  
+  Gets a service configuration (version) for a managed service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/service.management"
+            "https://www.googleapis.com/auth/service.management.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:serviceName :configId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/configs/{configId}"
+     #{:serviceName :configId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configs-create$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/create
+  
+  Required parameters: serviceName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:monitoring {:consumerDestinations [MonitoringDestination],
+                :producerDestinations [MonitoringDestination]},
+   :systemParameters {:rules [SystemParameterRule]},
+   :logs [{:labels [LabelDescriptor],
+           :description string,
+           :displayName string,
+           :name string}],
+   :name string,
+   :billing {:consumerDestinations [BillingDestination]},
+   :producerProjectId string,
+   :quota {:limits [QuotaLimit], :metricRules [MetricRule]},
+   :title string,
+   :documentation {:documentationRootUrl string,
+                   :pages [Page],
+                   :serviceRootUrl string,
+                   :overview string,
+                   :summary string,
+                   :rules [DocumentationRule]},
+   :types [{:options [Option],
+            :syntax string,
+            :fields [Field],
+            :sourceContext SourceContext,
+            :name string,
+            :oneofs [string]}],
+   :logging {:producerDestinations [LoggingDestination],
+             :consumerDestinations [LoggingDestination]},
+   :endpoints [{:name string, :allowCors boolean, :target string}],
+   :configVersion integer,
+   :sourceInfo {:sourceFiles [{}]},
+   :usage {:rules [UsageRule],
+           :producerNotificationChannel string,
+           :requirements [string]},
+   :authentication {:rules [AuthenticationRule],
+                    :providers [AuthProvider]},
+   :id string,
+   :control {:environment string},
+   :http {:rules [HttpRule], :fullyDecodeReservedExpansion boolean},
+   :context {:rules [ContextRule]},
+   :monitoredResources [{:description string,
+                         :type string,
+                         :displayName string,
+                         :name string,
+                         :labels [LabelDescriptor],
+                         :launchStage string}],
+   :apis [{:sourceContext SourceContext,
+           :options [Option],
+           :mixins [Mixin],
+           :syntax string,
+           :methods [Method],
+           :name string,
+           :version string}],
+   :customError {:types [string], :rules [CustomErrorRule]},
+   :systemTypes [{:options [Option],
+                  :syntax string,
+                  :fields [Field],
+                  :sourceContext SourceContext,
+                  :name string,
+                  :oneofs [string]}],
+   :enums [{:enumvalue [EnumValue],
+            :syntax string,
+            :options [Option],
+            :name string,
+            :sourceContext SourceContext}],
+   :backend {:rules [BackendRule]},
+   :metrics [{:description string,
+              :labels [LabelDescriptor],
+              :valueType string,
+              :monitoredResourceTypes [string],
+              :unit string,
+              :displayName string,
+              :name string,
+              :type string,
+              :metricKind string,
+              :launchStage string,
+              :metadata MetricDescriptorMetadata}]}
+  
+  Creates a new service configuration (version) for a managed service. This method only stores the service configuration. To roll out the service configuration to backend systems please call CreateServiceRollout. Only the 100 most recent service configurations and ones referenced by existing rollouts are kept for each service. The rest will be deleted eventually."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:serviceName})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/configs"
+     #{:serviceName}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn configs-submit$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/submit
+  
+  Required parameters: serviceName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:configSource {:files [ConfigFile], :id string},
+   :validateOnly boolean}
+  
+  Creates a new service configuration (version) for a managed service based on user-supplied configuration source files (for example: OpenAPI Specification). This method stores the source configurations as well as the generated service configuration. To rollout the service configuration to other services, please call CreateServiceRollout. Only the 100 most recent configuration sources and ones referenced by existing service configurtions are kept for each service. The rest will be deleted eventually. Operation"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:serviceName})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicemanagement.googleapis.com/"
+     "v1/services/{serviceName}/configs:submit"
+     #{:serviceName}
      parameters)
     (merge-with
      merge
@@ -460,300 +686,38 @@
       :as :json}
      auth))))
 
-(defn rollouts-create$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/create
+(defn consumers-setIamPolicy$
+  "https://cloud.google.com/service-management/api/reference/rest/v1/services/consumers/setIamPolicy
   
-  Required parameters: serviceName
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {:createTime string,
-   :rolloutId string,
-   :trafficPercentStrategy {:percentages {}},
-   :status string,
-   :createdBy string,
-   :serviceName string,
-   :deleteServiceStrategy {}}
+  {:updateMask string,
+   :policy {:bindings [Binding],
+            :version integer,
+            :auditConfigs [AuditConfig],
+            :etag string}}
   
-  Creates a new service configuration rollout. Based on rollout, the Google Service Management will roll out the service configurations to different backend services. For example, the logging configuration will be pushed to Google Cloud Logging. Please note that any previous pending and running Rollouts and associated Operations will be automatically cancelled so that the latest Rollout will not be blocked by previous Rollouts. Only the 100 most recent (in any state) and the last 10 successful (if not already part of the set of 100 most recent) rollouts are kept for each service. The rest will be deleted eventually. Operation"
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/rollouts"
-     #{:serviceName}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn rollouts-list$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/list
-  
-  Required parameters: serviceName
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists the history of the service configuration rollouts for a managed service, from the newest to the oldest."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/rollouts"
-     #{:serviceName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn rollouts-get$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/rollouts/get
-  
-  Required parameters: serviceName, rolloutId
-  
-  Optional parameters: none
-  
-  Gets a service configuration rollout."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:serviceName :rolloutId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/rollouts/{rolloutId}"
-     #{:serviceName :rolloutId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configs-get$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/get
-  
-  Required parameters: configId, serviceName
-  
-  Optional parameters: view
-  
-  Gets a service configuration (version) for a managed service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:serviceName :configId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/configs/{configId}"
-     #{:serviceName :configId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configs-create$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/create
-  
-  Required parameters: serviceName
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:monitoring {:consumerDestinations [MonitoringDestination],
-                :producerDestinations [MonitoringDestination]},
-   :systemParameters {:rules [SystemParameterRule]},
-   :logs [{:displayName string,
-           :name string,
-           :labels [LabelDescriptor],
-           :description string}],
-   :name string,
-   :billing {:consumerDestinations [BillingDestination]},
-   :producerProjectId string,
-   :quota {:limits [QuotaLimit], :metricRules [MetricRule]},
-   :title string,
-   :documentation {:documentationRootUrl string,
-                   :summary string,
-                   :overview string,
-                   :pages [Page],
-                   :rules [DocumentationRule],
-                   :serviceRootUrl string},
-   :types [{:options [Option],
-            :name string,
-            :syntax string,
-            :fields [Field],
-            :sourceContext SourceContext,
-            :oneofs [string]}],
-   :logging {:producerDestinations [LoggingDestination],
-             :consumerDestinations [LoggingDestination]},
-   :endpoints [{:target string,
-                :allowCors boolean,
-                :name string,
-                :aliases [string]}],
-   :configVersion integer,
-   :sourceInfo {:sourceFiles [{}]},
-   :usage {:requirements [string],
-           :rules [UsageRule],
-           :producerNotificationChannel string},
-   :authentication {:rules [AuthenticationRule],
-                    :providers [AuthProvider]},
-   :id string,
-   :control {:environment string},
-   :http {:rules [HttpRule], :fullyDecodeReservedExpansion boolean},
-   :context {:rules [ContextRule]},
-   :monitoredResources [{:labels [LabelDescriptor],
-                         :name string,
-                         :description string,
-                         :launchStage string,
-                         :type string,
-                         :displayName string}],
-   :apis [{:version string,
-           :syntax string,
-           :sourceContext SourceContext,
-           :options [Option],
-           :methods [Method],
-           :mixins [Mixin],
-           :name string}],
-   :customError {:rules [CustomErrorRule], :types [string]},
-   :systemTypes [{:options [Option],
-                  :name string,
-                  :syntax string,
-                  :fields [Field],
-                  :sourceContext SourceContext,
-                  :oneofs [string]}],
-   :enums [{:options [Option],
-            :name string,
-            :sourceContext SourceContext,
-            :syntax string,
-            :enumvalue [EnumValue]}],
-   :backend {:rules [BackendRule]},
-   :metrics [{:description string,
-              :labels [LabelDescriptor],
-              :valueType string,
-              :monitoredResourceTypes [string],
-              :unit string,
-              :displayName string,
-              :name string,
-              :type string,
-              :metricKind string,
-              :launchStage string,
-              :metadata MetricDescriptorMetadata}]}
-  
-  Creates a new service configuration (version) for a managed service. This method only stores the service configuration. To roll out the service configuration to backend systems please call CreateServiceRollout. Only the 100 most recent service configurations and ones referenced by existing rollouts are kept for each service. The rest will be deleted eventually."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/configs"
-     #{:serviceName}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configs-submit$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/submit
-  
-  Required parameters: serviceName
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:validateOnly boolean,
-   :configSource {:files [ConfigFile], :id string}}
-  
-  Creates a new service configuration (version) for a managed service based on user-supplied configuration source files (for example: OpenAPI Specification). This method stores the source configurations as well as the generated service configuration. To rollout the service configuration to other services, please call CreateServiceRollout. Only the 100 most recent configuration sources and ones referenced by existing service configurtions are kept for each service. The rest will be deleted eventually. Operation"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/configs:submit"
-     #{:serviceName}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn configs-list$
-  "https://cloud.google.com/service-management/api/reference/rest/v1/services/configs/list
-  
-  Required parameters: serviceName
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the history of the service configuration for a managed service, from the newest to the oldest."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/service.management"
-            "https://www.googleapis.com/auth/service.management.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:serviceName})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicemanagement.googleapis.com/"
-     "v1/services/{serviceName}/configs"
-     #{:serviceName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

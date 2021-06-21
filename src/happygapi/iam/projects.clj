@@ -6,6 +6,193 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn roles-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the definition of a Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :includedPermissions [string],
+   :description string,
+   :etag string,
+   :deleted boolean,
+   :title string,
+   :stage string}
+  
+  Updates the definition of a custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-list$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/list
+  
+  Required parameters: parent
+  
+  Optional parameters: view, pageToken, showDeleted, pageSize
+  
+  Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/roles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-create$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:role {:name string,
+          :includedPermissions [string],
+          :description string,
+          :etag string,
+          :deleted boolean,
+          :title string,
+          :stage string},
+   :roleId string}
+  
+  Creates a new custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/roles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-undelete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/undelete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string}
+  
+  Undeletes a custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn roles-delete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/delete
+  
+  Required parameters: name
+  
+  Optional parameters: etag
+  
+  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn serviceAccounts-disable$
   "https://cloud.google.com/iam/api/reference/rest/v1/projects/serviceAccounts/disable
   
@@ -74,10 +261,10 @@
   Body: 
   
   {:updateMask string,
-   :policy {:bindings [Binding],
-            :etag string,
+   :policy {:auditConfigs [AuditConfig],
             :version integer,
-            :auditConfigs [AuditConfig]}}
+            :etag string,
+            :bindings [Binding]}}
   
   Sets the IAM policy that is attached to a ServiceAccount. Use this method to grant or revoke access to the service account. For example, you could grant a member the ability to impersonate the service account. This method does not enable the service account to access other resources. To grant roles to a service account on a resource, follow these steps: 1. Call the resource's `getIamPolicy` method to get its current IAM policy. 2. Edit the policy so that it binds the service account to an IAM role for the resource. 3. Call the resource's `setIamPolicy` method to update its IAM policy. For detailed instructions, see [Granting roles to a service account for specific resources](https://cloud.google.com/iam/help/service-accounts/granting-access-to-service-accounts)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -141,7 +328,8 @@
   
   Body: 
   
-  {:serviceAccount {:description string,
+  {:updateMask string,
+   :serviceAccount {:description string,
                     :oauth2ClientId string,
                     :email string,
                     :disabled boolean,
@@ -149,8 +337,7 @@
                     :name string,
                     :etag string,
                     :uniqueId string,
-                    :projectId string},
-   :updateMask string}
+                    :projectId string}}
   
   Patches a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -214,7 +401,8 @@
   
   Body: 
   
-  {:serviceAccount {:description string,
+  {:accountId string,
+   :serviceAccount {:description string,
                     :oauth2ClientId string,
                     :email string,
                     :disabled boolean,
@@ -222,8 +410,7 @@
                     :name string,
                     :etag string,
                     :uniqueId string,
-                    :projectId string},
-   :accountId string}
+                    :projectId string}}
   
   Creates a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -407,7 +594,7 @@
   
   {:payload string}
   
-  **Note:** This method is deprecated and will stop working on July 1, 2021. Use the [`signJwt`](https://cloud.google.com/iam/help/rest-credentials/v1/projects.serviceAccounts/signJwt) method in the IAM Service Account Credentials API instead. If you currently use this method, see the [migration guide](https://cloud.google.com/iam/help/credentials/migrate-api) for instructions. Signs a JSON Web Token (JWT) using the system-managed private key for a ServiceAccount."
+  **Note:** This method is deprecated. Use the [`signJwt`](https://cloud.google.com/iam/help/rest-credentials/v1/projects.serviceAccounts/signJwt) method in the IAM Service Account Credentials API instead. If you currently use this method, see the [migration guide](https://cloud.google.com/iam/help/credentials/migrate-api) for instructions. Signs a JSON Web Token (JWT) using the system-managed private key for a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -439,7 +626,7 @@
   
   {:bytesToSign string}
   
-  **Note:** This method is deprecated and will stop working on July 1, 2021. Use the [`signBlob`](https://cloud.google.com/iam/help/rest-credentials/v1/projects.serviceAccounts/signBlob) method in the IAM Service Account Credentials API instead. If you currently use this method, see the [migration guide](https://cloud.google.com/iam/help/credentials/migrate-api) for instructions. Signs a blob using the system-managed private key for a ServiceAccount."
+  **Note:** This method is deprecated. Use the [`signBlob`](https://cloud.google.com/iam/help/rest-credentials/v1/projects.serviceAccounts/signBlob) method in the IAM Service Account Credentials API instead. If you currently use this method, see the [migration guide](https://cloud.google.com/iam/help/credentials/migrate-api) for instructions. Signs a blob using the system-managed private key for a ServiceAccount."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -455,32 +642,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn serviceAccounts-keys-list$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/serviceAccounts/keys/list
-  
-  Required parameters: name
-  
-  Optional parameters: keyTypes
-  
-  Lists every ServiceAccountKey for a service account."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}/keys"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -602,22 +763,22 @@
       :as :json}
      auth))))
 
-(defn roles-delete$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/delete
+(defn serviceAccounts-keys-list$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/serviceAccounts/keys/list
   
   Required parameters: name
   
-  Optional parameters: etag
+  Optional parameters: keyTypes
   
-  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
+  Lists every ServiceAccountKey for a service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://iam.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}/keys"
      #{:name}
      parameters)
     (merge-with
@@ -628,46 +789,34 @@
       :as :json}
      auth))))
 
-(defn roles-patch$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/patch
+(defn locations-workloadIdentityPools-list$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: updateMask
+  Optional parameters: showDeleted, pageSize, pageToken
   
-  Body: 
-  
-  {:deleted boolean,
-   :etag string,
-   :name string,
-   :title string,
-   :includedPermissions [string],
-   :stage string,
-   :description string}
-  
-  Updates the definition of a custom Role."
+  Lists all non-deleted WorkloadIdentityPools in a project. If `show_deleted` is set to `true`, then deleted pools are also listed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/workloadIdentityPools"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn roles-undelete$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/undelete
+(defn locations-workloadIdentityPools-undelete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/undelete
   
   Required parameters: name
   
@@ -675,9 +824,9 @@
   
   Body: 
   
-  {:etag string}
+  {}
   
-  Undeletes a custom Role."
+  Undeletes a WorkloadIdentityPool, as long as it was deleted fewer than 30 days ago."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -698,23 +847,23 @@
       :as :json}
      auth))))
 
-(defn roles-list$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/list
+(defn locations-workloadIdentityPools-delete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, view, pageToken, showDeleted
+  Optional parameters: none
   
-  Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
+  Deletes a WorkloadIdentityPool. You cannot use a deleted pool to exchange external credentials for Google Cloud credentials. However, deletion does not revoke credentials that have already been issued. Credentials issued for a deleted pool do not grant access to resources. If the pool is undeleted, and the credentials are not expired, they grant access again. You can undelete a pool for 30 days. After 30 days, deletion is permanent. You cannot update deleted pools. However, you can view and list them."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://iam.googleapis.com/"
-     "v1/{+parent}/roles"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -724,14 +873,86 @@
       :as :json}
      auth))))
 
-(defn roles-get$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/get
+(defn locations-workloadIdentityPools-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:state string,
+   :displayName string,
+   :name string,
+   :description string,
+   :disabled boolean}
+  
+  Updates an existing WorkloadIdentityPool."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-create$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/create
+  
+  Required parameters: parent
+  
+  Optional parameters: workloadIdentityPoolId
+  
+  Body: 
+  
+  {:state string,
+   :displayName string,
+   :name string,
+   :description string,
+   :disabled boolean}
+  
+  Creates a new WorkloadIdentityPool. You cannot reuse the name of a deleted pool until 30 days after deletion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/workloadIdentityPools"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the definition of a Role."
+  Gets an individual WorkloadIdentityPool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -750,25 +971,78 @@
       :as :json}
      auth))))
 
-(defn roles-create$
-  "https://cloud.google.com/iam/api/reference/rest/v1/projects/roles/create
+(defn locations-workloadIdentityPools-providers-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/get
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
+  Gets an individual WorkloadIdentityPoolProvider."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-list$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: showDeleted, pageSize, pageToken
+  
+  Lists all non-deleted WorkloadIdentityPoolProviders in a WorkloadIdentityPool. If `show_deleted` is set to `true`, then deleted providers are also listed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+parent}/providers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-create$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/create
+  
+  Required parameters: parent
+  
+  Optional parameters: workloadIdentityPoolProviderId
+  
   Body: 
   
-  {:roleId string,
-   :role {:deleted boolean,
-          :etag string,
-          :name string,
-          :title string,
-          :includedPermissions [string],
-          :stage string,
-          :description string}}
+  {:description string,
+   :aws {:accountId string},
+   :disabled boolean,
+   :oidc {:allowedAudiences [string], :issuerUri string},
+   :displayName string,
+   :name string,
+   :state string,
+   :attributeCondition string,
+   :attributeMapping {}}
   
-  Creates a new custom Role."
+  Creates a new WorkloadIdentityPoolProvider in a WorkloadIdentityPool. You cannot reuse the name of a deleted provider until 30 days after deletion."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -776,7 +1050,7 @@
    (http/post
     (util/get-url
      "https://iam.googleapis.com/"
-     "v1/{+parent}/roles"
+     "v1/{+parent}/providers"
      #{:parent}
      parameters)
     (merge-with
@@ -784,6 +1058,156 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-delete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a WorkloadIdentityPoolProvider. Deleting a provider does not revoke credentials that have already been issued; they continue to grant access. You can undelete a provider for 30 days. After 30 days, deletion is permanent. You cannot update deleted providers. However, you can view and list them."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-undelete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/undelete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Undeletes a WorkloadIdentityPoolProvider, as long as it was deleted fewer than 30 days ago."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :aws {:accountId string},
+   :disabled boolean,
+   :oidc {:allowedAudiences [string], :issuerUri string},
+   :displayName string,
+   :name string,
+   :state string,
+   :attributeCondition string,
+   :attributeMapping {}}
+  
+  Updates an existing WorkloadIdentityPoolProvider."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-providers-operations-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/providers/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workloadIdentityPools-operations-get$
+  "https://cloud.google.com/iam/api/reference/rest/v1/projects/locations/workloadIdentityPools/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,40 +1,13 @@
 (ns happygapi.compute.externalVpnGateways
   "Compute Engine API: externalVpnGateways.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/delete
-  
-  Required parameters: externalVpnGateway, project
-  
-  Optional parameters: requestId
-  
-  Deletes the specified externalVpnGateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:externalVpnGateway :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways/{externalVpnGateway}"
-     #{:externalVpnGateway :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/get
   
   Required parameters: externalVpnGateway, project
   
@@ -49,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways/{externalVpnGateway}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways/{externalVpnGateway}"
      #{:externalVpnGateway :project}
      parameters)
     (merge-with
@@ -61,8 +34,69 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/list
+  
+  Required parameters: project
+  
+  Optional parameters: pageToken, filter, orderBy, maxResults, returnPartialSuccess
+  
+  Retrieves the list of ExternalVpnGateway available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/setLabels
+  
+  Required parameters: resource, project
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labelFingerprint string, :labels {}}
+  
+  Sets the labels on an ExternalVpnGateway. To learn more about labels, read the Labeling Resources documentation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways/{resource}/setLabels"
+     #{:project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/insert
   
   Required parameters: project
   
@@ -71,7 +105,7 @@
   Body: 
   
   {:description string,
-   :interfaces [{:id integer, :ipAddress string}],
+   :interfaces [{:ipAddress string, :id integer}],
    :labels {},
    :redundancyType string,
    :creationTimestamp string,
@@ -89,8 +123,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways"
      #{:project}
      parameters)
     (merge-with
@@ -103,25 +137,24 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/list
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/delete
   
-  Required parameters: project
+  Required parameters: externalVpnGateway, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: requestId
   
-  Retrieves the list of ExternalVpnGateway available to the specified project."
+  Deletes the specified externalVpnGateway."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
+            "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:externalVpnGateway :project})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways"
-     #{:project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways/{externalVpnGateway}"
+     #{:externalVpnGateway :project}
      parameters)
     (merge-with
      merge
@@ -131,43 +164,10 @@
       :as :json}
      auth))))
 
-(defn setLabels$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/setLabels
-  
-  Required parameters: project, resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labelFingerprint string, :labels {}}
-  
-  Sets the labels on an ExternalVpnGateway. To learn more about labels, read the Labeling Resources documentation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways/{resource}/setLabels"
-     #{:project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/externalVpnGateways/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/testIamPermissions
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: none
   
@@ -184,8 +184,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/externalVpnGateways/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways/{resource}/testIamPermissions"
      #{:project :resource}
      parameters)
     (merge-with

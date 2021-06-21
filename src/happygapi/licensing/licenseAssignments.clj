@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listForProduct$
-  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/listForProduct
+(defn listForProductAndSku$
+  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/listForProductAndSku
   
-  Required parameters: productId, customerId
+  Required parameters: customerId, skuId, productId
   
   Optional parameters: maxResults, pageToken
   
   List all users assigned licenses for a specific product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:productId :customerId})]}
+  {:pre [(util/has-keys? parameters #{:productId :customerId :skuId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://licensing.googleapis.com/"
-     "apps/licensing/v1/product/{productId}/users"
-     #{:productId :customerId}
+     "apps/licensing/v1/product/{productId}/sku/{skuId}/users"
+     #{:productId :customerId :skuId}
      parameters)
     (merge-with
      merge
@@ -32,34 +32,8 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/get
-  
-  Required parameters: userId, productId, skuId
-  
-  Optional parameters: none
-  
-  Get a specific user's license by product SKU."
-  {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://licensing.googleapis.com/"
-     "apps/licensing/v1/product/{productId}/sku/{skuId}/user/{userId}"
-     #{:productId :skuId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/update
+(defn patch$
+  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/patch
   
   Required parameters: productId, userId, skuId
   
@@ -67,21 +41,21 @@
   
   Body: 
   
-  {:userId string,
-   :productId string,
+  {:skuName string,
    :productName string,
-   :skuId string,
-   :etags string,
    :kind string,
-   :skuName string,
-   :selfLink string}
+   :productId string,
+   :etags string,
+   :selfLink string,
+   :userId string,
+   :skuId string}
   
-  Reassign a user's product SKU with a different SKU in the same product."
+  Reassign a user's product SKU with a different SKU in the same product. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
-   (http/put
+   (http/patch
     (util/get-url
      "https://licensing.googleapis.com/"
      "apps/licensing/v1/product/{productId}/sku/{skuId}/user/{userId}"
@@ -100,7 +74,7 @@
 (defn delete$
   "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/delete
   
-  Required parameters: userId, skuId, productId
+  Required parameters: productId, userId, skuId
   
   Optional parameters: none
   
@@ -126,7 +100,7 @@
 (defn insert$
   "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/insert
   
-  Required parameters: productId, skuId
+  Required parameters: skuId, productId
   
   Optional parameters: none
   
@@ -155,23 +129,23 @@
       :as :json}
      auth))))
 
-(defn listForProductAndSku$
-  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/listForProductAndSku
+(defn get$
+  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/get
   
-  Required parameters: productId, customerId, skuId
+  Required parameters: productId, userId, skuId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: none
   
-  List all users assigned licenses for a specific product SKU."
+  Get a specific user's license by product SKU."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:productId :customerId :skuId})]}
+  {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://licensing.googleapis.com/"
-     "apps/licensing/v1/product/{productId}/sku/{skuId}/users"
-     #{:productId :customerId :skuId}
+     "apps/licensing/v1/product/{productId}/sku/{skuId}/user/{userId}"
+     #{:productId :skuId :userId}
      parameters)
     (merge-with
      merge
@@ -181,8 +155,8 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/patch
+(defn update$
+  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/update
   
   Required parameters: userId, productId, skuId
   
@@ -190,21 +164,21 @@
   
   Body: 
   
-  {:userId string,
-   :productId string,
+  {:skuName string,
    :productName string,
-   :skuId string,
-   :etags string,
    :kind string,
-   :skuName string,
-   :selfLink string}
+   :productId string,
+   :etags string,
+   :selfLink string,
+   :userId string,
+   :skuId string}
   
-  Patch a Licensing info via Apiary Patch Orchestration"
+  Reassign a user's product SKU with a different SKU in the same product."
   {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:productId :skuId :userId})]}
   (util/get-response
-   (http/patch
+   (http/put
     (util/get-url
      "https://licensing.googleapis.com/"
      "apps/licensing/v1/product/{productId}/sku/{skuId}/user/{userId}"
@@ -215,6 +189,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listForProduct$
+  "https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments/listForProduct
+  
+  Required parameters: productId, customerId
+  
+  Optional parameters: pageToken, maxResults
+  
+  List all users assigned licenses for a specific product SKU."
+  {:scopes ["https://www.googleapis.com/auth/apps.licensing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:productId :customerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://licensing.googleapis.com/"
+     "apps/licensing/v1/product/{productId}/users"
+     #{:productId :customerId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

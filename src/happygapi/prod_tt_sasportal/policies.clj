@@ -47,7 +47,7 @@
   
   Body: 
   
-  {:permissions [string], :resource string}
+  {:resource string, :permissions [string]}
   
   Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -79,8 +79,9 @@
   
   Body: 
   
-  {:resource string,
-   :policy {:etag string, :assignments [SasPortalAssignment]}}
+  {:disableNotification boolean,
+   :policy {:assignments [SasPortalAssignment], :etag string},
+   :resource string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}

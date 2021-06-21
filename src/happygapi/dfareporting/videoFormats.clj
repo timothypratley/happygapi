@@ -1,39 +1,13 @@
 (ns happygapi.dfareporting.videoFormats
-  "DCM/DFA Reporting And Trafficking API: videoFormats.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/videoFormats"
+  "Campaign Manager 360 API: videoFormats.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/videoFormats"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/videoFormats/get
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Gets one video format by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/videoFormats/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/videoFormats/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/videoFormats/list
   
   Required parameters: profileId
   
@@ -46,9 +20,35 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/videoFormats"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/videoFormats"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/videoFormats/get
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Gets one video format by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/videoFormats/{id}"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge

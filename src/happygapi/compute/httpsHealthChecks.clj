@@ -1,42 +1,15 @@
 (ns happygapi.compute.httpsHealthChecks
   "Compute Engine API: httpsHealthChecks.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/delete
-  
-  Required parameters: httpsHealthCheck, project
-  
-  Optional parameters: requestId
-  
-  Deletes the specified HttpsHealthCheck resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :httpsHealthCheck})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks/{httpsHealthCheck}"
-     #{:project :httpsHealthCheck}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/get
   
-  Required parameters: httpsHealthCheck, project
+  Required parameters: project, httpsHealthCheck
   
   Optional parameters: none
   
@@ -49,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks/{httpsHealthCheck}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks/{httpsHealthCheck}"
      #{:project :httpsHealthCheck}
      parameters)
     (merge-with
@@ -62,7 +35,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/insert
   
   Required parameters: project
   
@@ -92,8 +65,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks"
      #{:project}
      parameters)
     (merge-with
@@ -107,11 +80,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, maxResults, filter, returnPartialSuccess, pageToken
   
   Retrieves the list of HttpsHealthCheck resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -122,8 +95,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks"
      #{:project}
      parameters)
     (merge-with
@@ -135,7 +108,7 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/patch
   
   Required parameters: httpsHealthCheck, project
   
@@ -165,8 +138,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks/{httpsHealthCheck}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks/{httpsHealthCheck}"
      #{:project :httpsHealthCheck}
      parameters)
     (merge-with
@@ -180,9 +153,9 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/httpsHealthChecks/update
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/update
   
-  Required parameters: httpsHealthCheck, project
+  Required parameters: project, httpsHealthCheck
   
   Optional parameters: requestId
   
@@ -210,8 +183,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/httpsHealthChecks/{httpsHealthCheck}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks/{httpsHealthCheck}"
      #{:project :httpsHealthCheck}
      parameters)
     (merge-with
@@ -219,6 +192,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks/delete
+  
+  Required parameters: httpsHealthCheck, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified HttpsHealthCheck resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :httpsHealthCheck})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/httpsHealthChecks/{httpsHealthCheck}"
+     #{:project :httpsHealthCheck}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

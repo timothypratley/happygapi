@@ -1,31 +1,30 @@
 (ns happygapi.compute.regionNetworkEndpointGroups
   "Compute Engine API: regionNetworkEndpointGroups.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionNetworkEndpointGroups"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionNetworkEndpointGroups/delete
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/list
   
-  Required parameters: networkEndpointGroup, project, region
+  Required parameters: region, project
   
-  Optional parameters: requestId
+  Optional parameters: orderBy, pageToken, filter, returnPartialSuccess, maxResults
   
-  Deletes the specified network endpoint group. Note that the NEG cannot be deleted if it is configured as a backend of a backend service."
+  Retrieves the list of regional network endpoint groups available to the specified project in the given region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:networkEndpointGroup :region :project})]}
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/networkEndpointGroups/{networkEndpointGroup}"
-     #{:networkEndpointGroup :region :project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/networkEndpointGroups"
+     #{:region :project}
      parameters)
     (merge-with
      merge
@@ -36,9 +35,9 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionNetworkEndpointGroups/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/get
   
-  Required parameters: networkEndpointGroup, project, region
+  Required parameters: region, project, networkEndpointGroup
   
   Optional parameters: none
   
@@ -53,8 +52,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/networkEndpointGroups/{networkEndpointGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/networkEndpointGroups/{networkEndpointGroup}"
      #{:networkEndpointGroup :region :project}
      parameters)
     (merge-with
@@ -66,7 +65,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionNetworkEndpointGroups/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/insert
   
   Required parameters: project, region
   
@@ -81,12 +80,12 @@
    :name string,
    :cloudFunction {:function string, :urlMask string},
    :selfLink string,
-   :cloudRun {:service string, :tag string, :urlMask string},
+   :cloudRun {:urlMask string, :tag string, :service string},
    :size integer,
    :region string,
    :id string,
    :kind string,
-   :appEngine {:service string, :urlMask string, :version string},
+   :appEngine {:version string, :urlMask string, :service string},
    :annotations {},
    :network string,
    :defaultPort integer,
@@ -100,8 +99,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/networkEndpointGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/networkEndpointGroups"
      #{:region :project}
      parameters)
     (merge-with
@@ -114,25 +113,26 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/regionNetworkEndpointGroups/list
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/delete
   
-  Required parameters: project, region
+  Required parameters: region, networkEndpointGroup, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: requestId
   
-  Retrieves the list of regional network endpoint groups available to the specified project in the given region."
+  Deletes the specified network endpoint group. Note that the NEG cannot be deleted if it is configured as a backend of a backend service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
+            "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:networkEndpointGroup :region :project})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/networkEndpointGroups"
-     #{:region :project}
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/networkEndpointGroups/{networkEndpointGroup}"
+     #{:networkEndpointGroup :region :project}
      parameters)
     (merge-with
      merge

@@ -9,13 +9,13 @@
 (defn failover$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/failover
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:failoverContext {:settingsVersion string, :kind string}}
+  {:failoverContext {:kind string, :settingsVersion string}}
   
   Failover the instance to its failover replica instance. Using this operation might cause your instance to restart."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -42,7 +42,7 @@
 (defn get$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/get
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -75,15 +75,15 @@
   
   Body: 
   
-  {:onPremisesConfiguration {:clientCertificate string,
+  {:onPremisesConfiguration {:username string,
                              :kind string,
-                             :clientKey string,
-                             :password string,
+                             :clientCertificate string,
                              :dumpFilePath string,
                              :caCertificate string,
                              :hostPort string,
-                             :username string},
-   :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
+                             :password string,
+                             :clientKey string},
+   :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
    :instanceType string,
@@ -105,6 +105,7 @@
               :storageAutoResize boolean,
               :pricingPlan string,
               :locationPreference LocationPreference,
+              :insightsConfig InsightsConfig,
               :ipConfiguration IpConfiguration,
               :kind string,
               :maintenanceWindow MaintenanceWindow,
@@ -117,7 +118,7 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:ipAddress string, :timeToRetire string, :type string}],
+   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
@@ -133,8 +134,8 @@
                           :startTime string,
                           :canDefer boolean},
    :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :kind string,
-                          :failoverTarget boolean},
+                          :failoverTarget boolean,
+                          :kind string},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -146,6 +147,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
+   :outOfDiskReport {:sqlOutOfDiskState string,
+                     :sqlMinRecommendedIncreaseSizeGb integer},
    :suspensionReason [string]}
   
   Creates a new Cloud SQL instance."
@@ -173,15 +176,15 @@
 (defn demoteMaster$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/demoteMaster
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:demoteMasterContext {:kind string,
+  {:demoteMasterContext {:masterInstanceName string,
                          :verifyGtidConsistency boolean,
-                         :masterInstanceName string,
+                         :kind string,
                          :replicaConfiguration DemoteMasterConfiguration}}
   
   Demotes the stand-alone instance to be a Cloud SQL read replica for an external database server."
@@ -209,7 +212,7 @@
 (defn restart$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/restart
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -242,15 +245,15 @@
   
   Body: 
   
-  {:onPremisesConfiguration {:clientCertificate string,
+  {:onPremisesConfiguration {:username string,
                              :kind string,
-                             :clientKey string,
-                             :password string,
+                             :clientCertificate string,
                              :dumpFilePath string,
                              :caCertificate string,
                              :hostPort string,
-                             :username string},
-   :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
+                             :password string,
+                             :clientKey string},
+   :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
    :instanceType string,
@@ -272,6 +275,7 @@
               :storageAutoResize boolean,
               :pricingPlan string,
               :locationPreference LocationPreference,
+              :insightsConfig InsightsConfig,
               :ipConfiguration IpConfiguration,
               :kind string,
               :maintenanceWindow MaintenanceWindow,
@@ -284,7 +288,7 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:ipAddress string, :timeToRetire string, :type string}],
+   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
@@ -300,8 +304,8 @@
                           :startTime string,
                           :canDefer boolean},
    :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :kind string,
-                          :failoverTarget boolean},
+                          :failoverTarget boolean,
+                          :kind string},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -313,6 +317,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
+   :outOfDiskReport {:sqlOutOfDiskState string,
+                     :sqlMinRecommendedIncreaseSizeGb integer},
    :suspensionReason [string]}
   
   Updates settings of a Cloud SQL instance. This method supports patch semantics."
@@ -394,21 +400,21 @@
 (defn update$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/update
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:onPremisesConfiguration {:clientCertificate string,
+  {:onPremisesConfiguration {:username string,
                              :kind string,
-                             :clientKey string,
-                             :password string,
+                             :clientCertificate string,
                              :dumpFilePath string,
                              :caCertificate string,
                              :hostPort string,
-                             :username string},
-   :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
+                             :password string,
+                             :clientKey string},
+   :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
    :instanceType string,
@@ -430,6 +436,7 @@
               :storageAutoResize boolean,
               :pricingPlan string,
               :locationPreference LocationPreference,
+              :insightsConfig InsightsConfig,
               :ipConfiguration IpConfiguration,
               :kind string,
               :maintenanceWindow MaintenanceWindow,
@@ -442,7 +449,7 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:ipAddress string, :timeToRetire string, :type string}],
+   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
@@ -458,8 +465,8 @@
                           :startTime string,
                           :canDefer boolean},
    :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :kind string,
-                          :failoverTarget boolean},
+                          :failoverTarget boolean,
+                          :kind string},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -471,6 +478,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
+   :outOfDiskReport {:sqlOutOfDiskState string,
+                     :sqlMinRecommendedIncreaseSizeGb integer},
    :suspensionReason [string]}
   
   Updates settings of a Cloud SQL instance. Using this operation might cause your instance to restart."
@@ -498,7 +507,7 @@
 (defn delete$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/delete
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
@@ -531,15 +540,15 @@
   
   Body: 
   
-  {:exportContext {:databases [string],
+  {:exportContext {:fileType string,
+                   :sqlExportOptions {:schemaOnly boolean,
+                                      :mysqlExportOptions {:masterData integer},
+                                      :tables [string]},
+                   :csvExportOptions {:selectQuery string},
+                   :databases [string],
                    :kind string,
                    :uri string,
-                   :offload boolean,
-                   :sqlExportOptions {:mysqlExportOptions {:masterData integer},
-                                      :schemaOnly boolean,
-                                      :tables [string]},
-                   :fileType string,
-                   :csvExportOptions {:selectQuery string}}}
+                   :offload boolean}}
   
   Exports data from a Cloud SQL instance to a Cloud Storage bucket as a SQL dump or CSV file."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -565,7 +574,7 @@
 (defn listServerCas$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/listServerCas
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
@@ -592,7 +601,7 @@
 (defn promoteReplica$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/promoteReplica
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -619,7 +628,7 @@
 (defn resetSslConfig$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/resetSslConfig
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
@@ -648,7 +657,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, pageToken, maxResults
+  Optional parameters: maxResults, filter, pageToken
   
   Lists instances under a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -673,16 +682,16 @@
 (defn clone$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/clone
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:cloneContext {:destinationInstanceName string,
-                  :kind string,
+  {:cloneContext {:kind string,
                   :pointInTime string,
                   :pitrTimestampMs string,
+                  :destinationInstanceName string,
                   :binLogCoordinates BinLogCoordinates}}
   
   Creates a Cloud SQL instance as a clone of the source instance. Using this operation might cause your instance to restart."
@@ -710,16 +719,16 @@
 (defn restoreBackup$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/restoreBackup
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
   Body: 
   
-  {:restoreBackupContext {:instanceId string,
-                          :kind string,
+  {:restoreBackupContext {:project string,
+                          :instanceId string,
                           :backupRunId string,
-                          :project string}}
+                          :kind string}}
   
   Restores a backup of a Cloud SQL instance. Using this operation might cause your instance to restart."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -812,9 +821,9 @@
   
   Body: 
   
-  {:truncateLogContext {:logType string, :kind string}}
+  {:truncateLogContext {:kind string, :logType string}}
   
-  Truncate MySQL general and slow query log tables"
+  Truncate MySQL general and slow query log tables MySQL only."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters body]
@@ -845,15 +854,15 @@
   
   Body: 
   
-  {:importContext {:fileType string,
-                   :csvImportOptions {:table string, :columns [string]},
-                   :bakImportOptions {:encryptionOptions {:pvkPath string,
-                                                          :certPath string,
-                                                          :pvkPassword string}},
+  {:importContext {:kind string,
                    :importUser string,
                    :database string,
-                   :kind string,
-                   :uri string}}
+                   :csvImportOptions {:table string, :columns [string]},
+                   :uri string,
+                   :fileType string,
+                   :bakImportOptions {:encryptionOptions {:pvkPath string,
+                                                          :certPath string,
+                                                          :pvkPassword string}}}}
   
   Imports data into a Cloud SQL instance from a SQL dump or CSV file in Cloud Storage."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

@@ -32,8 +32,40 @@
       :as :json}
      auth))))
 
-(defn environments-addPublicKey$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/addPublicKey
+(defn environments-authorize$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:idToken string, :expireTime string, :accessToken string}
+  
+  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudshell.googleapis.com/"
+     "v1/{+name}:authorize"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn environments-removePublicKey$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/removePublicKey
   
   Required parameters: environment
   
@@ -43,7 +75,7 @@
   
   {:key string}
   
-  Adds a public SSH key to an environment, allowing clients with the corresponding private key to connect to that environment via SSH. If a key with the same content already exists, this will error with ALREADY_EXISTS."
+  Removes a public SSH key from an environment. Clients will no longer be able to connect to the environment using the corresponding private key. If a key with the same content is not present, this will error with NOT_FOUND."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:environment})]}
@@ -51,7 +83,7 @@
    (http/post
     (util/get-url
      "https://cloudshell.googleapis.com/"
-     "v1/{+environment}:addPublicKey"
+     "v1/{+environment}:removePublicKey"
      #{:environment}
      parameters)
     (merge-with
@@ -96,40 +128,8 @@
       :as :json}
      auth))))
 
-(defn environments-authorize$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:idToken string, :accessToken string, :expireTime string}
-  
-  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudshell.googleapis.com/"
-     "v1/{+name}:authorize"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn environments-removePublicKey$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/removePublicKey
+(defn environments-addPublicKey$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/addPublicKey
   
   Required parameters: environment
   
@@ -139,7 +139,7 @@
   
   {:key string}
   
-  Removes a public SSH key from an environment. Clients will no longer be able to connect to the environment using the corresponding private key. If a key with the same content is not present, this will error with NOT_FOUND."
+  Adds a public SSH key to an environment, allowing clients with the corresponding private key to connect to that environment via SSH. If a key with the same content already exists, this will error with ALREADY_EXISTS."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:environment})]}
@@ -147,7 +147,7 @@
    (http/post
     (util/get-url
      "https://cloudshell.googleapis.com/"
-     "v1/{+environment}:removePublicKey"
+     "v1/{+environment}:addPublicKey"
      #{:environment}
      parameters)
     (merge-with

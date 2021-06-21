@@ -6,16 +6,42 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://developers.google.com/display-video/api/reference/rest/v1/inventorySourceGroups/delete
+  
+  Required parameters: inventorySourceGroupId
+  
+  Optional parameters: partnerId, advertiserId
+  
+  Deletes an inventory source group."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:inventorySourceGroupId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/inventorySourceGroups/{+inventorySourceGroupId}"
+     #{:inventorySourceGroupId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/display-video/api/reference/rest/v1/inventorySourceGroups/patch
   
   Required parameters: inventorySourceGroupId
   
-  Optional parameters: advertiserId, updateMask, partnerId
+  Optional parameters: updateMask, advertiserId, partnerId
   
   Body: 
   
-  {:name string, :inventorySourceGroupId string, :displayName string}
+  {:displayName string, :name string, :inventorySourceGroupId string}
   
   Updates an inventory source group. Returns the updated inventory source group if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -43,11 +69,11 @@
   
   Required parameters: none
   
-  Optional parameters: partnerId, advertiserId
+  Optional parameters: advertiserId, partnerId
   
   Body: 
   
-  {:name string, :inventorySourceGroupId string, :displayName string}
+  {:displayName string, :name string, :inventorySourceGroupId string}
   
   Creates a new inventory source group. Returns the newly created inventory source group if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -75,7 +101,7 @@
   
   Required parameters: inventorySourceGroupId
   
-  Optional parameters: advertiserId, partnerId
+  Optional parameters: partnerId, advertiserId
   
   Gets an inventory source group."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -101,7 +127,7 @@
   
   Required parameters: none
   
-  Optional parameters: partnerId, advertiserId, filter, pageToken, pageSize, orderBy
+  Optional parameters: pageSize, orderBy, advertiserId, partnerId, filter, pageToken
   
   Lists inventory source groups that are accessible to the current user. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -122,32 +148,6 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/display-video/api/reference/rest/v1/inventorySourceGroups/delete
-  
-  Required parameters: inventorySourceGroupId
-  
-  Optional parameters: partnerId, advertiserId
-  
-  Deletes an inventory source group."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:inventorySourceGroupId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/inventorySourceGroups/{+inventorySourceGroupId}"
-     #{:inventorySourceGroupId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn assignedInventorySources-bulkEdit$
   "https://developers.google.com/display-video/api/reference/rest/v1/inventorySourceGroups/assignedInventorySources/bulkEdit
   
@@ -158,11 +158,11 @@
   Body: 
   
   {:partnerId string,
-   :advertiserId string,
    :deletedAssignedInventorySources [string],
-   :createdAssignedInventorySources [{:name string,
-                                      :assignedInventorySourceId string,
-                                      :inventorySourceId string}]}
+   :createdAssignedInventorySources [{:assignedInventorySourceId string,
+                                      :name string,
+                                      :inventorySourceId string}],
+   :advertiserId string}
   
   Bulk edits multiple assignments between inventory sources and a single inventory source group. The operation will delete the assigned inventory sources provided in BulkEditAssignedInventorySourcesRequest.deleted_assigned_inventory_sources and then create the assigned inventory sources provided in BulkEditAssignedInventorySourcesRequest.created_assigned_inventory_sources."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -190,12 +190,12 @@
   
   Required parameters: inventorySourceGroupId
   
-  Optional parameters: advertiserId, partnerId
+  Optional parameters: partnerId, advertiserId
   
   Body: 
   
-  {:name string,
-   :assignedInventorySourceId string,
+  {:assignedInventorySourceId string,
+   :name string,
    :inventorySourceId string}
   
   Creates an assignment between an inventory source and an inventory source group."
@@ -224,7 +224,7 @@
   
   Required parameters: inventorySourceGroupId
   
-  Optional parameters: partnerId, advertiserId, filter, orderBy, pageToken, pageSize
+  Optional parameters: orderBy, pageToken, filter, partnerId, advertiserId, pageSize
   
   Lists inventory sources assigned to an inventory source group."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -250,7 +250,7 @@
   
   Required parameters: inventorySourceGroupId, assignedInventorySourceId
   
-  Optional parameters: advertiserId, partnerId
+  Optional parameters: partnerId, advertiserId
   
   Deletes the assignment between an inventory source and an inventory source group."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

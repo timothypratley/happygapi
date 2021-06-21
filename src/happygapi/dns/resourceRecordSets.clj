@@ -9,11 +9,11 @@
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/resourceRecordSets/list
   
-  Required parameters: project, managedZone
+  Required parameters: managedZone, project
   
-  Optional parameters: pageToken, maxResults, type, name
+  Optional parameters: name, maxResults, pageToken, type
   
-  Enumerate ResourceRecordSets that have been created but not yet deleted."
+  Enumerates ResourceRecordSets that you have created but not yet deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/ndev.clouddns.readonly"

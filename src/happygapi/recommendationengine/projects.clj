@@ -1,6 +1,6 @@
 (ns happygapi.recommendationengine.projects
-  "Recommendations AI: projects.
-  Recommendations AI service enables customers to build end-to-end personalized recommendation systems without requiring a high level of expertise in machine learning, recommendation system, or Google Cloud.
+  "Recommendations AI (Beta): projects.
+  Note that we now highly recommend new customers to use Retail API, which incorporates the GA version of the Recommendations AI funtionalities. To enable Retail API, please visit https://console.cloud.google.com/apis/library/retail.googleapis.com. The Recommendations AI service enables customers to build end-to-end personalized recommendation systems without requiring a high level of expertise in machine learning, recommendation system, or Google Cloud.
   See: https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:displayName string,
-   :name string,
+  {:name string,
    :defaultEventStoreId string,
    :catalogItemLevelConfig {:eventItemLevel string,
-                            :predictItemLevel string}}
+                            :predictItemLevel string},
+   :displayName string}
   
   Updates the catalog configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -47,7 +47,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists all the catalog configurations associated with the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -120,23 +120,108 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-catalogItems-list$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/list
+(defn locations-catalogs-catalogItems-import$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/import
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: none
   
-  Gets a list of catalog items."
+  Body: 
+  
+  {:requestId string,
+   :updateMask string,
+   :inputConfig {:catalogInlineSource GoogleCloudRecommendationengineV1beta1CatalogInlineSource,
+                 :userEventInlineSource GoogleCloudRecommendationengineV1beta1UserEventInlineSource,
+                 :bigQuerySource GoogleCloudRecommendationengineV1beta1BigQuerySource,
+                 :gcsSource GoogleCloudRecommendationengineV1beta1GcsSource},
+   :errorsConfig {:gcsPrefix string}}
+  
+  Bulk import of multiple catalog items. Request processing may be synchronous. No partial updating supported. Non-existing items will be created. Operation.response is of type ImportResponse. Note that it is possible for a subset of the items to be successfully updated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+parent}/catalogItems:import"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-catalogs-catalogItems-create$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :tags [string],
+   :productMetadata {:priceRange GoogleCloudRecommendationengineV1beta1ProductCatalogItemPriceRange,
+                     :stockState string,
+                     :images [GoogleCloudRecommendationengineV1beta1Image],
+                     :currencyCode string,
+                     :exactPrice GoogleCloudRecommendationengineV1beta1ProductCatalogItemExactPrice,
+                     :canonicalProductUri string,
+                     :costs {},
+                     :availableQuantity string},
+   :itemAttributes {:numericalFeatures {}, :categoricalFeatures {}},
+   :title string,
+   :languageCode string,
+   :itemGroupId string,
+   :id string,
+   :categoryHierarchies [{:categories [string]}]}
+  
+  Creates a catalog item."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
     (util/get-url
      "https://recommendationengine.googleapis.com/"
      "v1beta1/{+parent}/catalogItems"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-catalogs-catalogItems-get$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a specific catalog item."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -172,32 +257,6 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-catalogItems-get$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a specific catalog item."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-catalogs-catalogItems-patch$
   "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/patch
   
@@ -209,15 +268,15 @@
   
   {:description string,
    :tags [string],
-   :productMetadata {:currencyCode string,
+   :productMetadata {:priceRange GoogleCloudRecommendationengineV1beta1ProductCatalogItemPriceRange,
                      :stockState string,
+                     :images [GoogleCloudRecommendationengineV1beta1Image],
+                     :currencyCode string,
                      :exactPrice GoogleCloudRecommendationengineV1beta1ProductCatalogItemExactPrice,
                      :canonicalProductUri string,
                      :costs {},
-                     :availableQuantity string,
-                     :priceRange GoogleCloudRecommendationengineV1beta1ProductCatalogItemPriceRange,
-                     :images [GoogleCloudRecommendationengineV1beta1Image]},
-   :itemAttributes {:categoricalFeatures {}, :numericalFeatures {}},
+                     :availableQuantity string},
+   :itemAttributes {:numericalFeatures {}, :categoricalFeatures {}},
    :title string,
    :languageCode string,
    :itemGroupId string,
@@ -245,76 +304,19 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-catalogItems-import$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/import
+(defn locations-catalogs-catalogItems-list$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageSize, filter, pageToken
   
-  Body: 
-  
-  {:errorsConfig {:gcsPrefix string},
-   :updateMask string,
-   :inputConfig {:gcsSource GoogleCloudRecommendationengineV1beta1GcsSource,
-                 :bigQuerySource GoogleCloudRecommendationengineV1beta1BigQuerySource,
-                 :catalogInlineSource GoogleCloudRecommendationengineV1beta1CatalogInlineSource,
-                 :userEventInlineSource GoogleCloudRecommendationengineV1beta1UserEventInlineSource},
-   :requestId string}
-  
-  Bulk import of multiple catalog items. Request processing may be synchronous. No partial updating supported. Non-existing items will be created. Operation.response is of type ImportResponse. Note that it is possible for a subset of the items to be successfully updated."
+  Gets a list of catalog items."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+parent}/catalogItems:import"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-catalogs-catalogItems-create$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/catalogItems/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :tags [string],
-   :productMetadata {:currencyCode string,
-                     :stockState string,
-                     :exactPrice GoogleCloudRecommendationengineV1beta1ProductCatalogItemExactPrice,
-                     :canonicalProductUri string,
-                     :costs {},
-                     :availableQuantity string,
-                     :priceRange GoogleCloudRecommendationengineV1beta1ProductCatalogItemPriceRange,
-                     :images [GoogleCloudRecommendationengineV1beta1Image]},
-   :itemAttributes {:categoricalFeatures {}, :numericalFeatures {}},
-   :title string,
-   :languageCode string,
-   :itemGroupId string,
-   :id string,
-   :categoryHierarchies [{:categories [string]}]}
-  
-  Creates a catalog item."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://recommendationengine.googleapis.com/"
      "v1beta1/{+parent}/catalogItems"
@@ -322,9 +324,33 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-catalogs-eventStores-predictionApiKeyRegistrations-list$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/predictionApiKeyRegistrations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  List the registered apiKeys for use with predict method."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+parent}/predictionApiKeyRegistrations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -362,32 +388,6 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-eventStores-predictionApiKeyRegistrations-list$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/predictionApiKeyRegistrations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  List the registered apiKeys for use with predict method."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+parent}/predictionApiKeyRegistrations"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-catalogs-eventStores-predictionApiKeyRegistrations-delete$
   "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/predictionApiKeyRegistrations/delete
   
@@ -401,75 +401,6 @@
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-catalogs-eventStores-placements-predict$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/placements/predict
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labels {},
-   :pageToken string,
-   :dryRun boolean,
-   :filter string,
-   :userEvent {:eventDetail GoogleCloudRecommendationengineV1beta1EventDetail,
-               :eventTime string,
-               :eventSource string,
-               :eventType string,
-               :userInfo GoogleCloudRecommendationengineV1beta1UserInfo,
-               :productEventDetail GoogleCloudRecommendationengineV1beta1ProductEventDetail},
-   :params {},
-   :pageSize integer}
-  
-  Makes a recommendation prediction. If using API Key based authentication, the API Key must be registered using the PredictionApiKeyRegistry service. [Learn more](/recommendations-ai/docs/setting-up#register-key)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+name}:predict"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-catalogs-eventStores-operations-get$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://recommendationengine.googleapis.com/"
      "v1beta1/{+name}"
@@ -509,27 +440,64 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-eventStores-userEvents-purge$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/purge
+(defn locations-catalogs-eventStores-operations-get$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/operations/get
   
-  Required parameters: parent
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-catalogs-eventStores-placements-predict$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/placements/predict
+  
+  Required parameters: name
   
   Optional parameters: none
   
   Body: 
   
-  {:force boolean, :filter string}
+  {:params {},
+   :labels {},
+   :pageSize integer,
+   :filter string,
+   :pageToken string,
+   :userEvent {:eventDetail GoogleCloudRecommendationengineV1beta1EventDetail,
+               :userInfo GoogleCloudRecommendationengineV1beta1UserInfo,
+               :eventTime string,
+               :eventType string,
+               :eventSource string,
+               :productEventDetail GoogleCloudRecommendationengineV1beta1ProductEventDetail},
+   :dryRun boolean}
   
-  Deletes permanently all user events specified by the filter provided. Depending on the number of events specified by the filter, this operation could take hours or days to complete. To test a filter, use the list command first."
+  Makes a recommendation prediction. If using API Key based authentication, the API Key must be registered using the PredictionApiKeyRegistry service. [Learn more](https://cloud.google.com/recommendations-ai/docs/setting-up#register-key)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+parent}/userEvents:purge"
-     #{:parent}
+     "v1beta1/{+name}:predict"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -573,43 +541,6 @@
       :as :json}
      auth))))
 
-(defn locations-catalogs-eventStores-userEvents-import$
-  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/import
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requestId string,
-   :inputConfig {:gcsSource GoogleCloudRecommendationengineV1beta1GcsSource,
-                 :bigQuerySource GoogleCloudRecommendationengineV1beta1BigQuerySource,
-                 :catalogInlineSource GoogleCloudRecommendationengineV1beta1CatalogInlineSource,
-                 :userEventInlineSource GoogleCloudRecommendationengineV1beta1UserEventInlineSource},
-   :errorsConfig {:gcsPrefix string}}
-  
-  Bulk import of User events. Request processing might be synchronous. Events that already exist are skipped. Use this method for backfilling historical user events. Operation.response is of type ImportResponse. Note that it is possible for a subset of the items to be successfully inserted. Operation.metadata is of type ImportMetadata."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommendationengine.googleapis.com/"
-     "v1beta1/{+parent}/userEvents:import"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-catalogs-eventStores-userEvents-write$
   "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/write
   
@@ -621,24 +552,24 @@
   
   {:eventDetail {:eventAttributes GoogleCloudRecommendationengineV1beta1FeatureMap,
                  :experimentIds [string],
-                 :recommendationToken string,
                  :pageViewId string,
+                 :referrerUri string,
                  :uri string,
-                 :referrerUri string},
-   :eventTime string,
-   :eventSource string,
-   :eventType string,
-   :userInfo {:ipAddress string,
+                 :recommendationToken string},
+   :userInfo {:visitorId string,
+              :userAgent string,
               :userId string,
-              :visitorId string,
               :directUserRequest boolean,
-              :userAgent string},
-   :productEventDetail {:purchaseTransaction GoogleCloudRecommendationengineV1beta1PurchaseTransaction,
-                        :pageCategories [GoogleCloudRecommendationengineV1beta1CatalogItemCategoryHierarchy],
-                        :cartId string,
-                        :searchQuery string,
+              :ipAddress string},
+   :eventTime string,
+   :eventType string,
+   :eventSource string,
+   :productEventDetail {:searchQuery string,
                         :listId string,
-                        :productDetails [GoogleCloudRecommendationengineV1beta1ProductDetail]}}
+                        :productDetails [GoogleCloudRecommendationengineV1beta1ProductDetail],
+                        :purchaseTransaction GoogleCloudRecommendationengineV1beta1PurchaseTransaction,
+                        :cartId string,
+                        :pageCategories [GoogleCloudRecommendationengineV1beta1CatalogItemCategoryHierarchy]}}
   
   Writes a single user event."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -661,12 +592,44 @@
       :as :json}
      auth))))
 
+(defn locations-catalogs-eventStores-userEvents-purge$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/purge
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:force boolean, :filter string}
+  
+  Deletes permanently all user events specified by the filter provided. Depending on the number of events specified by the filter, this operation could take hours or days to complete. To test a filter, use the list command first."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+parent}/userEvents:purge"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-catalogs-eventStores-userEvents-collect$
   "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/collect
   
   Required parameters: parent
   
-  Optional parameters: ets, uri, userEvent
+  Optional parameters: userEvent, ets, uri
   
   Writes a single user event from the browser. This uses a GET request to due to browser restriction of POST-ing to a 3rd party domain. This method is used only by the Recommendations AI JavaScript pixel. Users should not call this method directly."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -692,7 +655,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Gets a list of user events within a time range, with potential filtering. The method does not list unjoined user events. Unjoined user event definition: when a user event is ingested from Recommendations AI User Event APIs, the catalog item included in the user event is connected with the current catalog. If a catalog item of the ingested event is not in the current catalog, it could lead to degraded model quality. This is called an unjoined event."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -708,6 +671,43 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-catalogs-eventStores-userEvents-import$
+  "https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects/locations/catalogs/eventStores/userEvents/import
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:errorsConfig {:gcsPrefix string},
+   :requestId string,
+   :inputConfig {:catalogInlineSource GoogleCloudRecommendationengineV1beta1CatalogInlineSource,
+                 :userEventInlineSource GoogleCloudRecommendationengineV1beta1UserEventInlineSource,
+                 :bigQuerySource GoogleCloudRecommendationengineV1beta1BigQuerySource,
+                 :gcsSource GoogleCloudRecommendationengineV1beta1GcsSource}}
+  
+  Bulk import of User events. Request processing might be synchronous. Events that already exist are skipped. Use this method for backfilling historical user events. Operation.response is of type ImportResponse. Note that it is possible for a subset of the items to be successfully inserted. Operation.metadata is of type ImportMetadata."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recommendationengine.googleapis.com/"
+     "v1beta1/{+parent}/userEvents:import"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

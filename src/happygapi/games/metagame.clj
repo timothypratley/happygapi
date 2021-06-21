@@ -35,9 +35,9 @@
 (defn listCategoriesByPlayer$
   "https://developers.google.com/games/api/reference/rest/v1/metagame/listCategoriesByPlayer
   
-  Required parameters: collection, playerId
+  Required parameters: playerId, collection
   
-  Optional parameters: language, maxResults, pageToken
+  Optional parameters: language, pageToken, maxResults
   
   List play data aggregated per category for the player corresponding to `playerId`."
   {:scopes ["https://www.googleapis.com/auth/games"]}

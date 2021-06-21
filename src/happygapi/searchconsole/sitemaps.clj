@@ -62,7 +62,7 @@
 (defn get$
   "https://developers.google.com/webmaster-tools/search-console-api/api/reference/rest/v1/sitemaps/get
   
-  Required parameters: feedpath, siteUrl
+  Required parameters: siteUrl, feedpath
   
   Optional parameters: none
   

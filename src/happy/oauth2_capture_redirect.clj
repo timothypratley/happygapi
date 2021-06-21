@@ -8,12 +8,18 @@
             [happy.oauth2 :as oauth2]
             [ring.adapter.jetty :as jetty]))
 
+(defn maybe-parse-int [s]
+  (try
+    (Integer/parseInt s)
+    (catch Exception _
+      nil)))
+
 (defn wait-for-redirect [{:as config :keys [redirect_uri redirect_uris]}]
   (let [code (promise)
         port (or (some-> (or redirect_uri (last redirect_uris))
                          (str/split #":")
                          (last)
-                         (Integer/parseInt))
+                         (maybe-parse-int))
                  80)
         server (jetty/run-jetty
                  (fn [request]
@@ -21,6 +27,11 @@
                    {:status 200
                     :body   "ok"})
                  (merge {:port port :join? false} config))]
+    (-> (fn []
+          (Thread/sleep 20000)
+          (deliver code nil))
+        (Thread. "wait for user timeout")
+        (.start))
     (try
       @code
       (finally
@@ -31,28 +42,19 @@
       (browse/browse-url))
   (wait-for-redirect config))
 
-(defn grow-scopes
-  "Incremental authorization.
-  Given a credentials map, re-authorizes with additional scopes.
-  Include previous scopes when asking for new scopes.
-  Scopes are a vector of urls.
-  Credentials contain tokens and scopes.
-  Returns the URL to redirect the user to,
-  or nil if the scopes are already authorized."
-  [config {:as credentials :keys [scopes]} new-scopes optional]
-  (let [scopes (set/union (set scopes) (set new-scopes))]
-    (oauth2/exchange-code config (request-code config scopes optional))))
-
 (defn update-credentials [config credentials scopes optional]
-  (cond
-    (not (oauth2/has-scopes? credentials scopes))
-    (grow-scopes config credentials scopes optional)
+  ;; scopes can grow
+  (let [scopes (set/union (set (:scopes credentials)) (set scopes))]
+    ;; merge to retain refresh token
+    (merge credentials
+           (cond
+             (and (oauth2/valid? credentials)
+                  (oauth2/has-scopes? credentials scopes))
+             credentials
 
-    (oauth2/valid? credentials)
-    credentials
+             (and (oauth2/refreshable? config credentials)
+                  (oauth2/has-scopes? credentials scopes))
+             (oauth2/refresh-credentials config scopes credentials)
 
-    (oauth2/refreshable? config credentials)
-    (oauth2/refresh-credentials config scopes credentials)
-
-    :else
-    (oauth2/exchange-code config (request-code config scopes optional))))
+             :else
+             (oauth2/exchange-code config (request-code config scopes optional))))))

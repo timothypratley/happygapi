@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get an AccessPolicy by name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/delete
   
@@ -41,7 +67,7 @@
   
   Body: 
   
-  {:title string, :etag string, :name string, :parent string}
+  {:name string, :etag string, :parent string, :title string}
   
   Update an AccessPolicy. The longrunning Operation from this RPC will have a successful status once the changes to the AccessPolicy have propagated to long-lasting storage. Syntactic and basic semantic errors will be returned in `metadata` as a BadRequest proto."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -69,7 +95,7 @@
   
   Required parameters: none
   
-  Optional parameters: parent, pageSize, pageToken
+  Optional parameters: pageToken, pageSize, parent
   
   List all AccessPolicies under a container."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -99,7 +125,7 @@
   
   Body: 
   
-  {:title string, :etag string, :name string, :parent string}
+  {:name string, :etag string, :parent string, :title string}
   
   Create an `AccessPolicy`. Fails if this organization already has a `AccessPolicy`. The longrunning Operation will have a successful status once the `AccessPolicy` has propagated to long-lasting storage. Syntactic and basic semantic errors will be returned in `metadata` as a BadRequest proto."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -122,38 +148,12 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Get an AccessPolicy by name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn accessLevels-list$
   "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/list
   
   Required parameters: parent
   
-  Optional parameters: accessLevelFormat, pageToken, pageSize
+  Optional parameters: pageSize, accessLevelFormat, pageToken
   
   List all Access Levels for an access policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -174,8 +174,8 @@
       :as :json}
      auth))))
 
-(defn accessLevels-replaceAll$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/replaceAll
+(defn accessLevels-create$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/create
   
   Required parameters: parent
   
@@ -183,14 +183,13 @@
   
   Body: 
   
-  {:etag string,
-   :accessLevels [{:basic BasicLevel,
-                   :name string,
-                   :custom CustomLevel,
-                   :title string,
-                   :description string}]}
+  {:basic {:conditions [Condition], :combiningFunction string},
+   :description string,
+   :name string,
+   :custom {:expr Expr},
+   :title string}
   
-  Replace all existing Access Levels in an Access Policy with the Access Levels provided. This is done atomically. The longrunning operation from this RPC will have a successful status once all replacements have propagated to long-lasting storage. Replacements containing errors will result in an error response for the first error encountered. Replacement will be cancelled on error, existing Access Levels will not be affected. Operation.response field will contain ReplaceAccessLevelsResponse. Removing Access Levels contained in existing Service Perimeters will result in error."
+  Create an Access Level. The longrunning operation from this RPC will have a successful status once the Access Level has propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -198,7 +197,7 @@
    (http/post
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/accessLevels:replaceAll"
+     "v1/{+parent}/accessLevels"
      #{:parent}
      parameters)
     (merge-with
@@ -211,31 +210,32 @@
       :as :json}
      auth))))
 
-(defn accessLevels-patch$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/patch
+(defn accessLevels-replaceAll$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/replaceAll
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
   Body: 
   
-  {:basic {:combiningFunction string, :conditions [Condition]},
-   :name string,
-   :custom {:expr Expr},
-   :title string,
-   :description string}
+  {:accessLevels [{:basic BasicLevel,
+                   :description string,
+                   :name string,
+                   :custom CustomLevel,
+                   :title string}],
+   :etag string}
   
-  Update an Access Level. The longrunning operation from this RPC will have a successful status once the changes to the Access Level have propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered."
+  Replace all existing Access Levels in an Access Policy with the Access Levels provided. This is done atomically. The longrunning operation from this RPC will have a successful status once all replacements have propagated to long-lasting storage. Replacements containing errors will result in an error response for the first error encountered. Replacement will be cancelled on error, existing Access Levels will not be affected. Operation.response field will contain ReplaceAccessLevelsResponse. Removing Access Levels contained in existing Service Perimeters will result in error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/accessLevels:replaceAll"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -273,31 +273,31 @@
       :as :json}
      auth))))
 
-(defn accessLevels-create$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/create
+(defn accessLevels-patch$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/accessLevels/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
-  {:basic {:combiningFunction string, :conditions [Condition]},
+  {:basic {:conditions [Condition], :combiningFunction string},
+   :description string,
    :name string,
    :custom {:expr Expr},
-   :title string,
-   :description string}
+   :title string}
   
-  Create an Access Level. The longrunning operation from this RPC will have a successful status once the Access Level has propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered."
+  Update an Access Level. The longrunning operation from this RPC will have a successful status once the changes to the Access Level have propagated to long-lasting storage. Access Levels containing errors will result in an error response for the first error encountered."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/accessLevels"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -335,27 +335,75 @@
       :as :json}
      auth))))
 
-(defn servicePerimeters-get$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/get
+(defn servicePerimeters-list$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken
   
-  Get a Service Perimeter by resource name."
+  List all Service Perimeters for an access policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/servicePerimeters"
+     #{:parent}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn servicePerimeters-create$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:title string,
+   :spec {:vpcAccessibleServices VpcAccessibleServices,
+          :accessLevels [string],
+          :resources [string],
+          :egressPolicies [EgressPolicy],
+          :restrictedServices [string],
+          :ingressPolicies [IngressPolicy]},
+   :useExplicitDryRunSpec boolean,
+   :status {:vpcAccessibleServices VpcAccessibleServices,
+            :accessLevels [string],
+            :resources [string],
+            :egressPolicies [EgressPolicy],
+            :restrictedServices [string],
+            :ingressPolicies [IngressPolicy]},
+   :description string,
+   :name string,
+   :perimeterType string}
+  
+  Create a Service Perimeter. The longrunning operation from this RPC will have a successful status once the Service Perimeter has propagated to long-lasting storage. Service Perimeters containing errors will result in an error response for the first error encountered."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+parent}/servicePerimeters"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -370,14 +418,14 @@
   
   Body: 
   
-  {:servicePerimeters [{:description string,
-                        :status ServicePerimeterConfig,
-                        :useExplicitDryRunSpec boolean,
-                        :perimeterType string,
+  {:etag string,
+   :servicePerimeters [{:title string,
                         :spec ServicePerimeterConfig,
+                        :useExplicitDryRunSpec boolean,
+                        :status ServicePerimeterConfig,
+                        :description string,
                         :name string,
-                        :title string}],
-   :etag string}
+                        :perimeterType string}]}
   
   Replace all existing Service Perimeters in an Access Policy with the Service Perimeters provided. This is done atomically. The longrunning operation from this RPC will have a successful status once all replacements have propagated to long-lasting storage. Replacements containing errors will result in an error response for the first error encountered. Replacement will be cancelled on error, existing Service Perimeters will not be affected. Operation.response field will contain ReplaceServicePerimetersResponse."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -400,8 +448,56 @@
       :as :json}
      auth))))
 
-(defn servicePerimeters-create$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/create
+(defn servicePerimeters-patch$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:title string,
+   :spec {:vpcAccessibleServices VpcAccessibleServices,
+          :accessLevels [string],
+          :resources [string],
+          :egressPolicies [EgressPolicy],
+          :restrictedServices [string],
+          :ingressPolicies [IngressPolicy]},
+   :useExplicitDryRunSpec boolean,
+   :status {:vpcAccessibleServices VpcAccessibleServices,
+            :accessLevels [string],
+            :resources [string],
+            :egressPolicies [EgressPolicy],
+            :restrictedServices [string],
+            :ingressPolicies [IngressPolicy]},
+   :description string,
+   :name string,
+   :perimeterType string}
+  
+  Update a Service Perimeter. The longrunning operation from this RPC will have a successful status once the changes to the Service Perimeter have propagated to long-lasting storage. Service Perimeter containing errors will result in an error response for the first error encountered."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://accesscontextmanager.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn servicePerimeters-commit$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/commit
   
   Required parameters: parent
   
@@ -409,21 +505,9 @@
   
   Body: 
   
-  {:description string,
-   :status {:resources [string],
-            :restrictedServices [string],
-            :accessLevels [string],
-            :vpcAccessibleServices VpcAccessibleServices},
-   :useExplicitDryRunSpec boolean,
-   :perimeterType string,
-   :spec {:resources [string],
-          :restrictedServices [string],
-          :accessLevels [string],
-          :vpcAccessibleServices VpcAccessibleServices},
-   :name string,
-   :title string}
+  {:etag string}
   
-  Create a Service Perimeter. The longrunning operation from this RPC will have a successful status once the Service Perimeter has propagated to long-lasting storage. Service Perimeters containing errors will result in an error response for the first error encountered."
+  Commit the dry-run spec for all the Service Perimeters in an Access Policy. A commit operation on a Service Perimeter involves copying its `spec` field to that Service Perimeter's `status` field. Only Service Perimeters with `use_explicit_dry_run_spec` field set to true are affected by a commit operation. The longrunning operation from this RPC will have a successful status once the dry-run specs for all the Service Perimeters have been committed. If a commit fails, it will cause the longrunning operation to return an error response and the entire commit operation will be cancelled. When successful, Operation.response field will contain CommitServicePerimetersResponse. The `dry_run` and the `spec` fields will be cleared after a successful commit operation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -431,7 +515,7 @@
    (http/post
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/servicePerimeters"
+     "v1/{+parent}/servicePerimeters:commit"
      #{:parent}
      parameters)
     (merge-with
@@ -470,99 +554,23 @@
       :as :json}
      auth))))
 
-(defn servicePerimeters-commit$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/commit
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string}
-  
-  Commit the dry-run spec for all the Service Perimeters in an Access Policy. A commit operation on a Service Perimeter involves copying its `spec` field to that Service Perimeter's `status` field. Only Service Perimeters with `use_explicit_dry_run_spec` field set to true are affected by a commit operation. The longrunning operation from this RPC will have a successful status once the dry-run specs for all the Service Perimeters have been committed. If a commit fails, it will cause the longrunning operation to return an error response and the entire commit operation will be cancelled. When successful, Operation.response field will contain CommitServicePerimetersResponse. The `dry_run` and the `spec` fields will be cleared after a successful commit operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/servicePerimeters:commit"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn servicePerimeters-patch$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/patch
+(defn servicePerimeters-get$
+  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/get
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
-  Body: 
-  
-  {:description string,
-   :status {:resources [string],
-            :restrictedServices [string],
-            :accessLevels [string],
-            :vpcAccessibleServices VpcAccessibleServices},
-   :useExplicitDryRunSpec boolean,
-   :perimeterType string,
-   :spec {:resources [string],
-          :restrictedServices [string],
-          :accessLevels [string],
-          :vpcAccessibleServices VpcAccessibleServices},
-   :name string,
-   :title string}
-  
-  Update a Service Perimeter. The longrunning operation from this RPC will have a successful status once the changes to the Service Perimeter have propagated to long-lasting storage. Service Perimeter containing errors will result in an error response for the first error encountered."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://accesscontextmanager.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn servicePerimeters-list$
-  "https://cloud.google.com/access-context-manager/docs/reference/rest/api/reference/rest/v1/accessPolicies/servicePerimeters/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  List all Service Perimeters for an access policy."
+  Get a Service Perimeter by resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://accesscontextmanager.googleapis.com/"
-     "v1/{+parent}/servicePerimeters"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

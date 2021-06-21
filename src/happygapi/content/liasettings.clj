@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/get
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
 (defn setinventoryverificationcontact$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/setinventoryverificationcontact
   
-  Required parameters: merchantId, language, contactName, accountId, country, contactEmail
+  Required parameters: contactName, merchantId, language, contactEmail, accountId, country
   
   Optional parameters: none
   
@@ -53,8 +53,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}/setinventoryverificationcontact"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}/setinventoryverificationcontact"
      #{:contactName
        :contactEmail
        :language
@@ -86,8 +86,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}/requestinventoryverification/{country}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}/requestinventoryverification/{country}"
      #{:accountId :country :merchantId}
      parameters)
     (merge-with
@@ -101,21 +101,21 @@
 (defn update$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/update
   
-  Required parameters: merchantId, accountId
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:countrySettings [{:inventory LiaInventorySettings,
+  {:countrySettings [{:hostedLocalStorefrontActive boolean,
+                      :inventory LiaInventorySettings,
                       :storePickupActive boolean,
-                      :onDisplayToOrder LiaOnDisplayToOrderSettings,
-                      :about LiaAboutPageSettings,
-                      :country string,
                       :posDataProvider LiaPosDataProvider,
-                      :hostedLocalStorefrontActive boolean}],
-   :accountId string,
-   :kind string}
+                      :country string,
+                      :about LiaAboutPageSettings,
+                      :onDisplayToOrder LiaOnDisplayToOrderSettings}],
+   :kind string,
+   :accountId string}
   
   Updates the LIA settings of the account. Any fields that are not provided are deleted from the resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -124,8 +124,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -141,7 +141,7 @@
 (defn requestgmbaccess$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/requestgmbaccess
   
-  Required parameters: merchantId, accountId, gmbEmail
+  Required parameters: gmbEmail, merchantId, accountId
   
   Optional parameters: none
   
@@ -154,8 +154,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}/requestgmbaccess"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}/requestgmbaccess"
      #{:gmbEmail :accountId :merchantId}
      parameters)
     (merge-with
@@ -171,7 +171,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Lists the LIA settings of the sub-accounts in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -180,8 +180,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings"
      #{:merchantId}
      parameters)
     (merge-with
@@ -195,7 +195,7 @@
 (defn setposdataprovider$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/setposdataprovider
   
-  Required parameters: merchantId, accountId, country
+  Required parameters: accountId, country, merchantId
   
   Optional parameters: posDataProviderId, posExternalAccountId
   
@@ -208,8 +208,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}/setposdataprovider"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}/setposdataprovider"
      #{:accountId :country :merchantId}
      parameters)
     (merge-with
@@ -234,8 +234,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/liasettings/posdataproviders"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "liasettings/posdataproviders"
      #{}
      parameters)
     (merge-with
@@ -260,8 +260,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/liasettings/{accountId}/accessiblegmbaccounts"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/liasettings/{accountId}/accessiblegmbaccounts"
      #{:accountId :merchantId}
      parameters)
     (merge-with
@@ -300,8 +300,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/liasettings/batch"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "liasettings/batch"
      #{}
      parameters)
     (merge-with

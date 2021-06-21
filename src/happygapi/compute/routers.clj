@@ -1,15 +1,15 @@
 (ns happygapi.compute.routers
   "Compute Engine API: routers.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/routers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/get
   
-  Required parameters: project, region, router
+  Required parameters: router, project, region
   
   Optional parameters: none
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -35,18 +35,18 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/insert
   
-  Required parameters: project, region
+  Required parameters: region, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:ipRange string,
+   :interfaces [{:linkedVpnTunnel string,
+                 :ipRange string,
                  :linkedInterconnectAttachment string,
-                 :linkedVpnTunnel string,
                  :managementType string,
                  :name string}],
    :creationTimestamp string,
@@ -61,9 +61,11 @@
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
            :drainNatIps [string],
+           :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:peerIpAddress string,
+   :bgpPeers [{:enable string,
+               :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
@@ -74,13 +76,15 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:advertiseMode string,
-         :advertisedGroups [string],
+   :bgp {:keepaliveInterval integer,
+         :asn integer,
+         :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :asn integer},
+         :advertisedGroups [string]},
    :region string,
    :id string,
    :kind string,
+   :encryptedInterconnectRouter boolean,
    :network string}
   
   Creates a Router resource in the specified project and region using the data included in the request."
@@ -91,8 +95,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers"
      #{:region :project}
      parameters)
     (merge-with
@@ -106,18 +110,18 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/patch
   
-  Required parameters: project, region, router
+  Required parameters: region, router, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:ipRange string,
+   :interfaces [{:linkedVpnTunnel string,
+                 :ipRange string,
                  :linkedInterconnectAttachment string,
-                 :linkedVpnTunnel string,
                  :managementType string,
                  :name string}],
    :creationTimestamp string,
@@ -132,9 +136,11 @@
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
            :drainNatIps [string],
+           :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:peerIpAddress string,
+   :bgpPeers [{:enable string,
+               :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
@@ -145,13 +151,15 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:advertiseMode string,
-         :advertisedGroups [string],
+   :bgp {:keepaliveInterval integer,
+         :asn integer,
+         :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :asn integer},
+         :advertisedGroups [string]},
    :region string,
    :id string,
    :kind string,
+   :encryptedInterconnectRouter boolean,
    :network string}
   
   Patches the specified Router resource with the data included in the request. This method supports PATCH semantics and uses JSON merge patch format and processing rules."
@@ -162,8 +170,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -177,7 +185,7 @@
      auth))))
 
 (defn getRouterStatus$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/getRouterStatus
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/getRouterStatus
   
   Required parameters: project, region, router
   
@@ -192,8 +200,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}/getRouterStatus"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}/getRouterStatus"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -205,11 +213,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, orderBy, pageToken, maxResults, includeAllScopes, filter
   
   Retrieves an aggregated list of routers."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -220,8 +228,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/routers"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/routers"
      #{:project}
      parameters)
     (merge-with
@@ -233,18 +241,18 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/update
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/update
   
-  Required parameters: project, region, router
+  Required parameters: router, region, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:ipRange string,
+   :interfaces [{:linkedVpnTunnel string,
+                 :ipRange string,
                  :linkedInterconnectAttachment string,
-                 :linkedVpnTunnel string,
                  :managementType string,
                  :name string}],
    :creationTimestamp string,
@@ -259,9 +267,11 @@
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
            :drainNatIps [string],
+           :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:peerIpAddress string,
+   :bgpPeers [{:enable string,
+               :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
@@ -272,13 +282,15 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:advertiseMode string,
-         :advertisedGroups [string],
+   :bgp {:keepaliveInterval integer,
+         :asn integer,
+         :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :asn integer},
+         :advertisedGroups [string]},
    :region string,
    :id string,
    :kind string,
+   :encryptedInterconnectRouter boolean,
    :network string}
   
   Updates the specified Router resource with the data included in the request. This method conforms to PUT semantics, which requests that the state of the target resource be created or replaced with the state defined by the representation enclosed in the request message payload."
@@ -289,8 +301,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -304,9 +316,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/delete
   
-  Required parameters: project, region, router
+  Required parameters: region, project, router
   
   Optional parameters: requestId
   
@@ -318,8 +330,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -331,18 +343,18 @@
      auth))))
 
 (defn preview$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/preview
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/preview
   
-  Required parameters: project, region, router
+  Required parameters: region, router, project
   
   Optional parameters: none
   
   Body: 
   
   {:description string,
-   :interfaces [{:ipRange string,
+   :interfaces [{:linkedVpnTunnel string,
+                 :ipRange string,
                  :linkedInterconnectAttachment string,
-                 :linkedVpnTunnel string,
                  :managementType string,
                  :name string}],
    :creationTimestamp string,
@@ -357,9 +369,11 @@
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
            :drainNatIps [string],
+           :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:peerIpAddress string,
+   :bgpPeers [{:enable string,
+               :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
@@ -370,13 +384,15 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:advertiseMode string,
-         :advertisedGroups [string],
+   :bgp {:keepaliveInterval integer,
+         :asn integer,
+         :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :asn integer},
+         :advertisedGroups [string]},
    :region string,
    :id string,
    :kind string,
+   :encryptedInterconnectRouter boolean,
    :network string}
   
   Preview fields auto-generated during router create and update operations. Calling this method does NOT create or update the router."
@@ -388,8 +404,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}/preview"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}/preview"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -403,11 +419,11 @@
      auth))))
 
 (defn getNatMappingInfo$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/getNatMappingInfo
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/getNatMappingInfo
   
-  Required parameters: project, region, router
+  Required parameters: project, router, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
   
   Retrieves runtime Nat mapping information of VM endpoints."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -418,8 +434,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers/{router}/getNatMappingInfo"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}/getNatMappingInfo"
      #{:router :region :project}
      parameters)
     (merge-with
@@ -431,11 +447,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routers/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/list
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, pageToken, orderBy, filter, returnPartialSuccess
   
   Retrieves a list of Router resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -446,8 +462,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/routers"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers"
      #{:region :project}
      parameters)
     (merge-with

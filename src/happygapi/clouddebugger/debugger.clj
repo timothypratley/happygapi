@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: clientVersion, project, includeInactive
+  Optional parameters: project, includeInactive, clientVersion
   
   Lists all the debuggees that the user has access to."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -33,12 +33,39 @@
       :as :json}
      auth))))
 
+(defn debuggees-breakpoints-get$
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/debugger/debuggees/breakpoints/get
+  
+  Required parameters: debuggeeId, breakpointId
+  
+  Optional parameters: clientVersion
+  
+  Gets breakpoint information."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud_debugger"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:debuggeeId :breakpointId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://clouddebugger.googleapis.com/"
+     "v2/debugger/debuggees/{debuggeeId}/breakpoints/{breakpointId}"
+     #{:debuggeeId :breakpointId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn debuggees-breakpoints-list$
   "https://cloud.google.com/debuggerapi/reference/rest/v2/debugger/debuggees/breakpoints/list
   
   Required parameters: debuggeeId
   
-  Optional parameters: includeInactive, clientVersion, stripResults, action.value, includeAllUsers, waitToken
+  Optional parameters: clientVersion, waitToken, includeInactive, action.value, includeAllUsers, stripResults
   
   Lists all breakpoints for the debuggee."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -51,33 +78,6 @@
      "https://clouddebugger.googleapis.com/"
      "v2/debugger/debuggees/{debuggeeId}/breakpoints"
      #{:debuggeeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn debuggees-breakpoints-delete$
-  "https://cloud.google.com/debuggerapi/reference/rest/v2/debugger/debuggees/breakpoints/delete
-  
-  Required parameters: debuggeeId, breakpointId
-  
-  Optional parameters: clientVersion
-  
-  Deletes the breakpoint from the debuggee."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud_debugger"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:debuggeeId :breakpointId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://clouddebugger.googleapis.com/"
-     "v2/debugger/debuggees/{debuggeeId}/breakpoints/{breakpointId}"
-     #{:debuggeeId :breakpointId}
      parameters)
     (merge-with
      merge
@@ -101,32 +101,32 @@
    :isFinalState boolean,
    :canaryExpireTime string,
    :stackFrames [{:arguments [Variable],
-                  :function string,
                   :locals [Variable],
+                  :function string,
                   :location SourceLocation}],
    :createTime string,
    :state string,
    :evaluatedExpressions [{:type string,
-                           :name string,
-                           :value string,
-                           :status StatusMessage,
                            :members [Variable],
+                           :value string,
+                           :name string,
+                           :status StatusMessage,
                            :varTableIndex integer}],
-   :status {:isError boolean,
-            :refersTo string,
-            :description FormatMessage},
+   :status {:description FormatMessage,
+            :isError boolean,
+            :refersTo string},
    :id string,
    :condition string,
    :expressions [string],
    :logLevel string,
    :variableTable [{:type string,
-                    :name string,
-                    :value string,
-                    :status StatusMessage,
                     :members [Variable],
+                    :value string,
+                    :name string,
+                    :status StatusMessage,
                     :varTableIndex integer}],
    :action string,
-   :location {:line integer, :path string, :column integer},
+   :location {:column integer, :path string, :line integer},
    :logMessageFormat string,
    :userEmail string}
   
@@ -152,20 +152,20 @@
       :as :json}
      auth))))
 
-(defn debuggees-breakpoints-get$
-  "https://cloud.google.com/debuggerapi/reference/rest/v2/debugger/debuggees/breakpoints/get
+(defn debuggees-breakpoints-delete$
+  "https://cloud.google.com/debuggerapi/reference/rest/v2/debugger/debuggees/breakpoints/delete
   
-  Required parameters: breakpointId, debuggeeId
+  Required parameters: debuggeeId, breakpointId
   
   Optional parameters: clientVersion
   
-  Gets breakpoint information."
+  Deletes the breakpoint from the debuggee."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud_debugger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:debuggeeId :breakpointId})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://clouddebugger.googleapis.com/"
      "v2/debugger/debuggees/{debuggeeId}/breakpoints/{breakpointId}"

@@ -67,10 +67,10 @@
   
   Body: 
   
-  {:historyId string,
-   :displayName string,
-   :testPlatform string,
-   :name string}
+  {:testPlatform string,
+   :historyId string,
+   :name string,
+   :displayName string}
   
   Creates a History. The returned History will have the id set. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing project does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -96,7 +96,7 @@
 (defn histories-get$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/get
   
-  Required parameters: projectId, historyId
+  Required parameters: historyId, projectId
   
   Optional parameters: none
   
@@ -124,7 +124,7 @@
   
   Required parameters: projectId
   
-  Optional parameters: pageSize, filterByName, pageToken
+  Optional parameters: pageToken, pageSize, filterByName
   
   Lists Histories for a given Project. The histories are sorted by modification time in descending order. The history_id key will be used to order the history with the same modification time. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the History does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -136,120 +136,6 @@
      "https://toolresults.googleapis.com/"
      "toolresults/v1beta3/projects/{projectId}/histories"
      #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-patch$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/patch
-  
-  Required parameters: projectId, executionId, historyId
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:completionTime {:seconds string, :nanos integer},
-   :outcome {:skippedDetail SkippedDetail,
-             :inconclusiveDetail InconclusiveDetail,
-             :successDetail SuccessDetail,
-             :failureDetail FailureDetail,
-             :summary string},
-   :creationTime {:seconds string, :nanos integer},
-   :executionId string,
-   :dimensionDefinitions [{}],
-   :state string,
-   :testExecutionMatrixId string,
-   :specification {:iosTest IosTest, :androidTest AndroidTest}}
-  
-  Updates an existing Execution with the supplied partial entity. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the requested state transition is illegal - NOT_FOUND - if the containing History does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :projectId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}"
-     #{:executionId :historyId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-create$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/create
-  
-  Required parameters: historyId, projectId
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:completionTime {:seconds string, :nanos integer},
-   :outcome {:skippedDetail SkippedDetail,
-             :inconclusiveDetail InconclusiveDetail,
-             :successDetail SuccessDetail,
-             :failureDetail FailureDetail,
-             :summary string},
-   :creationTime {:seconds string, :nanos integer},
-   :executionId string,
-   :dimensionDefinitions [{}],
-   :state string,
-   :testExecutionMatrixId string,
-   :specification {:iosTest IosTest, :androidTest AndroidTest}}
-  
-  Creates an Execution. The returned Execution will have the id set. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing History does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:historyId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions"
-     #{:historyId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/list
-  
-  Required parameters: projectId, historyId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists Executions for a given History. The executions are sorted by creation_time in descending order. The execution_id key will be used to order the executions with the same creation_time. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing History does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:historyId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions"
-     #{:historyId :projectId}
      parameters)
     (merge-with
      merge
@@ -287,14 +173,128 @@
       :as :json}
      auth))))
 
-(defn histories-executions-steps-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/list
+(defn histories-executions-create$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/create
   
-  Required parameters: executionId, historyId, projectId
+  Required parameters: projectId, historyId
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:dimensionDefinitions [{}],
+   :completionTime {:nanos integer, :seconds string},
+   :specification {:iosTest IosTest, :androidTest AndroidTest},
+   :state string,
+   :creationTime {:nanos integer, :seconds string},
+   :testExecutionMatrixId string,
+   :outcome {:summary string,
+             :successDetail SuccessDetail,
+             :skippedDetail SkippedDetail,
+             :failureDetail FailureDetail,
+             :inconclusiveDetail InconclusiveDetail},
+   :executionId string}
+  
+  Creates an Execution. The returned Execution will have the id set. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing History does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:historyId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions"
+     #{:historyId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn histories-executions-patch$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/patch
+  
+  Required parameters: executionId, projectId, historyId
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:dimensionDefinitions [{}],
+   :completionTime {:nanos integer, :seconds string},
+   :specification {:iosTest IosTest, :androidTest AndroidTest},
+   :state string,
+   :creationTime {:nanos integer, :seconds string},
+   :testExecutionMatrixId string,
+   :outcome {:summary string,
+             :successDetail SuccessDetail,
+             :skippedDetail SkippedDetail,
+             :failureDetail FailureDetail,
+             :inconclusiveDetail InconclusiveDetail},
+   :executionId string}
+  
+  Updates an existing Execution with the supplied partial entity. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the requested state transition is illegal - NOT_FOUND - if the containing History does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :projectId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}"
+     #{:executionId :historyId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn histories-executions-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/list
+  
+  Required parameters: historyId, projectId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists Executions for a given History. The executions are sorted by creation_time in descending order. The execution_id key will be used to order the executions with the same creation_time. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing History does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:historyId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions"
+     #{:historyId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn histories-executions-environments-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/environments/list
+  
+  Required parameters: historyId, executionId, projectId
   
   Optional parameters: pageToken, pageSize
   
-  Lists Steps for a given Execution. The steps are sorted by creation_time in descending order. The step_id key will be used to order the steps with the same creation_time. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if an argument in the request happens to be invalid; e.g. if an attempt is made to list the children of a nonexistent Step - NOT_FOUND - if the containing Execution does not exist"
+  Lists Environments for a given Execution. The Environments are sorted by display name. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing Execution does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys?
@@ -304,7 +304,7 @@
    (http/get
     (util/get-url
      "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/environments"
      #{:executionId :historyId :projectId}
      parameters)
     (merge-with
@@ -315,29 +315,63 @@
       :as :json}
      auth))))
 
-(defn histories-executions-steps-getPerfMetricsSummary$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/getPerfMetricsSummary
+(defn histories-executions-environments-get$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/environments/get
   
-  Required parameters: stepId, projectId, executionId, historyId
+  Required parameters: historyId, executionId, projectId, environmentId
   
   Optional parameters: none
   
-  Retrieves a PerfMetricsSummary. May return any of the following error code(s): - NOT_FOUND - The specified PerfMetricsSummary does not exist"
+  Gets an Environment. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the Environment does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys?
           parameters
-          #{:executionId :historyId :stepId :projectId})]}
+          #{:executionId :historyId :environmentId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfMetricsSummary"
-     #{:executionId :historyId :stepId :projectId}
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/environments/{environmentId}"
+     #{:executionId :historyId :environmentId :projectId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn histories-executions-steps-publishXunitXmlFiles$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/publishXunitXmlFiles
+  
+  Required parameters: projectId, historyId, stepId, executionId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:xunitXmlFiles [{:fileUri string}]}
+  
+  Publish xml files to an existing Step. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the requested state transition is illegal, e.g try to upload a duplicate xml file or a file too large. - NOT_FOUND - if the containing Execution does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :stepId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}:publishXunitXmlFiles"
+     #{:executionId :historyId :stepId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -372,36 +406,36 @@
 (defn histories-executions-steps-patch$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/patch
   
-  Required parameters: stepId, projectId, historyId, executionId
+  Required parameters: historyId, projectId, executionId, stepId
   
   Optional parameters: requestId
   
   Body: 
   
-  {:creationTime {:seconds string, :nanos integer},
+  {:creationTime {:nanos integer, :seconds string},
    :description string,
    :runDuration {:seconds string, :nanos integer},
-   :labels [{:key string, :value string}],
-   :multiStep {:primaryStep PrimaryStep,
+   :labels [{:value string, :key string}],
+   :multiStep {:primaryStepId string,
                :multistepNumber integer,
-               :primaryStepId string},
+               :primaryStep PrimaryStep},
    :name string,
-   :outcome {:skippedDetail SkippedDetail,
-             :inconclusiveDetail InconclusiveDetail,
+   :outcome {:summary string,
              :successDetail SuccessDetail,
+             :skippedDetail SkippedDetail,
              :failureDetail FailureDetail,
-             :summary string},
+             :inconclusiveDetail InconclusiveDetail},
    :state string,
    :deviceUsageDuration {:seconds string, :nanos integer},
-   :completionTime {:seconds string, :nanos integer},
+   :completionTime {:nanos integer, :seconds string},
    :stepId string,
    :hasImages boolean,
    :dimensionValue [{:key string, :value string}],
    :toolExecutionStep {:toolExecution ToolExecution},
    :testExecutionStep {:testIssues [TestIssue],
-                       :testSuiteOverviews [TestSuiteOverview],
+                       :testTiming TestTiming,
                        :toolExecution ToolExecution,
-                       :testTiming TestTiming}}
+                       :testSuiteOverviews [TestSuiteOverview]}}
   
   Updates an existing Step with the supplied partial entity. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the requested state transition is illegal (e.g try to upload a duplicate xml file), if the updated step is too large (more than 10Mib) - NOT_FOUND - if the containing Execution does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -426,39 +460,95 @@
       :as :json}
      auth))))
 
+(defn histories-executions-steps-getPerfMetricsSummary$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/getPerfMetricsSummary
+  
+  Required parameters: executionId, historyId, stepId, projectId
+  
+  Optional parameters: none
+  
+  Retrieves a PerfMetricsSummary. May return any of the following error code(s): - NOT_FOUND - The specified PerfMetricsSummary does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :stepId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfMetricsSummary"
+     #{:executionId :historyId :stepId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn histories-executions-steps-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/list
+  
+  Required parameters: executionId, projectId, historyId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists Steps for a given Execution. The steps are sorted by creation_time in descending order. The step_id key will be used to order the steps with the same creation_time. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if an argument in the request happens to be invalid; e.g. if an attempt is made to list the children of a nonexistent Step - NOT_FOUND - if the containing Execution does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps"
+     #{:executionId :historyId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn histories-executions-steps-create$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/create
   
-  Required parameters: executionId, projectId, historyId
+  Required parameters: historyId, projectId, executionId
   
   Optional parameters: requestId
   
   Body: 
   
-  {:creationTime {:seconds string, :nanos integer},
+  {:creationTime {:nanos integer, :seconds string},
    :description string,
    :runDuration {:seconds string, :nanos integer},
-   :labels [{:key string, :value string}],
-   :multiStep {:primaryStep PrimaryStep,
+   :labels [{:value string, :key string}],
+   :multiStep {:primaryStepId string,
                :multistepNumber integer,
-               :primaryStepId string},
+               :primaryStep PrimaryStep},
    :name string,
-   :outcome {:skippedDetail SkippedDetail,
-             :inconclusiveDetail InconclusiveDetail,
+   :outcome {:summary string,
              :successDetail SuccessDetail,
+             :skippedDetail SkippedDetail,
              :failureDetail FailureDetail,
-             :summary string},
+             :inconclusiveDetail InconclusiveDetail},
    :state string,
    :deviceUsageDuration {:seconds string, :nanos integer},
-   :completionTime {:seconds string, :nanos integer},
+   :completionTime {:nanos integer, :seconds string},
    :stepId string,
    :hasImages boolean,
    :dimensionValue [{:key string, :value string}],
    :toolExecutionStep {:toolExecution ToolExecution},
    :testExecutionStep {:testIssues [TestIssue],
-                       :testSuiteOverviews [TestSuiteOverview],
+                       :testTiming TestTiming,
                        :toolExecution ToolExecution,
-                       :testTiming TestTiming}}
+                       :testSuiteOverviews [TestSuiteOverview]}}
   
   Creates a Step. The returned Step will have the id set. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the step is too large (more than 10Mib) - NOT_FOUND - if the containing Execution does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -483,44 +573,10 @@
       :as :json}
      auth))))
 
-(defn histories-executions-steps-publishXunitXmlFiles$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/publishXunitXmlFiles
-  
-  Required parameters: projectId, executionId, historyId, stepId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:xunitXmlFiles [{:fileUri string}]}
-  
-  Publish xml files to an existing Step. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write project - INVALID_ARGUMENT - if the request is malformed - FAILED_PRECONDITION - if the requested state transition is illegal, e.g try to upload a duplicate xml file or a file too large. - NOT_FOUND - if the containing Execution does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :stepId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}:publishXunitXmlFiles"
-     #{:executionId :historyId :stepId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn histories-executions-steps-get$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/get
   
-  Required parameters: historyId, stepId, projectId, executionId
+  Required parameters: projectId, stepId, historyId, executionId
   
   Optional parameters: none
   
@@ -545,51 +601,23 @@
       :as :json}
      auth))))
 
-(defn histories-executions-steps-perfSampleSeries-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/list
-  
-  Required parameters: projectId, stepId, historyId, executionId
-  
-  Optional parameters: filter
-  
-  Lists PerfSampleSeries for a given Step. The request provides an optional filter which specifies one or more PerfMetricsType to include in the result; if none returns all. The resulting PerfSampleSeries are sorted by ids. May return any of the following canonical error codes: - NOT_FOUND - The containing Step does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :stepId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfSampleSeries"
-     #{:executionId :historyId :stepId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn histories-executions-steps-perfSampleSeries-create$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/create
   
-  Required parameters: executionId, stepId, historyId, projectId
+  Required parameters: stepId, executionId, historyId, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:sampleSeriesId string,
+  {:historyId string,
    :executionId string,
    :stepId string,
    :projectId string,
-   :historyId string,
-   :basicPerfSampleSeries {:sampleSeriesLabel string,
-                           :perfMetricType string,
-                           :perfUnit string}}
+   :sampleSeriesId string,
+   :basicPerfSampleSeries {:perfUnit string,
+                           :sampleSeriesLabel string,
+                           :perfMetricType string}}
   
   Creates a PerfSampleSeries. May return any of the following error code(s): - ALREADY_EXISTS - PerfMetricSummary already exists for the given Step - NOT_FOUND - The containing Step does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -614,10 +642,38 @@
       :as :json}
      auth))))
 
+(defn histories-executions-steps-perfSampleSeries-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/list
+  
+  Required parameters: executionId, historyId, projectId, stepId
+  
+  Optional parameters: filter
+  
+  Lists PerfSampleSeries for a given Step. The request provides an optional filter which specifies one or more PerfMetricsType to include in the result; if none returns all. The resulting PerfSampleSeries are sorted by ids. May return any of the following canonical error codes: - NOT_FOUND - The containing Step does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :stepId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfSampleSeries"
+     #{:executionId :historyId :stepId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn histories-executions-steps-perfSampleSeries-get$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/get
   
-  Required parameters: stepId, executionId, projectId, sampleSeriesId, historyId
+  Required parameters: stepId, executionId, historyId, projectId, sampleSeriesId
   
   Optional parameters: none
   
@@ -646,10 +702,42 @@
       :as :json}
      auth))))
 
+(defn histories-executions-steps-perfSampleSeries-samples-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/samples/list
+  
+  Required parameters: projectId, executionId, sampleSeriesId, stepId, historyId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the Performance Samples of a given Sample Series - The list results are sorted by timestamps ascending - The default page size is 500 samples; and maximum size allowed 5000 - The response token indicates the last returned PerfSample timestamp - When the results size exceeds the page size, submit a subsequent request including the page token to return the rest of the samples up to the page limit May return any of the following canonical error codes: - OUT_OF_RANGE - The specified request page_token is out of valid range - NOT_FOUND - The containing PerfSampleSeries does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId
+            :historyId
+            :sampleSeriesId
+            :stepId
+            :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfSampleSeries/{sampleSeriesId}/samples"
+     #{:executionId :historyId :sampleSeriesId :stepId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn histories-executions-steps-perfSampleSeries-samples-batchCreate$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/samples/batchCreate
   
-  Required parameters: projectId, executionId, historyId, stepId, sampleSeriesId
+  Required parameters: sampleSeriesId, historyId, stepId, executionId, projectId
   
   Optional parameters: none
   
@@ -684,123 +772,10 @@
       :as :json}
      auth))))
 
-(defn histories-executions-steps-perfSampleSeries-samples-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfSampleSeries/samples/list
-  
-  Required parameters: sampleSeriesId, executionId, historyId, stepId, projectId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the Performance Samples of a given Sample Series - The list results are sorted by timestamps ascending - The default page size is 500 samples; and maximum size allowed 5000 - The response token indicates the last returned PerfSample timestamp - When the results size exceeds the page size, submit a subsequent request including the page token to return the rest of the samples up to the page limit May return any of the following canonical error codes: - OUT_OF_RANGE - The specified request page_token is out of valid range - NOT_FOUND - The containing PerfSampleSeries does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId
-            :historyId
-            :sampleSeriesId
-            :stepId
-            :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfSampleSeries/{sampleSeriesId}/samples"
-     #{:executionId :historyId :sampleSeriesId :stepId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-steps-thumbnails-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/thumbnails/list
-  
-  Required parameters: stepId, executionId, projectId, historyId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists thumbnails of images attached to a step. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read from the project, or from any of the images - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the step does not exist, or if any of the images do not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :stepId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/thumbnails"
-     #{:executionId :historyId :stepId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-steps-perfMetricsSummary-create$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfMetricsSummary/create
-  
-  Required parameters: executionId, stepId, projectId, historyId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:projectId string,
-   :stepId string,
-   :perfMetrics [string],
-   :appStartTime {:initialDisplayTime Duration,
-                  :fullyDrawnTime Duration},
-   :graphicsStats {:totalFrames string,
-                   :highInputLatencyCount string,
-                   :p50Millis string,
-                   :slowUiThreadCount string,
-                   :slowDrawCount string,
-                   :jankyFrames string,
-                   :missedVsyncCount string,
-                   :p90Millis string,
-                   :buckets [GraphicsStatsBucket],
-                   :p99Millis string,
-                   :slowBitmapUploadCount string,
-                   :p95Millis string},
-   :historyId string,
-   :executionId string,
-   :perfEnvironment {:cpuInfo CPUInfo, :memoryInfo MemoryInfo}}
-  
-  Creates a PerfMetricsSummary resource. Returns the existing one if it has already been created. May return any of the following error code(s): - NOT_FOUND - The containing Step does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :stepId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfMetricsSummary"
-     #{:executionId :historyId :stepId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn histories-executions-steps-testCases-get$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/testCases/get
   
-  Required parameters: executionId, testCaseId, projectId, historyId, stepId
+  Required parameters: testCaseId, stepId, executionId, historyId, projectId
   
   Optional parameters: none
   
@@ -828,9 +803,9 @@
 (defn histories-executions-steps-testCases-list$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/testCases/list
   
-  Required parameters: stepId, historyId, projectId, executionId
+  Required parameters: historyId, projectId, executionId, stepId
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists Test Cases attached to a Step. Experimental test cases API. Still in active development. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to write to project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing Step does not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -853,25 +828,25 @@
       :as :json}
      auth))))
 
-(defn histories-executions-clusters-get$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/clusters/get
+(defn histories-executions-steps-thumbnails-list$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/thumbnails/list
   
-  Required parameters: clusterId, executionId, projectId, historyId
+  Required parameters: projectId, historyId, stepId, executionId
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken
   
-  Retrieves a single screenshot cluster by its ID"
+  Lists thumbnails of images attached to a step. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read from the project, or from any of the images - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the step does not exist, or if any of the images do not exist"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys?
           parameters
-          #{:executionId :historyId :clusterId :projectId})]}
+          #{:executionId :historyId :stepId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/clusters/{clusterId}"
-     #{:executionId :historyId :clusterId :projectId}
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/thumbnails"
+     #{:executionId :historyId :stepId :projectId}
      parameters)
     (merge-with
      merge
@@ -881,10 +856,63 @@
       :as :json}
      auth))))
 
+(defn histories-executions-steps-perfMetricsSummary-create$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/steps/perfMetricsSummary/create
+  
+  Required parameters: executionId, projectId, historyId, stepId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:perfMetrics [string],
+   :historyId string,
+   :appStartTime {:fullyDrawnTime Duration,
+                  :initialDisplayTime Duration},
+   :graphicsStats {:totalFrames string,
+                   :highInputLatencyCount string,
+                   :p50Millis string,
+                   :slowUiThreadCount string,
+                   :slowDrawCount string,
+                   :jankyFrames string,
+                   :missedVsyncCount string,
+                   :p90Millis string,
+                   :buckets [GraphicsStatsBucket],
+                   :p99Millis string,
+                   :slowBitmapUploadCount string,
+                   :p95Millis string},
+   :perfEnvironment {:cpuInfo CPUInfo, :memoryInfo MemoryInfo},
+   :stepId string,
+   :projectId string,
+   :executionId string}
+  
+  Creates a PerfMetricsSummary resource. Returns the existing one if it has already been created. May return any of the following error code(s): - NOT_FOUND - The containing Step does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:executionId :historyId :stepId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://toolresults.googleapis.com/"
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/steps/{stepId}/perfMetricsSummary"
+     #{:executionId :historyId :stepId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn histories-executions-clusters-list$
   "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/clusters/list
   
-  Required parameters: historyId, executionId, projectId
+  Required parameters: projectId, historyId, executionId
   
   Optional parameters: none
   
@@ -909,53 +937,25 @@
       :as :json}
      auth))))
 
-(defn histories-executions-environments-list$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/environments/list
+(defn histories-executions-clusters-get$
+  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/clusters/get
   
-  Required parameters: executionId, projectId, historyId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists Environments for a given Execution. The Environments are sorted by display name. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the containing Execution does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:executionId :historyId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/environments"
-     #{:executionId :historyId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn histories-executions-environments-get$
-  "https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects/histories/executions/environments/get
-  
-  Required parameters: projectId, historyId, environmentId, executionId
+  Required parameters: executionId, projectId, historyId, clusterId
   
   Optional parameters: none
   
-  Gets an Environment. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the Environment does not exist"
+  Retrieves a single screenshot cluster by its ID"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys?
           parameters
-          #{:executionId :historyId :environmentId :projectId})]}
+          #{:executionId :historyId :clusterId :projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://toolresults.googleapis.com/"
-     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/environments/{environmentId}"
-     #{:executionId :historyId :environmentId :projectId}
+     "toolresults/v1beta3/projects/{projectId}/histories/{historyId}/executions/{executionId}/clusters/{clusterId}"
+     #{:executionId :historyId :clusterId :projectId}
      parameters)
     (merge-with
      merge

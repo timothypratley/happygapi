@@ -11,7 +11,7 @@
   
   Required parameters: part
   
-  Optional parameters: pageToken, maxResults, hl
+  Optional parameters: maxResults, hl, pageToken
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"

@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the AdMob publisher account that was most recently signed in to from the AdMob UI. For more information, see https://support.google.com/admob/answer/10243672."
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"
+            "https://www.googleapis.com/auth/admob.report"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://admob.googleapis.com/"
+     "v1/accounts"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/get
   
@@ -14,7 +41,8 @@
   Optional parameters: none
   
   Gets information about the specified AdMob publisher account."
-  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"
+            "https://www.googleapis.com/auth/admob.report"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -32,23 +60,49 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/list
+(defn adUnits-list$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/adUnits/list
   
-  Required parameters: none
+  Required parameters: parent
   
   Optional parameters: pageToken, pageSize
   
-  Lists the AdMob publisher account accessible with the client credential. Currently, all credentials have access to at most one AdMob account."
-  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
+  List the ad units under the specified AdMob account."
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://admob.googleapis.com/"
-     "v1/accounts"
-     #{}
+     "v1/{+parent}/adUnits"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn apps-list$
+  "https://developers.google.com/admob/api/api/reference/rest/v1/accounts/apps/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  List the apps under the specified AdMob account."
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://admob.googleapis.com/"
+     "v1/{+parent}/apps"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -67,17 +121,18 @@
   
   Body: 
   
-  {:reportSpec {:dateRange DateRange,
-                :localizationSettings LocalizationSettings,
+  {:reportSpec {:localizationSettings LocalizationSettings,
+                :dimensionFilters [NetworkReportSpecDimensionFilter],
+                :dateRange DateRange,
                 :timeZone string,
-                :sortConditions [NetworkReportSpecSortCondition],
                 :metrics [string],
+                :sortConditions [NetworkReportSpecSortCondition],
                 :dimensions [string],
-                :maxReportRows integer,
-                :dimensionFilters [NetworkReportSpecDimensionFilter]}}
+                :maxReportRows integer}}
   
-  Generates an AdMob Network report based on the provided report specification."
-  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
+  Generates an AdMob Network report based on the provided report specification. Returns result of a server-side streaming RPC. The result is returned in a sequence of responses."
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"
+            "https://www.googleapis.com/auth/admob.report"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
@@ -106,17 +161,18 @@
   
   Body: 
   
-  {:reportSpec {:localizationSettings LocalizationSettings,
-                :sortConditions [MediationReportSpecSortCondition],
-                :dimensions [string],
-                :dimensionFilters [MediationReportSpecDimensionFilter],
+  {:reportSpec {:dimensions [string],
+                :dateRange DateRange,
                 :maxReportRows integer,
-                :metrics [string],
+                :sortConditions [MediationReportSpecSortCondition],
                 :timeZone string,
-                :dateRange DateRange}}
+                :localizationSettings LocalizationSettings,
+                :metrics [string],
+                :dimensionFilters [MediationReportSpecDimensionFilter]}}
   
-  Generates an AdMob Mediation report based on the provided report specification."
-  {:scopes ["https://www.googleapis.com/auth/admob.report"]}
+  Generates an AdMob Mediation report based on the provided report specification. Returns result of a server-side streaming RPC. The result is returned in a sequence of responses."
+  {:scopes ["https://www.googleapis.com/auth/admob.readonly"
+            "https://www.googleapis.com/auth/admob.report"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response

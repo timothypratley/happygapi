@@ -6,43 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn createAccountTree$
-  "https://developers.google.com/analytics/api/reference/rest/v3/provisioning/createAccountTree
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:accountName string,
-   :websiteUrl string,
-   :kind string,
-   :webpropertyName string,
-   :profileName string,
-   :timezone string}
-  
-  Provision account."
-  {:scopes ["https://www.googleapis.com/auth/analytics.provision"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "provisioning/createAccountTree"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn createAccountTicket$
   "https://developers.google.com/analytics/api/reference/rest/v3/provisioning/createAccountTicket
   
@@ -52,9 +15,7 @@
   
   Body: 
   
-  {:kind string,
-   :redirectUri string,
-   :account {:permissions {:effective [string]},
+  {:account {:permissions {:effective [string]},
              :starred boolean,
              :updated string,
              :name string,
@@ -76,12 +37,14 @@
                  :level string,
                  :id string,
                  :kind string,
-                 :childLink {:type string, :href string},
+                 :childLink {:href string, :type string},
                  :internalWebPropertyId string,
                  :dataRetentionTtl string,
                  :profileCount integer,
                  :dataRetentionResetOnNewActivity boolean,
                  :accountId string},
+   :kind string,
+   :redirectUri string,
    :profile {:timezone string,
              :permissions {:effective [string]},
              :starred boolean,
@@ -101,7 +64,7 @@
              :enhancedECommerceTracking boolean,
              :id string,
              :kind string,
-             :childLink {:href string, :type string},
+             :childLink {:type string, :href string},
              :internalWebPropertyId string,
              :stripSiteSearchQueryParameters boolean,
              :excludeQueryParameters string,
@@ -119,6 +82,43 @@
     (util/get-url
      "https://www.googleapis.com/analytics/v3/"
      "provisioning/createAccountTicket"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn createAccountTree$
+  "https://developers.google.com/analytics/api/reference/rest/v3/provisioning/createAccountTree
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:webpropertyName string,
+   :accountName string,
+   :kind string,
+   :timezone string,
+   :profileName string,
+   :websiteUrl string}
+  
+  Provision account."
+  {:scopes ["https://www.googleapis.com/auth/analytics.provision"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "provisioning/createAccountTree"
      #{}
      parameters)
     (merge-with

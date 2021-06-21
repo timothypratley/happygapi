@@ -6,38 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:role string, :courseId string, :id string, :userId string}
-  
-  Creates an invitation. Only one invitation for a user and course may exist at a time. Delete and re-create an invitation to make changes. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create invitations for this course or for access errors. * `NOT_FOUND` if the course or the user does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled or if the user already has this role or a role with greater permissions. * `ALREADY_EXISTS` if an invitation for the specified user and course already exists."
-  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/invitations"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn accept$
   "https://developers.google.com/classroom/api/reference/rest/v1/invitations/accept
   
@@ -91,6 +59,32 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/delete
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Deletes an invitation. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete the requested invitation or for access errors. * `NOT_FOUND` if no invitation exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/invitations/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/classroom/api/reference/rest/v1/invitations/list
   
@@ -118,27 +112,33 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/delete
+(defn create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/create
   
-  Required parameters: id
+  Required parameters: none
   
   Optional parameters: none
   
-  Deletes an invitation. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete the requested invitation or for access errors. * `NOT_FOUND` if no invitation exists with the requested ID."
+  Body: 
+  
+  {:courseId string, :id string, :role string, :userId string}
+  
+  Creates an invitation. Only one invitation for a user and course may exist at a time. Delete and re-create an invitation to make changes. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create invitations for this course or for access errors. * `NOT_FOUND` if the course or the user does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled or if the user already has this role or a role with greater permissions. * `ALREADY_EXISTS` if an invitation for the specified user and course already exists."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/invitations/{id}"
-     #{:id}
+     "v1/invitations"
+     #{}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

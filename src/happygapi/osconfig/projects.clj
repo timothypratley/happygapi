@@ -1,45 +1,19 @@
 (ns happygapi.osconfig.projects
   "OS Config API: projects.
   OS management tools that can be used for patch management, patch compliance, and configuration management on VM instances.
-  See: https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patchJobs-list$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchJobs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  Get a list of patch jobs."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://osconfig.googleapis.com/"
-     "v1/{+parent}/patchJobs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patchJobs-get$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchJobs/get
+(defn patchDeployments-get$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchDeployments/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Get the patch job. This can be used to track the progress of an ongoing patch job or review the details of completed jobs."
+  Get an OS Config patch deployment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -58,8 +32,121 @@
       :as :json}
      auth))))
 
+(defn patchDeployments-list$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchDeployments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Get a page of OS Config patch deployments."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://osconfig.googleapis.com/"
+     "v1/{+parent}/patchDeployments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patchDeployments-delete$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchDeployments/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Delete an OS Config patch deployment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://osconfig.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patchDeployments-create$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchDeployments/create
+  
+  Required parameters: parent
+  
+  Optional parameters: patchDeploymentId
+  
+  Body: 
+  
+  {:description string,
+   :lastExecuteTime string,
+   :name string,
+   :patchConfig {:apt AptSettings,
+                 :yum YumSettings,
+                 :windowsUpdate WindowsUpdateSettings,
+                 :preStep ExecStep,
+                 :postStep ExecStep,
+                 :rebootConfig string,
+                 :goo GooSettings,
+                 :zypper ZypperSettings},
+   :createTime string,
+   :duration string,
+   :updateTime string,
+   :recurringSchedule {:timeZone TimeZone,
+                       :lastExecuteTime string,
+                       :nextExecuteTime string,
+                       :startTime string,
+                       :endTime string,
+                       :frequency string,
+                       :monthly MonthlySchedule,
+                       :weekly WeeklySchedule,
+                       :timeOfDay TimeOfDay},
+   :oneTimeSchedule {:executeTime string},
+   :rollout {:disruptionBudget FixedOrPercent, :mode string},
+   :instanceFilter {:instanceNamePrefixes [string],
+                    :groupLabels [PatchInstanceFilterGroupLabel],
+                    :zones [string],
+                    :instances [string],
+                    :all boolean}}
+  
+  Create an OS Config patch deployment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://osconfig.googleapis.com/"
+     "v1/{+parent}/patchDeployments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patchJobs-cancel$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchJobs/cancel
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchJobs/cancel
   
   Required parameters: name
   
@@ -90,8 +177,34 @@
       :as :json}
      auth))))
 
+(defn patchJobs-get$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchJobs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get the patch job. This can be used to track the progress of an ongoing patch job or review the details of completed jobs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://osconfig.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patchJobs-execute$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchJobs/execute
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchJobs/execute
   
   Required parameters: parent
   
@@ -99,24 +212,24 @@
   
   Body: 
   
-  {:displayName string,
-   :patchConfig {:preStep ExecStep,
+  {:description string,
+   :patchConfig {:apt AptSettings,
+                 :yum YumSettings,
                  :windowsUpdate WindowsUpdateSettings,
-                 :apt AptSettings,
+                 :preStep ExecStep,
                  :postStep ExecStep,
-                 :goo GooSettings,
                  :rebootConfig string,
-                 :zypper ZypperSettings,
-                 :yum YumSettings},
-   :duration string,
-   :dryRun boolean,
-   :rollout {:mode string, :disruptionBudget FixedOrPercent},
-   :description string,
-   :instanceFilter {:all boolean,
-                    :instances [string],
-                    :instanceNamePrefixes [string],
+                 :goo GooSettings,
+                 :zypper ZypperSettings},
+   :displayName string,
+   :instanceFilter {:instanceNamePrefixes [string],
+                    :groupLabels [PatchInstanceFilterGroupLabel],
                     :zones [string],
-                    :groupLabels [PatchInstanceFilterGroupLabel]}}
+                    :instances [string],
+                    :all boolean},
+   :duration string,
+   :rollout {:disruptionBudget FixedOrPercent, :mode string},
+   :dryRun boolean}
   
   Patch VM instances by creating and running a patch job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -139,12 +252,38 @@
       :as :json}
      auth))))
 
-(defn patchJobs-instanceDetails-list$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchJobs/instanceDetails/list
+(defn patchJobs-list$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchJobs/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, filter
+  
+  Get a list of patch jobs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://osconfig.googleapis.com/"
+     "v1/{+parent}/patchJobs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patchJobs-instanceDetails-list$
+  "https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects/patchJobs/instanceDetails/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
   
   Get a list of instance details for a given patch job."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -160,145 +299,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patchDeployments-get$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchDeployments/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Get an OS Config patch deployment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://osconfig.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patchDeployments-delete$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchDeployments/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Delete an OS Config patch deployment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://osconfig.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patchDeployments-list$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchDeployments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Get a page of OS Config patch deployments."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://osconfig.googleapis.com/"
-     "v1/{+parent}/patchDeployments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patchDeployments-create$
-  "https://cloud.google.com/compute/docs/manage-osapi/reference/rest/v1/projects/patchDeployments/create
-  
-  Required parameters: parent
-  
-  Optional parameters: patchDeploymentId
-  
-  Body: 
-  
-  {:description string,
-   :lastExecuteTime string,
-   :name string,
-   :patchConfig {:preStep ExecStep,
-                 :windowsUpdate WindowsUpdateSettings,
-                 :apt AptSettings,
-                 :postStep ExecStep,
-                 :goo GooSettings,
-                 :rebootConfig string,
-                 :zypper ZypperSettings,
-                 :yum YumSettings},
-   :createTime string,
-   :duration string,
-   :updateTime string,
-   :recurringSchedule {:timeZone TimeZone,
-                       :lastExecuteTime string,
-                       :nextExecuteTime string,
-                       :startTime string,
-                       :endTime string,
-                       :frequency string,
-                       :monthly MonthlySchedule,
-                       :weekly WeeklySchedule,
-                       :timeOfDay TimeOfDay},
-   :oneTimeSchedule {:executeTime string},
-   :rollout {:mode string, :disruptionBudget FixedOrPercent},
-   :instanceFilter {:all boolean,
-                    :instances [string],
-                    :instanceNamePrefixes [string],
-                    :zones [string],
-                    :groupLabels [PatchInstanceFilterGroupLabel]}}
-  
-  Create an OS Config patch deployment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://osconfig.googleapis.com/"
-     "v1/{+parent}/patchDeployments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

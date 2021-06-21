@@ -1,36 +1,10 @@
 (ns happygapi.alertcenter.alerts
-  "G Suite Alert Center API: alerts.
+  "Google Workspace Alert Center API: alerts.
   Manages alerts on issues affecting your domain.
   See: https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn get$
-  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/get
-  
-  Required parameters: alertId
-  
-  Optional parameters: customerId
-  
-  Gets the specified alert. Attempting to get a nonexistent alert returns `NOT_FOUND` error."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:alertId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts/{alertId}"
-     #{:alertId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn delete$
   "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/delete
@@ -63,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: filter, pageToken, orderBy, customerId, pageSize
+  Optional parameters: pageSize, filter, customerId, pageToken, orderBy
   
   Lists the alerts."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
@@ -75,6 +49,32 @@
      "https://alertcenter.googleapis.com/"
      "v1beta1/alerts"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getMetadata$
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/getMetadata
+  
+  Required parameters: alertId
+  
+  Optional parameters: customerId
+  
+  Returns the metadata of an alert. Attempting to get metadata for a non-existent alert returns `NOT_FOUND` error."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:alertId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts/{alertId}/metadata"
+     #{:alertId}
      parameters)
     (merge-with
      merge
@@ -116,6 +116,32 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/get
+  
+  Required parameters: alertId
+  
+  Optional parameters: customerId
+  
+  Gets the specified alert. Attempting to get a nonexistent alert returns `NOT_FOUND` error."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:alertId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts/{alertId}"
+     #{:alertId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn batchDelete$
   "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/batchDelete
   
@@ -143,32 +169,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getMetadata$
-  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/getMetadata
-  
-  Required parameters: alertId
-  
-  Optional parameters: customerId
-  
-  Returns the metadata of an alert. Attempting to get metadata for a non-existent alert returns `NOT_FOUND` error."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:alertId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts/{alertId}/metadata"
-     #{:alertId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -211,7 +211,7 @@
   
   Required parameters: alertId
   
-  Optional parameters: filter, customerId
+  Optional parameters: customerId, filter
   
   Lists all the feedback for an alert. Attempting to list feedbacks for a non-existent alert returns `NOT_FOUND` error."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
@@ -241,12 +241,12 @@
   
   Body: 
   
-  {:feedbackId string,
+  {:type string,
+   :alertId string,
    :customerId string,
-   :type string,
-   :createTime string,
    :email string,
-   :alertId string}
+   :feedbackId string,
+   :createTime string}
   
   Creates new feedback for an alert. Attempting to create a feedback for a non-existent alert returns `NOT_FOUND` error. Attempting to create a feedback for an alert that is marked for deletion returns `FAILED_PRECONDITION' error."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}

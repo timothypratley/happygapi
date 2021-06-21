@@ -6,33 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listByUser$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/listByUser
-  
-  Required parameters: userId
-  
-  Optional parameters: status, view, fetchUserInfo, role
-  
-  Lists blogs by user."
-  {:scopes ["https://www.googleapis.com/auth/blogger"
-            "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://blogger.googleapis.com/"
-     "v3/users/{userId}/blogs"
-     #{:userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/get
   
@@ -78,6 +51,33 @@
      "https://blogger.googleapis.com/"
      "v3/blogs/byurl"
      #{:url}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listByUser$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/listByUser
+  
+  Required parameters: userId
+  
+  Optional parameters: status, view, fetchUserInfo, role
+  
+  Lists blogs by user."
+  {:scopes ["https://www.googleapis.com/auth/blogger"
+            "https://www.googleapis.com/auth/blogger.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://blogger.googleapis.com/"
+     "v3/users/{userId}/blogs"
+     #{:userId}
      parameters)
     (merge-with
      merge

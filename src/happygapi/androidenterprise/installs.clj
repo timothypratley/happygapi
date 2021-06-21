@@ -9,13 +9,13 @@
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/update
   
-  Required parameters: userId, installId, enterpriseId, deviceId
+  Required parameters: deviceId, userId, enterpriseId, installId
   
   Optional parameters: none
   
   Body: 
   
-  {:versionCode integer, :installState string, :productId string}
+  {:installState string, :productId string, :versionCode integer}
   
   Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -43,7 +43,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/get
   
-  Required parameters: userId, deviceId, enterpriseId, installId
+  Required parameters: installId, userId, deviceId, enterpriseId
   
   Optional parameters: none
   
@@ -68,38 +68,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/list
-  
-  Required parameters: userId, enterpriseId, deviceId
-  
-  Optional parameters: none
-  
-  Retrieves the details of all apps installed on the specified device."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :deviceId :userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs"
-     #{:enterpriseId :deviceId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/delete
   
-  Required parameters: installId, userId, deviceId, enterpriseId
+  Required parameters: enterpriseId, installId, deviceId, userId
   
   Optional parameters: none
   
@@ -115,6 +87,34 @@
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
      #{:enterpriseId :deviceId :installId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/list
+  
+  Required parameters: enterpriseId, deviceId, userId
+  
+  Optional parameters: none
+  
+  Retrieves the details of all apps installed on the specified device."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :deviceId :userId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs"
+     #{:enterpriseId :deviceId :userId}
      parameters)
     (merge-with
      merge

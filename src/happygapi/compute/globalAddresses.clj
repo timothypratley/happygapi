@@ -1,13 +1,13 @@
 (ns happygapi.compute.globalAddresses
   "Compute Engine API: globalAddresses.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalAddresses"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalAddresses/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/delete
   
   Required parameters: address, project
   
@@ -21,8 +21,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/addresses/{address}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/addresses/{address}"
      #{:address :project}
      parameters)
     (merge-with
@@ -34,9 +34,9 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalAddresses/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/get
   
-  Required parameters: address, project
+  Required parameters: project, address
   
   Optional parameters: none
   
@@ -49,8 +49,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/addresses/{address}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/addresses/{address}"
      #{:address :project}
      parameters)
     (merge-with
@@ -62,7 +62,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalAddresses/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/insert
   
   Required parameters: project
   
@@ -96,8 +96,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/addresses"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/addresses"
      #{:project}
      parameters)
     (merge-with
@@ -111,11 +111,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/globalAddresses/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
   
   Retrieves a list of global addresses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -126,8 +126,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/addresses"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/addresses"
      #{:project}
      parameters)
     (merge-with

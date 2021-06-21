@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:gaia string, :id string, :snippet {}}
+  {:snippet {}, :featuredPart boolean, :gaia string, :id string}
   
   POST method."
   {:scopes ["https://www.googleapis.com/auth/youtube.readonly"]}

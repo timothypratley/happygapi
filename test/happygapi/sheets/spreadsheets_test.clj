@@ -6,6 +6,7 @@
 (def spreadsheet-id "1NbGRyCRMoOT_MLhnubC5900JNwiQq_uqvdKwbqZOfyM")
 
 (deftest get$-test
+  (credentials/init!)
   (testing "When fetching a spreadsheet"
     (let [spreadsheet (gsheets/get$ (credentials/auth!)
                                     {:spreadsheetId spreadsheet-id})]
@@ -17,6 +18,7 @@
         "should get an exception")))
 
 (deftest values-batchUpdate$-test
+  (credentials/init!)
   (testing "When updating values in a sheet"
     (let [response (gsheets/values-batchUpdate$ (credentials/auth!)
                                                 {:spreadsheetId spreadsheet-id}

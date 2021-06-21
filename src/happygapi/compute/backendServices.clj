@@ -1,13 +1,13 @@
 (ns happygapi.compute.backendServices
   "Compute Engine API: backendServices.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/backendServices"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn setSecurityPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/setSecurityPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/setSecurityPolicy
   
   Required parameters: backendService, project
   
@@ -17,7 +17,7 @@
   
   {:securityPolicy string}
   
-  Sets the security policy for the specified backend service."
+  Sets the Google Cloud Armor security policy for the specified backend service. For more information, see Google Cloud Armor Overview"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -25,8 +25,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}/setSecurityPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}/setSecurityPolicy"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -40,9 +40,9 @@
      auth))))
 
 (defn getHealth$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/getHealth
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/getHealth
   
-  Required parameters: backendService, project
+  Required parameters: project, backendService
   
   Optional parameters: none
   
@@ -50,11 +50,7 @@
   
   {:group string}
   
-  Gets the most recent health check results for this BackendService.
-  
-  Example request body:
-  
-  { \"group\": \"/zones/us-east1-b/instanceGroups/lb-backend-example\" }"
+  Gets the most recent health check results for this BackendService. Example request body: { \"group\": \"/zones/us-east1-b/instanceGroups/lb-backend-example\" }"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -63,8 +59,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}/getHealth"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}/getHealth"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -78,9 +74,9 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/get
   
-  Required parameters: backendService, project
+  Required parameters: project, backendService
   
   Optional parameters: none
   
@@ -93,8 +89,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -106,7 +102,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/insert
   
   Required parameters: project
   
@@ -115,17 +111,28 @@
   Body: 
   
   {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
    :connectionDraining {:drainingTimeoutSec integer},
    :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
    :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
                :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
    :outlierDetection {:successRateStdevFactor integer,
                       :successRateMinimumHosts integer,
                       :enforcingSuccessRate integer,
@@ -139,9 +146,9 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
+   :consistentHash {:minimumRingSize string,
                     :httpHeaderName string,
-                    :minimumRingSize string},
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
    :port integer,
    :healthChecks [string],
    :region string,
@@ -150,15 +157,15 @@
                      :maxRequests integer,
                      :maxRequestsPerConnection integer,
                      :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
+   :iap {:oauth2ClientSecretSha256 string,
          :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
+         :oauth2ClientId string,
+         :enabled boolean},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
                     :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
@@ -181,7 +188,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Creates a BackendService resource in the specified project using the data included in the request. For more information, see  Backend services overview."
+  Creates a BackendService resource in the specified project using the data included in the request. For more information, see Backend services overview ."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -189,8 +196,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices"
      #{:project}
      parameters)
     (merge-with
@@ -204,26 +211,37 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/patch
   
-  Required parameters: backendService, project
+  Required parameters: project, backendService
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
    :connectionDraining {:drainingTimeoutSec integer},
    :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
    :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
                :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
    :outlierDetection {:successRateStdevFactor integer,
                       :successRateMinimumHosts integer,
                       :enforcingSuccessRate integer,
@@ -237,9 +255,9 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
+   :consistentHash {:minimumRingSize string,
                     :httpHeaderName string,
-                    :minimumRingSize string},
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
    :port integer,
    :healthChecks [string],
    :region string,
@@ -248,15 +266,15 @@
                      :maxRequests integer,
                      :maxRequestsPerConnection integer,
                      :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
+   :iap {:oauth2ClientSecretSha256 string,
          :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
+         :oauth2ClientId string,
+         :enabled boolean},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
                     :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
@@ -279,7 +297,7 @@
    :affinityCookieTtlSec integer,
    :securityPolicy string}
   
-  Patches the specified BackendService resource with the data included in the request. For more information, see  Backend services overview. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Patches the specified BackendService resource with the data included in the request. For more information, see Backend services overview. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -287,8 +305,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -302,11 +320,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, maxResults, pageToken, includeAllScopes, orderBy, filter
   
   Retrieves the list of all BackendService resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -317,8 +335,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/backendServices"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/backendServices"
      #{:project}
      parameters)
     (merge-with
@@ -330,26 +348,37 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/update
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/update
   
-  Required parameters: backendService, project
+  Required parameters: project, backendService
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :securitySettings {:clientTlsPolicy string,
-                      :subjectAltNames [string]},
+   :securitySettings {:subjectAltNames [string],
+                      :clientTlsPolicy string},
+   :customResponseHeaders [string],
    :creationTimestamp string,
    :protocol string,
    :enableCDN boolean,
    :connectionDraining {:drainingTimeoutSec integer},
    :name string,
+   :maxStreamDuration {:seconds string, :nanos integer},
    :portName string,
-   :cdnPolicy {:cacheKeyPolicy CacheKeyPolicy,
+   :cdnPolicy {:defaultTtl integer,
+               :serveWhileStale integer,
+               :signedUrlKeyNames [string],
+               :maxTtl integer,
                :signedUrlCacheMaxAgeSec string,
-               :signedUrlKeyNames [string]},
+               :requestCoalescing boolean,
+               :negativeCaching boolean,
+               :bypassCacheOnRequestHeaders [BackendServiceCdnPolicyBypassCacheOnRequestHeader],
+               :negativeCachingPolicy [BackendServiceCdnPolicyNegativeCachingPolicy],
+               :cacheKeyPolicy CacheKeyPolicy,
+               :clientTtl integer,
+               :cacheMode string},
    :outlierDetection {:successRateStdevFactor integer,
                       :successRateMinimumHosts integer,
                       :enforcingSuccessRate integer,
@@ -363,9 +392,9 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
+   :consistentHash {:minimumRingSize string,
                     :httpHeaderName string,
-                    :minimumRingSize string},
+                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
    :port integer,
    :healthChecks [string],
    :region string,
@@ -374,15 +403,15 @@
                      :maxRequests integer,
                      :maxRequestsPerConnection integer,
                      :maxRetries integer},
-   :iap {:enabled boolean,
-         :oauth2ClientId string,
+   :iap {:oauth2ClientSecretSha256 string,
          :oauth2ClientSecret string,
-         :oauth2ClientSecretSha256 string},
+         :oauth2ClientId string,
+         :enabled boolean},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:disableConnectionDrainOnFailover boolean,
-                    :dropTrafficIfUnhealthy boolean,
+   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean,
                     :failoverRatio number},
    :sessionAffinity string,
    :timeoutSec integer,
@@ -413,8 +442,8 @@
   (util/get-response
    (http/put
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -428,7 +457,7 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/delete
   
   Required parameters: backendService, project
   
@@ -442,8 +471,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -455,11 +484,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, returnPartialSuccess, pageToken, orderBy, filter
   
   Retrieves the list of BackendService resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -470,8 +499,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices"
      #{:project}
      parameters)
     (merge-with
@@ -483,7 +512,7 @@
      auth))))
 
 (defn addSignedUrlKey$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/addSignedUrlKey
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/addSignedUrlKey
   
   Required parameters: backendService, project
   
@@ -501,8 +530,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}/addSignedUrlKey"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}/addSignedUrlKey"
      #{:backendService :project}
      parameters)
     (merge-with
@@ -516,9 +545,9 @@
      auth))))
 
 (defn deleteSignedUrlKey$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/backendServices/deleteSignedUrlKey
+  "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/deleteSignedUrlKey
   
-  Required parameters: backendService, keyName, project
+  Required parameters: project, keyName, backendService
   
   Optional parameters: requestId
   
@@ -532,8 +561,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/backendServices/{backendService}/deleteSignedUrlKey"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/backendServices/{backendService}/deleteSignedUrlKey"
      #{:keyName :backendService :project}
      parameters)
     (merge-with

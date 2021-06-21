@@ -1,17 +1,17 @@
 (ns happygapi.compute.vpnGateways
   "Compute Engine API: vpnGateways.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: filter, returnPartialSuccess, orderBy, pageToken, includeAllScopes, maxResults
   
   Retrieves an aggregated list of VPN gateways."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/vpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/vpnGateways"
      #{:project}
      parameters)
     (merge-with
@@ -34,65 +34,10 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/delete
-  
-  Required parameters: project, region, vpnGateway
-  
-  Optional parameters: requestId
-  
-  Deletes the specified VPN gateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project :vpnGateway})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways/{vpnGateway}"
-     #{:region :project :vpnGateway}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/get
-  
-  Required parameters: project, region, vpnGateway
-  
-  Optional parameters: none
-  
-  Returns the specified VPN gateway. Gets a list of available VPN gateways by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project :vpnGateway})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways/{vpnGateway}"
-     #{:region :project :vpnGateway}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn getStatus$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/getStatus
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/getStatus
   
-  Required parameters: project, region, vpnGateway
+  Required parameters: region, project, vpnGateway
   
   Optional parameters: none
   
@@ -105,8 +50,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways/{vpnGateway}/getStatus"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways/{vpnGateway}/getStatus"
      #{:region :project :vpnGateway}
      parameters)
     (merge-with
@@ -117,8 +62,158 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/list
+  
+  Required parameters: project, region
+  
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
+  
+  Retrieves a list of VPN gateways available to the specified project and region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn testIamPermissions$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/testIamPermissions
+  
+  Required parameters: resource, region, project
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways/{resource}/testIamPermissions"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/delete
+  
+  Required parameters: region, vpnGateway, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified VPN gateway."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :vpnGateway})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways/{vpnGateway}"
+     #{:region :project :vpnGateway}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/get
+  
+  Required parameters: vpnGateway, project, region
+  
+  Optional parameters: none
+  
+  Returns the specified VPN gateway. Gets a list of available VPN gateways by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :vpnGateway})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways/{vpnGateway}"
+     #{:region :project :vpnGateway}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/setLabels
+  
+  Required parameters: resource, project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:labels {}, :labelFingerprint string}
+  
+  Sets the labels on a VpnGateway. To learn more about labels, read the Labeling Resources documentation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways/{resource}/setLabels"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnGateways/insert
   
   Required parameters: project, region
   
@@ -128,7 +223,9 @@
   
   {:description string,
    :labels {},
-   :vpnInterfaces [{:id integer, :ipAddress string}],
+   :vpnInterfaces [{:interconnectAttachment string,
+                    :ipAddress string,
+                    :id integer}],
    :creationTimestamp string,
    :name string,
    :selfLink string,
@@ -146,104 +243,9 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnGateways"
      #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/list
-  
-  Required parameters: project, region
-  
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
-  
-  Retrieves a list of VPN gateways available to the specified project and region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setLabels$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/setLabels
-  
-  Required parameters: project, region, resource
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:labelFingerprint string, :labels {}}
-  
-  Sets the labels on a VpnGateway. To learn more about labels, read the Labeling Resources documentation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways/{resource}/setLabels"
-     #{:region :project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/vpnGateways/testIamPermissions
-  
-  Required parameters: project, region, resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/vpnGateways/{resource}/testIamPermissions"
-     #{:region :project :resource}
      parameters)
     (merge-with
      merge

@@ -1,13 +1,13 @@
 (ns happygapi.compute.images
   "Compute Engine API: images.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/images"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/get
   
   Required parameters: image, project
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{image}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{image}"
      #{:project :image}
      parameters)
     (merge-with
@@ -35,25 +35,25 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/setIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/setIamPolicy
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:bindingId string,
-               :condition Expr,
-               :members [string],
-               :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:rules [Rule],
             :bindings [Binding],
-            :etag string,
+            :auditConfigs [AuditConfig],
             :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :etag string},
+   :bindings [{:condition Expr,
+               :members [string],
+               :bindingId string,
+               :role string}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -63,8 +63,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{resource}/setIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{resource}/setIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with
@@ -78,7 +78,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/insert
   
   Required parameters: project
   
@@ -89,8 +89,8 @@
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
                                  :rawKey string,
+                                 :kmsKeyServiceAccount string,
                                  :sha256 string},
    :guestOsFeatures [{:type string}],
    :family string,
@@ -98,12 +98,12 @@
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
                               :rawKey string,
+                              :kmsKeyServiceAccount string,
                               :sha256 string},
    :imageEncryptionKey {:kmsKeyName string,
-                        :kmsKeyServiceAccount string,
                         :rawKey string,
+                        :kmsKeyServiceAccount string,
                         :sha256 string},
    :name string,
    :sourceDisk string,
@@ -112,29 +112,30 @@
    :selfLink string,
    :sourceSnapshot string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
                              :rawKey string,
+                             :kmsKeyServiceAccount string,
                              :sha256 string},
+   :satisfiesPzs boolean,
    :status string,
-   :deprecated {:deleted string,
+   :deprecated {:replacement string,
                 :deprecated string,
+                :state string,
                 :obsolete string,
-                :replacement string,
-                :state string},
+                :deleted string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
    :rawDisk {:containerType string,
-             :sha1Checksum string,
-             :source string},
+             :source string,
+             :sha1Checksum string},
    :sourceType string,
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
    :shieldedInstanceInitialState {:dbs [FileContentBuffer],
+                                  :pk FileContentBuffer,
                                   :dbxs [FileContentBuffer],
-                                  :keks [FileContentBuffer],
-                                  :pk FileContentBuffer},
+                                  :keks [FileContentBuffer]},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -149,8 +150,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images"
      #{:project}
      parameters)
     (merge-with
@@ -164,9 +165,9 @@
      auth))))
 
 (defn getFromFamily$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/getFromFamily
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/getFromFamily
   
-  Required parameters: family, project
+  Required parameters: project, family
   
   Optional parameters: none
   
@@ -179,8 +180,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/family/{family}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/family/{family}"
      #{:family :project}
      parameters)
     (merge-with
@@ -192,7 +193,7 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/patch
   
   Required parameters: image, project
   
@@ -203,8 +204,8 @@
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
                                  :rawKey string,
+                                 :kmsKeyServiceAccount string,
                                  :sha256 string},
    :guestOsFeatures [{:type string}],
    :family string,
@@ -212,12 +213,12 @@
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
                               :rawKey string,
+                              :kmsKeyServiceAccount string,
                               :sha256 string},
    :imageEncryptionKey {:kmsKeyName string,
-                        :kmsKeyServiceAccount string,
                         :rawKey string,
+                        :kmsKeyServiceAccount string,
                         :sha256 string},
    :name string,
    :sourceDisk string,
@@ -226,29 +227,30 @@
    :selfLink string,
    :sourceSnapshot string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
                              :rawKey string,
+                             :kmsKeyServiceAccount string,
                              :sha256 string},
+   :satisfiesPzs boolean,
    :status string,
-   :deprecated {:deleted string,
+   :deprecated {:replacement string,
                 :deprecated string,
+                :state string,
                 :obsolete string,
-                :replacement string,
-                :state string},
+                :deleted string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
    :rawDisk {:containerType string,
-             :sha1Checksum string,
-             :source string},
+             :source string,
+             :sha1Checksum string},
    :sourceType string,
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
    :shieldedInstanceInitialState {:dbs [FileContentBuffer],
+                                  :pk FileContentBuffer,
                                   :dbxs [FileContentBuffer],
-                                  :keks [FileContentBuffer],
-                                  :pk FileContentBuffer},
+                                  :keks [FileContentBuffer]},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -260,8 +262,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{image}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{image}"
      #{:project :image}
      parameters)
     (merge-with
@@ -275,9 +277,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/testIamPermissions
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: none
   
@@ -294,8 +296,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{resource}/testIamPermissions"
      #{:project :resource}
      parameters)
     (merge-with
@@ -309,7 +311,7 @@
      auth))))
 
 (defn setLabels$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/setLabels
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/setLabels
   
   Required parameters: project, resource
   
@@ -327,8 +329,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{resource}/setLabels"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{resource}/setLabels"
      #{:project :resource}
      parameters)
     (merge-with
@@ -342,9 +344,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/delete
   
-  Required parameters: image, project
+  Required parameters: project, image
   
   Optional parameters: requestId
   
@@ -356,8 +358,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{image}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{image}"
      #{:project :image}
      parameters)
     (merge-with
@@ -369,9 +371,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/getIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/getIamPolicy
   
-  Required parameters: project, resource
+  Required parameters: resource, project
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -384,8 +386,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{resource}/getIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{resource}/getIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with
@@ -397,11 +399,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, orderBy, filter, maxResults, returnPartialSuccess
   
   Retrieves the list of custom images available to the specified project. Custom images are images you create that belong to your project. This method does not get any images that belong to other projects, including publicly-available images, like Debian 8. If you want to get a list of publicly-available images, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -412,8 +414,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images"
      #{:project}
      parameters)
     (merge-with
@@ -425,23 +427,21 @@
      auth))))
 
 (defn deprecate$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/images/deprecate
+  "https://cloud.google.com/compute/api/reference/rest/v1/images/deprecate
   
-  Required parameters: image, project
+  Required parameters: project, image
   
   Optional parameters: requestId
   
   Body: 
   
-  {:deleted string,
+  {:replacement string,
    :deprecated string,
+   :state string,
    :obsolete string,
-   :replacement string,
-   :state string}
+   :deleted string}
   
-  Sets the deprecation status of an image.
-  
-  If an empty request body is given, clears the deprecation status instead."
+  Sets the deprecation status of an image. If an empty request body is given, clears the deprecation status instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -449,8 +449,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/images/{image}/deprecate"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/images/{image}/deprecate"
      #{:project :image}
      parameters)
     (merge-with

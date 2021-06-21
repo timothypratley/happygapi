@@ -11,7 +11,7 @@
   
   Required parameters: address
   
-  Optional parameters: electionId, returnAllAvailableData, officialOnly
+  Optional parameters: officialOnly, returnAllAvailableData, electionId
   
   Looks up information relevant to a voter based on the voter's registered address."
   {:scopes nil}

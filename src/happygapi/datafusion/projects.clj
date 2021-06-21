@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, includeUnrevealedLocations, pageSize, filter
+  Optional parameters: includeUnrevealedLocations, pageToken, pageSize, filter
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -58,32 +58,6 @@
       :as :json}
      auth))))
 
-(defn locations-versions-list$
-  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/versions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: latestPatchOnly, pageToken, pageSize
-  
-  Lists possible versions for Data Fusion instances in the specified project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datafusion.googleapis.com/"
-     "v1/{+parent}/versions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-instances-get$
   "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/instances/get
   
@@ -119,11 +93,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:version integer,
+  {:policy {:bindings [Binding],
             :etag string,
-            :bindings [Binding],
-            :auditConfigs [AuditConfig]}}
+            :version integer,
+            :auditConfigs [AuditConfig]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -198,12 +172,13 @@
    :createTime string,
    :dataprocServiceAccount string,
    :type string,
+   :enableRbac boolean,
    :serviceEndpoint string,
    :state string,
-   :availableVersion [{:versionNumber string,
-                       :availableFeatures [string],
+   :availableVersion [{:availableFeatures [string],
+                       :versionNumber string,
                        :defaultVersion boolean}],
-   :networkConfig {:ipAllocation string, :network string},
+   :networkConfig {:network string, :ipAllocation string},
    :updateTime string,
    :enableStackdriverMonitoring boolean,
    :p4ServiceAccount string,
@@ -213,7 +188,7 @@
    :version string,
    :privateInstance boolean,
    :stateMessage string,
-   :accelerators [{:acceleratorType string}]}
+   :accelerators [{:acceleratorType string, :state string}]}
   
   Updates a single Data Fusion instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -288,12 +263,13 @@
    :createTime string,
    :dataprocServiceAccount string,
    :type string,
+   :enableRbac boolean,
    :serviceEndpoint string,
    :state string,
-   :availableVersion [{:versionNumber string,
-                       :availableFeatures [string],
+   :availableVersion [{:availableFeatures [string],
+                       :versionNumber string,
                        :defaultVersion boolean}],
-   :networkConfig {:ipAllocation string, :network string},
+   :networkConfig {:network string, :ipAllocation string},
    :updateTime string,
    :enableStackdriverMonitoring boolean,
    :p4ServiceAccount string,
@@ -303,7 +279,7 @@
    :version string,
    :privateInstance boolean,
    :stateMessage string,
-   :accelerators [{:acceleratorType string}]}
+   :accelerators [{:acceleratorType string, :state string}]}
   
   Creates a new Data Fusion instance in the specified project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -383,7 +359,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, orderBy, filter
+  Optional parameters: filter, orderBy, pageSize, pageToken
   
   Lists Data Fusion instances in the specified project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -395,6 +371,32 @@
      "https://datafusion.googleapis.com/"
      "v1/{+parent}/instances"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datafusion.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -436,32 +438,6 @@
       :as :json}
      auth))))
 
-(defn locations-operations-delete$
-  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datafusion.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-operations-get$
   "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/operations/get
   
@@ -488,23 +464,49 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/operations/list
+(defn locations-operations-delete$
+  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/operations/delete
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datafusion.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-versions-list$
+  "https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects/locations/versions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, latestPatchOnly, pageToken
+  
+  Lists possible versions for Data Fusion instances in the specified project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
    (http/get
     (util/get-url
      "https://datafusion.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
+     "v1/{+parent}/versions"
+     #{:parent}
      parameters)
     (merge-with
      merge

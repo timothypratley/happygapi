@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn deleteBook$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/deleteBook
+  
+  Required parameters: volumeId
+  
+  Optional parameters: none
+  
+  Remove the book and its contents"
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/cloudloading/deleteBook"
+     #{:volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn updateBook$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/updateBook
   
@@ -15,10 +41,10 @@
   
   Body: 
   
-  {:author string,
+  {:volumeId string,
    :title string,
    :processingState string,
-   :volumeId string}
+   :author string}
   
   Updates a user-upload volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -46,7 +72,7 @@
   
   Required parameters: none
   
-  Optional parameters: mime_type, name, drive_document_id, upload_client_token
+  Optional parameters: drive_document_id, name, upload_client_token, mime_type
   
   Add a user-upload volume and triggers processing."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -58,32 +84,6 @@
      "https://books.googleapis.com/"
      "books/v1/cloudloading/addBook"
      #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deleteBook$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/deleteBook
-  
-  Required parameters: volumeId
-  
-  Optional parameters: none
-  
-  Remove the book and its contents"
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:volumeId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/cloudloading/deleteBook"
-     #{:volumeId}
      parameters)
     (merge-with
      merge

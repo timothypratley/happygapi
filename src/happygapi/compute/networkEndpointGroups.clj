@@ -1,15 +1,15 @@
 (ns happygapi.compute.networkEndpointGroups
   "Compute Engine API: networkEndpointGroups.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/get
   
-  Required parameters: networkEndpointGroup, project, zone
+  Required parameters: zone, networkEndpointGroup, project
   
   Optional parameters: none
   
@@ -24,8 +24,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}"
      #{:zone :networkEndpointGroup :project}
      parameters)
     (merge-with
@@ -37,9 +37,9 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/insert
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
   Optional parameters: requestId
   
@@ -52,12 +52,12 @@
    :name string,
    :cloudFunction {:function string, :urlMask string},
    :selfLink string,
-   :cloudRun {:service string, :tag string, :urlMask string},
+   :cloudRun {:urlMask string, :tag string, :service string},
    :size integer,
    :region string,
    :id string,
    :kind string,
-   :appEngine {:service string, :urlMask string, :version string},
+   :appEngine {:version string, :urlMask string, :service string},
    :annotations {},
    :network string,
    :defaultPort integer,
@@ -71,8 +71,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups"
      #{:zone :project}
      parameters)
     (merge-with
@@ -86,9 +86,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/testIamPermissions
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, resource, project
   
   Optional parameters: none
   
@@ -105,8 +105,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{resource}/testIamPermissions"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -120,11 +120,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, pageToken, includeAllScopes, returnPartialSuccess, filter, orderBy
   
   Retrieves the list of network endpoint groups and sorts them by zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -135,8 +135,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/networkEndpointGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/networkEndpointGroups"
      #{:project}
      parameters)
     (merge-with
@@ -148,17 +148,17 @@
      auth))))
 
 (defn attachNetworkEndpoints$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/attachNetworkEndpoints
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/attachNetworkEndpoints
   
-  Required parameters: networkEndpointGroup, project, zone
+  Required parameters: project, networkEndpointGroup, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:annotations {},
-                       :fqdn string,
+  {:networkEndpoints [{:fqdn string,
                        :instance string,
+                       :annotations {},
                        :ipAddress string,
                        :port integer}]}
   
@@ -172,8 +172,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/attachNetworkEndpoints"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/attachNetworkEndpoints"
      #{:zone :networkEndpointGroup :project}
      parameters)
     (merge-with
@@ -187,9 +187,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/delete
   
-  Required parameters: networkEndpointGroup, project, zone
+  Required parameters: zone, project, networkEndpointGroup
   
   Optional parameters: requestId
   
@@ -203,8 +203,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}"
      #{:zone :networkEndpointGroup :project}
      parameters)
     (merge-with
@@ -216,11 +216,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/list
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, returnPartialSuccess, orderBy, filter, maxResults
   
   Retrieves the list of network endpoint groups that are located in the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -231,8 +231,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups"
      #{:zone :project}
      parameters)
     (merge-with
@@ -244,11 +244,11 @@
      auth))))
 
 (defn listNetworkEndpoints$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/listNetworkEndpoints
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/listNetworkEndpoints
   
   Required parameters: networkEndpointGroup, project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
   
   Body: 
   
@@ -265,8 +265,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/listNetworkEndpoints"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/listNetworkEndpoints"
      #{:zone :networkEndpointGroup :project}
      parameters)
     (merge-with
@@ -280,17 +280,17 @@
      auth))))
 
 (defn detachNetworkEndpoints$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/networkEndpointGroups/detachNetworkEndpoints
+  "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/detachNetworkEndpoints
   
-  Required parameters: networkEndpointGroup, project, zone
+  Required parameters: zone, project, networkEndpointGroup
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:annotations {},
-                       :fqdn string,
+  {:networkEndpoints [{:fqdn string,
                        :instance string,
+                       :annotations {},
                        :ipAddress string,
                        :port integer}]}
   
@@ -304,8 +304,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/detachNetworkEndpoints"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/networkEndpointGroups/{networkEndpointGroup}/detachNetworkEndpoints"
      #{:zone :networkEndpointGroup :project}
      parameters)
     (merge-with

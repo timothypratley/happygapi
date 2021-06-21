@@ -1,68 +1,13 @@
 (ns happygapi.compute.routes
   "Compute Engine API: routes.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/routes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/delete
-  
-  Required parameters: project, route
-  
-  Optional parameters: requestId
-  
-  Deletes the specified Route resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:route :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/routes/{route}"
-     #{:route :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/get
-  
-  Required parameters: project, route
-  
-  Optional parameters: none
-  
-  Returns the specified Route resource. Gets a list of available routes by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:route :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/routes/{route}"
-     #{:route :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/insert
   
   Required parameters: project
   
@@ -80,9 +25,9 @@
    :nextHopIlb string,
    :name string,
    :selfLink string,
-   :warnings [{:code string,
+   :warnings [{:message string,
                :data [{:key string, :value string}],
-               :message string}],
+               :code string}],
    :nextHopVpnTunnel string,
    :priority integer,
    :id string,
@@ -99,8 +44,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/routes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes"
      #{:project}
      parameters)
     (merge-with
@@ -114,11 +59,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/routes/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/list
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, orderBy, filter, maxResults, pageToken
   
   Retrieves the list of Route resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -129,9 +74,64 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/global/routes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes"
      #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/get
+  
+  Required parameters: project, route
+  
+  Optional parameters: none
+  
+  Returns the specified Route resource. Gets a list of available routes by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:route :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes/{route}"
+     #{:route :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/delete
+  
+  Required parameters: route, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified Route resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:route :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes/{route}"
+     #{:route :project}
      parameters)
     (merge-with
      merge

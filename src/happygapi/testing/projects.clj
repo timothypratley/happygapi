@@ -6,10 +6,36 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn testMatrices-cancel$
+  "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/cancel
+  
+  Required parameters: testMatrixId, projectId
+  
+  Optional parameters: none
+  
+  Cancels unfinished test executions in a test matrix. This call returns immediately and cancellation proceeds asynchronously. If the matrix is already final, this operation will have no effect. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the Test Matrix does not exist"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:testMatrixId :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://testing.googleapis.com/"
+     "v1/projects/{projectId}/testMatrices/{testMatrixId}:cancel"
+     #{:testMatrixId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn testMatrices-get$
   "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/get
   
-  Required parameters: testMatrixId, projectId
+  Required parameters: projectId, testMatrixId
   
   Optional parameters: none
   
@@ -33,32 +59,6 @@
       :as :json}
      auth))))
 
-(defn testMatrices-cancel$
-  "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/cancel
-  
-  Required parameters: projectId, testMatrixId
-  
-  Optional parameters: none
-  
-  Cancels unfinished test executions in a test matrix. This call returns immediately and cancellation proceeds asynchronously. If the matrix is already final, this operation will have no effect. May return any of the following canonical error codes: - PERMISSION_DENIED - if the user is not authorized to read project - INVALID_ARGUMENT - if the request is malformed - NOT_FOUND - if the Test Matrix does not exist"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:testMatrixId :projectId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://testing.googleapis.com/"
-     "v1/projects/{projectId}/testMatrices/{testMatrixId}:cancel"
-     #{:testMatrixId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn testMatrices-create$
   "https://developers.google.com/cloud-test-lab/api/reference/rest/v1/projects/testMatrices/create
   
@@ -69,9 +69,9 @@
   Body: 
   
   {:invalidMatrixDetails string,
-   :clientInfo {:clientInfoDetails [ClientInfoDetail], :name string},
-   :resultStorage {:toolResultsExecution ToolResultsExecution,
-                   :googleCloudStorage GoogleCloudStorage,
+   :clientInfo {:name string, :clientInfoDetails [ClientInfoDetail]},
+   :resultStorage {:googleCloudStorage GoogleCloudStorage,
+                   :toolResultsExecution ToolResultsExecution,
                    :toolResultsHistory ToolResultsHistory,
                    :resultsUrl string},
    :failFast boolean,
@@ -90,8 +90,8 @@
                      :testSpecification TestSpecification,
                      :toolResultsStep ToolResultsStep}],
    :environmentMatrix {:androidMatrix AndroidMatrix,
-                       :androidDeviceList AndroidDeviceList,
-                       :iosDeviceList IosDeviceList},
+                       :iosDeviceList IosDeviceList,
+                       :androidDeviceList AndroidDeviceList},
    :projectId string,
    :timestamp string,
    :testSpecification {:testTimeout string,

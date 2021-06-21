@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageToken, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -67,10 +67,10 @@
   
   Body: 
   
-  {:policy {:bindings [Binding],
-            :etag string,
+  {:policy {:etag string,
+            :auditConfigs [AuditConfig],
             :version integer,
-            :auditConfigs [AuditConfig]},
+            :bindings [Binding]},
    :updateMask string}
   
   Sets the IAM access control policy on the specified function. Replaces any existing policy."
@@ -104,8 +104,10 @@
   Body: 
   
   {:description string,
+   :buildWorkerPool string,
    :labels {},
    :versionId string,
+   :sourceToken string,
    :name string,
    :entryPoint string,
    :environmentVariables {},
@@ -115,9 +117,9 @@
    :updateTime string,
    :vpcConnectorEgressSettings string,
    :eventTrigger {:failurePolicy FailurePolicy,
-                  :service string,
                   :resource string,
-                  :eventType string},
+                  :eventType string,
+                  :service string},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -128,8 +130,8 @@
    :buildId string,
    :maxInstances integer,
    :ingressSettings string,
-   :httpsTrigger {:url string},
-   :sourceRepository {:url string, :deployedUrl string}}
+   :httpsTrigger {:securityLevel string, :url string},
+   :sourceRepository {:deployedUrl string, :url string}}
   
   Updates existing function."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -226,8 +228,10 @@
   Body: 
   
   {:description string,
+   :buildWorkerPool string,
    :labels {},
    :versionId string,
+   :sourceToken string,
    :name string,
    :entryPoint string,
    :environmentVariables {},
@@ -237,9 +241,9 @@
    :updateTime string,
    :vpcConnectorEgressSettings string,
    :eventTrigger {:failurePolicy FailurePolicy,
-                  :service string,
                   :resource string,
-                  :eventType string},
+                  :eventType string,
+                  :service string},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -250,8 +254,8 @@
    :buildId string,
    :maxInstances integer,
    :ingressSettings string,
-   :httpsTrigger {:url string},
-   :sourceRepository {:url string, :deployedUrl string}}
+   :httpsTrigger {:securityLevel string, :url string},
+   :sourceRepository {:deployedUrl string, :url string}}
   
   Creates a new function. If a function with the given name already exists in the specified project, the long running operation will return `ALREADY_EXISTS` error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

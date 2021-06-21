@@ -66,17 +66,17 @@
    :displayName {:truncatedByteCount integer, :value string},
    :name string,
    :endTime string,
-   :timeEvents {:droppedMessageEventsCount integer,
-                :droppedAnnotationsCount integer,
-                :timeEvent [TimeEvent]},
+   :timeEvents {:droppedAnnotationsCount integer,
+                :timeEvent [TimeEvent],
+                :droppedMessageEventsCount integer},
    :childSpanCount integer,
-   :status {:details [{}], :code integer, :message string},
+   :status {:message string, :details [{}], :code integer},
    :sameProcessAsParentSpan boolean,
    :parentSpanId string,
    :spanKind string,
-   :attributes {:attributeMap {}, :droppedAttributesCount integer},
-   :stackTrace {:stackFrames StackFrames, :stackTraceHashId string},
-   :links {:link [Link], :droppedLinksCount integer}}
+   :attributes {:droppedAttributesCount integer, :attributeMap {}},
+   :stackTrace {:stackTraceHashId string, :stackFrames StackFrames},
+   :links {:droppedLinksCount integer, :link [Link]}}
   
   Creates a new span."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

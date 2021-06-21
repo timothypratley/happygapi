@@ -6,10 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/get
+  
+  Required parameters: datasetId, projectId
+  
+  Optional parameters: none
+  
+  Returns the dataset specified by datasetID."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/datasets/{datasetId}"
+     #{:datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/patch
   
-  Required parameters: datasetId, projectId
+  Required parameters: projectId, datasetId
   
   Optional parameters: none
   
@@ -28,18 +56,20 @@
    :satisfiesPZS boolean,
    :id string,
    :kind string,
-   :access [{:userByEmail string,
-             :role string,
+   :access [{:role string,
              :iamMember string,
              :specialGroup string,
-             :routine {:routineId string,
-                       :datasetId string,
-                       :projectId string},
+             :groupByEmail string,
+             :routine {:datasetId string,
+                       :projectId string,
+                       :routineId string},
              :domain string,
+             :userByEmail string,
+             :dataset {:dataset DatasetReference,
+                       :target_types [{:targetType string}]},
              :view {:datasetId string,
-                    :tableId string,
-                    :projectId string},
-             :groupByEmail string}],
+                    :projectId string,
+                    :tableId string}}],
    :location string,
    :datasetReference {:projectId string, :datasetId string}}
   
@@ -65,10 +95,37 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/delete
+  
+  Required parameters: datasetId, projectId
+  
+  Optional parameters: deleteContents
+  
+  Deletes the dataset specified by the datasetId value. Before you can delete a dataset, you must delete all its tables, either manually or by specifying deleteContents. Immediately after deletion, you can create another dataset with the same name."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{projectId}/datasets/{datasetId}"
+     #{:datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/update
   
-  Required parameters: datasetId, projectId
+  Required parameters: projectId, datasetId
   
   Optional parameters: none
   
@@ -87,18 +144,20 @@
    :satisfiesPZS boolean,
    :id string,
    :kind string,
-   :access [{:userByEmail string,
-             :role string,
+   :access [{:role string,
              :iamMember string,
              :specialGroup string,
-             :routine {:routineId string,
-                       :datasetId string,
-                       :projectId string},
+             :groupByEmail string,
+             :routine {:datasetId string,
+                       :projectId string,
+                       :routineId string},
              :domain string,
+             :userByEmail string,
+             :dataset {:dataset DatasetReference,
+                       :target_types [{:targetType string}]},
              :view {:datasetId string,
-                    :tableId string,
-                    :projectId string},
-             :groupByEmail string}],
+                    :projectId string,
+                    :tableId string}}],
    :location string,
    :datasetReference {:projectId string, :datasetId string}}
   
@@ -119,62 +178,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/list
-  
-  Required parameters: projectId
-  
-  Optional parameters: filter, maxResults, all, pageToken
-  
-  Lists all datasets in the specified project to which you have been granted the READER dataset role."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets"
-     #{:projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/delete
-  
-  Required parameters: projectId, datasetId
-  
-  Optional parameters: deleteContents
-  
-  Deletes the dataset specified by the datasetId value. Before you can delete a dataset, you must delete all its tables, either manually or by specifying deleteContents. Immediately after deletion, you can create another dataset with the same name."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}"
-     #{:datasetId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -202,18 +205,20 @@
    :satisfiesPZS boolean,
    :id string,
    :kind string,
-   :access [{:userByEmail string,
-             :role string,
+   :access [{:role string,
              :iamMember string,
              :specialGroup string,
-             :routine {:routineId string,
-                       :datasetId string,
-                       :projectId string},
+             :groupByEmail string,
+             :routine {:datasetId string,
+                       :projectId string,
+                       :routineId string},
              :domain string,
+             :userByEmail string,
+             :dataset {:dataset DatasetReference,
+                       :target_types [{:targetType string}]},
              :view {:datasetId string,
-                    :tableId string,
-                    :projectId string},
-             :groupByEmail string}],
+                    :projectId string,
+                    :tableId string}}],
    :location string,
    :datasetReference {:projectId string, :datasetId string}}
   
@@ -239,26 +244,25 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/get
+(defn list$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/datasets/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: projectId
   
-  Optional parameters: none
+  Optional parameters: pageToken, all, filter, maxResults
   
-  Returns the dataset specified by datasetID."
+  Lists all datasets in the specified project to which you have been granted the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
+  {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}"
-     #{:datasetId :projectId}
+     "projects/{projectId}/datasets"
+     #{:projectId}
      parameters)
     (merge-with
      merge

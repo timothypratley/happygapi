@@ -1,15 +1,15 @@
 (ns happygapi.compute.nodeGroups
   "Compute Engine API: nodeGroups.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/get
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: zone, project, nodeGroup
   
   Optional parameters: none
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -35,25 +35,25 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/setIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/setIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, project, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:bindingId string,
-               :condition Expr,
-               :members [string],
-               :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
+  {:etag string,
+   :policy {:rules [Rule],
             :bindings [Binding],
-            :etag string,
+            :auditConfigs [AuditConfig],
             :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :etag string},
+   :bindings [{:condition Expr,
+               :members [string],
+               :bindingId string,
+               :role string}]}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -63,8 +63,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{resource}/setIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{resource}/setIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -78,15 +78,16 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/insert
   
-  Required parameters: initialNodeCount, project, zone
+  Required parameters: project, zone, initialNodeCount
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
+   :locationHint string,
    :creationTimestamp string,
    :zone string,
    :name string,
@@ -97,9 +98,10 @@
    :status string,
    :id string,
    :kind string,
+   :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
    :autoscalingPolicy {:maxNodes integer,
-                       :minNodes integer,
-                       :mode string},
+                       :mode string,
+                       :minNodes integer},
    :fingerprint string}
   
   Creates a NodeGroup resource in the specified project using the data included in the request."
@@ -112,8 +114,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups"
      #{:zone :initialNodeCount :project}
      parameters)
     (merge-with
@@ -127,15 +129,16 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/patch
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/patch
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: nodeGroup, zone, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
+   :locationHint string,
    :creationTimestamp string,
    :zone string,
    :name string,
@@ -146,9 +149,10 @@
    :status string,
    :id string,
    :kind string,
+   :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
    :autoscalingPolicy {:maxNodes integer,
-                       :minNodes integer,
-                       :mode string},
+                       :mode string,
+                       :minNodes integer},
    :fingerprint string}
   
   Updates the specified node group."
@@ -159,8 +163,8 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -174,9 +178,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/testIamPermissions
   
-  Required parameters: project, resource, zone
+  Required parameters: resource, project, zone
   
   Optional parameters: none
   
@@ -193,8 +197,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{resource}/testIamPermissions"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -208,11 +212,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, pageToken, orderBy, includeAllScopes, filter, returnPartialSuccess
   
   Retrieves an aggregated list of node groups. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -223,8 +227,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/nodeGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/nodeGroups"
      #{:project}
      parameters)
     (merge-with
@@ -236,9 +240,9 @@
      auth))))
 
 (defn addNodes$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/addNodes
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/addNodes
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: nodeGroup, zone, project
   
   Optional parameters: requestId
   
@@ -254,8 +258,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}/addNodes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/addNodes"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -269,9 +273,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/delete
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: project, zone, nodeGroup
   
   Optional parameters: requestId
   
@@ -283,8 +287,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -296,9 +300,9 @@
      auth))))
 
 (defn deleteNodes$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/deleteNodes
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/deleteNodes
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: zone, nodeGroup, project
   
   Optional parameters: requestId
   
@@ -314,8 +318,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}/deleteNodes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/deleteNodes"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -329,9 +333,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/getIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/getIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, resource, project
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -344,8 +348,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{resource}/getIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{resource}/getIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -357,11 +361,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/list
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
   
   Retrieves a list of node groups available to the specified project. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -372,8 +376,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups"
      #{:zone :project}
      parameters)
     (merge-with
@@ -385,7 +389,7 @@
      auth))))
 
 (defn setNodeTemplate$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/setNodeTemplate
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/setNodeTemplate
   
   Required parameters: nodeGroup, project, zone
   
@@ -403,8 +407,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}/setNodeTemplate"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/setNodeTemplate"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with
@@ -418,11 +422,11 @@
      auth))))
 
 (defn listNodes$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/nodeGroups/listNodes
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/listNodes
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: zone, project, nodeGroup
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, pageToken, maxResults, returnPartialSuccess, filter
   
   Lists nodes in the node group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -433,8 +437,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/nodeGroups/{nodeGroup}/listNodes"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/listNodes"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with

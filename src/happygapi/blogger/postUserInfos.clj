@@ -36,7 +36,7 @@
 (defn get$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/postUserInfos/get
   
-  Required parameters: blogId, userId, postId
+  Required parameters: postId, userId, blogId
   
   Optional parameters: maxComments
   

@@ -1,13 +1,13 @@
 (ns happygapi.compute.disks
   "Compute Engine API: disks.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/disks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/get
   
   Required parameters: disk, project, zone
   
@@ -22,8 +22,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -35,7 +35,7 @@
      auth))))
 
 (defn setIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/setIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/setIamPolicy
   
   Required parameters: project, resource, zone
   
@@ -43,17 +43,17 @@
   
   Body: 
   
-  {:bindings [{:bindingId string,
-               :condition Expr,
-               :members [string],
-               :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
+  {:etag string,
+   :policy {:rules [Rule],
             :bindings [Binding],
-            :etag string,
+            :auditConfigs [AuditConfig],
             :iamOwned boolean,
-            :rules [Rule],
-            :version integer}}
+            :version integer,
+            :etag string},
+   :bindings [{:condition Expr,
+               :members [string],
+               :bindingId string,
+               :role string}]}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -63,8 +63,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{resource}/setIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{resource}/setIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -78,19 +78,20 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/insert
   
   Required parameters: project, zone
   
-  Optional parameters: requestId, sourceImage
+  Optional parameters: sourceImage, requestId
   
   Body: 
   
   {:description string,
    :labels {},
+   :locationHint string,
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
                                  :rawKey string,
+                                 :kmsKeyServiceAccount string,
                                  :sha256 string},
    :guestOsFeatures [{:type string}],
    :resourcePolicies [string],
@@ -98,8 +99,8 @@
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
                               :rawKey string,
+                              :kmsKeyServiceAccount string,
                               :sha256 string},
    :zone string,
    :name string,
@@ -114,19 +115,22 @@
    :sourceSnapshot string,
    :region string,
    :lastAttachTimestamp string,
+   :satisfiesPzs boolean,
    :status string,
    :id string,
    :kind string,
    :sourceSnapshotId string,
+   :sourceStorageObject string,
    :licenseCodes [string],
    :replicaZones [string],
    :options string,
    :diskEncryptionKey {:kmsKeyName string,
-                       :kmsKeyServiceAccount string,
                        :rawKey string,
+                       :kmsKeyServiceAccount string,
                        :sha256 string},
    :users [string],
-   :labelFingerprint string}
+   :labelFingerprint string,
+   :provisionedIops string}
   
   Creates a persistent disk in the specified project using the data in the request. You can create a disk from a source (sourceImage, sourceSnapshot, or sourceDisk) or create an empty 500 GB data disk by omitting all properties. You can also create a disk that is larger than the default size by specifying the sizeGb property."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -136,8 +140,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks"
      #{:zone :project}
      parameters)
     (merge-with
@@ -151,9 +155,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/testIamPermissions
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/testIamPermissions
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, resource, project
   
   Optional parameters: none
   
@@ -170,8 +174,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{resource}/testIamPermissions"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{resource}/testIamPermissions"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -185,17 +189,18 @@
      auth))))
 
 (defn createSnapshot$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/createSnapshot
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/createSnapshot
   
-  Required parameters: disk, project, zone
+  Required parameters: zone, project, disk
   
-  Optional parameters: guestFlush, requestId
+  Optional parameters: requestId, guestFlush
   
   Body: 
   
   {:description string,
    :labels {},
    :autoCreated boolean,
+   :locationHint string,
    :sourceDiskId string,
    :downloadBytes string,
    :creationTimestamp string,
@@ -205,9 +210,10 @@
    :licenses [string],
    :selfLink string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
                              :rawKey string,
+                             :kmsKeyServiceAccount string,
                              :sha256 string},
+   :satisfiesPzs boolean,
    :status string,
    :id string,
    :kind string,
@@ -215,8 +221,8 @@
    :licenseCodes [string],
    :storageBytesStatus string,
    :snapshotEncryptionKey {:kmsKeyName string,
-                           :kmsKeyServiceAccount string,
                            :rawKey string,
+                           :kmsKeyServiceAccount string,
                            :sha256 string},
    :storageLocations [string],
    :storageBytes string,
@@ -230,8 +236,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}/createSnapshot"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}/createSnapshot"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -245,9 +251,9 @@
      auth))))
 
 (defn setLabels$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/setLabels
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/setLabels
   
-  Required parameters: project, resource, zone
+  Required parameters: project, zone, resource
   
   Optional parameters: requestId
   
@@ -263,8 +269,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{resource}/setLabels"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{resource}/setLabels"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -278,11 +284,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: includeAllScopes, orderBy, returnPartialSuccess, filter, maxResults, pageToken
   
   Retrieves an aggregated list of persistent disks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -293,8 +299,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/disks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/disks"
      #{:project}
      parameters)
     (merge-with
@@ -306,9 +312,9 @@
      auth))))
 
 (defn removeResourcePolicies$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/removeResourcePolicies
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/removeResourcePolicies
   
-  Required parameters: disk, project, zone
+  Required parameters: disk, zone, project
   
   Optional parameters: requestId
   
@@ -324,8 +330,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}/removeResourcePolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}/removeResourcePolicies"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -339,9 +345,9 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/delete
   
-  Required parameters: disk, project, zone
+  Required parameters: project, disk, zone
   
   Optional parameters: requestId
   
@@ -353,8 +359,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -366,7 +372,7 @@
      auth))))
 
 (defn resize$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/resize
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/resize
   
   Required parameters: disk, project, zone
   
@@ -384,8 +390,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}/resize"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}/resize"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -399,9 +405,9 @@
      auth))))
 
 (defn getIamPolicy$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/getIamPolicy
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/getIamPolicy
   
-  Required parameters: project, resource, zone
+  Required parameters: zone, resource, project
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -414,8 +420,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{resource}/getIamPolicy"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{resource}/getIamPolicy"
      #{:zone :project :resource}
      parameters)
     (merge-with
@@ -427,9 +433,9 @@
      auth))))
 
 (defn addResourcePolicies$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/addResourcePolicies
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/addResourcePolicies
   
-  Required parameters: disk, project, zone
+  Required parameters: project, disk, zone
   
   Optional parameters: requestId
   
@@ -445,8 +451,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks/{disk}/addResourcePolicies"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks/{disk}/addResourcePolicies"
      #{:disk :zone :project}
      parameters)
     (merge-with
@@ -460,11 +466,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/disks/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/disks/list
   
   Required parameters: project, zone
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: maxResults, orderBy, filter, pageToken, returnPartialSuccess
   
   Retrieves a list of persistent disks contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -475,8 +481,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/zones/{zone}/disks"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/disks"
      #{:zone :project}
      parameters)
     (merge-with

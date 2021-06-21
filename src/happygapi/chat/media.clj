@@ -1,6 +1,6 @@
 (ns happygapi.chat.media
-  "Hangouts Chat API: media.
-  Enables bots to fetch information and perform actions in Hangouts Chat.
+  "Google Chat API: media.
+  Enables bots to fetch information and perform actions in Google Chat. Authentication using a service account is a prerequisite for using the Google Chat REST API.
   See: https://developers.google.com/hangouts/chatapi/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]

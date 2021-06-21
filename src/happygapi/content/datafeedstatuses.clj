@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeedstatuses/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: maxResults, pageToken
-  
-  Lists the statuses of the datafeeds in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeedstatuses"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn custombatch$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeedstatuses/custombatch
   
@@ -41,12 +15,12 @@
   
   Body: 
   
-  {:entries [{:batchId integer,
-              :method string,
+  {:entries [{:country string,
               :merchantId string,
               :datafeedId string,
-              :country string,
-              :language string}]}
+              :language string,
+              :method string,
+              :batchId integer}]}
   
   Gets multiple Merchant Center datafeed statuses in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -55,8 +29,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/datafeedstatuses/batch"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "datafeedstatuses/batch"
      #{}
      parameters)
     (merge-with
@@ -69,12 +43,38 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeedstatuses/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: pageToken, maxResults
+  
+  Lists the statuses of the datafeeds in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeedstatuses"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/datafeedstatuses/get
   
-  Required parameters: datafeedId, merchantId
+  Required parameters: merchantId, datafeedId
   
-  Optional parameters: language, country
+  Optional parameters: country, language
   
   Retrieves the status of a datafeed from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -83,8 +83,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://shoppingcontent.googleapis.com/"
-     "content/v2.1/{merchantId}/datafeedstatuses/{datafeedId}"
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/datafeedstatuses/{datafeedId}"
      #{:datafeedId :merchantId}
      parameters)
     (merge-with

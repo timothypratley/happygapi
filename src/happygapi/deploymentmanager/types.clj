@@ -1,17 +1,17 @@
 (ns happygapi.deploymentmanager.types
   "Cloud Deployment Manager V2 API: types.
   The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
-  See: http://cloud.google.com/deployment-managerapi/reference/rest/v2/types"
+  See: https://cloud.google.com/deployment-managerapi/reference/rest/v2/types"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn list$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/types/list
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/types/list
   
   Required parameters: project
   
-  Optional parameters: orderBy, filter, pageToken, returnPartialSuccess, maxResults
+  Optional parameters: pageToken, orderBy, maxResults, filter
   
   Lists all resource types for Deployment Manager."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

@@ -6,34 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patch$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
+(defn insert$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
   
-  Required parameters: calendarId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:etag string,
-   :timeZone string,
+  {:summary string,
+   :kind string,
    :conferenceProperties {:allowedConferenceSolutionTypes [string]},
    :location string,
-   :summary string,
-   :kind string,
+   :id string,
+   :etag string,
    :description string,
-   :id string}
+   :timeZone string}
   
-  Updates metadata for a calendar. This method supports patch semantics."
+  Creates a secondary calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:calendarId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}"
-     #{:calendarId}
+     "calendars"
+     #{}
      parameters)
     (merge-with
      merge
@@ -71,60 +71,73 @@
       :as :json}
      auth))))
 
-(defn clear$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/clear
+(defn update$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
   
   Required parameters: calendarId
   
   Optional parameters: none
   
-  Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
+  Body: 
+  
+  {:summary string,
+   :kind string,
+   :conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :location string,
+   :id string,
+   :etag string,
+   :description string,
+   :timeZone string}
+  
+  Updates metadata for a calendar."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}/clear"
+     "calendars/{calendarId}"
      #{:calendarId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
+(defn patch$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
   
-  Required parameters: none
+  Required parameters: calendarId
   
   Optional parameters: none
   
   Body: 
   
-  {:etag string,
-   :timeZone string,
+  {:summary string,
+   :kind string,
    :conferenceProperties {:allowedConferenceSolutionTypes [string]},
    :location string,
-   :summary string,
-   :kind string,
+   :id string,
+   :etag string,
    :description string,
-   :id string}
+   :timeZone string}
   
-  Creates a secondary calendar."
+  Updates metadata for a calendar. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
-     "calendars"
-     #{}
+     "calendars/{calendarId}"
+     #{:calendarId}
      parameters)
     (merge-with
      merge
@@ -163,40 +176,27 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
+(defn clear$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/clear
   
   Required parameters: calendarId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:etag string,
-   :timeZone string,
-   :conferenceProperties {:allowedConferenceSolutionTypes [string]},
-   :location string,
-   :summary string,
-   :kind string,
-   :description string,
-   :id string}
-  
-  Updates metadata for a calendar."
+  Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account."
   {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:calendarId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}"
+     "calendars/{calendarId}/clear"
      #{:calendarId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

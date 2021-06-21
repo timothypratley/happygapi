@@ -15,15 +15,16 @@
   
   Body: 
   
-  {:aggregationType string,
-   :dimensionFilterGroups [{:filters [ApiDimensionFilter],
-                            :groupType string}],
+  {:searchType string,
+   :startDate string,
+   :dataState string,
+   :rowLimit integer,
    :dimensions [string],
    :endDate string,
-   :rowLimit integer,
-   :searchType string,
-   :startDate string,
-   :startRow integer}
+   :dimensionFilterGroups [{:filters [ApiDimensionFilter],
+                            :groupType string}],
+   :startRow integer,
+   :aggregationType string}
   
   Query your data with filters and parameters that you define. Returns zero or more rows grouped by the row keys that you define. You must define a date range of one or more days.
   

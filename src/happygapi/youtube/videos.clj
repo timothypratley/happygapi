@@ -6,25 +6,140 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getRating$
-  "https://developers.google.com/youtube/api/reference/rest/v3/videos/getRating
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/videos/update
   
-  Required parameters: id
+  Required parameters: part
   
   Optional parameters: onBehalfOfContentOwner
   
-  Retrieves the ratings that the authorized user gave to a list of specified videos."
+  Body: 
+  
+  {:monetizationDetails {:access AccessPolicy},
+   :localizations {},
+   :snippet {:description string,
+             :tags [string],
+             :publishedAt string,
+             :channelId string,
+             :categoryId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :defaultAudioLanguage string,
+             :liveBroadcastContent string,
+             :localized VideoLocalization,
+             :channelTitle string,
+             :defaultLanguage string},
+   :fileDetails {:creationTime string,
+                 :fileSize string,
+                 :fileType string,
+                 :fileName string,
+                 :bitrateBps string,
+                 :videoStreams [VideoFileDetailsVideoStream],
+                 :container string,
+                 :durationMs string,
+                 :audioStreams [VideoFileDetailsAudioStream]},
+   :etag string,
+   :recordingDetails {:recordingDate string,
+                      :location GeoPoint,
+                      :locationDescription string},
+   :statistics {:viewCount string,
+                :dislikeCount string,
+                :favoriteCount string,
+                :commentCount string,
+                :likeCount string},
+   :ageGating {:restricted boolean,
+               :videoGameRating string,
+               :alcoholContent boolean},
+   :status {:uploadStatus string,
+            :publicStatsViewable boolean,
+            :license string,
+            :embeddable boolean,
+            :publishAt string,
+            :madeForKids boolean,
+            :privacyStatus string,
+            :failureReason string,
+            :rejectionReason string,
+            :selfDeclaredMadeForKids boolean},
+   :processingDetails {:processingStatus string,
+                       :processingFailureReason string,
+                       :tagSuggestionsAvailability string,
+                       :editorSuggestionsAvailability string,
+                       :processingProgress VideoProcessingDetailsProcessingProgress,
+                       :fileDetailsAvailability string,
+                       :thumbnailsAvailability string,
+                       :processingIssuesAvailability string},
+   :id string,
+   :kind string,
+   :liveStreamingDetails {:scheduledStartTime string,
+                          :scheduledEndTime string,
+                          :actualStartTime string,
+                          :actualEndTime string,
+                          :concurrentViewers string,
+                          :activeLiveChatId string},
+   :suggestions {:processingHints [string],
+                 :editorSuggestions [string],
+                 :tagSuggestions [VideoSuggestionsTagSuggestion],
+                 :processingWarnings [string],
+                 :processingErrors [string]},
+   :contentDetails {:caption string,
+                    :definition string,
+                    :licensedContent boolean,
+                    :duration string,
+                    :contentRating ContentRating,
+                    :countryRestriction AccessPolicy,
+                    :regionRestriction VideoContentDetailsRegionRestriction,
+                    :dimension string,
+                    :projection string,
+                    :hasCustomThumbnail boolean},
+   :player {:embedWidth string, :embedHtml string, :embedHeight string},
+   :projectDetails {},
+   :topicDetails {:relevantTopicIds [string],
+                  :topicCategories [string],
+                  :topicIds [string]}}
+  
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
             "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/videos"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/videos/list
+  
+  Required parameters: part
+  
+  Optional parameters: maxHeight, maxWidth, locale, pageToken, chart, hl, id, regionCode, myRating, onBehalfOfContentOwner, maxResults, videoCategoryId
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"
+            "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
-     "youtube/v3/videos/getRating"
-     #{:id}
+     "youtube/v3/videos"
+     #{:part}
      parameters)
     (merge-with
      merge
@@ -65,7 +180,7 @@
 (defn rate$
   "https://developers.google.com/youtube/api/reference/rest/v3/videos/rate
   
-  Required parameters: rating, id
+  Required parameters: id, rating
   
   Optional parameters: none
   
@@ -90,144 +205,29 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/videos/list
+(defn getRating$
+  "https://developers.google.com/youtube/api/reference/rest/v3/videos/getRating
   
-  Required parameters: part
+  Required parameters: id
   
-  Optional parameters: maxHeight, maxWidth, locale, pageToken, chart, hl, id, regionCode, myRating, onBehalfOfContentOwner, maxResults, videoCategoryId
+  Optional parameters: onBehalfOfContentOwner
   
-  Retrieves a list of resources, possibly filtered."
+  Retrieves the ratings that the authorized user gave to a list of specified videos."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
-     "youtube/v3/videos"
-     #{:part}
+     "youtube/v3/videos/getRating"
+     #{:id}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/videos/update
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:monetizationDetails {:access AccessPolicy},
-   :localizations {},
-   :snippet {:description string,
-             :tags [string],
-             :publishedAt string,
-             :channelId string,
-             :categoryId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :defaultAudioLanguage string,
-             :liveBroadcastContent string,
-             :localized VideoLocalization,
-             :channelTitle string,
-             :defaultLanguage string},
-   :fileDetails {:creationTime string,
-                 :fileSize string,
-                 :fileType string,
-                 :fileName string,
-                 :bitrateBps string,
-                 :videoStreams [VideoFileDetailsVideoStream],
-                 :container string,
-                 :durationMs string,
-                 :audioStreams [VideoFileDetailsAudioStream]},
-   :etag string,
-   :recordingDetails {:locationDescription string,
-                      :location GeoPoint,
-                      :recordingDate string},
-   :statistics {:commentCount string,
-                :dislikeCount string,
-                :favoriteCount string,
-                :likeCount string,
-                :viewCount string},
-   :ageGating {:videoGameRating string,
-               :restricted boolean,
-               :alcoholContent boolean},
-   :status {:uploadStatus string,
-            :publicStatsViewable boolean,
-            :license string,
-            :embeddable boolean,
-            :publishAt string,
-            :madeForKids boolean,
-            :privacyStatus string,
-            :failureReason string,
-            :rejectionReason string,
-            :selfDeclaredMadeForKids boolean},
-   :processingDetails {:tagSuggestionsAvailability string,
-                       :processingFailureReason string,
-                       :processingStatus string,
-                       :processingProgress VideoProcessingDetailsProcessingProgress,
-                       :fileDetailsAvailability string,
-                       :editorSuggestionsAvailability string,
-                       :processingIssuesAvailability string,
-                       :thumbnailsAvailability string},
-   :id string,
-   :kind string,
-   :liveStreamingDetails {:scheduledEndTime string,
-                          :activeLiveChatId string,
-                          :scheduledStartTime string,
-                          :concurrentViewers string,
-                          :actualEndTime string,
-                          :actualStartTime string},
-   :suggestions {:editorSuggestions [string],
-                 :processingWarnings [string],
-                 :tagSuggestions [VideoSuggestionsTagSuggestion],
-                 :processingHints [string],
-                 :processingErrors [string]},
-   :contentDetails {:caption string,
-                    :definition string,
-                    :licensedContent boolean,
-                    :duration string,
-                    :contentRating ContentRating,
-                    :countryRestriction AccessPolicy,
-                    :regionRestriction VideoContentDetailsRegionRestriction,
-                    :dimension string,
-                    :projection string,
-                    :hasCustomThumbnail boolean},
-   :player {:embedHeight string, :embedHtml string, :embedWidth string},
-   :projectDetails {:tags [string]},
-   :topicDetails {:topicIds [string],
-                  :topicCategories [string],
-                  :relevantTopicIds [string]}}
-  
-  Updates an existing resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/videos"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -238,7 +238,7 @@
   
   Required parameters: part
   
-  Optional parameters: autoLevels, notifySubscribers, onBehalfOfContentOwnerChannel, onBehalfOfContentOwner, stabilize
+  Optional parameters: stabilize, onBehalfOfContentOwnerChannel, onBehalfOfContentOwner, notifySubscribers, autoLevels
   
   Body: 
   
@@ -266,16 +266,16 @@
                  :durationMs string,
                  :audioStreams [VideoFileDetailsAudioStream]},
    :etag string,
-   :recordingDetails {:locationDescription string,
+   :recordingDetails {:recordingDate string,
                       :location GeoPoint,
-                      :recordingDate string},
-   :statistics {:commentCount string,
+                      :locationDescription string},
+   :statistics {:viewCount string,
                 :dislikeCount string,
                 :favoriteCount string,
-                :likeCount string,
-                :viewCount string},
-   :ageGating {:videoGameRating string,
-               :restricted boolean,
+                :commentCount string,
+                :likeCount string},
+   :ageGating {:restricted boolean,
+               :videoGameRating string,
                :alcoholContent boolean},
    :status {:uploadStatus string,
             :publicStatsViewable boolean,
@@ -287,26 +287,26 @@
             :failureReason string,
             :rejectionReason string,
             :selfDeclaredMadeForKids boolean},
-   :processingDetails {:tagSuggestionsAvailability string,
+   :processingDetails {:processingStatus string,
                        :processingFailureReason string,
-                       :processingStatus string,
+                       :tagSuggestionsAvailability string,
+                       :editorSuggestionsAvailability string,
                        :processingProgress VideoProcessingDetailsProcessingProgress,
                        :fileDetailsAvailability string,
-                       :editorSuggestionsAvailability string,
-                       :processingIssuesAvailability string,
-                       :thumbnailsAvailability string},
+                       :thumbnailsAvailability string,
+                       :processingIssuesAvailability string},
    :id string,
    :kind string,
-   :liveStreamingDetails {:scheduledEndTime string,
-                          :activeLiveChatId string,
-                          :scheduledStartTime string,
-                          :concurrentViewers string,
+   :liveStreamingDetails {:scheduledStartTime string,
+                          :scheduledEndTime string,
+                          :actualStartTime string,
                           :actualEndTime string,
-                          :actualStartTime string},
-   :suggestions {:editorSuggestions [string],
-                 :processingWarnings [string],
+                          :concurrentViewers string,
+                          :activeLiveChatId string},
+   :suggestions {:processingHints [string],
+                 :editorSuggestions [string],
                  :tagSuggestions [VideoSuggestionsTagSuggestion],
-                 :processingHints [string],
+                 :processingWarnings [string],
                  :processingErrors [string]},
    :contentDetails {:caption string,
                     :definition string,
@@ -318,11 +318,11 @@
                     :dimension string,
                     :projection string,
                     :hasCustomThumbnail boolean},
-   :player {:embedHeight string, :embedHtml string, :embedWidth string},
-   :projectDetails {:tags [string]},
-   :topicDetails {:topicIds [string],
+   :player {:embedWidth string, :embedHtml string, :embedHeight string},
+   :projectDetails {},
+   :topicDetails {:relevantTopicIds [string],
                   :topicCategories [string],
-                  :relevantTopicIds [string]}}
+                  :topicIds [string]}}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -357,11 +357,11 @@
   
   Body: 
   
-  {:videoId string,
+  {:comments string,
    :secondaryReasonId string,
-   :comments string,
+   :language string,
    :reasonId string,
-   :language string}
+   :videoId string}
   
   Report abuse for a video."
   {:scopes ["https://www.googleapis.com/auth/youtube"

@@ -6,6 +6,64 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a requested deployment."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-move$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:destination string}
+  
+  Moves a device under another node or customer."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}:move"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn devices-patch$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/patch
   
@@ -26,18 +84,20 @@
                   :isSigned boolean,
                   :airInterface SasPortalDeviceAirInterface,
                   :model SasPortalDeviceModel},
+   :grantRangeAllowlists [{:lowFrequencyMhz number,
+                           :highFrequencyMhz number}],
    :displayName string,
    :name string,
    :state string,
    :deviceMetadata {},
-   :grants [{:suspensionReason [string],
-             :state string,
-             :expireTime string,
-             :frequencyRange SasPortalFrequencyRange,
-             :grantId string,
-             :channelType string,
+   :grants [{:frequencyRange SasPortalFrequencyRange,
              :maxEirp number,
-             :moveList [SasPortalDpaMoveList]}],
+             :moveList [SasPortalDpaMoveList],
+             :grantId string,
+             :expireTime string,
+             :channelType string,
+             :state string,
+             :suspensionReason [string]}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -48,6 +108,8 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
+   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
+                      :score number}],
    :fccId string}
   
   Updates a device."
@@ -82,12 +144,14 @@
   
   {:device {:serialNumber string,
             :activeConfig SasPortalDeviceConfig,
+            :grantRangeAllowlists [SasPortalFrequencyRange],
             :displayName string,
             :name string,
             :state string,
             :deviceMetadata SasPortalDeviceMetadata,
             :grants [SasPortalDeviceGrant],
             :preloadedConfig SasPortalDeviceConfig,
+            :currentChannels [SasPortalChannelWithScore],
             :fccId string}}
   
   Signs a device."
@@ -172,7 +236,7 @@
   
   Body: 
   
-  {:installerId string, :encodedDevice string}
+  {:encodedDevice string, :installerId string}
   
   Updates a signed device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -183,38 +247,6 @@
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/{+name}:updateSigned"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-move$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:destination string}
-  
-  Moves a device under another node or customer."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}:move"
      #{:name}
      parameters)
     (merge-with

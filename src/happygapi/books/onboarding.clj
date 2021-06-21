@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listCategoryVolumes$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/onboarding/listCategoryVolumes
-  
-  Required parameters: none
-  
-  Optional parameters: pageSize, locale, pageToken, categoryId, maxAllowedMaturityRating
-  
-  List available volumes under categories for onboarding experience."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/onboarding/listCategoryVolumes"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn listCategories$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/onboarding/listCategories
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://books.googleapis.com/"
      "books/v1/onboarding/listCategories"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listCategoryVolumes$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/onboarding/listCategoryVolumes
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, maxAllowedMaturityRating, locale, categoryId, pageToken
+  
+  List available volumes under categories for onboarding experience."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/onboarding/listCategoryVolumes"
      #{}
      parameters)
     (merge-with

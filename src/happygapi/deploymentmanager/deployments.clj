@@ -1,13 +1,13 @@
 (ns happygapi.deploymentmanager.deployments
   "Cloud Deployment Manager V2 API: deployments.
   The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
-  See: http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments"
+  See: https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn cancelPreview$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/cancelPreview
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/cancelPreview
   
   Required parameters: project, deployment
   
@@ -40,7 +40,7 @@
      auth))))
 
 (defn get$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/get
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/get
   
   Required parameters: project, deployment
   
@@ -69,7 +69,7 @@
      auth))))
 
 (defn setIamPolicy$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/setIamPolicy
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/setIamPolicy
   
   Required parameters: resource, project
   
@@ -77,12 +77,12 @@
   
   Body: 
   
-  {:bindings [{:condition Expr, :members [string], :role string}],
-   :etag string,
-   :policy {:auditConfigs [AuditConfig],
-            :etag string,
-            :version integer,
-            :bindings [Binding]}}
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :bindings [{:members [string], :condition Expr, :role string}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -107,11 +107,11 @@
      auth))))
 
 (defn insert$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/insert
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/insert
   
   Required parameters: project
   
-  Optional parameters: preview, createPolicy
+  Optional parameters: createPolicy, preview
   
   Body: 
   
@@ -127,33 +127,34 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:code string,
-                           :data [{:key string, :value string}],
-                           :message string}],
+               :warnings [{:data [{:value string, :key string}],
+                           :message string,
+                           :code string}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
+               :operationGroupId string,
                :status string,
                :targetLink string,
                :id string,
                :insertTime string,
                :kind string,
                :error {:errors [{:code string,
-                                 :location string,
-                                 :message string}]},
+                                 :message string,
+                                 :location string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:labels [DeploymentUpdateLabelEntry],
-            :description string,
-            :manifest string},
+   :update {:description string,
+            :manifest string,
+            :labels [DeploymentUpdateLabelEntry]},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:config ConfigFile, :imports [ImportFile]},
+   :target {:imports [ImportFile], :config ConfigFile},
    :fingerprint string}
   
   Creates a deployment and all of the resources described by the deployment manifest."
@@ -179,11 +180,11 @@
      auth))))
 
 (defn patch$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/patch
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/patch
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
-  Optional parameters: createPolicy, deletePolicy, preview
+  Optional parameters: deletePolicy, preview, createPolicy
   
   Body: 
   
@@ -199,33 +200,34 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:code string,
-                           :data [{:key string, :value string}],
-                           :message string}],
+               :warnings [{:data [{:value string, :key string}],
+                           :message string,
+                           :code string}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
+               :operationGroupId string,
                :status string,
                :targetLink string,
                :id string,
                :insertTime string,
                :kind string,
                :error {:errors [{:code string,
-                                 :location string,
-                                 :message string}]},
+                                 :message string,
+                                 :location string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:labels [DeploymentUpdateLabelEntry],
-            :description string,
-            :manifest string},
+   :update {:description string,
+            :manifest string,
+            :labels [DeploymentUpdateLabelEntry]},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:config ConfigFile, :imports [ImportFile]},
+   :target {:imports [ImportFile], :config ConfigFile},
    :fingerprint string}
   
   Patches a deployment and all of the resources described by the deployment manifest."
@@ -251,9 +253,9 @@
      auth))))
 
 (defn testIamPermissions$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/testIamPermissions
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/testIamPermissions
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
@@ -284,7 +286,7 @@
      auth))))
 
 (defn update$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/update
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/update
   
   Required parameters: project, deployment
   
@@ -304,33 +306,34 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:code string,
-                           :data [{:key string, :value string}],
-                           :message string}],
+               :warnings [{:data [{:value string, :key string}],
+                           :message string,
+                           :code string}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
+               :operationGroupId string,
                :status string,
                :targetLink string,
                :id string,
                :insertTime string,
                :kind string,
                :error {:errors [{:code string,
-                                 :location string,
-                                 :message string}]},
+                                 :message string,
+                                 :location string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:labels [DeploymentUpdateLabelEntry],
-            :description string,
-            :manifest string},
+   :update {:description string,
+            :manifest string,
+            :labels [DeploymentUpdateLabelEntry]},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:config ConfigFile, :imports [ImportFile]},
+   :target {:imports [ImportFile], :config ConfigFile},
    :fingerprint string}
   
   Updates a deployment and all of the resources described by the deployment manifest."
@@ -356,7 +359,7 @@
      auth))))
 
 (defn delete$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/delete
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/delete
   
   Required parameters: deployment, project
   
@@ -383,7 +386,7 @@
      auth))))
 
 (defn getIamPolicy$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/getIamPolicy
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/getIamPolicy
   
   Required parameters: project, resource
   
@@ -410,7 +413,7 @@
      auth))))
 
 (defn stop$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/stop
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/stop
   
   Required parameters: project, deployment
   
@@ -443,11 +446,11 @@
      auth))))
 
 (defn list$
-  "http://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/list
+  "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/list
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, filter, orderBy
+  Optional parameters: orderBy, filter, pageToken, maxResults
   
   Lists all deployments for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

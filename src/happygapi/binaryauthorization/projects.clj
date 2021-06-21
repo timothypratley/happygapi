@@ -41,15 +41,18 @@
   
   Body: 
   
-  {:name string,
-   :description string,
+  {:description string,
+   :name string,
+   :defaultAdmissionRule {:requireAttestationsBy [string],
+                          :evaluationMode string,
+                          :enforcementMode string},
    :updateTime string,
+   :istioServiceIdentityAdmissionRules {},
+   :clusterAdmissionRules {},
    :globalPolicyEvaluationMode string,
-   :defaultAdmissionRule {:evaluationMode string,
-                          :enforcementMode string,
-                          :requireAttestationsBy [string]},
-   :admissionWhitelistPatterns [{:namePattern string}],
-   :clusterAdmissionRules {}}
+   :kubernetesServiceAccountAdmissionRules {},
+   :kubernetesNamespaceAdmissionRules {},
+   :admissionWhitelistPatterns [{:namePattern string}]}
   
   Creates or updates a project's policy, and returns a copy of the new policy. A policy is always updated as a whole, to avoid race conditions with concurrent policy enforcement (or management!) requests. Returns NOT_FOUND if the project does not exist, INVALID_ARGUMENT if the request is malformed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -67,6 +70,96 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policy-testIamPermissions$
+  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policy-setIamPolicy$
+  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:etag string, :version integer, :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policy-getIamPolicy$
+  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://binaryauthorization.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -107,7 +200,7 @@
   
   Body: 
   
-  {:policy {:etag string, :bindings [Binding], :version integer}}
+  {:policy {:etag string, :version integer, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -171,12 +264,12 @@
   
   Body: 
   
-  {:updateTime string,
+  {:userOwnedGrafeasNote {:publicKeys [AttestorPublicKey],
+                          :noteReference string,
+                          :delegationServiceAccountEmail string},
+   :name string,
    :description string,
-   :userOwnedGrafeasNote {:publicKeys [AttestorPublicKey],
-                          :delegationServiceAccountEmail string,
-                          :noteReference string},
-   :name string}
+   :updateTime string}
   
   Creates an attestor, and returns a copy of the new attestor. Returns NOT_FOUND if the project does not exist, INVALID_ARGUMENT if the request is malformed, ALREADY_EXISTS if the attestor already exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -208,12 +301,12 @@
   
   Body: 
   
-  {:updateTime string,
+  {:userOwnedGrafeasNote {:publicKeys [AttestorPublicKey],
+                          :noteReference string,
+                          :delegationServiceAccountEmail string},
+   :name string,
    :description string,
-   :userOwnedGrafeasNote {:publicKeys [AttestorPublicKey],
-                          :delegationServiceAccountEmail string,
-                          :noteReference string},
-   :name string}
+   :updateTime string}
   
   Updates an attestor. Returns NOT_FOUND if the attestor does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -324,10 +417,10 @@
   Body: 
   
   {:occurrenceNote string,
-   :occurrenceResourceUri string,
-   :attestation {:signatures [Signature],
-                 :serializedPayload string,
-                 :jwts [Jwt]}}
+   :attestation {:serializedPayload string,
+                 :signatures [Signature],
+                 :jwts [Jwt]},
+   :occurrenceResourceUri string}
   
   Returns whether the given Attestation for the given image URI was signed by the given Attestor"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -345,96 +438,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policy-testIamPermissions$
-  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policy-setIamPolicy$
-  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string, :bindings [Binding], :version integer}}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policy-getIamPolicy$
-  "https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects/policy/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://binaryauthorization.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

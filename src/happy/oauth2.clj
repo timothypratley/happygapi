@@ -19,11 +19,11 @@
   {:pre [client_id (or redirect_uri redirect_uris) scopes]}
   (str "https://accounts.google.com/o/oauth2/v2/auth"
        "?client_id=" client_id
-       "&redirect_uri=" (or redirect_uri (last redirect_uris))
-       "&scope=" (str/join " " scopes)
        "&state=" state
        "&response_type=code"
-       "&access_type=offline"))
+       "&access_type=offline"
+       "&scope=" (str/join "%20" scopes)
+       "&redirect_uri=" (or redirect_uri (last redirect_uris))))
 
 (defn set-authorization-parameters
   "Step 1: Set authorization parameters.
@@ -32,12 +32,15 @@
   ([config scopes] (set-authorization-parameters config scopes nil))
   ([{:as config :keys [client_id redirect_uri redirect_uris]} scopes {:as optional :keys [state login_hint]}]
    {:pre [client_id (or redirect_uri redirect_uris) scopes]}
-   (http/get "https://accounts.google.com/o/oauth2/v2/auth"
-             {:query-params (merge {:client_id     client_id
-                                    :redirect_uri  (or redirect_uri (last redirect_uris))
-                                    :response_type "code"
-                                    :scope         (str/join " " scopes)}
-                                   optional)})
+   (assert
+     (= 200
+        (:status
+          (http/get "https://accounts.google.com/o/oauth2/v2/auth"
+                    {:query-params (merge {:client_id     client_id
+                                           :redirect_uri  (or redirect_uri (last redirect_uris))
+                                           :response_type "code"
+                                           :scope         (str/join " " scopes)}
+                                          optional)}))))
    (redirect-to-google config scopes optional)))
 
 (defn with-timestamp
@@ -57,7 +60,7 @@
   "Step 5: Exchange authorization code for refresh and access tokens.
   When the user is redirected back to your app from Google with a short lived code,
   exchange the code for a long lived access token."
-  [{:keys [client_id client_secret redirect_uri redirect_uris]} code]
+  [{:keys [client_id client_secret redirect_uri redirect_uris refresh_token]} code]
   {:pre [client_id client_secret (or redirect_uri redirect_uris) code]}
   (with-timestamp
     (:body (http/post "https://oauth2.googleapis.com/token"
@@ -105,12 +108,10 @@
                       :grant_type    "refresh_token"
                       :refresh_token refresh_token})]
     (with-timestamp
-      (merge
-        credentials
-        (:body (http/post "https://oauth2.googleapis.com/token"
-                          {:form-params params
-                           :accept      :json
-                           :as          :json}))))))
+      (:body (http/post "https://oauth2.googleapis.com/token"
+                        {:form-params params
+                         :accept      :json
+                         :as          :json})))))
 
 (defn revoke-token
   "Given a credentials map containing either an access token or refresh token, revokes them."

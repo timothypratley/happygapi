@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn releaseDownloadAccess$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/releaseDownloadAccess
-  
-  Required parameters: volumeIds, cpksver
-  
-  Optional parameters: locale, source
-  
-  Release downloaded content access restriction."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:cpksver :volumeIds})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/myconfig/releaseDownloadAccess"
-     #{:cpksver :volumeIds}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn updateUserSettings$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/updateUserSettings
   
@@ -41,13 +15,13 @@
   
   Body: 
   
-  {:notesExport {:folderName string, :isEnabled boolean},
-   :notification {:priceDrop {:opted_state string},
-                  :moreFromAuthors {:opted_state string},
+  {:kind string,
+   :notification {:moreFromAuthors {:opted_state string},
                   :rewardExpirations {:opted_state string},
+                  :priceDrop {:opted_state string},
                   :moreFromSeries {:opted_state string},
                   :matchMyInterests {:opted_state string}},
-   :kind string}
+   :notesExport {:isEnabled boolean, :folderName string}}
   
   Sets the settings for the user. If a sub-object is specified, it will overwrite the existing sub-object stored in the server. Unspecified sub-objects will retain the existing value."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -70,12 +44,40 @@
       :as :json}
      auth))))
 
+(defn requestAccess$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/requestAccess
+  
+  Required parameters: volumeId, source, cpksver, nonce
+  
+  Optional parameters: licenseTypes, locale
+  
+  Request concurrent and download access restrictions."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:volumeId :source :cpksver :nonce})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/myconfig/requestAccess"
+     #{:volumeId :source :cpksver :nonce}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn syncVolumeLicenses$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/syncVolumeLicenses
   
-  Required parameters: nonce, source, cpksver
+  Required parameters: source, cpksver, nonce
   
-  Optional parameters: locale, volumeIds, showPreorders, features, includeNonComicsSeries
+  Optional parameters: locale, showPreorders, includeNonComicsSeries, features, volumeIds
   
   Request downloaded content access for specified volumes on the My eBooks shelf."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -96,25 +98,23 @@
       :as :json}
      auth))))
 
-(defn requestAccess$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/requestAccess
+(defn releaseDownloadAccess$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/myconfig/releaseDownloadAccess
   
-  Required parameters: source, cpksver, nonce, volumeId
+  Required parameters: cpksver, volumeIds
   
-  Optional parameters: licenseTypes, locale
+  Optional parameters: source, locale
   
-  Request concurrent and download access restrictions."
+  Release downloaded content access restriction."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:volumeId :source :cpksver :nonce})]}
+  {:pre [(util/has-keys? parameters #{:cpksver :volumeIds})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://books.googleapis.com/"
-     "books/v1/myconfig/requestAccess"
-     #{:volumeId :source :cpksver :nonce}
+     "books/v1/myconfig/releaseDownloadAccess"
+     #{:cpksver :volumeIds}
      parameters)
     (merge-with
      merge

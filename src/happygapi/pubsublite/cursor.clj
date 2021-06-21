@@ -6,6 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn projects-locations-subscriptions-commitCursor$
+  "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/cursor/projects/locations/subscriptions/commitCursor
+  
+  Required parameters: subscription
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:partition string, :cursor {:offset string}}
+  
+  Updates the committed cursor."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:subscription})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsublite.googleapis.com/"
+     "v1/cursor/{+subscription}:commitCursor"
+     #{:subscription}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn projects-locations-subscriptions-cursors-list$
   "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/cursor/projects/locations/subscriptions/cursors/list
   

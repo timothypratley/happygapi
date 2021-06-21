@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:firebaseProjectId string,
-   :propertyId string,
+  {:propertyId string,
    :id {:type string, :userId string},
-   :kind string,
+   :firebaseProjectId string,
    :deletionRequestTime string,
-   :webPropertyId string}
+   :webPropertyId string,
+   :kind string}
   
   Insert or update a user deletion requests."
   {:scopes ["https://www.googleapis.com/auth/analytics.user.deletion"]}

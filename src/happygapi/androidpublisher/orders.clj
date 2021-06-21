@@ -9,7 +9,7 @@
 (defn refund$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/orders/refund
   
-  Required parameters: orderId, packageName
+  Required parameters: packageName, orderId
   
   Optional parameters: revoke
   

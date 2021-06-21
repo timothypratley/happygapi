@@ -14,7 +14,7 @@
   Optional parameters: startDate.day, pageToken, endDate.month, endDate.day, startDate.year, pageSize, query, startDate.month, endDate.year
   
   Get detailed lead reports containing leads that have been received by all linked GLS accounts. Caller needs to provide their manager customer id and the associated auth credential that allows them read permissions on their linked accounts."
-  {:scopes nil}
+  {:scopes ["https://www.googleapis.com/auth/adwords"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response

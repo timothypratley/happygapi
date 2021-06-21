@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Deletes all the log entries in a log. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
+  Deletes all the log entries in a log for the _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters]
@@ -38,7 +38,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken, resourceNames
   
   Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

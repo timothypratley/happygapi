@@ -32,32 +32,6 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/partners/list
-  
-  Required parameters: none
-  
-  Optional parameters: orderBy, pageSize, filter, pageToken
-  
-  Lists partners that are accessible to the current user. The order is defined by the order_by parameter."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/partners"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn bulkEditPartnerAssignedTargetingOptions$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/bulkEditPartnerAssignedTargetingOptions
   
@@ -67,10 +41,10 @@
   
   Body: 
   
-  {:createRequests [{:targetingType string,
-                     :assignedTargetingOptions [AssignedTargetingOption]}],
-   :deleteRequests [{:targetingType string,
-                     :assignedTargetingOptionIds [string]}]}
+  {:deleteRequests [{:assignedTargetingOptionIds [string],
+                     :targetingType string}],
+   :createRequests [{:assignedTargetingOptions [AssignedTargetingOption],
+                     :targetingType string}]}
   
   Bulk edits targeting options under a single partner. The operation will delete the assigned targeting options provided in BulkEditPartnerAssignedTargetingOptionsRequest.deleteRequests and then create the assigned targeting options provided in BulkEditPartnerAssignedTargetingOptionsRequest.createRequests ."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -93,112 +67,27 @@
       :as :json}
      auth))))
 
-(defn targetingTypes-assignedTargetingOptions-create$
-  "https://developers.google.com/display-video/api/reference/rest/v1/partners/targetingTypes/assignedTargetingOptions/create
+(defn list$
+  "https://developers.google.com/display-video/api/reference/rest/v1/partners/list
   
-  Required parameters: targetingType, partnerId
+  Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: pageSize, orderBy, pageToken, filter
   
-  Body: 
-  
-  {:negativeKeywordListDetails {:negativeKeywordListId string},
-   :parentalStatusDetails {:targetingOptionId string,
-                           :parentalStatus string},
-   :geoRegionDetails {:geoRegionType string,
-                      :displayName string,
-                      :negative boolean,
-                      :targetingOptionId string},
-   :regionalLocationListDetails {:regionalLocationListId string,
-                                 :negative boolean},
-   :browserDetails {:displayName string,
-                    :negative boolean,
-                    :targetingOptionId string},
-   :inventorySourceGroupDetails {:inventorySourceGroupId string},
-   :assignedTargetingOptionId string,
-   :operatingSystemDetails {:displayName string,
-                            :targetingOptionId string,
-                            :negative boolean},
-   :appCategoryDetails {:targetingOptionId string,
-                        :displayName string,
-                        :negative boolean},
-   :contentInstreamPositionDetails {:targetingOptionId string,
-                                    :contentInstreamPosition string},
-   :inventorySourceDetails {:inventorySourceId string},
-   :thirdPartyVerifierDetails {:adloox Adloox,
-                               :integralAdScience IntegralAdScience,
-                               :doubleVerify DoubleVerify},
-   :name string,
-   :onScreenPositionDetails {:onScreenPosition string,
-                             :targetingOptionId string},
-   :videoPlayerSizeDetails {:videoPlayerSize string,
-                            :targetingOptionId string},
-   :carrierAndIspDetails {:displayName string,
-                          :targetingOptionId string,
-                          :negative boolean},
-   :proximityLocationListDetails {:proximityLocationListId string,
-                                  :proximityRadiusRange string},
-   :digitalContentLabelExclusionDetails {:contentRatingTier string,
-                                         :excludedTargetingOptionId string},
-   :ageRangeDetails {:targetingOptionId string, :ageRange string},
-   :deviceMakeModelDetails {:displayName string,
-                            :negative boolean,
-                            :targetingOptionId string},
-   :categoryDetails {:displayName string,
-                     :negative boolean,
-                     :targetingOptionId string},
-   :inheritance string,
-   :audienceGroupDetails {:includedGoogleAudienceGroup GoogleAudienceGroup,
-                          :includedFirstAndThirdPartyAudienceGroups [FirstAndThirdPartyAudienceGroup],
-                          :includedCustomListGroup CustomListGroup,
-                          :excludedFirstAndThirdPartyAudienceGroup FirstAndThirdPartyAudienceGroup,
-                          :includedCombinedAudienceGroup CombinedAudienceGroup,
-                          :excludedGoogleAudienceGroup GoogleAudienceGroup},
-   :channelDetails {:channelId string, :negative boolean},
-   :targetingType string,
-   :environmentDetails {:targetingOptionId string, :environment string},
-   :sensitiveCategoryExclusionDetails {:sensitiveCategory string,
-                                       :excludedTargetingOptionId string},
-   :deviceTypeDetails {:deviceType string, :targetingOptionId string},
-   :appDetails {:displayName string, :appId string, :negative boolean},
-   :subExchangeDetails {:targetingOptionId string},
-   :genderDetails {:gender string, :targetingOptionId string},
-   :languageDetails {:targetingOptionId string,
-                     :negative boolean,
-                     :displayName string},
-   :viewabilityDetails {:targetingOptionId string, :viewability string},
-   :keywordDetails {:negative boolean, :keyword string},
-   :urlDetails {:url string, :negative boolean},
-   :exchangeDetails {:targetingOptionId string},
-   :dayAndTimeDetails {:endHour integer,
-                       :dayOfWeek string,
-                       :timeZoneResolution string,
-                       :startHour integer},
-   :householdIncomeDetails {:targetingOptionId string,
-                            :householdIncome string},
-   :authorizedSellerStatusDetails {:targetingOptionId string,
-                                   :authorizedSellerStatus string},
-   :contentOutstreamPositionDetails {:contentOutstreamPosition string,
-                                     :targetingOptionId string},
-   :userRewardedContentDetails {:targetingOptionId string,
-                                :userRewardedContent string}}
-  
-  Assigns a targeting option to a partner. Returns the assigned targeting option if successful."
+  Lists partners that are accessible to the current user. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetingType :partnerId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/partners/{+partnerId}/targetingTypes/{+targetingType}/assignedTargetingOptions"
-     #{:targetingType :partnerId}
+     "v1/partners"
+     #{}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -207,7 +96,7 @@
 (defn targetingTypes-assignedTargetingOptions-get$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/targetingTypes/assignedTargetingOptions/get
   
-  Required parameters: assignedTargetingOptionId, partnerId, targetingType
+  Required parameters: assignedTargetingOptionId, targetingType, partnerId
   
   Optional parameters: none
   
@@ -235,7 +124,7 @@
 (defn targetingTypes-assignedTargetingOptions-list$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/targetingTypes/assignedTargetingOptions/list
   
-  Required parameters: targetingType, partnerId
+  Required parameters: partnerId, targetingType
   
   Optional parameters: filter, orderBy, pageToken, pageSize
   
@@ -258,10 +147,129 @@
       :as :json}
      auth))))
 
+(defn targetingTypes-assignedTargetingOptions-create$
+  "https://developers.google.com/display-video/api/reference/rest/v1/partners/targetingTypes/assignedTargetingOptions/create
+  
+  Required parameters: targetingType, partnerId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:negativeKeywordListDetails {:negativeKeywordListId string},
+   :parentalStatusDetails {:parentalStatus string,
+                           :targetingOptionId string},
+   :geoRegionDetails {:displayName string,
+                      :negative boolean,
+                      :targetingOptionId string,
+                      :geoRegionType string},
+   :regionalLocationListDetails {:regionalLocationListId string,
+                                 :negative boolean},
+   :browserDetails {:targetingOptionId string,
+                    :displayName string,
+                    :negative boolean},
+   :inventorySourceGroupDetails {:inventorySourceGroupId string},
+   :nativeContentPositionDetails {:contentPosition string,
+                                  :targetingOptionId string},
+   :assignedTargetingOptionId string,
+   :operatingSystemDetails {:negative boolean,
+                            :targetingOptionId string,
+                            :displayName string},
+   :appCategoryDetails {:targetingOptionId string,
+                        :negative boolean,
+                        :displayName string},
+   :contentInstreamPositionDetails {:targetingOptionId string,
+                                    :contentInstreamPosition string,
+                                    :adType string},
+   :inventorySourceDetails {:inventorySourceId string},
+   :thirdPartyVerifierDetails {:integralAdScience IntegralAdScience,
+                               :doubleVerify DoubleVerify,
+                               :adloox Adloox},
+   :name string,
+   :onScreenPositionDetails {:adType string,
+                             :onScreenPosition string,
+                             :targetingOptionId string},
+   :videoPlayerSizeDetails {:targetingOptionId string,
+                            :videoPlayerSize string},
+   :carrierAndIspDetails {:targetingOptionId string,
+                          :displayName string,
+                          :negative boolean},
+   :proximityLocationListDetails {:proximityRadiusRange string,
+                                  :proximityLocationListId string},
+   :digitalContentLabelExclusionDetails {:contentRatingTier string,
+                                         :excludedTargetingOptionId string},
+   :ageRangeDetails {:targetingOptionId string, :ageRange string},
+   :deviceMakeModelDetails {:negative boolean,
+                            :targetingOptionId string,
+                            :displayName string},
+   :categoryDetails {:targetingOptionId string,
+                     :negative boolean,
+                     :displayName string},
+   :inheritance string,
+   :audienceGroupDetails {:includedFirstAndThirdPartyAudienceGroups [FirstAndThirdPartyAudienceGroup],
+                          :excludedGoogleAudienceGroup GoogleAudienceGroup,
+                          :includedCombinedAudienceGroup CombinedAudienceGroup,
+                          :excludedFirstAndThirdPartyAudienceGroup FirstAndThirdPartyAudienceGroup,
+                          :includedGoogleAudienceGroup GoogleAudienceGroup,
+                          :includedCustomListGroup CustomListGroup},
+   :channelDetails {:channelId string, :negative boolean},
+   :targetingType string,
+   :environmentDetails {:targetingOptionId string, :environment string},
+   :sensitiveCategoryExclusionDetails {:excludedTargetingOptionId string,
+                                       :sensitiveCategory string},
+   :deviceTypeDetails {:targetingOptionId string, :deviceType string},
+   :appDetails {:negative boolean,
+                :appPlatform string,
+                :appId string,
+                :displayName string},
+   :subExchangeDetails {:targetingOptionId string},
+   :genderDetails {:gender string, :targetingOptionId string},
+   :languageDetails {:displayName string,
+                     :negative boolean,
+                     :targetingOptionId string},
+   :viewabilityDetails {:viewability string, :targetingOptionId string},
+   :keywordDetails {:negative boolean, :keyword string},
+   :urlDetails {:negative boolean, :url string},
+   :exchangeDetails {:targetingOptionId string},
+   :dayAndTimeDetails {:timeZoneResolution string,
+                       :endHour integer,
+                       :dayOfWeek string,
+                       :startHour integer},
+   :householdIncomeDetails {:targetingOptionId string,
+                            :householdIncome string},
+   :authorizedSellerStatusDetails {:authorizedSellerStatus string,
+                                   :targetingOptionId string},
+   :contentOutstreamPositionDetails {:contentOutstreamPosition string,
+                                     :targetingOptionId string,
+                                     :adType string},
+   :userRewardedContentDetails {:userRewardedContent string,
+                                :targetingOptionId string}}
+  
+  Assigns a targeting option to a partner. Returns the assigned targeting option if successful."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetingType :partnerId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/partners/{+partnerId}/targetingTypes/{+targetingType}/assignedTargetingOptions"
+     #{:targetingType :partnerId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn targetingTypes-assignedTargetingOptions-delete$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/targetingTypes/assignedTargetingOptions/delete
   
-  Required parameters: partnerId, targetingType, assignedTargetingOptionId
+  Required parameters: partnerId, assignedTargetingOptionId, targetingType
   
   Optional parameters: none
   
@@ -286,46 +294,22 @@
       :as :json}
      auth))))
 
-(defn channels-get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/get
-  
-  Required parameters: channelId, partnerId
-  
-  Optional parameters: advertiserId
-  
-  Gets a channel for a partner or advertiser."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:channelId :partnerId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/partners/{+partnerId}/channels/{+channelId}"
-     #{:channelId :partnerId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn channels-patch$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/patch
   
-  Required parameters: channelId, partnerId
+  Required parameters: partnerId, channelId
   
-  Optional parameters: updateMask, advertiserId
+  Optional parameters: advertiserId, updateMask
   
   Body: 
   
-  {:name string,
+  {:displayName string,
    :partnerId string,
-   :channelId string,
+   :name string,
    :advertiserId string,
-   :displayName string}
+   :positivelyTargetedLineItemCount string,
+   :negativelyTargetedLineItemCount string,
+   :channelId string}
   
   Updates a channel. Returns the updated channel if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -357,11 +341,13 @@
   
   Body: 
   
-  {:name string,
+  {:displayName string,
    :partnerId string,
-   :channelId string,
+   :name string,
    :advertiserId string,
-   :displayName string}
+   :positivelyTargetedLineItemCount string,
+   :negativelyTargetedLineItemCount string,
+   :channelId string}
   
   Creates a new channel. Returns the newly created channel if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -389,7 +375,7 @@
   
   Required parameters: partnerId
   
-  Optional parameters: pageSize, advertiserId, pageToken, orderBy, filter
+  Optional parameters: pageToken, advertiserId, orderBy, pageSize, filter
   
   Lists channels for a partner or advertiser."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -410,14 +396,14 @@
       :as :json}
      auth))))
 
-(defn channels-sites-list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/sites/list
+(defn channels-get$
+  "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/get
   
   Required parameters: channelId, partnerId
   
-  Optional parameters: orderBy, pageToken, advertiserId, pageSize, filter
+  Optional parameters: advertiserId
   
-  Lists sites in a channel."
+  Gets a channel for a partner or advertiser."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:channelId :partnerId})]}
@@ -425,7 +411,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/partners/{+partnerId}/channels/{+channelId}/sites"
+     "v1/partners/{+partnerId}/channels/{+channelId}"
      #{:channelId :partnerId}
      parameters)
     (merge-with
@@ -471,7 +457,7 @@
 (defn channels-sites-delete$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/sites/delete
   
-  Required parameters: urlOrAppId, partnerId, channelId
+  Required parameters: urlOrAppId, channelId, partnerId
   
   Optional parameters: advertiserId
   
@@ -496,19 +482,45 @@
       :as :json}
      auth))))
 
+(defn channels-sites-list$
+  "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/sites/list
+  
+  Required parameters: partnerId, channelId
+  
+  Optional parameters: pageToken, filter, pageSize, advertiserId, orderBy
+  
+  Lists sites in a channel."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:channelId :partnerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/partners/{+partnerId}/channels/{+channelId}/sites"
+     #{:channelId :partnerId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn channels-sites-bulkEdit$
   "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/sites/bulkEdit
   
-  Required parameters: channelId, partnerId
+  Required parameters: partnerId, channelId
   
   Optional parameters: none
   
   Body: 
   
-  {:partnerId string,
+  {:advertiserId string,
    :createdSites [{:name string, :urlOrAppId string}],
-   :deletedSites [string],
-   :advertiserId string}
+   :partnerId string,
+   :deletedSites [string]}
   
   Bulk edits sites under a single channel. The operation will delete the sites provided in BulkEditSitesRequest.deleted_sites and then create the sites provided in BulkEditSitesRequest.created_sites."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -519,6 +531,40 @@
     (util/get-url
      "https://displayvideo.googleapis.com/"
      "v1/partners/{partnerId}/channels/{+channelId}/sites:bulkEdit"
+     #{:channelId :partnerId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn channels-sites-replace$
+  "https://developers.google.com/display-video/api/reference/rest/v1/partners/channels/sites/replace
+  
+  Required parameters: partnerId, channelId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:advertiserId string,
+   :newSites [{:name string, :urlOrAppId string}],
+   :partnerId string}
+  
+  Replaces all of the sites under a single channel. The operation will replace the sites under a channel with the sites provided in ReplaceSitesRequest.new_sites."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:channelId :partnerId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/partners/{partnerId}/channels/{+channelId}/sites:replace"
      #{:channelId :partnerId}
      parameters)
     (merge-with

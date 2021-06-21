@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, advertiserId, partnerId, orderBy, filter, pageSize
+  Optional parameters: advertiserId, filter, orderBy, pageSize, partnerId, pageToken
   
   Lists inventory sources that are accessible to the current user. The order is defined by the order_by parameter. If a filter by entity_status is not specified, inventory sources with entity status `ENTITY_STATUS_ARCHIVED` will not be included in the results."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

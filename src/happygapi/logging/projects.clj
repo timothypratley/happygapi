@@ -6,14 +6,72 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-get$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}/locations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-buckets-list$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
-  Lists buckets (Beta)."
+  Lists buckets."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/logging.admin"
@@ -35,20 +93,22 @@
       :as :json}
      auth))))
 
-(defn locations-buckets-delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/delete
+(defn locations-buckets-get$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a bucket. Moves the bucket to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all logs in the bucket will be permanently deleted."
+  Gets a bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://logging.googleapis.com/"
      "v2/{+name}"
@@ -71,15 +131,16 @@
   
   Body: 
   
-  {:locked boolean,
+  {:createTime string,
+   :retentionDays integer,
    :updateTime string,
    :description string,
-   :createTime string,
+   :name string,
+   :restrictedFields [string],
    :lifecycleState string,
-   :retentionDays integer,
-   :name string}
+   :locked boolean}
   
-  Updates a bucket. This method replaces the following fields in the existing bucket with values from the new bucket: retention_periodIf the retention period is decreased and the bucket is locked, FAILED_PRECONDITION will be returned.If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION will be returned.A buckets region may not be modified after it is created. This method is in Beta."
+  Updates a bucket. This method replaces the following fields in the existing bucket with values from the new bucket: retention_periodIf the retention period is decreased and the bucket is locked, FAILED_PRECONDITION will be returned.If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION will be returned.A buckets region may not be modified after it is created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters body]
@@ -101,30 +162,41 @@
       :as :json}
      auth))))
 
-(defn locations-buckets-get$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/get
+(defn locations-buckets-create$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/create
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: bucketId
   
-  Gets a bucket (Beta)."
+  Body: 
+  
+  {:createTime string,
+   :retentionDays integer,
+   :updateTime string,
+   :description string,
+   :name string,
+   :restrictedFields [string],
+   :lifecycleState string,
+   :locked boolean}
+  
+  Creates a bucket that can be used to store log entries. Once a bucket has been created, the region cannot be changed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
+     "v2/{+parent}/buckets"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -163,24 +235,49 @@
       :as :json}
      auth))))
 
-(defn locations-buckets-create$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/create
+(defn locations-buckets-delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a bucket. Moves the bucket to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all logs in the bucket will be permanently deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-buckets-views-create$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/views/create
   
   Required parameters: parent
   
-  Optional parameters: bucketId
+  Optional parameters: viewId
   
   Body: 
   
-  {:locked boolean,
-   :updateTime string,
-   :description string,
+  {:updateTime string,
    :createTime string,
-   :lifecycleState string,
-   :retentionDays integer,
-   :name string}
+   :name string,
+   :filter string,
+   :description string}
   
-  Creates a bucket that can be used to store log entries. Once a bucket has been created, the region cannot be changed."
+  Creates a view over logs in a bucket. A bucket may contain a maximum of 50 views."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters body]
@@ -189,7 +286,7 @@
    (http/post
     (util/get-url
      "https://logging.googleapis.com/"
-     "v2/{+parent}/buckets"
+     "v2/{+parent}/views"
      #{:parent}
      parameters)
     (merge-with
@@ -238,11 +335,11 @@
   
   Body: 
   
-  {:name string,
+  {:updateTime string,
+   :createTime string,
+   :name string,
    :filter string,
-   :updateTime string,
-   :description string,
-   :createTime string}
+   :description string}
   
   Updates a view. This method replaces the following fields in the existing view with values from the new view: filter."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -266,51 +363,14 @@
       :as :json}
      auth))))
 
-(defn locations-buckets-views-create$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/views/create
-  
-  Required parameters: parent
-  
-  Optional parameters: viewId
-  
-  Body: 
-  
-  {:name string,
-   :filter string,
-   :updateTime string,
-   :description string,
-   :createTime string}
-  
-  Creates a view over logs in a bucket. A bucket may contain a maximum of 50 views."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/views"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-buckets-views-list$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/locations/buckets/views/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
-  Lists views on a bucket.."
+  Lists views on a bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/logging.admin"
@@ -389,46 +449,22 @@
       :as :json}
      auth))))
 
-(defn metrics-update$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/metrics/update
+(defn metrics-get$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/metrics/get
   
   Required parameters: metricName
   
   Optional parameters: none
   
-  Body: 
-  
-  {:description string,
-   :labelExtractors {},
-   :name string,
-   :createTime string,
-   :valueExtractor string,
-   :updateTime string,
-   :filter string,
-   :bucketOptions {:exponentialBuckets Exponential,
-                   :explicitBuckets Explicit,
-                   :linearBuckets Linear},
-   :metricDescriptor {:description string,
-                      :labels [LabelDescriptor],
-                      :valueType string,
-                      :monitoredResourceTypes [string],
-                      :unit string,
-                      :displayName string,
-                      :name string,
-                      :type string,
-                      :metricKind string,
-                      :launchStage string,
-                      :metadata MetricDescriptorMetadata},
-   :version string}
-  
-  Creates or updates a logs-based metric."
+  Gets a logs-based metric."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.write"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:metricName})]}
   (util/get-response
-   (http/put
+   (http/get
     (util/get-url
      "https://logging.googleapis.com/"
      "v2/{+metricName}"
@@ -436,9 +472,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -454,6 +488,7 @@
   Body: 
   
   {:description string,
+   :disabled boolean,
    :labelExtractors {},
    :name string,
    :createTime string,
@@ -461,8 +496,8 @@
    :updateTime string,
    :filter string,
    :bucketOptions {:exponentialBuckets Exponential,
-                   :explicitBuckets Explicit,
-                   :linearBuckets Linear},
+                   :linearBuckets Linear,
+                   :explicitBuckets Explicit},
    :metricDescriptor {:description string,
                       :labels [LabelDescriptor],
                       :valueType string,
@@ -528,22 +563,47 @@
       :as :json}
      auth))))
 
-(defn metrics-get$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/metrics/get
+(defn metrics-update$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/metrics/update
   
   Required parameters: metricName
   
   Optional parameters: none
   
-  Gets a logs-based metric."
+  Body: 
+  
+  {:description string,
+   :disabled boolean,
+   :labelExtractors {},
+   :name string,
+   :createTime string,
+   :valueExtractor string,
+   :updateTime string,
+   :filter string,
+   :bucketOptions {:exponentialBuckets Exponential,
+                   :linearBuckets Linear,
+                   :explicitBuckets Explicit},
+   :metricDescriptor {:description string,
+                      :labels [LabelDescriptor],
+                      :valueType string,
+                      :monitoredResourceTypes [string],
+                      :unit string,
+                      :displayName string,
+                      :name string,
+                      :type string,
+                      :metricKind string,
+                      :launchStage string,
+                      :metadata MetricDescriptorMetadata},
+   :version string}
+  
+  Creates or updates a logs-based metric."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/logging.write"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:metricName})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://logging.googleapis.com/"
      "v2/{+metricName}"
@@ -551,168 +611,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn exclusions-patch$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:filter string,
-   :createTime string,
-   :description string,
-   :disabled boolean,
-   :name string,
-   :updateTime string}
-  
-  Changes one or more properties of an existing exclusion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn exclusions-create$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:filter string,
-   :createTime string,
-   :description string,
-   :disabled boolean,
-   :name string,
-   :updateTime string}
-  
-  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/exclusions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn exclusions-get$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the description of an exclusion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn exclusions-delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an exclusion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn exclusions-list$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists all the exclusions in a parent resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/exclusions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -734,12 +635,12 @@
    :disabled boolean,
    :name string,
    :createTime string,
-   :exclusions [{:filter string,
-                 :createTime string,
+   :exclusions [{:createTime string,
                  :description string,
+                 :updateTime string,
                  :disabled boolean,
                  :name string,
-                 :updateTime string}],
+                 :filter string}],
    :updateTime string,
    :filter string,
    :outputVersionFormat string,
@@ -757,162 +658,6 @@
      "https://logging.googleapis.com/"
      "v2/{+parent}/sinks"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sinks-list$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists sinks."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/sinks"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sinks-delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/delete
-  
-  Required parameters: sinkName
-  
-  Optional parameters: none
-  
-  Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:sinkName})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+sinkName}"
-     #{:sinkName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sinks-patch$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/patch
-  
-  Required parameters: sinkName
-  
-  Optional parameters: uniqueWriterIdentity, updateMask
-  
-  Body: 
-  
-  {:description string,
-   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
-                     :usePartitionedTables boolean},
-   :includeChildren boolean,
-   :disabled boolean,
-   :name string,
-   :createTime string,
-   :exclusions [{:filter string,
-                 :createTime string,
-                 :description string,
-                 :disabled boolean,
-                 :name string,
-                 :updateTime string}],
-   :updateTime string,
-   :filter string,
-   :outputVersionFormat string,
-   :destination string,
-   :writerIdentity string}
-  
-  Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:sinkName})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+sinkName}"
-     #{:sinkName}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sinks-update$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/update
-  
-  Required parameters: sinkName
-  
-  Optional parameters: uniqueWriterIdentity, updateMask
-  
-  Body: 
-  
-  {:description string,
-   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
-                     :usePartitionedTables boolean},
-   :includeChildren boolean,
-   :disabled boolean,
-   :name string,
-   :createTime string,
-   :exclusions [{:filter string,
-                 :createTime string,
-                 :description string,
-                 :disabled boolean,
-                 :name string,
-                 :updateTime string}],
-   :updateTime string,
-   :filter string,
-   :outputVersionFormat string,
-   :destination string,
-   :writerIdentity string}
-  
-  Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:sinkName})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+sinkName}"
-     #{:sinkName}
      parameters)
     (merge-with
      merge
@@ -953,6 +698,162 @@
       :as :json}
      auth))))
 
+(defn sinks-patch$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/patch
+  
+  Required parameters: sinkName
+  
+  Optional parameters: uniqueWriterIdentity, updateMask
+  
+  Body: 
+  
+  {:description string,
+   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
+                     :usePartitionedTables boolean},
+   :includeChildren boolean,
+   :disabled boolean,
+   :name string,
+   :createTime string,
+   :exclusions [{:createTime string,
+                 :description string,
+                 :updateTime string,
+                 :disabled boolean,
+                 :name string,
+                 :filter string}],
+   :updateTime string,
+   :filter string,
+   :outputVersionFormat string,
+   :destination string,
+   :writerIdentity string}
+  
+  Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sinkName})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+sinkName}"
+     #{:sinkName}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sinks-update$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/update
+  
+  Required parameters: sinkName
+  
+  Optional parameters: updateMask, uniqueWriterIdentity
+  
+  Body: 
+  
+  {:description string,
+   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
+                     :usePartitionedTables boolean},
+   :includeChildren boolean,
+   :disabled boolean,
+   :name string,
+   :createTime string,
+   :exclusions [{:createTime string,
+                 :description string,
+                 :updateTime string,
+                 :disabled boolean,
+                 :name string,
+                 :filter string}],
+   :updateTime string,
+   :filter string,
+   :outputVersionFormat string,
+   :destination string,
+   :writerIdentity string}
+  
+  Updates a sink. This method replaces the following fields in the existing sink with values from the new sink: destination, and filter.The updated sink might also have a new writer_identity; see the unique_writer_identity field."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sinkName})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+sinkName}"
+     #{:sinkName}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sinks-delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/delete
+  
+  Required parameters: sinkName
+  
+  Optional parameters: none
+  
+  Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sinkName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+sinkName}"
+     #{:sinkName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sinks-list$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/sinks/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists sinks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/sinks"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn logs-delete$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/logs/delete
   
@@ -960,7 +861,7 @@
   
   Optional parameters: none
   
-  Deletes all the log entries in a log. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
+  Deletes all the log entries in a log for the _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters]
@@ -985,7 +886,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageToken, resourceNames, pageSize
   
   Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1004,6 +905,167 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exclusions-create$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:createTime string,
+   :description string,
+   :updateTime string,
+   :disabled boolean,
+   :name string,
+   :filter string}
+  
+  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/exclusions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exclusions-list$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists all the exclusions in a parent resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/exclusions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exclusions-delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an exclusion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exclusions-get$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the description of an exclusion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exclusions-patch$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/projects/exclusions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:createTime string,
+   :description string,
+   :updateTime string,
+   :disabled boolean,
+   :name string,
+   :filter string}
+  
+  Changes one or more properties of an existing exclusion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

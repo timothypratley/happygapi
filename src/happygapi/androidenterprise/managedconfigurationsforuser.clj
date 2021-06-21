@@ -9,7 +9,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/delete
   
-  Required parameters: userId, managedConfigurationForUserId, enterpriseId
+  Required parameters: enterpriseId, userId, managedConfigurationForUserId
   
   Optional parameters: none
   
@@ -37,22 +37,22 @@
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/update
   
-  Required parameters: userId, enterpriseId, managedConfigurationForUserId
+  Required parameters: managedConfigurationForUserId, userId, enterpriseId
   
   Optional parameters: none
   
   Body: 
   
-  {:productId string,
+  {:configurationVariables {:variableSet [VariableSet], :mcmId string},
+   :kind string,
+   :productId string,
    :managedProperty [{:valueStringArray [string],
-                      :valueInteger integer,
+                      :key string,
                       :valueBundle ManagedPropertyBundle,
-                      :valueBundleArray [ManagedPropertyBundle],
                       :valueBool boolean,
-                      :valueString string,
-                      :key string}],
-   :configurationVariables {:variableSet [VariableSet], :mcmId string},
-   :kind string}
+                      :valueBundleArray [ManagedPropertyBundle],
+                      :valueInteger integer,
+                      :valueString string}]}
   
   Adds or updates the managed configuration settings for an app for the specified user. If you support the Managed configurations iframe, you can apply managed configurations to a user by specifying an mcmId and its associated configuration variables (if any) in the request. Alternatively, all EMMs can apply managed configurations by passing a list of managed properties."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -106,7 +106,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/get
   
-  Required parameters: userId, managedConfigurationForUserId, enterpriseId
+  Required parameters: enterpriseId, managedConfigurationForUserId, userId
   
   Optional parameters: none
   

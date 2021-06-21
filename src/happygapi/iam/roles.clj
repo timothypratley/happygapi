@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/iam/api/reference/rest/v1/roles/list
-  
-  Required parameters: none
-  
-  Optional parameters: parent, pageToken, view, showDeleted, pageSize
-  
-  Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/roles"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/iam/api/reference/rest/v1/roles/get
   
@@ -58,6 +32,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://cloud.google.com/iam/api/reference/rest/v1/roles/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, pageToken, parent, showDeleted, view
+  
+  Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/roles"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn queryGrantableRoles$
   "https://cloud.google.com/iam/api/reference/rest/v1/roles/queryGrantableRoles
   
@@ -67,9 +67,9 @@
   
   Body: 
   
-  {:pageSize integer,
-   :view string,
+  {:view string,
    :fullResourceName string,
+   :pageSize integer,
    :pageToken string}
   
   Lists roles that can be granted on a Google Cloud resource. A role is grantable if the IAM policy for the resource can contain bindings to the role."

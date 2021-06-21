@@ -1,38 +1,10 @@
 (ns happygapi.cloudsearch.indexing
   "Cloud Search API: indexing.
-  Cloud Search provides cloud-based search capabilities over G Suite data. The Cloud Search API allows indexing of non-G Suite data into Cloud Search.
+  Cloud Search provides cloud-based search capabilities over Google Workspace data. The Cloud Search API allows indexing of non-Google Workspace data into Cloud Search.
   See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn datasources-getSchema$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/getSchema
-  
-  Required parameters: name
-  
-  Optional parameters: debugOptions.enableDebugging
-  
-  Gets the schema of a data source. **Note:** This API requires an admin or service account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/indexing/{+name}/schema"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn datasources-deleteSchema$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/deleteSchema
@@ -62,6 +34,34 @@
       :as :json}
      auth))))
 
+(defn datasources-getSchema$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/getSchema
+  
+  Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
+  
+  Gets the schema of a data source. **Note:** This API requires an admin or service account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/indexing/{+name}/schema"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn datasources-updateSchema$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/updateSchema
   
@@ -72,9 +72,9 @@
   Body: 
   
   {:validateOnly boolean,
-   :debugOptions {:enableDebugging boolean},
-   :schema {:objectDefinitions [ObjectDefinition],
-            :operationIds [string]}}
+   :schema {:operationIds [string],
+            :objectDefinitions [ObjectDefinition]},
+   :debugOptions {:enableDebugging boolean}}
   
   Updates the schema of a data source. This method does not perform incremental updates to the schema. Instead, this method updates the schema by overwriting the entire schema. **Note:** This API requires an admin or service account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -135,12 +135,12 @@
   
   Body: 
   
-  {:item {:metadataHash string,
+  {:item {:payload string,
+          :metadataHash string,
           :contentHash string,
+          :type string,
           :repositoryError RepositoryError,
           :structuredDataHash string,
-          :type string,
-          :payload string,
           :queue string},
    :connectorName string,
    :debugOptions {:enableDebugging boolean}}
@@ -176,8 +176,7 @@
   
   Body: 
   
-  {:debugOptions {:enableDebugging boolean},
-   :indexItemOptions {:allowUnknownGsuitePrincipals boolean},
+  {:mode string,
    :item {:payload string,
           :queue string,
           :content ItemContent,
@@ -189,7 +188,8 @@
           :structuredData ItemStructuredData,
           :metadata ItemMetadata},
    :connectorName string,
-   :mode string}
+   :indexItemOptions {:allowUnknownGsuitePrincipals boolean},
+   :debugOptions {:enableDebugging boolean}}
   
   Updates Item ACL, metadata, and content. It will insert the Item if it does not exist. This method does not support partial updates. Fields with no provided values are cleared out in the Cloud Search index. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -284,11 +284,11 @@
   
   Body: 
   
-  {:connectorName string,
+  {:debugOptions {:enableDebugging boolean},
+   :connectorName string,
+   :statusCodes [string],
    :limit integer,
-   :queue string,
-   :debugOptions {:enableDebugging boolean},
-   :statusCodes [string]}
+   :queue string}
   
   Polls for unreserved items from the indexing queue and marks a set as reserved, starting with items that have the oldest timestamp from the highest priority ItemStatus. The priority order is as follows: ERROR MODIFIED NEW_ITEM ACCEPTED Reserving items ensures that polling from other threads cannot create overlapping sets. After handling the reserved items, the client should put items back into the unreserved state, either by calling index, or by calling push with the type REQUEUE. Items automatically become available (unreserved) after 4 hours even if no update or push method is called. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -317,7 +317,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, brief, pageSize, connectorName, debugOptions.enableDebugging
+  Optional parameters: brief, debugOptions.enableDebugging, pageToken, connectorName, pageSize
   
   Lists all or a subset of Item resources. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"

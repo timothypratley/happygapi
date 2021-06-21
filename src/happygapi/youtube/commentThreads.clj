@@ -6,19 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/commentThreads/list
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/commentThreads/update
   
   Required parameters: part
   
-  Optional parameters: textFormat, channelId, allThreadsRelatedToChannelId, pageToken, id, videoId, order, searchTerms, moderationStatus, maxResults
+  Optional parameters: none
   
-  Retrieves a list of resources, possibly filtered."
+  Body: 
+  
+  {:snippet {:totalReplyCount integer,
+             :isPublic boolean,
+             :videoId string,
+             :topLevelComment Comment,
+             :channelId string,
+             :canReply boolean},
+   :etag string,
+   :id string,
+   :replies {:comments [Comment]},
+   :kind string}
+  
+  Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/commentThreads"
@@ -26,7 +39,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -41,16 +56,16 @@
   
   Body: 
   
-  {:snippet {:topLevelComment Comment,
-             :canReply boolean,
+  {:snippet {:totalReplyCount integer,
              :isPublic boolean,
+             :videoId string,
+             :topLevelComment Comment,
              :channelId string,
-             :totalReplyCount integer,
-             :videoId string},
-   :id string,
-   :kind string,
+             :canReply boolean},
    :etag string,
-   :replies {:comments [Comment]}}
+   :id string,
+   :replies {:comments [Comment]},
+   :kind string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
@@ -73,32 +88,19 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/commentThreads/update
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/commentThreads/list
   
   Required parameters: part
   
-  Optional parameters: none
+  Optional parameters: textFormat, channelId, allThreadsRelatedToChannelId, pageToken, id, videoId, order, searchTerms, moderationStatus, maxResults
   
-  Body: 
-  
-  {:snippet {:topLevelComment Comment,
-             :canReply boolean,
-             :isPublic boolean,
-             :channelId string,
-             :totalReplyCount integer,
-             :videoId string},
-   :id string,
-   :kind string,
-   :etag string,
-   :replies {:comments [Comment]}}
-  
-  Updates an existing resource."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/put
+   (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/commentThreads"
@@ -106,9 +108,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

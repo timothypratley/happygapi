@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: clientInfo.platform, clientInfo.applicationId, clientInfo.operatingSystem, enablePoliticalFeatures, enableDetailedHighwayTypes, clientInfo.userId, enableFeatureNames, enablePrivateRoads, clientInfo.deviceModel, enableModeledVolumes, clientInfo.apiClient, languageCode, clientTileVersionId, regionCode, enableUnclippedBuildings, clientInfo.applicationVersion
+  Optional parameters: clientInfo.platform, clientInfo.applicationId, clientInfo.operatingSystem, enablePoliticalFeatures, enableDetailedHighwayTypes, clientInfo.userId, enableFeatureNames, enablePrivateRoads, clientInfo.deviceModel, enableModeledVolumes, clientInfo.apiClient, languageCode, clientTileVersionId, regionCode, enableUnclippedBuildings, clientInfo.applicationVersion, alwaysIncludeBuildingFootprints
   
   Gets a feature tile by its tile resource name."
   {:scopes nil}

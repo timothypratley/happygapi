@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:challengeResponse {:data string, :signature string},
+  {:challengeResponse {:signature string, :data string},
    :expectedIdentity string}
   
   VerifyChallengeResponse API"

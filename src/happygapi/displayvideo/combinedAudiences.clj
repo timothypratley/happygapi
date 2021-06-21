@@ -11,7 +11,7 @@
   
   Required parameters: combinedAudienceId
   
-  Optional parameters: partnerId, advertiserId
+  Optional parameters: advertiserId, partnerId
   
   Gets a combined audience."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: orderBy, pageSize, partnerId, advertiserId, pageToken, filter
+  Optional parameters: advertiserId, partnerId, pageToken, pageSize, orderBy, filter
   
   Lists combined audiences. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

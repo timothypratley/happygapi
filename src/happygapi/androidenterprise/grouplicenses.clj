@@ -35,7 +35,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/grouplicenses/get
   
-  Required parameters: groupLicenseId, enterpriseId
+  Required parameters: enterpriseId, groupLicenseId
   
   Optional parameters: none
   

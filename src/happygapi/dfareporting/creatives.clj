@@ -1,13 +1,246 @@
 (ns happygapi.dfareporting.creatives
-  "DCM/DFA Reporting And Trafficking API: creatives.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives"
+  "Campaign Manager 360 API: creatives.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:archived boolean,
+   :counterCustomEvents [{:advertiserCustomEventName string,
+                          :popupWindowProperties PopupWindowProperties,
+                          :artworkType string,
+                          :artworkLabel string,
+                          :videoReportingId string,
+                          :advertiserCustomEventId string,
+                          :id string,
+                          :targetType string,
+                          :exitClickThroughUrl CreativeClickThroughUrl,
+                          :advertiserCustomEventType string}],
+   :thirdPartyBackupImageImpressionsUrl string,
+   :overrideCss string,
+   :adParameters string,
+   :skippable boolean,
+   :allowScriptAccess boolean,
+   :customKeyValues [string],
+   :studioCreativeId string,
+   :idDimensionValue {:dimensionName string,
+                      :value string,
+                      :kind string,
+                      :matchType string,
+                      :id string,
+                      :etag string},
+   :additionalSizes [{:kind string,
+                      :iab boolean,
+                      :height integer,
+                      :width integer,
+                      :id string}],
+   :fsCommand {:top integer,
+               :windowWidth integer,
+               :positionOption string,
+               :windowHeight integer,
+               :left integer},
+   :backupImageClickThroughUrl {:landingPageId string,
+                                :customClickThroughUrl string,
+                                :computedClickThroughUrl string},
+   :timerCustomEvents [{:advertiserCustomEventName string,
+                        :popupWindowProperties PopupWindowProperties,
+                        :artworkType string,
+                        :artworkLabel string,
+                        :videoReportingId string,
+                        :advertiserCustomEventId string,
+                        :id string,
+                        :targetType string,
+                        :exitClickThroughUrl CreativeClickThroughUrl,
+                        :advertiserCustomEventType string}],
+   :sslOverride boolean,
+   :compatibility [string],
+   :sslCompliant boolean,
+   :skipOffset {:offsetPercentage integer, :offsetSeconds integer},
+   :thirdPartyRichMediaImpressionsUrl string,
+   :name string,
+   :convertFlashToHtml5 boolean,
+   :universalAdId {:registry string, :value string},
+   :artworkType string,
+   :authoringSource string,
+   :type string,
+   :creativeAssets [{:role string,
+                     :fileSize string,
+                     :idDimensionValue DimensionValue,
+                     :additionalSizes [Size],
+                     :windowMode string,
+                     :bitRate integer,
+                     :verticallyLocked boolean,
+                     :offset OffsetPosition,
+                     :horizontallyLocked boolean,
+                     :sslCompliant boolean,
+                     :positionLeftUnit string,
+                     :frameRate number,
+                     :alignment string,
+                     :pushdownDuration number,
+                     :artworkType string,
+                     :zipFilesize string,
+                     :childAssetType string,
+                     :startTimeType string,
+                     :orientation string,
+                     :flashVersion integer,
+                     :duration integer,
+                     :streamingServingUrl string,
+                     :audioSampleRate integer,
+                     :displayType string,
+                     :detectedFeatures [string],
+                     :size Size,
+                     :progressiveServingUrl string,
+                     :originalBackup boolean,
+                     :collapsedSize Size,
+                     :durationType string,
+                     :hideFlashObjects boolean,
+                     :positionTopUnit string,
+                     :active boolean,
+                     :id string,
+                     :customStartTimeValue integer,
+                     :pushdown boolean,
+                     :mimeType string,
+                     :zIndex integer,
+                     :position OffsetPosition,
+                     :hideSelectionBoxes boolean,
+                     :politeLoad boolean,
+                     :expandedDimension Size,
+                     :companionCreativeIds [string],
+                     :zipFilename string,
+                     :assetIdentifier CreativeAssetId,
+                     :mediaDuration number,
+                     :audioBitRate integer,
+                     :actionScript3 boolean,
+                     :transparency boolean,
+                     :backupImageExit CreativeCustomEvent}],
+   :exitCustomEvents [{:advertiserCustomEventName string,
+                       :popupWindowProperties PopupWindowProperties,
+                       :artworkType string,
+                       :artworkLabel string,
+                       :videoReportingId string,
+                       :advertiserCustomEventId string,
+                       :id string,
+                       :targetType string,
+                       :exitClickThroughUrl CreativeClickThroughUrl,
+                       :advertiserCustomEventType string}],
+   :size {:kind string,
+          :iab boolean,
+          :height integer,
+          :width integer,
+          :id string},
+   :studioAdvertiserId string,
+   :creativeFieldAssignments [{:creativeFieldValueId string,
+                               :creativeFieldId string}],
+   :thirdPartyUrls [{:thirdPartyUrlType string, :url string}],
+   :commercialId string,
+   :backupImageFeatures [string],
+   :authoringTool string,
+   :advertiserId string,
+   :htmlCode string,
+   :active boolean,
+   :id string,
+   :requiredFlashPluginVersion string,
+   :kind string,
+   :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
+   :creativeAssetSelection {:rules [Rule], :defaultAssetId string},
+   :adTagKeys [string],
+   :obaIcon {:program string,
+             :iconClickTrackingUrl string,
+             :iconClickThroughUrl string,
+             :resourceUrl string,
+             :yPosition string,
+             :iconViewTrackingUrl string,
+             :size Size,
+             :xPosition string},
+   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+                :name string,
+                :eventName string}],
+   :lastModifiedInfo {:time string},
+   :latestTraffickedCreativeId string,
+   :totalFileSize string,
+   :redirectUrl string,
+   :requiredFlashVersion integer,
+   :backupImageTargetWindow {:customHtml string,
+                             :targetWindowOption string},
+   :subaccountId string,
+   :version integer,
+   :dynamicAssetSelection boolean,
+   :renderingIdDimensionValue {:dimensionName string,
+                               :value string,
+                               :kind string,
+                               :matchType string,
+                               :id string,
+                               :etag string},
+   :mediaDuration number,
+   :autoAdvanceImages boolean,
+   :backgroundColor string,
+   :companionCreatives [string],
+   :accountId string,
+   :backupImageReportingLabel string,
+   :studioTraffickedCreativeId string,
+   :mediaDescription string,
+   :htmlCodeLocked boolean,
+   :renderingId string}
+  
+  Updates an existing creative."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creatives"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: archived, studioCreativeId, campaignId, renderingIds, ids, searchString, types, pageToken, sortField, advertiserId, active, sortOrder, creativeFieldIds, companionCreativeIds, sizeIds, maxResults
+  
+  Retrieves a list of creatives, possibly filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creatives"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives/patch
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives/patch
   
   Required parameters: id, profileId
   
@@ -33,22 +266,22 @@
    :allowScriptAccess boolean,
    :customKeyValues [string],
    :studioCreativeId string,
-   :idDimensionValue {:etag string,
+   :idDimensionValue {:dimensionName string,
                       :value string,
+                      :kind string,
+                      :matchType string,
                       :id string,
-                      :kind string,
-                      :dimensionName string,
-                      :matchType string},
-   :additionalSizes [{:width integer,
-                      :kind string,
+                      :etag string},
+   :additionalSizes [{:kind string,
+                      :iab boolean,
                       :height integer,
-                      :id string,
-                      :iab boolean}],
-   :fsCommand {:left integer,
+                      :width integer,
+                      :id string}],
+   :fsCommand {:top integer,
                :windowWidth integer,
                :positionOption string,
-               :top integer,
-               :windowHeight integer},
+               :windowHeight integer,
+               :left integer},
    :backupImageClickThroughUrl {:landingPageId string,
                                 :customClickThroughUrl string,
                                 :computedClickThroughUrl string},
@@ -65,11 +298,11 @@
    :sslOverride boolean,
    :compatibility [string],
    :sslCompliant boolean,
-   :skipOffset {:offsetSeconds integer, :offsetPercentage integer},
+   :skipOffset {:offsetPercentage integer, :offsetSeconds integer},
    :thirdPartyRichMediaImpressionsUrl string,
    :name string,
    :convertFlashToHtml5 boolean,
-   :universalAdId {:value string, :registry string},
+   :universalAdId {:registry string, :value string},
    :artworkType string,
    :authoringSource string,
    :type string,
@@ -133,15 +366,15 @@
                        :targetType string,
                        :exitClickThroughUrl CreativeClickThroughUrl,
                        :advertiserCustomEventType string}],
-   :size {:width integer,
-          :kind string,
+   :size {:kind string,
+          :iab boolean,
           :height integer,
-          :id string,
-          :iab boolean},
+          :width integer,
+          :id string},
    :studioAdvertiserId string,
    :creativeFieldAssignments [{:creativeFieldValueId string,
                                :creativeFieldId string}],
-   :thirdPartyUrls [{:url string, :thirdPartyUrlType string}],
+   :thirdPartyUrls [{:thirdPartyUrlType string, :url string}],
    :commercialId string,
    :backupImageFeatures [string],
    :authoringTool string,
@@ -151,20 +384,20 @@
    :id string,
    :requiredFlashPluginVersion string,
    :kind string,
-   :progressOffset {:offsetSeconds integer, :offsetPercentage integer},
+   :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
    :creativeAssetSelection {:rules [Rule], :defaultAssetId string},
    :adTagKeys [string],
-   :obaIcon {:resourceUrl string,
-             :program string,
-             :xPosition string,
-             :size Size,
+   :obaIcon {:program string,
              :iconClickTrackingUrl string,
-             :yPosition string,
              :iconClickThroughUrl string,
-             :iconViewTrackingUrl string},
-   :clickTags [{:name string,
-                :eventName string,
-                :clickThroughUrl CreativeClickThroughUrl}],
+             :resourceUrl string,
+             :yPosition string,
+             :iconViewTrackingUrl string,
+             :size Size,
+             :xPosition string},
+   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+                :name string,
+                :eventName string}],
    :lastModifiedInfo {:time string},
    :latestTraffickedCreativeId string,
    :totalFileSize string,
@@ -175,12 +408,12 @@
    :subaccountId string,
    :version integer,
    :dynamicAssetSelection boolean,
-   :renderingIdDimensionValue {:etag string,
+   :renderingIdDimensionValue {:dimensionName string,
                                :value string,
-                               :id string,
                                :kind string,
-                               :dimensionName string,
-                               :matchType string},
+                               :matchType string,
+                               :id string,
+                               :etag string},
    :mediaDuration number,
    :autoAdvanceImages boolean,
    :backgroundColor string,
@@ -199,216 +432,9 @@
   (util/get-response
    (http/patch
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creatives"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creatives"
      #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives/update
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:archived boolean,
-   :counterCustomEvents [{:advertiserCustomEventName string,
-                          :popupWindowProperties PopupWindowProperties,
-                          :artworkType string,
-                          :artworkLabel string,
-                          :videoReportingId string,
-                          :advertiserCustomEventId string,
-                          :id string,
-                          :targetType string,
-                          :exitClickThroughUrl CreativeClickThroughUrl,
-                          :advertiserCustomEventType string}],
-   :thirdPartyBackupImageImpressionsUrl string,
-   :overrideCss string,
-   :adParameters string,
-   :skippable boolean,
-   :allowScriptAccess boolean,
-   :customKeyValues [string],
-   :studioCreativeId string,
-   :idDimensionValue {:etag string,
-                      :value string,
-                      :id string,
-                      :kind string,
-                      :dimensionName string,
-                      :matchType string},
-   :additionalSizes [{:width integer,
-                      :kind string,
-                      :height integer,
-                      :id string,
-                      :iab boolean}],
-   :fsCommand {:left integer,
-               :windowWidth integer,
-               :positionOption string,
-               :top integer,
-               :windowHeight integer},
-   :backupImageClickThroughUrl {:landingPageId string,
-                                :customClickThroughUrl string,
-                                :computedClickThroughUrl string},
-   :timerCustomEvents [{:advertiserCustomEventName string,
-                        :popupWindowProperties PopupWindowProperties,
-                        :artworkType string,
-                        :artworkLabel string,
-                        :videoReportingId string,
-                        :advertiserCustomEventId string,
-                        :id string,
-                        :targetType string,
-                        :exitClickThroughUrl CreativeClickThroughUrl,
-                        :advertiserCustomEventType string}],
-   :sslOverride boolean,
-   :compatibility [string],
-   :sslCompliant boolean,
-   :skipOffset {:offsetSeconds integer, :offsetPercentage integer},
-   :thirdPartyRichMediaImpressionsUrl string,
-   :name string,
-   :convertFlashToHtml5 boolean,
-   :universalAdId {:value string, :registry string},
-   :artworkType string,
-   :authoringSource string,
-   :type string,
-   :creativeAssets [{:role string,
-                     :fileSize string,
-                     :idDimensionValue DimensionValue,
-                     :additionalSizes [Size],
-                     :windowMode string,
-                     :bitRate integer,
-                     :verticallyLocked boolean,
-                     :offset OffsetPosition,
-                     :horizontallyLocked boolean,
-                     :sslCompliant boolean,
-                     :positionLeftUnit string,
-                     :frameRate number,
-                     :alignment string,
-                     :pushdownDuration number,
-                     :artworkType string,
-                     :zipFilesize string,
-                     :childAssetType string,
-                     :startTimeType string,
-                     :orientation string,
-                     :flashVersion integer,
-                     :duration integer,
-                     :streamingServingUrl string,
-                     :audioSampleRate integer,
-                     :displayType string,
-                     :detectedFeatures [string],
-                     :size Size,
-                     :progressiveServingUrl string,
-                     :originalBackup boolean,
-                     :collapsedSize Size,
-                     :durationType string,
-                     :hideFlashObjects boolean,
-                     :positionTopUnit string,
-                     :active boolean,
-                     :id string,
-                     :customStartTimeValue integer,
-                     :pushdown boolean,
-                     :mimeType string,
-                     :zIndex integer,
-                     :position OffsetPosition,
-                     :hideSelectionBoxes boolean,
-                     :politeLoad boolean,
-                     :expandedDimension Size,
-                     :companionCreativeIds [string],
-                     :zipFilename string,
-                     :assetIdentifier CreativeAssetId,
-                     :mediaDuration number,
-                     :audioBitRate integer,
-                     :actionScript3 boolean,
-                     :transparency boolean,
-                     :backupImageExit CreativeCustomEvent}],
-   :exitCustomEvents [{:advertiserCustomEventName string,
-                       :popupWindowProperties PopupWindowProperties,
-                       :artworkType string,
-                       :artworkLabel string,
-                       :videoReportingId string,
-                       :advertiserCustomEventId string,
-                       :id string,
-                       :targetType string,
-                       :exitClickThroughUrl CreativeClickThroughUrl,
-                       :advertiserCustomEventType string}],
-   :size {:width integer,
-          :kind string,
-          :height integer,
-          :id string,
-          :iab boolean},
-   :studioAdvertiserId string,
-   :creativeFieldAssignments [{:creativeFieldValueId string,
-                               :creativeFieldId string}],
-   :thirdPartyUrls [{:url string, :thirdPartyUrlType string}],
-   :commercialId string,
-   :backupImageFeatures [string],
-   :authoringTool string,
-   :advertiserId string,
-   :htmlCode string,
-   :active boolean,
-   :id string,
-   :requiredFlashPluginVersion string,
-   :kind string,
-   :progressOffset {:offsetSeconds integer, :offsetPercentage integer},
-   :creativeAssetSelection {:rules [Rule], :defaultAssetId string},
-   :adTagKeys [string],
-   :obaIcon {:resourceUrl string,
-             :program string,
-             :xPosition string,
-             :size Size,
-             :iconClickTrackingUrl string,
-             :yPosition string,
-             :iconClickThroughUrl string,
-             :iconViewTrackingUrl string},
-   :clickTags [{:name string,
-                :eventName string,
-                :clickThroughUrl CreativeClickThroughUrl}],
-   :lastModifiedInfo {:time string},
-   :latestTraffickedCreativeId string,
-   :totalFileSize string,
-   :redirectUrl string,
-   :requiredFlashVersion integer,
-   :backupImageTargetWindow {:customHtml string,
-                             :targetWindowOption string},
-   :subaccountId string,
-   :version integer,
-   :dynamicAssetSelection boolean,
-   :renderingIdDimensionValue {:etag string,
-                               :value string,
-                               :id string,
-                               :kind string,
-                               :dimensionName string,
-                               :matchType string},
-   :mediaDuration number,
-   :autoAdvanceImages boolean,
-   :backgroundColor string,
-   :companionCreatives [string],
-   :accountId string,
-   :backupImageReportingLabel string,
-   :studioTraffickedCreativeId string,
-   :mediaDescription string,
-   :htmlCodeLocked boolean,
-   :renderingId string}
-  
-  Updates an existing creative."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creatives"
-     #{:profileId}
      parameters)
     (merge-with
      merge
@@ -421,7 +447,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives/get
   
   Required parameters: profileId, id
   
@@ -434,8 +460,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creatives/{id}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creatives/{id}"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -447,7 +473,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creatives/insert
   
   Required parameters: profileId
   
@@ -473,22 +499,22 @@
    :allowScriptAccess boolean,
    :customKeyValues [string],
    :studioCreativeId string,
-   :idDimensionValue {:etag string,
+   :idDimensionValue {:dimensionName string,
                       :value string,
+                      :kind string,
+                      :matchType string,
                       :id string,
-                      :kind string,
-                      :dimensionName string,
-                      :matchType string},
-   :additionalSizes [{:width integer,
-                      :kind string,
+                      :etag string},
+   :additionalSizes [{:kind string,
+                      :iab boolean,
                       :height integer,
-                      :id string,
-                      :iab boolean}],
-   :fsCommand {:left integer,
+                      :width integer,
+                      :id string}],
+   :fsCommand {:top integer,
                :windowWidth integer,
                :positionOption string,
-               :top integer,
-               :windowHeight integer},
+               :windowHeight integer,
+               :left integer},
    :backupImageClickThroughUrl {:landingPageId string,
                                 :customClickThroughUrl string,
                                 :computedClickThroughUrl string},
@@ -505,11 +531,11 @@
    :sslOverride boolean,
    :compatibility [string],
    :sslCompliant boolean,
-   :skipOffset {:offsetSeconds integer, :offsetPercentage integer},
+   :skipOffset {:offsetPercentage integer, :offsetSeconds integer},
    :thirdPartyRichMediaImpressionsUrl string,
    :name string,
    :convertFlashToHtml5 boolean,
-   :universalAdId {:value string, :registry string},
+   :universalAdId {:registry string, :value string},
    :artworkType string,
    :authoringSource string,
    :type string,
@@ -573,15 +599,15 @@
                        :targetType string,
                        :exitClickThroughUrl CreativeClickThroughUrl,
                        :advertiserCustomEventType string}],
-   :size {:width integer,
-          :kind string,
+   :size {:kind string,
+          :iab boolean,
           :height integer,
-          :id string,
-          :iab boolean},
+          :width integer,
+          :id string},
    :studioAdvertiserId string,
    :creativeFieldAssignments [{:creativeFieldValueId string,
                                :creativeFieldId string}],
-   :thirdPartyUrls [{:url string, :thirdPartyUrlType string}],
+   :thirdPartyUrls [{:thirdPartyUrlType string, :url string}],
    :commercialId string,
    :backupImageFeatures [string],
    :authoringTool string,
@@ -591,20 +617,20 @@
    :id string,
    :requiredFlashPluginVersion string,
    :kind string,
-   :progressOffset {:offsetSeconds integer, :offsetPercentage integer},
+   :progressOffset {:offsetPercentage integer, :offsetSeconds integer},
    :creativeAssetSelection {:rules [Rule], :defaultAssetId string},
    :adTagKeys [string],
-   :obaIcon {:resourceUrl string,
-             :program string,
-             :xPosition string,
-             :size Size,
+   :obaIcon {:program string,
              :iconClickTrackingUrl string,
-             :yPosition string,
              :iconClickThroughUrl string,
-             :iconViewTrackingUrl string},
-   :clickTags [{:name string,
-                :eventName string,
-                :clickThroughUrl CreativeClickThroughUrl}],
+             :resourceUrl string,
+             :yPosition string,
+             :iconViewTrackingUrl string,
+             :size Size,
+             :xPosition string},
+   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+                :name string,
+                :eventName string}],
    :lastModifiedInfo {:time string},
    :latestTraffickedCreativeId string,
    :totalFileSize string,
@@ -615,12 +641,12 @@
    :subaccountId string,
    :version integer,
    :dynamicAssetSelection boolean,
-   :renderingIdDimensionValue {:etag string,
+   :renderingIdDimensionValue {:dimensionName string,
                                :value string,
-                               :id string,
                                :kind string,
-                               :dimensionName string,
-                               :matchType string},
+                               :matchType string,
+                               :id string,
+                               :etag string},
    :mediaDuration number,
    :autoAdvanceImages boolean,
    :backgroundColor string,
@@ -639,8 +665,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creatives"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creatives"
      #{:profileId}
      parameters)
     (merge-with
@@ -648,32 +674,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/creatives/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: archived, studioCreativeId, campaignId, renderingIds, ids, searchString, types, pageToken, sortField, advertiserId, active, sortOrder, creativeFieldIds, companionCreativeIds, sizeIds, maxResults
-  
-  Retrieves a list of creatives, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/creatives"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,15 +1,15 @@
 (ns happygapi.compute.targetPools
   "Compute Engine API: targetPools.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/targetPools"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn getHealth$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/getHealth
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/getHealth
   
-  Required parameters: project, region, targetPool
+  Required parameters: project, targetPool, region
   
   Optional parameters: none
   
@@ -26,8 +26,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/getHealth"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/getHealth"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -41,7 +41,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/get
   
   Required parameters: project, region, targetPool
   
@@ -56,8 +56,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -69,9 +69,9 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/insert
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/insert
   
-  Required parameters: project, region
+  Required parameters: region, project
   
   Optional parameters: requestId
   
@@ -98,8 +98,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools"
      #{:region :project}
      parameters)
     (merge-with
@@ -113,11 +113,11 @@
      auth))))
 
 (defn aggregatedList$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/aggregatedList
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, pageToken, maxResults, returnPartialSuccess, includeAllScopes, filter
   
   Retrieves an aggregated list of target pools."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -128,8 +128,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/aggregated/targetPools"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/targetPools"
      #{:project}
      parameters)
     (merge-with
@@ -141,7 +141,7 @@
      auth))))
 
 (defn setBackup$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/setBackup
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/setBackup
   
   Required parameters: project, region, targetPool
   
@@ -159,8 +159,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/setBackup"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/setBackup"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -174,7 +174,7 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/delete
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/delete
   
   Required parameters: project, region, targetPool
   
@@ -188,8 +188,8 @@
   (util/get-response
    (http/delete
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -201,7 +201,7 @@
      auth))))
 
 (defn removeInstance$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/removeInstance
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/removeInstance
   
   Required parameters: project, region, targetPool
   
@@ -219,8 +219,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/removeInstance"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/removeInstance"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -234,11 +234,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/list
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/list
   
   Required parameters: project, region
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, filter, maxResults, returnPartialSuccess, pageToken
   
   Retrieves a list of target pools available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -249,8 +249,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools"
      #{:region :project}
      parameters)
     (merge-with
@@ -262,9 +262,9 @@
      auth))))
 
 (defn removeHealthCheck$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/removeHealthCheck
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/removeHealthCheck
   
-  Required parameters: project, region, targetPool
+  Required parameters: region, project, targetPool
   
   Optional parameters: requestId
   
@@ -280,8 +280,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/removeHealthCheck"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/removeHealthCheck"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -295,9 +295,9 @@
      auth))))
 
 (defn addInstance$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/addInstance
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addInstance
   
-  Required parameters: project, region, targetPool
+  Required parameters: targetPool, project, region
   
   Optional parameters: requestId
   
@@ -313,8 +313,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/addInstance"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/addInstance"
      #{:region :project :targetPool}
      parameters)
     (merge-with
@@ -328,9 +328,9 @@
      auth))))
 
 (defn addHealthCheck$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/targetPools/addHealthCheck
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addHealthCheck
   
-  Required parameters: project, region, targetPool
+  Required parameters: project, targetPool, region
   
   Optional parameters: requestId
   
@@ -346,8 +346,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/regions/{region}/targetPools/{targetPool}/addHealthCheck"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/addHealthCheck"
      #{:region :project :targetPool}
      parameters)
     (merge-with

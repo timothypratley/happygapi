@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:subject {:id string, :typeId string, :url string},
+  {:description string,
    :relatedEntities [{:entity Entity}],
-   :description string,
-   :abuseTypes [{:id string}]}
+   :abuseTypes [{:id string}],
+   :subject {:url string, :typeId string, :id string}}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"

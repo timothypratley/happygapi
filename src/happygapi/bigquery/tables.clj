@@ -9,13 +9,12 @@
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/get
   
-  Required parameters: tableId, datasetId, projectId
+  Required parameters: datasetId, projectId, tableId
   
   Optional parameters: selectedFields
   
   Gets the specified table resource by table ID. This method does not return the data in the table, it only returns the table resource, which describes the structure of this table."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -44,11 +43,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:etag string,
             :bindings [Binding],
-            :etag string,
-            :version integer}}
+            :version integer,
+            :auditConfigs [AuditConfig]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -75,7 +74,7 @@
 (defn insert$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/insert
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
   Optional parameters: none
   
@@ -93,32 +92,34 @@
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:expirationMs string,
-                      :type string,
+   :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
+                      :expirationMs string,
                       :field string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
+                               :decimalTargetTypes [string],
                                :sourceUris [string],
                                :maxBadRecords integer},
    :lastModifiedTime string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
-                    :tableId string,
-                    :projectId string},
+                    :projectId string,
+                    :tableId string},
    :id string,
-   :rangePartitioning {:range {:end string,
-                               :start string,
+   :rangePartitioning {:range {:start string,
+                               :end string,
                                :interval string},
                        :field string},
    :kind string,
@@ -126,20 +127,21 @@
                      :estimatedRows string,
                      :oldestEntryTime string},
    :location string,
-   :materializedView {:refreshIntervalMs string,
-                      :enableRefresh boolean,
+   :materializedView {:enableRefresh boolean,
+                      :lastRefreshTime string,
                       :query string,
-                      :lastRefreshTime string},
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
-   :snapshotDefinition {:snapshotTime string,
-                        :baseTableReference TableReference},
-   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+   :snapshotDefinition {:baseTableReference TableReference,
+                        :snapshotTime string},
+   :view {:useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :query string,
-          :useLegacySql boolean},
-   :model {:modelOptions {:labels [string],
+          :userDefinedFunctionResources [UserDefinedFunctionResource]},
+   :model {:trainingRuns [BqmlTrainingRun],
+           :modelOptions {:lossType string,
                           :modelType string,
-                          :lossType string},
-           :trainingRuns [BqmlTrainingRun]}}
+                          :labels [string]}}}
   
   Creates a new, empty table in the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -184,32 +186,34 @@
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:expirationMs string,
-                      :type string,
+   :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
+                      :expirationMs string,
                       :field string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
+                               :decimalTargetTypes [string],
                                :sourceUris [string],
                                :maxBadRecords integer},
    :lastModifiedTime string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
-                    :tableId string,
-                    :projectId string},
+                    :projectId string,
+                    :tableId string},
    :id string,
-   :rangePartitioning {:range {:end string,
-                               :start string,
+   :rangePartitioning {:range {:start string,
+                               :end string,
                                :interval string},
                        :field string},
    :kind string,
@@ -217,20 +221,21 @@
                      :estimatedRows string,
                      :oldestEntryTime string},
    :location string,
-   :materializedView {:refreshIntervalMs string,
-                      :enableRefresh boolean,
+   :materializedView {:enableRefresh boolean,
+                      :lastRefreshTime string,
                       :query string,
-                      :lastRefreshTime string},
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
-   :snapshotDefinition {:snapshotTime string,
-                        :baseTableReference TableReference},
-   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+   :snapshotDefinition {:baseTableReference TableReference,
+                        :snapshotTime string},
+   :view {:useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :query string,
-          :useLegacySql boolean},
-   :model {:modelOptions {:labels [string],
+          :userDefinedFunctionResources [UserDefinedFunctionResource]},
+   :model {:trainingRuns [BqmlTrainingRun],
+           :modelOptions {:lossType string,
                           :modelType string,
-                          :lossType string},
-           :trainingRuns [BqmlTrainingRun]}}
+                          :labels [string]}}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -267,7 +272,6 @@
   
   Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters body]
@@ -292,7 +296,7 @@
 (defn update$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/update
   
-  Required parameters: projectId, datasetId, tableId
+  Required parameters: tableId, datasetId, projectId
   
   Optional parameters: none
   
@@ -310,32 +314,34 @@
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:expirationMs string,
-                      :type string,
+   :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
+                      :expirationMs string,
                       :field string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
+                               :decimalTargetTypes [string],
                                :sourceUris [string],
                                :maxBadRecords integer},
    :lastModifiedTime string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
-                    :tableId string,
-                    :projectId string},
+                    :projectId string,
+                    :tableId string},
    :id string,
-   :rangePartitioning {:range {:end string,
-                               :start string,
+   :rangePartitioning {:range {:start string,
+                               :end string,
                                :interval string},
                        :field string},
    :kind string,
@@ -343,20 +349,21 @@
                      :estimatedRows string,
                      :oldestEntryTime string},
    :location string,
-   :materializedView {:refreshIntervalMs string,
-                      :enableRefresh boolean,
+   :materializedView {:enableRefresh boolean,
+                      :lastRefreshTime string,
                       :query string,
-                      :lastRefreshTime string},
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
-   :snapshotDefinition {:snapshotTime string,
-                        :baseTableReference TableReference},
-   :view {:userDefinedFunctionResources [UserDefinedFunctionResource],
+   :snapshotDefinition {:baseTableReference TableReference,
+                        :snapshotTime string},
+   :view {:useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :query string,
-          :useLegacySql boolean},
-   :model {:modelOptions {:labels [string],
+          :userDefinedFunctionResources [UserDefinedFunctionResource]},
+   :model {:trainingRuns [BqmlTrainingRun],
+           :modelOptions {:lossType string,
                           :modelType string,
-                          :lossType string},
-           :trainingRuns [BqmlTrainingRun]}}
+                          :labels [string]}}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -383,7 +390,7 @@
 (defn delete$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/delete
   
-  Required parameters: tableId, projectId, datasetId
+  Required parameters: tableId, datasetId, projectId
   
   Optional parameters: none
   
@@ -420,7 +427,6 @@
   
   Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters body]
@@ -445,13 +451,12 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/list
   
-  Required parameters: datasetId, projectId
+  Required parameters: projectId, datasetId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Lists all tables in the specified dataset. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/bigquery.readonly"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]

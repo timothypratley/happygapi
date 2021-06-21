@@ -37,7 +37,7 @@
   
   Required parameters: series_id
   
-  Optional parameters: page_token, page_size
+  Optional parameters: page_size, page_token
   
   Returns Series membership data given the series id."
   {:scopes ["https://www.googleapis.com/auth/books"]}

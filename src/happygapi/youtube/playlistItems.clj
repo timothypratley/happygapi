@@ -16,23 +16,25 @@
   Body: 
   
   {:id string,
-   :snippet {:description string,
+   :etag string,
+   :status {:privacyStatus string},
+   :snippet {:videoOwnerChannelTitle string,
+             :description string,
              :publishedAt string,
              :channelId string,
              :thumbnails ThumbnailDetails,
              :title string,
              :resourceId ResourceId,
+             :videoOwnerChannelId string,
              :position integer,
              :channelTitle string,
              :playlistId string},
    :kind string,
-   :status {:privacyStatus string},
-   :contentDetails {:endAt string,
-                    :videoId string,
-                    :videoPublishedAt string,
+   :contentDetails {:videoId string,
+                    :endAt string,
                     :note string,
-                    :startAt string},
-   :etag string}
+                    :startAt string,
+                    :videoPublishedAt string}}
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -95,23 +97,25 @@
   Body: 
   
   {:id string,
-   :snippet {:description string,
+   :etag string,
+   :status {:privacyStatus string},
+   :snippet {:videoOwnerChannelTitle string,
+             :description string,
              :publishedAt string,
              :channelId string,
              :thumbnails ThumbnailDetails,
              :title string,
              :resourceId ResourceId,
+             :videoOwnerChannelId string,
              :position integer,
              :channelTitle string,
              :playlistId string},
    :kind string,
-   :status {:privacyStatus string},
-   :contentDetails {:endAt string,
-                    :videoId string,
-                    :videoPublishedAt string,
+   :contentDetails {:videoId string,
+                    :endAt string,
                     :note string,
-                    :startAt string},
-   :etag string}
+                    :startAt string,
+                    :videoPublishedAt string}}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -141,7 +145,7 @@
   
   Required parameters: part
   
-  Optional parameters: id, playlistId, pageToken, onBehalfOfContentOwner, videoId, maxResults
+  Optional parameters: id, pageToken, videoId, onBehalfOfContentOwner, playlistId, maxResults
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"

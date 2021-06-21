@@ -6,28 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/list
+(defn cancel$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/cancel
   
-  Required parameters: none
+  Required parameters: name
   
-  Optional parameters: filter, name, pageSize, pageToken
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://serviceusage.googleapis.com/"
-     "v1/operations"
-     #{}
+     "v1/{+name}:cancel"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -60,34 +66,28 @@
       :as :json}
      auth))))
 
-(defn cancel$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/cancel
+(defn list$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/list
   
-  Required parameters: name
+  Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: pageSize, name, pageToken, filter
   
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://serviceusage.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
+     "v1/operations"
+     #{}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

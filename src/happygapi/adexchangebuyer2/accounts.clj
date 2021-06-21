@@ -6,81 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn creatives-update$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/update
-  
-  Required parameters: accountId, creativeId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:video {:videoVastXml string, :videoUrl string},
-   :detectedProductCategories [integer],
-   :servingRestrictions [{:disapprovalReasons [Disapproval],
-                          :contexts [ServingContext],
-                          :disapproval Disapproval,
-                          :status string}],
-   :declaredClickThroughUrls [string],
-   :advertiserName string,
-   :adTechnologyProviders {:detectedProviderIds [string],
-                           :hasUnidentifiedProvider boolean},
-   :adChoicesDestinationUrl string,
-   :impressionTrackingUrls [string],
-   :dealsStatus string,
-   :apiUpdateTime string,
-   :detectedSensitiveCategories [integer],
-   :openAuctionStatus string,
-   :restrictedCategories [string],
-   :corrections [{:contexts [ServingContext],
-                  :type string,
-                  :details [string]}],
-   :detectedDomains [string],
-   :detectedLanguages [string],
-   :creativeId string,
-   :native {:clickLinkUrl string,
-            :headline string,
-            :starRating number,
-            :storeUrl string,
-            :logo Image,
-            :advertiserName string,
-            :appIcon Image,
-            :priceDisplayText string,
-            :callToAction string,
-            :clickTrackingUrl string,
-            :videoUrl string,
-            :image Image,
-            :body string},
-   :detectedAdvertiserIds [string],
-   :vendorIds [integer],
-   :agencyId string,
-   :version integer,
-   :attributes [string],
-   :accountId string,
-   :clickThroughUrls [string],
-   :html {:height integer, :width integer, :snippet string}}
-  
-  Updates a creative."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/creatives/{creativeId}"
-     #{:creativeId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn creatives-watch$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/watch
   
@@ -113,6 +38,58 @@
       :as :json}
      auth))))
 
+(defn creatives-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/list
+  
+  Required parameters: accountId
+  
+  Optional parameters: query, pageSize, pageToken
+  
+  Lists creatives."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/creatives"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn creatives-get$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/get
+  
+  Required parameters: accountId, creativeId
+  
+  Optional parameters: none
+  
+  Gets a creative."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/creatives/{creativeId}"
+     #{:creativeId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn creatives-create$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/create
   
@@ -124,10 +101,10 @@
   
   {:video {:videoVastXml string, :videoUrl string},
    :detectedProductCategories [integer],
-   :servingRestrictions [{:disapprovalReasons [Disapproval],
-                          :contexts [ServingContext],
+   :servingRestrictions [{:contexts [ServingContext],
+                          :status string,
                           :disapproval Disapproval,
-                          :status string}],
+                          :disapprovalReasons [Disapproval]}],
    :declaredClickThroughUrls [string],
    :advertiserName string,
    :adTechnologyProviders {:detectedProviderIds [string],
@@ -165,7 +142,7 @@
    :attributes [string],
    :accountId string,
    :clickThroughUrls [string],
-   :html {:height integer, :width integer, :snippet string}}
+   :html {:height integer, :snippet string, :width integer}}
   
   Creates a creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -188,27 +165,76 @@
       :as :json}
      auth))))
 
-(defn creatives-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/list
+(defn creatives-update$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/update
   
-  Required parameters: accountId
+  Required parameters: creativeId, accountId
   
-  Optional parameters: pageSize, pageToken, query
+  Optional parameters: none
   
-  Lists creatives."
+  Body: 
+  
+  {:video {:videoVastXml string, :videoUrl string},
+   :detectedProductCategories [integer],
+   :servingRestrictions [{:contexts [ServingContext],
+                          :status string,
+                          :disapproval Disapproval,
+                          :disapprovalReasons [Disapproval]}],
+   :declaredClickThroughUrls [string],
+   :advertiserName string,
+   :adTechnologyProviders {:detectedProviderIds [string],
+                           :hasUnidentifiedProvider boolean},
+   :adChoicesDestinationUrl string,
+   :impressionTrackingUrls [string],
+   :dealsStatus string,
+   :apiUpdateTime string,
+   :detectedSensitiveCategories [integer],
+   :openAuctionStatus string,
+   :restrictedCategories [string],
+   :corrections [{:contexts [ServingContext],
+                  :type string,
+                  :details [string]}],
+   :detectedDomains [string],
+   :detectedLanguages [string],
+   :creativeId string,
+   :native {:clickLinkUrl string,
+            :headline string,
+            :starRating number,
+            :storeUrl string,
+            :logo Image,
+            :advertiserName string,
+            :appIcon Image,
+            :priceDisplayText string,
+            :callToAction string,
+            :clickTrackingUrl string,
+            :videoUrl string,
+            :image Image,
+            :body string},
+   :detectedAdvertiserIds [string],
+   :vendorIds [integer],
+   :agencyId string,
+   :version integer,
+   :attributes [string],
+   :accountId string,
+   :clickThroughUrls [string],
+   :html {:height integer, :snippet string, :width integer}}
+  
+  Updates a creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/creatives"
-     #{:accountId}
+     "v2beta1/accounts/{accountId}/creatives/{creativeId}"
+     #{:creativeId :accountId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -217,7 +243,7 @@
 (defn creatives-stopWatching$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/stopWatching
   
-  Required parameters: creativeId, accountId
+  Required parameters: accountId, creativeId
   
   Optional parameters: none
   
@@ -246,32 +272,6 @@
       :as :json}
      auth))))
 
-(defn creatives-get$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/get
-  
-  Required parameters: creativeId, accountId
-  
-  Optional parameters: none
-  
-  Gets a creative."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/creatives/{creativeId}"
-     #{:creativeId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn creatives-dealAssociations-remove$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/dealAssociations/remove
   
@@ -281,7 +281,7 @@
   
   Body: 
   
-  {:association {:accountId string, :dealsId string, :creativeId string}}
+  {:association {:accountId string, :creativeId string, :dealsId string}}
   
   Remove the association between a deal and a creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -304,44 +304,12 @@
       :as :json}
      auth))))
 
-(defn creatives-dealAssociations-add$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/dealAssociations/add
-  
-  Required parameters: accountId, creativeId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:association {:accountId string, :dealsId string, :creativeId string}}
-  
-  Associate an existing deal with a creative."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/creatives/{creativeId}/dealAssociations:add"
-     #{:creativeId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn creatives-dealAssociations-list$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/dealAssociations/list
   
   Required parameters: accountId, creativeId
   
-  Optional parameters: pageSize, pageToken, query
+  Optional parameters: pageToken, pageSize, query
   
   List all creative-deal associations."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -362,53 +330,33 @@
       :as :json}
      auth))))
 
-(defn finalizedProposals-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/finalizedProposals/list
+(defn creatives-dealAssociations-add$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/creatives/dealAssociations/add
   
-  Required parameters: accountId
+  Required parameters: accountId, creativeId
   
-  Optional parameters: filterSyntax, pageToken, filter, pageSize
+  Optional parameters: none
   
-  List finalized proposals, regardless if a proposal is being renegotiated. A filter expression (PQL query) may be specified to filter the results. The notes will not be returned."
+  Body: 
+  
+  {:association {:accountId string, :creativeId string, :dealsId string}}
+  
+  Associate an existing deal with a creative."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:accountId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:creativeId :accountId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/finalizedProposals"
-     #{:accountId}
+     "v2beta1/accounts/{accountId}/creatives/{creativeId}/dealAssociations:add"
+     #{:creativeId :accountId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn products-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/products/list
-  
-  Required parameters: accountId
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  List all products visible to the buyer (optionally filtered by the specified PQL query)."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/products"
-     #{:accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -440,120 +388,14 @@
       :as :json}
      auth))))
 
-(defn clients-get$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/get
-  
-  Required parameters: accountId, clientAccountId
-  
-  Optional parameters: none
-  
-  Gets a client buyer with a given client account ID."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}"
-     #{:clientAccountId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-create$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/create
+(defn products-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/products/list
   
   Required parameters: accountId
   
-  Optional parameters: none
+  Optional parameters: pageToken, filter, pageSize
   
-  Body: 
-  
-  {:role string,
-   :entityName string,
-   :partnerClientId string,
-   :clientAccountId string,
-   :visibleToSeller boolean,
-   :status string,
-   :entityId string,
-   :entityType string,
-   :clientName string}
-  
-  Creates a new client buyer."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients"
-     #{:accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-update$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/update
-  
-  Required parameters: clientAccountId, accountId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:role string,
-   :entityName string,
-   :partnerClientId string,
-   :clientAccountId string,
-   :visibleToSeller boolean,
-   :status string,
-   :entityId string,
-   :entityType string,
-   :clientName string}
-  
-  Updates an existing client buyer."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}"
-     #{:clientAccountId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/list
-  
-  Required parameters: accountId
-  
-  Optional parameters: pageToken, partnerClientId, pageSize
-  
-  Lists all the clients for the current sponsor buyer."
+  List all products visible to the buyer (optionally filtered by the specified PQL query)."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:accountId})]}
@@ -561,7 +403,7 @@
    (http/get
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients"
+     "v2beta1/accounts/{accountId}/products"
      #{:accountId}
      parameters)
     (merge-with
@@ -572,25 +414,23 @@
       :as :json}
      auth))))
 
-(defn clients-invitations-get$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/get
+(defn publisherProfiles-get$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/publisherProfiles/get
   
-  Required parameters: accountId, invitationId, clientAccountId
+  Required parameters: publisherProfileId, accountId
   
   Optional parameters: none
   
-  Retrieves an existing client user invitation."
+  Gets the requested publisher profile by id."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:clientAccountId :invitationId :accountId})]}
+  {:pre [(util/has-keys? parameters #{:publisherProfileId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations/{invitationId}"
-     #{:clientAccountId :invitationId :accountId}
+     "v2beta1/accounts/{accountId}/publisherProfiles/{publisherProfileId}"
+     #{:publisherProfileId :accountId}
      parameters)
     (merge-with
      merge
@@ -600,146 +440,23 @@
       :as :json}
      auth))))
 
-(defn clients-invitations-create$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/create
+(defn publisherProfiles-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/publisherProfiles/list
   
-  Required parameters: accountId, clientAccountId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:email string, :invitationId string, :clientAccountId string}
-  
-  Creates and sends out an email invitation to access an Ad Exchange client buyer account."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations"
-     #{:clientAccountId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-invitations-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/list
-  
-  Required parameters: clientAccountId, accountId
+  Required parameters: accountId
   
   Optional parameters: pageToken, pageSize
   
-  Lists all the client users invitations for a client with a given account ID."
+  List all publisher profiles visible to the buyer"
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  {:pre [(util/has-keys? parameters #{:accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations"
-     #{:clientAccountId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-users-update$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/update
-  
-  Required parameters: clientAccountId, accountId, userId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:clientAccountId string,
-   :userId string,
-   :email string,
-   :status string}
-  
-  Updates an existing client user. Only the user status can be changed on update."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:clientAccountId :userId :accountId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}"
-     #{:clientAccountId :userId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-users-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/list
-  
-  Required parameters: clientAccountId, accountId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists all the known client users for a specified sponsor buyer account ID."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users"
-     #{:clientAccountId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn clients-users-get$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/get
-  
-  Required parameters: accountId, userId, clientAccountId
-  
-  Optional parameters: none
-  
-  Retrieves an existing client user."
-  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:clientAccountId :userId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}"
-     #{:clientAccountId :userId :accountId}
+     "v2beta1/accounts/{accountId}/publisherProfiles"
+     #{:accountId}
      parameters)
     (merge-with
      merge
@@ -752,7 +469,7 @@
 (defn proposals-get$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/proposals/get
   
-  Required parameters: accountId, proposalId
+  Required parameters: proposalId, accountId
   
   Optional parameters: none
   
@@ -791,11 +508,12 @@
    :originatorRole string,
    :updateTime string,
    :proposalState string,
-   :notes [{:note string,
+   :notes [{:proposalRevision string,
+            :note string,
             :noteId string,
-            :creatorRole string,
             :createTime string,
-            :proposalRevision string}],
+            :creatorRole string}],
+   :termsAndConditions string,
    :lastUpdaterOrCommentorRole string,
    :deals [{:syndicationProduct string,
             :description string,
@@ -868,11 +586,12 @@
    :originatorRole string,
    :updateTime string,
    :proposalState string,
-   :notes [{:note string,
+   :notes [{:proposalRevision string,
+            :note string,
             :noteId string,
-            :creatorRole string,
             :createTime string,
-            :proposalRevision string}],
+            :creatorRole string}],
+   :termsAndConditions string,
    :lastUpdaterOrCommentorRole string,
    :deals [{:syndicationProduct string,
             :description string,
@@ -932,7 +651,7 @@
 (defn proposals-completeSetup$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/proposals/completeSetup
   
-  Required parameters: accountId, proposalId
+  Required parameters: proposalId, accountId
   
   Optional parameters: none
   
@@ -966,7 +685,7 @@
   
   Required parameters: accountId
   
-  Optional parameters: filter, pageToken, filterSyntax, pageSize
+  Optional parameters: filter, filterSyntax, pageToken, pageSize
   
   List proposals. A filter expression (PQL query) may be specified to filter the results. To retrieve all finalized proposals, regardless if a proposal is being renegotiated, see the FinalizedProposals resource. Note that Bidder/ChildSeat relationships differ from the usual behavior. A Bidder account can only see its child seats' proposals by specifying the ChildSeat's accountId in the request path."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -990,17 +709,17 @@
 (defn proposals-addNote$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/proposals/addNote
   
-  Required parameters: proposalId, accountId
+  Required parameters: accountId, proposalId
   
   Optional parameters: none
   
   Body: 
   
-  {:note {:note string,
+  {:note {:proposalRevision string,
+          :note string,
           :noteId string,
-          :creatorRole string,
           :createTime string,
-          :proposalRevision string}}
+          :creatorRole string}}
   
   Create a new note and attach it to the proposal. The note is assigned a unique ID by the server. The proposal revision number will not increase when associated with a new note."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
@@ -1090,7 +809,7 @@
 (defn proposals-resume$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/proposals/resume
   
-  Required parameters: proposalId, accountId
+  Required parameters: accountId, proposalId
   
   Optional parameters: none
   
@@ -1122,7 +841,7 @@
 (defn proposals-accept$
   "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/proposals/accept
   
-  Required parameters: accountId, proposalId
+  Required parameters: proposalId, accountId
   
   Optional parameters: none
   
@@ -1130,7 +849,7 @@
   
   {:proposalRevision string}
   
-  Mark the proposal as accepted at the given revision number. If the number does not match the server's revision number an `ABORTED` error message will be returned. This call updates the proposal_state from `PROPOSED` to `BUYER_ACCEPTED`, or from `SELLER_ACCEPTED` to `FINALIZED`."
+  Mark the proposal as accepted at the given revision number. If the number does not match the server's revision number an `ABORTED` error message will be returned. This call updates the proposal_state from `PROPOSED` to `BUYER_ACCEPTED`, or from `SELLER_ACCEPTED` to `FINALIZED`. Upon calling this endpoint, the buyer implicitly agrees to the terms and conditions optionally set within the proposal by the publisher."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:proposalId :accountId})]}
@@ -1151,14 +870,80 @@
       :as :json}
      auth))))
 
-(defn publisherProfiles-list$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/publisherProfiles/list
+(defn clients-update$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/update
+  
+  Required parameters: clientAccountId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:role string,
+   :entityName string,
+   :partnerClientId string,
+   :clientAccountId string,
+   :visibleToSeller boolean,
+   :status string,
+   :entityId string,
+   :entityType string,
+   :clientName string}
+  
+  Updates an existing client buyer."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}"
+     #{:clientAccountId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-get$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/get
+  
+  Required parameters: accountId, clientAccountId
+  
+  Optional parameters: none
+  
+  Gets a client buyer with a given client account ID."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}"
+     #{:clientAccountId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/list
   
   Required parameters: accountId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: partnerClientId, pageSize, pageToken
   
-  List all publisher profiles visible to the buyer"
+  Lists all the clients for the current sponsor buyer."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:accountId})]}
@@ -1166,7 +951,7 @@
    (http/get
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/publisherProfiles"
+     "v2beta1/accounts/{accountId}/clients"
      #{:accountId}
      parameters)
     (merge-with
@@ -1177,27 +962,308 @@
       :as :json}
      auth))))
 
-(defn publisherProfiles-get$
-  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/publisherProfiles/get
+(defn clients-create$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/create
   
-  Required parameters: publisherProfileId, accountId
+  Required parameters: accountId
   
   Optional parameters: none
   
-  Gets the requested publisher profile by id."
+  Body: 
+  
+  {:role string,
+   :entityName string,
+   :partnerClientId string,
+   :clientAccountId string,
+   :visibleToSeller boolean,
+   :status string,
+   :entityId string,
+   :entityType string,
+   :clientName string}
+  
+  Creates a new client buyer."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-users-update$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/update
+  
+  Required parameters: clientAccountId, userId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:email string,
+   :clientAccountId string,
+   :userId string,
+   :status string}
+  
+  Updates an existing client user. Only the user status can be changed on update."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:clientAccountId :userId :accountId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}"
+     #{:clientAccountId :userId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-users-get$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/get
+  
+  Required parameters: accountId, userId, clientAccountId
+  
+  Optional parameters: none
+  
+  Retrieves an existing client user."
   {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:publisherProfileId :accountId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:clientAccountId :userId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adexchangebuyer.googleapis.com/"
-     "v2beta1/accounts/{accountId}/publisherProfiles/{publisherProfileId}"
-     #{:publisherProfileId :accountId}
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}"
+     #{:clientAccountId :userId :accountId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-users-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/users/list
+  
+  Required parameters: clientAccountId, accountId
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists all the known client users for a specified sponsor buyer account ID."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users"
+     #{:clientAccountId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-invitations-get$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/get
+  
+  Required parameters: accountId, invitationId, clientAccountId
+  
+  Optional parameters: none
+  
+  Retrieves an existing client user invitation."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:clientAccountId :invitationId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations/{invitationId}"
+     #{:clientAccountId :invitationId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-invitations-create$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/create
+  
+  Required parameters: accountId, clientAccountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:clientAccountId string, :invitationId string, :email string}
+  
+  Creates and sends out an email invitation to access an Ad Exchange client buyer account."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations"
+     #{:clientAccountId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn clients-invitations-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/clients/invitations/list
+  
+  Required parameters: clientAccountId, accountId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists all the client users invitations for a client with a given account ID."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:clientAccountId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations"
+     #{:clientAccountId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn finalizedProposals-list$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/finalizedProposals/list
+  
+  Required parameters: accountId
+  
+  Optional parameters: filter, pageSize, filterSyntax, pageToken
+  
+  List finalized proposals, regardless if a proposal is being renegotiated. A filter expression (PQL query) may be specified to filter the results. The notes will not be returned."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/finalizedProposals"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn finalizedProposals-pause$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/finalizedProposals/pause
+  
+  Required parameters: accountId, proposalId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:reason string, :externalDealIds [string]}
+  
+  Update given deals to pause serving. This method will set the `DealServingMetadata.DealPauseStatus.has_buyer_paused` bit to true for all listed deals in the request. Currently, this method only applies to PG and PD deals. For PA deals, please call accounts.proposals.pause endpoint. It is a no-op to pause already-paused deals. It is an error to call PauseProposalDeals for deals which are not part of the proposal of proposal_id or which are not finalized or renegotiating."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/finalizedProposals/{proposalId}:pause"
+     #{:proposalId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn finalizedProposals-resume$
+  "https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/accounts/finalizedProposals/resume
+  
+  Required parameters: accountId, proposalId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:externalDealIds [string]}
+  
+  Update given deals to resume serving. This method will set the `DealServingMetadata.DealPauseStatus.has_buyer_paused` bit to false for all listed deals in the request. Currently, this method only applies to PG and PD deals. For PA deals, please call accounts.proposals.resume endpoint. It is a no-op to resume running deals or deals paused by the other party. It is an error to call ResumeProposalDeals for deals which are not part of the proposal of proposal_id or which are not finalized or renegotiating."
+  {:scopes ["https://www.googleapis.com/auth/adexchange.buyer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:proposalId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://adexchangebuyer.googleapis.com/"
+     "v2beta1/accounts/{accountId}/finalizedProposals/{proposalId}:resume"
+     #{:proposalId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

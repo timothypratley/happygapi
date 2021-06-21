@@ -1,13 +1,13 @@
 (ns happygapi.cloudresourcemanager.operations
   "Cloud Resource Manager API: operations.
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
-  See: https://cloud.google.com/resource-managerapi/reference/rest/v2/operations"
+  See: https://cloud.google.com/resource-managerapi/reference/rest/v3/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v2/operations/get
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/operations/get
   
   Required parameters: name
   
@@ -22,7 +22,7 @@
    (http/get
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
-     "v1/{+name}"
+     "v3/{+name}"
      #{:name}
      parameters)
     (merge-with

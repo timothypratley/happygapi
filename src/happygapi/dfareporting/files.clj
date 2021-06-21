@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.files
-  "DCM/DFA Reporting And Trafficking API: files.
-  Manage your DoubleClick Campaign Manager ad campaigns and reports.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/files"
+  "Campaign Manager 360 API: files.
+  Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/files"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/files/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/files/get
   
   Required parameters: reportId, fileId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "reports/{reportId}/files/{fileId}"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/reports/{reportId}/files/{fileId}"
      #{:reportId :fileId}
      parameters)
     (merge-with
@@ -33,11 +33,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.4/files/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/files/list
   
   Required parameters: profileId
   
-  Optional parameters: sortField, maxResults, sortOrder, pageToken, scope
+  Optional parameters: sortOrder, pageToken, sortField, scope, maxResults
   
   Lists files for a user profile."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/dfareporting/v3.4/"
-     "userprofiles/{profileId}/files"
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/files"
      #{:profileId}
      parameters)
     (merge-with

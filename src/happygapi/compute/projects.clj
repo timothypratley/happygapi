@@ -1,13 +1,13 @@
 (ns happygapi.compute.projects
   "Compute Engine API: projects.
-  Creates and runs virtual machines on Google Cloud Platform.
-  See: https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects"
+  Creates and runs virtual machines on Google Cloud Platform. 
+  See: https://cloud.google.com/compute/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn moveDisk$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/moveDisk
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/moveDisk
   
   Required parameters: project
   
@@ -25,8 +25,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/moveDisk"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/moveDisk"
      #{:project}
      parameters)
     (merge-with
@@ -40,7 +40,7 @@
      auth))))
 
 (defn setDefaultNetworkTier$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/setDefaultNetworkTier
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/setDefaultNetworkTier
   
   Required parameters: project
   
@@ -58,8 +58,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/setDefaultNetworkTier"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/setDefaultNetworkTier"
      #{:project}
      parameters)
     (merge-with
@@ -73,7 +73,7 @@
      auth))))
 
 (defn setUsageExportBucket$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/setUsageExportBucket
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/setUsageExportBucket
   
   Required parameters: project
   
@@ -81,7 +81,7 @@
   
   Body: 
   
-  {:bucketName string, :reportNamePrefix string}
+  {:reportNamePrefix string, :bucketName string}
   
   Enables the usage export feature and sets the usage export bucket where reports are stored. If you provide an empty request body using this method, the usage export feature will be disabled."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -94,8 +94,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/setUsageExportBucket"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/setUsageExportBucket"
      #{:project}
      parameters)
     (merge-with
@@ -109,7 +109,7 @@
      auth))))
 
 (defn disableXpnHost$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/disableXpnHost
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/disableXpnHost
   
   Required parameters: project
   
@@ -123,8 +123,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/disableXpnHost"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/disableXpnHost"
      #{:project}
      parameters)
     (merge-with
@@ -136,7 +136,7 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/get
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/get
   
   Required parameters: project
   
@@ -151,8 +151,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}"
      #{:project}
      parameters)
     (merge-with
@@ -164,11 +164,11 @@
      auth))))
 
 (defn getXpnResources$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/getXpnResources
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/getXpnResources
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: filter, returnPartialSuccess, maxResults, orderBy, pageToken
   
   Gets service resources (a.k.a service project) associated with this host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -178,8 +178,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/getXpnResources"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/getXpnResources"
      #{:project}
      parameters)
     (merge-with
@@ -191,7 +191,7 @@
      auth))))
 
 (defn setCommonInstanceMetadata$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/setCommonInstanceMetadata
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/setCommonInstanceMetadata
   
   Required parameters: project
   
@@ -199,9 +199,9 @@
   
   Body: 
   
-  {:fingerprint string,
+  {:kind string,
    :items [{:key string, :value string}],
-   :kind string}
+   :fingerprint string}
   
   Sets metadata common to all instances within the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -211,8 +211,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/setCommonInstanceMetadata"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/setCommonInstanceMetadata"
      #{:project}
      parameters)
     (merge-with
@@ -226,7 +226,7 @@
      auth))))
 
 (defn moveInstance$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/moveInstance
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/moveInstance
   
   Required parameters: project
   
@@ -244,8 +244,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/moveInstance"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/moveInstance"
      #{:project}
      parameters)
     (merge-with
@@ -259,7 +259,7 @@
      auth))))
 
 (defn getXpnHost$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/getXpnHost
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/getXpnHost
   
   Required parameters: project
   
@@ -273,8 +273,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/getXpnHost"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/getXpnHost"
      #{:project}
      parameters)
     (merge-with
@@ -286,7 +286,7 @@
      auth))))
 
 (defn disableXpnResource$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/disableXpnResource
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/disableXpnResource
   
   Required parameters: project
   
@@ -294,7 +294,7 @@
   
   Body: 
   
-  {:xpnResource {:id string, :type string}}
+  {:xpnResource {:type string, :id string}}
   
   Disable a service resource (also known as service project) associated with this host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -304,8 +304,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/disableXpnResource"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/disableXpnResource"
      #{:project}
      parameters)
     (merge-with
@@ -319,7 +319,7 @@
      auth))))
 
 (defn enableXpnHost$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/enableXpnHost
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/enableXpnHost
   
   Required parameters: project
   
@@ -333,8 +333,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/enableXpnHost"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/enableXpnHost"
      #{:project}
      parameters)
     (merge-with
@@ -346,7 +346,7 @@
      auth))))
 
 (defn enableXpnResource$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/enableXpnResource
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/enableXpnResource
   
   Required parameters: project
   
@@ -354,7 +354,7 @@
   
   Body: 
   
-  {:xpnResource {:id string, :type string}}
+  {:xpnResource {:type string, :id string}}
   
   Enable service resource (a.k.a service project) for a host project, so that subnets in the host project can be used by instances in the service project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -364,8 +364,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/enableXpnResource"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/enableXpnResource"
      #{:project}
      parameters)
     (merge-with
@@ -379,11 +379,11 @@
      auth))))
 
 (defn listXpnHosts$
-  "https://developers.google.com/compute/docs/reference/latest/api/reference/rest/v1/projects/listXpnHosts
+  "https://cloud.google.com/compute/api/reference/rest/v1/projects/listXpnHosts
   
   Required parameters: project
   
-  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: orderBy, filter, returnPartialSuccess, maxResults, pageToken
   
   Body: 
   
@@ -397,8 +397,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://compute.googleapis.com/compute/v1/projects/"
-     "{project}/listXpnHosts"
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/listXpnHosts"
      #{:project}
      parameters)
     (merge-with

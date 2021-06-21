@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists all public cloud services."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
@@ -39,7 +39,7 @@
   
   Required parameters: parent
   
-  Optional parameters: startTime, currencyCode, endTime, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, startTime, endTime, currencyCode
   
   Lists all publicly available SKUs for a given cloud service."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"
