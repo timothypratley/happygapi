@@ -130,9 +130,12 @@
 (defn refreshable? [{:as config :keys [private_key]} {:as credentials :keys [refresh_token]}]
   (boolean (or refresh_token private_key)))
 
+(defn credential-scopes [credentials]
+  (str/split (:scope credentials) #" "))
+
 (defn has-scopes? [credentials scopes]
   ;; TODO: scopes have a hierarchy
-  (set/subset? (set (:scopes credentials)) (set scopes)))
+  (set/subset? (set scopes) (set (credential-scopes credentials))))
 
 (defn auth-header
   "Given credentials, returns request header suitable for merging into a request."

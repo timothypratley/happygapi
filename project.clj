@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [clj-http "3.12.2"]
                  [cheshire "5.10.0"]
-                 [buddy "2.0.0"]]
+                 [buddy/buddy-sign "3.4.1"]]
   :deploy-repositories {"releases" {:url "https://repo.clojars.org"}}
   :profiles {:dev     {:source-paths ["dev"]
                        :dependencies [[fipp "0.6.23"]

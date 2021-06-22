@@ -44,7 +44,7 @@
 
 (defn update-credentials [config credentials scopes optional]
   ;; scopes can grow
-  (let [scopes (set/union (set (:scopes credentials)) (set scopes))]
+  (let [scopes (set/union (set (oauth2/credential-scopes credentials)) (set scopes))]
     ;; merge to retain refresh token
     (merge credentials
            (cond

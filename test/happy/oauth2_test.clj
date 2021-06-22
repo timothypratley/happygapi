@@ -6,8 +6,8 @@
 #_
 (deftest oauth2-exchange-code-test
   (credentials/init!)
-  (let [config @credentials/secret
-        scopes @credentials/scopes]
+  (let [config @credentials/*secret
+        scopes @credentials/*scopes]
     (let [code (r/request-code config scopes nil)]
       (is code)
       (let [credentials (oauth2/exchange-code config code)]
@@ -17,8 +17,8 @@
 (deftest refresh-revoke-test
   (credentials/init!)
   (credentials/auth!)
-  (let [config @credentials/secret
-        scopes @credentials/scopes
+  (let [config @credentials/*secret
+        scopes @credentials/*scopes
         credentials (credentials/fetch-credentials "user")]
     (and
       (is (oauth2/refreshable? config credentials))
