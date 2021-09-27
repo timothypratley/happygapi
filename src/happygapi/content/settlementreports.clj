@@ -11,7 +11,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: maxResults, transferStartDate, pageToken, transferEndDate
+  Optional parameters: transferStartDate, pageToken, transferEndDate, maxResults
   
   Retrieves a list of settlement reports from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -35,7 +35,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/settlementreports/get
   
-  Required parameters: settlementId, merchantId
+  Required parameters: merchantId, settlementId
   
   Optional parameters: none
   

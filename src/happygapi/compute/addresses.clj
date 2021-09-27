@@ -6,12 +6,40 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: filter, orderBy, maxResults, pageToken, returnPartialSuccess
+  
+  Retrieves a list of addresses contained within the specified region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/addresses"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn aggregatedList$
   "https://cloud.google.com/compute/api/reference/rest/v1/addresses/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: orderBy, filter, pageToken, returnPartialSuccess, maxResults, includeAllScopes
+  Optional parameters: pageToken, filter, maxResults, includeAllScopes, orderBy, returnPartialSuccess
   
   Retrieves an aggregated list of addresses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -25,61 +53,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/aggregated/addresses"
      #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/get
-  
-  Required parameters: address, region, project
-  
-  Optional parameters: none
-  
-  Returns the specified address resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:address :region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/addresses/{address}"
-     #{:address :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/delete
-  
-  Required parameters: address, project, region
-  
-  Optional parameters: requestId
-  
-  Deletes the specified address resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:address :region :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/addresses/{address}"
-     #{:address :region :project}
      parameters)
     (merge-with
      merge
@@ -138,25 +111,52 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/list
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/delete
   
-  Required parameters: region, project
+  Required parameters: project, region, address
   
-  Optional parameters: orderBy, pageToken, returnPartialSuccess, filter, maxResults
+  Optional parameters: requestId
   
-  Retrieves a list of addresses contained within the specified region."
+  Deletes the specified address resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:address :region :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/addresses/{address}"
+     #{:address :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/addresses/get
+  
+  Required parameters: region, address, project
+  
+  Optional parameters: none
+  
+  Returns the specified address resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
+  {:pre [(util/has-keys? parameters #{:address :region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/addresses"
-     #{:region :project}
+     "projects/{project}/regions/{region}/addresses/{address}"
+     #{:address :region :project}
      parameters)
     (merge-with
      merge

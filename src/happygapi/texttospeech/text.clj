@@ -15,14 +15,14 @@
   
   Body: 
   
-  {:audioConfig {:effectsProfileId [string],
+  {:voice {:ssmlGender string, :name string, :languageCode string},
+   :input {:ssml string, :text string},
+   :audioConfig {:effectsProfileId [string],
                  :speakingRate number,
-                 :volumeGainDb number,
+                 :audioEncoding string,
                  :pitch number,
-                 :sampleRateHertz integer,
-                 :audioEncoding string},
-   :input {:text string, :ssml string},
-   :voice {:languageCode string, :ssmlGender string, :name string}}
+                 :volumeGainDb number,
+                 :sampleRateHertz integer}}
   
   Synthesizes speech synchronously: receive results after all text input has been processed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

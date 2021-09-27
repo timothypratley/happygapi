@@ -6,97 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/delete
-  
-  Required parameters: healthCheckService, region, project
-  
-  Optional parameters: requestId
-  
-  Deletes the specified regional HealthCheckService."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:region :project :healthCheckService})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/healthCheckServices/{healthCheckService}"
-     #{:region :project :healthCheckService}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/list
-  
-  Required parameters: region, project
-  
-  Optional parameters: maxResults, orderBy, filter, returnPartialSuccess, pageToken
-  
-  Lists all the HealthCheckService resources that have been configured for the specified project in the given region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/healthCheckServices"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/get
-  
-  Required parameters: healthCheckService, region, project
-  
-  Optional parameters: none
-  
-  Returns the specified regional HealthCheckService resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:region :project :healthCheckService})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/healthCheckServices/{healthCheckService}"
-     #{:region :project :healthCheckService}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/patch
   
-  Required parameters: project, healthCheckService, region
+  Required parameters: project, region, healthCheckService
   
   Optional parameters: requestId
   
@@ -178,6 +91,93 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: pageToken, maxResults, returnPartialSuccess, filter, orderBy
+  
+  Lists all the HealthCheckService resources that have been configured for the specified project in the given region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/healthCheckServices"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/get
+  
+  Required parameters: healthCheckService, region, project
+  
+  Optional parameters: none
+  
+  Returns the specified regional HealthCheckService resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:region :project :healthCheckService})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/healthCheckServices/{healthCheckService}"
+     #{:region :project :healthCheckService}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionHealthCheckServices/delete
+  
+  Required parameters: region, healthCheckService, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified regional HealthCheckService."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:region :project :healthCheckService})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/healthCheckServices/{healthCheckService}"
+     #{:region :project :healthCheckService}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

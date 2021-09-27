@@ -1,6 +1,6 @@
 (ns happygapi.cloudchannel.products
   "Cloud Channel API: products.
-  
+  The Cloud Channel API enables Google Cloud partners to have a single unified resale platform and APIs across all of Google Cloud including GCP, Workspace, Maps and Chrome.
   See: https://cloud.google.com/channelapi/reference/rest/v1/products"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, account, languageCode, pageSize
+  Optional parameters: languageCode, account, pageToken, pageSize
   
   Lists the Products the reseller is authorized to sell. Possible error codes: * INVALID_ARGUMENT: Required request parameters are missing or invalid."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -37,7 +37,7 @@
   
   Required parameters: parent
   
-  Optional parameters: account, pageSize, languageCode, pageToken
+  Optional parameters: pageToken, languageCode, pageSize, account
   
   Lists the SKUs for a product the reseller is authorized to sell. Possible error codes: * INVALID_ARGUMENT: Required request parameters are missing or invalid."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}

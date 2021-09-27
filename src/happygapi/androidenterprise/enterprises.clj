@@ -99,14 +99,14 @@
   
   Body: 
   
-  {:webApps {:enabled boolean},
-   :playSearch {:approveApps boolean, :enabled boolean},
+  {:privateApps {:enabled boolean},
+   :parent string,
+   :webApps {:enabled boolean},
    :managedConfigurations {:enabled boolean},
-   :permission [string],
-   :privateApps {:enabled boolean},
    :zeroTouch {:enabled boolean},
-   :storeBuilder {:enabled boolean},
-   :parent string}
+   :permission [string],
+   :playSearch {:enabled boolean, :approveApps boolean},
+   :storeBuilder {:enabled boolean}}
   
   Returns a unique token to access an embeddable UI. To generate a web UI, pass the generated token into the managed Google Play javascript API. Each token may only be used to start one UI session. See the javascript API documentation for further information."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -378,10 +378,10 @@
   
   Body: 
   
-  {:primaryDomain string,
+  {:name string,
    :administrator [{:email string}],
    :id string,
-   :name string}
+   :primaryDomain string}
   
   Enrolls an enterprise with the calling EMM."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}

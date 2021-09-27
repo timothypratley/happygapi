@@ -6,34 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userProfiles/list
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Retrieves list of user profiles for a user."
-  {:scopes ["https://www.googleapis.com/auth/ddmconversions"
-            "https://www.googleapis.com/auth/dfareporting"
-            "https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userProfiles/get
   
@@ -53,6 +25,34 @@
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userProfiles/list
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Retrieves list of user profiles for a user."
+  {:scopes ["https://www.googleapis.com/auth/ddmconversions"
+            "https://www.googleapis.com/auth/dfareporting"
+            "https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles"
+     #{}
      parameters)
     (merge-with
      merge

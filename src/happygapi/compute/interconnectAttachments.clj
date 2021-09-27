@@ -6,26 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/delete
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/aggregatedList
   
-  Required parameters: interconnectAttachment, region, project
+  Required parameters: project
   
-  Optional parameters: requestId
+  Optional parameters: filter, includeAllScopes, returnPartialSuccess, maxResults, orderBy, pageToken
   
-  Deletes the specified interconnect attachment."
+  Retrieves an aggregated list of interconnect attachments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:interconnectAttachment :region :project})]}
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/interconnectAttachments/{interconnectAttachment}"
-     #{:interconnectAttachment :region :project}
+     "projects/{project}/aggregated/interconnectAttachments"
+     #{:project}
      parameters)
     (merge-with
      merge
@@ -97,38 +96,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/list
-  
-  Required parameters: region, project
-  
-  Optional parameters: returnPartialSuccess, filter, maxResults, pageToken, orderBy
-  
-  Retrieves the list of interconnect attachments contained within the specified region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/interconnectAttachments"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/get
   
-  Required parameters: interconnectAttachment, project, region
+  Required parameters: region, project, interconnectAttachment
   
   Optional parameters: none
   
@@ -155,25 +126,25 @@
       :as :json}
      auth))))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/aggregatedList
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/list
   
-  Required parameters: project
+  Required parameters: project, region
   
-  Optional parameters: includeAllScopes, orderBy, pageToken, maxResults, returnPartialSuccess, filter
+  Optional parameters: maxResults, returnPartialSuccess, orderBy, filter, pageToken
   
-  Retrieves an aggregated list of interconnect attachments."
+  Retrieves the list of interconnect attachments contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/interconnectAttachments"
-     #{:project}
+     "projects/{project}/regions/{region}/interconnectAttachments"
+     #{:region :project}
      parameters)
     (merge-with
      merge
@@ -186,7 +157,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/patch
   
-  Required parameters: project, interconnectAttachment, region
+  Required parameters: region, interconnectAttachment, project
   
   Optional parameters: requestId
   
@@ -242,6 +213,35 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnectAttachments/delete
+  
+  Required parameters: interconnectAttachment, region, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified interconnect attachment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:interconnectAttachment :region :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/interconnectAttachments/{interconnectAttachment}"
+     #{:interconnectAttachment :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

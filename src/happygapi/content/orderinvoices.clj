@@ -9,19 +9,19 @@
 (defn createrefundinvoice$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createrefundinvoice
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:operationId string,
-   :refundOnlyOption {:description string, :reason string},
-   :returnOption {:description string, :reason string},
+  {:refundOnlyOption {:reason string, :description string},
+   :shipmentInvoices [{:invoiceSummary InvoiceSummary,
+                       :lineItemInvoices [ShipmentInvoiceLineItemInvoice],
+                       :shipmentGroupId string}],
    :invoiceId string,
-   :shipmentInvoices [{:lineItemInvoices [ShipmentInvoiceLineItemInvoice],
-                       :invoiceSummary InvoiceSummary,
-                       :shipmentGroupId string}]}
+   :returnOption {:description string, :reason string},
+   :operationId string}
   
   Creates a refund invoice for one or more shipment groups, and triggers a refund for orderinvoice enabled orders. This can only be used for line items that have previously been charged using `createChargeInvoice`. All amounts (except for the summary) are incremental with respect to the previous invoice."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -47,21 +47,21 @@
 (defn createchargeinvoice$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createchargeinvoice
   
-  Required parameters: merchantId, orderId
+  Required parameters: orderId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:lineItemInvoices [{:lineItemId string,
-                       :shipmentUnitIds [string],
-                       :unitInvoice UnitInvoice,
-                       :productId string}],
-   :invoiceSummary {:additionalChargeSummaries [InvoiceSummaryAdditionalChargeSummary],
-                    :productTotal Amount},
-   :shipmentGroupId string,
+  {:invoiceId string,
    :operationId string,
-   :invoiceId string}
+   :shipmentGroupId string,
+   :invoiceSummary {:productTotal Amount,
+                    :additionalChargeSummaries [InvoiceSummaryAdditionalChargeSummary]},
+   :lineItemInvoices [{:productId string,
+                       :shipmentUnitIds [string],
+                       :lineItemId string,
+                       :unitInvoice UnitInvoice}]}
   
   Creates a charge invoice for a shipment group, and triggers a charge capture for orderinvoice enabled orders."
   {:scopes ["https://www.googleapis.com/auth/content"]}

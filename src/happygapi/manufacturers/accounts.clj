@@ -32,10 +32,36 @@
       :as :json}
      auth))))
 
+(defn products-list$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/list
+  
+  Required parameters: parent
+  
+  Optional parameters: include, pageToken, pageSize
+  
+  Lists all the products in a Manufacturer Center account."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn products-update$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/update
   
-  Required parameters: parent, name
+  Required parameters: name, parent
   
   Optional parameters: none
   
@@ -46,20 +72,20 @@
    :format string,
    :ageGroup string,
    :sizeSystem string,
-   :suggestedRetailPrice {:amount string, :currency string},
+   :suggestedRetailPrice {:currency string, :amount string},
    :flavor string,
    :color string,
    :productLine string,
    :capacity {:value string, :unit string},
    :includedDestination [string],
-   :additionalImageLink [{:imageUrl string,
-                          :status string,
-                          :type string}],
+   :additionalImageLink [{:status string,
+                          :type string,
+                          :imageUrl string}],
    :productPageUrl string,
    :releaseDate string,
-   :productDetail [{:sectionName string,
-                    :attributeName string,
-                    :attributeValue string}],
+   :productDetail [{:attributeName string,
+                    :attributeValue string,
+                    :sectionName string}],
    :productName string,
    :sizeType [string],
    :size string,
@@ -71,15 +97,15 @@
    :itemGroupId string,
    :productType [string],
    :disclosureDate string,
-   :featureDescription [{:image Image, :text string, :headline string}],
-   :count {:value string, :unit string},
+   :featureDescription [{:headline string, :image Image, :text string}],
+   :count {:unit string, :value string},
    :material string,
    :videoLink [string],
    :gtin [string],
    :gender string,
    :targetClientId string,
    :productHighlight [string],
-   :imageLink {:imageUrl string, :status string, :type string},
+   :imageLink {:status string, :type string, :imageUrl string},
    :pattern string,
    :richProductContent [string]}
   
@@ -121,32 +147,6 @@
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"
      #{:parent :name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn products-list$
-  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/list
-  
-  Required parameters: parent
-  
-  Optional parameters: include, pageSize, pageToken
-  
-  Lists all the products in a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products"
-     #{:parent}
      parameters)
     (merge-with
      merge

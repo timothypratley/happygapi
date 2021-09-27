@@ -6,41 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingListShares/patch
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:remarketingListId string,
-   :sharedAccountIds [string],
-   :kind string,
-   :sharedAdvertiserIds [string]}
-  
-  Updates an existing remarketing list share. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/remarketingListShares"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingListShares/update
   
@@ -50,10 +15,10 @@
   
   Body: 
   
-  {:remarketingListId string,
+  {:sharedAdvertiserIds [string],
    :sharedAccountIds [string],
    :kind string,
-   :sharedAdvertiserIds [string]}
+   :remarketingListId string}
   
   Updates an existing remarketing list share."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -76,10 +41,45 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingListShares/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:sharedAdvertiserIds [string],
+   :sharedAccountIds [string],
+   :kind string,
+   :remarketingListId string}
+  
+  Updates an existing remarketing list share. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/remarketingListShares"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingListShares/get
   
-  Required parameters: profileId, remarketingListId
+  Required parameters: remarketingListId, profileId
   
   Optional parameters: none
   

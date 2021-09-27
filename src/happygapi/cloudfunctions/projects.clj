@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -67,9 +67,9 @@
   
   Body: 
   
-  {:policy {:etag string,
+  {:policy {:version integer,
+            :etag string,
             :auditConfigs [AuditConfig],
-            :version integer,
             :bindings [Binding]},
    :updateMask string}
   
@@ -106,20 +106,30 @@
   {:description string,
    :buildWorkerPool string,
    :labels {},
+   :secretEnvironmentVariables [{:key string,
+                                 :projectId string,
+                                 :secret string,
+                                 :version string}],
    :versionId string,
    :sourceToken string,
+   :secretVolumes [{:versions [SecretVersion],
+                    :mountPath string,
+                    :secret string,
+                    :projectId string}],
    :name string,
    :entryPoint string,
+   :buildName string,
    :environmentVariables {},
+   :minInstances integer,
    :sourceUploadUrl string,
    :vpcConnector string,
    :buildEnvironmentVariables {},
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:failurePolicy FailurePolicy,
+   :eventTrigger {:eventType string,
+                  :service string,
                   :resource string,
-                  :eventType string,
-                  :service string},
+                  :failurePolicy FailurePolicy},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -130,7 +140,7 @@
    :buildId string,
    :maxInstances integer,
    :ingressSettings string,
-   :httpsTrigger {:securityLevel string, :url string},
+   :httpsTrigger {:url string, :securityLevel string},
    :sourceRepository {:deployedUrl string, :url string}}
   
   Updates existing function."
@@ -230,20 +240,30 @@
   {:description string,
    :buildWorkerPool string,
    :labels {},
+   :secretEnvironmentVariables [{:key string,
+                                 :projectId string,
+                                 :secret string,
+                                 :version string}],
    :versionId string,
    :sourceToken string,
+   :secretVolumes [{:versions [SecretVersion],
+                    :mountPath string,
+                    :secret string,
+                    :projectId string}],
    :name string,
    :entryPoint string,
+   :buildName string,
    :environmentVariables {},
+   :minInstances integer,
    :sourceUploadUrl string,
    :vpcConnector string,
    :buildEnvironmentVariables {},
    :updateTime string,
    :vpcConnectorEgressSettings string,
-   :eventTrigger {:failurePolicy FailurePolicy,
+   :eventTrigger {:eventType string,
+                  :service string,
                   :resource string,
-                  :eventType string,
-                  :service string},
+                  :failurePolicy FailurePolicy},
    :availableMemoryMb integer,
    :serviceAccountEmail string,
    :status string,
@@ -254,7 +274,7 @@
    :buildId string,
    :maxInstances integer,
    :ingressSettings string,
-   :httpsTrigger {:securityLevel string, :url string},
+   :httpsTrigger {:url string, :securityLevel string},
    :sourceRepository {:deployedUrl string, :url string}}
   
   Creates a new function. If a function with the given name already exists in the specified project, the long running operation will return `ALREADY_EXISTS` error."
@@ -399,7 +419,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Returns a list of functions that belong to the requested project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

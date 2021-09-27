@@ -6,6 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn update$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/update
+  
+  Required parameters: adClientId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:code string, :kind string, :id string, :name string}
+  
+  Update a custom channel in the host AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "adclients/{adClientId}/customchannels"
+     #{:adClientId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/get
   
@@ -27,38 +59,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/update
-  
-  Required parameters: adClientId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:kind string, :id string, :name string, :code string}
-  
-  Update a custom channel in the host AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:adClientId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/customchannels"
-     #{:adClientId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -90,32 +90,6 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/delete
-  
-  Required parameters: adClientId, customChannelId
-  
-  Optional parameters: none
-  
-  Delete a specific custom channel from the host AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/customchannels/{customChannelId}"
-     #{:adClientId :customChannelId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/patch
   
@@ -125,7 +99,7 @@
   
   Body: 
   
-  {:kind string, :id string, :name string, :code string}
+  {:code string, :kind string, :id string, :name string}
   
   Update a custom channel in the host AdSense account. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
@@ -148,6 +122,32 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/delete
+  
+  Required parameters: customChannelId, adClientId
+  
+  Optional parameters: none
+  
+  Delete a specific custom channel from the host AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId :customChannelId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "adclients/{adClientId}/customchannels/{customChannelId}"
+     #{:adClientId :customChannelId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/customchannels/insert
   
@@ -157,7 +157,7 @@
   
   Body: 
   
-  {:kind string, :id string, :name string, :code string}
+  {:code string, :kind string, :id string, :name string}
   
   Add a new custom channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}

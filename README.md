@@ -166,6 +166,12 @@ lein test
 ```
 
 
+## Deploying
+
+```
+lein deploy
+```
+
 ## License
 
 Copyright © 2020 Timothy Pratley

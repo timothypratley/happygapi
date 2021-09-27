@@ -11,7 +11,7 @@
   
   Required parameters: notification_id
   
-  Optional parameters: locale, source
+  Optional parameters: source, locale
   
   Returns notification details for a given notification id."
   {:scopes ["https://www.googleapis.com/auth/books"]}

@@ -41,7 +41,7 @@
   
   Body: 
   
-  {:kind string, :cloudTopicName string, :registeredEvents [string]}
+  {:kind string, :registeredEvents [string], :cloudTopicName string}
   
   Register a Merchant Center account for pubsub notifications. Note that cloud topic name should not be provided as part of the request."
   {:scopes ["https://www.googleapis.com/auth/content"]}

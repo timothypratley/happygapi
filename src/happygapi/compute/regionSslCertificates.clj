@@ -6,12 +6,58 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionSslCertificates/insert
+  
+  Required parameters: project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :name string,
+   :selfManaged {:privateKey string, :certificate string},
+   :privateKey string,
+   :selfLink string,
+   :type string,
+   :region string,
+   :certificate string,
+   :subjectAlternativeNames [string],
+   :id string,
+   :kind string,
+   :managed {:domainStatus {}, :domains [string], :status string},
+   :expireTime string}
+  
+  Creates a SslCertificate resource in the specified project and region using the data included in the request"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/sslCertificates"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionSslCertificates/list
   
   Required parameters: region, project
   
-  Optional parameters: filter, returnPartialSuccess, pageToken, orderBy, maxResults
+  Optional parameters: returnPartialSuccess, orderBy, maxResults, pageToken, filter
   
   Retrieves the list of SslCertificate resources available to the specified project in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -63,56 +109,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionSslCertificates/insert
-  
-  Required parameters: project, region
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :creationTimestamp string,
-   :name string,
-   :selfManaged {:privateKey string, :certificate string},
-   :privateKey string,
-   :selfLink string,
-   :type string,
-   :region string,
-   :certificate string,
-   :subjectAlternativeNames [string],
-   :id string,
-   :kind string,
-   :managed {:status string, :domains [string], :domainStatus {}},
-   :expireTime string}
-  
-  Creates a SslCertificate resource in the specified project and region using the data included in the request"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/sslCertificates"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionSslCertificates/get
   
-  Required parameters: project, region, sslCertificate
+  Required parameters: region, sslCertificate, project
   
   Optional parameters: none
   

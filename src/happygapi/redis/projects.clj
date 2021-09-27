@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://redis.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/get
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://redis.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://redis.googleapis.com/"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -137,24 +137,24 @@
    :reservedIpRange string,
    :statusMessage string,
    :createTime string,
-   :maintenanceSchedule {:endTime string,
-                         :canReschedule boolean,
+   :maintenanceSchedule {:canReschedule boolean,
                          :scheduleDeadlineTime string,
+                         :endTime string,
                          :startTime string},
    :state string,
    :port integer,
    :redisConfigs {},
-   :maintenancePolicy {:weeklyMaintenanceWindow [WeeklyMaintenanceWindow],
-                       :createTime string,
+   :maintenancePolicy {:createTime string,
                        :updateTime string,
+                       :weeklyMaintenanceWindow [WeeklyMaintenanceWindow],
                        :description string},
    :persistenceIamIdentity string,
    :host string,
    :serverCaCerts [{:createTime string,
-                    :expireTime string,
-                    :serialNumber string,
                     :sha1Fingerprint string,
-                    :cert string}],
+                    :cert string,
+                    :serialNumber string,
+                    :expireTime string}],
    :currentLocationId string,
    :alternativeLocationId string,
    :transitEncryptionMode string,
@@ -216,7 +216,7 @@
   
   Body: 
   
-  {:rescheduleType string, :scheduleTime string}
+  {:scheduleTime string, :rescheduleType string}
   
   Reschedule maintenance for a given instance in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -260,24 +260,24 @@
    :reservedIpRange string,
    :statusMessage string,
    :createTime string,
-   :maintenanceSchedule {:endTime string,
-                         :canReschedule boolean,
+   :maintenanceSchedule {:canReschedule boolean,
                          :scheduleDeadlineTime string,
+                         :endTime string,
                          :startTime string},
    :state string,
    :port integer,
    :redisConfigs {},
-   :maintenancePolicy {:weeklyMaintenanceWindow [WeeklyMaintenanceWindow],
-                       :createTime string,
+   :maintenancePolicy {:createTime string,
                        :updateTime string,
+                       :weeklyMaintenanceWindow [WeeklyMaintenanceWindow],
                        :description string},
    :persistenceIamIdentity string,
    :host string,
    :serverCaCerts [{:createTime string,
-                    :expireTime string,
-                    :serialNumber string,
                     :sha1Fingerprint string,
-                    :cert string}],
+                    :cert string,
+                    :serialNumber string,
+                    :expireTime string}],
    :currentLocationId string,
    :alternativeLocationId string,
    :transitEncryptionMode string,
@@ -452,32 +452,6 @@
       :as :json}
      auth))))
 
-(defn locations-operations-delete$
-  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://redis.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-operations-cancel$
   "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/operations/cancel
   
@@ -494,6 +468,32 @@
     (util/get-url
      "https://redis.googleapis.com/"
      "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://redis.googleapis.com/"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -530,19 +530,19 @@
       :as :json}
      auth))))
 
-(defn locations-operations-get$
-  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/operations/get
+(defn locations-operations-delete$
+  "https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects/locations/operations/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://redis.googleapis.com/"
      "v1/{+name}"

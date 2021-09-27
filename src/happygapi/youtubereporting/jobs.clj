@@ -33,29 +33,20 @@
       :as :json}
      auth))))
 
-(defn create$
-  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/create
+(defn list$
+  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/list
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, includeSystemManaged, pageToken, pageSize
   
-  Body: 
-  
-  {:id string,
-   :name string,
-   :createTime string,
-   :systemManaged boolean,
-   :reportTypeId string,
-   :expireTime string}
-  
-  Creates a job and returns it."
+  Lists jobs."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://youtubereporting.googleapis.com/"
      "v1/jobs"
@@ -63,9 +54,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -98,20 +87,29 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/list
+(defn create$
+  "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/create
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken, includeSystemManaged, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner
   
-  Lists jobs."
+  Body: 
+  
+  {:systemManaged boolean,
+   :expireTime string,
+   :reportTypeId string,
+   :id string,
+   :name string,
+   :createTime string}
+  
+  Creates a job and returns it."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
             "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://youtubereporting.googleapis.com/"
      "v1/jobs"
@@ -119,7 +117,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -128,7 +128,7 @@
 (defn reports-get$
   "https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/jobs/reports/get
   
-  Required parameters: jobId, reportId
+  Required parameters: reportId, jobId
   
   Optional parameters: onBehalfOfContentOwner
   
@@ -157,7 +157,7 @@
   
   Required parameters: jobId
   
-  Optional parameters: pageToken, onBehalfOfContentOwner, startTimeBefore, pageSize, startTimeAtOrAfter, createdAfter
+  Optional parameters: startTimeBefore, startTimeAtOrAfter, createdAfter, onBehalfOfContentOwner, pageSize, pageToken
   
   Lists reports created by a specific job. Returns NOT_FOUND if the job does not exist."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"

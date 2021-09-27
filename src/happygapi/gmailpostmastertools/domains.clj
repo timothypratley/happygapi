@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the domains that have been registered by the client. The order of domains in the response is unspecified and non-deterministic. Newly created domains will not necessarily be added to the end of this list."
-  {:scopes ["https://www.googleapis.com/auth/postmaster.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://gmailpostmastertools.googleapis.com/"
-     "v1/domains"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/get
   
@@ -49,6 +23,32 @@
      "https://gmailpostmastertools.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the domains that have been registered by the client. The order of domains in the response is unspecified and non-deterministic. Newly created domains will not necessarily be added to the end of this list."
+  {:scopes ["https://www.googleapis.com/auth/postmaster.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://gmailpostmastertools.googleapis.com/"
+     "v1/domains"
+     #{}
      parameters)
     (merge-with
      merge

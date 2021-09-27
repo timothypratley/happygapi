@@ -42,14 +42,14 @@
   Body: 
   
   {:state string,
-   :config {:logSource string, :policyOverlay {}},
-   :resultsSummary {:unchangedCount integer,
-                    :oldestDate GoogleTypeDate,
-                    :logCount integer,
-                    :differenceCount integer,
+   :name string,
+   :config {:policyOverlay {}, :logSource string},
+   :resultsSummary {:oldestDate GoogleTypeDate,
+                    :unchangedCount integer,
+                    :errorCount integer,
                     :newestDate GoogleTypeDate,
-                    :errorCount integer},
-   :name string}
+                    :logCount integer,
+                    :differenceCount integer}}
   
   Creates and starts a Replay using the given ReplayConfig."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -77,7 +77,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the results of running a Replay."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

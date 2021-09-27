@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/get
   
-  Required parameters: zone, networkEndpointGroup, project
+  Required parameters: project, zone, networkEndpointGroup
   
   Optional parameters: none
   
@@ -39,7 +39,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/insert
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
   Optional parameters: requestId
   
@@ -50,7 +50,7 @@
    :creationTimestamp string,
    :zone string,
    :name string,
-   :cloudFunction {:function string, :urlMask string},
+   :cloudFunction {:urlMask string, :function string},
    :selfLink string,
    :cloudRun {:urlMask string, :tag string, :service string},
    :size integer,
@@ -88,7 +88,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/testIamPermissions
   
-  Required parameters: zone, resource, project
+  Required parameters: zone, project, resource
   
   Optional parameters: none
   
@@ -124,7 +124,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, pageToken, includeAllScopes, returnPartialSuccess, filter, orderBy
+  Optional parameters: orderBy, returnPartialSuccess, includeAllScopes, maxResults, pageToken, filter
   
   Retrieves the list of network endpoint groups and sorts them by zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -150,16 +150,16 @@
 (defn attachNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/attachNetworkEndpoints
   
-  Required parameters: project, networkEndpointGroup, zone
+  Required parameters: zone, project, networkEndpointGroup
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:fqdn string,
-                       :instance string,
-                       :annotations {},
+  {:networkEndpoints [{:instance string,
                        :ipAddress string,
+                       :annotations {},
+                       :fqdn string,
                        :port integer}]}
   
   Attach a list of network endpoints to the specified network endpoint group."
@@ -189,7 +189,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/delete
   
-  Required parameters: zone, project, networkEndpointGroup
+  Required parameters: networkEndpointGroup, zone, project
   
   Optional parameters: requestId
   
@@ -220,7 +220,7 @@
   
   Required parameters: zone, project
   
-  Optional parameters: pageToken, returnPartialSuccess, orderBy, filter, maxResults
+  Optional parameters: maxResults, returnPartialSuccess, filter, orderBy, pageToken
   
   Retrieves the list of network endpoint groups that are located in the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -246,9 +246,9 @@
 (defn listNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/listNetworkEndpoints
   
-  Required parameters: networkEndpointGroup, project, zone
+  Required parameters: project, networkEndpointGroup, zone
   
-  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
+  Optional parameters: pageToken, maxResults, orderBy, filter, returnPartialSuccess
   
   Body: 
   
@@ -282,16 +282,16 @@
 (defn detachNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/detachNetworkEndpoints
   
-  Required parameters: zone, project, networkEndpointGroup
+  Required parameters: networkEndpointGroup, zone, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:fqdn string,
-                       :instance string,
-                       :annotations {},
+  {:networkEndpoints [{:instance string,
                        :ipAddress string,
+                       :annotations {},
+                       :fqdn string,
                        :port integer}]}
   
   Detach a list of network endpoints from the specified network endpoint group."

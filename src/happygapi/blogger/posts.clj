@@ -9,9 +9,9 @@
 (defn get$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/get
   
-  Required parameters: blogId, postId
+  Required parameters: postId, blogId
   
-  Optional parameters: fetchImages, view, maxComments, fetchBody
+  Optional parameters: maxComments, view, fetchImages, fetchBody
   
   Gets a post by blog id and post id"
   {:scopes ["https://www.googleapis.com/auth/blogger"
@@ -38,7 +38,7 @@
   
   Required parameters: blogId
   
-  Optional parameters: fetchBody, fetchImages, isDraft
+  Optional parameters: fetchBody, isDraft, fetchImages
   
   Body: 
   
@@ -50,8 +50,8 @@
    :selfLink string,
    :etag string,
    :title string,
-   :author {:url string,
-            :image {:url string},
+   :author {:image {:url string},
+            :url string,
             :id string,
             :displayName string},
    :replies {:totalItems string,
@@ -60,10 +60,10 @@
                       :content string,
                       :updated string,
                       :selfLink string,
-                      :author {:id string,
+                      :author {:image {:url string},
                                :displayName string,
-                               :url string,
-                               :image {:url string}},
+                               :id string,
+                               :url string},
                       :status string,
                       :id string,
                       :kind string,
@@ -76,7 +76,7 @@
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lng number, :name string, :span string, :lat number},
+   :location {:name string, :lat number, :span string, :lng number},
    :blog {:id string},
    :published string}
   
@@ -106,7 +106,7 @@
   
   Required parameters: postId, blogId
   
-  Optional parameters: publish, maxComments, revert, fetchBody, fetchImages
+  Optional parameters: fetchImages, publish, fetchBody, maxComments, revert
   
   Body: 
   
@@ -118,8 +118,8 @@
    :selfLink string,
    :etag string,
    :title string,
-   :author {:url string,
-            :image {:url string},
+   :author {:image {:url string},
+            :url string,
             :id string,
             :displayName string},
    :replies {:totalItems string,
@@ -128,10 +128,10 @@
                       :content string,
                       :updated string,
                       :selfLink string,
-                      :author {:id string,
+                      :author {:image {:url string},
                                :displayName string,
-                               :url string,
-                               :image {:url string}},
+                               :id string,
+                               :url string},
                       :status string,
                       :id string,
                       :kind string,
@@ -144,7 +144,7 @@
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lng number, :name string, :span string, :lat number},
+   :location {:name string, :lat number, :span string, :lng number},
    :blog {:id string},
    :published string}
   
@@ -174,7 +174,7 @@
   
   Required parameters: blogId, postId
   
-  Optional parameters: publish, revert, fetchImages, fetchBody, maxComments
+  Optional parameters: publish, revert, fetchBody, maxComments, fetchImages
   
   Body: 
   
@@ -186,8 +186,8 @@
    :selfLink string,
    :etag string,
    :title string,
-   :author {:url string,
-            :image {:url string},
+   :author {:image {:url string},
+            :url string,
             :id string,
             :displayName string},
    :replies {:totalItems string,
@@ -196,10 +196,10 @@
                       :content string,
                       :updated string,
                       :selfLink string,
-                      :author {:id string,
+                      :author {:image {:url string},
                                :displayName string,
-                               :url string,
-                               :image {:url string}},
+                               :id string,
+                               :url string},
                       :status string,
                       :id string,
                       :kind string,
@@ -212,7 +212,7 @@
    :kind string,
    :url string,
    :readerComments string,
-   :location {:lng number, :name string, :span string, :lat number},
+   :location {:name string, :lat number, :span string, :lng number},
    :blog {:id string},
    :published string}
   
@@ -268,7 +268,7 @@
   
   Required parameters: q, blogId
   
-  Optional parameters: orderBy, fetchBodies
+  Optional parameters: fetchBodies, orderBy
   
   Searches for posts matching given query terms in the specified blog."
   {:scopes ["https://www.googleapis.com/auth/blogger"
@@ -293,7 +293,7 @@
 (defn revert$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/revert
   
-  Required parameters: blogId, postId
+  Required parameters: postId, blogId
   
   Optional parameters: none
   

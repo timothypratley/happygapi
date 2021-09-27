@@ -15,15 +15,15 @@
   
   Body: 
   
-  {:salePrice {:value string, :currency string},
-   :price {:value string, :currency string},
-   :regionId string,
-   :customAttributes [{:groupValues [CustomAttribute],
-                       :value string,
-                       :name string}],
-   :availability string,
+  {:customAttributes [{:groupValues [CustomAttribute],
+                       :name string,
+                       :value string}],
+   :salePrice {:value string, :currency string},
    :salePriceEffectiveDate string,
-   :kind string}
+   :regionId string,
+   :kind string,
+   :price {:value string, :currency string},
+   :availability string}
   
   Update the regional inventory of a product in your Merchant Center account. If a regional inventory with the same region ID already exists, this method updates that entry."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -55,11 +55,11 @@
   
   Body: 
   
-  {:entries [{:productId string,
-              :batchId integer,
-              :method string,
+  {:entries [{:method string,
+              :merchantId string,
+              :productId string,
               :regionalInventory RegionalInventory,
-              :merchantId string}]}
+              :batchId integer}]}
   
   Updates regional inventory for multiple products or regions in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}

@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDiskTypes/get
   
-  Required parameters: project, diskType, region
+  Required parameters: diskType, region, project
   
   Optional parameters: none
   
@@ -37,9 +37,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDiskTypes/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: returnPartialSuccess, orderBy, pageToken, maxResults, filter
+  Optional parameters: orderBy, filter, maxResults, pageToken, returnPartialSuccess
   
   Retrieves a list of regional disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

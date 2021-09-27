@@ -83,15 +83,17 @@
    :displayName string,
    :name string,
    :state string,
-   :deviceMetadata {},
-   :grants [{:frequencyRange SasPortalFrequencyRange,
-             :maxEirp number,
+   :deviceMetadata {:commonChannelGroup string,
+                    :interferenceCoordinationGroup string,
+                    :antennaModel string},
+   :grants [{:grantId string,
              :moveList [SasPortalDpaMoveList],
-             :grantId string,
-             :expireTime string,
              :channelType string,
+             :expireTime string,
+             :frequencyRange SasPortalFrequencyRange,
              :state string,
-             :suspensionReason [string]}],
+             :suspensionReason [string],
+             :maxEirp number}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -102,8 +104,8 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
-   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
-                      :score number}],
+   :currentChannels [{:score number,
+                      :frequencyRange SasPortalFrequencyRange}],
    :fccId string}
   
   Updates a device."
@@ -136,7 +138,7 @@
   
   Body: 
   
-  {:encodedDevice string, :installerId string}
+  {:installerId string, :encodedDevice string}
   
   Updates a signed device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -216,15 +218,17 @@
    :displayName string,
    :name string,
    :state string,
-   :deviceMetadata {},
-   :grants [{:frequencyRange SasPortalFrequencyRange,
-             :maxEirp number,
+   :deviceMetadata {:commonChannelGroup string,
+                    :interferenceCoordinationGroup string,
+                    :antennaModel string},
+   :grants [{:grantId string,
              :moveList [SasPortalDpaMoveList],
-             :grantId string,
-             :expireTime string,
              :channelType string,
+             :expireTime string,
+             :frequencyRange SasPortalFrequencyRange,
              :state string,
-             :suspensionReason [string]}],
+             :suspensionReason [string],
+             :maxEirp number}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -235,8 +239,8 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
-   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
-                      :score number}],
+   :currentChannels [{:score number,
+                      :frequencyRange SasPortalFrequencyRange}],
    :fccId string}
   
   Creates a device under a node or customer."
@@ -323,7 +327,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: pageSize, filter, pageToken
   
   Lists devices under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -386,23 +390,23 @@
       :as :json}
      auth))))
 
-(defn nodes-list$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/list
+(defn nodes-delete$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: none
   
-  Lists nodes."
+  Deletes a node."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/nodes"
-     #{:parent}
+     "v1alpha1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -421,7 +425,7 @@
   
   Body: 
   
-  {:displayName string, :sasUserIds [string], :name string}
+  {:name string, :displayName string, :sasUserIds [string]}
   
   Updates an existing node."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -444,23 +448,19 @@
       :as :json}
      auth))))
 
-(defn nodes-create$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/create
+(defn nodes-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize, filter
   
-  Body: 
-  
-  {:displayName string, :sasUserIds [string], :name string}
-  
-  Creates a new node."
+  Lists nodes."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/{+parent}/nodes"
@@ -468,9 +468,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -508,32 +506,6 @@
       :as :json}
      auth))))
 
-(defn nodes-delete$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn nodes-get$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/get
   
@@ -551,6 +523,159 @@
      "https://sasportal.googleapis.com/"
      "v1alpha1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :displayName string, :sasUserIds [string]}
+  
+  Creates a new node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-deployments-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/deployments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists deployments."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/deployments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-deployments-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/deployments/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:sasUserIds [string],
+   :defaultBillingMode string,
+   :name string,
+   :frns [string],
+   :allowedBillingModes [string],
+   :displayName string}
+  
+  Creates a new deployment."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/deployments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-nodes-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/nodes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :displayName string, :sasUserIds [string]}
+  
+  Creates a new node."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn nodes-nodes-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/nodes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists nodes."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/nodes"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -617,15 +742,17 @@
    :displayName string,
    :name string,
    :state string,
-   :deviceMetadata {},
-   :grants [{:frequencyRange SasPortalFrequencyRange,
-             :maxEirp number,
+   :deviceMetadata {:commonChannelGroup string,
+                    :interferenceCoordinationGroup string,
+                    :antennaModel string},
+   :grants [{:grantId string,
              :moveList [SasPortalDpaMoveList],
-             :grantId string,
-             :expireTime string,
              :channelType string,
+             :expireTime string,
+             :frequencyRange SasPortalFrequencyRange,
              :state string,
-             :suspensionReason [string]}],
+             :suspensionReason [string],
+             :maxEirp number}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -636,8 +763,8 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
-   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
-                      :score number}],
+   :currentChannels [{:score number,
+                      :frequencyRange SasPortalFrequencyRange}],
    :fccId string}
   
   Creates a device under a node or customer."
@@ -666,7 +793,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageToken, pageSize, filter
   
   Lists devices under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -687,116 +814,32 @@
       :as :json}
      auth))))
 
-(defn nodes-nodes-create$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/nodes/create
+(defn deployments-patch$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: none
-  
-  Body: 
-  
-  {:displayName string, :sasUserIds [string], :name string}
-  
-  Creates a new node."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/nodes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-nodes-list$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/nodes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists nodes."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/nodes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-deployments-list$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/deployments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists deployments."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/deployments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn nodes-deployments-create$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/nodes/deployments/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
-  {:displayName string,
+  {:sasUserIds [string],
    :defaultBillingMode string,
-   :allowedBillingModes [string],
    :name string,
    :frns [string],
-   :sasUserIds [string]}
+   :allowedBillingModes [string],
+   :displayName string}
   
-  Creates a new deployment."
+  Updates an existing deployment."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/deployments"
-     #{:parent}
+     "v1alpha1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -834,95 +877,6 @@
       :as :json}
      auth))))
 
-(defn deployments-get$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns a requested deployment."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deployments-list$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists deployments."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/deployments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deployments-patch$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:displayName string,
-   :defaultBillingMode string,
-   :allowedBillingModes [string],
-   :name string,
-   :frns [string],
-   :sasUserIds [string]}
-  
-  Updates an existing deployment."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn deployments-move$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/move
   
@@ -955,70 +909,53 @@
       :as :json}
      auth))))
 
-(defn deployments-devices-create$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/devices/create
+(defn deployments-list$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize, filter
   
-  Body: 
-  
-  {:serialNumber string,
-   :activeConfig {:category string,
-                  :installationParams SasPortalInstallationParams,
-                  :state string,
-                  :measurementCapabilities [string],
-                  :updateTime string,
-                  :callSign string,
-                  :userId string,
-                  :isSigned boolean,
-                  :airInterface SasPortalDeviceAirInterface,
-                  :model SasPortalDeviceModel},
-   :grantRangeAllowlists [{:lowFrequencyMhz number,
-                           :highFrequencyMhz number}],
-   :displayName string,
-   :name string,
-   :state string,
-   :deviceMetadata {},
-   :grants [{:frequencyRange SasPortalFrequencyRange,
-             :maxEirp number,
-             :moveList [SasPortalDpaMoveList],
-             :grantId string,
-             :expireTime string,
-             :channelType string,
-             :state string,
-             :suspensionReason [string]}],
-   :preloadedConfig {:category string,
-                     :installationParams SasPortalInstallationParams,
-                     :state string,
-                     :measurementCapabilities [string],
-                     :updateTime string,
-                     :callSign string,
-                     :userId string,
-                     :isSigned boolean,
-                     :airInterface SasPortalDeviceAirInterface,
-                     :model SasPortalDeviceModel},
-   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
-                      :score number}],
-   :fccId string}
-  
-  Creates a device under a node or customer."
+  Lists deployments."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://sasportal.googleapis.com/"
-     "v1alpha1/{+parent}/devices"
+     "v1alpha1/{+parent}/deployments"
      #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn deployments-get$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a requested deployment."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1056,12 +993,83 @@
       :as :json}
      auth))))
 
+(defn deployments-devices-create$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/devices/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:serialNumber string,
+   :activeConfig {:category string,
+                  :installationParams SasPortalInstallationParams,
+                  :state string,
+                  :measurementCapabilities [string],
+                  :updateTime string,
+                  :callSign string,
+                  :userId string,
+                  :isSigned boolean,
+                  :airInterface SasPortalDeviceAirInterface,
+                  :model SasPortalDeviceModel},
+   :grantRangeAllowlists [{:lowFrequencyMhz number,
+                           :highFrequencyMhz number}],
+   :displayName string,
+   :name string,
+   :state string,
+   :deviceMetadata {:commonChannelGroup string,
+                    :interferenceCoordinationGroup string,
+                    :antennaModel string},
+   :grants [{:grantId string,
+             :moveList [SasPortalDpaMoveList],
+             :channelType string,
+             :expireTime string,
+             :frequencyRange SasPortalFrequencyRange,
+             :state string,
+             :suspensionReason [string],
+             :maxEirp number}],
+   :preloadedConfig {:category string,
+                     :installationParams SasPortalInstallationParams,
+                     :state string,
+                     :measurementCapabilities [string],
+                     :updateTime string,
+                     :callSign string,
+                     :userId string,
+                     :isSigned boolean,
+                     :airInterface SasPortalDeviceAirInterface,
+                     :model SasPortalDeviceModel},
+   :currentChannels [{:score number,
+                      :frequencyRange SasPortalFrequencyRange}],
+   :fccId string}
+  
+  Creates a device under a node or customer."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+parent}/devices"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn deployments-devices-list$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/nodes/deployments/devices/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: filter, pageToken, pageSize
   
   Lists devices under a node or customer."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}

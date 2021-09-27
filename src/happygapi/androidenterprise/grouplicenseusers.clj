@@ -9,7 +9,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/grouplicenseusers/list
   
-  Required parameters: groupLicenseId, enterpriseId
+  Required parameters: enterpriseId, groupLicenseId
   
   Optional parameters: none
   

@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/get
   
-  Required parameters: merchantId, accountId
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
   
@@ -35,7 +35,7 @@
 (defn setinventoryverificationcontact$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/setinventoryverificationcontact
   
-  Required parameters: contactName, merchantId, language, contactEmail, accountId, country
+  Required parameters: language, accountId, merchantId, contactName, country, contactEmail
   
   Optional parameters: none
   
@@ -73,7 +73,7 @@
 (defn requestinventoryverification$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/requestinventoryverification
   
-  Required parameters: country, accountId, merchantId
+  Required parameters: merchantId, accountId, country
   
   Optional parameters: none
   
@@ -107,14 +107,14 @@
   
   Body: 
   
-  {:countrySettings [{:hostedLocalStorefrontActive boolean,
+  {:kind string,
+   :countrySettings [{:about LiaAboutPageSettings,
                       :inventory LiaInventorySettings,
+                      :onDisplayToOrder LiaOnDisplayToOrderSettings,
+                      :hostedLocalStorefrontActive boolean,
                       :storePickupActive boolean,
                       :posDataProvider LiaPosDataProvider,
-                      :country string,
-                      :about LiaAboutPageSettings,
-                      :onDisplayToOrder LiaOnDisplayToOrderSettings}],
-   :kind string,
+                      :country string}],
    :accountId string}
   
   Updates the LIA settings of the account. Any fields that are not provided are deleted from the resource."
@@ -141,7 +141,7 @@
 (defn requestgmbaccess$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/requestgmbaccess
   
-  Required parameters: gmbEmail, merchantId, accountId
+  Required parameters: gmbEmail, accountId, merchantId
   
   Optional parameters: none
   
@@ -195,9 +195,9 @@
 (defn setposdataprovider$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/setposdataprovider
   
-  Required parameters: accountId, country, merchantId
+  Required parameters: merchantId, country, accountId
   
-  Optional parameters: posDataProviderId, posExternalAccountId
+  Optional parameters: posExternalAccountId, posDataProviderId
   
   Sets the POS data provider for the specified country."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -249,7 +249,7 @@
 (defn getaccessiblegmbaccounts$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/liasettings/getaccessiblegmbaccounts
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   

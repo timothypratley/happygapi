@@ -17,40 +17,42 @@
   
   {:space {:type string,
            :displayName string,
+           :singleUserBotDm boolean,
            :name string,
-           :threaded boolean,
-           :singleUserBotDm boolean},
+           :threaded boolean},
    :fallbackText string,
    :name string,
    :createTime string,
    :previewText string,
    :argumentText string,
    :thread {:name string},
-   :actionResponse {:type string, :url string},
-   :sender {:type string,
+   :actionResponse {:type string,
+                    :dialogAction DialogAction,
+                    :url string},
+   :sender {:domainId string,
+            :type string,
             :name string,
-            :domainId string,
-            :displayName string,
-            :isAnonymous boolean},
-   :cards [{:cardActions [CardAction],
-            :name string,
-            :header CardHeader,
-            :sections [Section]}],
-   :annotations [{:startIndex integer,
+            :isAnonymous boolean,
+            :displayName string},
+   :cards [{:name string,
+            :cardActions [CardAction],
+            :sections [Section],
+            :header CardHeader}],
+   :lastUpdateTime string,
+   :annotations [{:userMention UserMentionMetadata,
+                  :startIndex integer,
                   :type string,
                   :slashCommand SlashCommandMetadata,
-                  :length integer,
-                  :userMention UserMentionMetadata}],
+                  :length integer}],
    :slashCommand {:commandId string},
-   :cardsV2 [{:card GoogleAppsCardV1Card, :cardId string}],
-   :attachment [{:source string,
-                 :downloadUri string,
-                 :driveDataRef DriveDataRef,
-                 :attachmentDataRef AttachmentDataRef,
-                 :contentName string,
-                 :name string,
+   :attachment [{:contentType string,
                  :thumbnailUri string,
-                 :contentType string}],
+                 :name string,
+                 :downloadUri string,
+                 :contentName string,
+                 :source string,
+                 :driveDataRef DriveDataRef,
+                 :attachmentDataRef AttachmentDataRef}],
    :text string}
   
   Legacy path for creating message. Calling these will result in a BadRequest response."
@@ -105,7 +107,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists spaces the caller is a member of."
   {:scopes nil}
@@ -126,69 +128,53 @@
       :as :json}
      auth))))
 
-(defn messages-create$
-  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/messages/create
+(defn members-get$
+  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/members/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a membership."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chat.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn members-list$
+  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/members/list
   
   Required parameters: parent
   
-  Optional parameters: threadKey
+  Optional parameters: pageToken, pageSize
   
-  Body: 
-  
-  {:space {:type string,
-           :displayName string,
-           :name string,
-           :threaded boolean,
-           :singleUserBotDm boolean},
-   :fallbackText string,
-   :name string,
-   :createTime string,
-   :previewText string,
-   :argumentText string,
-   :thread {:name string},
-   :actionResponse {:type string, :url string},
-   :sender {:type string,
-            :name string,
-            :domainId string,
-            :displayName string,
-            :isAnonymous boolean},
-   :cards [{:cardActions [CardAction],
-            :name string,
-            :header CardHeader,
-            :sections [Section]}],
-   :annotations [{:startIndex integer,
-                  :type string,
-                  :slashCommand SlashCommandMetadata,
-                  :length integer,
-                  :userMention UserMentionMetadata}],
-   :slashCommand {:commandId string},
-   :cardsV2 [{:card GoogleAppsCardV1Card, :cardId string}],
-   :attachment [{:source string,
-                 :downloadUri string,
-                 :driveDataRef DriveDataRef,
-                 :attachmentDataRef AttachmentDataRef,
-                 :contentName string,
-                 :name string,
-                 :thumbnailUri string,
-                 :contentType string}],
-   :text string}
-  
-  Creates a message."
+  Lists human memberships in a space."
   {:scopes nil}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://chat.googleapis.com/"
-     "v1/{+parent}/messages"
+     "v1/{+parent}/members"
      #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -257,40 +243,42 @@
   
   {:space {:type string,
            :displayName string,
+           :singleUserBotDm boolean,
            :name string,
-           :threaded boolean,
-           :singleUserBotDm boolean},
+           :threaded boolean},
    :fallbackText string,
    :name string,
    :createTime string,
    :previewText string,
    :argumentText string,
    :thread {:name string},
-   :actionResponse {:type string, :url string},
-   :sender {:type string,
+   :actionResponse {:type string,
+                    :dialogAction DialogAction,
+                    :url string},
+   :sender {:domainId string,
+            :type string,
             :name string,
-            :domainId string,
-            :displayName string,
-            :isAnonymous boolean},
-   :cards [{:cardActions [CardAction],
-            :name string,
-            :header CardHeader,
-            :sections [Section]}],
-   :annotations [{:startIndex integer,
+            :isAnonymous boolean,
+            :displayName string},
+   :cards [{:name string,
+            :cardActions [CardAction],
+            :sections [Section],
+            :header CardHeader}],
+   :lastUpdateTime string,
+   :annotations [{:userMention UserMentionMetadata,
+                  :startIndex integer,
                   :type string,
                   :slashCommand SlashCommandMetadata,
-                  :length integer,
-                  :userMention UserMentionMetadata}],
+                  :length integer}],
    :slashCommand {:commandId string},
-   :cardsV2 [{:card GoogleAppsCardV1Card, :cardId string}],
-   :attachment [{:source string,
-                 :downloadUri string,
-                 :driveDataRef DriveDataRef,
-                 :attachmentDataRef AttachmentDataRef,
-                 :contentName string,
-                 :name string,
+   :attachment [{:contentType string,
                  :thumbnailUri string,
-                 :contentType string}],
+                 :name string,
+                 :downloadUri string,
+                 :contentName string,
+                 :source string,
+                 :driveDataRef DriveDataRef,
+                 :attachmentDataRef AttachmentDataRef}],
    :text string}
   
   Updates a message."
@@ -303,6 +291,76 @@
      "https://chat.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn messages-create$
+  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/messages/create
+  
+  Required parameters: parent
+  
+  Optional parameters: threadKey
+  
+  Body: 
+  
+  {:space {:type string,
+           :displayName string,
+           :singleUserBotDm boolean,
+           :name string,
+           :threaded boolean},
+   :fallbackText string,
+   :name string,
+   :createTime string,
+   :previewText string,
+   :argumentText string,
+   :thread {:name string},
+   :actionResponse {:type string,
+                    :dialogAction DialogAction,
+                    :url string},
+   :sender {:domainId string,
+            :type string,
+            :name string,
+            :isAnonymous boolean,
+            :displayName string},
+   :cards [{:name string,
+            :cardActions [CardAction],
+            :sections [Section],
+            :header CardHeader}],
+   :lastUpdateTime string,
+   :annotations [{:userMention UserMentionMetadata,
+                  :startIndex integer,
+                  :type string,
+                  :slashCommand SlashCommandMetadata,
+                  :length integer}],
+   :slashCommand {:commandId string},
+   :attachment [{:contentType string,
+                 :thumbnailUri string,
+                 :name string,
+                 :downloadUri string,
+                 :contentName string,
+                 :source string,
+                 :driveDataRef DriveDataRef,
+                 :attachmentDataRef AttachmentDataRef}],
+   :text string}
+  
+  Creates a message."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chat.googleapis.com/"
+     "v1/{+parent}/messages"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -331,58 +389,6 @@
      "https://chat.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn members-get$
-  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/members/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns a membership."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chat.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn members-list$
-  "https://developers.google.com/hangouts/chatapi/reference/rest/v1/spaces/members/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists human memberships in a space."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chat.googleapis.com/"
-     "v1/{+parent}/members"
-     #{:parent}
      parameters)
     (merge-with
      merge

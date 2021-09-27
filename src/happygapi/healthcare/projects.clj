@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/get
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://healthcare.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -93,11 +93,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
             :etag string,
-            :bindings [Binding],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -277,11 +277,11 @@
   
   Body: 
   
-  {:destinationDataset string,
-   :config {:image ImageConfig,
+  {:config {:image ImageConfig,
+            :fhir FhirConfig,
             :dicom DicomConfig,
-            :text TextConfig,
-            :fhir FhirConfig}}
+            :text TextConfig},
+   :destinationDataset string}
   
   Creates a new dataset containing de-identified data from the source dataset. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifySummary. If errors occur, error is set. The LRO result may still be successful if de-identification fails for some DICOM instances. The new de-identified dataset will not contain these failed resources. Failed resource totals are tracked in Operation.metadata. Error details are also logged to Cloud Logging. For more information, see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -359,7 +359,7 @@
 (defn locations-datasets-dicomStores-searchForSeries$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/searchForSeries
   
-  Required parameters: parent, dicomWebPath
+  Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -391,11 +391,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
             :etag string,
-            :bindings [Binding],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -427,7 +427,7 @@
   
   Body: 
   
-  {:labels {}, :name string, :notificationConfig {:pubsubTopic string}}
+  {:notificationConfig {:pubsubTopic string}, :name string, :labels {}}
   
   Updates the specified DICOM store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -491,7 +491,7 @@
   
   Body: 
   
-  {:labels {}, :name string, :notificationConfig {:pubsubTopic string}}
+  {:notificationConfig {:pubsubTopic string}, :name string, :labels {}}
   
   Creates a new DICOM store within the parent dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -543,7 +543,7 @@
 (defn locations-datasets-dicomStores-searchForStudies$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/searchForStudies
   
-  Required parameters: parent, dicomWebPath
+  Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -575,7 +575,7 @@
   
   Body: 
   
-  {:bigqueryDestination {:tableUri string, :force boolean},
+  {:bigqueryDestination {:force boolean, :tableUri string},
    :gcsDestination {:uriPrefix string, :mimeType string}}
   
   Exports data to the specified destination by copying it from the DICOM store. Errors are also logged to Cloud Logging. For more information, see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging). The metadata field type is OperationMetadata."
@@ -661,11 +661,11 @@
   Body: 
   
   {:config {:image ImageConfig,
+            :fhir FhirConfig,
             :dicom DicomConfig,
-            :text TextConfig,
-            :fhir FhirConfig},
-   :destinationStore string,
-   :filterConfig {:resourcePathsGcsUri string}}
+            :text TextConfig},
+   :filterConfig {:resourcePathsGcsUri string},
+   :destinationStore string}
   
   De-identifies data from the source store and writes it to the destination store. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifyDicomStoreSummary. If errors occur, error is set. The LRO result may still be successful if de-identification fails for some DICOM instances. The output DICOM store will not contain these failed resources. Failed resource totals are tracked in Operation.metadata. Error details are also logged to Cloud Logging (see [Viewing error logs in Cloud Logging](/healthcare/docs/how-tos/logging))."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -693,7 +693,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: pageToken, filter, pageSize
   
   Lists the DICOM stores in the given dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -755,7 +755,7 @@
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   StoreInstances stores DICOM instances associated with study instance unique identifiers (SUID). See [Store Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5). For details on the implementation of StoreInstances, see [Store transaction](https://cloud.google.com/healthcare/docs/dicom#store_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call StoreInstances, see [Storing DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#storing_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -773,6 +773,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-retrieveMetadata$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveMetadata
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  RetrieveStudyMetadata returns instance associated with the given study presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudyMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudyMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -781,13 +807,13 @@
 (defn locations-datasets-dicomStores-studies-storeInstances$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/storeInstances
   
-  Required parameters: parent, dicomWebPath
+  Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   StoreInstances stores DICOM instances associated with study instance unique identifiers (SUID). See [Store Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.5). For details on the implementation of StoreInstances, see [Store transaction](https://cloud.google.com/healthcare/docs/dicom#store_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call StoreInstances, see [Storing DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#storing_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -810,14 +836,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-searchForSeries$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/searchForSeries
+(defn locations-datasets-dicomStores-studies-retrieveStudy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveStudy
   
   Required parameters: parent, dicomWebPath
   
   Optional parameters: none
   
-  SearchForSeries returns a list of matching series. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForSeries, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForSeries, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  RetrieveStudy returns all instances within the given study. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudy, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudy, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
@@ -862,6 +888,32 @@
       :as :json}
      auth))))
 
+(defn locations-datasets-dicomStores-studies-searchForSeries$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/searchForSeries
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  SearchForSeries returns a list of matching series. See [Search Transaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.6). For details on the implementation of SearchForSeries, see [Search transaction](https://cloud.google.com/healthcare/docs/dicom#search_transaction) in the Cloud Healthcare API conformance statement. For samples that show how to call SearchForSeries, see [Searching for studies, series, instances, and frames](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#searching_for_studies_series_instances_and_frames)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-datasets-dicomStores-studies-delete$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/delete
   
@@ -888,40 +940,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-retrieveMetadata$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveMetadata
+(defn locations-datasets-dicomStores-studies-series-retrieveSeries$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/retrieveSeries
   
   Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
-  RetrieveStudyMetadata returns instance associated with the given study presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudyMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudyMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-retrieveStudy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/retrieveStudy
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveStudy returns all instances within the given study. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveStudy, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveStudy, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
+  RetrieveSeries returns all instances within the given study and series. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveSeries, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveSeries, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
@@ -943,7 +969,7 @@
 (defn locations-datasets-dicomStores-studies-series-searchForInstances$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/searchForInstances
   
-  Required parameters: parent, dicomWebPath
+  Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
@@ -953,6 +979,32 @@
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-dicomStores-studies-series-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/delete
+  
+  Required parameters: parent, dicomWebPath
+  
+  Optional parameters: none
+  
+  DeleteSeries deletes all instances within the given study and series. Delete requests are equivalent to the GET requests specified in the Retrieve transaction. The method returns an Operation which will be marked successful when the deletion is complete. Warning: Instances cannot be inserted into a series that is being deleted by an operation until the operation completes. For samples that show how to call DeleteSeries, see [Deleting a study, series, or instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#deleting_a_study_series_or_instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
      "v1/{+parent}/dicomWeb/{+dicomWebPath}"
@@ -992,14 +1044,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-series-retrieveSeries$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/retrieveSeries
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveMetadata
   
   Required parameters: parent, dicomWebPath
   
   Optional parameters: none
   
-  RetrieveSeries returns all instances within the given study and series. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveSeries, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveSeries, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
+  RetrieveInstanceMetadata returns instance associated with the given study, series, and SOP Instance UID presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstanceMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstanceMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
@@ -1018,40 +1070,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-series-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/delete
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  DeleteSeries deletes all instances within the given study and series. Delete requests are equivalent to the GET requests specified in the Retrieve transaction. The method returns an Operation which will be marked successful when the deletion is complete. Warning: Instances cannot be inserted into a series that is being deleted by an operation until the operation completes. For samples that show how to call DeleteSeries, see [Deleting a study, series, or instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#deleting_a_study_series_or_instance)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveMetadata$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveMetadata
+(defn locations-datasets-dicomStores-studies-series-instances-retrieveInstance$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveInstance
   
   Required parameters: parent, dicomWebPath
   
   Optional parameters: none
   
-  RetrieveInstanceMetadata returns instance associated with the given study, series, and SOP Instance UID presented as metadata with the bulk data removed. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstanceMetadata, see [Metadata resources](https://cloud.google.com/healthcare/docs/dicom#metadata_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstanceMetadata, see [Retrieving metadata](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_metadata)."
+  RetrieveInstance returns instance associated with the given study, series, and SOP Instance UID. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstance, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) and [DICOM instances](https://cloud.google.com/healthcare/docs/dicom#dicom_instances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstance, see [Retrieving an instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_an_instance)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
@@ -1096,32 +1122,6 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-dicomStores-studies-series-instances-retrieveInstance$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveInstance
-  
-  Required parameters: parent, dicomWebPath
-  
-  Optional parameters: none
-  
-  RetrieveInstance returns instance associated with the given study, series, and SOP Instance UID. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveInstance, see [DICOM study/series/instances](https://cloud.google.com/healthcare/docs/dicom#dicom_studyseriesinstances) and [DICOM instances](https://cloud.google.com/healthcare/docs/dicom#dicom_instances) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveInstance, see [Retrieving an instance](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_an_instance)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-datasets-dicomStores-studies-series-instances-retrieveRendered$
   "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/retrieveRendered
   
@@ -1130,32 +1130,6 @@
   Optional parameters: none
   
   RetrieveRenderedInstance returns instance associated with the given study, series, and SOP Instance UID in an acceptable Rendered Media Type. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4). For details on the implementation of RetrieveRenderedInstance, see [Rendered resources](https://cloud.google.com/healthcare/docs/dicom#rendered_resources) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveRenderedInstance, see [Retrieving consumer image formats](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_consumer_image_formats)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
-     #{:parent :dicomWebPath}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveFrames$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveFrames
-  
-  Required parameters: dicomWebPath, parent
-  
-  Optional parameters: none
-  
-  RetrieveFrames returns instances associated with the given study, series, SOP Instance UID and frame numbers. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4}. For details on the implementation of RetrieveFrames, see [DICOM frames](https://cloud.google.com/healthcare/docs/dicom#dicom_frames) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveFrames, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
@@ -1200,46 +1174,40 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-operations-cancel$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/cancel
+(defn locations-datasets-dicomStores-studies-series-instances-frames-retrieveFrames$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/dicomStores/studies/series/instances/frames/retrieveFrames
   
-  Required parameters: name
+  Required parameters: dicomWebPath, parent
   
   Optional parameters: none
   
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  RetrieveFrames returns instances associated with the given study, series, SOP Instance UID and frame numbers. See [RetrieveTransaction] (http://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_10.4}. For details on the implementation of RetrieveFrames, see [DICOM frames](https://cloud.google.com/healthcare/docs/dicom#dicom_frames) in the Cloud Healthcare API conformance statement. For samples that show how to call RetrieveFrames, see [Retrieving DICOM data](https://cloud.google.com/healthcare/docs/how-tos/dicomweb#retrieving_dicom_data)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :dicomWebPath})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
+     "v1/{+parent}/dicomWeb/{+dicomWebPath}"
+     #{:parent :dicomWebPath}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn locations-datasets-operations-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/get
+(defn locations-datasets-consentStores-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Gets the specified consent store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1258,60 +1226,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-operations-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/setIamPolicy
+(defn locations-datasets-consentStores-setIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/setIamPolicy
   
   Required parameters: resource
   
@@ -1319,11 +1235,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
             :etag string,
-            :bindings [Binding],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1346,33 +1262,30 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/create
+(defn locations-datasets-consentStores-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: hl7V2StoreId
+  Optional parameters: updateMask
   
   Body: 
   
-  {:name string,
-   :labels {},
-   :rejectDuplicateMessage boolean,
-   :parserConfig {:allowNullHeader boolean,
-                  :segmentTerminator string,
-                  :schema SchemaPackage},
-   :notificationConfigs [{:pubsubTopic string, :filter string}]}
+  {:enableConsentCreateOnUpdate boolean,
+   :defaultConsentTtl string,
+   :name string,
+   :labels {}}
   
-  Creates a new HL7v2 store within the parent dataset."
+  Updates the specified consent store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/hl7V2Stores"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -1384,60 +1297,42 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/list
+(defn locations-datasets-consentStores-queryAccessibleData$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/queryAccessibleData
   
-  Required parameters: parent
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists the HL7v2 stores in the given dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/hl7V2Stores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/get
-  
-  Required parameters: name
+  Required parameters: consentStore
   
   Optional parameters: none
   
-  Gets the specified HL7v2 store."
+  Body: 
+  
+  {:gcsDestination {:uriPrefix string},
+   :requestAttributes {},
+   :resourceAttributes {}}
+  
+  Queries all data_ids that are consented for a specified use in the given consent store and writes them to a specified destination. The returned Operation includes a progress counter for the number of User data mappings processed. If the request is successful, a detailed response is returned of type QueryAccessibleDataResponse, contained in the response field when the operation finishes. The metadata field type is OperationMetadata. Errors are logged to Cloud Logging (see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging)). For example, the following sample log entry shows a `failed to evaluate consent policy` error that occurred during a QueryAccessibleData call to consent store `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/consentStores/{consent_store_id}`. ```json jsonPayload: { @type: \"type.googleapis.com/google.cloud.healthcare.logging.QueryAccessibleDataLogEntry\" error: { code: 9 message: \"failed to evaluate consent policy\" } resourceName: \"projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/consentStores/{consent_store_id}/consents/{consent_id}\" } logName: \"projects/{project_id}/logs/healthcare.googleapis.com%2Fquery_accessible_data\" operation: { id: \"projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/operations/{operation_id}\" producer: \"healthcare.googleapis.com/QueryAccessibleData\" } receiveTimestamp: \"TIMESTAMP\" resource: { labels: { consent_store_id: \"{consent_store_id}\" dataset_id: \"{dataset_id}\" location: \"{location_id}\" project_id: \"{project_id}\" } type: \"healthcare_consent_store\" } severity: \"ERROR\" timestamp: \"TIMESTAMP\" ```"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:consentStore})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+consentStore}:queryAccessibleData"
+     #{:consentStore}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/testIamPermissions
+(defn locations-datasets-consentStores-testIamPermissions$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/testIamPermissions
   
   Required parameters: resource
   
@@ -1468,14 +1363,87 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/delete
+(defn locations-datasets-consentStores-evaluateUserConsents$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/evaluateUserConsents
+  
+  Required parameters: consentStore
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:pageSize integer,
+   :userId string,
+   :responseView string,
+   :consentList {:consents [string]},
+   :requestAttributes {},
+   :pageToken string,
+   :resourceAttributes {}}
+  
+  Evaluates the user's Consents for all matching User data mappings. Note: User data mappings are indexed asynchronously, which can cause a slight delay between the time mappings are created or updated and when they are included in EvaluateUserConsents results."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:consentStore})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+consentStore}:evaluateUserConsents"
+     #{:consentStore}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/create
+  
+  Required parameters: parent
+  
+  Optional parameters: consentStoreId
+  
+  Body: 
+  
+  {:enableConsentCreateOnUpdate boolean,
+   :defaultConsentTtl string,
+   :name string,
+   :labels {}}
+  
+  Creates a new consent store in the parent dataset. Attempting to create a consent store with the same ID as an existing store fails with an ALREADY_EXISTS error."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/consentStores"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes the specified HL7v2 store and removes all messages that it contains."
+  Deletes the specified consent store and removes all the consent store's data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1494,8 +1462,147 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/patch
+(defn locations-datasets-consentStores-getIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists the consent stores in the specified dataset."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/consentStores"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-checkDataAccess$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/checkDataAccess
+  
+  Required parameters: consentStore
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:dataId string,
+   :consentList {:consents [string]},
+   :requestAttributes {},
+   :responseView string}
+  
+  Checks if a particular data_id of a User data mapping in the specified consent store is consented for the specified use."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:consentStore})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+consentStore}:checkDataAccess"
+     #{:consentStore}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-userDataMappings-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists the User data mappings in the specified consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/userDataMappings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-userDataMappings-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified User data mapping."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-userDataMappings-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/patch
   
   Required parameters: name
   
@@ -1504,14 +1611,14 @@
   Body: 
   
   {:name string,
-   :labels {},
-   :rejectDuplicateMessage boolean,
-   :parserConfig {:allowNullHeader boolean,
-                  :segmentTerminator string,
-                  :schema SchemaPackage},
-   :notificationConfigs [{:pubsubTopic string, :filter string}]}
+   :archiveTime string,
+   :resourceAttributes [{:attributeDefinitionId string,
+                         :values [string]}],
+   :dataId string,
+   :userId string,
+   :archived boolean}
   
-  Updates the HL7v2 store."
+  Updates the specified User data mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1532,55 +1639,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:message {:labels {},
-             :messageType string,
-             :sendTime string,
-             :name string,
-             :createTime string,
-             :parsedData ParsedData,
-             :sendFacility string,
-             :patientIds [PatientId],
-             :schematizedData SchematizedData,
-             :data string}}
-  
-  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Pub/Sub topic configured in Hl7V2Store.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Pub/Sub topic, the adapter transmits the message when a notification is received."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/messages"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-hl7V2Stores-messages-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/delete
+(defn locations-datasets-consentStores-userDataMappings-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes an HL7v2 message."
+  Deletes the specified User data mapping."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1599,14 +1665,84 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/get
+(defn locations-datasets-consentStores-userDataMappings-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :archiveTime string,
+   :resourceAttributes [{:attributeDefinitionId string,
+                         :values [string]}],
+   :dataId string,
+   :userId string,
+   :archived boolean}
+  
+  Creates a new User data mapping in the parent consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/userDataMappings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-userDataMappings-archive$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/archive
   
   Required parameters: name
   
-  Optional parameters: view
+  Optional parameters: none
   
-  Gets an HL7v2 message."
+  Body: 
+  
+  {}
+  
+  Archives the specified User data mapping."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:archive"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified revision of a Consent, or the latest revision if `revision_id` is not specified in the resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1625,8 +1761,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/patch
+(defn locations-datasets-consentStores-consents-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/patch
   
   Required parameters: name
   
@@ -1634,18 +1770,18 @@
   
   Body: 
   
-  {:labels {},
-   :messageType string,
-   :sendTime string,
+  {:policies [{:authorizationRule Expr, :resourceAttributes [Attribute]}],
+   :revisionCreateTime string,
    :name string,
-   :createTime string,
-   :parsedData {:segments [Segment]},
-   :sendFacility string,
-   :patientIds [{:value string, :type string}],
-   :schematizedData {:data string, :error string},
-   :data string}
+   :revisionId string,
+   :state string,
+   :ttl string,
+   :consentArtifact string,
+   :userId string,
+   :expireTime string,
+   :metadata {}}
   
-  Update the message. The contents of the message in Message.data and data extracted from the contents such as Message.create_time cannot be altered. Only the Message.labels field is allowed to be updated. The labels in the request are merged with the existing set of labels. Existing labels with the same keys are updated."
+  Updates the latest revision of the specified Consent by committing a new revision with the changes. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `REJECTED` or `REVOKED` state."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1666,8 +1802,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-ingest$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/ingest
+(defn locations-datasets-consentStores-consents-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/create
   
   Required parameters: parent
   
@@ -1675,18 +1811,18 @@
   
   Body: 
   
-  {:message {:labels {},
-             :messageType string,
-             :sendTime string,
-             :name string,
-             :createTime string,
-             :parsedData ParsedData,
-             :sendFacility string,
-             :patientIds [PatientId],
-             :schematizedData SchematizedData,
-             :data string}}
+  {:policies [{:authorizationRule Expr, :resourceAttributes [Attribute]}],
+   :revisionCreateTime string,
+   :name string,
+   :revisionId string,
+   :state string,
+   :ttl string,
+   :consentArtifact string,
+   :userId string,
+   :expireTime string,
+   :metadata {}}
   
-  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Pub/Sub topic configured in Hl7V2Store.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Pub/Sub topic, the adapter transmits the message when a notification is received. If the method is successful, it generates a response containing an HL7v2 acknowledgment (`ACK`) message. If the method encounters an error, it returns a negative acknowledgment (`NACK`) message. This behavior is suitable for replying to HL7v2 interface systems that expect these acknowledgments."
+  Creates a new Consent in the parent consent store."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1694,7 +1830,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/messages:ingest"
+     "v1/{+parent}/consents"
      #{:parent}
      parameters)
     (merge-with
@@ -1707,14 +1843,40 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-hl7V2Stores-messages-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/list
+(defn locations-datasets-consentStores-consents-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the Consent and its revisions. To keep a record of the Consent but mark it inactive, see [RevokeConsent]. To delete a revision of a Consent, see [DeleteConsentRevision]. This operation does not delete the related Consent artifact."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/list
   
   Required parameters: parent
   
-  Optional parameters: orderBy, filter, view, pageToken, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
-  Lists all the messages in the given HL7v2 store with support for filtering. Note: HL7v2 messages are indexed asynchronously, so there might be a slight delay between the time a message is created and when it can be found through a filter."
+  Lists the Consent in the given consent store, returning each Consent's latest revision."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1722,12 +1884,438 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/messages"
+     "v1/{+parent}/consents"
      #{:parent}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-reject$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/reject
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:consentArtifact string}
+  
+  Rejects the latest revision of the specified Consent by committing a new revision with `state` updated to `REJECTED`. If the latest revision of the specified Consent is in the `REJECTED` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `ACTIVE` or `REVOKED` state."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:reject"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-deleteRevision$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/deleteRevision
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified revision of a Consent. An INVALID_ARGUMENT error occurs if the specified revision is the latest revision."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:deleteRevision"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-listRevisions$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/listRevisions
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists the revisions of the specified Consent in reverse chronological order."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:listRevisions"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-activate$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/activate
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:consentArtifact string, :ttl string, :expireTime string}
+  
+  Activates the latest revision of the specified Consent by committing a new revision with `state` updated to `ACTIVE`. If the latest revision of the specified Consent is in the `ACTIVE` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `REJECTED` or `REVOKED` state."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:activate"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consents-revoke$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/revoke
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:consentArtifact string}
+  
+  Revokes the latest revision of the specified Consent by committing a new revision with `state` updated to `REVOKED`. If the latest revision of the specified Consent is in the `REVOKED` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the given consent is in `DRAFT` or `REJECTED` state."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}:revoke"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consentArtifacts-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:userSignature {:userId string,
+                   :signatureTime string,
+                   :image Image,
+                   :metadata {}},
+   :metadata {},
+   :consentContentVersion string,
+   :guardianSignature {:userId string,
+                       :signatureTime string,
+                       :image Image,
+                       :metadata {}},
+   :witnessSignature {:userId string,
+                      :signatureTime string,
+                      :image Image,
+                      :metadata {}},
+   :name string,
+   :consentContentScreenshots [{:gcsUri string, :rawBytes string}],
+   :userId string}
+  
+  Creates a new Consent artifact in the parent consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/consentArtifacts"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consentArtifacts-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists the Consent artifacts in the specified consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/consentArtifacts"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consentArtifacts-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified Consent artifact."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-consentArtifacts-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified Consent artifact. Fails if the artifact is referenced by the latest revision of any Consent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-attributeDefinitions-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified Attribute definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-attributeDefinitions-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified Attribute definition. Fails if the Attribute definition is referenced by any User data mapping, or the latest revision of any Consent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-attributeDefinitions-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists the Attribute definitions in the specified consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/attributeDefinitions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-attributeDefinitions-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:consentDefaultValues [string],
+   :name string,
+   :category string,
+   :description string,
+   :dataMappingDefaultValue string,
+   :allowedValues [string]}
+  
+  Updates the specified Attribute definition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-consentStores-attributeDefinitions-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/create
+  
+  Required parameters: parent
+  
+  Optional parameters: attributeDefinitionId
+  
+  Body: 
+  
+  {:consentDefaultValues [string],
+   :name string,
+   :category string,
+   :description string,
+   :dataMappingDefaultValue string,
+   :allowedValues [string]}
+  
+  Creates a new Attribute definition in the parent consent store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/attributeDefinitions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1768,11 +2356,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
             :etag string,
-            :bindings [Binding],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1944,10 +2532,10 @@
   
   Body: 
   
-  {:bigqueryDestination {:datasetUri string,
-                         :force boolean,
-                         :writeDisposition string,
-                         :schemaConfig SchemaConfig},
+  {:bigqueryDestination {:writeDisposition string,
+                         :schemaConfig SchemaConfig,
+                         :datasetUri string,
+                         :force boolean},
    :gcsDestination {:uriPrefix string}}
   
   Export resources from the FHIR store to the specified destination. This method returns an Operation that can be used to track the status of the export by calling GetOperation. Immediate fatal errors appear in the error field, errors are also logged to Cloud Logging (see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging)). Otherwise, when the operation finishes, a detailed response of type ExportResourcesResponse is returned in the response field. The metadata field type for this operation is OperationMetadata."
@@ -2006,12 +2594,12 @@
   
   Body: 
   
-  {:resourceFilter {:resources Resources},
-   :config {:image ImageConfig,
+  {:config {:image ImageConfig,
+            :fhir FhirConfig,
             :dicom DicomConfig,
-            :text TextConfig,
-            :fhir FhirConfig},
-   :destinationStore string}
+            :text TextConfig},
+   :destinationStore string,
+   :resourceFilter {:resources Resources}}
   
   De-identifies data from the source store and writes it to the destination store. The metadata field type is OperationMetadata. If the request is successful, the response field type is DeidentifyFhirStoreSummary. If errors occur, error is set. Error details are also logged to Cloud Logging (see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging))."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2039,7 +2627,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: pageToken, filter, pageSize
   
   Lists the FHIR stores in the given dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2179,7 +2767,7 @@
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   Updates part of an existing resource by applying the operations specified in a [JSON Patch](http://jsonpatch.com/) document. Implements the FHIR standard patch interaction ([STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#patch), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#patch)). DSTU2 doesn't define a patch method, but the server supports it in the same way it supports STU3. The request body must contain a JSON Patch document, and the request headers must contain `Content-Type: application/json-patch+json`. On success, the response body contains a JSON-encoded representation of the updated resource, including the server-assigned version ID. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `patch`, see [Patching a FHIR resource](/healthcare/docs/how-tos/fhir-resources#patching_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2211,7 +2799,7 @@
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   Creates a FHIR resource. Implements the FHIR standard create interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#create), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#create), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#create)), which creates a new resource with a server-assigned resource ID. The request body must contain a JSON-encoded FHIR resource, and the request headers must contain `Content-Type: application/fhir+json`. On success, the response body contains a JSON-encoded representation of the resource as it was created on the server, including the server-assigned resource ID and version ID. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `create`, see [Creating a FHIR resource](/healthcare/docs/how-tos/fhir-resources#creating_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2239,7 +2827,7 @@
   
   Required parameters: name
   
-  Optional parameters: _count, _at, _page_token, _since
+  Optional parameters: _page_token, _since, _count, _at
   
   Lists all the versions of a resource (including the current version and deleted versions) from the FHIR store. Implements the per-resource form of the FHIR standard history interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#history), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#history), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#history)). On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `history`, containing the version history sorted from most recent to oldest versions. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `history`, see [Listing FHIR resource versions](/healthcare/docs/how-tos/fhir-resources#listing_fhir_resource_versions)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2269,7 +2857,7 @@
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   Updates the entire contents of a resource. Implements the FHIR standard update interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#update), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#update), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#update)). If the specified resource does not exist and the FHIR store has enable_update_create set, creates the resource with the client-specified ID. It is strongly advised not to include or encode any sensitive data such as patient identifiers in client-specified resource IDs. Those IDs are part of the FHIR resource path recorded in Cloud Audit Logs and Pub/Sub notifications. Those IDs can also be contained in reference fields within other resources. The request body must contain a JSON-encoded FHIR resource, and the request headers must contain `Content-Type: application/fhir+json`. The resource must contain an `id` element having an identical value to the ID in the REST path of the request. On success, the response body contains a JSON-encoded representation of the updated resource, including the server-assigned version ID. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `update`, see [Updating a FHIR resource](/healthcare/docs/how-tos/fhir-resources#updating_a_fhir_resource)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2323,7 +2911,7 @@
   
   Required parameters: name
   
-  Optional parameters: _count, _page_token, end, _type, _since, start
+  Optional parameters: _type, end, _count, start, _page_token, _since
   
   Retrieves a Patient resource and resources related to that patient. Implements the FHIR extended operation Patient-everything ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/patient-operations.html#everything), [STU3](http://hl7.org/implement/standards/fhir/STU3/patient-operations.html#everything), [R4](http://hl7.org/implement/standards/fhir/R4/patient-operations.html#everything)). On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the operation. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The resources in scope for the response are: * The patient resource itself. * All the resources directly referenced by the patient resource. * Resources directly referencing the patient resource that meet the inclusion criteria. The inclusion criteria are based on the membership rules in the patient compartment definition ([DSTU2](http://hl7.org/fhir/DSTU2/compartment-patient.html), [STU3](http://www.hl7.org/fhir/stu3/compartmentdefinition-patient.html), [R4](http://hl7.org/fhir/R4/compartmentdefinition-patient.html)), which details the eligible resource types and referencing search parameters. For samples that show how to call `Patient-everything`, see [Getting all patient compartment resources](/healthcare/docs/how-tos/fhir-resources#getting_all_patient_compartment_resources)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2355,7 +2943,7 @@
   
   {:resourceType string}
   
-  Searches for resources in the given FHIR store according to criteria specified as query parameters. Implements the FHIR standard search interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search)) using the search semantics described in the FHIR Search specification ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html), [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html), [R4](http://hl7.org/implement/standards/fhir/R4/search.html)). Supports four methods of search defined by the specification: * `GET [base]?[parameters]` to search across all resources. * `GET [base]/[type]?[parameters]` to search resources of a specified type. * `POST [base]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method across all resources. * `POST [base]/[type]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method for the specified type. The `GET` and `POST` methods do not support compartment searches. The `POST` method does not support `application/x-www-form-urlencoded` search parameters. On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the search. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The server's capability statement, retrieved through capabilities, indicates what search parameters are supported on each FHIR resource. A list of all search parameters defined by the specification can be found in the FHIR Search Parameter Registry ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html), [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)). FHIR search parameters for DSTU2 can be found on each resource's definition page. Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`, `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`. Supported search result parameters: `_sort`, `_count`, `_include`, `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`. The maximum number of search results returned defaults to 100, which can be overridden by the `_count` parameter up to a maximum limit of 1000. If there are additional results, the returned `Bundle` will contain pagination links. Resources with a total size larger than 5MB or a field count larger than 50,000 might not be fully searchable as the server might trim its generated search index in those cases. Note: FHIR resources are indexed asynchronously, so there might be a slight delay between the time a resource is created or changes and when the change is reflected in search results. For samples and detailed information, see [Searching for FHIR resources](/healthcare/docs/how-tos/fhir-search) and [Advanced FHIR search features](/healthcare/docs/how-tos/fhir-advanced-search)."
+  Searches for resources in the given FHIR store according to criteria specified as query parameters. Implements the FHIR standard search interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search)) using the search semantics described in the FHIR Search specification ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html), [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html), [R4](http://hl7.org/implement/standards/fhir/R4/search.html)). Supports four methods of search defined by the specification: * `GET [base]?[parameters]` to search across all resources. * `GET [base]/[type]?[parameters]` to search resources of a specified type. * `POST [base]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method across all resources. * `POST [base]/[type]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method for the specified type. The `GET` and `POST` methods do not support compartment searches. The `POST` method does not support `application/x-www-form-urlencoded` search parameters. On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the search. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The server's capability statement, retrieved through capabilities, indicates what search parameters are supported on each FHIR resource. A list of all search parameters defined by the specification can be found in the FHIR Search Parameter Registry ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html), [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)). FHIR search parameters for DSTU2 can be found on each resource's definition page. Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`, `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`. Supported search result parameters: `_sort`, `_count`, `_include`, `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`. The maximum number of search results returned defaults to 100, which can be overridden by the `_count` parameter up to a maximum limit of 1000. If there are additional results, the returned `Bundle` contains a link of `relation` \"next\", which has a `_page_token` parameter for an opaque pagination token that can be used to retrieve the next page. Resources with a total size larger than 5MB or a field count larger than 50,000 might not be fully searchable as the server might trim its generated search index in those cases. Note: FHIR resources are indexed asynchronously, so there might be a slight delay between the time a resource is created or changes and when the change is reflected in search results. For samples and detailed information, see [Searching for FHIR resources](/healthcare/docs/how-tos/fhir-search) and [Advanced FHIR search features](/healthcare/docs/how-tos/fhir-advanced-search)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -2385,7 +2973,7 @@
   
   Body: 
   
-  {:data string, :contentType string, :extensions [{}]}
+  {:extensions [{}], :data string, :contentType string}
   
   Executes all the requests in the given Bundle. Implements the FHIR standard batch/transaction interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#transaction), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#transaction), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#transaction)). Supports all interactions within a bundle, except search. This method accepts Bundles of type `batch` and `transaction`, processing them according to the batch processing rules ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.1), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.1), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#brules)) and transaction processing rules ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#2.1.0.16.2), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#2.21.0.17.2), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#trules)). The request body must contain a JSON-encoded FHIR `Bundle` resource, and the request headers must contain `Content-Type: application/fhir+json`. For a batch bundle or a successful transaction the response body will contain a JSON-encoded representation of a `Bundle` resource of type `batch-response` or `transaction-response` containing one entry for each entry in the request, with the outcome of processing the entry. In the case of an error for a transaction bundle, the response body will contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. For samples that show how to call `executeBundle`, see [Managing FHIR resources using FHIR bundles](/healthcare/docs/how-tos/fhir-bundles)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2445,7 +3033,7 @@
   
   {:resourceType string}
   
-  Searches for resources in the given FHIR store according to criteria specified as query parameters. Implements the FHIR standard search interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search)) using the search semantics described in the FHIR Search specification ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html), [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html), [R4](http://hl7.org/implement/standards/fhir/R4/search.html)). Supports four methods of search defined by the specification: * `GET [base]?[parameters]` to search across all resources. * `GET [base]/[type]?[parameters]` to search resources of a specified type. * `POST [base]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method across all resources. * `POST [base]/[type]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method for the specified type. The `GET` and `POST` methods do not support compartment searches. The `POST` method does not support `application/x-www-form-urlencoded` search parameters. On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the search. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The server's capability statement, retrieved through capabilities, indicates what search parameters are supported on each FHIR resource. A list of all search parameters defined by the specification can be found in the FHIR Search Parameter Registry ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html), [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)). FHIR search parameters for DSTU2 can be found on each resource's definition page. Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`, `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`. Supported search result parameters: `_sort`, `_count`, `_include`, `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`. The maximum number of search results returned defaults to 100, which can be overridden by the `_count` parameter up to a maximum limit of 1000. If there are additional results, the returned `Bundle` will contain pagination links. Resources with a total size larger than 5MB or a field count larger than 50,000 might not be fully searchable as the server might trim its generated search index in those cases. Note: FHIR resources are indexed asynchronously, so there might be a slight delay between the time a resource is created or changes and when the change is reflected in search results. For samples and detailed information, see [Searching for FHIR resources](/healthcare/docs/how-tos/fhir-search) and [Advanced FHIR search features](/healthcare/docs/how-tos/fhir-advanced-search)."
+  Searches for resources in the given FHIR store according to criteria specified as query parameters. Implements the FHIR standard search interaction ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/http.html#search), [STU3](http://hl7.org/implement/standards/fhir/STU3/http.html#search), [R4](http://hl7.org/implement/standards/fhir/R4/http.html#search)) using the search semantics described in the FHIR Search specification ([DSTU2](http://hl7.org/implement/standards/fhir/DSTU2/search.html), [STU3](http://hl7.org/implement/standards/fhir/STU3/search.html), [R4](http://hl7.org/implement/standards/fhir/R4/search.html)). Supports four methods of search defined by the specification: * `GET [base]?[parameters]` to search across all resources. * `GET [base]/[type]?[parameters]` to search resources of a specified type. * `POST [base]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method across all resources. * `POST [base]/[type]/_search?[parameters]` as an alternate form having the same semantics as the `GET` method for the specified type. The `GET` and `POST` methods do not support compartment searches. The `POST` method does not support `application/x-www-form-urlencoded` search parameters. On success, the response body contains a JSON-encoded representation of a `Bundle` resource of type `searchset`, containing the results of the search. Errors generated by the FHIR store contain a JSON-encoded `OperationOutcome` resource describing the reason for the error. If the request cannot be mapped to a valid API method on a FHIR store, a generic GCP error might be returned instead. The server's capability statement, retrieved through capabilities, indicates what search parameters are supported on each FHIR resource. A list of all search parameters defined by the specification can be found in the FHIR Search Parameter Registry ([STU3](http://hl7.org/implement/standards/fhir/STU3/searchparameter-registry.html), [R4](http://hl7.org/implement/standards/fhir/R4/searchparameter-registry.html)). FHIR search parameters for DSTU2 can be found on each resource's definition page. Supported search modifiers: `:missing`, `:exact`, `:contains`, `:text`, `:in`, `:not-in`, `:above`, `:below`, `:[type]`, `:not`, and `:recurse`. Supported search result parameters: `_sort`, `_count`, `_include`, `_revinclude`, `_summary=text`, `_summary=data`, and `_elements`. The maximum number of search results returned defaults to 100, which can be overridden by the `_count` parameter up to a maximum limit of 1000. If there are additional results, the returned `Bundle` contains a link of `relation` \"next\", which has a `_page_token` parameter for an opaque pagination token that can be used to retrieve the next page. Resources with a total size larger than 5MB or a field count larger than 50,000 might not be fully searchable as the server might trim its generated search index in those cases. Note: FHIR resources are indexed asynchronously, so there might be a slight delay between the time a resource is created or changes and when the change is reflected in search results. For samples and detailed information, see [Searching for FHIR resources](/healthcare/docs/how-tos/fhir-search) and [Advanced FHIR search features](/healthcare/docs/how-tos/fhir-advanced-search)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent :resourceType})]}
@@ -2466,19 +3054,58 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/get
+(defn locations-datasets-hl7V2Stores-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :labels {},
+   :parserConfig {:version string,
+                  :schema SchemaPackage,
+                  :allowNullHeader boolean,
+                  :segmentTerminator string},
+   :rejectDuplicateMessage boolean,
+   :notificationConfigs [{:filter string, :pubsubTopic string}]}
+  
+  Updates the HL7v2 store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the specified consent store."
+  Deletes the specified HL7v2 store and removes all messages that it contains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://healthcare.googleapis.com/"
      "v1/{+name}"
@@ -2492,8 +3119,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-setIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/setIamPolicy
+(defn locations-datasets-hl7V2Stores-setIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/setIamPolicy
   
   Required parameters: resource
   
@@ -2501,11 +3128,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
             :etag string,
-            :bindings [Binding],
-            :version integer}}
+            :version integer,
+            :bindings [Binding]},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2528,77 +3155,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:defaultConsentTtl string,
-   :name string,
-   :enableConsentCreateOnUpdate boolean,
-   :labels {}}
-  
-  Updates the specified consent store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-queryAccessibleData$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/queryAccessibleData
-  
-  Required parameters: consentStore
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:gcsDestination {:uriPrefix string},
-   :resourceAttributes {},
-   :requestAttributes {}}
-  
-  Queries all data_ids that are consented for a specified use in the given consent store and writes them to a specified destination. The returned Operation includes a progress counter for the number of User data mappings processed. If the request is successful, a detailed response is returned of type QueryAccessibleDataResponse, contained in the response field when the operation finishes. The metadata field type is OperationMetadata. Errors are logged to Cloud Logging (see [Viewing error logs in Cloud Logging](https://cloud.google.com/healthcare/docs/how-tos/logging)). For example, the following sample log entry shows a `failed to evaluate consent policy` error that occurred during a QueryAccessibleData call to consent store `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/consentStores/{consent_store_id}`. ```json jsonPayload: { @type: \"type.googleapis.com/google.cloud.healthcare.logging.QueryAccessibleDataLogEntry\" error: { code: 9 message: \"failed to evaluate consent policy\" } resourceName: \"projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/consentStores/{consent_store_id}/consents/{consent_id}\" } logName: \"projects/{project_id}/logs/healthcare.googleapis.com%2Fquery_accessible_data\" operation: { id: \"projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/operations/{operation_id}\" producer: \"healthcare.googleapis.com/QueryAccessibleData\" } receiveTimestamp: \"TIMESTAMP\" resource: { labels: { consent_store_id: \"{consent_store_id}\" dataset_id: \"{dataset_id}\" location: \"{location_id}\" project_id: \"{project_id}\" } type: \"healthcare_consent_store\" } severity: \"ERROR\" timestamp: \"TIMESTAMP\" ```"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:consentStore})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+consentStore}:queryAccessibleData"
-     #{:consentStore}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-testIamPermissions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/testIamPermissions
+(defn locations-datasets-hl7V2Stores-testIamPermissions$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/testIamPermissions
   
   Required parameters: resource
   
@@ -2629,107 +3187,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-evaluateUserConsents$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/evaluateUserConsents
-  
-  Required parameters: consentStore
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requestAttributes {},
-   :consentList {:consents [string]},
-   :pageToken string,
-   :responseView string,
-   :userId string,
-   :resourceAttributes {},
-   :pageSize integer}
-  
-  Evaluates the user's Consents for all matching User data mappings. Note: User data mappings are indexed asynchronously, which can cause a slight delay between the time mappings are created or updated and when they are included in EvaluateUserConsents results."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:consentStore})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+consentStore}:evaluateUserConsents"
-     #{:consentStore}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/create
-  
-  Required parameters: parent
-  
-  Optional parameters: consentStoreId
-  
-  Body: 
-  
-  {:defaultConsentTtl string,
-   :name string,
-   :enableConsentCreateOnUpdate boolean,
-   :labels {}}
-  
-  Creates a new consent store in the parent dataset. Attempting to create a consent store with the same ID as an existing store fails with an ALREADY_EXISTS error."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consentStores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified consent store and removes all the consent store's data."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-getIamPolicy$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/getIamPolicy
+(defn locations-datasets-hl7V2Stores-getIamPolicy$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/getIamPolicy
   
   Required parameters: resource
   
@@ -2754,112 +3213,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists the consent stores in the specified dataset."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consentStores"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-checkDataAccess$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/checkDataAccess
-  
-  Required parameters: consentStore
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:consentList {:consents [string]},
-   :requestAttributes {},
-   :dataId string,
-   :responseView string}
-  
-  Checks if a particular data_id of a User data mapping in the specified consent store is consented for the specified use."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:consentStore})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+consentStore}:checkDataAccess"
-     #{:consentStore}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-attributeDefinitions-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:dataMappingDefaultValue string,
-   :allowedValues [string],
-   :category string,
-   :name string,
-   :description string,
-   :consentDefaultValues [string]}
-  
-  Updates the specified Attribute definition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-attributeDefinitions-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/list
+(defn locations-datasets-hl7V2Stores-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/list
   
   Required parameters: parent
   
   Optional parameters: filter, pageToken, pageSize
   
-  Lists the Attribute definitions in the specified consent store."
+  Lists the HL7v2 stores in the given dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -2867,7 +3228,7 @@
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/attributeDefinitions"
+     "v1/{+parent}/hl7V2Stores"
      #{:parent}
      parameters)
     (merge-with
@@ -2878,23 +3239,51 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-attributeDefinitions-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/create
+(defn locations-datasets-hl7V2Stores-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified HL7v2 store."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-hl7V2Stores-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/create
   
   Required parameters: parent
   
-  Optional parameters: attributeDefinitionId
+  Optional parameters: hl7V2StoreId
   
   Body: 
   
-  {:dataMappingDefaultValue string,
-   :allowedValues [string],
-   :category string,
-   :name string,
-   :description string,
-   :consentDefaultValues [string]}
+  {:name string,
+   :labels {},
+   :parserConfig {:version string,
+                  :schema SchemaPackage,
+                  :allowNullHeader boolean,
+                  :segmentTerminator string},
+   :rejectDuplicateMessage boolean,
+   :notificationConfigs [{:filter string, :pubsubTopic string}]}
   
-  Creates a new Attribute definition in the parent consent store."
+  Creates a new HL7v2 store within the parent dataset."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -2902,7 +3291,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/attributeDefinitions"
+     "v1/{+parent}/hl7V2Stores"
      #{:parent}
      parameters)
     (merge-with
@@ -2915,23 +3304,23 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-attributeDefinitions-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/get
+(defn locations-datasets-hl7V2Stores-messages-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: orderBy, pageToken, pageSize, view, filter
   
-  Gets the specified Attribute definition."
+  Lists all the messages in the given HL7v2 store with support for filtering. Note: HL7v2 messages are indexed asynchronously, so there might be a slight delay between the time a message is created and when it can be found through a filter."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/messages"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -2941,34 +3330,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-attributeDefinitions-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/attributeDefinitions/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified Attribute definition. Fails if the Attribute definition is referenced by any User data mapping, or the latest revision of any Consent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-userDataMappings-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/patch
+(defn locations-datasets-hl7V2Stores-messages-patch$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/patch
   
   Required parameters: name
   
@@ -2976,15 +3339,18 @@
   
   Body: 
   
-  {:name string,
-   :dataId string,
-   :userId string,
-   :archiveTime string,
-   :archived boolean,
-   :resourceAttributes [{:attributeDefinitionId string,
-                         :values [string]}]}
+  {:labels {},
+   :messageType string,
+   :sendTime string,
+   :name string,
+   :createTime string,
+   :parsedData {:segments [Segment]},
+   :sendFacility string,
+   :patientIds [{:type string, :value string}],
+   :schematizedData {:error string, :data string},
+   :data string}
   
-  Updates the specified User data mapping."
+  Update the message. The contents of the message in Message.data and data extracted from the contents such as Message.create_time cannot be altered. Only the Message.labels field is allowed to be updated. The labels in the request are merged with the existing set of labels. Existing labels with the same keys are updated."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -3005,14 +3371,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-userDataMappings-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/delete
+(defn locations-datasets-hl7V2Stores-messages-delete$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes the specified User data mapping."
+  Deletes an HL7v2 message."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -3031,23 +3397,23 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-userDataMappings-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/list
+(defn locations-datasets-hl7V2Stores-messages-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: view
   
-  Lists the User data mappings in the specified consent store."
+  Gets an HL7v2 message."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/userDataMappings"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -3057,8 +3423,8 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-userDataMappings-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/create
+(defn locations-datasets-hl7V2Stores-messages-ingest$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/ingest
   
   Required parameters: parent
   
@@ -3066,15 +3432,18 @@
   
   Body: 
   
-  {:name string,
-   :dataId string,
-   :userId string,
-   :archiveTime string,
-   :archived boolean,
-   :resourceAttributes [{:attributeDefinitionId string,
-                         :values [string]}]}
+  {:message {:labels {},
+             :messageType string,
+             :sendTime string,
+             :name string,
+             :createTime string,
+             :parsedData ParsedData,
+             :sendFacility string,
+             :patientIds [PatientId],
+             :schematizedData SchematizedData,
+             :data string}}
   
-  Creates a new User data mapping in the parent consent store."
+  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Pub/Sub topic configured in Hl7V2Store.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Pub/Sub topic, the adapter transmits the message when a notification is received. If the method is successful, it generates a response containing an HL7v2 acknowledgment (`ACK`) message. If the method encounters an error, it returns a negative acknowledgment (`NACK`) message. This behavior is suitable for replying to HL7v2 interface systems that expect these acknowledgments."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -3082,7 +3451,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/userDataMappings"
+     "v1/{+parent}/messages:ingest"
      #{:parent}
      parameters)
     (merge-with
@@ -3095,8 +3464,75 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-userDataMappings-archive$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/archive
+(defn locations-datasets-hl7V2Stores-messages-create$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/hl7V2Stores/messages/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:message {:labels {},
+             :messageType string,
+             :sendTime string,
+             :name string,
+             :createTime string,
+             :parsedData ParsedData,
+             :sendFacility string,
+             :patientIds [PatientId],
+             :schematizedData SchematizedData,
+             :data string}}
+  
+  Parses and stores an HL7v2 message. This method triggers an asynchronous notification to any Pub/Sub topic configured in Hl7V2Store.Hl7V2NotificationConfig, if the filtering matches the message. If an MLLP adapter is configured to listen to a Pub/Sub topic, the adapter transmits the message when a notification is received."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+parent}/messages"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-operations-list$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://healthcare.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-datasets-operations-cancel$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/cancel
   
   Required parameters: name
   
@@ -3106,7 +3542,7 @@
   
   {}
   
-  Archives the specified User data mapping."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -3114,7 +3550,7 @@
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+name}:archive"
+     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -3127,14 +3563,14 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-userDataMappings-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/userDataMappings/get
+(defn locations-datasets-operations-get$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/operations/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the specified User data mapping."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -3153,429 +3589,27 @@
       :as :json}
      auth))))
 
-(defn locations-datasets-consentStores-consents-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/get
+(defn locations-services-nlp-analyzeEntities$
+  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/services/nlp/analyzeEntities
   
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the specified revision of a Consent, or the latest revision if `revision_id` is not specified in the resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-patch$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:policies [{:resourceAttributes [Attribute], :authorizationRule Expr}],
-   :revisionCreateTime string,
-   :name string,
-   :revisionId string,
-   :state string,
-   :ttl string,
-   :consentArtifact string,
-   :userId string,
-   :expireTime string,
-   :metadata {}}
-  
-  Updates the latest revision of the specified Consent by committing a new revision with the changes. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `REJECTED` or `REVOKED` state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/create
-  
-  Required parameters: parent
+  Required parameters: nlpService
   
   Optional parameters: none
   
   Body: 
   
-  {:policies [{:resourceAttributes [Attribute], :authorizationRule Expr}],
-   :revisionCreateTime string,
-   :name string,
-   :revisionId string,
-   :state string,
-   :ttl string,
-   :consentArtifact string,
-   :userId string,
-   :expireTime string,
-   :metadata {}}
+  {:documentContent string, :licensedVocabularies [string]}
   
-  Creates a new Consent in the parent consent store."
+  Analyze heathcare entity in a document. Its response includes the recognized entity mentions and the relationships between them. AnalyzeEntities uses context aware models to detect entities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:nlpService})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consents"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the Consent and its revisions. To keep a record of the Consent but mark it inactive, see [RevokeConsent]. To delete a revision of a Consent, see [DeleteConsentRevision]. This operation does not delete the related Consent artifact."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  Lists the Consent in the given consent store, returning each Consent's latest revision."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consents"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-reject$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/reject
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:consentArtifact string}
-  
-  Rejects the latest revision of the specified Consent by committing a new revision with `state` updated to `REJECTED`. If the latest revision of the specified Consent is in the `REJECTED` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `ACTIVE` or `REVOKED` state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}:reject"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-deleteRevision$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/deleteRevision
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified revision of a Consent. An INVALID_ARGUMENT error occurs if the specified revision is the latest revision."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}:deleteRevision"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-listRevisions$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/listRevisions
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists the revisions of the specified Consent in reverse chronological order."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}:listRevisions"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-activate$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/activate
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:ttl string, :expireTime string, :consentArtifact string}
-  
-  Activates the latest revision of the specified Consent by committing a new revision with `state` updated to `ACTIVE`. If the latest revision of the specified Consent is in the `ACTIVE` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the specified Consent is in the `REJECTED` or `REVOKED` state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}:activate"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consents-revoke$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consents/revoke
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:consentArtifact string}
-  
-  Revokes the latest revision of the specified Consent by committing a new revision with `state` updated to `REVOKED`. If the latest revision of the specified Consent is in the `REVOKED` state, no new revision is committed. A FAILED_PRECONDITION error occurs if the latest revision of the given consent is in `DRAFT` or `REJECTED` state."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}:revoke"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consentArtifacts-list$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists the Consent artifacts in the specified consent store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consentArtifacts"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consentArtifacts-get$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the specified Consent artifact."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consentArtifacts-delete$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified Consent artifact. Fails if the artifact is referenced by the latest revision of any Consent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-datasets-consentStores-consentArtifacts-create$
-  "https://cloud.google.com/healthcareapi/reference/rest/v1/projects/locations/datasets/consentStores/consentArtifacts/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:userSignature {:userId string,
-                   :image Image,
-                   :signatureTime string,
-                   :metadata {}},
-   :metadata {},
-   :userId string,
-   :guardianSignature {:userId string,
-                       :image Image,
-                       :signatureTime string,
-                       :metadata {}},
-   :consentContentVersion string,
-   :consentContentScreenshots [{:gcsUri string, :rawBytes string}],
-   :witnessSignature {:userId string,
-                      :image Image,
-                      :signatureTime string,
-                      :metadata {}},
-   :name string}
-  
-  Creates a new Consent artifact in the parent consent store."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://healthcare.googleapis.com/"
-     "v1/{+parent}/consentArtifacts"
-     #{:parent}
+     "v1/{+nlpService}:analyzeEntities"
+     #{:nlpService}
      parameters)
     (merge-with
      merge

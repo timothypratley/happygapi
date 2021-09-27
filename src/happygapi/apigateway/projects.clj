@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/get
   
@@ -58,14 +32,14 @@
       :as :json}
      auth))))
 
-(defn locations-operations-get$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/get
+(defn locations-list$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: filter, pageToken, pageSize
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -73,7 +47,7 @@
    (http/get
     (util/get-url
      "https://apigateway.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -84,26 +58,95 @@
       :as :json}
      auth))))
 
-(defn locations-operations-cancel$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/cancel
+(defn locations-gateways-setIamPolicy$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {}
+  {:policy {:etag string,
+            :version integer,
+            :auditConfigs [ApigatewayAuditConfig],
+            :bindings [ApigatewayBinding]},
+   :updateMask string}
   
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://apigateway.googleapis.com/"
-     "v1/{+name}:cancel"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-gateways-getIamPolicy$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-gateways-patch$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:createTime string,
+   :labels {},
+   :apiConfig string,
+   :displayName string,
+   :state string,
+   :name string,
+   :updateTime string,
+   :defaultHostname string}
+  
+  Updates the parameters of a single Gateway."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -116,22 +159,22 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/list
+(defn locations-gateways-delete$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/delete
   
   Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Deletes a single Gateway."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://apigateway.googleapis.com/"
-     "v1/{+name}/operations"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -142,23 +185,49 @@
       :as :json}
      auth))))
 
-(defn locations-operations-delete$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/delete
+(defn locations-gateways-get$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  Gets details of a single Gateway."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://apigateway.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-gateways-list$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageSize, pageToken, filter
+  
+  Lists Gateways in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+parent}/gateways"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -200,159 +269,6 @@
       :as :json}
      auth))))
 
-(defn locations-gateways-patch$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:defaultHostname string,
-   :labels {},
-   :name string,
-   :displayName string,
-   :updateTime string,
-   :apiConfig string,
-   :state string,
-   :createTime string}
-  
-  Updates the parameters of a single Gateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-gateways-get$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets details of a single Gateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-gateways-setIamPolicy$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:bindings [ApigatewayBinding],
-            :version integer,
-            :auditConfigs [ApigatewayAuditConfig],
-            :etag string},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-gateways-delete$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a single Gateway."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-gateways-getIamPolicy$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-gateways-create$
   "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/create
   
@@ -362,14 +278,14 @@
   
   Body: 
   
-  {:defaultHostname string,
+  {:createTime string,
    :labels {},
-   :name string,
-   :displayName string,
-   :updateTime string,
    :apiConfig string,
+   :displayName string,
    :state string,
-   :createTime string}
+   :name string,
+   :updateTime string,
+   :defaultHostname string}
   
   Creates a new Gateway in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -387,58 +303,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-gateways-list$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/gateways/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, pageSize, filter, pageToken
-  
-  Lists Gateways in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+parent}/gateways"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-apis-list$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter, orderBy
-  
-  Lists Apis in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+parent}/apis"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -470,27 +334,37 @@
       :as :json}
      auth))))
 
-(defn locations-apis-getIamPolicy$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/getIamPolicy
+(defn locations-apis-setIamPolicy$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/setIamPolicy
   
   Required parameters: resource
   
-  Optional parameters: options.requestedPolicyVersion
+  Optional parameters: none
   
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  Body: 
+  
+  {:policy {:etag string,
+            :version integer,
+            :auditConfigs [ApigatewayAuditConfig],
+            :bindings [ApigatewayBinding]},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://apigateway.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
+     "v1/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -522,42 +396,6 @@
       :as :json}
      auth))))
 
-(defn locations-apis-setIamPolicy$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:bindings [ApigatewayBinding],
-            :version integer,
-            :auditConfigs [ApigatewayAuditConfig],
-            :etag string},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-apis-patch$
   "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/patch
   
@@ -567,13 +405,13 @@
   
   Body: 
   
-  {:displayName string,
+  {:state string,
+   :displayName string,
    :name string,
    :updateTime string,
    :managedService string,
-   :state string,
-   :createTime string,
-   :labels {}}
+   :labels {},
+   :createTime string}
   
   Updates the parameters of a single Api."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -585,6 +423,44 @@
      "https://apigateway.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-apis-create$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/create
+  
+  Required parameters: parent
+  
+  Optional parameters: apiId
+  
+  Body: 
+  
+  {:state string,
+   :displayName string,
+   :name string,
+   :updateTime string,
+   :managedService string,
+   :labels {},
+   :createTime string}
+  
+  Creates a new Api in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+parent}/apis"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -628,29 +504,45 @@
       :as :json}
      auth))))
 
-(defn locations-apis-create$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/create
+(defn locations-apis-getIamPolicy$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-apis-list$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/list
   
   Required parameters: parent
   
-  Optional parameters: apiId
+  Optional parameters: orderBy, pageSize, filter, pageToken
   
-  Body: 
-  
-  {:displayName string,
-   :name string,
-   :updateTime string,
-   :managedService string,
-   :state string,
-   :createTime string,
-   :labels {}}
-  
-  Creates a new Api in a given project and location."
+  Lists Apis in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://apigateway.googleapis.com/"
      "v1/{+parent}/apis"
@@ -658,9 +550,76 @@
      parameters)
     (merge-with
      merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-apis-configs-create$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: apiConfigId
+  
+  Body: 
+  
+  {:serviceConfigId string,
+   :labels {},
+   :displayName string,
+   :name string,
+   :grpcServices [{:source [ApigatewayApiConfigFile],
+                   :fileDescriptorSet ApigatewayApiConfigFile}],
+   :createTime string,
+   :state string,
+   :managedServiceConfigs [{:contents string, :path string}],
+   :updateTime string,
+   :openapiDocuments [{:document ApigatewayApiConfigFile}],
+   :gatewayServiceAccount string}
+  
+  Creates a new ApiConfig in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+parent}/configs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-apis-configs-delete$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a single ApiConfig."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -709,7 +668,7 @@
                    :fileDescriptorSet ApigatewayApiConfigFile}],
    :createTime string,
    :state string,
-   :managedServiceConfigs [{:path string, :contents string}],
+   :managedServiceConfigs [{:contents string, :path string}],
    :updateTime string,
    :openapiDocuments [{:document ApigatewayApiConfigFile}],
    :gatewayServiceAccount string}
@@ -724,111 +683,6 @@
      "https://apigateway.googleapis.com/"
      "v1/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-apis-configs-list$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, pageToken, orderBy
-  
-  Lists ApiConfigs in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+parent}/configs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-apis-configs-setIamPolicy$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:bindings [ApigatewayBinding],
-            :version integer,
-            :auditConfigs [ApigatewayAuditConfig],
-            :etag string},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-apis-configs-create$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/create
-  
-  Required parameters: parent
-  
-  Optional parameters: apiConfigId
-  
-  Body: 
-  
-  {:serviceConfigId string,
-   :labels {},
-   :displayName string,
-   :name string,
-   :grpcServices [{:source [ApigatewayApiConfigFile],
-                   :fileDescriptorSet ApigatewayApiConfigFile}],
-   :createTime string,
-   :state string,
-   :managedServiceConfigs [{:path string, :contents string}],
-   :updateTime string,
-   :openapiDocuments [{:document ApigatewayApiConfigFile}],
-   :gatewayServiceAccount string}
-  
-  Creates a new ApiConfig in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apigateway.googleapis.com/"
-     "v1/{+parent}/configs"
-     #{:parent}
      parameters)
     (merge-with
      merge
@@ -866,6 +720,42 @@
       :as :json}
      auth))))
 
+(defn locations-apis-configs-setIamPolicy$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:etag string,
+            :version integer,
+            :auditConfigs [ApigatewayAuditConfig],
+            :bindings [ApigatewayBinding]},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-apis-configs-testIamPermissions$
   "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/testIamPermissions
   
@@ -898,19 +788,129 @@
       :as :json}
      auth))))
 
-(defn locations-apis-configs-delete$
-  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/delete
+(defn locations-apis-configs-list$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/apis/configs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageSize, filter, pageToken
+  
+  Lists ApiConfigs in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+parent}/configs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/cancel
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a single ApiConfig."
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-delete$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageSize, pageToken, filter
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apigateway.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://apigateway.googleapis.com/"
      "v1/{+name}"

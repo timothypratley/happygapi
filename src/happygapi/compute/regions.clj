@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, orderBy, maxResults, filter, pageToken
+  Optional parameters: filter, pageToken, orderBy, returnPartialSuccess, maxResults
   
   Retrieves the list of region resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

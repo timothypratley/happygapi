@@ -6,95 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/list
-  
-  Required parameters: project
-  
-  Optional parameters: maxResults, orderBy, pageToken, filter, returnPartialSuccess
-  
-  Retrieves the list of TargetSslProxy resources available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetSslProxies"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/get
-  
-  Required parameters: targetSslProxy, project
-  
-  Optional parameters: none
-  
-  Returns the specified TargetSslProxy resource. Gets a list of available target SSL proxies by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetSslProxies/{targetSslProxy}"
-     #{:targetSslProxy :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setProxyHeader$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setProxyHeader
-  
-  Required parameters: project, targetSslProxy
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:proxyHeader string}
-  
-  Changes the ProxyHeaderType for TargetSslProxy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setProxyHeader"
-     #{:targetSslProxy :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn setBackendService$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setBackendService
   
@@ -128,67 +39,56 @@
       :as :json}
      auth))))
 
-(defn setSslCertificates$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setSslCertificates
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/list
   
-  Required parameters: project, targetSslProxy
+  Required parameters: project
   
-  Optional parameters: requestId
+  Optional parameters: filter, orderBy, pageToken, maxResults, returnPartialSuccess
   
-  Body: 
-  
-  {:sslCertificates [string]}
-  
-  Changes SslCertificates for TargetSslProxy."
+  Retrieves the list of TargetSslProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setSslCertificates"
-     #{:targetSslProxy :project}
+     "projects/{project}/global/targetSslProxies"
+     #{:project}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn setSslPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setSslPolicy
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/delete
   
-  Required parameters: targetSslProxy, project
+  Required parameters: project, targetSslProxy
   
   Optional parameters: requestId
   
-  Body: 
-  
-  {:sslPolicy string}
-  
-  Sets the SSL policy for TargetSslProxy. The SSL policy specifies the server-side support for SSL features. This affects connections between clients and the SSL proxy load balancer. They do not affect the connection between the load balancer and the backends."
+  Deletes the specified TargetSslProxy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setSslPolicy"
+     "projects/{project}/global/targetSslProxies/{targetSslProxy}"
      #{:targetSslProxy :project}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -236,20 +136,54 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/delete
+(defn setProxyHeader$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setProxyHeader
   
   Required parameters: project, targetSslProxy
   
   Optional parameters: requestId
   
-  Deletes the specified TargetSslProxy resource."
+  Body: 
+  
+  {:proxyHeader string}
+  
+  Changes the ProxyHeaderType for TargetSslProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setProxyHeader"
+     #{:targetSslProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/get
+  
+  Required parameters: targetSslProxy, project
+  
+  Optional parameters: none
+  
+  Returns the specified TargetSslProxy resource. Gets a list of available target SSL proxies by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/targetSslProxies/{targetSslProxy}"
@@ -258,6 +192,72 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setSslPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setSslPolicy
+  
+  Required parameters: project, targetSslProxy
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:sslPolicy string}
+  
+  Sets the SSL policy for TargetSslProxy. The SSL policy specifies the server-side support for SSL features. This affects connections between clients and the SSL proxy load balancer. They do not affect the connection between the load balancer and the backends."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setSslPolicy"
+     #{:targetSslProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setSslCertificates$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetSslProxies/setSslCertificates
+  
+  Required parameters: targetSslProxy, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:sslCertificates [string]}
+  
+  Changes SslCertificates for TargetSslProxy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetSslProxy :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetSslProxies/{targetSslProxy}/setSslCertificates"
+     #{:targetSslProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

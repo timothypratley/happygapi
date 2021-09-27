@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: maxResults, sortField, searchString, sortOrder, pageToken, ids
-  
-  Retrieves a list of advertiser groups, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/advertiserGroups"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/update
   
@@ -41,7 +15,7 @@
   
   Body: 
   
-  {:kind string, :id string, :name string, :accountId string}
+  {:id string, :accountId string, :name string, :kind string}
   
   Updates an existing advertiser group."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -64,6 +38,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: maxResults, ids, sortOrder, sortField, pageToken, searchString
+  
+  Retrieves a list of advertiser groups, possibly filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/advertiserGroups"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/patch
   
@@ -73,7 +73,7 @@
   
   Body: 
   
-  {:kind string, :id string, :name string, :accountId string}
+  {:id string, :accountId string, :name string, :kind string}
   
   Updates an existing advertiser group. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -122,6 +122,38 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/insert
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :accountId string, :name string, :kind string}
+  
+  Inserts a new advertiser group."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/advertiserGroups"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/delete
   
@@ -143,38 +175,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserGroups/insert
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:kind string, :id string, :name string, :accountId string}
-  
-  Inserts a new advertiser group."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/advertiserGroups"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

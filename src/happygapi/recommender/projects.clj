@@ -64,6 +64,32 @@
       :as :json}
      auth))))
 
+(defn locations-recommenders-recommendations-list$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/projects/locations/recommenders/recommendations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists recommendations for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified recommender."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1/{+parent}/recommendations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-recommenders-recommendations-markFailed$
   "https://cloud.google.com/recommender/docs/api/reference/rest/v1/projects/locations/recommenders/recommendations/markFailed
   
@@ -96,32 +122,6 @@
       :as :json}
      auth))))
 
-(defn locations-recommenders-recommendations-list$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/projects/locations/recommenders/recommendations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists recommendations for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1/{+parent}/recommendations"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-recommenders-recommendations-markSucceeded$
   "https://cloud.google.com/recommender/docs/api/reference/rest/v1/projects/locations/recommenders/recommendations/markSucceeded
   
@@ -131,7 +131,7 @@
   
   Body: 
   
-  {:stateMetadata {}, :etag string}
+  {:etag string, :stateMetadata {}}
   
   Marks the Recommendation State as Succeeded. Users can use this method to indicate to the Recommender API that they have applied the recommendation themselves, and the operation was successful. This stops the recommendation content from being updated. Associated insights are frozen and placed in the ACCEPTED state. MarkRecommendationSucceeded can be applied to recommendations in ACTIVE, CLAIMED, SUCCEEDED, or FAILED state. Requires the recommender.*.update IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -163,7 +163,7 @@
   
   Body: 
   
-  {:etag string, :stateMetadata {}}
+  {:stateMetadata {}, :etag string}
   
   Marks the Insight State as Accepted. Users can use this method to indicate to the Recommender API that they have applied some action based on the insight. This stops the insight content from being updated. MarkInsightAccepted can be applied to insights in ACTIVE state. Requires the recommender.*.update IAM permission for the specified insight."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -191,7 +191,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageToken, pageSize, filter
   
   Lists insights for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified insight type."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

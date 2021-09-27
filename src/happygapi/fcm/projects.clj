@@ -28,7 +28,8 @@
              :data {}}}
   
   Send a message to specified target (a registration token, topic or condition)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase.messaging"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response

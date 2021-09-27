@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/mobileApps/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -37,7 +37,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: searchString, pageToken, maxResults, ids, directories
+  Optional parameters: maxResults, directories, pageToken, ids, searchString
   
   Retrieves list of available mobile apps."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}

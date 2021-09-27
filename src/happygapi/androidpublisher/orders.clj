@@ -9,11 +9,11 @@
 (defn refund$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/orders/refund
   
-  Required parameters: packageName, orderId
+  Required parameters: orderId, packageName
   
   Optional parameters: revoke
   
-  Refund a user's subscription or in-app purchase order."
+  Refunds a user's subscription or in-app purchase order. Orders older than 1 year cannot be refunded."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:packageName :orderId})]}

@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://servicedirectory.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/get
   
@@ -58,86 +32,22 @@
       :as :json}
      auth))))
 
-(defn locations-namespaces-create$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/create
-  
-  Required parameters: parent
-  
-  Optional parameters: namespaceId
-  
-  Body: 
-  
-  {:labels {}, :name string}
-  
-  Creates a namespace, and returns the new namespace."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://servicedirectory.googleapis.com/"
-     "v1/{+parent}/namespaces"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-namespaces-patch$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/patch
+(defn locations-list$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: pageToken, pageSize, filter
   
-  Body: 
-  
-  {:labels {}, :name string}
-  
-  Updates a namespace."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://servicedirectory.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-namespaces-delete$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a namespace. This also deletes all services and endpoints in the namespace."
+  Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://servicedirectory.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -153,7 +63,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, filter, pageSize, orderBy
+  Optional parameters: pageSize, filter, orderBy, pageToken
   
   Lists all namespaces."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -169,6 +79,38 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-namespaces-testIamPermissions$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Tests IAM permissions for a resource (namespace or service only)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://servicedirectory.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -206,27 +148,85 @@
       :as :json}
      auth))))
 
-(defn locations-namespaces-testIamPermissions$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/testIamPermissions
+(defn locations-namespaces-create$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/create
   
-  Required parameters: resource
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: namespaceId
   
   Body: 
   
-  {:permissions [string]}
+  {:labels {}, :name string}
   
-  Tests IAM permissions for a resource (namespace or service only)."
+  Creates a namespace, and returns the new namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://servicedirectory.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
+     "v1/{+parent}/namespaces"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-namespaces-delete$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a namespace. This also deletes all services and endpoints in the namespace."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://servicedirectory.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-namespaces-patch$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:labels {}, :name string}
+  
+  Updates a namespace."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://servicedirectory.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -273,7 +273,7 @@
   
   Body: 
   
-  {:policy {:bindings [Binding], :version integer, :etag string}}
+  {:policy {:etag string, :version integer, :bindings [Binding]}}
   
   Sets the IAM Policy for a resource (namespace or service only)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -331,7 +331,7 @@
   
   Body: 
   
-  {:policy {:bindings [Binding], :version integer, :etag string}}
+  {:policy {:etag string, :version integer, :bindings [Binding]}}
   
   Sets the IAM Policy for a resource (namespace or service only)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -363,11 +363,11 @@
   
   Body: 
   
-  {:endpoints [{:name string,
-                :annotations {},
+  {:name string,
+   :endpoints [{:port integer,
                 :address string,
-                :port integer}],
-   :name string,
+                :name string,
+                :annotations {}}],
    :annotations {}}
   
   Updates a service."
@@ -432,11 +432,11 @@
   
   Body: 
   
-  {:endpoints [{:name string,
-                :annotations {},
+  {:name string,
+   :endpoints [{:port integer,
                 :address string,
-                :port integer}],
-   :name string,
+                :name string,
+                :annotations {}}],
    :annotations {}}
   
   Creates a service, and returns the new service."
@@ -523,7 +523,7 @@
   
   Required parameters: parent
   
-  Optional parameters: orderBy, pageSize, filter, pageToken
+  Optional parameters: pageToken, pageSize, filter, orderBy
   
   Lists all services belonging to a namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -553,7 +553,7 @@
   
   Body: 
   
-  {:maxEndpoints integer, :endpointFilter string}
+  {:endpointFilter string, :maxEndpoints integer}
   
   Returns a service and its associated endpoints. Resolving a service is not considered an active developer method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -611,7 +611,7 @@
   
   Body: 
   
-  {:name string, :annotations {}, :address string, :port integer}
+  {:port integer, :address string, :name string, :annotations {}}
   
   Creates an endpoint, and returns the new endpoint."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -629,6 +629,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-namespaces-services-endpoints-delete$
+  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/services/endpoints/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an endpoint."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://servicedirectory.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -669,7 +695,7 @@
   
   Body: 
   
-  {:name string, :annotations {}, :address string, :port integer}
+  {:port integer, :address string, :name string, :annotations {}}
   
   Updates an endpoint."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -687,32 +713,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-namespaces-services-endpoints-delete$
-  "https://cloud.google.com/service-directoryapi/reference/rest/v1/projects/locations/namespaces/services/endpoints/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an endpoint."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://servicedirectory.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

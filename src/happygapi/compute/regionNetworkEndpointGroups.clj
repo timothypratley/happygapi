@@ -9,9 +9,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: orderBy, pageToken, filter, returnPartialSuccess, maxResults
+  Optional parameters: filter, pageToken, maxResults, returnPartialSuccess, orderBy
   
   Retrieves the list of regional network endpoint groups available to the specified project in the given region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -37,7 +37,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/get
   
-  Required parameters: region, project, networkEndpointGroup
+  Required parameters: region, networkEndpointGroup, project
   
   Optional parameters: none
   
@@ -78,7 +78,7 @@
    :creationTimestamp string,
    :zone string,
    :name string,
-   :cloudFunction {:function string, :urlMask string},
+   :cloudFunction {:urlMask string, :function string},
    :selfLink string,
    :cloudRun {:urlMask string, :tag string, :service string},
    :size integer,
@@ -116,7 +116,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionNetworkEndpointGroups/delete
   
-  Required parameters: region, networkEndpointGroup, project
+  Required parameters: networkEndpointGroup, region, project
   
   Optional parameters: requestId
   

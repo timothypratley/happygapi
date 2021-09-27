@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/list
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/get
   
-  Required parameters: profileId
+  Required parameters: profileId, id
   
-  Optional parameters: height, width, ids, iabStandard
+  Optional parameters: none
   
-  Retrieves a list of sizes, possibly filtered. Retrieved sizes are globally unique and may include values not currently in use by your account. Due to this, the list of sizes returned by this method may differ from the list seen in the Trafficking UI."
+  Gets one size by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/sizes"
-     #{:profileId}
+     "dfareporting/v3.5/userprofiles/{profileId}/sizes/{id}"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge
@@ -41,10 +41,10 @@
   
   Body: 
   
-  {:kind string,
-   :iab boolean,
+  {:width integer,
+   :kind string,
    :height integer,
-   :width integer,
+   :iab boolean,
    :id string}
   
   Inserts a new size."
@@ -68,23 +68,23 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/get
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sizes/list
   
-  Required parameters: id, profileId
+  Required parameters: profileId
   
-  Optional parameters: none
+  Optional parameters: ids, height, width, iabStandard
   
-  Gets one size by ID."
+  Retrieves a list of sizes, possibly filtered. Retrieved sizes are globally unique and may include values not currently in use by your account. Due to this, the list of sizes returned by this method may differ from the list seen in the Trafficking UI."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/sizes/{id}"
-     #{:id :profileId}
+     "dfareporting/v3.5/userprofiles/{profileId}/sizes"
+     #{:profileId}
      parameters)
     (merge-with
      merge

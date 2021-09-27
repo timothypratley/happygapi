@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/get
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/list
   
-  Required parameters: collectionId, merchantId
+  Required parameters: merchantId
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken
   
-  Retrieves a collection from your Merchant Center account."
+  Lists the collections in your Merchant Center account. The response might contain fewer items than specified by page_size. Rely on next_page_token to determine if there are more items to be requested."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/collections/{collectionId}"
-     #{:collectionId :merchantId}
+     "{merchantId}/collections"
+     #{:merchantId}
      parameters)
     (merge-with
      merge
@@ -45,7 +45,7 @@
    :headline [string],
    :customLabel3 string,
    :mobileLink string,
-   :featuredProduct [{:y number, :offerId string, :x number}],
+   :featuredProduct [{:offerId string, :x number, :y number}],
    :customLabel2 string,
    :language string,
    :link string,
@@ -76,32 +76,6 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the collections in your Merchant Center account. The response might contain fewer items than specified by page_size. Rely on next_page_token to determine if there are more items to be requested."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/collections"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/delete
   
@@ -115,6 +89,32 @@
   {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
   (util/get-response
    (http/delete
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/collections/{collectionId}"
+     #{:collectionId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/get
+  
+  Required parameters: collectionId, merchantId
+  
+  Optional parameters: none
+  
+  Retrieves a collection from your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/collections/{collectionId}"

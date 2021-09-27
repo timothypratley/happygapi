@@ -1,10 +1,10 @@
-{:CustomApp {:description "This resource represents a custom app.",
-             :properties {:packageName {:readOnly true,
+{:CustomApp {:type "object",
+             :properties {:title {:type "string",
+                                  :description "Title for the Android app."},
+                          :languageCode {:type "string",
+                                         :description "Default listing language in BCP 47 format."},
+                          :packageName {:description "Output only. Package name of the created Android app. Only present in the API response.",
                                         :type "string",
-                                        :description "Output only. Package name of the created Android app. Only present in the API response."},
-                          :languageCode {:description "Default listing language in BCP 47 format.",
-                                         :type "string"},
-                          :title {:description "Title for the Android app.",
-                                  :type "string"}},
+                                        :readOnly true}},
              :id "CustomApp",
-             :type "object"}}
+             :description "This resource represents a custom app."}}

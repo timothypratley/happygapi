@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/get
   
-  Required parameters: datasetId, projectId, tableId
+  Required parameters: tableId, datasetId, projectId
   
   Optional parameters: selectedFields
   
@@ -43,11 +43,11 @@
   
   Body: 
   
-  {:policy {:etag string,
+  {:updateMask string,
+   :policy {:etag string,
             :bindings [Binding],
             :version integer,
-            :auditConfigs [AuditConfig]},
-   :updateMask string}
+            :auditConfigs [AuditConfig]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -94,8 +94,8 @@
    :etag string,
    :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
-                      :expirationMs string,
-                      :field string},
+                      :field string,
+                      :expirationMs string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
@@ -107,6 +107,7 @@
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
+                               :avroOptions AvroOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
@@ -119,18 +120,19 @@
                     :tableId string},
    :id string,
    :rangePartitioning {:range {:start string,
-                               :end string,
-                               :interval string},
+                               :interval string,
+                               :end string},
                        :field string},
    :kind string,
+   :defaultCollation string,
    :streamingBuffer {:estimatedBytes string,
-                     :estimatedRows string,
-                     :oldestEntryTime string},
+                     :oldestEntryTime string,
+                     :estimatedRows string},
    :location string,
    :materializedView {:enableRefresh boolean,
                       :lastRefreshTime string,
-                      :query string,
-                      :refreshIntervalMs string},
+                      :refreshIntervalMs string,
+                      :query string},
    :encryptionConfiguration {:kmsKeyName string},
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
@@ -138,10 +140,10 @@
           :useLegacySql boolean,
           :query string,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:trainingRuns [BqmlTrainingRun],
-           :modelOptions {:lossType string,
-                          :modelType string,
-                          :labels [string]}}}
+   :model {:modelOptions {:modelType string,
+                          :labels [string],
+                          :lossType string},
+           :trainingRuns [BqmlTrainingRun]}}
   
   Creates a new, empty table in the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -188,8 +190,8 @@
    :etag string,
    :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
-                      :expirationMs string,
-                      :field string},
+                      :field string,
+                      :expirationMs string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
@@ -201,6 +203,7 @@
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
+                               :avroOptions AvroOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
@@ -213,18 +216,19 @@
                     :tableId string},
    :id string,
    :rangePartitioning {:range {:start string,
-                               :end string,
-                               :interval string},
+                               :interval string,
+                               :end string},
                        :field string},
    :kind string,
+   :defaultCollation string,
    :streamingBuffer {:estimatedBytes string,
-                     :estimatedRows string,
-                     :oldestEntryTime string},
+                     :oldestEntryTime string,
+                     :estimatedRows string},
    :location string,
    :materializedView {:enableRefresh boolean,
                       :lastRefreshTime string,
-                      :query string,
-                      :refreshIntervalMs string},
+                      :refreshIntervalMs string,
+                      :query string},
    :encryptionConfiguration {:kmsKeyName string},
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
@@ -232,10 +236,10 @@
           :useLegacySql boolean,
           :query string,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:trainingRuns [BqmlTrainingRun],
-           :modelOptions {:lossType string,
-                          :modelType string,
-                          :labels [string]}}}
+   :model {:modelOptions {:modelType string,
+                          :labels [string],
+                          :lossType string},
+           :trainingRuns [BqmlTrainingRun]}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -316,8 +320,8 @@
    :etag string,
    :timePartitioning {:type string,
                       :requirePartitionFilter boolean,
-                      :expirationMs string,
-                      :field string},
+                      :field string,
+                      :expirationMs string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
@@ -329,6 +333,7 @@
                                :sourceFormat string,
                                :ignoreUnknownValues boolean,
                                :googleSheetsOptions GoogleSheetsOptions,
+                               :avroOptions AvroOptions,
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
@@ -341,18 +346,19 @@
                     :tableId string},
    :id string,
    :rangePartitioning {:range {:start string,
-                               :end string,
-                               :interval string},
+                               :interval string,
+                               :end string},
                        :field string},
    :kind string,
+   :defaultCollation string,
    :streamingBuffer {:estimatedBytes string,
-                     :estimatedRows string,
-                     :oldestEntryTime string},
+                     :oldestEntryTime string,
+                     :estimatedRows string},
    :location string,
    :materializedView {:enableRefresh boolean,
                       :lastRefreshTime string,
-                      :query string,
-                      :refreshIntervalMs string},
+                      :refreshIntervalMs string,
+                      :query string},
    :encryptionConfiguration {:kmsKeyName string},
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
@@ -360,10 +366,10 @@
           :useLegacySql boolean,
           :query string,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:trainingRuns [BqmlTrainingRun],
-           :modelOptions {:lossType string,
-                          :modelType string,
-                          :labels [string]}}}
+   :model {:modelOptions {:modelType string,
+                          :labels [string],
+                          :lossType string},
+           :trainingRuns [BqmlTrainingRun]}}
   
   Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -390,7 +396,7 @@
 (defn delete$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/delete
   
-  Required parameters: tableId, datasetId, projectId
+  Required parameters: datasetId, projectId, tableId
   
   Optional parameters: none
   
@@ -453,7 +459,7 @@
   
   Required parameters: projectId, datasetId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   Lists all tables in the specified dataset. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

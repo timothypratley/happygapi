@@ -6,53 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/delete
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/update
   
   Required parameters: enterpriseId, userId, managedConfigurationForUserId
   
   Optional parameters: none
   
-  Removes a per-user managed configuration for an app for the specified user."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :managedConfigurationForUserId :userId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
-     #{:enterpriseId :managedConfigurationForUserId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/update
-  
-  Required parameters: managedConfigurationForUserId, userId, enterpriseId
-  
-  Optional parameters: none
-  
   Body: 
   
-  {:configurationVariables {:variableSet [VariableSet], :mcmId string},
-   :kind string,
-   :productId string,
-   :managedProperty [{:valueStringArray [string],
-                      :key string,
+  {:managedProperty [{:valueBool boolean,
                       :valueBundle ManagedPropertyBundle,
-                      :valueBool boolean,
-                      :valueBundleArray [ManagedPropertyBundle],
+                      :valueStringArray [string],
+                      :key string,
+                      :valueString string,
                       :valueInteger integer,
-                      :valueString string}]}
+                      :valueBundleArray [ManagedPropertyBundle]}],
+   :configurationVariables {:mcmId string, :variableSet [VariableSet]},
+   :kind string,
+   :productId string}
   
   Adds or updates the managed configuration settings for an app for the specified user. If you support the Managed configurations iframe, you can apply managed configurations to a user by specifying an mcmId and its associated configuration variables (if any) in the request. Alternatively, all EMMs can apply managed configurations by passing a list of managed properties."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -106,7 +78,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/get
   
-  Required parameters: enterpriseId, managedConfigurationForUserId, userId
+  Required parameters: managedConfigurationForUserId, enterpriseId, userId
   
   Optional parameters: none
   
@@ -118,6 +90,34 @@
           #{:enterpriseId :managedConfigurationForUserId :userId})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
+     #{:enterpriseId :managedConfigurationForUserId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/delete
+  
+  Required parameters: managedConfigurationForUserId, enterpriseId, userId
+  
+  Optional parameters: none
+  
+  Removes a per-user managed configuration for an app for the specified user."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :managedConfigurationForUserId :userId})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"

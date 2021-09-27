@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:availablePermissionIds [string],
-   :kind string,
-   :accountId string,
+  {:accountId string,
    :name string,
-   :id string}
+   :kind string,
+   :id string,
+   :availablePermissionIds [string]}
   
   Inserts a new subaccount."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -42,36 +42,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/subaccounts/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: sortOrder, pageToken, searchString, sortField, maxResults, ids
-  
-  Gets a list of subaccounts, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/subaccounts"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/subaccounts/get
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   
@@ -94,37 +68,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/subaccounts/patch
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/subaccounts/list
   
-  Required parameters: profileId, id
+  Required parameters: profileId
   
-  Optional parameters: none
+  Optional parameters: sortOrder, maxResults, pageToken, searchString, ids, sortField
   
-  Body: 
-  
-  {:availablePermissionIds [string],
-   :kind string,
-   :accountId string,
-   :name string,
-   :id string}
-  
-  Updates an existing subaccount. This method supports patch semantics."
+  Gets a list of subaccounts, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/subaccounts"
-     #{:id :profileId}
+     #{:profileId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -139,11 +103,11 @@
   
   Body: 
   
-  {:availablePermissionIds [string],
-   :kind string,
-   :accountId string,
+  {:accountId string,
    :name string,
-   :id string}
+   :kind string,
+   :id string,
+   :availablePermissionIds [string]}
   
   Updates an existing subaccount."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -155,6 +119,42 @@
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/subaccounts"
      #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/subaccounts/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:accountId string,
+   :name string,
+   :kind string,
+   :id string,
+   :availablePermissionIds [string]}
+  
+  Updates an existing subaccount. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/subaccounts"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge

@@ -1,13 +1,13 @@
 (ns happygapi.admin.channels
   "Admin SDK API: channels.
   Admin SDK lets administrators of enterprise domains to view and manage resources like user, groups etc. It also provides audit and usage reports of domain.
-  See: http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels"
+  See: https://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn stop$
-  "http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels/stop
+  "https://developers.google.com/admin-sdk/api/reference/rest/reports_v1/channels/stop
   
   Required parameters: none
   

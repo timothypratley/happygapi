@@ -32,24 +32,56 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/get
+(defn create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/create
   
-  Required parameters: id
+  Required parameters: none
   
   Optional parameters: none
   
-  Returns an invitation. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to view the requested invitation or for access errors. * `NOT_FOUND` if no invitation exists with the requested ID."
+  Body: 
+  
+  {:role string, :userId string, :id string, :courseId string}
+  
+  Creates an invitation. Only one invitation for a user and course may exist at a time. Delete and re-create an invitation to make changes. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create invitations for this course or for access errors. * `NOT_FOUND` if the course or the user does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled or if the user already has this role or a role with greater permissions. * `ALREADY_EXISTS` if an invitation for the specified user and course already exists."
+  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/invitations"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/list
+  
+  Required parameters: none
+  
+  Optional parameters: courseId, pageSize, userId, pageToken
+  
+  Returns a list of invitations that the requesting user is permitted to view, restricted to those that match the list request. *Note:* At least one of `user_id` or `course_id` must be supplied. Both fields can be supplied. This method returns the following error codes: * `PERMISSION_DENIED` for access errors."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
             "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/invitations/{id}"
-     #{:id}
+     "v1/invitations"
+     #{}
      parameters)
     (merge-with
      merge
@@ -85,60 +117,28 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/list
+(defn get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/get
   
-  Required parameters: none
+  Required parameters: id
   
-  Optional parameters: pageToken, pageSize, courseId, userId
+  Optional parameters: none
   
-  Returns a list of invitations that the requesting user is permitted to view, restricted to those that match the list request. *Note:* At least one of `user_id` or `course_id` must be supplied. Both fields can be supplied. This method returns the following error codes: * `PERMISSION_DENIED` for access errors."
+  Returns an invitation. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to view the requested invitation or for access errors. * `NOT_FOUND` if no invitation exists with the requested ID."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"
             "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/invitations"
-     #{}
+     "v1/invitations/{id}"
+     #{:id}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/invitations/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:courseId string, :id string, :role string, :userId string}
-  
-  Creates an invitation. Only one invitation for a user and course may exist at a time. Delete and re-create an invitation to make changes. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create invitations for this course or for access errors. * `NOT_FOUND` if the course or the user does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled or if the user already has this role or a role with greater permissions. * `ALREADY_EXISTS` if an invitation for the specified user and course already exists."
-  {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/invitations"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

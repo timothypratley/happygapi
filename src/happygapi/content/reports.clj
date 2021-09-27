@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:pageToken string, :pageSize integer, :query string}
+  {:query string, :pageToken string, :pageSize integer}
   
   Retrieves merchant performance mertrics matching the search query and optionally segmented by selected dimensions."
   {:scopes ["https://www.googleapis.com/auth/content"]}

@@ -11,7 +11,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: returnPartialSuccess, orderBy, maxResults, filter, pageToken
+  Optional parameters: filter, orderBy, returnPartialSuccess, pageToken, maxResults
   
   Retrieves a list of machine types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -34,38 +34,10 @@
       :as :json}
      auth))))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/machineTypes/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: pageToken, returnPartialSuccess, orderBy, filter, includeAllScopes, maxResults
-  
-  Retrieves an aggregated list of machine types."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/machineTypes"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/machineTypes/get
   
-  Required parameters: project, zone, machineType
+  Required parameters: zone, project, machineType
   
   Optional parameters: none
   
@@ -81,6 +53,34 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/zones/{zone}/machineTypes/{machineType}"
      #{:zone :machineType :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/machineTypes/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: orderBy, maxResults, includeAllScopes, returnPartialSuccess, filter, pageToken
+  
+  Retrieves an aggregated list of machine types."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/machineTypes"
+     #{:project}
      parameters)
     (merge-with
      merge

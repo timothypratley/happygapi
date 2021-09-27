@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/files/get
   
-  Required parameters: reportId, fileId
+  Required parameters: fileId, reportId
   
   Optional parameters: none
   
@@ -37,7 +37,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: sortOrder, pageToken, sortField, scope, maxResults
+  Optional parameters: pageToken, scope, sortField, sortOrder, maxResults
   
   Lists files for a user profile."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}

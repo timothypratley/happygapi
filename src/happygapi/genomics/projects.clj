@@ -71,7 +71,7 @@
   
   Required parameters: name
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
   Lists operations that match the specified filter in the request. Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission: * `genomics.operations.list`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -102,16 +102,16 @@
   
   Body: 
   
-  {:sosReport string,
-   :events [{:data {}, :timestamp string}],
-   :event {},
-   :result {:details [{}], :message string, :code integer},
-   :deadlineExpired {},
+  {:event {},
    :workerStatus {:attachedDisks {},
+                  :uptimeSeconds string,
                   :freeRamBytes string,
                   :totalRamBytes string,
-                  :bootDisk DiskStatus,
-                  :uptimeSeconds string}}
+                  :bootDisk DiskStatus},
+   :result {:code integer, :message string, :details [{}]},
+   :deadlineExpired {},
+   :events [{:timestamp string, :data {}}],
+   :sosReport string}
   
   The worker uses this method to retrieve the assigned operation and provide periodic status updates."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

@@ -1,6 +1,6 @@
 (ns happygapi.monitoring.uptimeCheckIps
   "Cloud Monitoring API: uptimeCheckIps.
-  Manages your Cloud Monitoring data and configurations. Most projects must be associated with a Workspace, with a few exceptions as noted on the individual method pages. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the Cloud Monitoring documentation.
+  Manages your Cloud Monitoring data and configurations. Most projects must be associated with a Workspace, with a few exceptions as noted on the individual method pages. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the Cloud Monitoring documentation (https://cloud.google.com/monitoring/docs).
   See: https://cloud.google.com/monitoring/api/api/reference/rest/v3/uptimeCheckIps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]

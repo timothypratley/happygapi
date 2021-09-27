@@ -6,94 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn scanConfigs-get$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the specified scan configuration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn scanConfigs-update$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/update
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:enabled boolean,
-   :name string,
-   :createTime string,
-   :description string,
-   :updateTime string}
-  
-  Updates the specified scan configuration."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn scanConfigs-list$
-  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists scan configurations for the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://containeranalysis.googleapis.com/"
-     "v1beta1/{+parent}/scanConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn occurrences-get$
   "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/occurrences/get
   
@@ -129,7 +41,7 @@
   
   Body: 
   
-  {:policy {:version integer, :etag string, :bindings [Binding]}}
+  {:policy {:bindings [Binding], :version integer, :etag string}}
   
   Sets the access control policy on the specified note or occurrence. Requires `containeranalysis.notes.setIamPolicy` or `containeranalysis.occurrences.setIamPolicy` permission if the resource is a note or an occurrence, respectively. The resource takes the format `projects/[PROJECT_ID]/notes/[NOTE_ID]` for notes and `projects/[PROJECT_ID]/occurrences/[OCCURRENCE_ID]` for occurrences."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -163,26 +75,54 @@
   
   {:noteName string,
    :remediation string,
+   :sbom {:creators [string],
+          :licenseListVersion string,
+          :createTime string,
+          :title string,
+          :creatorComment string,
+          :id string,
+          :documentComment string,
+          :namespace string,
+          :externalDocumentRefs [string]},
    :name string,
    :createTime string,
    :discovered {:discovered Discovered},
-   :vulnerability {:shortDescription string,
-                   :longDescription string,
-                   :severity string,
-                   :effectiveSeverity string,
-                   :type string,
+   :vulnerability {:packageIssue [PackageIssue],
                    :relatedUrls [RelatedUrl],
-                   :cvssScore number,
-                   :packageIssue [PackageIssue]},
+                   :effectiveSeverity string,
+                   :severity string,
+                   :shortDescription string,
+                   :longDescription string,
+                   :type string,
+                   :cvssScore number},
+   :spdxRelationship {:target string,
+                      :comment string,
+                      :type string,
+                      :source string},
    :updateTime string,
-   :build {:provenance BuildProvenance, :provenanceBytes string},
+   :build {:provenanceBytes string, :provenance BuildProvenance},
    :installation {:installation Installation},
    :derivedImage {:derivedImage Derived},
    :attestation {:attestation Attestation},
-   :resource {:contentHash Hash, :name string, :uri string},
+   :resource {:uri string, :name string, :contentHash Hash},
    :kind string,
+   :spdxFile {:licenseComments string,
+              :licenseConcluded string,
+              :filesLicenseInfo [string],
+              :copyright string,
+              :id string,
+              :contributors [string],
+              :comment string,
+              :notice string,
+              :attributions [string]},
    :deployment {:deployment Deployment},
-   :intoto {:signatures [GrafeasV1beta1IntotoSignature], :signed Link}}
+   :spdxPackage {:licenseConcluded string,
+                 :sourceInfo string,
+                 :licenseComments string,
+                 :filename string,
+                 :id string,
+                 :comment string},
+   :intoto {:signed Link, :signatures [GrafeasV1beta1IntotoSignature]}}
   
   Updates the specified occurrence."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -248,26 +188,54 @@
   
   {:noteName string,
    :remediation string,
+   :sbom {:creators [string],
+          :licenseListVersion string,
+          :createTime string,
+          :title string,
+          :creatorComment string,
+          :id string,
+          :documentComment string,
+          :namespace string,
+          :externalDocumentRefs [string]},
    :name string,
    :createTime string,
    :discovered {:discovered Discovered},
-   :vulnerability {:shortDescription string,
-                   :longDescription string,
-                   :severity string,
-                   :effectiveSeverity string,
-                   :type string,
+   :vulnerability {:packageIssue [PackageIssue],
                    :relatedUrls [RelatedUrl],
-                   :cvssScore number,
-                   :packageIssue [PackageIssue]},
+                   :effectiveSeverity string,
+                   :severity string,
+                   :shortDescription string,
+                   :longDescription string,
+                   :type string,
+                   :cvssScore number},
+   :spdxRelationship {:target string,
+                      :comment string,
+                      :type string,
+                      :source string},
    :updateTime string,
-   :build {:provenance BuildProvenance, :provenanceBytes string},
+   :build {:provenanceBytes string, :provenance BuildProvenance},
    :installation {:installation Installation},
    :derivedImage {:derivedImage Derived},
    :attestation {:attestation Attestation},
-   :resource {:contentHash Hash, :name string, :uri string},
+   :resource {:uri string, :name string, :contentHash Hash},
    :kind string,
+   :spdxFile {:licenseComments string,
+              :licenseConcluded string,
+              :filesLicenseInfo [string],
+              :copyright string,
+              :id string,
+              :contributors [string],
+              :comment string,
+              :notice string,
+              :attributions [string]},
    :deployment {:deployment Deployment},
-   :intoto {:signatures [GrafeasV1beta1IntotoSignature], :signed Link}}
+   :spdxPackage {:licenseConcluded string,
+                 :sourceInfo string,
+                 :licenseComments string,
+                 :filename string,
+                 :id string,
+                 :comment string},
+   :intoto {:signed Link, :signatures [GrafeasV1beta1IntotoSignature]}}
   
   Creates a new occurrence."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -301,10 +269,12 @@
   
   {:occurrences [{:noteName string,
                   :remediation string,
+                  :sbom DocumentOccurrence,
                   :name string,
                   :createTime string,
                   :discovered GrafeasV1beta1DiscoveryDetails,
                   :vulnerability GrafeasV1beta1VulnerabilityDetails,
+                  :spdxRelationship RelationshipOccurrence,
                   :updateTime string,
                   :build GrafeasV1beta1BuildDetails,
                   :installation GrafeasV1beta1PackageDetails,
@@ -312,7 +282,9 @@
                   :attestation Details,
                   :resource Resource,
                   :kind string,
+                  :spdxFile FileOccurrence,
                   :deployment GrafeasV1beta1DeploymentDetails,
+                  :spdxPackage PackageOccurrence,
                   :intoto GrafeasV1beta1IntotoDetails}]}
   
   Creates new occurrences in batch."
@@ -425,7 +397,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
   Lists occurrences for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -507,7 +479,7 @@
   
   Body: 
   
-  {:policy {:version integer, :etag string, :bindings [Binding]}}
+  {:policy {:bindings [Binding], :version integer, :etag string}}
   
   Sets the access control policy on the specified note or occurrence. Requires `containeranalysis.notes.setIamPolicy` or `containeranalysis.occurrences.setIamPolicy` permission if the resource is a note or an occurrence, respectively. The resource takes the format `projects/[PROJECT_ID]/notes/[NOTE_ID]` for notes and `projects/[PROJECT_ID]/occurrences/[OCCURRENCE_ID]` for occurrences."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -539,32 +511,51 @@
   
   Body: 
   
-  {:relatedUrl [{:url string, :label string}],
-   :package {:distribution [Distribution], :name string},
+  {:relatedUrl [{:label string, :url string}],
+   :package {:name string, :distribution [Distribution]},
    :discovery {:analysisKind string},
+   :sbom {:spdxVersion string, :dataLicence string},
    :relatedNoteNames [string],
    :deployable {:resourceUri [string]},
    :expirationTime string,
    :name string,
    :createTime string,
-   :vulnerability {:cvssScore number,
+   :vulnerability {:windowsDetails [WindowsDetail],
                    :severity string,
-                   :cvssV3 CVSSv3,
-                   :details [Detail],
                    :sourceUpdateTime string,
-                   :windowsDetails [WindowsDetail]},
+                   :details [Detail],
+                   :cvssV3 CVSSv3,
+                   :cvssScore number},
+   :spdxRelationship {},
    :updateTime string,
    :attestationAuthority {:hint Hint},
    :shortDescription string,
-   :baseImage {:resourceUrl string, :fingerprint Fingerprint},
-   :build {:signature BuildSignature, :builderVersion string},
+   :baseImage {:fingerprint Fingerprint, :resourceUrl string},
+   :build {:builderVersion string, :signature BuildSignature},
    :kind string,
-   :intoto {:threshold string,
-            :expectedProducts [ArtifactRule],
-            :stepName string,
-            :expectedCommand [string],
+   :spdxFile {:title string, :checksum [string], :fileType string},
+   :spdxPackage {:supplier string,
+                 :detailedDescription string,
+                 :homePage string,
+                 :filesLicenseInfo [string],
+                 :copyright string,
+                 :verificationCode string,
+                 :analyzed boolean,
+                 :title string,
+                 :checksum string,
+                 :externalRefs [ExternalRef],
+                 :summaryDescription string,
+                 :attribution string,
+                 :licenseDeclared string,
+                 :downloadLocation string,
+                 :version string,
+                 :originator string},
+   :intoto {:stepName string,
+            :signingKeys [SigningKey],
+            :threshold string,
             :expectedMaterials [ArtifactRule],
-            :signingKeys [SigningKey]},
+            :expectedProducts [ArtifactRule],
+            :expectedCommand [string]},
    :longDescription string}
   
   Updates the specified note."
@@ -629,32 +620,51 @@
   
   Body: 
   
-  {:relatedUrl [{:url string, :label string}],
-   :package {:distribution [Distribution], :name string},
+  {:relatedUrl [{:label string, :url string}],
+   :package {:name string, :distribution [Distribution]},
    :discovery {:analysisKind string},
+   :sbom {:spdxVersion string, :dataLicence string},
    :relatedNoteNames [string],
    :deployable {:resourceUri [string]},
    :expirationTime string,
    :name string,
    :createTime string,
-   :vulnerability {:cvssScore number,
+   :vulnerability {:windowsDetails [WindowsDetail],
                    :severity string,
-                   :cvssV3 CVSSv3,
-                   :details [Detail],
                    :sourceUpdateTime string,
-                   :windowsDetails [WindowsDetail]},
+                   :details [Detail],
+                   :cvssV3 CVSSv3,
+                   :cvssScore number},
+   :spdxRelationship {},
    :updateTime string,
    :attestationAuthority {:hint Hint},
    :shortDescription string,
-   :baseImage {:resourceUrl string, :fingerprint Fingerprint},
-   :build {:signature BuildSignature, :builderVersion string},
+   :baseImage {:fingerprint Fingerprint, :resourceUrl string},
+   :build {:builderVersion string, :signature BuildSignature},
    :kind string,
-   :intoto {:threshold string,
-            :expectedProducts [ArtifactRule],
-            :stepName string,
-            :expectedCommand [string],
+   :spdxFile {:title string, :checksum [string], :fileType string},
+   :spdxPackage {:supplier string,
+                 :detailedDescription string,
+                 :homePage string,
+                 :filesLicenseInfo [string],
+                 :copyright string,
+                 :verificationCode string,
+                 :analyzed boolean,
+                 :title string,
+                 :checksum string,
+                 :externalRefs [ExternalRef],
+                 :summaryDescription string,
+                 :attribution string,
+                 :licenseDeclared string,
+                 :downloadLocation string,
+                 :version string,
+                 :originator string},
+   :intoto {:stepName string,
+            :signingKeys [SigningKey],
+            :threshold string,
             :expectedMaterials [ArtifactRule],
-            :signingKeys [SigningKey]},
+            :expectedProducts [ArtifactRule],
+            :expectedCommand [string]},
    :longDescription string}
   
   Creates a new note."
@@ -773,7 +783,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists notes for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -799,7 +809,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: pageSize, pageToken, filter
   
   Lists occurrences referencing the specified note. Provider projects can use this method to get all occurrences across consumer projects referencing the specified note."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -810,6 +820,94 @@
     (util/get-url
      "https://containeranalysis.googleapis.com/"
      "v1beta1/{+name}/occurrences"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-list$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists scan configurations for the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1beta1/{+parent}/scanConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-update$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/update
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateTime string,
+   :createTime string,
+   :description string,
+   :enabled boolean,
+   :name string}
+  
+  Updates the specified scan configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn scanConfigs-get$
+  "https://cloud.google.com/container-analysis/api/reference/rest/api/reference/rest/v1beta1/projects/scanConfigs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the specified scan configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://containeranalysis.googleapis.com/"
+     "v1beta1/{+name}"
      #{:name}
      parameters)
     (merge-with

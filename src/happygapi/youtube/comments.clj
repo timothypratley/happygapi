@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/comments/delete
-  
-  Required parameters: id
-  
-  Optional parameters: none
-  
-  Deletes a resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/comments"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn setModerationStatus$
   "https://developers.google.com/youtube/api/reference/rest/v3/comments/setModerationStatus
   
@@ -67,7 +41,8 @@
   
   Body: 
   
-  {:snippet {:authorProfileImageUrl string,
+  {:etag string,
+   :snippet {:authorProfileImageUrl string,
              :likeCount integer,
              :publishedAt string,
              :canRate boolean,
@@ -82,9 +57,8 @@
              :videoId string,
              :parentId string,
              :moderationStatus string},
-   :kind string,
-   :etag string,
-   :id string}
+   :id string,
+   :kind string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
@@ -107,50 +81,27 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/comments/update
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/delete
   
-  Required parameters: part
+  Required parameters: id
   
   Optional parameters: none
   
-  Body: 
-  
-  {:snippet {:authorProfileImageUrl string,
-             :likeCount integer,
-             :publishedAt string,
-             :canRate boolean,
-             :viewerRating string,
-             :updatedAt string,
-             :authorChannelUrl string,
-             :textOriginal string,
-             :channelId string,
-             :authorDisplayName string,
-             :textDisplay string,
-             :authorChannelId CommentSnippetAuthorChannelId,
-             :videoId string,
-             :parentId string,
-             :moderationStatus string},
-   :kind string,
-   :etag string,
-   :id string}
-  
-  Updates an existing resource."
+  Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
-   (http/put
+   (http/delete
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/comments"
-     #{:part}
+     #{:id}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -182,12 +133,61 @@
       :as :json}
      auth))))
 
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/comments/update
+  
+  Required parameters: part
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string,
+   :snippet {:authorProfileImageUrl string,
+             :likeCount integer,
+             :publishedAt string,
+             :canRate boolean,
+             :viewerRating string,
+             :updatedAt string,
+             :authorChannelUrl string,
+             :textOriginal string,
+             :channelId string,
+             :authorDisplayName string,
+             :textDisplay string,
+             :authorChannelId CommentSnippetAuthorChannelId,
+             :videoId string,
+             :parentId string,
+             :moderationStatus string},
+   :id string,
+   :kind string}
+  
+  Updates an existing resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/comments"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/comments/list
   
   Required parameters: part
   
-  Optional parameters: textFormat, id, pageToken, maxResults, parentId
+  Optional parameters: pageToken, maxResults, parentId, id, textFormat
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"]}

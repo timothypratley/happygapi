@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/platformTypes/get
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   

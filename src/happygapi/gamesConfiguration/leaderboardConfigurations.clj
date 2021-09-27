@@ -6,27 +6,48 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/list
+(defn update$
+  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/update
   
-  Required parameters: applicationId
+  Required parameters: leaderboardId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: none
   
-  Returns a list of the leaderboard configurations in this application."
+  Body: 
+  
+  {:id string,
+   :draft {:kind string,
+           :scoreFormat GamesNumberFormatConfiguration,
+           :name LocalizedStringBundle,
+           :sortRank integer,
+           :iconUrl string},
+   :scoreMin string,
+   :scoreMax string,
+   :kind string,
+   :scoreOrder string,
+   :published {:kind string,
+               :scoreFormat GamesNumberFormatConfiguration,
+               :name LocalizedStringBundle,
+               :sortRank integer,
+               :iconUrl string},
+   :token string}
+  
+  Update the metadata of the leaderboard configuration with the given ID."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:applicationId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:leaderboardId})]}
   (util/get-response
-   (http/get
+   (http/put
     (util/get-url
      "https://gamesconfiguration.googleapis.com/"
-     "games/v1configuration/applications/{applicationId}/leaderboards"
-     #{:applicationId}
+     "games/v1configuration/leaderboards/{leaderboardId}"
+     #{:leaderboardId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -58,53 +79,6 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/insert
-  
-  Required parameters: applicationId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:scoreMin string,
-   :kind string,
-   :id string,
-   :scoreMax string,
-   :published {:scoreFormat GamesNumberFormatConfiguration,
-               :sortRank integer,
-               :name LocalizedStringBundle,
-               :kind string,
-               :iconUrl string},
-   :scoreOrder string,
-   :draft {:scoreFormat GamesNumberFormatConfiguration,
-           :sortRank integer,
-           :name LocalizedStringBundle,
-           :kind string,
-           :iconUrl string},
-   :token string}
-  
-  Insert a new leaderboard configuration in this application."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:applicationId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://gamesconfiguration.googleapis.com/"
-     "games/v1configuration/applications/{applicationId}/leaderboards"
-     #{:applicationId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/delete
   
@@ -131,48 +105,74 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/update
+(defn insert$
+  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/insert
   
-  Required parameters: leaderboardId
+  Required parameters: applicationId
   
   Optional parameters: none
   
   Body: 
   
-  {:scoreMin string,
-   :kind string,
-   :id string,
-   :scoreMax string,
-   :published {:scoreFormat GamesNumberFormatConfiguration,
-               :sortRank integer,
-               :name LocalizedStringBundle,
-               :kind string,
-               :iconUrl string},
-   :scoreOrder string,
-   :draft {:scoreFormat GamesNumberFormatConfiguration,
-           :sortRank integer,
+  {:id string,
+   :draft {:kind string,
+           :scoreFormat GamesNumberFormatConfiguration,
            :name LocalizedStringBundle,
-           :kind string,
+           :sortRank integer,
            :iconUrl string},
+   :scoreMin string,
+   :scoreMax string,
+   :kind string,
+   :scoreOrder string,
+   :published {:kind string,
+               :scoreFormat GamesNumberFormatConfiguration,
+               :name LocalizedStringBundle,
+               :sortRank integer,
+               :iconUrl string},
    :token string}
   
-  Update the metadata of the leaderboard configuration with the given ID."
+  Insert a new leaderboard configuration in this application."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:leaderboardId})]}
+  {:pre [(util/has-keys? parameters #{:applicationId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://gamesconfiguration.googleapis.com/"
-     "games/v1configuration/leaderboards/{leaderboardId}"
-     #{:leaderboardId}
+     "games/v1configuration/applications/{applicationId}/leaderboards"
+     #{:applicationId}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations/list
+  
+  Required parameters: applicationId
+  
+  Optional parameters: maxResults, pageToken
+  
+  Returns a list of the leaderboard configurations in this application."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:applicationId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://gamesconfiguration.googleapis.com/"
+     "games/v1configuration/applications/{applicationId}/leaderboards"
+     #{:applicationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

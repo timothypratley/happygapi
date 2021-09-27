@@ -6,64 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/routes/insert
-  
-  Required parameters: project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:nextHopIp string,
-   :description string,
-   :tags [string],
-   :nextHopNetwork string,
-   :nextHopInstance string,
-   :creationTimestamp string,
-   :nextHopPeering string,
-   :nextHopIlb string,
-   :name string,
-   :selfLink string,
-   :warnings [{:message string,
-               :data [{:key string, :value string}],
-               :code string}],
-   :nextHopVpnTunnel string,
-   :priority integer,
-   :id string,
-   :kind string,
-   :network string,
-   :nextHopGateway string,
-   :destRange string}
-  
-  Creates a Route resource in the specified project using the data included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/routes"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/routes/list
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, orderBy, filter, maxResults, pageToken
+  Optional parameters: returnPartialSuccess, filter, orderBy, maxResults, pageToken
   
   Retrieves the list of Route resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -136,6 +84,58 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:nextHopIp string,
+   :description string,
+   :tags [string],
+   :nextHopNetwork string,
+   :nextHopInstance string,
+   :creationTimestamp string,
+   :nextHopPeering string,
+   :nextHopIlb string,
+   :name string,
+   :selfLink string,
+   :warnings [{:code string,
+               :message string,
+               :data [{:value string, :key string}]}],
+   :nextHopVpnTunnel string,
+   :priority integer,
+   :id string,
+   :kind string,
+   :network string,
+   :nextHopGateway string,
+   :destRange string}
+  
+  Creates a Route resource in the specified project using the data included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

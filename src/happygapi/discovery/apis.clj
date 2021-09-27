@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: name, preferred
+  Optional parameters: preferred, name
   
   Retrieve the list of APIs supported at this endpoint."
   {:scopes nil}

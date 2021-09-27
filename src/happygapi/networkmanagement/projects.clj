@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-get$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about a location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-list$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/list
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://networkmanagement.googleapis.com/"
      "v1/{+name}/locations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-get$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -94,9 +94,9 @@
   Body: 
   
   {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+   :policy {:bindings [Binding],
+            :auditConfigs [AuditConfig],
             :version integer,
-            :bindings [Binding],
             :etag string}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
@@ -136,27 +136,27 @@
    :name string,
    :createTime string,
    :relatedProjects [string],
-   :source {:projectId string,
-            :gkeMasterCluster string,
-            :instance string,
+   :source {:networkType string,
             :ipAddress string,
+            :cloudSqlInstance string,
+            :gkeMasterCluster string,
             :network string,
-            :networkType string,
-            :port integer,
-            :cloudSqlInstance string},
+            :instance string,
+            :projectId string,
+            :port integer},
    :updateTime string,
-   :reachabilityDetails {:error Status,
+   :reachabilityDetails {:verifyTime string,
                          :result string,
-                         :verifyTime string,
-                         :traces [Trace]},
-   :destination {:projectId string,
-                 :gkeMasterCluster string,
-                 :instance string,
+                         :traces [Trace],
+                         :error Status},
+   :destination {:networkType string,
                  :ipAddress string,
+                 :cloudSqlInstance string,
+                 :gkeMasterCluster string,
                  :network string,
-                 :networkType string,
-                 :port integer,
-                 :cloudSqlInstance string}}
+                 :instance string,
+                 :projectId string,
+                 :port integer}}
   
   Updates the configuration of an existing `ConnectivityTest`. After you update a test, the reachability analysis is performed as part of the long running operation, which completes when the analysis completes. The Reachability state in the test resource is updated with the new result. If the endpoint specifications in `ConnectivityTest` are invalid (for example, they contain non-existent resources in the network, or the user does not have read permissions to the network configurations of listed projects), then the reachability result returns a value of UNKNOWN. If the endpoint specifications in `ConnectivityTest` are incomplete, the reachability result returns a value of `AMBIGUOUS`. See the documentation in `ConnectivityTest` for for more details."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -227,27 +227,27 @@
    :name string,
    :createTime string,
    :relatedProjects [string],
-   :source {:projectId string,
-            :gkeMasterCluster string,
-            :instance string,
+   :source {:networkType string,
             :ipAddress string,
+            :cloudSqlInstance string,
+            :gkeMasterCluster string,
             :network string,
-            :networkType string,
-            :port integer,
-            :cloudSqlInstance string},
+            :instance string,
+            :projectId string,
+            :port integer},
    :updateTime string,
-   :reachabilityDetails {:error Status,
+   :reachabilityDetails {:verifyTime string,
                          :result string,
-                         :verifyTime string,
-                         :traces [Trace]},
-   :destination {:projectId string,
-                 :gkeMasterCluster string,
-                 :instance string,
+                         :traces [Trace],
+                         :error Status},
+   :destination {:networkType string,
                  :ipAddress string,
+                 :cloudSqlInstance string,
+                 :gkeMasterCluster string,
                  :network string,
-                 :networkType string,
-                 :port integer,
-                 :cloudSqlInstance string}}
+                 :instance string,
+                 :projectId string,
+                 :port integer}}
   
   Creates a new Connectivity Test. After you create a test, the reachability analysis is performed as part of the long running operation, which completes when the analysis completes. If the endpoint specifications in `ConnectivityTest` are invalid (for example, containing non-existent resources in the network, or you don't have read permissions to the network configurations of listed projects), then the reachability result returns a value of `UNKNOWN`. If the endpoint specifications in `ConnectivityTest` are incomplete, the reachability result returns a value of AMBIGUOUS. For more information, see the Connectivity Test documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -327,7 +327,7 @@
   
   Required parameters: parent
   
-  Optional parameters: orderBy, pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, orderBy, filter
   
   Lists all Connectivity Tests owned by a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -380,6 +380,32 @@
       :as :json}
      auth))))
 
+(defn locations-global-operations-delete$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-operations-list$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/list
   
@@ -419,32 +445,6 @@
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-delete$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://networkmanagement.googleapis.com/"
      "v1/{+name}"

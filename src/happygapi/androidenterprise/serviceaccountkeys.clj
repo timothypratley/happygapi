@@ -6,38 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/serviceaccountkeys/insert
-  
-  Required parameters: enterpriseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:id string, :data string, :type string, :publicData string}
-  
-  Generates new credentials for the service account associated with this enterprise. The calling service account must have been retrieved by calling Enterprises.GetServiceAccount and must have been set as the enterprise service account by calling Enterprises.SetAccount. Only the type of the key should be populated in the resource to be inserted."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/serviceAccountKeys"
-     #{:enterpriseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/serviceaccountkeys/list
   
@@ -64,10 +32,42 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/serviceaccountkeys/insert
+  
+  Required parameters: enterpriseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string, :type string, :data string, :publicData string}
+  
+  Generates new credentials for the service account associated with this enterprise. The calling service account must have been retrieved by calling Enterprises.GetServiceAccount and must have been set as the enterprise service account by calling Enterprises.SetAccount. Only the type of the key should be populated in the resource to be inserted."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/serviceAccountKeys"
+     #{:enterpriseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/serviceaccountkeys/delete
   
-  Required parameters: keyId, enterpriseId
+  Required parameters: enterpriseId, keyId
   
   Optional parameters: none
   

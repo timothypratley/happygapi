@@ -11,7 +11,7 @@
   
   Required parameters: settlementId, merchantId
   
-  Optional parameters: pageToken, maxResults, transactionIds
+  Optional parameters: transactionIds, maxResults, pageToken
   
   Retrieves a list of transactions for the settlement."
   {:scopes ["https://www.googleapis.com/auth/content"]}

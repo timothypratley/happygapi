@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageToken, filter, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -119,11 +119,11 @@
   
   Body: 
   
-  {:policy {:auditConfigs [AuditConfig],
+  {:updateMask string,
+   :policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
             :etag string,
-            :version integer},
-   :updateMask string}
+            :version integer}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -155,9 +155,9 @@
   
   Body: 
   
-  {:managementSettings {:renewalMethod string,
-                        :transferLockState string},
-   :updateMask string}
+  {:updateMask string,
+   :managementSettings {:transferLockState string,
+                        :renewalMethod string}}
   
   Updates a `Registration`'s management settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -191,25 +191,25 @@
   
   {:labels {},
    :supportedPrivacy [string],
-   :dnsSettings {:googleDomainsDns GoogleDomainsDns,
-                 :glueRecords [GlueRecord],
-                 :customDns CustomDns},
+   :dnsSettings {:customDns CustomDns,
+                 :googleDomainsDns GoogleDomainsDns,
+                 :glueRecords [GlueRecord]},
    :issues [string],
    :name string,
    :createTime string,
-   :managementSettings {:renewalMethod string,
-                        :transferLockState string},
-   :contactSettings {:adminContact Contact,
-                     :privacy string,
-                     :technicalContact Contact,
-                     :registrantContact Contact},
+   :managementSettings {:transferLockState string,
+                        :renewalMethod string},
+   :contactSettings {:technicalContact Contact,
+                     :adminContact Contact,
+                     :registrantContact Contact,
+                     :privacy string},
    :state string,
    :domainName string,
    :expireTime string,
-   :pendingContactSettings {:adminContact Contact,
-                            :privacy string,
-                            :technicalContact Contact,
-                            :registrantContact Contact}}
+   :pendingContactSettings {:technicalContact Contact,
+                            :adminContact Contact,
+                            :registrantContact Contact,
+                            :privacy string}}
   
   Updates select fields of a `Registration` resource, notably `labels`. To update other fields, use the appropriate custom update method: * To update management settings, see `ConfigureManagementSettings` * To update DNS configuration, see `ConfigureDnsSettings` * To update contact information, see `ConfigureContactSettings`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -305,13 +305,13 @@
   
   Body: 
   
-  {:updateMask string,
-   :contactSettings {:adminContact Contact,
-                     :privacy string,
-                     :technicalContact Contact,
-                     :registrantContact Contact},
-   :contactNotices [string],
-   :validateOnly boolean}
+  {:contactNotices [string],
+   :updateMask string,
+   :validateOnly boolean,
+   :contactSettings {:technicalContact Contact,
+                     :adminContact Contact,
+                     :registrantContact Contact,
+                     :privacy string}}
   
   Updates a `Registration`'s contact settings. Some changes require confirmation by the domain's registrant contact ."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -343,10 +343,10 @@
   
   Body: 
   
-  {:dnsSettings {:googleDomainsDns GoogleDomainsDns,
-                 :glueRecords [GlueRecord],
-                 :customDns CustomDns},
-   :validateOnly boolean,
+  {:validateOnly boolean,
+   :dnsSettings {:customDns CustomDns,
+                 :googleDomainsDns GoogleDomainsDns,
+                 :glueRecords [GlueRecord]},
    :updateMask string}
   
   Updates a `Registration`'s DNS settings."
@@ -459,7 +459,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, filter
   
   Lists the `Registration` resources in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -489,8 +489,8 @@
   
   Body: 
   
-  {:yearlyPrice {:currencyCode string, :nanos integer, :units string},
-   :validateOnly boolean,
+  {:contactNotices [string],
+   :domainNotices [string],
    :registration {:labels {},
                   :supportedPrivacy [string],
                   :dnsSettings DnsSettings,
@@ -503,8 +503,8 @@
                   :domainName string,
                   :expireTime string,
                   :pendingContactSettings ContactSettings},
-   :contactNotices [string],
-   :domainNotices [string]}
+   :yearlyPrice {:currencyCode string, :units string, :nanos integer},
+   :validateOnly boolean}
   
   Registers a new domain name and creates a corresponding `Registration` resource. Call `RetrieveRegisterParameters` first to check availability of the domain name and determine parameters like price that are needed to build a call to this method. A successful call creates a `Registration` resource in state `REGISTRATION_PENDING`, which resolves to `ACTIVE` within 1-2 minutes, indicating that the domain was successfully registered. If the resource ends up in state `REGISTRATION_FAILED`, it indicates that the domain was not registered successfully, and you can safely delete the resource and retry registration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -584,7 +584,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageToken, pageSize
   
   Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

@@ -11,7 +11,7 @@
   
   Required parameters: queryId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Retrieves stored reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}

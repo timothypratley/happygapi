@@ -9,9 +9,9 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata/list
   
-  Required parameters: datasetId, projectId, tableId
+  Required parameters: projectId, datasetId, tableId
   
-  Optional parameters: selectedFields, maxResults, startIndex, pageToken
+  Optional parameters: maxResults, selectedFields, pageToken, startIndex
   
   Retrieves table data from a specified set of rows. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -37,17 +37,17 @@
 (defn insertAll$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata/insertAll
   
-  Required parameters: datasetId, tableId, projectId
+  Required parameters: projectId, datasetId, tableId
   
   Optional parameters: none
   
   Body: 
   
-  {:rows [{:json {}, :insertId string}],
-   :skipInvalidRows boolean,
-   :kind string,
+  {:kind string,
    :ignoreUnknownValues boolean,
-   :templateSuffix string}
+   :templateSuffix string,
+   :skipInvalidRows boolean,
+   :rows [{:json {}, :insertId string}]}
   
   Streams data into BigQuery one record at a time without needing to run a load job. Requires the WRITER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

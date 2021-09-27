@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:packageName string, :languageCode string, :title string}
+  {:title string, :languageCode string, :packageName string}
   
   Creates a new custom app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}

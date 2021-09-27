@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn annotate$
-  "https://cloud.google.com/vision/api/reference/rest/v1/files/annotate
+(defn asyncBatchAnnotate$
+  "https://cloud.google.com/vision/api/reference/rest/v1/files/asyncBatchAnnotate
   
   Required parameters: none
   
@@ -16,12 +16,12 @@
   Body: 
   
   {:parent string,
-   :requests [{:features [Feature],
-               :pages [integer],
-               :imageContext ImageContext,
-               :inputConfig InputConfig}]}
+   :requests [{:imageContext ImageContext,
+               :inputConfig InputConfig,
+               :outputConfig OutputConfig,
+               :features [Feature]}]}
   
-  Service that performs image detection and annotation for a batch of files. Now only \"application/pdf\", \"image/tiff\" and \"image/gif\" are supported. This service will extract at most 5 (customers can specify which 5 in AnnotateFileRequest.pages) frames (gif) or pages (pdf or tiff) from each file provided and perform detection and annotation for each image extracted."
+  Run asynchronous image detection and annotation for a list of generic files, such as PDF files, which may contain multiple pages and multiple images per page. Progress and results can be retrieved through the `google.longrunning.Operations` interface. `Operation.metadata` contains `OperationMetadata` (metadata). `Operation.response` contains `AsyncBatchAnnotateFilesResponse` (results)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth parameters body]
@@ -30,7 +30,7 @@
    (http/post
     (util/get-url
      "https://vision.googleapis.com/"
-     "v1/files:annotate"
+     "v1/files:asyncBatchAnnotate"
      #{}
      parameters)
     (merge-with
@@ -43,8 +43,8 @@
       :as :json}
      auth))))
 
-(defn asyncBatchAnnotate$
-  "https://cloud.google.com/vision/api/reference/rest/v1/files/asyncBatchAnnotate
+(defn annotate$
+  "https://cloud.google.com/vision/api/reference/rest/v1/files/annotate
   
   Required parameters: none
   
@@ -53,12 +53,12 @@
   Body: 
   
   {:parent string,
-   :requests [{:features [Feature],
+   :requests [{:inputConfig InputConfig,
                :imageContext ImageContext,
-               :outputConfig OutputConfig,
-               :inputConfig InputConfig}]}
+               :pages [integer],
+               :features [Feature]}]}
   
-  Run asynchronous image detection and annotation for a list of generic files, such as PDF files, which may contain multiple pages and multiple images per page. Progress and results can be retrieved through the `google.longrunning.Operations` interface. `Operation.metadata` contains `OperationMetadata` (metadata). `Operation.response` contains `AsyncBatchAnnotateFilesResponse` (results)."
+  Service that performs image detection and annotation for a batch of files. Now only \"application/pdf\", \"image/tiff\" and \"image/gif\" are supported. This service will extract at most 5 (customers can specify which 5 in AnnotateFileRequest.pages) frames (gif) or pages (pdf or tiff) from each file provided and perform detection and annotation for each image extracted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-vision"]}
   [auth parameters body]
@@ -67,7 +67,7 @@
    (http/post
     (util/get-url
      "https://vision.googleapis.com/"
-     "v1/files:asyncBatchAnnotate"
+     "v1/files:annotate"
      #{}
      parameters)
     (merge-with

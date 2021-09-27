@@ -6,27 +6,45 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn keys-getMetrics$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/getMetrics
+(defn keys-create$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/create
   
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
   
-  Get some aggregated metrics for a Key. This data can be used to build dashboards."
+  Body: 
+  
+  {:displayName string,
+   :iosSettings {:allowAllBundleIds boolean, :allowedBundleIds [string]},
+   :labels {},
+   :androidSettings {:allowedPackageNames [string],
+                     :allowAllPackageNames boolean},
+   :webSettings {:allowAllDomains boolean,
+                 :allowedDomains [string],
+                 :integrationType string,
+                 :challengeSecurityPreference string,
+                 :allowAmpTraffic boolean},
+   :testingOptions {:testingScore number, :testingChallenge string},
+   :createTime string,
+   :name string}
+  
+  Creates a new reCAPTCHA Enterprise key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/keys"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -64,34 +82,63 @@
       :as :json}
      auth))))
 
-(defn keys-create$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/create
+(defn keys-patch$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
   Body: 
   
-  {:name string,
-   :webSettings {:challengeSecurityPreference string,
+  {:displayName string,
+   :iosSettings {:allowAllBundleIds boolean, :allowedBundleIds [string]},
+   :labels {},
+   :androidSettings {:allowedPackageNames [string],
+                     :allowAllPackageNames boolean},
+   :webSettings {:allowAllDomains boolean,
                  :allowedDomains [string],
                  :integrationType string,
-                 :allowAmpTraffic boolean,
-                 :allowAllDomains boolean},
-   :createTime string,
+                 :challengeSecurityPreference string,
+                 :allowAmpTraffic boolean},
    :testingOptions {:testingScore number, :testingChallenge string},
-   :labels {},
-   :iosSettings {:allowedBundleIds [string]},
-   :displayName string,
-   :androidSettings {:allowedPackageNames [string]}}
+   :createTime string,
+   :name string}
   
-  Creates a new reCAPTCHA Enterprise key."
+  Updates the specified key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keys-list$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Returns the list of all keys that belong to a project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://recaptchaenterprise.googleapis.com/"
      "v1/{+parent}/keys"
@@ -99,9 +146,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -133,49 +178,6 @@
       :as :json}
      auth))))
 
-(defn keys-patch$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string,
-   :webSettings {:challengeSecurityPreference string,
-                 :allowedDomains [string],
-                 :integrationType string,
-                 :allowAmpTraffic boolean,
-                 :allowAllDomains boolean},
-   :createTime string,
-   :testingOptions {:testingScore number, :testingChallenge string},
-   :labels {},
-   :iosSettings {:allowedBundleIds [string]},
-   :displayName string,
-   :androidSettings {:allowedPackageNames [string]}}
-  
-  Updates the specified key."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn keys-get$
   "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/get
   
@@ -202,70 +204,27 @@
       :as :json}
      auth))))
 
-(defn keys-list$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/list
+(defn keys-getMetrics$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/getMetrics
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: none
   
-  Returns the list of all keys that belong to a project."
+  Get some aggregated metrics for a Key. This data can be used to build dashboards."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/keys"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn assessments-create$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/assessments/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:event {:userAgent string,
-           :siteKey string,
-           :expectedAction string,
-           :token string,
-           :userIpAddress string},
-   :name string,
-   :tokenProperties {:action string,
-                     :valid boolean,
-                     :hostname string,
-                     :createTime string,
-                     :invalidReason string},
-   :riskAnalysis {:reasons [string], :score number}}
-  
-  Creates an Assessment of the likelihood an event is legitimate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/assessments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -280,7 +239,7 @@
   
   Body: 
   
-  {:reasons [string], :annotation string}
+  {:annotation string, :reasons [string]}
   
   Annotates a previously created Assessment to provide additional information on whether the event turned out to be authentic or fraudulent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -292,6 +251,49 @@
      "https://recaptchaenterprise.googleapis.com/"
      "v1/{+name}:annotate"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assessments-create$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/assessments/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:riskAnalysis {:reasons [string], :score number},
+   :tokenProperties {:createTime string,
+                     :hostname string,
+                     :invalidReason string,
+                     :action string,
+                     :valid boolean},
+   :name string,
+   :event {:token string,
+           :userIpAddress string,
+           :expectedAction string,
+           :siteKey string,
+           :userAgent string}}
+  
+  Creates an Assessment of the likelihood an event is legitimate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+parent}/assessments"
+     #{:parent}
      parameters)
     (merge-with
      merge

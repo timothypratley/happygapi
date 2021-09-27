@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/get
   
-  Required parameters: project, region, subnetwork
+  Required parameters: region, subnetwork, project
   
   Optional parameters: none
   
@@ -37,23 +37,23 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/setIamPolicy
   
-  Required parameters: project, region, resource
+  Required parameters: resource, project, region
   
   Optional parameters: none
   
   Body: 
   
-  {:policy {:rules [Rule],
-            :bindings [Binding],
+  {:etag string,
+   :bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string},
-   :etag string,
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}]}
+            :rules [Rule],
+            :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -80,7 +80,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/insert
   
-  Required parameters: project, region
+  Required parameters: region, project
   
   Optional parameters: requestId
   
@@ -105,13 +105,13 @@
    :kind string,
    :enableFlowLogs boolean,
    :network string,
-   :secondaryIpRanges [{:ipCidrRange string, :rangeName string}],
-   :logConfig {:filterExpr string,
-               :aggregationInterval string,
-               :flowSampling number,
+   :secondaryIpRanges [{:rangeName string, :ipCidrRange string}],
+   :logConfig {:metadataFields [string],
                :enable boolean,
-               :metadataFields [string],
-               :metadata string},
+               :filterExpr string,
+               :metadata string,
+               :aggregationInterval string,
+               :flowSampling number},
    :fingerprint string,
    :externalIpv6Prefix string}
   
@@ -142,7 +142,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, pageToken, returnPartialSuccess, filter, maxResults
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
   
   Retrieves an aggregated list of all usable subnetworks in the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -168,9 +168,9 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/patch
   
-  Required parameters: subnetwork, project, region
+  Required parameters: subnetwork, region, project
   
-  Optional parameters: drainTimeoutSeconds, requestId
+  Optional parameters: requestId, drainTimeoutSeconds
   
   Body: 
   
@@ -193,13 +193,13 @@
    :kind string,
    :enableFlowLogs boolean,
    :network string,
-   :secondaryIpRanges [{:ipCidrRange string, :rangeName string}],
-   :logConfig {:filterExpr string,
-               :aggregationInterval string,
-               :flowSampling number,
+   :secondaryIpRanges [{:rangeName string, :ipCidrRange string}],
+   :logConfig {:metadataFields [string],
                :enable boolean,
-               :metadataFields [string],
-               :metadata string},
+               :filterExpr string,
+               :metadata string,
+               :aggregationInterval string,
+               :flowSampling number},
    :fingerprint string,
    :externalIpv6Prefix string}
   
@@ -228,7 +228,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/testIamPermissions
   
-  Required parameters: project, region, resource
+  Required parameters: region, project, resource
   
   Optional parameters: none
   
@@ -264,7 +264,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, orderBy, returnPartialSuccess, pageToken, filter, includeAllScopes
+  Optional parameters: maxResults, pageToken, filter, returnPartialSuccess, includeAllScopes, orderBy
   
   Retrieves an aggregated list of subnetworks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -317,7 +317,7 @@
 (defn setPrivateIpGoogleAccess$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/setPrivateIpGoogleAccess
   
-  Required parameters: region, subnetwork, project
+  Required parameters: project, region, subnetwork
   
   Optional parameters: requestId
   
@@ -350,7 +350,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/getIamPolicy
   
-  Required parameters: project, region, resource
+  Required parameters: resource, project, region
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -378,7 +378,7 @@
 (defn expandIpCidrRange$
   "https://cloud.google.com/compute/api/reference/rest/v1/subnetworks/expandIpCidrRange
   
-  Required parameters: subnetwork, project, region
+  Required parameters: region, subnetwork, project
   
   Optional parameters: requestId
   
@@ -413,7 +413,7 @@
   
   Required parameters: region, project
   
-  Optional parameters: pageToken, orderBy, filter, maxResults, returnPartialSuccess
+  Optional parameters: orderBy, pageToken, returnPartialSuccess, filter, maxResults
   
   Retrieves a list of subnetworks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

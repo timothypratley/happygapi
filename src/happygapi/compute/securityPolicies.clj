@@ -74,13 +74,14 @@
    :creationTimestamp string,
    :name string,
    :selfLink string,
-   :rules [{:kind string,
+   :rules [{:preview boolean,
             :action string,
-            :description string,
-            :priority integer,
             :match SecurityPolicyRuleMatcher,
-            :preview boolean}],
+            :kind string,
+            :priority integer,
+            :description string}],
    :id string,
+   :adaptiveProtectionConfig {:layer7DdosDefenseConfig SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig},
    :kind string,
    :advancedOptionsConfig {:jsonParsing string, :logLevel string},
    :fingerprint string}
@@ -112,7 +113,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, returnPartialSuccess, orderBy, pageToken, filter
+  Optional parameters: maxResults, orderBy, pageToken, filter, returnPartialSuccess
   
   Gets the current list of preconfigured Web Application Firewall (WAF) expressions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -148,13 +149,14 @@
    :creationTimestamp string,
    :name string,
    :selfLink string,
-   :rules [{:kind string,
+   :rules [{:preview boolean,
             :action string,
-            :description string,
-            :priority integer,
             :match SecurityPolicyRuleMatcher,
-            :preview boolean}],
+            :kind string,
+            :priority integer,
+            :description string}],
    :id string,
+   :adaptiveProtectionConfig {:layer7DdosDefenseConfig SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig},
    :kind string,
    :advancedOptionsConfig {:jsonParsing string, :logLevel string},
    :fingerprint string}
@@ -217,14 +219,14 @@
   
   Body: 
   
-  {:kind string,
+  {:preview boolean,
    :action string,
-   :description string,
-   :priority integer,
-   :match {:config SecurityPolicyRuleMatcherConfig,
-           :versionedExpr string,
+   :match {:versionedExpr string,
+           :config SecurityPolicyRuleMatcherConfig,
            :expr Expr},
-   :preview boolean}
+   :kind string,
+   :priority integer,
+   :description string}
   
   Patches a rule at the specified priority."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -251,20 +253,20 @@
 (defn addRule$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/addRule
   
-  Required parameters: project, securityPolicy
+  Required parameters: securityPolicy, project
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string,
+  {:preview boolean,
    :action string,
-   :description string,
-   :priority integer,
-   :match {:config SecurityPolicyRuleMatcherConfig,
-           :versionedExpr string,
+   :match {:versionedExpr string,
+           :config SecurityPolicyRuleMatcherConfig,
            :expr Expr},
-   :preview boolean}
+   :kind string,
+   :priority integer,
+   :description string}
   
   Inserts a rule into a security policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -293,7 +295,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
+  Optional parameters: returnPartialSuccess, orderBy, pageToken, filter, maxResults
   
   List all the policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

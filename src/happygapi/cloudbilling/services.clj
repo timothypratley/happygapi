@@ -39,7 +39,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, startTime, endTime, currencyCode
+  Optional parameters: currencyCode, pageToken, pageSize, endTime, startTime
   
   Lists all publicly available SKUs for a given cloud service."
   {:scopes ["https://www.googleapis.com/auth/cloud-billing"

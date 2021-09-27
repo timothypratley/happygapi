@@ -15,8 +15,8 @@
   
   Body: 
   
-  {:nodeMatchers [{:nodeId StringMatcher,
-                   :nodeMetadatas [StructMatcher]}]}
+  {:nodeMatchers [{:nodeMetadatas [StructMatcher],
+                   :nodeId StringMatcher}]}
   
   "
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

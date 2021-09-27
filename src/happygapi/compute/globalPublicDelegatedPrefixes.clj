@@ -41,7 +41,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, maxResults, orderBy, filter, pageToken
+  Optional parameters: orderBy, filter, pageToken, maxResults, returnPartialSuccess
   
   Lists the global PublicDelegatedPrefixes for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -84,13 +84,13 @@
    :id string,
    :kind string,
    :parentPrefix string,
-   :publicDelegatedSubPrefixs [{:delegateeProject string,
+   :publicDelegatedSubPrefixs [{:name string,
+                                :delegateeProject string,
                                 :isAddress boolean,
-                                :status string,
-                                :description string,
                                 :region string,
-                                :name string,
-                                :ipCidrRange string}],
+                                :ipCidrRange string,
+                                :description string,
+                                :status string}],
    :fingerprint string}
   
   Creates a global PublicDelegatedPrefix in the specified project using the parameters that are included in the request."
@@ -104,6 +104,59 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/publicDelegatedPrefixes"
      #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalPublicDelegatedPrefixes/patch
+  
+  Required parameters: publicDelegatedPrefix, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :isLiveMigration boolean,
+   :name string,
+   :ipCidrRange string,
+   :selfLink string,
+   :region string,
+   :status string,
+   :id string,
+   :kind string,
+   :parentPrefix string,
+   :publicDelegatedSubPrefixs [{:name string,
+                                :delegateeProject string,
+                                :isAddress boolean,
+                                :region string,
+                                :ipCidrRange string,
+                                :description string,
+                                :status string}],
+   :fingerprint string}
+  
+  Patches the specified global PublicDelegatedPrefix resource with the data included in the request. This method supports PATCH semantics and uses JSON merge patch format and processing rules."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:publicDelegatedPrefix :project})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/publicDelegatedPrefixes/{publicDelegatedPrefix}"
+     #{:publicDelegatedPrefix :project}
      parameters)
     (merge-with
      merge
@@ -139,59 +192,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalPublicDelegatedPrefixes/patch
-  
-  Required parameters: publicDelegatedPrefix, project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :creationTimestamp string,
-   :isLiveMigration boolean,
-   :name string,
-   :ipCidrRange string,
-   :selfLink string,
-   :region string,
-   :status string,
-   :id string,
-   :kind string,
-   :parentPrefix string,
-   :publicDelegatedSubPrefixs [{:delegateeProject string,
-                                :isAddress boolean,
-                                :status string,
-                                :description string,
-                                :region string,
-                                :name string,
-                                :ipCidrRange string}],
-   :fingerprint string}
-  
-  Patches the specified global PublicDelegatedPrefix resource with the data included in the request. This method supports PATCH semantics and uses JSON merge patch format and processing rules."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:publicDelegatedPrefix :project})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/publicDelegatedPrefixes/{publicDelegatedPrefix}"
-     #{:publicDelegatedPrefix :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

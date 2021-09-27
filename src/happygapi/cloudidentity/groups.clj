@@ -6,6 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn search$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/search
+  
+  Required parameters: none
+  
+  Optional parameters: view, query, pageToken, pageSize
+  
+  Searches for `Group` resources matching a specified query."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/groups:search"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/delete
   
@@ -28,6 +56,90 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :labels {},
+   :parent string,
+   :displayName string,
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :dynamicGroupMetadata {:queries [DynamicGroupQuery],
+                          :status DynamicGroupStatus},
+   :groupKey {:id string, :namespace string}}
+  
+  Updates a `Group`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn create$
+  "https://cloud.google.com/identity/api/reference/rest/v1/groups/create
+  
+  Required parameters: none
+  
+  Optional parameters: initialGroupConfig
+  
+  Body: 
+  
+  {:description string,
+   :labels {},
+   :parent string,
+   :displayName string,
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :dynamicGroupMetadata {:queries [DynamicGroupQuery],
+                          :status DynamicGroupStatus},
+   :groupKey {:id string, :namespace string}}
+  
+  Creates a Group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudidentity.googleapis.com/"
+     "v1/groups"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -61,54 +173,12 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:description string,
-   :labels {},
-   :parent string,
-   :displayName string,
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :dynamicGroupMetadata {:status DynamicGroupStatus,
-                          :queries [DynamicGroupQuery]},
-   :groupKey {:id string, :namespace string}}
-  
-  Updates a `Group`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/identity/api/reference/rest/v1/groups/list
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize, view, parent
+  Optional parameters: view, parent, pageToken, pageSize
   
   Lists the `Group` resources under a customer or namespace."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
@@ -154,76 +224,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn search$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/search
-  
-  Required parameters: none
-  
-  Optional parameters: view, query, pageToken, pageSize
-  
-  Searches for `Group` resources matching a specified query."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/groups:search"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/identity/api/reference/rest/v1/groups/create
-  
-  Required parameters: none
-  
-  Optional parameters: initialGroupConfig
-  
-  Body: 
-  
-  {:description string,
-   :labels {},
-   :parent string,
-   :displayName string,
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :dynamicGroupMetadata {:status DynamicGroupStatus,
-                          :queries [DynamicGroupQuery]},
-   :groupKey {:id string, :namespace string}}
-  
-  Creates a Group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudidentity.googleapis.com/"
-     "v1/groups"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -379,11 +379,11 @@
   Body: 
   
   {:name string,
+   :preferredMemberKey {:id string, :namespace string},
+   :type string,
    :roles [{:name string, :expiryDetail ExpiryDetail}],
    :createTime string,
-   :updateTime string,
-   :preferredMemberKey {:id string, :namespace string},
-   :type string}
+   :updateTime string}
   
   Creates a `Membership`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
@@ -444,10 +444,10 @@
   
   Body: 
   
-  {:updateRolesParams [{:fieldMask string,
-                        :membershipRole MembershipRole}],
+  {:addRoles [{:name string, :expiryDetail ExpiryDetail}],
    :removeRoles [string],
-   :addRoles [{:name string, :expiryDetail ExpiryDetail}]}
+   :updateRolesParams [{:fieldMask string,
+                        :membershipRole MembershipRole}]}
   
   Modifies the `MembershipRole`s of a `Membership`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"
@@ -503,7 +503,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, view, pageToken
+  Optional parameters: view, pageToken, pageSize
   
   Lists the `Membership`s within a `Group`."
   {:scopes ["https://www.googleapis.com/auth/cloud-identity.groups"

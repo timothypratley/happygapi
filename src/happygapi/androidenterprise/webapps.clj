@@ -6,10 +6,36 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/list
+  
+  Required parameters: enterpriseId
+  
+  Optional parameters: none
+  
+  Retrieves the details of all web apps for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
+     #{:enterpriseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/get
   
-  Required parameters: webAppId, enterpriseId
+  Required parameters: enterpriseId, webAppId
   
   Optional parameters: none
   
@@ -41,11 +67,11 @@
   
   Body: 
   
-  {:startUrl string,
+  {:versionCode string,
+   :startUrl string,
    :displayMode string,
-   :webAppId string,
-   :versionCode string,
    :isPublished boolean,
+   :webAppId string,
    :title string,
    :icons [{:imageData string}]}
   
@@ -59,6 +85,44 @@
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/webApps/{webAppId}"
      #{:enterpriseId :webAppId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/insert
+  
+  Required parameters: enterpriseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:versionCode string,
+   :startUrl string,
+   :displayMode string,
+   :isPublished boolean,
+   :webAppId string,
+   :title string,
+   :icons [{:imageData string}]}
+  
+  Creates a new web app for the enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
+     #{:enterpriseId}
      parameters)
     (merge-with
      merge
@@ -91,70 +155,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/list
-  
-  Required parameters: enterpriseId
-  
-  Optional parameters: none
-  
-  Retrieves the details of all web apps for a given enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
-     #{:enterpriseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/webapps/insert
-  
-  Required parameters: enterpriseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:startUrl string,
-   :displayMode string,
-   :webAppId string,
-   :versionCode string,
-   :isPublished boolean,
-   :title string,
-   :icons [{:imageData string}]}
-  
-  Creates a new web app for the enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/webApps"
-     #{:enterpriseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

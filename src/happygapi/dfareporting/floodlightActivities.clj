@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/update
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/insert
   
   Required parameters: profileId
   
@@ -17,35 +17,35 @@
   
   {:tagString string,
    :attributionEnabled boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :value string,
-                                             :kind string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :floodlightConfigurationIdDimensionValue {:kind string,
+                                             :dimensionName string,
                                              :matchType string,
-                                             :id string,
-                                             :etag string},
+                                             :value string,
+                                             :etag string,
+                                             :id string},
    :expectedUrl string,
    :floodlightActivityGroupTagString string,
    :sslCompliant boolean,
    :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
-   :publisherTags [{:dynamicTag FloodlightActivityDynamicTag,
-                    :clickThrough boolean,
-                    :viewThrough boolean,
-                    :directorySiteId string,
+   :publisherTags [{:clickThrough boolean,
                     :siteIdDimensionValue DimensionValue,
-                    :siteId string}],
+                    :siteId string,
+                    :dynamicTag FloodlightActivityDynamicTag,
+                    :directorySiteId string,
+                    :viewThrough boolean}],
    :floodlightTagType string,
    :tagFormat string,
    :advertiserId string,
@@ -56,7 +56,7 @@
    :kind string,
    :notes string,
    :floodlightActivityGroupName string,
-   :defaultTags [{:id string, :name string, :tag string}],
+   :defaultTags [{:tag string, :name string, :id string}],
    :cacheBustingType string,
    :subaccountId string,
    :secure boolean,
@@ -65,12 +65,12 @@
    :floodlightActivityGroupType string,
    :userDefinedVariableTypes [string]}
   
-  Updates an existing floodlight activity."
+  Inserts a new floodlight activity."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities"
@@ -86,103 +86,23 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/patch
+(defn generatetag$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/generatetag
   
-  Required parameters: profileId, id
+  Required parameters: profileId
   
-  Optional parameters: none
+  Optional parameters: floodlightActivityId
   
-  Body: 
-  
-  {:tagString string,
-   :attributionEnabled boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :value string,
-                                             :kind string,
-                                             :matchType string,
-                                             :id string,
-                                             :etag string},
-   :expectedUrl string,
-   :floodlightActivityGroupTagString string,
-   :sslCompliant boolean,
-   :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :name string,
-   :publisherTags [{:dynamicTag FloodlightActivityDynamicTag,
-                    :clickThrough boolean,
-                    :viewThrough boolean,
-                    :directorySiteId string,
-                    :siteIdDimensionValue DimensionValue,
-                    :siteId string}],
-   :floodlightTagType string,
-   :tagFormat string,
-   :advertiserId string,
-   :status string,
-   :countingMethod string,
-   :sslRequired boolean,
-   :id string,
-   :kind string,
-   :notes string,
-   :floodlightActivityGroupName string,
-   :defaultTags [{:id string, :name string, :tag string}],
-   :cacheBustingType string,
-   :subaccountId string,
-   :secure boolean,
-   :floodlightActivityGroupId string,
-   :accountId string,
-   :floodlightActivityGroupType string,
-   :userDefinedVariableTypes [string]}
-  
-  Updates an existing floodlight activity. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/delete
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Deletes an existing floodlight activity."
+  Generates a tag for a floodlight activity."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities/{id}"
-     #{:id :profileId}
+     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities/generatetag"
+     #{:profileId}
      parameters)
     (merge-with
      merge
@@ -218,116 +138,10 @@
       :as :json}
      auth))))
 
-(defn generatetag$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/generatetag
-  
-  Required parameters: profileId
-  
-  Optional parameters: floodlightActivityId
-  
-  Generates a tag for a floodlight activity."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities/generatetag"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/insert
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:tagString string,
-   :attributionEnabled boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :floodlightConfigurationIdDimensionValue {:dimensionName string,
-                                             :value string,
-                                             :kind string,
-                                             :matchType string,
-                                             :id string,
-                                             :etag string},
-   :expectedUrl string,
-   :floodlightActivityGroupTagString string,
-   :sslCompliant boolean,
-   :floodlightConfigurationId string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :name string,
-   :publisherTags [{:dynamicTag FloodlightActivityDynamicTag,
-                    :clickThrough boolean,
-                    :viewThrough boolean,
-                    :directorySiteId string,
-                    :siteIdDimensionValue DimensionValue,
-                    :siteId string}],
-   :floodlightTagType string,
-   :tagFormat string,
-   :advertiserId string,
-   :status string,
-   :countingMethod string,
-   :sslRequired boolean,
-   :id string,
-   :kind string,
-   :notes string,
-   :floodlightActivityGroupName string,
-   :defaultTags [{:id string, :name string, :tag string}],
-   :cacheBustingType string,
-   :subaccountId string,
-   :secure boolean,
-   :floodlightActivityGroupId string,
-   :accountId string,
-   :floodlightActivityGroupType string,
-   :userDefinedVariableTypes [string]}
-  
-  Inserts a new floodlight activity."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -345,6 +159,192 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/delete
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Deletes an existing floodlight activity."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:tagString string,
+   :attributionEnabled boolean,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :floodlightConfigurationIdDimensionValue {:kind string,
+                                             :dimensionName string,
+                                             :matchType string,
+                                             :value string,
+                                             :etag string,
+                                             :id string},
+   :expectedUrl string,
+   :floodlightActivityGroupTagString string,
+   :sslCompliant boolean,
+   :floodlightConfigurationId string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :name string,
+   :publisherTags [{:clickThrough boolean,
+                    :siteIdDimensionValue DimensionValue,
+                    :siteId string,
+                    :dynamicTag FloodlightActivityDynamicTag,
+                    :directorySiteId string,
+                    :viewThrough boolean}],
+   :floodlightTagType string,
+   :tagFormat string,
+   :advertiserId string,
+   :status string,
+   :countingMethod string,
+   :sslRequired boolean,
+   :id string,
+   :kind string,
+   :notes string,
+   :floodlightActivityGroupName string,
+   :defaultTags [{:tag string, :name string, :id string}],
+   :cacheBustingType string,
+   :subaccountId string,
+   :secure boolean,
+   :floodlightActivityGroupId string,
+   :accountId string,
+   :floodlightActivityGroupType string,
+   :userDefinedVariableTypes [string]}
+  
+  Updates an existing floodlight activity."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/floodlightActivities/patch
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:tagString string,
+   :attributionEnabled boolean,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :floodlightConfigurationIdDimensionValue {:kind string,
+                                             :dimensionName string,
+                                             :matchType string,
+                                             :value string,
+                                             :etag string,
+                                             :id string},
+   :expectedUrl string,
+   :floodlightActivityGroupTagString string,
+   :sslCompliant boolean,
+   :floodlightConfigurationId string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :name string,
+   :publisherTags [{:clickThrough boolean,
+                    :siteIdDimensionValue DimensionValue,
+                    :siteId string,
+                    :dynamicTag FloodlightActivityDynamicTag,
+                    :directorySiteId string,
+                    :viewThrough boolean}],
+   :floodlightTagType string,
+   :tagFormat string,
+   :advertiserId string,
+   :status string,
+   :countingMethod string,
+   :sslRequired boolean,
+   :id string,
+   :kind string,
+   :notes string,
+   :floodlightActivityGroupName string,
+   :defaultTags [{:tag string, :name string, :id string}],
+   :cacheBustingType string,
+   :subaccountId string,
+   :secure boolean,
+   :floodlightActivityGroupId string,
+   :accountId string,
+   :floodlightActivityGroupType string,
+   :userDefinedVariableTypes [string]}
+  
+  Updates an existing floodlight activity. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/floodlightActivities"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

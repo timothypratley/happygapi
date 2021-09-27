@@ -578,7 +578,7 @@
                                         :description "The thumbnail version for use in thumbnail cache invalidation.",
                                         :format "int64"},
                      :folderColorRgb {:type "string",
-                                      :description "The color for a folder as an RGB hex string. The supported colors are published in the folderColorPalette field of the About resource.\nIf an unsupported color is specified, the closest color in the palette will be used instead."},
+                                      :description "The color for a folder or shortcut to a folder as an RGB hex string. The supported colors are published in the folderColorPalette field of the About resource.\nIf an unsupported color is specified, the closest color in the palette will be used instead."},
                      :createdTime {:type "string",
                                    :description "The time at which the file was created (RFC 3339 date-time).",
                                    :format "date-time"},

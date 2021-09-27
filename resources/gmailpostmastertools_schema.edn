@@ -1,50 +1,59 @@
-{:IpReputation {:description "IP Reputation information for a set of IPs in a specific reputation category.",
-                :properties {:reputation {:enumDescriptions ["The default value which should never be used explicitly. This represents the state where no reputation information is available."
-                                                             "Has a good track record of a very low spam rate, and complies with Gmail's sender guidelines. Mail will rarely be marked by the spam filter."
-                                                             "Known to send good mail, but is prone to sending a low volume of spam intermittently. Most of the email from this entity will have a fair deliverability rate, except when there is a notable increase in spam levels."
-                                                             "Known to send a considerable volume of spam regularly, and mail from this sender will likely be marked as spam."
-                                                             "History of sending an enormously high volume of spam. Mail coming from this entity will almost always be rejected at SMTP level or marked as spam."],
-                                          :enum ["REPUTATION_CATEGORY_UNSPECIFIED"
-                                                 "HIGH"
-                                                 "MEDIUM"
-                                                 "LOW"
-                                                 "BAD"],
-                                          :description "The reputation category this IP reputation represents.",
-                                          :type "string"},
-                             :sampleIps {:items {:type "string"},
-                                         :type "array",
-                                         :description "A sample of IPs in this reputation category."},
-                             :ipCount {:type "string",
-                                       :description "Total number of unique IPs in this reputation category. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
-                                       :format "int64"}},
+{:ListDomainsResponse {:type "object",
+                       :description "Response message for ListDomains.",
+                       :properties {:domains {:items {:$ref "Domain"},
+                                              :type "array",
+                                              :description "The list of domains."},
+                                    :nextPageToken {:description "Token to retrieve the next page of results, or empty if there are no more results in the list.",
+                                                    :type "string"}},
+                       :id "ListDomainsResponse"},
+ :TrafficStats {:properties {:spfSuccessRatio {:description "The ratio of mail that successfully authenticated with SPF vs. all mail that attempted to authenticate with [SPF](http://www.openspf.org/). Spoofed mail is excluded.",
+                                               :type "number",
+                                               :format "double"},
+                             :dmarcSuccessRatio {:description "The ratio of mail that passed [DMARC](https://dmarc.org/) alignment checks vs all mail received from the domain that successfully authenticated with either of [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
+                                                 :type "number",
+                                                 :format "double"},
+                             :domainReputation {:enum ["REPUTATION_CATEGORY_UNSPECIFIED"
+                                                       "HIGH"
+                                                       "MEDIUM"
+                                                       "LOW"
+                                                       "BAD"],
+                                                :description "Reputation of the domain.",
+                                                :enumDescriptions ["The default value which should never be used explicitly. This represents the state where no reputation information is available."
+                                                                   "Has a good track record of a very low spam rate, and complies with Gmail's sender guidelines. Mail will rarely be marked by the spam filter."
+                                                                   "Known to send good mail, but is prone to sending a low volume of spam intermittently. Most of the email from this entity will have a fair deliverability rate, except when there is a notable increase in spam levels."
+                                                                   "Known to send a considerable volume of spam regularly, and mail from this sender will likely be marked as spam."
+                                                                   "History of sending an enormously high volume of spam. Mail coming from this entity will almost always be rejected at SMTP level or marked as spam."],
+                                                :type "string"},
+                             :inboundEncryptionRatio {:type "number",
+                                                      :format "double",
+                                                      :description "The ratio of incoming mail (to Gmail), that passed secure transport (TLS) vs all mail received from that domain. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/)."},
+                             :dkimSuccessRatio {:type "number",
+                                                :description "The ratio of mail that successfully authenticated with DKIM vs. all mail that attempted to authenticate with [DKIM](http://www.dkim.org/). Spoofed mail is excluded.",
+                                                :format "double"},
+                             :name {:type "string",
+                                    :description "The resource name of the traffic statistics. Traffic statistic names have the form `domains/{domain}/trafficStats/{date}`, where domain_name is the fully qualified domain name (i.e., mymail.mydomain.com) of the domain this traffic statistics pertains to and date is the date in yyyymmdd format that these statistics corresponds to. For example: domains/mymail.mydomain.com/trafficStats/20160807"},
+                             :ipReputations {:type "array",
+                                             :items {:$ref "IpReputation"},
+                                             :description "Reputation information pertaining to the IP addresses of the email servers for the domain. There is exactly one entry for each reputation category except REPUTATION_CATEGORY_UNSPECIFIED."},
+                             :deliveryErrors {:description "Delivery errors for the domain. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
+                                              :items {:$ref "DeliveryError"},
+                                              :type "array"},
+                             :spammyFeedbackLoops {:items {:$ref "FeedbackLoop"},
+                                                   :type "array",
+                                                   :description "Spammy [Feedback loop identifiers] (https://support.google.com/mail/answer/6254652) with their individual spam rates. This metric only pertains to traffic that is authenticated by [DKIM](http://www.dkim.org/)."},
+                             :userReportedSpamRatio {:description "The ratio of user-report spam vs. email that was sent to the inbox. This metric only pertains to emails authenticated by [DKIM](http://www.dkim.org/).",
+                                                     :format "double",
+                                                     :type "number"},
+                             :outboundEncryptionRatio {:description "The ratio of outgoing mail (from Gmail) that was accepted over secure transport (TLS).",
+                                                       :type "number",
+                                                       :format "double"}},
                 :type "object",
-                :id "IpReputation"},
+                :description "Email traffic statistics pertaining to a specific date.",
+                :id "TrafficStats"},
  :DeliveryError {:type "object",
-                 :id "DeliveryError",
-                 :properties {:errorClass {:description "The class of delivery error.",
-                                           :type "string",
-                                           :enum ["DELIVERY_ERROR_CLASS_UNSPECIFIED"
-                                                  "PERMANENT_ERROR"
-                                                  "TEMPORARY_ERROR"],
-                                           :enumDescriptions ["The default value which should never be used explicitly."
-                                                              "Delivery of message has been rejected."
-                                                              "Temporary failure of message delivery to the recipient."]},
-                              :errorRatio {:description "The ratio of messages where the error occurred vs all authenticated traffic.",
-                                           :type "number",
-                                           :format "double"},
-                              :errorType {:description "The type of delivery error.",
-                                          :enum ["DELIVERY_ERROR_TYPE_UNSPECIFIED"
-                                                 "RATE_LIMIT_EXCEEDED"
-                                                 "SUSPECTED_SPAM"
-                                                 "CONTENT_SPAMMY"
-                                                 "BAD_ATTACHMENT"
-                                                 "BAD_DMARC_POLICY"
-                                                 "LOW_IP_REPUTATION"
-                                                 "LOW_DOMAIN_REPUTATION"
-                                                 "IP_IN_RBL"
-                                                 "DOMAIN_IN_RBL"
-                                                 "BAD_PTR_RECORD"],
-                                          :type "string",
+                 :description "Metric on a particular delivery error type.",
+                 :properties {:errorType {:type "string",
+                                          :description "The type of delivery error.",
                                           :enumDescriptions ["The default value which should never be used explicitly."
                                                              "The Domain or IP is sending traffic at a suspiciously high rate, due to which temporary rate limits have been imposed. The limit will be lifted when Gmail is confident enough of the nature of the traffic."
                                                              "The traffic is suspected to be spam, by Gmail, for various reasons."
@@ -55,91 +64,82 @@
                                                              "The Domain reputation of the sending domain is very low."
                                                              "The IP is listed in one or more public [Real-time Blackhole Lists](http://en.wikipedia.org/wiki/DNSBL). Work with the RBL to get your IP delisted."
                                                              "The Domain is listed in one or more public [Real-time Blackhole Lists](http://en.wikipedia.org/wiki/DNSBL). Work with the RBL to get your domain delisted."
-                                                             "The sending IP is missing a [PTR record](https://support.google.com/domains/answer/3251147#ptr)."]}},
-                 :description "Metric on a particular delivery error type."},
- :ListTrafficStatsResponse {:properties {:trafficStats {:type "array",
-                                                        :description "The list of TrafficStats.",
-                                                        :items {:$ref "TrafficStats"}},
-                                         :nextPageToken {:type "string",
-                                                         :description "Token to retrieve the next page of results, or empty if there are no more results in the list."}},
-                            :type "object",
-                            :id "ListTrafficStatsResponse",
-                            :description "Response message for ListTrafficStats."},
- :TrafficStats {:description "Email traffic statistics pertaining to a specific date.",
-                :id "TrafficStats",
-                :properties {:spfSuccessRatio {:format "double",
-                                               :type "number",
-                                               :description "The ratio of mail that successfully authenticated with SPF vs. all mail that attempted to authenticate with [SPF](http://www.openspf.org/). Spoofed mail is excluded."},
-                             :dmarcSuccessRatio {:description "The ratio of mail that passed [DMARC](https://dmarc.org/) alignment checks vs all mail received from the domain that successfully authenticated with either of [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
-                                                 :type "number",
-                                                 :format "double"},
-                             :domainReputation {:enumDescriptions ["The default value which should never be used explicitly. This represents the state where no reputation information is available."
-                                                                   "Has a good track record of a very low spam rate, and complies with Gmail's sender guidelines. Mail will rarely be marked by the spam filter."
-                                                                   "Known to send good mail, but is prone to sending a low volume of spam intermittently. Most of the email from this entity will have a fair deliverability rate, except when there is a notable increase in spam levels."
-                                                                   "Known to send a considerable volume of spam regularly, and mail from this sender will likely be marked as spam."
-                                                                   "History of sending an enormously high volume of spam. Mail coming from this entity will almost always be rejected at SMTP level or marked as spam."],
-                                                :description "Reputation of the domain.",
-                                                :type "string",
-                                                :enum ["REPUTATION_CATEGORY_UNSPECIFIED"
-                                                       "HIGH"
-                                                       "MEDIUM"
-                                                       "LOW"
-                                                       "BAD"]},
-                             :inboundEncryptionRatio {:format "double",
-                                                      :type "number",
-                                                      :description "The ratio of incoming mail (to Gmail), that passed secure transport (TLS) vs all mail received from that domain. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/)."},
-                             :dkimSuccessRatio {:description "The ratio of mail that successfully authenticated with DKIM vs. all mail that attempted to authenticate with [DKIM](http://www.dkim.org/). Spoofed mail is excluded.",
-                                                :format "double",
-                                                :type "number"},
-                             :name {:type "string",
-                                    :description "The resource name of the traffic statistics. Traffic statistic names have the form `domains/{domain}/trafficStats/{date}`, where domain_name is the fully qualified domain name (i.e., mymail.mydomain.com) of the domain this traffic statistics pertains to and date is the date in yyyymmdd format that these statistics corresponds to. For example: domains/mymail.mydomain.com/trafficStats/20160807"},
-                             :ipReputations {:type "array",
-                                             :items {:$ref "IpReputation"},
-                                             :description "Reputation information pertaining to the IP addresses of the email servers for the domain. There is exactly one entry for each reputation category except REPUTATION_CATEGORY_UNSPECIFIED."},
-                             :deliveryErrors {:type "array",
-                                              :description "Delivery errors for the domain. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
-                                              :items {:$ref "DeliveryError"}},
-                             :spammyFeedbackLoops {:items {:$ref "FeedbackLoop"},
-                                                   :type "array",
-                                                   :description "Spammy [Feedback loop identifiers] (https://support.google.com/mail/answer/6254652) with their individual spam rates. This metric only pertains to traffic that is authenticated by [DKIM](http://www.dkim.org/)."},
-                             :userReportedSpamRatio {:type "number",
-                                                     :format "double",
-                                                     :description "The ratio of user-report spam vs. email that was sent to the inbox. This metric only pertains to emails authenticated by [DKIM](http://www.dkim.org/)."},
-                             :outboundEncryptionRatio {:type "number",
-                                                       :format "double",
-                                                       :description "The ratio of outgoing mail (from Gmail) that was accepted over secure transport (TLS)."}},
-                :type "object"},
- :ListDomainsResponse {:description "Response message for ListDomains.",
-                       :properties {:nextPageToken {:type "string",
-                                                    :description "Token to retrieve the next page of results, or empty if there are no more results in the list."},
-                                    :domains {:items {:$ref "Domain"},
-                                              :description "The list of domains.",
-                                              :type "array"}},
-                       :id "ListDomainsResponse",
-                       :type "object"},
- :Domain {:properties {:permission {:description "User’s permission for this domain. Assigned by the server.",
+                                                             "The sending IP is missing a [PTR record](https://support.google.com/domains/answer/3251147#ptr)."],
+                                          :enum ["DELIVERY_ERROR_TYPE_UNSPECIFIED"
+                                                 "RATE_LIMIT_EXCEEDED"
+                                                 "SUSPECTED_SPAM"
+                                                 "CONTENT_SPAMMY"
+                                                 "BAD_ATTACHMENT"
+                                                 "BAD_DMARC_POLICY"
+                                                 "LOW_IP_REPUTATION"
+                                                 "LOW_DOMAIN_REPUTATION"
+                                                 "IP_IN_RBL"
+                                                 "DOMAIN_IN_RBL"
+                                                 "BAD_PTR_RECORD"]},
+                              :errorClass {:type "string",
+                                           :description "The class of delivery error.",
+                                           :enumDescriptions ["The default value which should never be used explicitly."
+                                                              "Delivery of message has been rejected."
+                                                              "Temporary failure of message delivery to the recipient."],
+                                           :enum ["DELIVERY_ERROR_CLASS_UNSPECIFIED"
+                                                  "PERMANENT_ERROR"
+                                                  "TEMPORARY_ERROR"]},
+                              :errorRatio {:format "double",
+                                           :description "The ratio of messages where the error occurred vs all authenticated traffic.",
+                                           :type "number"}},
+                 :id "DeliveryError"},
+ :Domain {:type "object",
+          :description "A registered domain resource in the Postmaster API.",
+          :properties {:name {:type "string",
+                              :description "The resource name of the Domain. Domain names have the form `domains/{domain_name}`, where domain_name is the fully qualified domain name (i.e., mymail.mydomain.com)."},
+                       :createTime {:type "string",
+                                    :format "google-datetime",
+                                    :description "Timestamp when the user registered this domain. Assigned by the server."},
+                       :permission {:enumDescriptions ["The default value and should never be used explicitly."
+                                                       "User has read access to the domain and can share access with others."
+                                                       "User has read access to the domain."
+                                                       "User doesn't have permission to access information about the domain. User did not verify ownership of domain nor was access granted by other domain owners."],
                                     :enum ["PERMISSION_UNSPECIFIED"
                                            "OWNER"
                                            "READER"
                                            "NONE"],
-                                    :enumDescriptions ["The default value and should never be used explicitly."
-                                                       "User has read access to the domain and can share access with others."
-                                                       "User has read access to the domain."
-                                                       "User doesn't have permission to access information about the domain. User did not verify ownership of domain nor was access granted by other domain owners."],
-                                    :type "string"},
-                       :createTime {:type "string",
-                                    :format "google-datetime",
-                                    :description "Timestamp when the user registered this domain. Assigned by the server."},
-                       :name {:description "The resource name of the Domain. Domain names have the form `domains/{domain_name}`, where domain_name is the fully qualified domain name (i.e., mymail.mydomain.com).",
-                              :type "string"}},
-          :id "Domain",
-          :type "object",
-          :description "A registered domain resource in the Postmaster API."},
- :FeedbackLoop {:type "object",
-                :properties {:id {:type "string",
-                                  :description "Feedback loop identifier that uniquely identifies individual campaigns."},
-                             :spamRatio {:format "double",
-                                         :type "number",
-                                         :description "The ratio of user marked spam messages with the identifier vs the total number of inboxed messages with that identifier."}},
+                                    :type "string",
+                                    :description "User’s permission for this domain. Assigned by the server."}},
+          :id "Domain"},
+ :ListTrafficStatsResponse {:properties {:trafficStats {:description "The list of TrafficStats.",
+                                                        :items {:$ref "TrafficStats"},
+                                                        :type "array"},
+                                         :nextPageToken {:type "string",
+                                                         :description "Token to retrieve the next page of results, or empty if there are no more results in the list."}},
+                            :id "ListTrafficStatsResponse",
+                            :type "object",
+                            :description "Response message for ListTrafficStats."},
+ :IpReputation {:type "object",
+                :properties {:ipCount {:description "Total number of unique IPs in this reputation category. This metric only pertains to traffic that passed [SPF](http://www.openspf.org/) or [DKIM](http://www.dkim.org/).",
+                                       :type "string",
+                                       :format "int64"},
+                             :reputation {:type "string",
+                                          :enumDescriptions ["The default value which should never be used explicitly. This represents the state where no reputation information is available."
+                                                             "Has a good track record of a very low spam rate, and complies with Gmail's sender guidelines. Mail will rarely be marked by the spam filter."
+                                                             "Known to send good mail, but is prone to sending a low volume of spam intermittently. Most of the email from this entity will have a fair deliverability rate, except when there is a notable increase in spam levels."
+                                                             "Known to send a considerable volume of spam regularly, and mail from this sender will likely be marked as spam."
+                                                             "History of sending an enormously high volume of spam. Mail coming from this entity will almost always be rejected at SMTP level or marked as spam."],
+                                          :enum ["REPUTATION_CATEGORY_UNSPECIFIED"
+                                                 "HIGH"
+                                                 "MEDIUM"
+                                                 "LOW"
+                                                 "BAD"],
+                                          :description "The reputation category this IP reputation represents."},
+                             :sampleIps {:description "A sample of IPs in this reputation category.",
+                                         :type "array",
+                                         :items {:type "string"}}},
+                :description "IP Reputation information for a set of IPs in a specific reputation category.",
+                :id "IpReputation"},
+ :FeedbackLoop {:description "[Feedback loop](https://support.google.com/mail/answer/6254652) identifier information.",
+                :properties {:spamRatio {:format "double",
+                                         :description "The ratio of user marked spam messages with the identifier vs the total number of inboxed messages with that identifier.",
+                                         :type "number"},
+                             :id {:description "Feedback loop identifier that uniquely identifies individual campaigns.",
+                                  :type "string"}},
                 :id "FeedbackLoop",
-                :description "[Feedback loop](https://support.google.com/mail/answer/6254652) identifier information."}}
+                :type "object"}}

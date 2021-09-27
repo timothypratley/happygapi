@@ -6,6 +6,78 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:directorySiteId string,
+   :keyName string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :name string,
+   :approved boolean,
+   :videoSettings {:skippableSettings SiteSkippableSetting,
+                   :obaEnabled boolean,
+                   :orientation string,
+                   :transcodeSettings SiteTranscodeSetting,
+                   :kind string,
+                   :obaSettings ObaIcon,
+                   :companionSettings SiteCompanionSetting},
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
+                                   :matchType string,
+                                   :value string,
+                                   :etag string,
+                                   :id string},
+   :id string,
+   :kind string,
+   :siteSettings {:disableNewCookie boolean,
+                  :activeViewOptOut boolean,
+                  :adBlockingOptOut boolean,
+                  :vpaidAdapterChoiceTemplate string,
+                  :videoActiveViewOptOutTemplate boolean,
+                  :tagSetting TagSetting},
+   :subaccountId string,
+   :siteContacts [{:lastName string,
+                   :title string,
+                   :email string,
+                   :firstName string,
+                   :id string,
+                   :phone string,
+                   :address string,
+                   :contactType string}],
+   :accountId string}
+  
+  Updates an existing site. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/sites"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/insert
   
@@ -17,44 +89,44 @@
   
   {:directorySiteId string,
    :keyName string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
+                      :value string,
+                      :etag string,
+                      :id string},
    :name string,
    :approved boolean,
-   :videoSettings {:obaEnabled boolean,
+   :videoSettings {:skippableSettings SiteSkippableSetting,
+                   :obaEnabled boolean,
+                   :orientation string,
                    :transcodeSettings SiteTranscodeSetting,
-                   :skippableSettings SiteSkippableSetting,
-                   :companionSettings SiteCompanionSetting,
-                   :obaSettings ObaIcon,
                    :kind string,
-                   :orientation string},
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
+                   :obaSettings ObaIcon,
+                   :companionSettings SiteCompanionSetting},
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
                                    :matchType string,
-                                   :id string,
-                                   :etag string},
+                                   :value string,
+                                   :etag string,
+                                   :id string},
    :id string,
    :kind string,
-   :siteSettings {:activeViewOptOut boolean,
+   :siteSettings {:disableNewCookie boolean,
+                  :activeViewOptOut boolean,
+                  :adBlockingOptOut boolean,
                   :vpaidAdapterChoiceTemplate string,
                   :videoActiveViewOptOutTemplate boolean,
-                  :disableNewCookie boolean,
-                  :tagSetting TagSetting,
-                  :adBlockingOptOut boolean},
+                  :tagSetting TagSetting},
    :subaccountId string,
-   :siteContacts [{:email string,
-                   :firstName string,
+   :siteContacts [{:lastName string,
                    :title string,
-                   :address string,
-                   :lastName string,
-                   :contactType string,
+                   :email string,
+                   :firstName string,
+                   :id string,
                    :phone string,
-                   :id string}],
+                   :address string,
+                   :contactType string}],
    :accountId string}
   
   Inserts a new site."
@@ -73,32 +145,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/get
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Gets one site by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/sites/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -130,78 +176,6 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/patch
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:directorySiteId string,
-   :keyName string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :name string,
-   :approved boolean,
-   :videoSettings {:obaEnabled boolean,
-                   :transcodeSettings SiteTranscodeSetting,
-                   :skippableSettings SiteSkippableSetting,
-                   :companionSettings SiteCompanionSetting,
-                   :obaSettings ObaIcon,
-                   :kind string,
-                   :orientation string},
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
-                                   :matchType string,
-                                   :id string,
-                                   :etag string},
-   :id string,
-   :kind string,
-   :siteSettings {:activeViewOptOut boolean,
-                  :vpaidAdapterChoiceTemplate string,
-                  :videoActiveViewOptOutTemplate boolean,
-                  :disableNewCookie boolean,
-                  :tagSetting TagSetting,
-                  :adBlockingOptOut boolean},
-   :subaccountId string,
-   :siteContacts [{:email string,
-                   :firstName string,
-                   :title string,
-                   :address string,
-                   :lastName string,
-                   :contactType string,
-                   :phone string,
-                   :id string}],
-   :accountId string}
-  
-  Updates an existing site. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/sites"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/update
   
@@ -213,44 +187,44 @@
   
   {:directorySiteId string,
    :keyName string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
+                      :value string,
+                      :etag string,
+                      :id string},
    :name string,
    :approved boolean,
-   :videoSettings {:obaEnabled boolean,
+   :videoSettings {:skippableSettings SiteSkippableSetting,
+                   :obaEnabled boolean,
+                   :orientation string,
                    :transcodeSettings SiteTranscodeSetting,
-                   :skippableSettings SiteSkippableSetting,
-                   :companionSettings SiteCompanionSetting,
-                   :obaSettings ObaIcon,
                    :kind string,
-                   :orientation string},
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
+                   :obaSettings ObaIcon,
+                   :companionSettings SiteCompanionSetting},
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
                                    :matchType string,
-                                   :id string,
-                                   :etag string},
+                                   :value string,
+                                   :etag string,
+                                   :id string},
    :id string,
    :kind string,
-   :siteSettings {:activeViewOptOut boolean,
+   :siteSettings {:disableNewCookie boolean,
+                  :activeViewOptOut boolean,
+                  :adBlockingOptOut boolean,
                   :vpaidAdapterChoiceTemplate string,
                   :videoActiveViewOptOutTemplate boolean,
-                  :disableNewCookie boolean,
-                  :tagSetting TagSetting,
-                  :adBlockingOptOut boolean},
+                  :tagSetting TagSetting},
    :subaccountId string,
-   :siteContacts [{:email string,
-                   :firstName string,
+   :siteContacts [{:lastName string,
                    :title string,
-                   :address string,
-                   :lastName string,
-                   :contactType string,
+                   :email string,
+                   :firstName string,
+                   :id string,
                    :phone string,
-                   :id string}],
+                   :address string,
+                   :contactType string}],
    :accountId string}
   
   Updates an existing site."
@@ -269,6 +243,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/sites/get
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Gets one site by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/sites/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

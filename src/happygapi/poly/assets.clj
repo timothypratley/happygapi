@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: category, maxComplexity, curated, pageSize, orderBy, keywords, format, pageToken
+  Optional parameters: keywords, pageSize, format, pageToken, maxComplexity, curated, category, orderBy
   
   Lists all public, remixable assets. These are assets with an access level of PUBLIC and published under the CC-By license."
   {:scopes nil}

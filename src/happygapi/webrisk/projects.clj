@@ -6,53 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn operations-list$
-  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/operations/list
+(defn submissions-create$
+  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/submissions/create
   
-  Required parameters: name
-  
-  Optional parameters: pageToken, pageSize, filter
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://webrisk.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-delete$
-  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/operations/delete
-  
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
   
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  Body: 
+  
+  {:uri string, :threatTypes [string]}
+  
+  Creates a Submission of a URI suspected of containing phishing content to be reviewed. If the result verifies the existence of malicious phishing content, the site will be added to the [Google's Social Engineering lists](https://support.google.com/webmasters/answer/6350487/) in order to protect users that could get exposed to this threat in the future. Only allowlisted projects can use this method during Early Access. Please reach out to Sales or your customer engineer to obtain access."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://webrisk.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/submissions"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -116,6 +96,58 @@
       :as :json}
      auth))))
 
+(defn operations-delete$
+  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://webrisk.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-list$
+  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://webrisk.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn uris-submit$
   "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/uris/submit
   
@@ -125,7 +157,7 @@
   
   Body: 
   
-  {:submission {:threatTypes [string], :uri string}}
+  {:submission {:uri string, :threatTypes [string]}}
   
   Submits a URI suspected of containing malicious content to be reviewed. Returns a google.longrunning.Operation which, once the review is complete, is updated with its result. You can use the [Pub/Sub API] (https://cloud.google.com/pubsub) to receive notifications for the returned Operation. If the result verifies the existence of malicious content, the site will be added to the [Google's Social Engineering lists] (https://support.google.com/webmasters/answer/6350487/) in order to protect users that could get exposed to this threat in the future. Only allowlisted projects can use this method during Early Access. Please reach out to Sales or your customer engineer to obtain access."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -136,38 +168,6 @@
     (util/get-url
      "https://webrisk.googleapis.com/"
      "v1/{+parent}/uris:submit"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn submissions-create$
-  "https://cloud.google.com/web-risk/api/reference/rest/v1/projects/submissions/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:threatTypes [string], :uri string}
-  
-  Creates a Submission of a URI suspected of containing phishing content to be reviewed. If the result verifies the existence of malicious phishing content, the site will be added to the [Google's Social Engineering lists](https://support.google.com/webmasters/answer/6350487/) in order to protect users that could get exposed to this threat in the future. Only allowlisted projects can use this method during Early Access. Please reach out to Sales or your customer engineer to obtain access."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://webrisk.googleapis.com/"
-     "v1/{+parent}/submissions"
      #{:parent}
      parameters)
     (merge-with

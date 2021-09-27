@@ -9,7 +9,7 @@
 (defn getHealth$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/getHealth
   
-  Required parameters: project, targetPool, region
+  Required parameters: project, region, targetPool
   
   Optional parameters: none
   
@@ -43,7 +43,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/get
   
-  Required parameters: project, region, targetPool
+  Required parameters: project, targetPool, region
   
   Optional parameters: none
   
@@ -117,7 +117,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, pageToken, maxResults, returnPartialSuccess, includeAllScopes, filter
+  Optional parameters: maxResults, filter, orderBy, returnPartialSuccess, pageToken, includeAllScopes
   
   Retrieves an aggregated list of target pools."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -143,9 +143,9 @@
 (defn setBackup$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/setBackup
   
-  Required parameters: project, region, targetPool
+  Required parameters: project, targetPool, region
   
-  Optional parameters: failoverRatio, requestId
+  Optional parameters: requestId, failoverRatio
   
   Body: 
   
@@ -176,7 +176,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/delete
   
-  Required parameters: project, region, targetPool
+  Required parameters: targetPool, region, project
   
   Optional parameters: requestId
   
@@ -203,7 +203,7 @@
 (defn removeInstance$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/removeInstance
   
-  Required parameters: project, region, targetPool
+  Required parameters: project, targetPool, region
   
   Optional parameters: requestId
   
@@ -238,7 +238,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: orderBy, filter, maxResults, returnPartialSuccess, pageToken
+  Optional parameters: returnPartialSuccess, maxResults, filter, orderBy, pageToken
   
   Retrieves a list of target pools available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -264,7 +264,7 @@
 (defn removeHealthCheck$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/removeHealthCheck
   
-  Required parameters: region, project, targetPool
+  Required parameters: project, region, targetPool
   
   Optional parameters: requestId
   
@@ -297,7 +297,7 @@
 (defn addInstance$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addInstance
   
-  Required parameters: targetPool, project, region
+  Required parameters: region, targetPool, project
   
   Optional parameters: requestId
   
@@ -330,7 +330,7 @@
 (defn addHealthCheck$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addHealthCheck
   
-  Required parameters: project, targetPool, region
+  Required parameters: region, project, targetPool
   
   Optional parameters: requestId
   

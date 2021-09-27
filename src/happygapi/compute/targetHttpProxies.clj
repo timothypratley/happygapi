@@ -6,73 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn setUrlMap$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/setUrlMap
-  
-  Required parameters: targetHttpProxy, project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:urlMap string}
-  
-  Changes the URL map for TargetHttpProxy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetHttpProxy :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/targetHttpProxies/{targetHttpProxy}/setUrlMap"
-     #{:targetHttpProxy :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/get
-  
-  Required parameters: project, targetHttpProxy
-  
-  Optional parameters: none
-  
-  Returns the specified TargetHttpProxy resource. Gets a list of available target HTTP proxies by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:targetHttpProxy :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetHttpProxies/{targetHttpProxy}"
-     #{:targetHttpProxy :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn aggregatedList$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: pageToken, orderBy, maxResults, includeAllScopes, filter, returnPartialSuccess
+  Optional parameters: returnPartialSuccess, orderBy, pageToken, filter, maxResults, includeAllScopes
   
   Retrieves the list of all TargetHttpProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -85,6 +24,34 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/aggregated/targetHttpProxies"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/list
+  
+  Required parameters: project
+  
+  Optional parameters: filter, pageToken, maxResults, orderBy, returnPartialSuccess
+  
+  Retrieves the list of TargetHttpProxy resources available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpProxies"
      #{:project}
      parameters)
     (merge-with
@@ -122,25 +89,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/list
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/get
   
-  Required parameters: project
+  Required parameters: targetHttpProxy, project
   
-  Optional parameters: pageToken, filter, maxResults, orderBy, returnPartialSuccess
+  Optional parameters: none
   
-  Retrieves the list of TargetHttpProxy resources available to the specified project."
+  Returns the specified TargetHttpProxy resource. Gets a list of available target HTTP proxies by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:targetHttpProxy :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetHttpProxies"
-     #{:project}
+     "projects/{project}/global/targetHttpProxies/{targetHttpProxy}"
+     #{:targetHttpProxy :project}
      parameters)
     (merge-with
      merge
@@ -150,37 +117,28 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/insert
+(defn setUrlMap$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/setUrlMap
   
-  Required parameters: project
+  Required parameters: project, targetHttpProxy
   
   Optional parameters: requestId
   
   Body: 
   
-  {:description string,
-   :creationTimestamp string,
-   :urlMap string,
-   :name string,
-   :selfLink string,
-   :region string,
-   :id string,
-   :kind string,
-   :fingerprint string,
-   :proxyBind boolean}
+  {:urlMap string}
   
-  Creates a TargetHttpProxy resource in the specified project using the data included in the request."
+  Changes the URL map for TargetHttpProxy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:targetHttpProxy :project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetHttpProxies"
-     #{:project}
+     "projects/{project}/targetHttpProxies/{targetHttpProxy}/setUrlMap"
+     #{:targetHttpProxy :project}
      parameters)
     (merge-with
      merge
@@ -223,6 +181,48 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/targetHttpProxies/{targetHttpProxy}"
      #{:targetHttpProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpProxies/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :selfLink string,
+   :region string,
+   :id string,
+   :kind string,
+   :fingerprint string,
+   :proxyBind boolean}
+  
+  Creates a TargetHttpProxy resource in the specified project using the data included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpProxies"
+     #{:project}
      parameters)
     (merge-with
      merge

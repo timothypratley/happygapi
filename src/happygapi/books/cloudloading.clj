@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn addBook$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/addBook
+  
+  Required parameters: none
+  
+  Optional parameters: drive_document_id, name, upload_client_token, mime_type
+  
+  Add a user-upload volume and triggers processing."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/cloudloading/addBook"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn deleteBook$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/deleteBook
   
@@ -62,32 +88,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn addBook$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/cloudloading/addBook
-  
-  Required parameters: none
-  
-  Optional parameters: drive_document_id, name, upload_client_token, mime_type
-  
-  Add a user-upload volume and triggers processing."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/cloudloading/addBook"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -9,7 +9,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/delete
   
-  Required parameters: enterpriseId, pageId, clusterId
+  Required parameters: clusterId, enterpriseId, pageId
   
   Optional parameters: none
   
@@ -34,10 +34,73 @@
       :as :json}
      auth))))
 
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/update
+  
+  Required parameters: clusterId, pageId, enterpriseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:orderInPage string,
+   :name [{:locale string, :text string}],
+   :id string,
+   :productId [string]}
+  
+  Updates a cluster."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :pageId :clusterId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
+     #{:enterpriseId :pageId :clusterId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/list
+  
+  Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
+  
+  Retrieves the details of all clusters on the specified page."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters"
+     #{:enterpriseId :pageId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/get
   
-  Required parameters: enterpriseId, clusterId, pageId
+  Required parameters: pageId, enterpriseId, clusterId
   
   Optional parameters: none
   
@@ -86,69 +149,6 @@
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters"
      #{:enterpriseId :pageId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/list
-  
-  Required parameters: enterpriseId, pageId
-  
-  Optional parameters: none
-  
-  Retrieves the details of all clusters on the specified page."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters"
-     #{:enterpriseId :pageId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/update
-  
-  Required parameters: clusterId, enterpriseId, pageId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:orderInPage string,
-   :name [{:locale string, :text string}],
-   :id string,
-   :productId [string]}
-  
-  Updates a cluster."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :pageId :clusterId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
-     #{:enterpriseId :pageId :clusterId}
      parameters)
     (merge-with
      merge

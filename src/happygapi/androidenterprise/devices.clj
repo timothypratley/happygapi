@@ -9,7 +9,7 @@
 (defn setState$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/setState
   
-  Required parameters: enterpriseId, deviceId, userId
+  Required parameters: userId, deviceId, enterpriseId
   
   Optional parameters: none
   
@@ -43,22 +43,22 @@
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/update
   
-  Required parameters: userId, deviceId, enterpriseId
+  Required parameters: userId, enterpriseId, deviceId
   
   Optional parameters: updateMask
   
   Body: 
   
-  {:policy {:productAvailabilityPolicy string,
-            :deviceReportPolicy string,
-            :productPolicy [ProductPolicy],
-            :autoUpdatePolicy string,
-            :maintenanceWindow MaintenanceWindow},
-   :managementType string,
+  {:managementType string,
    :report {:appState [AppState], :lastUpdatedTimestampMillis string},
-   :androidId string}
+   :androidId string,
+   :policy {:productPolicy [ProductPolicy],
+            :productAvailabilityPolicy string,
+            :maintenanceWindow MaintenanceWindow,
+            :deviceReportPolicy string,
+            :autoUpdatePolicy string}}
   
-  Updates the device policy. To ensure the policy is properly enforced, you need to prevent unmanaged accounts from accessing Google Play by setting the allowed_accounts in the managed configuration for the Google Play package. See restrict accounts in Google Play."
+  Updates the device policy. To ensure the policy is properly enforced, you need to prevent unmanaged accounts from accessing Google Play by setting the allowed_accounts in the managed configuration for the Google Play package. See restrict accounts in Google Play. When provisioning a new device, you should set the device policy using this method before adding the managed Google Play Account to the device, otherwise the policy will not be applied for a short period of time after adding the account to the device."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys?
@@ -112,7 +112,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/get
   
-  Required parameters: enterpriseId, userId, deviceId
+  Required parameters: userId, deviceId, enterpriseId
   
   Optional parameters: none
   
@@ -140,7 +140,7 @@
 (defn getState$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/devices/getState
   
-  Required parameters: enterpriseId, deviceId, userId
+  Required parameters: deviceId, userId, enterpriseId
   
   Optional parameters: none
   

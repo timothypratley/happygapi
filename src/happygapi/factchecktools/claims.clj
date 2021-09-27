@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: reviewPublisherSiteFilter, pageSize, maxAgeDays, pageToken, query, offset, languageCode
+  Optional parameters: query, reviewPublisherSiteFilter, pageToken, maxAgeDays, languageCode, pageSize, offset
   
   Search through fact-checked claims."
   {:scopes nil}

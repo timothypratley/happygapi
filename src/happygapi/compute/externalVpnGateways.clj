@@ -6,6 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/list
+  
+  Required parameters: project
+  
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
+  
+  Retrieves the list of ExternalVpnGateway available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/get
   
@@ -34,38 +62,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/list
-  
-  Required parameters: project
-  
-  Optional parameters: pageToken, filter, orderBy, maxResults, returnPartialSuccess
-  
-  Retrieves the list of ExternalVpnGateway available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/externalVpnGateways"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn setLabels$
   "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/setLabels
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
@@ -95,6 +95,40 @@
       :as :json}
      auth))))
 
+(defn testIamPermissions$
+  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/testIamPermissions
+  
+  Required parameters: project, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/externalVpnGateways/{resource}/testIamPermissions"
+     #{:project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/insert
   
@@ -105,7 +139,7 @@
   Body: 
   
   {:description string,
-   :interfaces [{:ipAddress string, :id integer}],
+   :interfaces [{:id integer, :ipAddress string}],
    :labels {},
    :redundancyType string,
    :creationTimestamp string,
@@ -159,40 +193,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn testIamPermissions$
-  "https://cloud.google.com/compute/api/reference/rest/v1/externalVpnGateways/testIamPermissions
-  
-  Required parameters: resource, project
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/externalVpnGateways/{resource}/testIamPermissions"
-     #{:project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

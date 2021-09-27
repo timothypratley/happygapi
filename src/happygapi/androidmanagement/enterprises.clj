@@ -6,87 +6,35 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, view, pageSize, projectId
-  
-  This feature is not generally available yet. Lists enterprises that are managed by an EMM. Only partial views are returned."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/enterprises"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets an enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn create$
   "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/create
   
   Required parameters: none
   
-  Optional parameters: projectId, enterpriseToken, agreementAccepted, signupUrlName
+  Optional parameters: agreementAccepted, signupUrlName, projectId, enterpriseToken
   
   Body: 
   
-  {:contactInfo {:dataProtectionOfficerPhone string,
-                 :dataProtectionOfficerEmail string,
-                 :euRepresentativePhone string,
+  {:contactInfo {:dataProtectionOfficerEmail string,
                  :dataProtectionOfficerName string,
+                 :euRepresentativePhone string,
+                 :dataProtectionOfficerPhone string,
                  :euRepresentativeName string,
-                 :euRepresentativeEmail string,
-                 :contactEmail string},
+                 :contactEmail string,
+                 :euRepresentativeEmail string},
    :enabledNotificationTypes [string],
    :enterpriseDisplayName string,
-   :logo {:sha256Hash string, :url string},
+   :logo {:url string, :sha256Hash string},
    :name string,
    :pubsubTopic string,
    :primaryColor integer,
-   :termsAndConditions [{:content UserFacingMessage,
-                         :header UserFacingMessage}],
+   :termsAndConditions [{:header UserFacingMessage,
+                         :content UserFacingMessage}],
    :appAutoApprovalEnabled boolean,
-   :signinDetails [{:allowPersonalUsage string,
+   :signinDetails [{:signinEnrollmentToken string,
+                    :signinUrl string,
                     :qrCode string,
-                    :signinEnrollmentToken string,
-                    :signinUrl string}]}
+                    :allowPersonalUsage string}]}
   
   Creates an enterprise. This is the last step in the enterprise signup flow."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
@@ -118,26 +66,26 @@
   
   Body: 
   
-  {:contactInfo {:dataProtectionOfficerPhone string,
-                 :dataProtectionOfficerEmail string,
-                 :euRepresentativePhone string,
+  {:contactInfo {:dataProtectionOfficerEmail string,
                  :dataProtectionOfficerName string,
+                 :euRepresentativePhone string,
+                 :dataProtectionOfficerPhone string,
                  :euRepresentativeName string,
-                 :euRepresentativeEmail string,
-                 :contactEmail string},
+                 :contactEmail string,
+                 :euRepresentativeEmail string},
    :enabledNotificationTypes [string],
    :enterpriseDisplayName string,
-   :logo {:sha256Hash string, :url string},
+   :logo {:url string, :sha256Hash string},
    :name string,
    :pubsubTopic string,
    :primaryColor integer,
-   :termsAndConditions [{:content UserFacingMessage,
-                         :header UserFacingMessage}],
+   :termsAndConditions [{:header UserFacingMessage,
+                         :content UserFacingMessage}],
    :appAutoApprovalEnabled boolean,
-   :signinDetails [{:allowPersonalUsage string,
+   :signinDetails [{:signinEnrollmentToken string,
+                    :signinUrl string,
                     :qrCode string,
-                    :signinEnrollmentToken string,
-                    :signinUrl string}]}
+                    :allowPersonalUsage string}]}
   
   Updates an enterprise."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
@@ -160,6 +108,32 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/delete
   
@@ -167,7 +141,7 @@
   
   Optional parameters: none
   
-  This feature is not generally available yet. Deletes an enterprise."
+  Deletes an enterprise. Only available for EMM-managed enterprises."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -186,27 +160,63 @@
       :as :json}
      auth))))
 
-(defn enrollmentTokens-delete$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/enrollmentTokens/delete
+(defn list$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/list
   
-  Required parameters: name
+  Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: projectId, view, pageToken, pageSize
   
-  Deletes an enrollment token. This operation invalidates the token, preventing its future use."
+  Lists EMM-managed enterprises. Only BASIC fields are returned."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/enterprises"
+     #{}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webTokens-create$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webTokens/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :parentFrameUrl string,
+   :value string,
+   :permissions [string],
+   :enabledFeatures [string]}
+  
+  Creates a web token to access an embeddable managed Google Play web UI for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/webTokens"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -253,59 +263,23 @@
       :as :json}
      auth))))
 
-(defn webTokens-create$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webTokens/create
+(defn enrollmentTokens-delete$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/enrollmentTokens/delete
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:parentFrameUrl string,
-   :value string,
-   :permissions [string],
-   :name string,
-   :enabledFeatures [string]}
-  
-  Creates a web token to access an embeddable managed Google Play web UI for a given enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/webTokens"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-list$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists devices for a given enterprise."
+  Deletes an enrollment token. This operation invalidates the token, preventing its future use."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/devices"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -315,14 +289,14 @@
       :as :json}
      auth))))
 
-(defn devices-get$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/get
+(defn applications-get$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/applications/get
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: languageCode
   
-  Gets a device."
+  Gets info about an application."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -336,6 +310,432 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-list$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists web apps for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/webApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-create$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:icons [{:imageData string}],
+   :displayMode string,
+   :versionCode string,
+   :name string,
+   :title string,
+   :startUrl string}
+  
+  Creates a web app."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/webApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-patch$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:icons [{:imageData string}],
+   :displayMode string,
+   :versionCode string,
+   :name string,
+   :title string,
+   :startUrl string}
+  
+  Updates a web app."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-delete$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a web app."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-get$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a web app."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-list$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists policies for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/policies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-delete$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a policy. This operation is only permitted if no devices are currently referencing the policy."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-get$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a policy."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-patch$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:outgoingBeamDisabled boolean,
+   :openNetworkConfiguration {},
+   :debuggingFeaturesAllowed boolean,
+   :kioskCustomLauncherEnabled boolean,
+   :kioskCustomization {:systemNavigation string,
+                        :systemErrorWarnings string,
+                        :deviceSettings string,
+                        :statusBar string,
+                        :powerButtonActions string},
+   :wifiConfigDisabled boolean,
+   :skipFirstUseHintsEnabled boolean,
+   :statusBarDisabled boolean,
+   :recommendedGlobalProxy {:pacUri string,
+                            :host string,
+                            :excludedHosts [string],
+                            :port integer},
+   :blockApplicationsEnabled boolean,
+   :alwaysOnVpnPackage {:lockdownEnabled boolean, :packageName string},
+   :bluetoothConfigDisabled boolean,
+   :applications [{:installType string,
+                   :packageName string,
+                   :managedConfiguration {},
+                   :disabled boolean,
+                   :managedConfigurationTemplate ManagedConfigurationTemplate,
+                   :lockTaskAllowed boolean,
+                   :delegatedScopes [string],
+                   :accessibleTrackIds [string],
+                   :minimumVersionCode integer,
+                   :extensionConfig ExtensionConfig,
+                   :defaultPermissionPolicy string,
+                   :permissionGrants [PermissionGrant],
+                   :connectedWorkAndPersonalApp string,
+                   :autoUpdateMode string}],
+   :mountPhysicalMediaDisabled boolean,
+   :stayOnPluggedModes [string],
+   :dataRoamingDisabled boolean,
+   :maximumTimeToLock string,
+   :screenCaptureDisabled boolean,
+   :encryptionPolicy string,
+   :keyguardDisabled boolean,
+   :unmuteMicrophoneDisabled boolean,
+   :name string,
+   :passwordRequirements {:requirePasswordUnlock string,
+                          :passwordScope string,
+                          :passwordQuality string,
+                          :passwordMinimumNumeric integer,
+                          :passwordMinimumSymbols integer,
+                          :passwordMinimumUpperCase integer,
+                          :maximumFailedPasswordsForWipe integer,
+                          :passwordMinimumLength integer,
+                          :passwordMinimumNonLetter integer,
+                          :passwordExpirationTimeout string,
+                          :passwordHistoryLength integer,
+                          :passwordMinimumLetters integer,
+                          :passwordMinimumLowerCase integer},
+   :factoryResetDisabled boolean,
+   :permittedInputMethods {:packageNames [string]},
+   :androidDevicePolicyTracks [string],
+   :installUnknownSourcesAllowed boolean,
+   :minimumApiLevel integer,
+   :credentialsConfigDisabled boolean,
+   :ensureVerifyAppsEnabled boolean,
+   :networkEscapeHatchEnabled boolean,
+   :keyguardDisabledFeatures [string],
+   :cameraDisabled boolean,
+   :deviceOwnerLockScreenInfo {:defaultMessage string,
+                               :localizedMessages {}},
+   :safeBootDisabled boolean,
+   :autoTimeRequired boolean,
+   :playStoreMode string,
+   :shareLocationDisabled boolean,
+   :permittedAccessibilityServices {:packageNames [string]},
+   :bluetoothDisabled boolean,
+   :setupActions [{:description UserFacingMessage,
+                   :launchApp LaunchAppAction,
+                   :title UserFacingMessage}],
+   :personalUsagePolicies {:maxDaysWithWorkOff integer,
+                           :screenCaptureDisabled boolean,
+                           :accountTypesWithManagementDisabled [string],
+                           :personalPlayStoreMode string,
+                           :personalApplications [PersonalApplicationPolicy],
+                           :cameraDisabled boolean},
+   :installAppsDisabled boolean,
+   :frpAdminEmails [string],
+   :passwordPolicies [{:requirePasswordUnlock string,
+                       :passwordScope string,
+                       :passwordQuality string,
+                       :passwordMinimumNumeric integer,
+                       :passwordMinimumSymbols integer,
+                       :passwordMinimumUpperCase integer,
+                       :maximumFailedPasswordsForWipe integer,
+                       :passwordMinimumLength integer,
+                       :passwordMinimumNonLetter integer,
+                       :passwordExpirationTimeout string,
+                       :passwordHistoryLength integer,
+                       :passwordMinimumLetters integer,
+                       :passwordMinimumLowerCase integer}],
+   :accountTypesWithManagementDisabled [string],
+   :adjustVolumeDisabled boolean,
+   :smsDisabled boolean,
+   :usbMassStorageEnabled boolean,
+   :setWallpaperDisabled boolean,
+   :removeUserDisabled boolean,
+   :networkResetDisabled boolean,
+   :appAutoUpdatePolicy string,
+   :shortSupportMessage {:defaultMessage string, :localizedMessages {}},
+   :tetheringConfigDisabled boolean,
+   :usbFileTransferDisabled boolean,
+   :oncCertificateProviders [{:contentProviderEndpoint ContentProviderEndpoint,
+                              :certificateReferences [string]}],
+   :crossProfilePolicies {:showWorkContactsInPersonalProfile string,
+                          :crossProfileCopyPaste string,
+                          :crossProfileDataSharing string},
+   :cellBroadcastsConfigDisabled boolean,
+   :defaultPermissionPolicy string,
+   :choosePrivateKeyRules [{:packageNames [string],
+                            :urlPattern string,
+                            :privateKeyAlias string}],
+   :permissionGrants [{:policy string, :permission string}],
+   :outgoingCallsDisabled boolean,
+   :vpnConfigDisabled boolean,
+   :bluetoothContactSharingDisabled boolean,
+   :statusReportingSettings {:commonCriteriaModeEnabled boolean,
+                             :systemPropertiesEnabled boolean,
+                             :powerManagementEventsEnabled boolean,
+                             :memoryInfoEnabled boolean,
+                             :applicationReportsEnabled boolean,
+                             :applicationReportingSettings ApplicationReportingSettings,
+                             :networkInfoEnabled boolean,
+                             :deviceSettingsEnabled boolean,
+                             :hardwareStatusEnabled boolean,
+                             :displayInfoEnabled boolean,
+                             :softwareInfoEnabled boolean},
+   :modifyAccountsDisabled boolean,
+   :addUserDisabled boolean,
+   :createWindowsDisabled boolean,
+   :version string,
+   :locationMode string,
+   :systemUpdate {:endMinutes integer,
+                  :startMinutes integer,
+                  :freezePeriods [FreezePeriod],
+                  :type string},
+   :policyEnforcementRules [{:blockAction BlockAction,
+                             :wipeAction WipeAction,
+                             :settingName string}],
+   :uninstallAppsDisabled boolean,
+   :advancedSecurityOverrides {:untrustedAppsPolicy string,
+                               :developerSettings string,
+                               :commonCriteriaMode string,
+                               :personalAppsThatCanReadWorkNotifications [string],
+                               :googlePlayProtectVerifyApps string},
+   :setUserIconDisabled boolean,
+   :autoDateAndTimeZone string,
+   :longSupportMessage {:defaultMessage string, :localizedMessages {}},
+   :persistentPreferredActivities [{:receiverActivity string,
+                                    :categories [string],
+                                    :actions [string]}],
+   :mobileNetworksConfigDisabled boolean,
+   :funDisabled boolean,
+   :complianceRules [{:nonComplianceDetailCondition NonComplianceDetailCondition,
+                      :packageNamesToDisable [string],
+                      :apiLevelCondition ApiLevelCondition,
+                      :disableApps boolean}],
+   :wifiConfigsLockdownEnabled boolean,
+   :privateKeySelectionEnabled boolean}
+  
+  Updates or creates a policy."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -379,11 +779,11 @@
   {:previousDeviceNames [string],
    :appliedState string,
    :memoryInfo {:totalRam string, :totalInternalStorage string},
-   :networkInfo {:imei string,
-                 :telephonyInfos [TelephonyInfo],
-                 :networkOperatorName string,
+   :networkInfo {:telephonyInfos [TelephonyInfo],
+                 :meid string,
                  :wifiMacAddress string,
-                 :meid string},
+                 :imei string,
+                 :networkOperatorName string},
    :softwareInfo {:systemUpdateInfo SystemUpdateInfo,
                   :deviceKernelVersion string,
                   :androidBuildNumber string,
@@ -402,9 +802,9 @@
    :state string,
    :apiLevel integer,
    :enrollmentTokenName string,
-   :memoryEvents [{:createTime string,
-                   :byteCount string,
-                   :eventType string}],
+   :memoryEvents [{:eventType string,
+                   :createTime string,
+                   :byteCount string}],
    :appliedPasswordPolicies [{:requirePasswordUnlock string,
                               :passwordScope string,
                               :passwordQuality string,
@@ -419,32 +819,32 @@
                               :passwordMinimumLetters integer,
                               :passwordMinimumLowerCase integer}],
    :commonCriteriaModeInfo {:commonCriteriaModeStatus string},
-   :hardwareStatusSamples [{:createTime string,
+   :hardwareStatusSamples [{:cpuTemperatures [number],
+                            :fanSpeeds [number],
                             :batteryTemperatures [number],
-                            :gpuTemperatures [number],
                             :skinTemperatures [number],
-                            :cpuUsages [number],
-                            :cpuTemperatures [number],
-                            :fanSpeeds [number]}],
+                            :gpuTemperatures [number],
+                            :createTime string,
+                            :cpuUsages [number]}],
    :enrollmentTokenData string,
    :enrollmentTime string,
    :managementMode string,
    :lastPolicyComplianceReportTime string,
    :ownership string,
    :appliedPolicyName string,
-   :securityPosture {:devicePosture string,
-                     :postureDetails [PostureDetail]},
-   :powerManagementEvents [{:batteryLevel number,
+   :securityPosture {:postureDetails [PostureDetail],
+                     :devicePosture string},
+   :powerManagementEvents [{:eventType string,
                             :createTime string,
-                            :eventType string}],
+                            :batteryLevel number}],
    :lastPolicySyncTime string,
-   :deviceSettings {:isDeviceSecure boolean,
-                    :adbEnabled boolean,
-                    :verifyAppsEnabled boolean,
+   :deviceSettings {:verifyAppsEnabled boolean,
+                    :encryptionStatus string,
                     :unknownSourcesEnabled boolean,
+                    :adbEnabled boolean,
                     :isEncrypted boolean,
                     :developmentSettingsEnabled boolean,
-                    :encryptionStatus string},
+                    :isDeviceSecure boolean},
    :hardwareInfo {:serialNumber string,
                   :skinShutdownTemperatures [number],
                   :batteryThrottlingTemperatures [number],
@@ -460,21 +860,21 @@
                   :model string,
                   :cpuThrottlingTemperatures [number]},
    :user {:accountIdentifier string},
-   :displays [{:displayId integer,
-               :refreshRate integer,
-               :state string,
-               :name string,
-               :height integer,
+   :displays [{:refreshRate integer,
                :density integer,
-               :width integer}],
+               :width integer,
+               :state string,
+               :height integer,
+               :name string,
+               :displayId integer}],
    :disabledReason {:defaultMessage string, :localizedMessages {}},
    :userName string,
    :policyName string,
    :appliedPolicyVersion string,
-   :nonComplianceDetails [{:settingName string,
-                           :installationFailureReason string,
-                           :nonComplianceReason string,
+   :nonComplianceDetails [{:installationFailureReason string,
                            :currentValue any,
+                           :settingName string,
+                           :nonComplianceReason string,
                            :fieldPath string,
                            :packageName string}],
    :applicationReports [{:packageName string,
@@ -510,6 +910,58 @@
       :as :json}
      auth))))
 
+(defn devices-get$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a device."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-list$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists devices for a given enterprise."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+parent}/devices"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn devices-issueCommand$
   "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/issueCommand
   
@@ -519,13 +971,13 @@
   
   Body: 
   
-  {:newPassword string,
-   :duration string,
-   :type string,
+  {:type string,
    :errorCode string,
-   :userName string,
+   :newPassword string,
+   :createTime string,
    :resetPasswordFlags [string],
-   :createTime string}
+   :duration string,
+   :userName string}
   
   Issues a command to a device. The Operation resource returned contains a Command in its metadata field. Use the get operation method to get the status of the command."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
@@ -543,6 +995,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-operations-cancel$
+  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED."
+  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidmanagement.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -600,32 +1078,6 @@
       :as :json}
      auth))))
 
-(defn devices-operations-cancel$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn devices-operations-delete$
   "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/devices/operations/delete
   
@@ -639,453 +1091,6 @@
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-patch$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:outgoingBeamDisabled boolean,
-   :openNetworkConfiguration {},
-   :debuggingFeaturesAllowed boolean,
-   :kioskCustomLauncherEnabled boolean,
-   :kioskCustomization {:deviceSettings string,
-                        :systemErrorWarnings string,
-                        :powerButtonActions string,
-                        :systemNavigation string,
-                        :statusBar string},
-   :wifiConfigDisabled boolean,
-   :skipFirstUseHintsEnabled boolean,
-   :statusBarDisabled boolean,
-   :recommendedGlobalProxy {:pacUri string,
-                            :excludedHosts [string],
-                            :host string,
-                            :port integer},
-   :blockApplicationsEnabled boolean,
-   :alwaysOnVpnPackage {:lockdownEnabled boolean, :packageName string},
-   :bluetoothConfigDisabled boolean,
-   :applications [{:installType string,
-                   :packageName string,
-                   :managedConfiguration {},
-                   :disabled boolean,
-                   :managedConfigurationTemplate ManagedConfigurationTemplate,
-                   :lockTaskAllowed boolean,
-                   :delegatedScopes [string],
-                   :accessibleTrackIds [string],
-                   :minimumVersionCode integer,
-                   :defaultPermissionPolicy string,
-                   :permissionGrants [PermissionGrant],
-                   :connectedWorkAndPersonalApp string,
-                   :autoUpdateMode string}],
-   :mountPhysicalMediaDisabled boolean,
-   :stayOnPluggedModes [string],
-   :dataRoamingDisabled boolean,
-   :maximumTimeToLock string,
-   :screenCaptureDisabled boolean,
-   :encryptionPolicy string,
-   :keyguardDisabled boolean,
-   :unmuteMicrophoneDisabled boolean,
-   :name string,
-   :passwordRequirements {:requirePasswordUnlock string,
-                          :passwordScope string,
-                          :passwordQuality string,
-                          :passwordMinimumNumeric integer,
-                          :passwordMinimumSymbols integer,
-                          :passwordMinimumUpperCase integer,
-                          :maximumFailedPasswordsForWipe integer,
-                          :passwordMinimumLength integer,
-                          :passwordMinimumNonLetter integer,
-                          :passwordExpirationTimeout string,
-                          :passwordHistoryLength integer,
-                          :passwordMinimumLetters integer,
-                          :passwordMinimumLowerCase integer},
-   :factoryResetDisabled boolean,
-   :permittedInputMethods {:packageNames [string]},
-   :androidDevicePolicyTracks [string],
-   :installUnknownSourcesAllowed boolean,
-   :minimumApiLevel integer,
-   :credentialsConfigDisabled boolean,
-   :ensureVerifyAppsEnabled boolean,
-   :networkEscapeHatchEnabled boolean,
-   :keyguardDisabledFeatures [string],
-   :cameraDisabled boolean,
-   :deviceOwnerLockScreenInfo {:defaultMessage string,
-                               :localizedMessages {}},
-   :safeBootDisabled boolean,
-   :autoTimeRequired boolean,
-   :playStoreMode string,
-   :shareLocationDisabled boolean,
-   :permittedAccessibilityServices {:packageNames [string]},
-   :bluetoothDisabled boolean,
-   :setupActions [{:title UserFacingMessage,
-                   :launchApp LaunchAppAction,
-                   :description UserFacingMessage}],
-   :personalUsagePolicies {:accountTypesWithManagementDisabled [string],
-                           :cameraDisabled boolean,
-                           :personalPlayStoreMode string,
-                           :screenCaptureDisabled boolean,
-                           :maxDaysWithWorkOff integer,
-                           :personalApplications [PersonalApplicationPolicy]},
-   :installAppsDisabled boolean,
-   :frpAdminEmails [string],
-   :passwordPolicies [{:requirePasswordUnlock string,
-                       :passwordScope string,
-                       :passwordQuality string,
-                       :passwordMinimumNumeric integer,
-                       :passwordMinimumSymbols integer,
-                       :passwordMinimumUpperCase integer,
-                       :maximumFailedPasswordsForWipe integer,
-                       :passwordMinimumLength integer,
-                       :passwordMinimumNonLetter integer,
-                       :passwordExpirationTimeout string,
-                       :passwordHistoryLength integer,
-                       :passwordMinimumLetters integer,
-                       :passwordMinimumLowerCase integer}],
-   :accountTypesWithManagementDisabled [string],
-   :adjustVolumeDisabled boolean,
-   :smsDisabled boolean,
-   :usbMassStorageEnabled boolean,
-   :setWallpaperDisabled boolean,
-   :removeUserDisabled boolean,
-   :networkResetDisabled boolean,
-   :appAutoUpdatePolicy string,
-   :shortSupportMessage {:defaultMessage string, :localizedMessages {}},
-   :tetheringConfigDisabled boolean,
-   :usbFileTransferDisabled boolean,
-   :oncCertificateProviders [{:certificateReferences [string],
-                              :contentProviderEndpoint ContentProviderEndpoint}],
-   :cellBroadcastsConfigDisabled boolean,
-   :defaultPermissionPolicy string,
-   :choosePrivateKeyRules [{:urlPattern string,
-                            :privateKeyAlias string,
-                            :packageNames [string]}],
-   :permissionGrants [{:policy string, :permission string}],
-   :outgoingCallsDisabled boolean,
-   :vpnConfigDisabled boolean,
-   :bluetoothContactSharingDisabled boolean,
-   :statusReportingSettings {:commonCriteriaModeEnabled boolean,
-                             :systemPropertiesEnabled boolean,
-                             :powerManagementEventsEnabled boolean,
-                             :memoryInfoEnabled boolean,
-                             :applicationReportsEnabled boolean,
-                             :applicationReportingSettings ApplicationReportingSettings,
-                             :networkInfoEnabled boolean,
-                             :deviceSettingsEnabled boolean,
-                             :hardwareStatusEnabled boolean,
-                             :displayInfoEnabled boolean,
-                             :softwareInfoEnabled boolean},
-   :modifyAccountsDisabled boolean,
-   :addUserDisabled boolean,
-   :createWindowsDisabled boolean,
-   :version string,
-   :locationMode string,
-   :systemUpdate {:type string,
-                  :startMinutes integer,
-                  :freezePeriods [FreezePeriod],
-                  :endMinutes integer},
-   :policyEnforcementRules [{:settingName string,
-                             :wipeAction WipeAction,
-                             :blockAction BlockAction}],
-   :uninstallAppsDisabled boolean,
-   :advancedSecurityOverrides {:commonCriteriaMode string,
-                               :untrustedAppsPolicy string,
-                               :developerSettings string,
-                               :googlePlayProtectVerifyApps string},
-   :setUserIconDisabled boolean,
-   :autoDateAndTimeZone string,
-   :longSupportMessage {:defaultMessage string, :localizedMessages {}},
-   :persistentPreferredActivities [{:categories [string],
-                                    :receiverActivity string,
-                                    :actions [string]}],
-   :mobileNetworksConfigDisabled boolean,
-   :funDisabled boolean,
-   :complianceRules [{:packageNamesToDisable [string],
-                      :disableApps boolean,
-                      :apiLevelCondition ApiLevelCondition,
-                      :nonComplianceDetailCondition NonComplianceDetailCondition}],
-   :wifiConfigsLockdownEnabled boolean,
-   :privateKeySelectionEnabled boolean}
-  
-  Updates or creates a policy."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-list$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists policies for a given enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/policies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-get$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a policy."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-delete$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/policies/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a policy. This operation is only permitted if no devices are currently referencing the policy."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-create$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:icons [{:imageData string}],
-   :startUrl string,
-   :title string,
-   :displayMode string,
-   :versionCode string,
-   :name string}
-  
-  Creates a web app."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/webApps"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-get$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a web app."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-delete$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a web app."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-patch$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:icons [{:imageData string}],
-   :startUrl string,
-   :title string,
-   :displayMode string,
-   :versionCode string,
-   :name string}
-  
-  Updates a web app."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn webApps-list$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/webApps/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists web apps for a given enterprise."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidmanagement.googleapis.com/"
-     "v1/{+parent}/webApps"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn applications-get$
-  "https://developers.google.com/android/managementapi/reference/rest/v1/enterprises/applications/get
-  
-  Required parameters: name
-  
-  Optional parameters: languageCode
-  
-  Gets info about an application."
-  {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://androidmanagement.googleapis.com/"
      "v1/{+name}"

@@ -6,43 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn updateAvailability$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/updateAvailability
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:availabilities [{:advertiserId string,
-                     :segmentationName string,
-                     :segmentationId string,
-                     :segmentationType string,
-                     :availabilityTimestamp string,
-                     :agencyId string}]}
-  
-  Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
-  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://doubleclicksearch.googleapis.com/"
-     "doubleclicksearch/v2/conversion/updateAvailability"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/get
   
@@ -78,6 +41,43 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn updateAvailability$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/updateAvailability
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:availabilities [{:segmentationType string,
+                     :advertiserId string,
+                     :availabilityTimestamp string,
+                     :agencyId string,
+                     :segmentationName string,
+                     :segmentationId string}]}
+  
+  Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
+  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://doubleclicksearch.googleapis.com/"
+     "doubleclicksearch/v2/conversion/updateAvailability"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,105 +1,49 @@
 (ns happygapi.monitoring.services
   "Cloud Monitoring API: services.
-  Manages your Cloud Monitoring data and configurations. Most projects must be associated with a Workspace, with a few exceptions as noted on the individual method pages. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the Cloud Monitoring documentation.
+  Manages your Cloud Monitoring data and configurations. Most projects must be associated with a Workspace, with a few exceptions as noted on the individual method pages. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the Cloud Monitoring documentation (https://cloud.google.com/monitoring/docs).
   See: https://cloud.google.com/monitoring/api/api/reference/rest/v3/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/get
+(defn patch$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/patch
   
   Required parameters: name
   
-  Optional parameters: none
-  
-  Get the named Service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  List Services for this workspace."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://monitoring.googleapis.com/"
-     "v3/{+parent}/services"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/create
-  
-  Required parameters: parent
-  
-  Optional parameters: serviceId
+  Optional parameters: updateMask
   
   Body: 
   
-  {:meshIstio {:meshUid string,
-               :serviceNamespace string,
-               :serviceName string},
+  {:meshIstio {:serviceNamespace string,
+               :serviceName string,
+               :meshUid string},
    :displayName string,
    :name string,
    :custom {},
    :cloudEndpoints {:service string},
-   :clusterIstio {:serviceName string,
+   :clusterIstio {:serviceNamespace string,
+                  :serviceName string,
                   :clusterName string,
-                  :location string,
-                  :serviceNamespace string},
+                  :location string},
    :telemetry {:resourceName string},
    :istioCanonicalService {:canonicalService string,
-                           :canonicalServiceNamespace string,
-                           :meshUid string},
+                           :meshUid string,
+                           :canonicalServiceNamespace string},
    :appEngine {:moduleId string},
    :userLabels {}}
   
-  Create a Service."
+  Update this Service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+parent}/services"
-     #{:parent}
+     "v3/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -138,44 +82,72 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/patch
+(defn get$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/get
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
-  Body: 
-  
-  {:meshIstio {:meshUid string,
-               :serviceNamespace string,
-               :serviceName string},
-   :displayName string,
-   :name string,
-   :custom {},
-   :cloudEndpoints {:service string},
-   :clusterIstio {:serviceName string,
-                  :clusterName string,
-                  :location string,
-                  :serviceNamespace string},
-   :telemetry {:resourceName string},
-   :istioCanonicalService {:canonicalService string,
-                           :canonicalServiceNamespace string,
-                           :meshUid string},
-   :appEngine {:moduleId string},
-   :userLabels {}}
-  
-  Update this Service."
+  Get the named Service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn create$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/create
+  
+  Required parameters: parent
+  
+  Optional parameters: serviceId
+  
+  Body: 
+  
+  {:meshIstio {:serviceNamespace string,
+               :serviceName string,
+               :meshUid string},
+   :displayName string,
+   :name string,
+   :custom {},
+   :cloudEndpoints {:service string},
+   :clusterIstio {:serviceNamespace string,
+                  :serviceName string,
+                  :clusterName string,
+                  :location string},
+   :telemetry {:resourceName string},
+   :istioCanonicalService {:canonicalService string,
+                           :meshUid string,
+                           :canonicalServiceNamespace string},
+   :appEngine {:moduleId string},
+   :userLabels {}}
+  
+  Create a Service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+parent}/services"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -187,32 +159,49 @@
       :as :json}
      auth))))
 
-(defn serviceLevelObjectives-create$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/create
+(defn list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/list
   
   Required parameters: parent
   
-  Optional parameters: serviceLevelObjectiveId
+  Optional parameters: filter, pageToken, pageSize
   
-  Body: 
-  
-  {:userLabels {},
-   :displayName string,
-   :rollingPeriod string,
-   :goal number,
-   :serviceLevelIndicator {:windowsBased WindowsBasedSli,
-                           :basicSli BasicSli,
-                           :requestBased RequestBasedSli},
-   :name string,
-   :calendarPeriod string}
-  
-  Create a ServiceLevelObjective for the given Service."
+  List Services for this workspace."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
+    (util/get-url
+     "https://monitoring.googleapis.com/"
+     "v3/{+parent}/services"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn serviceLevelObjectives-list$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/list
+  
+  Required parameters: parent
+  
+  Optional parameters: view, pageToken, filter, pageSize
+  
+  List the ServiceLevelObjectives for the given Service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/monitoring"
+            "https://www.googleapis.com/auth/monitoring.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
     (util/get-url
      "https://monitoring.googleapis.com/"
      "v3/{+parent}/serviceLevelObjectives"
@@ -220,9 +209,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -256,25 +243,24 @@
       :as :json}
      auth))))
 
-(defn serviceLevelObjectives-list$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/list
+(defn serviceLevelObjectives-delete$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter, view
+  Optional parameters: none
   
-  List the ServiceLevelObjectives for the given Service."
+  Delete the given ServiceLevelObjective."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/monitoring"
-            "https://www.googleapis.com/auth/monitoring.read"]}
+            "https://www.googleapis.com/auth/monitoring"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+parent}/serviceLevelObjectives"
-     #{:parent}
+     "v3/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -293,13 +279,13 @@
   
   Body: 
   
-  {:userLabels {},
-   :displayName string,
+  {:goal number,
    :rollingPeriod string,
-   :goal number,
-   :serviceLevelIndicator {:windowsBased WindowsBasedSli,
+   :displayName string,
+   :userLabels {},
+   :serviceLevelIndicator {:requestBased RequestBasedSli,
                            :basicSli BasicSli,
-                           :requestBased RequestBasedSli},
+                           :windowsBased WindowsBasedSli},
    :name string,
    :calendarPeriod string}
   
@@ -325,28 +311,42 @@
       :as :json}
      auth))))
 
-(defn serviceLevelObjectives-delete$
-  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/delete
+(defn serviceLevelObjectives-create$
+  "https://cloud.google.com/monitoring/api/api/reference/rest/v3/services/serviceLevelObjectives/create
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: serviceLevelObjectiveId
   
-  Delete the given ServiceLevelObjective."
+  Body: 
+  
+  {:goal number,
+   :rollingPeriod string,
+   :displayName string,
+   :userLabels {},
+   :serviceLevelIndicator {:requestBased RequestBasedSli,
+                           :basicSli BasicSli,
+                           :windowsBased WindowsBasedSli},
+   :name string,
+   :calendarPeriod string}
+  
+  Create a ServiceLevelObjective for the given Service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/monitoring"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://monitoring.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
+     "v3/{+parent}/serviceLevelObjectives"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

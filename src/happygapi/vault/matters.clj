@@ -1,6 +1,6 @@
 (ns happygapi.vault.matters
-  "G Suite Vault API: matters.
-  Retention and eDiscovery for Google Workspace. To work with Vault resources, the account must have the [required Vault privileges] (https://support.google.com/vault/answer/2799699) and access to the matter. To access a matter, the account must have created the matter, have the matter shared with them, or have the **View All Matters** privilege. For example, to download an export, an account needs the **Manage Exports** privilege and the matter shared with them. 
+  "Google Vault API: matters.
+  Retention and eDiscovery for Google Workspace. To work with Vault resources, the account must have the [required Vault privileges](https://support.google.com/vault/answer/2799699) and access to the matter. To access a matter, the account must have created the matter, have the matter shared with them, or have the **View All Matters** privilege. For example, to download an export, an account needs the **Manage Exports** privilege and the matter shared with them. 
   See: https://developers.google.com/vaultapi/reference/rest/v1/matters"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -74,13 +74,13 @@
   
   Body: 
   
-  {:description string,
-   :matterId string,
-   :matterPermissions [{:accountId string, :role string}],
+  {:matterId string,
+   :name string,
+   :description string,
    :state string,
-   :name string}
+   :matterPermissions [{:accountId string, :role string}]}
   
-  Creates a new matter with the given name and description. The initial state is open, and the owner is the method caller. Returns the created matter with default view."
+  Creates a matter with the given name and description. The initial state is open, and the owner is the method caller. Returns the created matter with default view."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -110,9 +110,9 @@
   
   Body: 
   
-  {:sendEmails boolean,
+  {:ccMe boolean,
    :matterPermission {:accountId string, :role string},
-   :ccMe boolean}
+   :sendEmails boolean}
   
   Adds an account as a matter collaborator."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
@@ -144,11 +144,11 @@
   
   Body: 
   
-  {:description string,
-   :matterId string,
-   :matterPermissions [{:accountId string, :role string}],
+  {:matterId string,
+   :name string,
+   :description string,
    :state string,
-   :name string}
+   :matterPermissions [{:accountId string, :role string}]}
   
   Updates the specified matter. This updates only the name and description of the matter, identified by matter ID. Changes to any other fields are ignored. Returns the default view of the matter."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
@@ -178,7 +178,7 @@
   
   Optional parameters: none
   
-  Deletes the specified matter. Returns matter with updated state."
+  Deletes the specified matter. Returns the matter with updated state."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -208,7 +208,7 @@
   
   {}
   
-  Reopens the specified matter. Returns matter with updated state."
+  Reopens the specified matter. Returns the matter with updated state."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -240,7 +240,7 @@
   
   {}
   
-  Closes the specified matter. Returns matter with updated state."
+  Closes the specified matter. Returns the matter with updated state."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -272,7 +272,7 @@
   
   {}
   
-  Undeletes the specified matter. Returns matter with updated state."
+  Undeletes the specified matter. Returns the matter with updated state."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -298,9 +298,9 @@
   
   Required parameters: none
   
-  Optional parameters: state, pageToken, pageSize, view
+  Optional parameters: pageSize, pageToken, view, state
   
-  Lists matters the user has access to."
+  Lists matters the requestor has access to."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
@@ -348,7 +348,7 @@
            :driveOptions DriveOptions,
            :dataScope string}}
   
-  Counts the artifacts within the context of a matter and returns a detailed breakdown of metrics."
+  Counts the accounts processed by the specified query."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -369,8 +369,35 @@
       :as :json}
      auth))))
 
-(defn holds-create$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/create
+(defn exports-list$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/list
+  
+  Required parameters: matterId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists details about the exports in the specified matter."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"
+            "https://www.googleapis.com/auth/ediscovery.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:matterId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/exports"
+     #{:matterId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn exports-create$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/create
   
   Required parameters: matterId
   
@@ -378,23 +405,41 @@
   
   Body: 
   
-  {:query {:groupsQuery HeldGroupsQuery,
-           :driveQuery HeldDriveQuery,
-           :voiceQuery HeldVoiceQuery,
-           :mailQuery HeldMailQuery,
-           :hangoutsChatQuery HeldHangoutsChatQuery},
-   :holdId string,
-   :name string,
-   :accounts [{:holdTime string,
-               :accountId string,
-               :firstName string,
-               :lastName string,
-               :email string}],
-   :corpus string,
-   :orgUnit {:holdTime string, :orgUnitId string},
-   :updateTime string}
+  {:name string,
+   :createTime string,
+   :requester {:displayName string, :email string},
+   :status string,
+   :id string,
+   :matterId string,
+   :cloudStorageSink {:files [CloudStorageFile]},
+   :query {:hangoutsChatOptions HangoutsChatOptions,
+           :orgUnitInfo OrgUnitInfo,
+           :timeZone string,
+           :hangoutsChatInfo HangoutsChatInfo,
+           :startTime string,
+           :terms string,
+           :searchMethod string,
+           :method string,
+           :voiceOptions VoiceOptions,
+           :endTime string,
+           :sharedDriveInfo SharedDriveInfo,
+           :accountInfo AccountInfo,
+           :corpus string,
+           :teamDriveInfo TeamDriveInfo,
+           :mailOptions MailOptions,
+           :driveOptions DriveOptions,
+           :dataScope string},
+   :stats {:exportedArtifactCount string,
+           :totalArtifactCount string,
+           :sizeInBytes string},
+   :exportOptions {:groupsOptions GroupsExportOptions,
+                   :region string,
+                   :voiceOptions VoiceExportOptions,
+                   :mailOptions MailExportOptions,
+                   :hangoutsChatOptions HangoutsChatExportOptions,
+                   :driveOptions DriveExportOptions}}
   
-  Creates a hold in the given matter."
+  Creates an export."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -402,7 +447,7 @@
    (http/post
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds"
+     "v1/matters/{matterId}/exports"
      #{:matterId}
      parameters)
     (merge-with
@@ -415,70 +460,24 @@
       :as :json}
      auth))))
 
-(defn holds-update$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/update
+(defn exports-get$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/get
   
-  Required parameters: holdId, matterId
+  Required parameters: exportId, matterId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:query {:groupsQuery HeldGroupsQuery,
-           :driveQuery HeldDriveQuery,
-           :voiceQuery HeldVoiceQuery,
-           :mailQuery HeldMailQuery,
-           :hangoutsChatQuery HeldHangoutsChatQuery},
-   :holdId string,
-   :name string,
-   :accounts [{:holdTime string,
-               :accountId string,
-               :firstName string,
-               :lastName string,
-               :email string}],
-   :corpus string,
-   :orgUnit {:holdTime string, :orgUnitId string},
-   :updateTime string}
-  
-  Updates the OU and/or query parameters of a hold. You cannot add accounts to a hold that covers an OU, nor can you add OUs to a hold that covers individual accounts. Accounts listed in the hold will be ignored."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-get$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/get
-  
-  Required parameters: matterId, holdId
-  
-  Optional parameters: view
-  
-  Gets a hold by ID."
+  Gets an export."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  {:pre [(util/has-keys? parameters #{:exportId :matterId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}"
-     #{:holdId :matterId}
+     "v1/matters/{matterId}/exports/{exportId}"
+     #{:exportId :matterId}
      parameters)
     (merge-with
      merge
@@ -488,229 +487,23 @@
       :as :json}
      auth))))
 
-(defn holds-list$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/list
+(defn exports-delete$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/delete
   
-  Required parameters: matterId
-  
-  Optional parameters: view, pageToken, pageSize
-  
-  Lists holds within a matter. An empty page token in ListHoldsResponse denotes no more holds to list."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"
-            "https://www.googleapis.com/auth/ediscovery.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:matterId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds"
-     #{:matterId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-removeHeldAccounts$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/removeHeldAccounts
-  
-  Required parameters: matterId, holdId
+  Required parameters: exportId, matterId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:accountIds [string]}
-  
-  Removes HeldAccounts from a hold. Returns a list of statuses in the same order as the request. If this request leaves the hold with no held accounts, the hold will not apply to any accounts."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}:removeHeldAccounts"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-delete$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/delete
-  
-  Required parameters: matterId, holdId
-  
-  Optional parameters: none
-  
-  Removes a hold by ID. This will release any HeldAccounts on this Hold."
+  Deletes an export."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  {:pre [(util/has-keys? parameters #{:exportId :matterId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-addHeldAccounts$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/addHeldAccounts
-  
-  Required parameters: matterId, holdId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:accountIds [string], :emails [string]}
-  
-  Adds HeldAccounts to a hold. Returns a list of accounts that have been successfully added. Accounts can only be added to an existing account-based hold."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}:addHeldAccounts"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-accounts-delete$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/delete
-  
-  Required parameters: holdId, accountId, matterId
-  
-  Optional parameters: none
-  
-  Removes a HeldAccount from a hold. If this request leaves the hold with no held accounts, the hold will not apply to any accounts."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId :accountId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}/accounts/{accountId}"
-     #{:holdId :matterId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-accounts-list$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/list
-  
-  Required parameters: matterId, holdId
-  
-  Optional parameters: none
-  
-  Lists HeldAccounts for a hold. This will only list individually specified held accounts. If the hold is on an OU, then use Admin SDK to enumerate its members."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"
-            "https://www.googleapis.com/auth/ediscovery.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}/accounts"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn holds-accounts-create$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/create
-  
-  Required parameters: holdId, matterId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:holdTime string,
-   :accountId string,
-   :firstName string,
-   :lastName string,
-   :email string}
-  
-  Adds a HeldAccount to a hold. Accounts can only be added to a hold that has no held_org_unit set. Attempting to add an account to an OU-based hold will result in an error."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/holds/{holdId}/accounts"
-     #{:holdId :matterId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn savedQueries-delete$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/savedQueries/delete
-  
-  Required parameters: matterId, savedQueryId
-  
-  Optional parameters: none
-  
-  Deletes a saved query by Id."
-  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:matterId :savedQueryId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/savedQueries/{savedQueryId}"
-     #{:matterId :savedQueryId}
+     "v1/matters/{matterId}/exports/{exportId}"
+     #{:exportId :matterId}
      parameters)
     (merge-with
      merge
@@ -727,7 +520,7 @@
   
   Optional parameters: pageToken, pageSize
   
-  Lists saved queries within a matter. An empty page token in ListSavedQueriesResponse denotes no more saved queries to list."
+  Lists the saved queries in a matter."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
@@ -747,6 +540,32 @@
       :as :json}
      auth))))
 
+(defn savedQueries-delete$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/savedQueries/delete
+  
+  Required parameters: savedQueryId, matterId
+  
+  Optional parameters: none
+  
+  Deletes the specified saved query."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:matterId :savedQueryId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/savedQueries/{savedQueryId}"
+     #{:matterId :savedQueryId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn savedQueries-get$
   "https://developers.google.com/vaultapi/reference/rest/v1/matters/savedQueries/get
   
@@ -754,7 +573,7 @@
   
   Optional parameters: none
   
-  Retrieves a saved query by Id."
+  Retrieves the specified saved query."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
@@ -783,10 +602,10 @@
   
   Body: 
   
-  {:createTime string,
+  {:matterId string,
    :displayName string,
-   :matterId string,
    :savedQueryId string,
+   :createTime string,
    :query {:hangoutsChatOptions HangoutsChatOptions,
            :orgUnitInfo OrgUnitInfo,
            :timeZone string,
@@ -826,8 +645,61 @@
       :as :json}
      auth))))
 
-(defn exports-create$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/create
+(defn holds-list$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/list
+  
+  Required parameters: matterId
+  
+  Optional parameters: pageToken, view, pageSize
+  
+  Lists the holds in a matter."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"
+            "https://www.googleapis.com/auth/ediscovery.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:matterId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds"
+     #{:matterId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-delete$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/delete
+  
+  Required parameters: holdId, matterId
+  
+  Optional parameters: none
+  
+  Removes the specified hold and releases the accounts or organizational unit covered by the hold. If the data is not preserved by another hold or retention rule, it might be purged."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds/{holdId}"
+     #{:holdId :matterId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-create$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/create
   
   Required parameters: matterId
   
@@ -835,41 +707,23 @@
   
   Body: 
   
-  {:name string,
-   :createTime string,
-   :requester {:email string, :displayName string},
-   :status string,
-   :id string,
-   :matterId string,
-   :cloudStorageSink {:files [CloudStorageFile]},
-   :query {:hangoutsChatOptions HangoutsChatOptions,
-           :orgUnitInfo OrgUnitInfo,
-           :timeZone string,
-           :hangoutsChatInfo HangoutsChatInfo,
-           :startTime string,
-           :terms string,
-           :searchMethod string,
-           :method string,
-           :voiceOptions VoiceOptions,
-           :endTime string,
-           :sharedDriveInfo SharedDriveInfo,
-           :accountInfo AccountInfo,
-           :corpus string,
-           :teamDriveInfo TeamDriveInfo,
-           :mailOptions MailOptions,
-           :driveOptions DriveOptions,
-           :dataScope string},
-   :stats {:sizeInBytes string,
-           :totalArtifactCount string,
-           :exportedArtifactCount string},
-   :exportOptions {:driveOptions DriveExportOptions,
-                   :region string,
-                   :groupsOptions GroupsExportOptions,
-                   :hangoutsChatOptions HangoutsChatExportOptions,
-                   :voiceOptions VoiceExportOptions,
-                   :mailOptions MailExportOptions}}
+  {:accounts [{:lastName string,
+               :accountId string,
+               :firstName string,
+               :holdTime string,
+               :email string}],
+   :query {:hangoutsChatQuery HeldHangoutsChatQuery,
+           :driveQuery HeldDriveQuery,
+           :groupsQuery HeldGroupsQuery,
+           :voiceQuery HeldVoiceQuery,
+           :mailQuery HeldMailQuery},
+   :holdId string,
+   :orgUnit {:orgUnitId string, :holdTime string},
+   :corpus string,
+   :name string,
+   :updateTime string}
   
-  Creates an Export."
+  Creates a hold in the specified matter."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:matterId})]}
@@ -877,7 +731,7 @@
    (http/post
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/exports"
+     "v1/matters/{matterId}/holds"
      #{:matterId}
      parameters)
     (merge-with
@@ -890,24 +744,102 @@
       :as :json}
      auth))))
 
-(defn exports-list$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/list
+(defn holds-removeHeldAccounts$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/removeHeldAccounts
   
-  Required parameters: matterId
+  Required parameters: holdId, matterId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: none
   
-  Lists Exports."
+  Body: 
+  
+  {:accountIds [string]}
+  
+  Removes the specified accounts from a hold. Returns a list of statuses in the same order as the request."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds/{holdId}:removeHeldAccounts"
+     #{:holdId :matterId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-update$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/update
+  
+  Required parameters: holdId, matterId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:accounts [{:lastName string,
+               :accountId string,
+               :firstName string,
+               :holdTime string,
+               :email string}],
+   :query {:hangoutsChatQuery HeldHangoutsChatQuery,
+           :driveQuery HeldDriveQuery,
+           :groupsQuery HeldGroupsQuery,
+           :voiceQuery HeldVoiceQuery,
+           :mailQuery HeldMailQuery},
+   :holdId string,
+   :orgUnit {:orgUnitId string, :holdTime string},
+   :corpus string,
+   :name string,
+   :updateTime string}
+  
+  Updates the scope (organizational unit or accounts) and query parameters of a hold. You cannot add accounts to a hold that covers an organizational unit, nor can you add organizational units to a hold that covers individual accounts. If you try, the unsupported values are ignored."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds/{holdId}"
+     #{:holdId :matterId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-get$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/get
+  
+  Required parameters: matterId, holdId
+  
+  Optional parameters: view
+  
+  Gets the specified hold."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:matterId})]}
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/exports"
-     #{:matterId}
+     "v1/matters/{matterId}/holds/{holdId}"
+     #{:holdId :matterId}
      parameters)
     (merge-with
      merge
@@ -917,23 +849,55 @@
       :as :json}
      auth))))
 
-(defn exports-delete$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/delete
+(defn holds-addHeldAccounts$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/addHeldAccounts
   
-  Required parameters: matterId, exportId
+  Required parameters: holdId, matterId
   
   Optional parameters: none
   
-  Deletes an Export."
+  Body: 
+  
+  {:emails [string], :accountIds [string]}
+  
+  Adds accounts to a hold. Returns a list of accounts that have been successfully added. Accounts can be added only to an existing account-based hold."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds/{holdId}:addHeldAccounts"
+     #{:holdId :matterId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-accounts-delete$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/delete
+  
+  Required parameters: holdId, accountId, matterId
+  
+  Optional parameters: none
+  
+  Removes an account from a hold."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:exportId :matterId})]}
+  {:pre [(util/has-keys? parameters #{:holdId :matterId :accountId})]}
   (util/get-response
    (http/delete
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/exports/{exportId}"
-     #{:exportId :matterId}
+     "v1/matters/{matterId}/holds/{holdId}/accounts/{accountId}"
+     #{:holdId :matterId :accountId}
      parameters)
     (merge-with
      merge
@@ -943,28 +907,64 @@
       :as :json}
      auth))))
 
-(defn exports-get$
-  "https://developers.google.com/vaultapi/reference/rest/v1/matters/exports/get
+(defn holds-accounts-list$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/list
   
-  Required parameters: matterId, exportId
+  Required parameters: matterId, holdId
   
   Optional parameters: none
   
-  Gets an Export."
+  Lists the accounts covered by a hold. This can list only individually-specified accounts covered by the hold. If the hold covers an organizational unit, use the [Admin SDK](https://developers.google.com/admin-sdk/). to list the members of the organizational unit on hold."
   {:scopes ["https://www.googleapis.com/auth/ediscovery"
             "https://www.googleapis.com/auth/ediscovery.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:exportId :matterId})]}
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://vault.googleapis.com/"
-     "v1/matters/{matterId}/exports/{exportId}"
-     #{:exportId :matterId}
+     "v1/matters/{matterId}/holds/{holdId}/accounts"
+     #{:holdId :matterId}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn holds-accounts-create$
+  "https://developers.google.com/vaultapi/reference/rest/v1/matters/holds/accounts/create
+  
+  Required parameters: holdId, matterId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:lastName string,
+   :accountId string,
+   :firstName string,
+   :holdTime string,
+   :email string}
+  
+  Adds an account to a hold. Accounts can be added only to a hold that does not have an organizational unit set. If you try to add an account to an organizational unit-based hold, an error is returned."
+  {:scopes ["https://www.googleapis.com/auth/ediscovery"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:holdId :matterId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://vault.googleapis.com/"
+     "v1/matters/{matterId}/holds/{holdId}/accounts"
+     #{:holdId :matterId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

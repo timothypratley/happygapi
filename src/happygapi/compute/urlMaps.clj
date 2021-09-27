@@ -9,13 +9,13 @@
 (defn invalidateCache$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/invalidateCache
   
-  Required parameters: project, urlMap
+  Required parameters: urlMap, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:path string, :host string}
+  {:host string, :path string}
   
   Initiates a cache invalidation operation, invalidating the specified path, scoped to the specified UrlMap. For more information, see [Invalidating cached content](/cdn/docs/invalidating-cached-content)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -42,7 +42,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/get
   
-  Required parameters: urlMap, project
+  Required parameters: project, urlMap
   
   Optional parameters: none
   
@@ -77,49 +77,49 @@
   Body: 
   
   {:description string,
-   :pathMatchers [{:name string,
+   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
+                   :routeRules [HttpRouteRule],
+                   :pathRules [PathRule],
+                   :description string,
+                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
-                   :description string,
-                   :headerAction HttpHeaderAction,
-                   :defaultUrlRedirect HttpRedirectAction,
-                   :pathRules [PathRule],
-                   :routeRules [HttpRouteRule]}],
+                   :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:path string,
-            :host string,
-            :expectedOutputUrl string,
+   :tests [{:service string,
             :expectedRedirectResponseCode integer,
-            :headers [UrlMapTestHeader],
+            :expectedOutputUrl string,
+            :host string,
             :description string,
-            :service string}],
+            :headers [UrlMapTestHeader],
+            :path string}],
    :name string,
-   :defaultUrlRedirect {:prefixRedirect string,
-                        :httpsRedirect boolean,
-                        :stripQuery boolean,
-                        :redirectResponseCode string,
+   :defaultUrlRedirect {:redirectResponseCode string,
+                        :prefixRedirect string,
                         :hostRedirect string,
-                        :pathRedirect string},
+                        :pathRedirect string,
+                        :stripQuery boolean,
+                        :httpsRedirect boolean},
    :selfLink string,
    :headerAction {:responseHeadersToRemove [string],
-                  :responseHeadersToAdd [HttpHeaderOption],
+                  :requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
-                  :requestHeadersToRemove [string]},
+                  :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:timeout Duration,
-                        :urlRewrite UrlRewrite,
-                        :retryPolicy HttpRetryPolicy,
-                        :faultInjectionPolicy HttpFaultInjection,
-                        :weightedBackendServices [WeightedBackendService],
+   :defaultRouteAction {:urlRewrite UrlRewrite,
+                        :corsPolicy CorsPolicy,
+                        :timeout Duration,
                         :maxStreamDuration Duration,
+                        :weightedBackendServices [WeightedBackendService],
                         :requestMirrorPolicy RequestMirrorPolicy,
-                        :corsPolicy CorsPolicy},
+                        :faultInjectionPolicy HttpFaultInjection,
+                        :retryPolicy HttpRetryPolicy},
    :defaultService string,
    :id string,
    :kind string,
    :hostRules [{:pathMatcher string,
-                :hosts [string],
-                :description string}],
+                :description string,
+                :hosts [string]}],
    :fingerprint string}
   
   Creates a UrlMap resource in the specified project using the data included in the request."
@@ -147,7 +147,7 @@
 (defn validate$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/validate
   
-  Required parameters: urlMap, project
+  Required parameters: project, urlMap
   
   Optional parameters: none
   
@@ -194,56 +194,56 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/patch
   
-  Required parameters: project, urlMap
+  Required parameters: urlMap, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :pathMatchers [{:name string,
+   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
+                   :routeRules [HttpRouteRule],
+                   :pathRules [PathRule],
+                   :description string,
+                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
-                   :description string,
-                   :headerAction HttpHeaderAction,
-                   :defaultUrlRedirect HttpRedirectAction,
-                   :pathRules [PathRule],
-                   :routeRules [HttpRouteRule]}],
+                   :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:path string,
-            :host string,
-            :expectedOutputUrl string,
+   :tests [{:service string,
             :expectedRedirectResponseCode integer,
-            :headers [UrlMapTestHeader],
+            :expectedOutputUrl string,
+            :host string,
             :description string,
-            :service string}],
+            :headers [UrlMapTestHeader],
+            :path string}],
    :name string,
-   :defaultUrlRedirect {:prefixRedirect string,
-                        :httpsRedirect boolean,
-                        :stripQuery boolean,
-                        :redirectResponseCode string,
+   :defaultUrlRedirect {:redirectResponseCode string,
+                        :prefixRedirect string,
                         :hostRedirect string,
-                        :pathRedirect string},
+                        :pathRedirect string,
+                        :stripQuery boolean,
+                        :httpsRedirect boolean},
    :selfLink string,
    :headerAction {:responseHeadersToRemove [string],
-                  :responseHeadersToAdd [HttpHeaderOption],
+                  :requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
-                  :requestHeadersToRemove [string]},
+                  :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:timeout Duration,
-                        :urlRewrite UrlRewrite,
-                        :retryPolicy HttpRetryPolicy,
-                        :faultInjectionPolicy HttpFaultInjection,
-                        :weightedBackendServices [WeightedBackendService],
+   :defaultRouteAction {:urlRewrite UrlRewrite,
+                        :corsPolicy CorsPolicy,
+                        :timeout Duration,
                         :maxStreamDuration Duration,
+                        :weightedBackendServices [WeightedBackendService],
                         :requestMirrorPolicy RequestMirrorPolicy,
-                        :corsPolicy CorsPolicy},
+                        :faultInjectionPolicy HttpFaultInjection,
+                        :retryPolicy HttpRetryPolicy},
    :defaultService string,
    :id string,
    :kind string,
    :hostRules [{:pathMatcher string,
-                :hosts [string],
-                :description string}],
+                :description string,
+                :hosts [string]}],
    :fingerprint string}
   
   Patches the specified UrlMap resource with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
@@ -273,7 +273,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, filter, orderBy, returnPartialSuccess, maxResults, includeAllScopes
+  Optional parameters: includeAllScopes, filter, returnPartialSuccess, maxResults, orderBy, pageToken
   
   Retrieves the list of all UrlMap resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -306,49 +306,49 @@
   Body: 
   
   {:description string,
-   :pathMatchers [{:name string,
+   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
+                   :routeRules [HttpRouteRule],
+                   :pathRules [PathRule],
+                   :description string,
+                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
-                   :description string,
-                   :headerAction HttpHeaderAction,
-                   :defaultUrlRedirect HttpRedirectAction,
-                   :pathRules [PathRule],
-                   :routeRules [HttpRouteRule]}],
+                   :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:path string,
-            :host string,
-            :expectedOutputUrl string,
+   :tests [{:service string,
             :expectedRedirectResponseCode integer,
-            :headers [UrlMapTestHeader],
+            :expectedOutputUrl string,
+            :host string,
             :description string,
-            :service string}],
+            :headers [UrlMapTestHeader],
+            :path string}],
    :name string,
-   :defaultUrlRedirect {:prefixRedirect string,
-                        :httpsRedirect boolean,
-                        :stripQuery boolean,
-                        :redirectResponseCode string,
+   :defaultUrlRedirect {:redirectResponseCode string,
+                        :prefixRedirect string,
                         :hostRedirect string,
-                        :pathRedirect string},
+                        :pathRedirect string,
+                        :stripQuery boolean,
+                        :httpsRedirect boolean},
    :selfLink string,
    :headerAction {:responseHeadersToRemove [string],
-                  :responseHeadersToAdd [HttpHeaderOption],
+                  :requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
-                  :requestHeadersToRemove [string]},
+                  :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:timeout Duration,
-                        :urlRewrite UrlRewrite,
-                        :retryPolicy HttpRetryPolicy,
-                        :faultInjectionPolicy HttpFaultInjection,
-                        :weightedBackendServices [WeightedBackendService],
+   :defaultRouteAction {:urlRewrite UrlRewrite,
+                        :corsPolicy CorsPolicy,
+                        :timeout Duration,
                         :maxStreamDuration Duration,
+                        :weightedBackendServices [WeightedBackendService],
                         :requestMirrorPolicy RequestMirrorPolicy,
-                        :corsPolicy CorsPolicy},
+                        :faultInjectionPolicy HttpFaultInjection,
+                        :retryPolicy HttpRetryPolicy},
    :defaultService string,
    :id string,
    :kind string,
    :hostRules [{:pathMatcher string,
-                :hosts [string],
-                :description string}],
+                :description string,
+                :hosts [string]}],
    :fingerprint string}
   
   Updates the specified UrlMap resource with the data included in the request."
@@ -376,7 +376,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/delete
   
-  Required parameters: urlMap, project
+  Required parameters: project, urlMap
   
   Optional parameters: requestId
   
@@ -405,7 +405,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, filter, orderBy, maxResults, pageToken
+  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
   
   Retrieves the list of UrlMap resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

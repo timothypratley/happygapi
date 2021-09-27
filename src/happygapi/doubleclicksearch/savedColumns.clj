@@ -9,7 +9,7 @@
 (defn list$
   "https://developers.google.com/search-adsapi/reference/rest/v2/savedColumns/list
   
-  Required parameters: advertiserId, agencyId
+  Required parameters: agencyId, advertiserId
   
   Optional parameters: none
   

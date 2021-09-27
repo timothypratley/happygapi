@@ -1,13 +1,13 @@
 (ns happygapi.admin.userUsageReport
   "Admin SDK API: userUsageReport.
   Admin SDK lets administrators of enterprise domains to view and manage resources like user, groups etc. It also provides audit and usage reports of domain.
-  See: http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/userUsageReport"
+  See: https://developers.google.com/admin-sdk/api/reference/rest/reports_v1/userUsageReport"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "http://developers.google.com/admin-sdk/api/reference/rest/reports_v1/userUsageReport/get
+  "https://developers.google.com/admin-sdk/api/reference/rest/reports_v1/userUsageReport/get
   
   Required parameters: date, userKey
   

@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:partition string, :cursor {:offset string}}
+  {:cursor {:offset string}, :partition string}
   
   Updates the committed cursor."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

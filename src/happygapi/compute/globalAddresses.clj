@@ -9,7 +9,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/delete
   
-  Required parameters: address, project
+  Required parameters: project, address
   
   Optional parameters: requestId
   
@@ -20,34 +20,6 @@
   {:pre [(util/has-keys? parameters #{:address :project})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/addresses/{address}"
-     #{:address :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/get
-  
-  Required parameters: project, address
-  
-  Optional parameters: none
-  
-  Returns the specified address resource. Gets a list of available addresses by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:address :project})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/addresses/{address}"
@@ -115,7 +87,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, maxResults, filter, pageToken
+  Optional parameters: orderBy, filter, returnPartialSuccess, maxResults, pageToken
   
   Retrieves a list of global addresses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -129,6 +101,34 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/addresses"
      #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalAddresses/get
+  
+  Required parameters: address, project
+  
+  Optional parameters: none
+  
+  Returns the specified address resource. Gets a list of available addresses by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:address :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/addresses/{address}"
+     #{:address :project}
      parameters)
     (merge-with
      merge

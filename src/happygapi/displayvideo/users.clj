@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, filter, orderBy, pageSize
-  
-  Lists users that are accessible to the current user. If two users have user roles on the same partner or advertiser, they can access each other."
-  {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/users"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/display-video/api/reference/rest/v1/users/patch
   
@@ -41,14 +15,14 @@
   
   Body: 
   
-  {:assignedUserRoles [{:userRole string,
-                        :advertiserId string,
-                        :partnerId string,
-                        :assignedUserRoleId string}],
-   :displayName string,
+  {:assignedUserRoles [{:partnerId string,
+                        :userRole string,
+                        :assignedUserRoleId string,
+                        :advertiserId string}],
+   :userId string,
    :name string,
    :email string,
-   :userId string}
+   :displayName string}
   
   Updates an existing user. Returns the updated user if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
@@ -132,14 +106,14 @@
   
   Body: 
   
-  {:assignedUserRoles [{:userRole string,
-                        :advertiserId string,
-                        :partnerId string,
-                        :assignedUserRoleId string}],
-   :displayName string,
+  {:assignedUserRoles [{:partnerId string,
+                        :userRole string,
+                        :assignedUserRoleId string,
+                        :advertiserId string}],
+   :userId string,
    :name string,
    :email string,
-   :userId string}
+   :displayName string}
   
   Creates a new user. Returns the newly created user if successful."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
@@ -162,6 +136,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/display-video/api/reference/rest/v1/users/list
+  
+  Required parameters: none
+  
+  Optional parameters: orderBy, pageSize, filter, pageToken
+  
+  Lists users that are accessible to the current user. If two users have user roles on the same partner or advertiser, they can access each other."
+  {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/users"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn bulkEditAssignedUserRoles$
   "https://developers.google.com/display-video/api/reference/rest/v1/users/bulkEditAssignedUserRoles
   
@@ -171,11 +171,11 @@
   
   Body: 
   
-  {:createdAssignedUserRoles [{:userRole string,
-                               :advertiserId string,
-                               :partnerId string,
-                               :assignedUserRoleId string}],
-   :deletedAssignedUserRoles [string]}
+  {:deletedAssignedUserRoles [string],
+   :createdAssignedUserRoles [{:partnerId string,
+                               :userRole string,
+                               :assignedUserRoleId string,
+                               :advertiserId string}]}
   
   Bulk edits user roles for a user. The operation will delete the assigned user roles provided in BulkEditAssignedUserRolesRequest.deletedAssignedUserRoles and then assign the user roles provided in BulkEditAssignedUserRolesRequest.createdAssignedUserRoles."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}

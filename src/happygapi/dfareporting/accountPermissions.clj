@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountPermissions/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   

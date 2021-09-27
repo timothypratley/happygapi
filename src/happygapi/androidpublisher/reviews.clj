@@ -6,12 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/get
+  
+  Required parameters: reviewId, packageName
+  
+  Optional parameters: translationLanguage
+  
+  Gets a single review."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :reviewId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/reviews/{reviewId}"
+     #{:packageName :reviewId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/list
   
   Required parameters: packageName
   
-  Optional parameters: token, startIndex, maxResults, translationLanguage
+  Optional parameters: translationLanguage, token, startIndex, maxResults
   
   Lists all reviews."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -59,32 +85,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/reviews/get
-  
-  Required parameters: reviewId, packageName
-  
-  Optional parameters: translationLanguage
-  
-  Gets a single review."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :reviewId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/reviews/{reviewId}"
-     #{:packageName :reviewId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

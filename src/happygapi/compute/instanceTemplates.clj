@@ -6,65 +6,28 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/getIamPolicy
+(defn testIamPermissions$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/testIamPermissions
   
   Required parameters: resource, project
-  
-  Optional parameters: optionsRequestedPolicyVersion
-  
-  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/instanceTemplates/{resource}/getIamPolicy"
-     #{:project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/setIamPolicy
-  
-  Required parameters: project, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:policy {:rules [Rule],
-            :bindings [Binding],
-            :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
-            :etag string},
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}],
-   :etag string}
+  {:permissions [string]}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy."
+  Returns permissions that a caller has on the specified resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/instanceTemplates/{resource}/setIamPolicy"
+     "projects/{project}/global/instanceTemplates/{resource}/testIamPermissions"
      #{:project :resource}
      parameters)
     (merge-with
@@ -80,7 +43,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/get
   
-  Required parameters: instanceTemplate, project
+  Required parameters: project, instanceTemplate
   
   Optional parameters: none
   
@@ -105,39 +68,12 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/delete
-  
-  Required parameters: project, instanceTemplate
-  
-  Optional parameters: requestId
-  
-  Deletes the specified instance template. Deleting an instance template is permanent and cannot be undone. It is not possible to delete templates that are already in use by a managed instance group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :instanceTemplate})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/instanceTemplates/{instanceTemplate}"
-     #{:project :instanceTemplate}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/list
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, pageToken, filter, maxResults, orderBy
+  Optional parameters: maxResults, orderBy, returnPartialSuccess, pageToken, filter
   
   Retrieves a list of instance templates that are contained within the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -218,8 +154,63 @@
       :as :json}
      auth))))
 
-(defn testIamPermissions$
-  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/testIamPermissions
+(defn getIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/getIamPolicy
+  
+  Required parameters: project, resource
+  
+  Optional parameters: optionsRequestedPolicyVersion
+  
+  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/instanceTemplates/{resource}/getIamPolicy"
+     #{:project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/delete
+  
+  Required parameters: instanceTemplate, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified instance template. Deleting an instance template is permanent and cannot be undone. It is not possible to delete templates that are already in use by a managed instance group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :instanceTemplate})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/instanceTemplates/{instanceTemplate}"
+     #{:project :instanceTemplate}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instanceTemplates/setIamPolicy
   
   Required parameters: project, resource
   
@@ -227,19 +218,28 @@
   
   Body: 
   
-  {:permissions [string]}
+  {:policy {:etag string,
+            :auditConfigs [AuditConfig],
+            :iamOwned boolean,
+            :version integer,
+            :rules [Rule],
+            :bindings [Binding]},
+   :bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :etag string}
   
-  Returns permissions that a caller has on the specified resource."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
+            "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/instanceTemplates/{resource}/testIamPermissions"
+     "projects/{project}/global/instanceTemplates/{resource}/setIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with

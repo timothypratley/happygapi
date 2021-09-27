@@ -92,7 +92,7 @@
 (defn getEffectiveFirewalls$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/getEffectiveFirewalls
   
-  Required parameters: network, project
+  Required parameters: project, network
   
   Optional parameters: none
   
@@ -203,7 +203,7 @@
 (defn removePeering$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/removePeering
   
-  Required parameters: network, project
+  Required parameters: project, network
   
   Optional parameters: requestId
   
@@ -236,7 +236,7 @@
 (defn addPeering$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/addPeering
   
-  Required parameters: network, project
+  Required parameters: project, network
   
   Optional parameters: requestId
   
@@ -244,7 +244,6 @@
   
   {:name string,
    :autoCreateRoutes boolean,
-   :peerNetwork string,
    :networkPeering {:exportCustomRoutes boolean,
                     :peerMtu integer,
                     :importSubnetRoutesWithPublicIp boolean,
@@ -255,7 +254,8 @@
                     :autoCreateRoutes boolean,
                     :network string,
                     :exportSubnetRoutesWithPublicIp boolean,
-                    :importCustomRoutes boolean}}
+                    :importCustomRoutes boolean},
+   :peerNetwork string}
   
   Adds a peering to the specified network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -311,7 +311,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, filter, returnPartialSuccess, maxResults, orderBy
+  Optional parameters: pageToken, orderBy, returnPartialSuccess, maxResults, filter
   
   Retrieves the list of networks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -337,7 +337,7 @@
 (defn switchToCustomMode$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/switchToCustomMode
   
-  Required parameters: network, project
+  Required parameters: project, network
   
   Optional parameters: requestId
   
@@ -382,7 +382,7 @@
                     :exportSubnetRoutesWithPublicIp boolean,
                     :importCustomRoutes boolean}}
   
-  Updates the specified network peering with the data included in the request Only the following fields can be modified: NetworkPeering.export_custom_routes, and NetworkPeering.import_custom_routes"
+  Updates the specified network peering with the data included in the request. You can only modify the NetworkPeering.export_custom_routes field and the NetworkPeering.import_custom_routes field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]

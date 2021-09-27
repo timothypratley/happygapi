@@ -34,6 +34,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: names, advertiserId, objectId, objectType
+  
+  Retrieves a list of dynamic targeting keys."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/dynamicTargetingKeys"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/insert
   
@@ -43,7 +69,7 @@
   
   Body: 
   
-  {:objectId string, :kind string, :name string, :objectType string}
+  {:name string, :objectId string, :kind string, :objectType string}
   
   Inserts a new dynamic targeting key. Keys must be created at the advertiser level before being assigned to the advertiser's ads, creatives, or placements. There is a maximum of 1000 keys per advertiser, out of which a maximum of 20 keys can be assigned per ad, creative, or placement."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -61,32 +87,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dynamicTargetingKeys/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: objectType, advertiserId, objectId, names
-  
-  Retrieves a list of dynamic targeting keys."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/dynamicTargetingKeys"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

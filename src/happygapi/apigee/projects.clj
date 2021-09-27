@@ -15,8 +15,8 @@
   
   Body: 
   
-  {:authorizedNetwork string,
-   :runtimeLocation string,
+  {:runtimeLocation string,
+   :authorizedNetwork string,
    :analyticsRegion string}
   
   Provisions a new Apigee organization with a functioning runtime. This is the standard way to create trial organizations for a free Apigee trial."

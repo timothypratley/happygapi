@@ -32,8 +32,8 @@
       :as :json}
      auth))))
 
-(defn devices-move$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
+(defn devices-updateSigned$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/updateSigned
   
   Required parameters: name
   
@@ -41,17 +41,17 @@
   
   Body: 
   
-  {:destination string}
+  {:installerId string, :encodedDevice string}
   
-  Moves a device under another node or customer."
+  Updates a signed device."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}:move"
+     "v1alpha1/{+name}:updateSigned"
      #{:name}
      parameters)
     (merge-with
@@ -89,15 +89,17 @@
    :displayName string,
    :name string,
    :state string,
-   :deviceMetadata {},
-   :grants [{:frequencyRange SasPortalFrequencyRange,
-             :maxEirp number,
+   :deviceMetadata {:commonChannelGroup string,
+                    :interferenceCoordinationGroup string,
+                    :antennaModel string},
+   :grants [{:grantId string,
              :moveList [SasPortalDpaMoveList],
-             :grantId string,
-             :expireTime string,
              :channelType string,
+             :expireTime string,
+             :frequencyRange SasPortalFrequencyRange,
              :state string,
-             :suspensionReason [string]}],
+             :suspensionReason [string],
+             :maxEirp number}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -108,8 +110,8 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
-   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
-                      :score number}],
+   :currentChannels [{:score number,
+                      :frequencyRange SasPortalFrequencyRange}],
    :fccId string}
   
   Updates a device."
@@ -201,6 +203,38 @@
       :as :json}
      auth))))
 
+(defn devices-move$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:destination string}
+  
+  Moves a device under another node or customer."
+  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}:move"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn devices-get$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/get
   
@@ -222,38 +256,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-updateSigned$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/updateSigned
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:encodedDevice string, :installerId string}
-  
-  Updates a signed device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}:updateSigned"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

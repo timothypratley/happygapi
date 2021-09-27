@@ -11,7 +11,7 @@
   
   Required parameters: firewallPolicy
   
-  Optional parameters: sourceFirewallPolicy, requestId
+  Optional parameters: requestId, sourceFirewallPolicy
   
   Copies rules to the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -38,7 +38,7 @@
   
   Required parameters: firewallPolicy
   
-  Optional parameters: requestId, priority
+  Optional parameters: priority, requestId
   
   Deletes a rule of the specified priority."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -97,17 +97,17 @@
   
   Body: 
   
-  {:bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}],
-   :etag string,
-   :policy {:rules [Rule],
-            :bindings [Binding],
+  {:policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string}}
+            :rules [Rule],
+            :bindings [Binding]},
+   :bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -147,11 +147,11 @@
    :displayName string,
    :name string,
    :selfLink string,
-   :associations [{:attachmentTarget string,
-                   :shortName string,
-                   :firewallPolicyId string,
+   :associations [{:displayName string,
+                   :attachmentTarget string,
                    :name string,
-                   :displayName string}],
+                   :firewallPolicyId string,
+                   :shortName string}],
    :rules [{:description string,
             :ruleTupleCount integer,
             :disabled boolean,
@@ -207,11 +207,11 @@
    :displayName string,
    :name string,
    :selfLink string,
-   :associations [{:attachmentTarget string,
-                   :shortName string,
-                   :firewallPolicyId string,
+   :associations [{:displayName string,
+                   :attachmentTarget string,
                    :name string,
-                   :displayName string}],
+                   :firewallPolicyId string,
+                   :shortName string}],
    :rules [{:description string,
             :ruleTupleCount integer,
             :disabled boolean,
@@ -290,7 +290,7 @@
   
   Required parameters: firewallPolicy
   
-  Optional parameters: requestId, parentId
+  Optional parameters: parentId, requestId
   
   Moves the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -413,9 +413,9 @@
    :targetServiceAccounts [string],
    :action string,
    :direction string,
-   :match {:destIpRanges [string],
-           :srcIpRanges [string],
-           :layer4Configs [FirewallPolicyRuleMatcherLayer4Config]}}
+   :match {:layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+           :destIpRanges [string],
+           :srcIpRanges [string]}}
   
   Patches a rule of the specified priority."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -458,9 +458,9 @@
    :targetServiceAccounts [string],
    :action string,
    :direction string,
-   :match {:destIpRanges [string],
-           :srcIpRanges [string],
-           :layer4Configs [FirewallPolicyRuleMatcherLayer4Config]}}
+   :match {:layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+           :destIpRanges [string],
+           :srcIpRanges [string]}}
   
   Inserts a rule into a firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -489,7 +489,7 @@
   
   Required parameters: none
   
-  Optional parameters: maxResults, parentId, filter, orderBy, returnPartialSuccess, pageToken
+  Optional parameters: filter, orderBy, returnPartialSuccess, parentId, pageToken, maxResults
   
   Lists all the policies that have been configured for the specified folder or organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -549,11 +549,11 @@
   
   Body: 
   
-  {:attachmentTarget string,
-   :shortName string,
-   :firewallPolicyId string,
+  {:displayName string,
+   :attachmentTarget string,
    :name string,
-   :displayName string}
+   :firewallPolicyId string,
+   :shortName string}
   
   Inserts an association for the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

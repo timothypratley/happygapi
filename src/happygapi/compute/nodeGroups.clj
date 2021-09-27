@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/get
   
-  Required parameters: zone, project, nodeGroup
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: none
   
@@ -43,17 +43,17 @@
   
   Body: 
   
-  {:etag string,
-   :policy {:rules [Rule],
-            :bindings [Binding],
+  {:bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string},
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}]}
+            :rules [Rule],
+            :bindings [Binding]},
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -80,7 +80,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/insert
   
-  Required parameters: project, zone, initialNodeCount
+  Required parameters: zone, project, initialNodeCount
   
   Optional parameters: requestId
   
@@ -99,8 +99,8 @@
    :id string,
    :kind string,
    :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
-   :autoscalingPolicy {:maxNodes integer,
-                       :mode string,
+   :autoscalingPolicy {:mode string,
+                       :maxNodes integer,
                        :minNodes integer},
    :fingerprint string}
   
@@ -131,7 +131,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/patch
   
-  Required parameters: nodeGroup, zone, project
+  Required parameters: project, zone, nodeGroup
   
   Optional parameters: requestId
   
@@ -150,8 +150,8 @@
    :id string,
    :kind string,
    :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
-   :autoscalingPolicy {:maxNodes integer,
-                       :mode string,
+   :autoscalingPolicy {:mode string,
+                       :maxNodes integer,
                        :minNodes integer},
    :fingerprint string}
   
@@ -216,7 +216,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, pageToken, orderBy, includeAllScopes, filter, returnPartialSuccess
+  Optional parameters: orderBy, returnPartialSuccess, pageToken, maxResults, filter, includeAllScopes
   
   Retrieves an aggregated list of node groups. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -242,7 +242,7 @@
 (defn addNodes$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/addNodes
   
-  Required parameters: nodeGroup, zone, project
+  Required parameters: project, zone, nodeGroup
   
   Optional parameters: requestId
   
@@ -275,7 +275,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/delete
   
-  Required parameters: project, zone, nodeGroup
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: requestId
   
@@ -335,7 +335,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/getIamPolicy
   
-  Required parameters: zone, resource, project
+  Required parameters: project, zone, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -363,9 +363,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/list
   
-  Required parameters: project, zone
+  Required parameters: zone, project
   
-  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
+  Optional parameters: returnPartialSuccess, maxResults, pageToken, orderBy, filter
   
   Retrieves a list of node groups available to the specified project. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -391,7 +391,7 @@
 (defn setNodeTemplate$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/setNodeTemplate
   
-  Required parameters: nodeGroup, project, zone
+  Required parameters: nodeGroup, zone, project
   
   Optional parameters: requestId
   
@@ -424,9 +424,9 @@
 (defn listNodes$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/listNodes
   
-  Required parameters: zone, project, nodeGroup
+  Required parameters: project, zone, nodeGroup
   
-  Optional parameters: orderBy, pageToken, maxResults, returnPartialSuccess, filter
+  Optional parameters: returnPartialSuccess, orderBy, maxResults, pageToken, filter
   
   Lists nodes in the node group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

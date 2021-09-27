@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, languageCode, filter, pageSize
+  Optional parameters: pageToken, pageSize, languageCode, filter
   
   Returns the list of available place action types for a location or country."
   {:scopes nil}

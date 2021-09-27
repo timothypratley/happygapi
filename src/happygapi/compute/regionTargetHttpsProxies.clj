@@ -6,10 +6,39 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/delete
+  
+  Required parameters: targetHttpsProxy, region, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified TargetHttpsProxy resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetHttpsProxy :region :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetHttpsProxies/{targetHttpsProxy}"
+     #{:targetHttpsProxy :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/insert
   
-  Required parameters: project, region
+  Required parameters: region, project
   
   Optional parameters: requestId
   
@@ -53,10 +82,38 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: maxResults, pageToken, orderBy, filter, returnPartialSuccess
+  
+  Retrieves the list of TargetHttpsProxy resources available to the specified project in the specified region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetHttpsProxies"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setSslCertificates$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/setSslCertificates
   
-  Required parameters: region, targetHttpsProxy, project
+  Required parameters: region, project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -88,10 +145,40 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/get
+  
+  Required parameters: targetHttpsProxy, region, project
+  
+  Optional parameters: none
+  
+  Returns the specified TargetHttpsProxy resource in the specified region. Gets a list of available target HTTP proxies by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetHttpsProxy :region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetHttpsProxies/{targetHttpsProxy}"
+     #{:targetHttpsProxy :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setUrlMap$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/setUrlMap
   
-  Required parameters: project, region, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project, region
   
   Optional parameters: requestId
   
@@ -118,93 +205,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/delete
-  
-  Required parameters: project, targetHttpsProxy, region
-  
-  Optional parameters: requestId
-  
-  Deletes the specified TargetHttpsProxy resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetHttpsProxy :region :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetHttpsProxies/{targetHttpsProxy}"
-     #{:targetHttpsProxy :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/list
-  
-  Required parameters: project, region
-  
-  Optional parameters: filter, returnPartialSuccess, maxResults, pageToken, orderBy
-  
-  Retrieves the list of TargetHttpsProxy resources available to the specified project in the specified region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetHttpsProxies"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionTargetHttpsProxies/get
-  
-  Required parameters: targetHttpsProxy, region, project
-  
-  Optional parameters: none
-  
-  Returns the specified TargetHttpsProxy resource in the specified region. Gets a list of available target HTTP proxies by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetHttpsProxy :region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetHttpsProxies/{targetHttpsProxy}"
-     #{:targetHttpsProxy :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

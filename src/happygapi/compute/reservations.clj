@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/get
   
-  Required parameters: project, reservation, zone
+  Required parameters: zone, project, reservation
   
   Optional parameters: none
   
@@ -37,23 +37,23 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/setIamPolicy
   
-  Required parameters: resource, project, zone
+  Required parameters: zone, resource, project
   
   Optional parameters: none
   
   Body: 
   
-  {:etag string,
-   :policy {:rules [Rule],
-            :bindings [Binding],
+  {:bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string},
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}]}
+            :rules [Rule],
+            :bindings [Binding]},
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -94,8 +94,8 @@
    :commitment string,
    :selfLink string,
    :satisfiesPzs boolean,
-   :specificReservation {:count string,
-                         :instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties,
+   :specificReservation {:instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties,
+                         :count string,
                          :inUseCount string},
    :status string,
    :id string,
@@ -162,7 +162,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, includeAllScopes, pageToken, maxResults, orderBy, filter
+  Optional parameters: maxResults, filter, returnPartialSuccess, includeAllScopes, pageToken, orderBy
   
   Retrieves an aggregated list of reservations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -188,7 +188,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/delete
   
-  Required parameters: project, zone, reservation
+  Required parameters: zone, reservation, project
   
   Optional parameters: requestId
   
@@ -215,7 +215,7 @@
 (defn resize$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/resize
   
-  Required parameters: zone, project, reservation
+  Required parameters: reservation, zone, project
   
   Optional parameters: requestId
   
@@ -248,7 +248,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/getIamPolicy
   
-  Required parameters: zone, project, resource
+  Required parameters: zone, resource, project
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -278,7 +278,7 @@
   
   Required parameters: zone, project
   
-  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
+  Optional parameters: returnPartialSuccess, maxResults, pageToken, filter, orderBy
   
   A list of all the reservations that have been configured for the specified project in specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

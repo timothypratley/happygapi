@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, view, pageSize
+  Optional parameters: view, pageSize, filter, pageToken
   
   Return available scans given a Database-specific resource name."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

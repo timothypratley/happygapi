@@ -26,12 +26,12 @@
                           :exitClickThroughUrl CreativeClickThroughUrl,
                           :advertiserCustomEventType string}],
    :richMedia boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
+                      :value string,
+                      :etag string,
+                      :id string},
    :timerCustomEvents [{:advertiserCustomEventName string,
                         :popupWindowProperties PopupWindowProperties,
                         :artworkType string,
@@ -57,8 +57,8 @@
    :id string,
    :kind string,
    :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
-                :name string,
-                :eventName string}],
+                :eventName string,
+                :name string}],
    :assetIdentifier {:type string, :name string}}
   
   Inserts a new creative asset."

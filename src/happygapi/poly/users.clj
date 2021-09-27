@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: format, orderBy, pageSize, visibility, pageToken
+  Optional parameters: format, visibility, orderBy, pageSize, pageToken
   
   Lists assets authored by the given user. Only the value 'me', representing the currently-authenticated user, is supported. May include assets with an access level of PRIVATE or UNLISTED and assets which are All Rights Reserved for the currently-authenticated user."
   {:scopes nil}
@@ -37,7 +37,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, format, orderBy, pageSize
+  Optional parameters: format, pageToken, pageSize, orderBy
   
   Lists assets that the user has liked. Only the value 'me', representing the currently-authenticated user, is supported. May include assets with an access level of UNLISTED."
   {:scopes nil}

@@ -6,49 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicyonline/create
-  
-  Required parameters: merchantId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :returnPolicyUri string,
-   :itemConditions [string],
-   :countries [string],
-   :policy {:days string, :type string},
-   :returnPolicyId string,
-   :returnReasonCategoryInfo [{:returnReasonCategory string,
-                               :returnShippingFee ReturnPolicyOnlineReturnShippingFee,
-                               :returnLabelSource string}],
-   :returnMethods [string],
-   :label string,
-   :restockingFee {:microPercent integer, :fixedFee PriceAmount}}
-  
-  Creates a new return policy."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/returnpolicyonline"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicyonline/get
   
@@ -104,7 +61,7 @@
 (defn patch$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicyonline/patch
   
-  Required parameters: returnPolicyId, merchantId
+  Required parameters: merchantId, returnPolicyId
   
   Optional parameters: none
   
@@ -114,14 +71,14 @@
    :returnPolicyUri string,
    :itemConditions [string],
    :countries [string],
-   :policy {:days string, :type string},
+   :policy {:type string, :days string},
    :returnPolicyId string,
-   :returnReasonCategoryInfo [{:returnReasonCategory string,
-                               :returnShippingFee ReturnPolicyOnlineReturnShippingFee,
+   :returnReasonCategoryInfo [{:returnShippingFee ReturnPolicyOnlineReturnShippingFee,
+                               :returnReasonCategory string,
                                :returnLabelSource string}],
    :returnMethods [string],
    :label string,
-   :restockingFee {:microPercent integer, :fixedFee PriceAmount}}
+   :restockingFee {:fixedFee PriceAmount, :microPercent integer}}
   
   Updates an existing return policy."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -133,6 +90,49 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicyonline/{returnPolicyId}"
      #{:returnPolicyId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn create$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicyonline/create
+  
+  Required parameters: merchantId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :returnPolicyUri string,
+   :itemConditions [string],
+   :countries [string],
+   :policy {:type string, :days string},
+   :returnPolicyId string,
+   :returnReasonCategoryInfo [{:returnShippingFee ReturnPolicyOnlineReturnShippingFee,
+                               :returnReasonCategory string,
+                               :returnLabelSource string}],
+   :returnMethods [string],
+   :label string,
+   :restockingFee {:fixedFee PriceAmount, :microPercent integer}}
+  
+  Creates a new return policy."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/returnpolicyonline"
+     #{:merchantId}
      parameters)
     (merge-with
      merge

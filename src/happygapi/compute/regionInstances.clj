@@ -9,14 +9,15 @@
 (defn bulkInsert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionInstances/bulkInsert
   
-  Required parameters: project, region
+  Required parameters: region, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:sourceInstanceTemplate string,
-   :locationPolicy {:locations {}},
+  {:minCount string,
+   :count string,
+   :namePattern string,
    :instanceProperties {:description string,
                         :tags Tags,
                         :labels {},
@@ -35,10 +36,9 @@
                         :metadata Metadata,
                         :serviceAccounts [ServiceAccount],
                         :minCpuPlatform string},
-   :namePattern string,
-   :count string,
+   :locationPolicy {:locations {}},
    :perInstanceProperties {},
-   :minCount string}
+   :sourceInstanceTemplate string}
   
   Creates multiple instances in a given region. Count specifies the number of instances to create."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

@@ -1,33 +1,34 @@
-{:GoogleCloudAssuredworkloadsV1Workload {:id "GoogleCloudAssuredworkloadsV1Workload",
-                                         :description "An Workload object for managing highly regulated workloads of cloud customers.",
-                                         :properties {:provisionedResourcesParent {:description "Input only. The parent resource for the resources managed by this Assured Workload. May be either an organization or a folder. Must be the same or a child of the Workload parent. If not specified all resources are created under the Workload parent. Formats: folders/{folder_id} organizations/{organization_id}",
+{:GoogleCloudAssuredworkloadsV1Workload {:type "object",
+                                         :properties {:provisionedResourcesParent {:description "Input only. The parent resource for the resources managed by this Assured Workload. May be either empty or a folder resource which is a child of the Workload parent. If not specified all resources are created under the parent organization. Format: folders/{folder_id}",
                                                                                    :type "string"},
-                                                      :labels {:description "Optional. Labels applied to the workload.",
+                                                      :labels {:type "object",
                                                                :additionalProperties {:type "string"},
-                                                               :type "object"},
+                                                               :description "Optional. Labels applied to the workload."},
                                                       :kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings",
                                                                     :description "Input only. Settings used to create a CMEK crypto key. When set a project with a KMS CMEK key is provisioned. This field is mandatory for a subset of Compliance Regimes."},
-                                                      :billingAccount {:description "Required. Input only. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`.",
+                                                      :billingAccount {:description "Optional. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`.",
                                                                        :type "string"},
                                                       :displayName {:type "string",
                                                                     :description "Required. The user-assigned display name of the Workload. When present it must be between 4 to 30 characters. Allowed characters are: lowercase and uppercase letters, numbers, hyphen, and spaces. Example: My Workload"},
                                                       :name {:description "Optional. The resource name of the workload. Format: organizations/{organization}/locations/{location}/workloads/{workload} Read-only.",
                                                              :type "string"},
-                                                      :createTime {:readOnly true,
-                                                                   :format "google-datetime",
+                                                      :createTime {:type "string",
+                                                                   :readOnly true,
                                                                    :description "Output only. Immutable. The Workload creation timestamp.",
-                                                                   :type "string"},
+                                                                   :format "google-datetime"},
                                                       :etag {:type "string",
                                                              :description "Optional. ETag of the workload, it is calculated on the basis of the Workload contents. It will be used in Update & Delete operations."},
-                                                      :complianceRegime {:enumDescriptions ["Unknown compliance regime."
+                                                      :complianceRegime {:type "string",
+                                                                         :enumDescriptions ["Unknown compliance regime."
                                                                                             "Information protection as per DoD IL4 requirements."
                                                                                             "Criminal Justice Information Services (CJIS) Security policies."
                                                                                             "FedRAMP High data protection controls"
                                                                                             "FedRAMP Moderate data protection controls"
                                                                                             "Assured Workloads For US Regions data protection controls"
                                                                                             "Health Insurance Portability and Accountability Act controls"
-                                                                                            "Health Information Trust Alliance controls"],
-                                                                         :type "string",
+                                                                                            "Health Information Trust Alliance controls"
+                                                                                            "Assured Workloads For EU Regions and Support controls"
+                                                                                            "Assured Workloads For Canada Regions and Support controls"],
                                                                          :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
                                                                                 "IL4"
                                                                                 "CJIS"
@@ -35,80 +36,101 @@
                                                                                 "FEDRAMP_MODERATE"
                                                                                 "US_REGIONAL_ACCESS"
                                                                                 "HIPAA"
-                                                                                "HITRUST"],
+                                                                                "HITRUST"
+                                                                                "EU_REGIONS_AND_SUPPORT"
+                                                                                "CA_REGIONS_AND_SUPPORT"],
                                                                          :description "Required. Immutable. Compliance Regime associated with this workload."},
-                                                      :resourceSettings {:type "array",
-                                                                         :items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings"},
+                                                      :resourceSettings {:items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings"},
+                                                                         :type "array",
                                                                          :description "Input only. Resource properties that are used to customize workload resources. These properties (such as custom project id) will be used to create workload resources if possible. This field is optional."},
-                                                      :resources {:items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo"},
-                                                                  :type "array",
+                                                      :resources {:type "array",
+                                                                  :items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo"},
                                                                   :description "Output only. The resources associated with this workload. These resources will be created when creating the workload. If any of the projects already exist, the workload creation will fail. Always read only.",
                                                                   :readOnly true}},
-                                         :type "object"},
+                                         :id "GoogleCloudAssuredworkloadsV1Workload",
+                                         :description "An Workload object for managing highly regulated workloads of cloud customers."},
  :GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampModerateSettings {:id "GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampModerateSettings",
+                                                                     :properties {:kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
+                                                                                                :description "Required. Input only. Immutable. Settings used to create a CMEK crypto key."}},
                                                                      :type "object",
-                                                                     :description "Settings specific to resources needed for FedRAMP Moderate.",
-                                                                     :properties {:kmsSettings {:description "Required. Input only. Immutable. Settings used to create a CMEK crypto key.",
-                                                                                                :$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings"}}},
- :GoogleCloudAssuredworkloadsV1beta1WorkloadResourceInfo {:properties {:resourceId {:description "Resource identifier. For a project this represents project_number.",
+                                                                     :description "Settings specific to resources needed for FedRAMP Moderate."},
+ :GoogleCloudAssuredworkloadsV1beta1WorkloadResourceInfo {:properties {:resourceId {:format "int64",
                                                                                     :type "string",
-                                                                                    :format "int64"},
-                                                                       :resourceType {:description "Indicates the type of resource.",
+                                                                                    :description "Resource identifier. For a project this represents project_number."},
+                                                                       :resourceType {:type "string",
                                                                                       :enumDescriptions ["Unknown resource type."
-                                                                                                         "Consumer project."
+                                                                                                         "Deprecated. Existing workloads will continue to support this, but new CreateWorkloadRequests should not specify this as an input value."
+                                                                                                         "Consumer Folder."
                                                                                                          "Consumer project containing encryption keys."
                                                                                                          "Keyring resource that hosts encryption keys."],
-                                                                                      :type "string",
+                                                                                      :description "Indicates the type of resource.",
                                                                                       :enum ["RESOURCE_TYPE_UNSPECIFIED"
                                                                                              "CONSUMER_PROJECT"
+                                                                                             "CONSUMER_FOLDER"
                                                                                              "ENCRYPTION_KEYS_PROJECT"
                                                                                              "KEYRING"]}},
                                                           :description "Represent the resources that are children of this Workload.",
                                                           :id "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceInfo",
                                                           :type "object"},
  :GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings {:type "object",
-                                                              :properties {:resourceId {:description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail.",
-                                                                                        :type "string"},
-                                                                           :displayName {:type "string",
+                                                              :id "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings",
+                                                              :description "Represent the custom settings for the resources to be created.",
+                                                              :properties {:displayName {:type "string",
                                                                                          :description "User-assigned resource display name. If not empty it will be used to create a resource with the specified name."},
+                                                                           :resourceId {:type "string",
+                                                                                        :description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail."},
                                                                            :resourceType {:enum ["RESOURCE_TYPE_UNSPECIFIED"
                                                                                                  "CONSUMER_PROJECT"
+                                                                                                 "CONSUMER_FOLDER"
                                                                                                  "ENCRYPTION_KEYS_PROJECT"
                                                                                                  "KEYRING"],
-                                                                                          :type "string",
                                                                                           :description "Indicates the type of resource. This field should be specified to correspond the id to the right project type (CONSUMER_PROJECT or ENCRYPTION_KEYS_PROJECT)",
                                                                                           :enumDescriptions ["Unknown resource type."
-                                                                                                             "Consumer project."
+                                                                                                             "Deprecated. Existing workloads will continue to support this, but new CreateWorkloadRequests should not specify this as an input value."
+                                                                                                             "Consumer Folder."
                                                                                                              "Consumer project containing encryption keys."
-                                                                                                             "Keyring resource that hosts encryption keys."]}},
-                                                              :description "Represent the custom settings for the resources to be created.",
-                                                              :id "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings"},
- :GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings {:description "Settings specific to the Key Management Service.",
-                                                         :properties {:nextRotationTime {:description "Required. Input only. Immutable. The time at which the Key Management Service will automatically create a new version of the crypto key and mark it as the primary.",
-                                                                                         :type "string",
-                                                                                         :format "google-datetime"},
-                                                                      :rotationPeriod {:format "google-duration",
-                                                                                       :type "string",
-                                                                                       :description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours."}},
-                                                         :type "object",
-                                                         :id "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings"},
- :GoogleCloudAssuredworkloadsV1WorkloadKMSSettings {:properties {:rotationPeriod {:type "string",
-                                                                                  :format "google-duration",
-                                                                                  :description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours."},
-                                                                 :nextRotationTime {:format "google-datetime",
-                                                                                    :description "Required. Input only. Immutable. The time at which the Key Management Service will automatically create a new version of the crypto key and mark it as the primary.",
-                                                                                    :type "string"}},
+                                                                                                             "Keyring resource that hosts encryption keys."],
+                                                                                          :type "string"}}},
+ :GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings {:id "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
+                                                         :description "Settings specific to the Key Management Service.",
+                                                         :properties {:rotationPeriod {:type "string",
+                                                                                       :description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours.",
+                                                                                       :format "google-duration"},
+                                                                      :nextRotationTime {:format "google-datetime",
+                                                                                         :description "Required. Input only. Immutable. The time at which the Key Management Service will automatically create a new version of the crypto key and mark it as the primary.",
+                                                                                         :type "string"}},
+                                                         :type "object"},
+ :GoogleCloudAssuredworkloadsV1WorkloadKMSSettings {:id "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings",
                                                     :description "Settings specific to the Key Management Service.",
-                                                    :id "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings",
+                                                    :properties {:nextRotationTime {:format "google-datetime",
+                                                                                    :type "string",
+                                                                                    :description "Required. Input only. Immutable. The time at which the Key Management Service will automatically create a new version of the crypto key and mark it as the primary."},
+                                                                 :rotationPeriod {:description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours.",
+                                                                                  :type "string",
+                                                                                  :format "google-duration"}},
                                                     :type "object"},
- :GoogleProtobufEmpty {:description "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.",
-                       :properties {},
-                       :id "GoogleProtobufEmpty",
-                       :type "object"},
- :GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata {:id "GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata",
-                                                                :properties {:displayName {:description "Optional. The display name of the workload.",
+ :GoogleProtobufEmpty {:properties {},
+                       :description "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.",
+                       :type "object",
+                       :id "GoogleProtobufEmpty"},
+ :GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata {:properties {:displayName {:description "Optional. The display name of the workload.",
                                                                                            :type "string"},
-                                                                             :complianceRegime {:type "string",
+                                                                             :parent {:description "Optional. The parent of the workload.",
+                                                                                      :type "string"},
+                                                                             :createTime {:format "google-datetime",
+                                                                                          :type "string",
+                                                                                          :description "Optional. Time when the operation was created."},
+                                                                             :complianceRegime {:enumDescriptions ["Unknown compliance regime."
+                                                                                                                   "Information protection as per DoD IL4 requirements."
+                                                                                                                   "Criminal Justice Information Services (CJIS) Security policies."
+                                                                                                                   "FedRAMP High data protection controls"
+                                                                                                                   "FedRAMP Moderate data protection controls"
+                                                                                                                   "Assured Workloads For US Regions data protection controls"
+                                                                                                                   "Health Insurance Portability and Accountability Act controls"
+                                                                                                                   "Health Information Trust Alliance controls"
+                                                                                                                   "Assured Workloads For EU Regions and Support controls"
+                                                                                                                   "Assured Workloads For Canada Regions and Support controls"],
+                                                                                                :description "Optional. Compliance controls that should be applied to the resources managed by the workload.",
                                                                                                 :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
                                                                                                        "IL4"
                                                                                                        "CJIS"
@@ -116,72 +138,66 @@
                                                                                                        "FEDRAMP_MODERATE"
                                                                                                        "US_REGIONAL_ACCESS"
                                                                                                        "HIPAA"
-                                                                                                       "HITRUST"],
-                                                                                                :enumDescriptions ["Unknown compliance regime."
-                                                                                                                   "Information protection as per DoD IL4 requirements."
-                                                                                                                   "Criminal Justice Information Services (CJIS) Security policies."
-                                                                                                                   "FedRAMP High data protection controls"
-                                                                                                                   "FedRAMP Moderate data protection controls"
-                                                                                                                   "Assured Workloads For US Regions data protection controls"
-                                                                                                                   "Health Insurance Portability and Accountability Act controls"
-                                                                                                                   "Health Information Trust Alliance controls"],
-                                                                                                :description "Optional. Compliance controls that should be applied to the resources managed by the workload."},
-                                                                             :parent {:type "string",
-                                                                                      :description "Optional. The parent of the workload."},
-                                                                             :createTime {:description "Optional. Time when the operation was created.",
-                                                                                          :type "string",
-                                                                                          :format "google-datetime"}},
-                                                                :type "object",
-                                                                :description "Operation metadata to give request details of CreateWorkload."},
- :GoogleLongrunningOperation {:description "This resource represents a long-running operation that is the result of a network API call.",
-                              :properties {:metadata {:description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
-                                                      :type "object",
-                                                      :additionalProperties {:type "any",
-                                                                             :description "Properties of the object. Contains field @type with type URL."}},
-                                           :name {:description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
-                                                  :type "string"},
-                                           :error {:description "The error result of the operation in case of failure or cancellation.",
-                                                   :$ref "GoogleRpcStatus"},
+                                                                                                       "HITRUST"
+                                                                                                       "EU_REGIONS_AND_SUPPORT"
+                                                                                                       "CA_REGIONS_AND_SUPPORT"],
+                                                                                                :type "string"}},
+                                                                :description "Operation metadata to give request details of CreateWorkload.",
+                                                                :id "GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata",
+                                                                :type "object"},
+ :GoogleLongrunningOperation {:id "GoogleLongrunningOperation",
+                              :description "This resource represents a long-running operation that is the result of a network API call.",
+                              :type "object",
+                              :properties {:metadata {:additionalProperties {:type "any",
+                                                                             :description "Properties of the object. Contains field @type with type URL."},
+                                                      :description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
+                                                      :type "object"},
                                            :done {:description "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.",
                                                   :type "boolean"},
-                                           :response {:additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
-                                                                             :type "any"},
+                                           :response {:additionalProperties {:type "any",
+                                                                             :description "Properties of the object. Contains field @type with type URL."},
                                                       :type "object",
-                                                      :description "The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`."}},
-                              :id "GoogleLongrunningOperation",
-                              :type "object"},
- :GoogleCloudAssuredworkloadsV1ListWorkloadsResponse {:properties {:nextPageToken {:type "string",
-                                                                                   :description "The next page token. Return empty if reached the last page."},
+                                                      :description "The normal response of the operation in case of success. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`."},
+                                           :name {:description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
+                                                  :type "string"},
+                                           :error {:$ref "GoogleRpcStatus",
+                                                   :description "The error result of the operation in case of failure or cancellation."}}},
+ :GoogleCloudAssuredworkloadsV1ListWorkloadsResponse {:type "object",
+                                                      :id "GoogleCloudAssuredworkloadsV1ListWorkloadsResponse",
+                                                      :description "Response of ListWorkloads endpoint.",
+                                                      :properties {:nextPageToken {:description "The next page token. Return empty if reached the last page.",
+                                                                                   :type "string"},
                                                                    :workloads {:type "array",
                                                                                :description "List of Workloads under a given parent.",
-                                                                               :items {:$ref "GoogleCloudAssuredworkloadsV1Workload"}}},
-                                                      :description "Response of ListWorkloads endpoint.",
-                                                      :type "object",
-                                                      :id "GoogleCloudAssuredworkloadsV1ListWorkloadsResponse"},
- :GoogleCloudAssuredworkloadsV1beta1Workload {:properties {:provisionedResourcesParent {:description "Input only. The parent resource for the resources managed by this Assured Workload. May be either an organization or a folder. Must be the same or a child of the Workload parent. If not specified all resources are created under the Workload parent. Formats: folders/{folder_id} organizations/{organization_id}",
-                                                                                        :type "string"},
-                                                           :labels {:additionalProperties {:type "string"},
+                                                                               :items {:$ref "GoogleCloudAssuredworkloadsV1Workload"}}}},
+ :GoogleCloudAssuredworkloadsV1beta1Workload {:description "An Workload object for managing highly regulated workloads of cloud customers.",
+                                              :type "object",
+                                              :id "GoogleCloudAssuredworkloadsV1beta1Workload",
+                                              :properties {:provisionedResourcesParent {:type "string",
+                                                                                        :description "Input only. The parent resource for the resources managed by this Assured Workload. May be either empty or a folder resource which is a child of the Workload parent. If not specified all resources are created under the parent organization. Format: folders/{folder_id}"},
+                                                           :labels {:type "object",
                                                                     :description "Optional. Labels applied to the workload.",
-                                                                    :type "object"},
+                                                                    :additionalProperties {:type "string"}},
                                                            :fedrampHighSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampHighSettings",
                                                                                  :description "Required. Input only. Immutable. Settings specific to resources needed for FedRAMP High."},
-                                                           :fedrampModerateSettings {:description "Required. Input only. Immutable. Settings specific to resources needed for FedRAMP Moderate.",
-                                                                                     :$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampModerateSettings"},
+                                                           :fedrampModerateSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampModerateSettings",
+                                                                                     :description "Required. Input only. Immutable. Settings specific to resources needed for FedRAMP Moderate."},
                                                            :kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
                                                                          :description "Input only. Settings used to create a CMEK crypto key. When set a project with a KMS CMEK key is provisioned. This field is mandatory for a subset of Compliance Regimes."},
-                                                           :billingAccount {:type "string",
-                                                                            :description "Required. Input only. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`."},
-                                                           :displayName {:type "string",
-                                                                         :description "Required. The user-assigned display name of the Workload. When present it must be between 4 to 30 characters. Allowed characters are: lowercase and uppercase letters, numbers, hyphen, and spaces. Example: My Workload"},
+                                                           :billingAccount {:description "Input only. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`.",
+                                                                            :type "string"},
+                                                           :displayName {:description "Required. The user-assigned display name of the Workload. When present it must be between 4 to 30 characters. Allowed characters are: lowercase and uppercase letters, numbers, hyphen, and spaces. Example: My Workload",
+                                                                         :type "string"},
                                                            :name {:type "string",
                                                                   :description "Optional. The resource name of the workload. Format: organizations/{organization}/locations/{location}/workloads/{workload} Read-only."},
-                                                           :createTime {:type "string",
+                                                           :createTime {:readOnly true,
                                                                         :format "google-datetime",
-                                                                        :description "Output only. Immutable. The Workload creation timestamp.",
-                                                                        :readOnly true},
+                                                                        :type "string",
+                                                                        :description "Output only. Immutable. The Workload creation timestamp."},
                                                            :etag {:type "string",
                                                                   :description "Optional. ETag of the workload, it is calculated on the basis of the Workload contents. It will be used in Update & Delete operations."},
-                                                           :complianceRegime {:type "string",
+                                                           :complianceRegime {:description "Required. Immutable. Compliance Regime associated with this workload.",
+                                                                              :type "string",
                                                                               :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
                                                                                      "IL4"
                                                                                      "CJIS"
@@ -189,7 +205,9 @@
                                                                                      "FEDRAMP_MODERATE"
                                                                                      "US_REGIONAL_ACCESS"
                                                                                      "HIPAA"
-                                                                                     "HITRUST"],
+                                                                                     "HITRUST"
+                                                                                     "EU_REGIONS_AND_SUPPORT"
+                                                                                     "CA_REGIONS_AND_SUPPORT"],
                                                                               :enumDescriptions ["Unknown compliance regime."
                                                                                                  "Information protection as per DoD IL4 requirements."
                                                                                                  "Criminal Justice Information Services (CJIS) Security policies."
@@ -197,79 +215,74 @@
                                                                                                  "FedRAMP Moderate data protection controls"
                                                                                                  "Assured Workloads For US Regions data protection controls"
                                                                                                  "Health Insurance Portability and Accountability Act controls"
-                                                                                                 "Health Information Trust Alliance controls"],
-                                                                              :description "Required. Immutable. Compliance Regime associated with this workload."},
+                                                                                                 "Health Information Trust Alliance controls"
+                                                                                                 "Assured Workloads For EU Regions and Support controls"
+                                                                                                 "Assured Workloads For Canada Regions and Support controls"]},
                                                            :cjisSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadCJISSettings",
                                                                           :description "Required. Input only. Immutable. Settings specific to resources needed for CJIS."},
-                                                           :resourceSettings {:items {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings"},
+                                                           :resourceSettings {:type "array",
                                                                               :description "Input only. Resource properties that are used to customize workload resources. These properties (such as custom project id) will be used to create workload resources if possible. This field is optional.",
-                                                                              :type "array"},
+                                                                              :items {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings"}},
                                                            :il4Settings {:description "Required. Input only. Immutable. Settings specific to resources needed for IL4.",
                                                                          :$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadIL4Settings"},
                                                            :resources {:description "Output only. The resources associated with this workload. These resources will be created when creating the workload. If any of the projects already exist, the workload creation will fail. Always read only.",
                                                                        :items {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceInfo"},
                                                                        :type "array",
-                                                                       :readOnly true}},
-                                              :description "An Workload object for managing highly regulated workloads of cloud customers.",
-                                              :type "object",
-                                              :id "GoogleCloudAssuredworkloadsV1beta1Workload"},
- :GoogleCloudAssuredworkloadsV1WorkloadResourceInfo {:id "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo",
-                                                     :type "object",
-                                                     :description "Represent the resources that are children of this Workload.",
-                                                     :properties {:resourceId {:description "Resource identifier. For a project this represents project_number.",
+                                                                       :readOnly true}}},
+ :GoogleCloudAssuredworkloadsV1WorkloadResourceInfo {:properties {:resourceId {:description "Resource identifier. For a project this represents project_number.",
                                                                                :type "string",
                                                                                :format "int64"},
-                                                                  :resourceType {:enum ["RESOURCE_TYPE_UNSPECIFIED"
+                                                                  :resourceType {:enumDescriptions ["Unknown resource type."
+                                                                                                    "Consumer project."
+                                                                                                    "Consumer project containing encryption keys."
+                                                                                                    "Keyring resource that hosts encryption keys."],
+                                                                                 :enum ["RESOURCE_TYPE_UNSPECIFIED"
                                                                                         "CONSUMER_PROJECT"
                                                                                         "ENCRYPTION_KEYS_PROJECT"
                                                                                         "KEYRING"],
-                                                                                 :description "Indicates the type of resource.",
                                                                                  :type "string",
-                                                                                 :enumDescriptions ["Unknown resource type."
-                                                                                                    "Consumer project."
-                                                                                                    "Consumer project containing encryption keys."
-                                                                                                    "Keyring resource that hosts encryption keys."]}}},
- :GoogleCloudAssuredworkloadsV1WorkloadResourceSettings {:description "Represent the custom settings for the resources to be created.",
-                                                         :properties {:resourceId {:type "string",
-                                                                                   :description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail."},
-                                                                      :resourceType {:enumDescriptions ["Unknown resource type."
-                                                                                                        "Consumer project."
-                                                                                                        "Consumer project containing encryption keys."
-                                                                                                        "Keyring resource that hosts encryption keys."],
-                                                                                     :description "Indicates the type of resource. This field should be specified to correspond the id to the right project type (CONSUMER_PROJECT or ENCRYPTION_KEYS_PROJECT)",
+                                                                                 :description "Indicates the type of resource."}},
+                                                     :type "object",
+                                                     :id "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo",
+                                                     :description "Represent the resources that are children of this Workload."},
+ :GoogleCloudAssuredworkloadsV1WorkloadResourceSettings {:properties {:resourceType {:description "Indicates the type of resource. This field should be specified to correspond the id to the right project type (CONSUMER_PROJECT or ENCRYPTION_KEYS_PROJECT)",
                                                                                      :type "string",
                                                                                      :enum ["RESOURCE_TYPE_UNSPECIFIED"
                                                                                             "CONSUMER_PROJECT"
                                                                                             "ENCRYPTION_KEYS_PROJECT"
-                                                                                            "KEYRING"]},
-                                                                      :displayName {:type "string",
-                                                                                    :description "User-assigned resource display name. If not empty it will be used to create a resource with the specified name."}},
-                                                         :type "object",
-                                                         :id "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings"},
- :GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampHighSettings {:properties {:kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
-                                                                                            :description "Required. Input only. Immutable. Settings used to create a CMEK crypto key."}},
+                                                                                            "KEYRING"],
+                                                                                     :enumDescriptions ["Unknown resource type."
+                                                                                                        "Consumer project."
+                                                                                                        "Consumer project containing encryption keys."
+                                                                                                        "Keyring resource that hosts encryption keys."]},
+                                                                      :displayName {:description "User-assigned resource display name. If not empty it will be used to create a resource with the specified name.",
+                                                                                    :type "string"},
+                                                                      :resourceId {:type "string",
+                                                                                   :description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail."}},
+                                                         :id "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings",
+                                                         :description "Represent the custom settings for the resources to be created.",
+                                                         :type "object"},
+ :GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampHighSettings {:type "object",
+                                                                 :properties {:kmsSettings {:description "Required. Input only. Immutable. Settings used to create a CMEK crypto key.",
+                                                                                            :$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings"}},
                                                                  :id "GoogleCloudAssuredworkloadsV1beta1WorkloadFedrampHighSettings",
-                                                                 :description "Settings specific to resources needed for FedRAMP High.",
-                                                                 :type "object"},
- :GoogleLongrunningListOperationsResponse {:properties {:nextPageToken {:type "string",
-                                                                        :description "The standard List next-page token."},
-                                                        :operations {:items {:$ref "GoogleLongrunningOperation"},
-                                                                     :description "A list of operations that matches the specified filter in the request.",
-                                                                     :type "array"}},
-                                           :type "object",
+                                                                 :description "Settings specific to resources needed for FedRAMP High."},
+ :GoogleLongrunningListOperationsResponse {:description "The response message for Operations.ListOperations.",
                                            :id "GoogleLongrunningListOperationsResponse",
-                                           :description "The response message for Operations.ListOperations."},
- :GoogleCloudAssuredworkloadsV1beta1CreateWorkloadOperationMetadata {:id "GoogleCloudAssuredworkloadsV1beta1CreateWorkloadOperationMetadata",
-                                                                     :properties {:complianceRegime {:enumDescriptions ["Unknown compliance regime."
-                                                                                                                        "Information protection as per DoD IL4 requirements."
-                                                                                                                        "Criminal Justice Information Services (CJIS) Security policies."
-                                                                                                                        "FedRAMP High data protection controls"
-                                                                                                                        "FedRAMP Moderate data protection controls"
-                                                                                                                        "Assured Workloads For US Regions data protection controls"
-                                                                                                                        "Health Insurance Portability and Accountability Act controls"
-                                                                                                                        "Health Information Trust Alliance controls"],
-                                                                                                     :type "string",
-                                                                                                     :description "Optional. Compliance controls that should be applied to the resources managed by the workload.",
+                                           :type "object",
+                                           :properties {:nextPageToken {:description "The standard List next-page token.",
+                                                                        :type "string"},
+                                                        :operations {:description "A list of operations that matches the specified filter in the request.",
+                                                                     :items {:$ref "GoogleLongrunningOperation"},
+                                                                     :type "array"}}},
+ :GoogleCloudAssuredworkloadsV1beta1CreateWorkloadOperationMetadata {:properties {:createTime {:type "string",
+                                                                                               :description "Optional. Time when the operation was created.",
+                                                                                               :format "google-datetime"},
+                                                                                  :parent {:type "string",
+                                                                                           :description "Optional. The parent of the workload."},
+                                                                                  :displayName {:description "Optional. The display name of the workload.",
+                                                                                                :type "string"},
+                                                                                  :complianceRegime {:description "Optional. Compliance controls that should be applied to the resources managed by the workload.",
                                                                                                      :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
                                                                                                             "IL4"
                                                                                                             "CJIS"
@@ -277,39 +290,46 @@
                                                                                                             "FEDRAMP_MODERATE"
                                                                                                             "US_REGIONAL_ACCESS"
                                                                                                             "HIPAA"
-                                                                                                            "HITRUST"]},
-                                                                                  :displayName {:description "Optional. The display name of the workload.",
-                                                                                                :type "string"},
-                                                                                  :resourceSettings {:type "array",
+                                                                                                            "HITRUST"
+                                                                                                            "EU_REGIONS_AND_SUPPORT"
+                                                                                                            "CA_REGIONS_AND_SUPPORT"],
+                                                                                                     :enumDescriptions ["Unknown compliance regime."
+                                                                                                                        "Information protection as per DoD IL4 requirements."
+                                                                                                                        "Criminal Justice Information Services (CJIS) Security policies."
+                                                                                                                        "FedRAMP High data protection controls"
+                                                                                                                        "FedRAMP Moderate data protection controls"
+                                                                                                                        "Assured Workloads For US Regions data protection controls"
+                                                                                                                        "Health Insurance Portability and Accountability Act controls"
+                                                                                                                        "Health Information Trust Alliance controls"
+                                                                                                                        "Assured Workloads For EU Regions and Support controls"
+                                                                                                                        "Assured Workloads For Canada Regions and Support controls"],
+                                                                                                     :type "string"},
+                                                                                  :resourceSettings {:items {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings"},
                                                                                                      :description "Optional. Resource properties in the input that are used for creating/customizing workload resources.",
-                                                                                                     :items {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadResourceSettings"}},
-                                                                                  :parent {:type "string",
-                                                                                           :description "Optional. The parent of the workload."},
-                                                                                  :createTime {:description "Optional. Time when the operation was created.",
-                                                                                               :format "google-datetime",
-                                                                                               :type "string"}},
+                                                                                                     :type "array"}},
                                                                      :type "object",
+                                                                     :id "GoogleCloudAssuredworkloadsV1beta1CreateWorkloadOperationMetadata",
                                                                      :description "Operation metadata to give request details of CreateWorkload."},
- :GoogleCloudAssuredworkloadsV1beta1WorkloadIL4Settings {:type "object",
+ :GoogleCloudAssuredworkloadsV1beta1WorkloadIL4Settings {:id "GoogleCloudAssuredworkloadsV1beta1WorkloadIL4Settings",
+                                                         :properties {:kmsSettings {:description "Required. Input only. Immutable. Settings used to create a CMEK crypto key.",
+                                                                                    :$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings"}},
                                                          :description "Settings specific to resources needed for IL4.",
-                                                         :id "GoogleCloudAssuredworkloadsV1beta1WorkloadIL4Settings",
-                                                         :properties {:kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
-                                                                                    :description "Required. Input only. Immutable. Settings used to create a CMEK crypto key."}}},
+                                                         :type "object"},
  :GoogleCloudAssuredworkloadsV1beta1WorkloadCJISSettings {:properties {:kmsSettings {:$ref "GoogleCloudAssuredworkloadsV1beta1WorkloadKMSSettings",
                                                                                      :description "Required. Input only. Immutable. Settings used to create a CMEK crypto key."}},
-                                                          :id "GoogleCloudAssuredworkloadsV1beta1WorkloadCJISSettings",
                                                           :type "object",
+                                                          :id "GoogleCloudAssuredworkloadsV1beta1WorkloadCJISSettings",
                                                           :description "Settings specific to resources needed for CJIS."},
  :GoogleRpcStatus {:type "object",
-                   :id "GoogleRpcStatus",
                    :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
-                   :properties {:message {:type "string",
-                                          :description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client."},
-                                :code {:description "The status code, which should be an enum value of google.rpc.Code.",
-                                       :format "int32",
-                                       :type "integer"},
-                                :details {:items {:additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
-                                                                         :type "any"},
+                   :id "GoogleRpcStatus",
+                   :properties {:code {:type "integer",
+                                       :description "The status code, which should be an enum value of google.rpc.Code.",
+                                       :format "int32"},
+                                :details {:description "A list of messages that carry the error details. There is a common set of message types for APIs to use.",
+                                          :items {:additionalProperties {:type "any",
+                                                                         :description "Properties of the object. Contains field @type with type URL."},
                                                   :type "object"},
-                                          :description "A list of messages that carry the error details. There is a common set of message types for APIs to use.",
-                                          :type "array"}}}}
+                                          :type "array"},
+                                :message {:description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
+                                          :type "string"}}}}

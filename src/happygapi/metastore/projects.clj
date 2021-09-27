@@ -93,11 +93,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
-            :auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
+            :version integer,
             :bindings [Binding],
-            :version integer}}
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -138,6 +138,7 @@
    :name string,
    :createTime string,
    :hiveMetastoreConfig {:configOverrides {},
+                         :endpointProtocol string,
                          :kerberosConfig KerberosConfig,
                          :version string},
    :state string,
@@ -147,7 +148,9 @@
    :artifactGcsUri string,
    :maintenanceWindow {:hourOfDay integer, :dayOfWeek string},
    :network string,
-   :metadataIntegration {:dataCatalogConfig DataCatalogConfig},
+   :metadataIntegration {:dataplexConfig DataplexConfig,
+                         :dataCatalogConfig DataCatalogConfig},
+   :encryptionConfig {:kmsKey string},
    :stateMessage string}
   
   Updates the parameters of a single service."
@@ -212,7 +215,7 @@
   
   Body: 
   
-  {:restoreType string, :requestId string, :backup string}
+  {:requestId string, :backup string, :restoreType string}
   
   Restores a service from a backup."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -240,7 +243,7 @@
   
   Required parameters: parent
   
-  Optional parameters: serviceId, requestId
+  Optional parameters: requestId, serviceId
   
   Body: 
   
@@ -253,6 +256,7 @@
    :name string,
    :createTime string,
    :hiveMetastoreConfig {:configOverrides {},
+                         :endpointProtocol string,
                          :kerberosConfig KerberosConfig,
                          :version string},
    :state string,
@@ -262,7 +266,9 @@
    :artifactGcsUri string,
    :maintenanceWindow {:hourOfDay integer, :dayOfWeek string},
    :network string,
-   :metadataIntegration {:dataCatalogConfig DataCatalogConfig},
+   :metadataIntegration {:dataplexConfig DataplexConfig,
+                         :dataCatalogConfig DataCatalogConfig},
+   :encryptionConfig {:kmsKey string},
    :stateMessage string}
   
   Creates a metastore service in a project and location."
@@ -373,9 +379,9 @@
   
   Body: 
   
-  {:destinationGcsFolder string,
-   :databaseDumpType string,
-   :requestId string}
+  {:databaseDumpType string,
+   :requestId string,
+   :destinationGcsFolder string}
   
   Exports metadata from a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -398,24 +404,65 @@
       :as :json}
      auth))))
 
+(defn locations-services-metadataImports-create$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/metadataImports/create
+  
+  Required parameters: parent
+  
+  Optional parameters: metadataImportId, requestId
+  
+  Body: 
+  
+  {:name string,
+   :endTime string,
+   :updateTime string,
+   :createTime string,
+   :databaseDump {:databaseType string,
+                  :gcsUri string,
+                  :sourceDatabase string,
+                  :type string},
+   :description string,
+   :state string}
+  
+  Creates a new MetadataImport in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1beta/{+parent}/metadataImports"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-services-metadataImports-patch$
   "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/metadataImports/patch
   
   Required parameters: name
   
-  Optional parameters: requestId, updateMask
+  Optional parameters: updateMask, requestId
   
   Body: 
   
   {:name string,
-   :updateTime string,
-   :databaseDump {:gcsUri string,
-                  :sourceDatabase string,
-                  :databaseType string,
-                  :type string},
-   :createTime string,
-   :description string,
    :endTime string,
+   :updateTime string,
+   :createTime string,
+   :databaseDump {:databaseType string,
+                  :gcsUri string,
+                  :sourceDatabase string,
+                  :type string},
+   :description string,
    :state string}
   
   Updates a single import. Only the description field of MetadataImport is supported to be updated."
@@ -444,7 +491,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, orderBy, pageToken, filter
+  Optional parameters: orderBy, pageSize, pageToken, filter
   
   Lists imports in a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -491,125 +538,6 @@
       :as :json}
      auth))))
 
-(defn locations-services-metadataImports-create$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/metadataImports/create
-  
-  Required parameters: parent
-  
-  Optional parameters: metadataImportId, requestId
-  
-  Body: 
-  
-  {:name string,
-   :updateTime string,
-   :databaseDump {:gcsUri string,
-                  :sourceDatabase string,
-                  :databaseType string,
-                  :type string},
-   :createTime string,
-   :description string,
-   :endTime string,
-   :state string}
-  
-  Creates a new MetadataImport in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://metastore.googleapis.com/"
-     "v1beta/{+parent}/metadataImports"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-backups-delete$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/delete
-  
-  Required parameters: name
-  
-  Optional parameters: requestId
-  
-  Deletes a single backup."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://metastore.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-backups-getIamPolicy$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://metastore.googleapis.com/"
-     "v1beta/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-services-backups-list$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, pageToken, orderBy
-  
-  Lists backups in a service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://metastore.googleapis.com/"
-     "v1beta/{+parent}/backups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-services-backups-testIamPermissions$
   "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/testIamPermissions
   
@@ -642,54 +570,27 @@
       :as :json}
      auth))))
 
-(defn locations-services-backups-create$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/create
+(defn locations-services-backups-getIamPolicy$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/getIamPolicy
   
-  Required parameters: parent
+  Required parameters: resource
   
-  Optional parameters: requestId, backupId
+  Optional parameters: options.requestedPolicyVersion
   
-  Body: 
-  
-  {:createTime string,
-   :endTime string,
-   :state string,
-   :name string,
-   :description string,
-   :serviceRevision {:endpointUri string,
-                     :labels {},
-                     :tier string,
-                     :metadataManagementActivity MetadataManagementActivity,
-                     :uid string,
-                     :name string,
-                     :createTime string,
-                     :hiveMetastoreConfig HiveMetastoreConfig,
-                     :state string,
-                     :port integer,
-                     :releaseChannel string,
-                     :updateTime string,
-                     :artifactGcsUri string,
-                     :maintenanceWindow MaintenanceWindow,
-                     :network string,
-                     :metadataIntegration MetadataIntegration,
-                     :stateMessage string}}
-  
-  Creates a new backup in a given project and location."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://metastore.googleapis.com/"
-     "v1beta/{+parent}/backups"
-     #{:parent}
+     "v1beta/{+resource}:getIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -721,6 +622,32 @@
       :as :json}
      auth))))
 
+(defn locations-services-backups-delete$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/delete
+  
+  Required parameters: name
+  
+  Optional parameters: requestId
+  
+  Deletes a single backup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-services-backups-setIamPolicy$
   "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/setIamPolicy
   
@@ -730,11 +657,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
-            :auditConfigs [AuditConfig],
+  {:policy {:auditConfigs [AuditConfig],
+            :version integer,
             :bindings [Binding],
-            :version integer}}
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -757,27 +684,82 @@
       :as :json}
      auth))))
 
-(defn locations-operations-delete$
-  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/operations/delete
+(defn locations-services-backups-list$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: filter, pageSize, pageToken, orderBy
   
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED."
+  Lists backups in a service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://metastore.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
+     "v1beta/{+parent}/backups"
+     #{:parent}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-backups-create$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/services/backups/create
+  
+  Required parameters: parent
+  
+  Optional parameters: backupId, requestId
+  
+  Body: 
+  
+  {:endTime string,
+   :serviceRevision {:endpointUri string,
+                     :labels {},
+                     :tier string,
+                     :metadataManagementActivity MetadataManagementActivity,
+                     :uid string,
+                     :name string,
+                     :createTime string,
+                     :hiveMetastoreConfig HiveMetastoreConfig,
+                     :state string,
+                     :port integer,
+                     :releaseChannel string,
+                     :updateTime string,
+                     :artifactGcsUri string,
+                     :maintenanceWindow MaintenanceWindow,
+                     :network string,
+                     :metadataIntegration MetadataIntegration,
+                     :encryptionConfig EncryptionConfig,
+                     :stateMessage string},
+   :restoringServices [string],
+   :description string,
+   :state string,
+   :name string,
+   :createTime string}
+  
+  Creates a new backup in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1beta/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -788,7 +770,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.NOTE: the name binding allows API services to override the binding to use different resource name schemes, such as users/*/operations. To override the binding, API services can add a binding such as \"/v1/{name=users/*}/operations\" to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -822,6 +804,32 @@
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-delete$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1beta/projects/locations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://metastore.googleapis.com/"
      "v1beta/{+name}"

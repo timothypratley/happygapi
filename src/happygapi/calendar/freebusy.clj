@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:timeZone string,
+  {:timeMin string,
+   :timeMax string,
    :items [{:id string}],
-   :timeMin string,
-   :calendarExpansionMax integer,
    :groupExpansionMax integer,
-   :timeMax string}
+   :calendarExpansionMax integer,
+   :timeZone string}
   
   Returns free/busy information for a set of calendars."
   {:scopes ["https://www.googleapis.com/auth/calendar"

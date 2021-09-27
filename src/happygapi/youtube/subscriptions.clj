@@ -6,34 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/delete
-  
-  Required parameters: id
-  
-  Optional parameters: none
-  
-  Deletes a resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/subscriptions"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/list
   
@@ -72,23 +44,23 @@
   
   Body: 
   
-  {:contentDetails {:totalItemCount integer,
-                    :newItemCount integer,
-                    :activityType string},
+  {:contentDetails {:newItemCount integer,
+                    :activityType string,
+                    :totalItemCount integer},
    :subscriberSnippet {:channelId string,
                        :description string,
-                       :title string,
-                       :thumbnails ThumbnailDetails},
+                       :thumbnails ThumbnailDetails,
+                       :title string},
    :kind string,
-   :snippet {:description string,
-             :channelTitle string,
-             :channelId string,
-             :publishedAt string,
-             :resourceId ResourceId,
-             :thumbnails ThumbnailDetails,
-             :title string},
    :etag string,
-   :id string}
+   :id string,
+   :snippet {:publishedAt string,
+             :resourceId ResourceId,
+             :channelTitle string,
+             :title string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :description string}}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -108,6 +80,34 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/subscriptions/delete
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Deletes a resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/subscriptions"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

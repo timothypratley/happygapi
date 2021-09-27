@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/inventoryItems/get
   
-  Required parameters: id, projectId, profileId
+  Required parameters: projectId, profileId, id
   
   Optional parameters: none
   

@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, pageToken, includeAllScopes, returnPartialSuccess, maxResults, orderBy
+  Optional parameters: maxResults, returnPartialSuccess, pageToken, includeAllScopes, filter, orderBy
   
   Retrieves an aggregated list of target VPN gateways."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -25,36 +25,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/aggregated/targetVpnGateways"
      #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/get
-  
-  Required parameters: project, targetVpnGateway, region
-  
-  Optional parameters: none
-  
-  Returns the specified target VPN gateway. Gets a list of available target VPN gateways by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetVpnGateway :region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
-     #{:targetVpnGateway :region :project}
      parameters)
     (merge-with
      merge
@@ -110,7 +80,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/delete
   
-  Required parameters: region, project, targetVpnGateway
+  Required parameters: project, region, targetVpnGateway
   
   Optional parameters: requestId
   
@@ -139,9 +109,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/list
   
-  Required parameters: project, region
+  Required parameters: region, project
   
-  Optional parameters: pageToken, maxResults, returnPartialSuccess, orderBy, filter
+  Optional parameters: filter, pageToken, returnPartialSuccess, orderBy, maxResults
   
   Retrieves a list of target VPN gateways available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -155,6 +125,36 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/targetVpnGateways"
      #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/get
+  
+  Required parameters: project, region, targetVpnGateway
+  
+  Optional parameters: none
+  
+  Returns the specified target VPN gateway. Gets a list of available target VPN gateways by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetVpnGateway :region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
+     #{:targetVpnGateway :region :project}
      parameters)
     (merge-with
      merge

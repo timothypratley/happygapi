@@ -11,11 +11,11 @@
   
   Required parameters: part
   
-  Optional parameters: none
+  Optional parameters: externalChannelId
   
   Body: 
   
-  {:snippet {}, :featuredPart boolean, :gaia string, :id string}
+  {:snippet {}, :gaia string, :featuredPart boolean, :id string}
   
   POST method."
   {:scopes ["https://www.googleapis.com/auth/youtube.readonly"]}

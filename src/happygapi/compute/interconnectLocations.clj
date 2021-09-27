@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, orderBy, returnPartialSuccess, pageToken, filter
+  Optional parameters: orderBy, maxResults, filter, pageToken, returnPartialSuccess
   
   Retrieves the list of interconnect locations available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

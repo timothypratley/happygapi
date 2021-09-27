@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: language, maxResults, pageToken
+  Optional parameters: maxResults, language, pageToken
   
   Lists all the leaderboard metadata for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}

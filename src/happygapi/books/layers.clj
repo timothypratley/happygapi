@@ -9,7 +9,7 @@
 (defn get$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/get
   
-  Required parameters: volumeId, summaryId
+  Required parameters: summaryId, volumeId
   
   Optional parameters: contentVersion, source
   
@@ -37,7 +37,7 @@
   
   Required parameters: volumeId
   
-  Optional parameters: contentVersion, pageToken, source, maxResults
+  Optional parameters: maxResults, contentVersion, source, pageToken
   
   List the layer summaries for a volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -49,34 +49,6 @@
      "https://books.googleapis.com/"
      "books/v1/volumes/{volumeId}/layersummary"
      #{:volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn volumeAnnotations-get$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/volumeAnnotations/get
-  
-  Required parameters: volumeId, layerId, annotationId
-  
-  Optional parameters: locale, source
-  
-  Gets the volume annotation."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:volumeId :annotationId :layerId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/volumes/{volumeId}/layers/{layerId}/annotations/{annotationId}"
-     #{:volumeId :annotationId :layerId}
      parameters)
     (merge-with
      merge
@@ -105,6 +77,34 @@
      "https://books.googleapis.com/"
      "books/v1/volumes/{volumeId}/layers/{layerId}"
      #{:volumeId :contentVersion :layerId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn volumeAnnotations-get$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/layers/volumeAnnotations/get
+  
+  Required parameters: volumeId, annotationId, layerId
+  
+  Optional parameters: locale, source
+  
+  Gets the volume annotation."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:volumeId :annotationId :layerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/volumes/{volumeId}/layers/{layerId}/annotations/{annotationId}"
+     #{:volumeId :annotationId :layerId}
      parameters)
     (merge-with
      merge

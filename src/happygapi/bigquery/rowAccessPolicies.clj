@@ -43,7 +43,7 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/rowAccessPolicies/list
   
-  Required parameters: tableId, datasetId, projectId
+  Required parameters: datasetId, tableId, projectId
   
   Optional parameters: pageSize, pageToken
   
@@ -63,43 +63,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setIamPolicy$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/rowAccessPolicies/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string,
-            :bindings [Binding],
-            :version integer,
-            :auditConfigs [AuditConfig]},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -127,6 +90,43 @@
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setIamPolicy$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/rowAccessPolicies/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateMask string,
+   :policy {:etag string,
+            :bindings [Binding],
+            :version integer,
+            :auditConfigs [AuditConfig]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with

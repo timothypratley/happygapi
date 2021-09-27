@@ -33,130 +33,6 @@
       :as :json}
      auth))))
 
-(defn create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/create
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :calendarId string,
-   :ownerId string,
-   :teacherFolder {:alternateLink string, :id string, :title string},
-   :name string,
-   :section string,
-   :guardiansEnabled boolean,
-   :updateTime string,
-   :courseMaterialSets [{:materials [CourseMaterial], :title string}],
-   :courseState string,
-   :enrollmentCode string,
-   :id string,
-   :alternateLink string,
-   :teacherGroupEmail string,
-   :room string,
-   :courseGroupEmail string,
-   :descriptionHeading string}
-  
-  Creates a course. The user specified in `ownerId` is the owner of the created course and added as a teacher. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create courses or for access errors. * `NOT_FOUND` if the primary teacher is not a valid user. * `FAILED_PRECONDITION` if the course owner's account is disabled or for the following request errors: * UserGroupsMembershipLimitReached * `ALREADY_EXISTS` if an alias was specified in the `id` and already exists."
-  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/delete
-  
-  Required parameters: id
-  
-  Optional parameters: none
-  
-  Deletes a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete the requested course or for access errors. * `NOT_FOUND` if no course exists with the requested ID."
-  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{id}"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/patch
-  
-  Required parameters: id
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :calendarId string,
-   :ownerId string,
-   :teacherFolder {:alternateLink string, :id string, :title string},
-   :name string,
-   :section string,
-   :guardiansEnabled boolean,
-   :updateTime string,
-   :courseMaterialSets [{:materials [CourseMaterial], :title string}],
-   :courseState string,
-   :enrollmentCode string,
-   :id string,
-   :alternateLink string,
-   :teacherGroupEmail string,
-   :room string,
-   :courseGroupEmail string,
-   :descriptionHeading string}
-  
-  Updates one or more fields in a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to modify the requested course or for access errors. * `NOT_FOUND` if no course exists with the requested ID. * `INVALID_ARGUMENT` if invalid fields are specified in the update mask or if no update mask is supplied. * `FAILED_PRECONDITION` for the following request errors: * CourseNotModifiable"
-  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{id}"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/update
   
@@ -170,12 +46,12 @@
    :description string,
    :calendarId string,
    :ownerId string,
-   :teacherFolder {:alternateLink string, :id string, :title string},
+   :teacherFolder {:id string, :alternateLink string, :title string},
    :name string,
    :section string,
    :guardiansEnabled boolean,
    :updateTime string,
-   :courseMaterialSets [{:materials [CourseMaterial], :title string}],
+   :courseMaterialSets [{:title string, :materials [CourseMaterial]}],
    :courseState string,
    :enrollmentCode string,
    :id string,
@@ -211,7 +87,7 @@
   
   Required parameters: none
   
-  Optional parameters: teacherId, studentId, courseStates, pageToken, pageSize
+  Optional parameters: teacherId, pageSize, courseStates, studentId, pageToken
   
   Returns a list of courses that the requesting user is permitted to view, restricted to those that match the request. Returned courses are ordered by creation time, with the most recently created coming first. This method returns the following error codes: * `PERMISSION_DENIED` for access errors. * `INVALID_ARGUMENT` if the query argument is malformed. * `NOT_FOUND` if any users specified in the query arguments do not exist."
   {:scopes ["https://www.googleapis.com/auth/classroom.courses"
@@ -233,26 +109,265 @@
       :as :json}
      auth))))
 
-(defn teachers-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/teachers/list
+(defn delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/delete
+  
+  Required parameters: id
+  
+  Optional parameters: none
+  
+  Deletes a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete the requested course or for access errors. * `NOT_FOUND` if no course exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :calendarId string,
+   :ownerId string,
+   :teacherFolder {:id string, :alternateLink string, :title string},
+   :name string,
+   :section string,
+   :guardiansEnabled boolean,
+   :updateTime string,
+   :courseMaterialSets [{:title string, :materials [CourseMaterial]}],
+   :courseState string,
+   :enrollmentCode string,
+   :id string,
+   :alternateLink string,
+   :teacherGroupEmail string,
+   :room string,
+   :courseGroupEmail string,
+   :descriptionHeading string}
+  
+  Creates a course. The user specified in `ownerId` is the owner of the created course and added as a teacher. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create courses or for access errors. * `NOT_FOUND` if the primary teacher is not a valid user. * `FAILED_PRECONDITION` if the course owner's account is disabled or for the following request errors: * UserGroupsMembershipLimitReached * `ALREADY_EXISTS` if an alias was specified in the `id` and already exists."
+  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/patch
+  
+  Required parameters: id
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :calendarId string,
+   :ownerId string,
+   :teacherFolder {:id string, :alternateLink string, :title string},
+   :name string,
+   :section string,
+   :guardiansEnabled boolean,
+   :updateTime string,
+   :courseMaterialSets [{:title string, :materials [CourseMaterial]}],
+   :courseState string,
+   :enrollmentCode string,
+   :id string,
+   :alternateLink string,
+   :teacherGroupEmail string,
+   :room string,
+   :courseGroupEmail string,
+   :descriptionHeading string}
+  
+  Updates one or more fields in a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to modify the requested course or for access errors. * `NOT_FOUND` if no course exists with the requested ID. * `INVALID_ARGUMENT` if invalid fields are specified in the update mask or if no update mask is supplied. * `FAILED_PRECONDITION` for the following request errors: * CourseNotModifiable"
+  {:scopes ["https://www.googleapis.com/auth/classroom.courses"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn topics-create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/create
+  
+  Required parameters: courseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:courseId string, :updateTime string, :name string, :topicId string}
+  
+  Creates a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create a topic in the requested course, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/topics"
+     #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn topics-patch$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/patch
+  
+  Required parameters: courseId, id
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:courseId string, :updateTime string, :name string, :topicId string}
+  
+  Updates one or more fields of a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding topic or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or topic does not exist"
+  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/topics/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn topics-delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/delete
+  
+  Required parameters: courseId, id
+  
+  Optional parameters: none
+  
+  Deletes a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not allowed to delete the requested topic or for access errors. * `FAILED_PRECONDITION` if the requested topic has already been deleted. * `NOT_FOUND` if no course or topic exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/topics/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn topics-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/list
   
   Required parameters: courseId
   
   Optional parameters: pageToken, pageSize
   
-  Returns a list of teachers of this course that the requester is permitted to view. This method returns the following error codes: * `NOT_FOUND` if the course does not exist. * `PERMISSION_DENIED` for access errors."
-  {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
-            "https://www.googleapis.com/auth/classroom.profile.photos"
-            "https://www.googleapis.com/auth/classroom.rosters"
-            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  Returns the list of topics that the requester is permitted to view. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.topics"
+            "https://www.googleapis.com/auth/classroom.topics.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:courseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/teachers"
+     "v1/courses/{courseId}/topics"
      #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn topics-get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/get
+  
+  Required parameters: courseId, id
+  
+  Optional parameters: none
+  
+  Returns a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or topic, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or topic does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.topics"
+            "https://www.googleapis.com/auth/classroom.topics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/topics/{id}"
+     #{:id :courseId}
      parameters)
     (merge-with
      merge
@@ -269,7 +384,7 @@
   
   Optional parameters: none
   
-  Deletes a teacher of a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete teachers of this course or for access errors. * `NOT_FOUND` if no teacher of this course has the requested ID or if the course does not exist. * `FAILED_PRECONDITION` if the requested ID belongs to the primary teacher of this course."
+  Deletes a teacher of a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to delete teachers of this course or for access errors. * `NOT_FOUND` if no teacher of this course has the requested ID or if the course does not exist. * `FAILED_PRECONDITION` if the requested ID belongs to the primary teacher of this course. * `FAILED_PRECONDITION` if the requested ID belongs to the owner of the course Drive folder. * `FAILED_PRECONDITION` if the course no longer has an active owner."
   {:scopes ["https://www.googleapis.com/auth/classroom.rosters"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:userId :courseId})]}
@@ -291,7 +406,7 @@
 (defn teachers-get$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/teachers/get
   
-  Required parameters: courseId, userId
+  Required parameters: userId, courseId
   
   Optional parameters: none
   
@@ -326,14 +441,14 @@
   
   Body: 
   
-  {:profile {:emailAddress string,
-             :permissions [GlobalPermission],
+  {:courseId string,
+   :userId string,
+   :profile {:name Name,
+             :photoUrl string,
+             :emailAddress string,
              :id string,
              :verifiedTeacher boolean,
-             :photoUrl string,
-             :name Name},
-   :courseId string,
-   :userId string}
+             :permissions [GlobalPermission]}}
   
   Creates a teacher of a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create teachers in this course or for access errors. * `NOT_FOUND` if the requested course ID does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled, for the following request errors: * CourseMemberLimitReached * CourseNotModifiable * CourseTeacherLimitReached * UserGroupsMembershipLimitReached * `ALREADY_EXISTS` if the user is already a teacher or student in the course."
   {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
@@ -346,6 +461,241 @@
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/courses/{courseId}/teachers"
+     #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn teachers-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/teachers/list
+  
+  Required parameters: courseId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns a list of teachers of this course that the requester is permitted to view. This method returns the following error codes: * `NOT_FOUND` if the course does not exist. * `PERMISSION_DENIED` for access errors."
+  {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
+            "https://www.googleapis.com/auth/classroom.profile.photos"
+            "https://www.googleapis.com/auth/classroom.rosters"
+            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/teachers"
+     #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/delete
+  
+  Required parameters: courseId, id
+  
+  Optional parameters: none
+  
+  Deletes an announcement. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding announcement item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding announcement, if the requesting user is not permitted to delete the requested course or for access errors. * `FAILED_PRECONDITION` if the requested announcement has already been deleted. * `NOT_FOUND` if no course exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-patch$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/patch
+  
+  Required parameters: id, courseId
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:creationTime string,
+   :individualStudentsOptions {:studentIds [string]},
+   :creatorUserId string,
+   :assigneeMode string,
+   :scheduledTime string,
+   :state string,
+   :updateTime string,
+   :id string,
+   :alternateLink string,
+   :materials [{:youtubeVideo YouTubeVideo,
+                :link Link,
+                :driveFile SharedDriveFile,
+                :form Form}],
+   :courseId string,
+   :text string}
+  
+  Updates one or more fields of an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding announcement or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `FAILED_PRECONDITION` if the requested announcement has already been deleted. * `NOT_FOUND` if the requested course or announcement does not exist"
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/list
+  
+  Required parameters: courseId
+  
+  Optional parameters: announcementStates, orderBy, pageSize, pageToken
+  
+  Returns a list of announcements that the requester is permitted to view. Course students may only view `PUBLISHED` announcements. Course teachers and domain administrators may view all announcements. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"
+            "https://www.googleapis.com/auth/classroom.announcements.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements"
+     #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/get
+  
+  Required parameters: id, courseId
+  
+  Optional parameters: none
+  
+  Returns an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or announcement, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or announcement does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"
+            "https://www.googleapis.com/auth/classroom.announcements.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-modifyAssignees$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/modifyAssignees
+  
+  Required parameters: id, courseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:modifyIndividualStudentsOptions {:addStudentIds [string],
+                                     :removeStudentIds [string]},
+   :assigneeMode string}
+  
+  Modifies assignee mode and options of an announcement. Only a teacher of the course that contains the announcement may call this method. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements/{id}:modifyAssignees"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn announcements-create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/create
+  
+  Required parameters: courseId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :individualStudentsOptions {:studentIds [string]},
+   :creatorUserId string,
+   :assigneeMode string,
+   :scheduledTime string,
+   :state string,
+   :updateTime string,
+   :id string,
+   :alternateLink string,
+   :materials [{:youtubeVideo YouTubeVideo,
+                :link Link,
+                :driveFile SharedDriveFile,
+                :form Form}],
+   :courseId string,
+   :text string}
+  
+  Creates an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create announcements in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
+  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/announcements"
      #{:courseId}
      parameters)
     (merge-with
@@ -395,7 +745,7 @@
   
   Required parameters: courseId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Returns a list of aliases for a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the course or for access errors. * `NOT_FOUND` if the course does not exist."
   {:scopes ["https://www.googleapis.com/auth/classroom.courses"
@@ -420,7 +770,7 @@
 (defn aliases-delete$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/aliases/delete
   
-  Required parameters: alias, courseId
+  Required parameters: courseId, alias
   
   Optional parameters: none
   
@@ -443,226 +793,8 @@
       :as :json}
      auth))))
 
-(defn topics-get$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/get
-  
-  Required parameters: courseId, id
-  
-  Optional parameters: none
-  
-  Returns a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or topic, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or topic does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.topics"
-            "https://www.googleapis.com/auth/classroom.topics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/topics/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn topics-create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/create
-  
-  Required parameters: courseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string, :courseId string, :topicId string, :updateTime string}
-  
-  Creates a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create a topic in the requested course, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/topics"
-     #{:courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn topics-delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/delete
-  
-  Required parameters: courseId, id
-  
-  Optional parameters: none
-  
-  Deletes a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not allowed to delete the requested topic or for access errors. * `FAILED_PRECONDITION` if the requested topic has already been deleted. * `NOT_FOUND` if no course or topic exists with the requested ID."
-  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/topics/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn topics-patch$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/patch
-  
-  Required parameters: id, courseId
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string, :courseId string, :topicId string, :updateTime string}
-  
-  Updates one or more fields of a topic. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding topic or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or topic does not exist"
-  {:scopes ["https://www.googleapis.com/auth/classroom.topics"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/topics/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn topics-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/topics/list
-  
-  Required parameters: courseId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns the list of topics that the requester is permitted to view. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.topics"
-            "https://www.googleapis.com/auth/classroom.topics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/topics"
-     #{:courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWorkMaterials-delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/delete
-  
-  Required parameters: id, courseId
-  
-  Optional parameters: none
-  
-  Deletes a course work material. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding course work material item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding course work material, if the requesting user is not permitted to delete the requested course or for access errors. * `FAILED_PRECONDITION` if the requested course work material has already been deleted. * `NOT_FOUND` if no course exists with the requested ID."
-  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWorkMaterials/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWorkMaterials-patch$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/patch
-  
-  Required parameters: courseId, id
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :individualStudentsOptions {:studentIds [string]},
-   :creatorUserId string,
-   :assigneeMode string,
-   :topicId string,
-   :scheduledTime string,
-   :state string,
-   :title string,
-   :updateTime string,
-   :id string,
-   :alternateLink string,
-   :materials [{:form Form,
-                :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
-   :courseId string}
-  
-  Updates one or more fields of a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `FAILED_PRECONDITION` if the requested course work material has already been deleted. * `NOT_FOUND` if the requested course or course work material does not exist"
-  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWorkMaterials/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWorkMaterials-create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/create
+(defn courseWork-create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/create
   
   Required parameters: courseId
   
@@ -673,30 +805,41 @@
   {:creationTime string,
    :description string,
    :individualStudentsOptions {:studentIds [string]},
+   :multipleChoiceQuestion {:choices [string]},
+   :submissionModificationMode string,
    :creatorUserId string,
    :assigneeMode string,
+   :dueTime {:nanos integer,
+             :minutes integer,
+             :hours integer,
+             :seconds integer},
    :topicId string,
    :scheduledTime string,
    :state string,
    :title string,
    :updateTime string,
    :id string,
+   :dueDate {:day integer, :year integer, :month integer},
    :alternateLink string,
-   :materials [{:form Form,
+   :materials [{:youtubeVideo YouTubeVideo,
                 :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
-   :courseId string}
+                :driveFile SharedDriveFile,
+                :form Form}],
+   :assignment {:studentWorkFolder DriveFolder},
+   :maxPoints number,
+   :associatedWithDeveloper boolean,
+   :courseId string,
+   :workType string}
   
-  Creates a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create course work material in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed or if more than 20 * materials are provided. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
-  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
+  Creates course work. The resulting course work (and corresponding student submissions) are associated with the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to make the request. Classroom API requests to modify course work and student submissions must be made with an OAuth client ID from the associated Developer Console project. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create course work in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
+  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.students"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:courseId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWorkMaterials"
+     "v1/courses/{courseId}/courseWork"
      #{:courseId}
      parameters)
     (merge-with
@@ -704,60 +847,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWorkMaterials-get$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/get
-  
-  Required parameters: courseId, id
-  
-  Optional parameters: none
-  
-  Returns a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work material, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work material does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"
-            "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWorkMaterials/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWorkMaterials-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/list
-  
-  Required parameters: courseId
-  
-  Optional parameters: materialDriveId, pageToken, materialLink, pageSize, orderBy, courseWorkMaterialStates
-  
-  Returns a list of course work material that the requester is permitted to view. Course students may only view `PUBLISHED` course work material. Course teachers and domain administrators may view all course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"
-            "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWorkMaterials"
-     #{:courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -766,7 +855,7 @@
 (defn courseWork-modifyAssignees$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/modifyAssignees
   
-  Required parameters: courseId, id
+  Required parameters: id, courseId
   
   Optional parameters: none
   
@@ -797,10 +886,39 @@
       :as :json}
      auth))))
 
+(defn courseWork-get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/get
+  
+  Required parameters: courseId, id
+  
+  Optional parameters: none
+  
+  Returns course work. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+            "https://www.googleapis.com/auth/classroom.coursework.students"
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/courseWork/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn courseWork-patch$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/patch
   
-  Required parameters: id, courseId
+  Required parameters: courseId, id
   
   Optional parameters: updateMask
   
@@ -813,10 +931,10 @@
    :submissionModificationMode string,
    :creatorUserId string,
    :assigneeMode string,
-   :dueTime {:hours integer,
-             :nanos integer,
-             :seconds integer,
-             :minutes integer},
+   :dueTime {:nanos integer,
+             :minutes integer,
+             :hours integer,
+             :seconds integer},
    :topicId string,
    :scheduledTime string,
    :state string,
@@ -825,10 +943,10 @@
    :id string,
    :dueDate {:day integer, :year integer, :month integer},
    :alternateLink string,
-   :materials [{:form Form,
+   :materials [{:youtubeVideo YouTubeVideo,
                 :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
+                :driveFile SharedDriveFile,
+                :form Form}],
    :assignment {:studentWorkFolder DriveFolder},
    :maxPoints number,
    :associatedWithDeveloper boolean,
@@ -856,123 +974,6 @@
       :as :json}
      auth))))
 
-(defn courseWork-create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/create
-  
-  Required parameters: courseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :individualStudentsOptions {:studentIds [string]},
-   :multipleChoiceQuestion {:choices [string]},
-   :submissionModificationMode string,
-   :creatorUserId string,
-   :assigneeMode string,
-   :dueTime {:hours integer,
-             :nanos integer,
-             :seconds integer,
-             :minutes integer},
-   :topicId string,
-   :scheduledTime string,
-   :state string,
-   :title string,
-   :updateTime string,
-   :id string,
-   :dueDate {:day integer, :year integer, :month integer},
-   :alternateLink string,
-   :materials [{:form Form,
-                :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
-   :assignment {:studentWorkFolder DriveFolder},
-   :maxPoints number,
-   :associatedWithDeveloper boolean,
-   :courseId string,
-   :workType string}
-  
-  Creates course work. The resulting course work (and corresponding student submissions) are associated with the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to make the request. Classroom API requests to modify course work and student submissions must be made with an OAuth client ID from the associated Developer Console project. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create course work in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
-  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.students"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWork"
-     #{:courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWork-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/list
-  
-  Required parameters: courseId
-  
-  Optional parameters: pageSize, pageToken, orderBy, courseWorkStates
-  
-  Returns a list of course work that the requester is permitted to view. Course students may only view `PUBLISHED` course work. Course teachers and domain administrators may view all course work. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
-            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
-            "https://www.googleapis.com/auth/classroom.coursework.students"
-            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWork"
-     #{:courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWork-get$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/get
-  
-  Required parameters: id, courseId
-  
-  Optional parameters: none
-  
-  Returns course work. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
-            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
-            "https://www.googleapis.com/auth/classroom.coursework.students"
-            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWork/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn courseWork-delete$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/delete
   
@@ -990,6 +991,35 @@
      "https://classroom.googleapis.com/"
      "v1/courses/{courseId}/courseWork/{id}"
      #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn courseWork-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/list
+  
+  Required parameters: courseId
+  
+  Optional parameters: pageSize, orderBy, courseWorkStates, pageToken
+  
+  Returns a list of course work that the requester is permitted to view. Course students may only view `PUBLISHED` course work. Course teachers and domain administrators may view all course work. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+            "https://www.googleapis.com/auth/classroom.coursework.students"
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/courseWork"
+     #{:courseId}
      parameters)
     (merge-with
      merge
@@ -1052,7 +1082,7 @@
 (defn courseWork-studentSubmissions-turnIn$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/turnIn
   
-  Required parameters: courseId, id, courseWorkId
+  Required parameters: courseId, courseWorkId, id
   
   Optional parameters: none
   
@@ -1069,73 +1099,6 @@
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:turnIn"
-     #{:id :courseWorkId :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWork-studentSubmissions-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/list
-  
-  Required parameters: courseId, courseWorkId
-  
-  Optional parameters: states, late, userId, pageToken, pageSize
-  
-  Returns a list of student submissions that the requester is permitted to view, factoring in the OAuth scopes of the request. `-` may be specified as the `course_work_id` to include student submissions for multiple course work items. Course students may only view their own work. Course teachers and domain administrators may view all student submissions. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
-            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
-            "https://www.googleapis.com/auth/classroom.coursework.students"
-            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
-            "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
-            "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:courseWorkId :courseId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions"
-     #{:courseWorkId :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn courseWork-studentSubmissions-modifyAttachments$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/modifyAttachments
-  
-  Required parameters: courseId, courseWorkId, id
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:addAttachments [{:form Form,
-                     :link Link,
-                     :youTubeVideo YouTubeVideo,
-                     :driveFile DriveFile}]}
-  
-  Modifies attachments of student submission. Attachments may only be added to student submissions belonging to course work objects with a `workType` of `ASSIGNMENT`. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding course work item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, if the user is not permitted to modify attachments on the requested student submission, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course, course work, or student submission does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
-            "https://www.googleapis.com/auth/classroom.coursework.students"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :courseWorkId :courseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:modifyAttachments"
      #{:id :courseWorkId :courseId}
      parameters)
     (merge-with
@@ -1183,7 +1146,7 @@
 (defn courseWork-studentSubmissions-reclaim$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/reclaim
   
-  Required parameters: courseWorkId, id, courseId
+  Required parameters: courseWorkId, courseId, id
   
   Optional parameters: none
   
@@ -1212,10 +1175,41 @@
       :as :json}
      auth))))
 
+(defn courseWork-studentSubmissions-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/list
+  
+  Required parameters: courseWorkId, courseId
+  
+  Optional parameters: userId, late, pageToken, states, pageSize
+  
+  Returns a list of student submissions that the requester is permitted to view, factoring in the OAuth scopes of the request. `-` may be specified as the `course_work_id` to include student submissions for multiple course work items. Course students may only view their own work. Course teachers and domain administrators may view all student submissions. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+            "https://www.googleapis.com/auth/classroom.coursework.students"
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+            "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
+            "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:courseWorkId :courseId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions"
+     #{:courseWorkId :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn courseWork-studentSubmissions-get$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/get
   
-  Required parameters: courseWorkId, courseId, id
+  Required parameters: courseId, courseWorkId, id
   
   Optional parameters: none
   
@@ -1243,67 +1237,78 @@
       :as :json}
      auth))))
 
-(defn announcements-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/list
+(defn courseWork-studentSubmissions-modifyAttachments$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWork/studentSubmissions/modifyAttachments
   
-  Required parameters: courseId
+  Required parameters: id, courseWorkId, courseId
   
-  Optional parameters: announcementStates, pageSize, pageToken, orderBy
+  Optional parameters: none
   
-  Returns a list of announcements that the requester is permitted to view. Course students may only view `PUBLISHED` announcements. Course teachers and domain administrators may view all announcements. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"
-            "https://www.googleapis.com/auth/classroom.announcements.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:courseId})]}
+  Body: 
+  
+  {:addAttachments [{:youTubeVideo YouTubeVideo,
+                     :form Form,
+                     :link Link,
+                     :driveFile DriveFile}]}
+  
+  Modifies attachments of student submission. Attachments may only be added to student submissions belonging to course work objects with a `workType` of `ASSIGNMENT`. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding course work item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work, if the user is not permitted to modify attachments on the requested student submission, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course, course work, or student submission does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.coursework.me"
+            "https://www.googleapis.com/auth/classroom.coursework.students"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :courseWorkId :courseId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements"
-     #{:courseId}
+     "v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions/{id}:modifyAttachments"
+     #{:id :courseWorkId :courseId}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn announcements-patch$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/patch
+(defn courseWorkMaterials-patch$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/patch
   
-  Required parameters: courseId, id
+  Required parameters: id, courseId
   
   Optional parameters: updateMask
   
   Body: 
   
   {:creationTime string,
+   :description string,
    :individualStudentsOptions {:studentIds [string]},
    :creatorUserId string,
    :assigneeMode string,
+   :topicId string,
    :scheduledTime string,
    :state string,
+   :title string,
    :updateTime string,
    :id string,
    :alternateLink string,
-   :materials [{:form Form,
+   :materials [{:youtubeVideo YouTubeVideo,
                 :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
-   :courseId string,
-   :text string}
+                :driveFile SharedDriveFile,
+                :form Form}],
+   :courseId string}
   
-  Updates one or more fields of an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding announcement or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `FAILED_PRECONDITION` if the requested announcement has already been deleted. * `NOT_FOUND` if the requested course or announcement does not exist"
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  Updates one or more fields of a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `FAILED_PRECONDITION` if the requested course work material has already been deleted. * `NOT_FOUND` if the requested course or course work material does not exist"
+  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:id :courseId})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements/{id}"
+     "v1/courses/{courseId}/courseWorkMaterials/{id}"
      #{:id :courseId}
      parameters)
     (merge-with
@@ -1316,83 +1321,23 @@
       :as :json}
      auth))))
 
-(defn announcements-modifyAssignees$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/modifyAssignees
+(defn courseWorkMaterials-get$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/get
   
   Required parameters: courseId, id
   
   Optional parameters: none
   
-  Body: 
-  
-  {:assigneeMode string,
-   :modifyIndividualStudentsOptions {:addStudentIds [string],
-                                     :removeStudentIds [string]}}
-  
-  Modifies assignee mode and options of an announcement. Only a teacher of the course that contains the announcement may call this method. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements/{id}:modifyAssignees"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn announcements-delete$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/delete
-  
-  Required parameters: id, courseId
-  
-  Optional parameters: none
-  
-  Deletes an announcement. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding announcement item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding announcement, if the requesting user is not permitted to delete the requested course or for access errors. * `FAILED_PRECONDITION` if the requested announcement has already been deleted. * `NOT_FOUND` if no course exists with the requested ID."
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :courseId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements/{id}"
-     #{:id :courseId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn announcements-get$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/get
-  
-  Required parameters: id, courseId
-  
-  Optional parameters: none
-  
-  Returns an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or announcement, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or announcement does not exist."
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"
-            "https://www.googleapis.com/auth/classroom.announcements.readonly"]}
+  Returns a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or course work material, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course or course work material does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"
+            "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:id :courseId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements/{id}"
+     "v1/courses/{courseId}/courseWorkMaterials/{id}"
      #{:id :courseId}
      parameters)
     (merge-with
@@ -1403,8 +1348,34 @@
       :as :json}
      auth))))
 
-(defn announcements-create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/announcements/create
+(defn courseWorkMaterials-delete$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/delete
+  
+  Required parameters: id, courseId
+  
+  Optional parameters: none
+  
+  Deletes a course work material. This request must be made by the Developer Console project of the [OAuth client ID](https://support.google.com/cloud/answer/6158849) used to create the corresponding course work material item. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting developer project did not create the corresponding course work material, if the requesting user is not permitted to delete the requested course or for access errors. * `FAILED_PRECONDITION` if the requested course work material has already been deleted. * `NOT_FOUND` if no course exists with the requested ID."
+  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :courseId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/courseWorkMaterials/{id}"
+     #{:id :courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn courseWorkMaterials-create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/create
   
   Required parameters: courseId
   
@@ -1413,30 +1384,32 @@
   Body: 
   
   {:creationTime string,
+   :description string,
    :individualStudentsOptions {:studentIds [string]},
    :creatorUserId string,
    :assigneeMode string,
+   :topicId string,
    :scheduledTime string,
    :state string,
+   :title string,
    :updateTime string,
    :id string,
    :alternateLink string,
-   :materials [{:form Form,
+   :materials [{:youtubeVideo YouTubeVideo,
                 :link Link,
-                :youtubeVideo YouTubeVideo,
-                :driveFile SharedDriveFile}],
-   :courseId string,
-   :text string}
+                :driveFile SharedDriveFile,
+                :form Form}],
+   :courseId string}
   
-  Creates an announcement. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create announcements in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
-  {:scopes ["https://www.googleapis.com/auth/classroom.announcements"]}
+  Creates a course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course, create course work material in the requested course, share a Drive attachment, or for access errors. * `INVALID_ARGUMENT` if the request is malformed or if more than 20 * materials are provided. * `NOT_FOUND` if the requested course does not exist. * `FAILED_PRECONDITION` for the following request error: * AttachmentNotVisible"
+  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:courseId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
-     "v1/courses/{courseId}/announcements"
+     "v1/courses/{courseId}/courseWorkMaterials"
      #{:courseId}
      parameters)
     (merge-with
@@ -1449,22 +1422,60 @@
       :as :json}
      auth))))
 
-(defn students-list$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/list
+(defn courseWorkMaterials-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/courseWorkMaterials/list
   
   Required parameters: courseId
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: orderBy, materialLink, materialDriveId, courseWorkMaterialStates, pageToken, pageSize
   
-  Returns a list of students of this course that the requester is permitted to view. This method returns the following error codes: * `NOT_FOUND` if the course does not exist. * `PERMISSION_DENIED` for access errors."
-  {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
-            "https://www.googleapis.com/auth/classroom.profile.photos"
-            "https://www.googleapis.com/auth/classroom.rosters"
-            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  Returns a list of course work material that the requester is permitted to view. Course students may only view `PUBLISHED` course work material. Course teachers and domain administrators may view all course work material. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to access the requested course or for access errors. * `INVALID_ARGUMENT` if the request is malformed. * `NOT_FOUND` if the requested course does not exist."
+  {:scopes ["https://www.googleapis.com/auth/classroom.courseworkmaterials"
+            "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:courseId})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://classroom.googleapis.com/"
+     "v1/courses/{courseId}/courseWorkMaterials"
+     #{:courseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn students-create$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/create
+  
+  Required parameters: courseId
+  
+  Optional parameters: enrollmentCode
+  
+  Body: 
+  
+  {:profile {:name Name,
+             :photoUrl string,
+             :emailAddress string,
+             :id string,
+             :verifiedTeacher boolean,
+             :permissions [GlobalPermission]},
+   :studentWorkFolder {:id string, :alternateLink string, :title string},
+   :userId string,
+   :courseId string}
+  
+  Adds a user as a student of a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create students in this course or for access errors. * `NOT_FOUND` if the requested course ID does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled, for the following request errors: * CourseMemberLimitReached * CourseNotModifiable * UserGroupsMembershipLimitReached * `ALREADY_EXISTS` if the user is already a student or teacher in the course."
+  {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
+            "https://www.googleapis.com/auth/classroom.profile.photos"
+            "https://www.googleapis.com/auth/classroom.rosters"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:courseId})]}
+  (util/get-response
+   (http/post
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/courses/{courseId}/students"
@@ -1472,7 +1483,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1481,7 +1494,7 @@
 (defn students-get$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/get
   
-  Required parameters: userId, courseId
+  Required parameters: courseId, userId
   
   Optional parameters: none
   
@@ -1510,7 +1523,7 @@
 (defn students-delete$
   "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/delete
   
-  Required parameters: courseId, userId
+  Required parameters: userId, courseId
   
   Optional parameters: none
   
@@ -1533,33 +1546,22 @@
       :as :json}
      auth))))
 
-(defn students-create$
-  "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/create
+(defn students-list$
+  "https://developers.google.com/classroom/api/reference/rest/v1/courses/students/list
   
   Required parameters: courseId
   
-  Optional parameters: enrollmentCode
+  Optional parameters: pageSize, pageToken
   
-  Body: 
-  
-  {:courseId string,
-   :studentWorkFolder {:alternateLink string, :id string, :title string},
-   :profile {:emailAddress string,
-             :permissions [GlobalPermission],
-             :id string,
-             :verifiedTeacher boolean,
-             :photoUrl string,
-             :name Name},
-   :userId string}
-  
-  Adds a user as a student of a course. This method returns the following error codes: * `PERMISSION_DENIED` if the requesting user is not permitted to create students in this course or for access errors. * `NOT_FOUND` if the requested course ID does not exist. * `FAILED_PRECONDITION` if the requested user's account is disabled, for the following request errors: * CourseMemberLimitReached * CourseNotModifiable * UserGroupsMembershipLimitReached * `ALREADY_EXISTS` if the user is already a student or teacher in the course."
+  Returns a list of students of this course that the requester is permitted to view. This method returns the following error codes: * `NOT_FOUND` if the course does not exist. * `PERMISSION_DENIED` for access errors."
   {:scopes ["https://www.googleapis.com/auth/classroom.profile.emails"
             "https://www.googleapis.com/auth/classroom.profile.photos"
-            "https://www.googleapis.com/auth/classroom.rosters"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/classroom.rosters"
+            "https://www.googleapis.com/auth/classroom.rosters.readonly"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:courseId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://classroom.googleapis.com/"
      "v1/courses/{courseId}/students"
@@ -1567,9 +1569,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -6,6 +6,46 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-replays-create$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:state string,
+   :name string,
+   :config {:policyOverlay {}, :logSource string},
+   :resultsSummary {:oldestDate GoogleTypeDate,
+                    :unchangedCount integer,
+                    :errorCount integer,
+                    :newestDate GoogleTypeDate,
+                    :logCount integer,
+                    :differenceCount integer}}
+  
+  Creates and starts a Replay using the given ReplayConfig."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://policysimulator.googleapis.com/"
+     "v1/{+parent}/replays"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-replays-get$
   "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/get
   
@@ -27,46 +67,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-replays-create$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:state string,
-   :config {:logSource string, :policyOverlay {}},
-   :resultsSummary {:unchangedCount integer,
-                    :oldestDate GoogleTypeDate,
-                    :logCount integer,
-                    :differenceCount integer,
-                    :newestDate GoogleTypeDate,
-                    :errorCount integer},
-   :name string}
-  
-  Creates and starts a Replay using the given ReplayConfig."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://policysimulator.googleapis.com/"
-     "v1/{+parent}/replays"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

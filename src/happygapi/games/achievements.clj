@@ -11,7 +11,7 @@
   
   Required parameters: playerId
   
-  Optional parameters: pageToken, state, maxResults, language
+  Optional parameters: language, state, pageToken, maxResults
   
   Lists the progress for all your application's achievements for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
@@ -41,12 +41,12 @@
   
   Body: 
   
-  {:kind string,
-   :updates [{:setStepsAtLeastPayload GamesAchievementSetStepsAtLeast,
+  {:updates [{:incrementPayload GamesAchievementIncrement,
               :kind string,
               :updateType string,
-              :achievementId string,
-              :incrementPayload GamesAchievementIncrement}]}
+              :setStepsAtLeastPayload GamesAchievementSetStepsAtLeast,
+              :achievementId string}],
+   :kind string}
   
   Updates multiple achievements for the currently authenticated player."
   {:scopes ["https://www.googleapis.com/auth/games"]}
@@ -64,60 +64,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn increment$
-  "https://developers.google.com/games/api/reference/rest/v1/achievements/increment
-  
-  Required parameters: achievementId, stepsToIncrement
-  
-  Optional parameters: requestId
-  
-  Increments the steps of the achievement with the given ID for the currently authenticated player."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:achievementId :stepsToIncrement})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/achievements/{achievementId}/increment"
-     #{:achievementId :stepsToIncrement}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn unlock$
-  "https://developers.google.com/games/api/reference/rest/v1/achievements/unlock
-  
-  Required parameters: achievementId
-  
-  Optional parameters: none
-  
-  Unlocks this achievement for the currently authenticated player."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:achievementId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/achievements/{achievementId}/unlock"
-     #{:achievementId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -166,6 +112,60 @@
      "https://games.googleapis.com/"
      "games/v1/achievements/{achievementId}/setStepsAtLeast"
      #{:achievementId :steps}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn unlock$
+  "https://developers.google.com/games/api/reference/rest/v1/achievements/unlock
+  
+  Required parameters: achievementId
+  
+  Optional parameters: none
+  
+  Unlocks this achievement for the currently authenticated player."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/achievements/{achievementId}/unlock"
+     #{:achievementId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn increment$
+  "https://developers.google.com/games/api/reference/rest/v1/achievements/increment
+  
+  Required parameters: stepsToIncrement, achievementId
+  
+  Optional parameters: requestId
+  
+  Increments the steps of the achievement with the given ID for the currently authenticated player."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:achievementId :stepsToIncrement})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/achievements/{achievementId}/increment"
+     #{:achievementId :stepsToIncrement}
      parameters)
     (merge-with
      merge

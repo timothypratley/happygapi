@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:requestScreenshot boolean, :url string}
+  {:url string, :requestScreenshot boolean}
   
   Runs Mobile-Friendly Test for a given URL."
   {:scopes nil}

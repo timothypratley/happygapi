@@ -6,30 +6,19 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/create
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/list
   
   Required parameters: merchantId
   
-  Optional parameters: regionId
+  Optional parameters: pageSize, pageToken
   
-  Body: 
-  
-  {:regionalInventoryEligible boolean,
-   :geotargetArea {:geotargetCriteriaIds [string]},
-   :postalCodeArea {:regionCode string,
-                    :postalCodes [RegionPostalCodeAreaPostalCodeRange]},
-   :shippingEligible boolean,
-   :displayName string,
-   :merchantId string,
-   :regionId string}
-  
-  Creates a region definition in your Merchant Center account."
+  Lists the regions in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/regions"
@@ -37,9 +26,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -54,14 +41,14 @@
   
   Body: 
   
-  {:regionalInventoryEligible boolean,
-   :geotargetArea {:geotargetCriteriaIds [string]},
+  {:regionId string,
+   :displayName string,
+   :regionalInventoryEligible boolean,
+   :merchantId string,
+   :shippingEligible boolean,
    :postalCodeArea {:regionCode string,
                     :postalCodes [RegionPostalCodeAreaPostalCodeRange]},
-   :shippingEligible boolean,
-   :displayName string,
-   :merchantId string,
-   :regionId string}
+   :geotargetArea {:geotargetCriteriaIds [string]}}
   
   Updates a region definition in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -87,7 +74,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/get
   
-  Required parameters: regionId, merchantId
+  Required parameters: merchantId, regionId
   
   Optional parameters: none
   
@@ -110,10 +97,49 @@
       :as :json}
      auth))))
 
+(defn create$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/create
+  
+  Required parameters: merchantId
+  
+  Optional parameters: regionId
+  
+  Body: 
+  
+  {:regionId string,
+   :displayName string,
+   :regionalInventoryEligible boolean,
+   :merchantId string,
+   :shippingEligible boolean,
+   :postalCodeArea {:regionCode string,
+                    :postalCodes [RegionPostalCodeAreaPostalCodeRange]},
+   :geotargetArea {:geotargetCriteriaIds [string]}}
+  
+  Creates a region definition in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/regions"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/delete
   
-  Required parameters: merchantId, regionId
+  Required parameters: regionId, merchantId
   
   Optional parameters: none
   
@@ -127,32 +153,6 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/regions/{regionId}"
      #{:regionId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/regions/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the regions in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/regions"
-     #{:merchantId}
      parameters)
     (merge-with
      merge

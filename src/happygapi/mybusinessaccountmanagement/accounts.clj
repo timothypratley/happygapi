@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/list
+  
+  Required parameters: none
+  
+  Optional parameters: parentAccount, pageSize, filter, pageToken
+  
+  Lists all of the accounts for the authenticated user. This includes all accounts that the user owns, as well as any accounts for which the user has management rights."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://mybusinessaccountmanagement.googleapis.com/"
+     "v1/accounts"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/my-business/api/reference/rest/v1/accounts/get
   
@@ -49,8 +75,8 @@
    :accountName string,
    :type string,
    :verificationState string,
-   :organizationInfo {:registeredDomain string,
-                      :phoneNumber string,
+   :organizationInfo {:phoneNumber string,
+                      :registeredDomain string,
                       :address PostalAddress},
    :permissionLevel string}
   
@@ -75,32 +101,6 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, filter, pageSize, parentAccount
-  
-  Lists all of the accounts for the authenticated user. This includes all accounts that the user owns, as well as any accounts for which the user has management rights."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/accounts"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/my-business/api/reference/rest/v1/accounts/patch
   
@@ -118,12 +118,47 @@
    :accountName string,
    :type string,
    :verificationState string,
-   :organizationInfo {:registeredDomain string,
-                      :phoneNumber string,
+   :organizationInfo {:phoneNumber string,
+                      :registeredDomain string,
                       :address PostalAddress},
    :permissionLevel string}
   
   Updates the specified business account. Personal accounts cannot be updated using this method."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://mybusinessaccountmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn admins-patch$
+  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/admins/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:role string,
+   :admin string,
+   :pendingInvitation boolean,
+   :name string}
+  
+  Updates the Admin for the specified Account Admin."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -205,9 +240,9 @@
   
   Body: 
   
-  {:admin string,
+  {:role string,
+   :admin string,
    :pendingInvitation boolean,
-   :role string,
    :name string}
   
   Invites the specified user to become an administrator for the specified account. The invitee must accept the invitation in order to be granted access to the account. See AcceptInvitation to programmatically accept an invitation."
@@ -231,29 +266,52 @@
       :as :json}
      auth))))
 
-(defn admins-patch$
-  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/admins/patch
+(defn invitations-list$
+  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/invitations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter
+  
+  Lists pending invitations for the specified account."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://mybusinessaccountmanagement.googleapis.com/"
+     "v1/{+parent}/invitations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn invitations-decline$
+  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/invitations/decline
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
   Body: 
   
-  {:admin string,
-   :pendingInvitation boolean,
-   :role string,
-   :name string}
+  {}
   
-  Updates the Admin for the specified Account Admin."
+  Declines the specified invitation."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:decline"
      #{:name}
      parameters)
     (merge-with
@@ -293,64 +351,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn invitations-decline$
-  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/invitations/decline
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Declines the specified invitation."
-  {:scopes nil}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/{+name}:decline"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn invitations-list$
-  "https://developers.google.com/my-business/api/reference/rest/v1/accounts/invitations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter
-  
-  Lists pending invitations for the specified account."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/{+parent}/invitations"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

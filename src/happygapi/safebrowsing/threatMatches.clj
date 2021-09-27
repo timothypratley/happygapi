@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:threatInfo {:platformTypes [string],
-                :threatEntryTypes [string],
-                :threatEntries [GoogleSecuritySafebrowsingV4ThreatEntry],
-                :threatTypes [string]},
-   :client {:clientId string, :clientVersion string}}
+  {:client {:clientVersion string, :clientId string},
+   :threatInfo {:threatEntries [GoogleSecuritySafebrowsingV4ThreatEntry],
+                :threatTypes [string],
+                :platformTypes [string],
+                :threatEntryTypes [string]}}
   
   Finds the threat entries that match the Safe Browsing lists."
   {:scopes nil}

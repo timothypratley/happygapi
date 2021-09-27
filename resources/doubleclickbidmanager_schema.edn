@@ -1,28 +1,28 @@
-{:ReportMetadata {:description "Report metadata.",
+{:ReportMetadata {:id "ReportMetadata",
                   :type "object",
-                  :properties {:reportDataStartTimeMs {:type "string",
-                                                       :description "The starting time for the data that is shown in the report.",
-                                                       :format "int64"},
+                  :properties {:status {:description "Report status.",
+                                        :$ref "ReportStatus"},
                                :googleCloudStoragePath {:type "string",
                                                         :description "The path to the location in Google Cloud Storage where the report is stored."},
-                               :status {:description "Report status.",
-                                        :$ref "ReportStatus"},
-                               :reportDataEndTimeMs {:description "The ending time for the data that is shown in the report.",
-                                                     :format "int64",
-                                                     :type "string"}},
-                  :id "ReportMetadata"},
- :QueryMetadata {:id "QueryMetadata",
-                 :properties {:format {:enumDescriptions ["" "" ""],
-                                       :type "string",
-                                       :description "Format of the generated report.",
+                               :reportDataEndTimeMs {:format "int64",
+                                                     :description "The ending time for the data that is shown in the report.",
+                                                     :type "string"},
+                               :reportDataStartTimeMs {:format "int64",
+                                                       :type "string",
+                                                       :description "The starting time for the data that is shown in the report."}},
+                  :description "Report metadata."},
+ :QueryMetadata {:properties {:format {:type "string",
                                        :enum ["CSV"
                                               "EXCEL_CSV"
-                                              "XLSX"]},
+                                              "XLSX"],
+                                       :description "Format of the generated report.",
+                                       :enumDescriptions ["" "" ""]},
                               :locale {:type "string",
                                        :description "Locale of the generated reports. Valid values are cs CZECH de GERMAN en ENGLISH es SPANISH fr FRENCH it ITALIAN ja JAPANESE ko KOREAN pl POLISH pt-BR BRAZILIAN_PORTUGUESE ru RUSSIAN tr TURKISH uk UKRAINIAN zh-CN CHINA_CHINESE zh-TW TAIWAN_CHINESE An locale string not in the list above will generate reports in English."},
-                              :sendNotification {:type "boolean",
-                                                 :description "Whether to send an email notification when a report is ready. Default to false."},
-                              :dataRange {:enum ["CUSTOM_DATES"
+                              :sendNotification {:description "Whether to send an email notification when a report is ready. Default to false.",
+                                                 :type "boolean"},
+                              :dataRange {:description "Range of report data.",
+                                          :enum ["CUSTOM_DATES"
                                                  "CURRENT_DAY"
                                                  "PREVIOUS_DAY"
                                                  "WEEK_TO_DATE"
@@ -42,7 +42,6 @@
                                                  "LAST_14_DAYS"
                                                  "TYPE_NOT_SUPPORTED"
                                                  "LAST_60_DAYS"],
-                                          :type "string",
                                           :enumDescriptions [""
                                                              ""
                                                              ""
@@ -63,44 +62,44 @@
                                                              ""
                                                              ""
                                                              ""],
-                                          :description "Range of report data."},
-                              :latestReportRunTimeMs {:type "string",
-                                                      :format "int64",
-                                                      :description "The time when the latest report started to run."},
-                              :title {:type "string",
-                                      :description "Query title. It is used to name the reports generated from this query."},
-                              :running {:description "Whether the latest report is currently running.",
-                                        :type "boolean"},
+                                          :type "string"},
+                              :latestReportRunTimeMs {:format "int64",
+                                                      :description "The time when the latest report started to run.",
+                                                      :type "string"},
+                              :title {:description "Query title. It is used to name the reports generated from this query.",
+                                      :type "string"},
+                              :running {:type "boolean",
+                                        :description "Whether the latest report is currently running."},
                               :googleCloudStoragePathForLatestReport {:description "The path to the location in Google Cloud Storage where the latest report is stored.",
                                                                       :type "string"},
                               :reportCount {:type "integer",
                                             :description "Number of reports that have been generated for the query.",
                                             :format "int32"},
-                              :shareEmailAddress {:items {:type "string"},
-                                                  :description "List of email addresses which are sent email notifications when the report is finished. Separate from sendNotification.",
-                                                  :type "array"},
+                              :shareEmailAddress {:type "array",
+                                                  :items {:type "string"},
+                                                  :description "List of email addresses which are sent email notifications when the report is finished. Separate from sendNotification."},
                               :googleDrivePathForLatestReport {:description "The path in Google Drive for the latest report.",
                                                                :type "string"}},
                  :type "object",
+                 :id "QueryMetadata",
                  :description "Query metadata."},
- :QuerySchedule {:description "Information on how frequently and when to run a query.",
-                 :id "QuerySchedule",
-                 :type "object",
-                 :properties {:startTimeMs {:format "int64",
+ :QuerySchedule {:properties {:nextRunTimezoneCode {:description "Canonical timezone code for report generation time. Defaults to America/New_York.",
+                                                    :type "string"},
+                              :nextRunMinuteOfDay {:type "integer",
+                                                   :format "int32",
+                                                   :description "Time of day at which a new report will be generated, represented as minutes past midnight. Range is 0 to 1439. Only applies to scheduled reports."},
+                              :startTimeMs {:description "When to start running the query. Not applicable to `ONE_TIME` frequency.",
                                             :type "string",
-                                            :description "When to start running the query. Not applicable to `ONE_TIME` frequency."},
-                              :endTimeMs {:format "int64",
-                                          :description "Datetime to periodically run the query until.",
-                                          :type "string"},
-                              :frequency {:enumDescriptions [""
+                                            :format "int64"},
+                              :frequency {:description "How often the query is run.",
+                                          :type "string",
+                                          :enumDescriptions [""
                                                              ""
                                                              ""
                                                              ""
                                                              ""
                                                              ""
                                                              ""],
-                                          :description "How often the query is run.",
-                                          :type "string",
                                           :enum ["ONE_TIME"
                                                  "DAILY"
                                                  "WEEKLY"
@@ -108,49 +107,43 @@
                                                  "MONTHLY"
                                                  "QUARTERLY"
                                                  "YEARLY"]},
-                              :nextRunTimezoneCode {:description "Canonical timezone code for report generation time. Defaults to America/New_York.",
-                                                    :type "string"},
-                              :nextRunMinuteOfDay {:type "integer",
-                                                   :format "int32",
-                                                   :description "Time of day at which a new report will be generated, represented as minutes past midnight. Range is 0 to 1439. Only applies to scheduled reports."}}},
- :Rule {:description "A Rule defines a name, and a boolean expression in [conjunctive normal form](http: //mathworld.wolfram.com/ConjunctiveNormalForm.html){.external} that can be // applied to a path event to determine if that name should be applied.",
-        :id "Rule",
+                              :endTimeMs {:type "string",
+                                          :description "Datetime to periodically run the query until.",
+                                          :format "int64"}},
+                 :description "Information on how frequently and when to run a query.",
+                 :type "object",
+                 :id "QuerySchedule"},
+ :Rule {:id "Rule",
+        :description "A Rule defines a name, and a boolean expression in [conjunctive normal form](http: //mathworld.wolfram.com/ConjunctiveNormalForm.html){.external} that can be // applied to a path event to determine if that name should be applied.",
         :type "object",
-        :properties {:disjunctiveMatchStatements {:type "array",
-                                                  :items {:$ref "DisjunctiveMatchStatement"}},
-                     :name {:type "string", :description "Rule name."}}},
- :EventFilter {:type "object",
-               :properties {:dimensionFilter {:$ref "PathQueryOptionsFilter",
+        :properties {:name {:description "Rule name.", :type "string"},
+                     :disjunctiveMatchStatements {:type "array",
+                                                  :items {:$ref "DisjunctiveMatchStatement"}}}},
+ :EventFilter {:properties {:dimensionFilter {:$ref "PathQueryOptionsFilter",
                                               :description "Filter on a dimension."}},
                :id "EventFilter",
-               :description "Defines the type of filter to be applied to the path, a DV360 event dimension filter."},
- :Report {:type "object",
-          :id "Report",
-          :properties {:params {:description "Report parameters.",
-                                :$ref "Parameters"},
-                       :key {:$ref "ReportKey",
-                             :description "Key used to identify a report."},
-                       :metadata {:$ref "ReportMetadata",
-                                  :description "Report metadata."}},
+               :description "Defines the type of filter to be applied to the path, a DV360 event dimension filter.",
+               :type "object"},
+ :Report {:id "Report",
+          :type "object",
+          :properties {:metadata {:$ref "ReportMetadata",
+                                  :description "Report metadata."},
+                       :key {:description "Key used to identify a report.",
+                             :$ref "ReportKey"},
+                       :params {:$ref "Parameters",
+                                :description "Report parameters."}},
           :description "Represents a report."},
- :PathQueryOptionsFilter {:description "Dimension Filter on path events.",
-                          :properties {:match {:enum ["UNKNOWN"
-                                                      "EXACT"
-                                                      "PARTIAL"
-                                                      "BEGINS_WITH"
-                                                      "WILDCARD_EXPRESSION"],
-                                               :type "string",
-                                               :description "Indicates how the filter should be matched to the value.",
-                                               :enumDescriptions [""
-                                                                  ""
-                                                                  ""
-                                                                  ""
-                                                                  ""]},
-                                       :values {:items {:type "string"},
-                                                :type "array",
-                                                :description "Value to filter on."},
-                                       :filter {:type "string",
-                                                :enumDescriptions [""
+ :PathQueryOptionsFilter {:properties {:filter {:enumDescriptions [""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
+                                                                   ""
                                                                    ""
                                                                    ""
                                                                    ""
@@ -710,576 +703,76 @@
                                                        "FILTER_INSERTION_ORDER_GOAL_TYPE"
                                                        "FILTER_LINE_ITEM_PACING_PERCENTAGE"
                                                        "FILTER_INSERTION_ORDER_GOAL_VALUE"
-                                                       "FILTER_OMID_CAPABLE"]}},
+                                                       "FILTER_OMID_CAPABLE"
+                                                       "FILTER_VENDOR_MEASUREMENT_MODE"
+                                                       "FILTER_IMPRESSION_LOSS_REJECTION_REASON"
+                                                       "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_START"
+                                                       "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_FIRST_QUARTILE"
+                                                       "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_MID_POINT"
+                                                       "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_THIRD_QUARTILE"
+                                                       "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_COMPLETE"
+                                                       "FILTER_VERIFICATION_VIDEO_RESIZED"
+                                                       "FILTER_VERIFICATION_AUDIBILITY_START"
+                                                       "FILTER_VERIFICATION_AUDIBILITY_COMPLETE"],
+                                                :type "string"},
+                                       :match {:type "string",
+                                               :enumDescriptions [""
+                                                                  ""
+                                                                  ""
+                                                                  ""
+                                                                  ""],
+                                               :enum ["UNKNOWN"
+                                                      "EXACT"
+                                                      "PARTIAL"
+                                                      "BEGINS_WITH"
+                                                      "WILDCARD_EXPRESSION"],
+                                               :description "Indicates how the filter should be matched to the value."},
+                                       :values {:type "array",
+                                                :description "Value to filter on.",
+                                                :items {:type "string"}}},
+                          :type "object",
                           :id "PathQueryOptionsFilter",
-                          :type "object"},
- :Parameters {:id "Parameters",
-              :properties {:groupBys {:items {:type "string",
-                                              :enum ["FILTER_UNKNOWN"
-                                                     "FILTER_DATE"
-                                                     "FILTER_DAY_OF_WEEK"
-                                                     "FILTER_WEEK"
-                                                     "FILTER_MONTH"
-                                                     "FILTER_YEAR"
-                                                     "FILTER_TIME_OF_DAY"
-                                                     "FILTER_CONVERSION_DELAY"
-                                                     "FILTER_CREATIVE_ID"
-                                                     "FILTER_CREATIVE_SIZE"
-                                                     "FILTER_CREATIVE_TYPE"
-                                                     "FILTER_EXCHANGE_ID"
-                                                     "FILTER_AD_POSITION"
-                                                     "FILTER_PUBLIC_INVENTORY"
-                                                     "FILTER_INVENTORY_SOURCE"
-                                                     "FILTER_CITY"
-                                                     "FILTER_REGION"
-                                                     "FILTER_DMA"
-                                                     "FILTER_COUNTRY"
-                                                     "FILTER_SITE_ID"
-                                                     "FILTER_CHANNEL_ID"
-                                                     "FILTER_PARTNER"
-                                                     "FILTER_ADVERTISER"
-                                                     "FILTER_INSERTION_ORDER"
-                                                     "FILTER_LINE_ITEM"
-                                                     "FILTER_PARTNER_CURRENCY"
-                                                     "FILTER_ADVERTISER_CURRENCY"
-                                                     "FILTER_ADVERTISER_TIMEZONE"
-                                                     "FILTER_LINE_ITEM_TYPE"
-                                                     "FILTER_USER_LIST"
-                                                     "FILTER_USER_LIST_FIRST_PARTY"
-                                                     "FILTER_USER_LIST_THIRD_PARTY"
-                                                     "FILTER_TARGETED_USER_LIST"
-                                                     "FILTER_DATA_PROVIDER"
-                                                     "FILTER_ORDER_ID"
-                                                     "FILTER_VIDEO_PLAYER_SIZE"
-                                                     "FILTER_VIDEO_DURATION_SECONDS"
-                                                     "FILTER_KEYWORD"
-                                                     "FILTER_PAGE_CATEGORY"
-                                                     "FILTER_CAMPAIGN_DAILY_FREQUENCY"
-                                                     "FILTER_LINE_ITEM_DAILY_FREQUENCY"
-                                                     "FILTER_LINE_ITEM_LIFETIME_FREQUENCY"
-                                                     "FILTER_OS"
-                                                     "FILTER_BROWSER"
-                                                     "FILTER_CARRIER"
-                                                     "FILTER_SITE_LANGUAGE"
-                                                     "FILTER_INVENTORY_FORMAT"
-                                                     "FILTER_ZIP_CODE"
-                                                     "FILTER_VIDEO_RATING_TIER"
-                                                     "FILTER_VIDEO_FORMAT_SUPPORT"
-                                                     "FILTER_VIDEO_SKIPPABLE_SUPPORT"
-                                                     "FILTER_VIDEO_CREATIVE_DURATION"
-                                                     "FILTER_PAGE_LAYOUT"
-                                                     "FILTER_VIDEO_AD_POSITION_IN_STREAM"
-                                                     "FILTER_AGE"
-                                                     "FILTER_GENDER"
-                                                     "FILTER_QUARTER"
-                                                     "FILTER_TRUEVIEW_CONVERSION_TYPE"
-                                                     "FILTER_MOBILE_GEO"
-                                                     "FILTER_MRAID_SUPPORT"
-                                                     "FILTER_ACTIVE_VIEW_EXPECTED_VIEWABILITY"
-                                                     "FILTER_VIDEO_CREATIVE_DURATION_SKIPPABLE"
-                                                     "FILTER_NIELSEN_COUNTRY_CODE"
-                                                     "FILTER_NIELSEN_DEVICE_ID"
-                                                     "FILTER_NIELSEN_GENDER"
-                                                     "FILTER_NIELSEN_AGE"
-                                                     "FILTER_INVENTORY_SOURCE_TYPE"
-                                                     "FILTER_CREATIVE_WIDTH"
-                                                     "FILTER_CREATIVE_HEIGHT"
-                                                     "FILTER_DFP_ORDER_ID"
-                                                     "FILTER_TRUEVIEW_AGE"
-                                                     "FILTER_TRUEVIEW_GENDER"
-                                                     "FILTER_TRUEVIEW_PARENTAL_STATUS"
-                                                     "FILTER_TRUEVIEW_REMARKETING_LIST"
-                                                     "FILTER_TRUEVIEW_INTEREST"
-                                                     "FILTER_TRUEVIEW_AD_GROUP_ID"
-                                                     "FILTER_TRUEVIEW_AD_GROUP_AD_ID"
-                                                     "FILTER_TRUEVIEW_IAR_LANGUAGE"
-                                                     "FILTER_TRUEVIEW_IAR_GENDER"
-                                                     "FILTER_TRUEVIEW_IAR_AGE"
-                                                     "FILTER_TRUEVIEW_IAR_CATEGORY"
-                                                     "FILTER_TRUEVIEW_IAR_COUNTRY"
-                                                     "FILTER_TRUEVIEW_IAR_CITY"
-                                                     "FILTER_TRUEVIEW_IAR_REGION"
-                                                     "FILTER_TRUEVIEW_IAR_ZIPCODE"
-                                                     "FILTER_TRUEVIEW_IAR_REMARKETING_LIST"
-                                                     "FILTER_TRUEVIEW_IAR_INTEREST"
-                                                     "FILTER_TRUEVIEW_IAR_PARENTAL_STATUS"
-                                                     "FILTER_TRUEVIEW_IAR_TIME_OF_DAY"
-                                                     "FILTER_TRUEVIEW_CUSTOM_AFFINITY"
-                                                     "FILTER_TRUEVIEW_CATEGORY"
-                                                     "FILTER_TRUEVIEW_KEYWORD"
-                                                     "FILTER_TRUEVIEW_PLACEMENT"
-                                                     "FILTER_TRUEVIEW_URL"
-                                                     "FILTER_TRUEVIEW_COUNTRY"
-                                                     "FILTER_TRUEVIEW_REGION"
-                                                     "FILTER_TRUEVIEW_CITY"
-                                                     "FILTER_TRUEVIEW_DMA"
-                                                     "FILTER_TRUEVIEW_ZIPCODE"
-                                                     "FILTER_NOT_SUPPORTED"
-                                                     "FILTER_MEDIA_PLAN"
-                                                     "FILTER_TRUEVIEW_IAR_YOUTUBE_CHANNEL"
-                                                     "FILTER_TRUEVIEW_IAR_YOUTUBE_VIDEO"
-                                                     "FILTER_SKIPPABLE_SUPPORT"
-                                                     "FILTER_COMPANION_CREATIVE_ID"
-                                                     "FILTER_BUDGET_SEGMENT_DESCRIPTION"
-                                                     "FILTER_FLOODLIGHT_ACTIVITY_ID"
-                                                     "FILTER_DEVICE_MODEL"
-                                                     "FILTER_DEVICE_MAKE"
-                                                     "FILTER_DEVICE_TYPE"
-                                                     "FILTER_CREATIVE_ATTRIBUTE"
-                                                     "FILTER_INVENTORY_COMMITMENT_TYPE"
-                                                     "FILTER_INVENTORY_RATE_TYPE"
-                                                     "FILTER_INVENTORY_DELIVERY_METHOD"
-                                                     "FILTER_INVENTORY_SOURCE_EXTERNAL_ID"
-                                                     "FILTER_AUTHORIZED_SELLER_STATE"
-                                                     "FILTER_VIDEO_DURATION_SECONDS_RANGE"
-                                                     "FILTER_PARTNER_NAME"
-                                                     "FILTER_PARTNER_STATUS"
-                                                     "FILTER_ADVERTISER_NAME"
-                                                     "FILTER_ADVERTISER_INTEGRATION_CODE"
-                                                     "FILTER_ADVERTISER_INTEGRATION_STATUS"
-                                                     "FILTER_CARRIER_NAME"
-                                                     "FILTER_CHANNEL_NAME"
-                                                     "FILTER_CITY_NAME"
-                                                     "FILTER_COMPANION_CREATIVE_NAME"
-                                                     "FILTER_USER_LIST_FIRST_PARTY_NAME"
-                                                     "FILTER_USER_LIST_THIRD_PARTY_NAME"
-                                                     "FILTER_NIELSEN_RESTATEMENT_DATE"
-                                                     "FILTER_NIELSEN_DATE_RANGE"
-                                                     "FILTER_INSERTION_ORDER_NAME"
-                                                     "FILTER_REGION_NAME"
-                                                     "FILTER_DMA_NAME"
-                                                     "FILTER_TRUEVIEW_IAR_REGION_NAME"
-                                                     "FILTER_TRUEVIEW_DMA_NAME"
-                                                     "FILTER_TRUEVIEW_REGION_NAME"
-                                                     "FILTER_ACTIVE_VIEW_CUSTOM_METRIC_ID"
-                                                     "FILTER_ACTIVE_VIEW_CUSTOM_METRIC_NAME"
-                                                     "FILTER_AD_TYPE"
-                                                     "FILTER_ALGORITHM"
-                                                     "FILTER_ALGORITHM_ID"
-                                                     "FILTER_AMP_PAGE_REQUEST"
-                                                     "FILTER_ANONYMOUS_INVENTORY_MODELING"
-                                                     "FILTER_APP_URL"
-                                                     "FILTER_APP_URL_EXCLUDED"
-                                                     "FILTER_ATTRIBUTED_USERLIST"
-                                                     "FILTER_ATTRIBUTED_USERLIST_COST"
-                                                     "FILTER_ATTRIBUTED_USERLIST_TYPE"
-                                                     "FILTER_ATTRIBUTION_MODEL"
-                                                     "FILTER_AUDIENCE_LIST"
-                                                     "FILTER_AUDIENCE_LIST_COST"
-                                                     "FILTER_AUDIENCE_LIST_TYPE"
-                                                     "FILTER_AUDIENCE_NAME"
-                                                     "FILTER_AUDIENCE_TYPE"
-                                                     "FILTER_BILLABLE_OUTCOME"
-                                                     "FILTER_BRAND_LIFT_TYPE"
-                                                     "FILTER_CHANNEL_TYPE"
-                                                     "FILTER_CM_PLACEMENT_ID"
-                                                     "FILTER_CONVERSION_SOURCE"
-                                                     "FILTER_CONVERSION_SOURCE_ID"
-                                                     "FILTER_COUNTRY_ID"
-                                                     "FILTER_CREATIVE"
-                                                     "FILTER_CREATIVE_ASSET"
-                                                     "FILTER_CREATIVE_INTEGRATION_CODE"
-                                                     "FILTER_CREATIVE_RENDERED_IN_AMP"
-                                                     "FILTER_CREATIVE_SOURCE"
-                                                     "FILTER_CREATIVE_STATUS"
-                                                     "FILTER_DATA_PROVIDER_NAME"
-                                                     "FILTER_DETAILED_DEMOGRAPHICS"
-                                                     "FILTER_DETAILED_DEMOGRAPHICS_ID"
-                                                     "FILTER_DEVICE"
-                                                     "FILTER_GAM_INSERTION_ORDER"
-                                                     "FILTER_GAM_LINE_ITEM"
-                                                     "FILTER_GAM_LINE_ITEM_ID"
-                                                     "FILTER_DIGITAL_CONTENT_LABEL"
-                                                     "FILTER_DOMAIN"
-                                                     "FILTER_ELIGIBLE_COOKIES_ON_FIRST_PARTY_AUDIENCE_LIST"
-                                                     "FILTER_ELIGIBLE_COOKIES_ON_THIRD_PARTY_AUDIENCE_LIST_AND_INTEREST"
-                                                     "FILTER_EXCHANGE"
-                                                     "FILTER_EXCHANGE_CODE"
-                                                     "FILTER_EXTENSION"
-                                                     "FILTER_EXTENSION_STATUS"
-                                                     "FILTER_EXTENSION_TYPE"
-                                                     "FILTER_FIRST_PARTY_AUDIENCE_LIST_COST"
-                                                     "FILTER_FIRST_PARTY_AUDIENCE_LIST_TYPE"
-                                                     "FILTER_FLOODLIGHT_ACTIVITY"
-                                                     "FILTER_FORMAT"
-                                                     "FILTER_GMAIL_AGE"
-                                                     "FILTER_GMAIL_CITY"
-                                                     "FILTER_GMAIL_COUNTRY"
-                                                     "FILTER_GMAIL_COUNTRY_NAME"
-                                                     "FILTER_GMAIL_DEVICE_TYPE"
-                                                     "FILTER_GMAIL_DEVICE_TYPE_NAME"
-                                                     "FILTER_GMAIL_GENDER"
-                                                     "FILTER_GMAIL_REGION"
-                                                     "FILTER_GMAIL_REMARKETING_LIST"
-                                                     "FILTER_HOUSEHOLD_INCOME"
-                                                     "FILTER_IMPRESSION_COUNTING_METHOD"
-                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_INSERTION_ORDER"
-                                                     "FILTER_INSERTION_ORDER_INTEGRATION_CODE"
-                                                     "FILTER_INSERTION_ORDER_STATUS"
-                                                     "FILTER_INTEREST"
-                                                     "FILTER_INVENTORY_SOURCE_GROUP"
-                                                     "FILTER_INVENTORY_SOURCE_GROUP_ID"
-                                                     "FILTER_INVENTORY_SOURCE_ID"
-                                                     "FILTER_INVENTORY_SOURCE_NAME"
-                                                     "FILTER_LIFE_EVENT"
-                                                     "FILTER_LIFE_EVENTS"
-                                                     "FILTER_LINE_ITEM_INTEGRATION_CODE"
-                                                     "FILTER_LINE_ITEM_NAME"
-                                                     "FILTER_LINE_ITEM_STATUS"
-                                                     "FILTER_MATCH_RATIO"
-                                                     "FILTER_MEASUREMENT_SOURCE"
-                                                     "FILTER_MEDIA_PLAN_NAME"
-                                                     "FILTER_PARENTAL_STATUS"
-                                                     "FILTER_PLACEMENT_ALL_YOUTUBE_CHANNELS"
-                                                     "FILTER_PLATFORM"
-                                                     "FILTER_PLAYBACK_METHOD"
-                                                     "FILTER_POSITION_IN_CONTENT"
-                                                     "FILTER_PUBLISHER_PROPERTY"
-                                                     "FILTER_PUBLISHER_PROPERTY_ID"
-                                                     "FILTER_PUBLISHER_PROPERTY_SECTION"
-                                                     "FILTER_PUBLISHER_PROPERTY_SECTION_ID"
-                                                     "FILTER_REFUND_REASON"
-                                                     "FILTER_REMARKETING_LIST"
-                                                     "FILTER_REWARDED"
-                                                     "FILTER_SENSITIVE_CATEGORY"
-                                                     "FILTER_SERVED_PIXEL_DENSITY"
-                                                     "FILTER_TARGETED_DATA_PROVIDERS"
-                                                     "FILTER_THIRD_PARTY_AUDIENCE_LIST_COST"
-                                                     "FILTER_THIRD_PARTY_AUDIENCE_LIST_TYPE"
-                                                     "FILTER_TRUEVIEW_AD"
-                                                     "FILTER_TRUEVIEW_AD_GROUP"
-                                                     "FILTER_TRUEVIEW_DETAILED_DEMOGRAPHICS"
-                                                     "FILTER_TRUEVIEW_DETAILED_DEMOGRAPHICS_ID"
-                                                     "FILTER_TRUEVIEW_HOUSEHOLD_INCOME"
-                                                     "FILTER_TRUEVIEW_IAR_COUNTRY_NAME"
-                                                     "FILTER_TRUEVIEW_REMARKETING_LIST_NAME"
-                                                     "FILTER_VARIANT_ID"
-                                                     "FILTER_VARIANT_NAME"
-                                                     "FILTER_VARIANT_VERSION"
-                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE"
-                                                     "FILTER_VERIFICATION_VIDEO_POSITION"
-                                                     "FILTER_VIDEO_COMPANION_CREATIVE_SIZE"
-                                                     "FILTER_VIDEO_CONTINUOUS_PLAY"
-                                                     "FILTER_VIDEO_DURATION"
-                                                     "FILTER_YOUTUBE_ADAPTED_AUDIENCE_LIST"
-                                                     "FILTER_YOUTUBE_AD_VIDEO"
-                                                     "FILTER_YOUTUBE_AD_VIDEO_ID"
-                                                     "FILTER_YOUTUBE_CHANNEL"
-                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_ADVERTISER"
-                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_PARTNER"
-                                                     "FILTER_YOUTUBE_VIDEO"
-                                                     "FILTER_ZIP_POSTAL_CODE"
-                                                     "FILTER_PLACEMENT_NAME_ALL_YOUTUBE_CHANNELS"
-                                                     "FILTER_TRUEVIEW_PLACEMENT_ID"
-                                                     "FILTER_PATH_PATTERN_ID"
-                                                     "FILTER_PATH_EVENT_INDEX"
-                                                     "FILTER_EVENT_TYPE"
-                                                     "FILTER_CHANNEL_GROUPING"
-                                                     "FILTER_OM_SDK_AVAILABLE"
-                                                     "FILTER_DATA_SOURCE"
-                                                     "FILTER_CM360_PLACEMENT_ID"
-                                                     "FILTER_TRUEVIEW_CLICK_TYPE_NAME"
-                                                     "FILTER_TRUEVIEW_AD_TYPE_NAME"
-                                                     "FILTER_VIDEO_CONTENT_DURATION"
-                                                     "FILTER_MATCHED_GENRE_TARGET"
-                                                     "FILTER_VIDEO_CONTENT_LIVE_STREAM"
-                                                     "FILTER_BUDGET_SEGMENT_TYPE"
-                                                     "FILTER_BUDGET_SEGMENT_BUDGET"
-                                                     "FILTER_BUDGET_SEGMENT_START_DATE"
-                                                     "FILTER_BUDGET_SEGMENT_END_DATE"
-                                                     "FILTER_BUDGET_SEGMENT_PACING_PERCENTAGE"
-                                                     "FILTER_LINE_ITEM_BUDGET"
-                                                     "FILTER_LINE_ITEM_START_DATE"
-                                                     "FILTER_LINE_ITEM_END_DATE"
-                                                     "FILTER_INSERTION_ORDER_GOAL_TYPE"
-                                                     "FILTER_LINE_ITEM_PACING_PERCENTAGE"
-                                                     "FILTER_INSERTION_ORDER_GOAL_VALUE"
-                                                     "FILTER_OMID_CAPABLE"],
-                                              :enumDescriptions [""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""
-                                                                 ""]},
-                                      :description "Data is grouped by the filters listed in this field.",
-                                      :type "array"},
-                           :options {:description "Additional query options.",
-                                     :$ref "Options"},
-                           :type {:description "Report type.",
+                          :description "Dimension Filter on path events."},
+ :Parameters {:description "Parameters of a query or report.",
+              :properties {:options {:$ref "Options",
+                                     :description "Additional query options."},
+                           :filters {:items {:$ref "FilterPair"},
+                                     :type "array",
+                                     :description "Filters used to match traffic data in your report."},
+                           :type {:enum ["TYPE_GENERAL"
+                                         "TYPE_AUDIENCE_PERFORMANCE"
+                                         "TYPE_INVENTORY_AVAILABILITY"
+                                         "TYPE_KEYWORD"
+                                         "TYPE_PIXEL_LOAD"
+                                         "TYPE_AUDIENCE_COMPOSITION"
+                                         "TYPE_CROSS_PARTNER"
+                                         "TYPE_PAGE_CATEGORY"
+                                         "TYPE_THIRD_PARTY_DATA_PROVIDER"
+                                         "TYPE_CROSS_PARTNER_THIRD_PARTY_DATA_PROVIDER"
+                                         "TYPE_CLIENT_SAFE"
+                                         "TYPE_ORDER_ID"
+                                         "TYPE_FEE"
+                                         "TYPE_CROSS_FEE"
+                                         "TYPE_ACTIVE_GRP"
+                                         "TYPE_YOUTUBE_VERTICAL"
+                                         "TYPE_COMSCORE_VCE"
+                                         "TYPE_TRUEVIEW"
+                                         "TYPE_NIELSEN_AUDIENCE_PROFILE"
+                                         "TYPE_NIELSEN_DAILY_REACH_BUILD"
+                                         "TYPE_NIELSEN_SITE"
+                                         "TYPE_REACH_AND_FREQUENCY"
+                                         "TYPE_ESTIMATED_CONVERSION"
+                                         "TYPE_VERIFICATION"
+                                         "TYPE_TRUEVIEW_IAR"
+                                         "TYPE_NIELSEN_ONLINE_GLOBAL_MARKET"
+                                         "TYPE_PETRA_NIELSEN_AUDIENCE_PROFILE"
+                                         "TYPE_PETRA_NIELSEN_DAILY_REACH_BUILD"
+                                         "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET"
+                                         "TYPE_NOT_SUPPORTED"
+                                         "TYPE_REACH_AUDIENCE"
+                                         "TYPE_LINEAR_TV_SEARCH_LIFT"
+                                         "TYPE_PATH"
+                                         "TYPE_PATH_ATTRIBUTION"],
                                   :enumDescriptions [""
                                                      ""
                                                      ""
@@ -1314,47 +807,10 @@
                                                      ""
                                                      ""
                                                      ""],
-                                  :enum ["TYPE_GENERAL"
-                                         "TYPE_AUDIENCE_PERFORMANCE"
-                                         "TYPE_INVENTORY_AVAILABILITY"
-                                         "TYPE_KEYWORD"
-                                         "TYPE_PIXEL_LOAD"
-                                         "TYPE_AUDIENCE_COMPOSITION"
-                                         "TYPE_CROSS_PARTNER"
-                                         "TYPE_PAGE_CATEGORY"
-                                         "TYPE_THIRD_PARTY_DATA_PROVIDER"
-                                         "TYPE_CROSS_PARTNER_THIRD_PARTY_DATA_PROVIDER"
-                                         "TYPE_CLIENT_SAFE"
-                                         "TYPE_ORDER_ID"
-                                         "TYPE_FEE"
-                                         "TYPE_CROSS_FEE"
-                                         "TYPE_ACTIVE_GRP"
-                                         "TYPE_YOUTUBE_VERTICAL"
-                                         "TYPE_COMSCORE_VCE"
-                                         "TYPE_TRUEVIEW"
-                                         "TYPE_NIELSEN_AUDIENCE_PROFILE"
-                                         "TYPE_NIELSEN_DAILY_REACH_BUILD"
-                                         "TYPE_NIELSEN_SITE"
-                                         "TYPE_REACH_AND_FREQUENCY"
-                                         "TYPE_ESTIMATED_CONVERSION"
-                                         "TYPE_VERIFICATION"
-                                         "TYPE_TRUEVIEW_IAR"
-                                         "TYPE_NIELSEN_ONLINE_GLOBAL_MARKET"
-                                         "TYPE_PETRA_NIELSEN_AUDIENCE_PROFILE"
-                                         "TYPE_PETRA_NIELSEN_DAILY_REACH_BUILD"
-                                         "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET"
-                                         "TYPE_NOT_SUPPORTED"
-                                         "TYPE_REACH_AUDIENCE"
-                                         "TYPE_LINEAR_TV_SEARCH_LIFT"
-                                         "TYPE_PATH"
-                                         "TYPE_PATH_ATTRIBUTION"],
-                                  :type "string"},
-                           :includeInviteData {:description "Deprecated. This field is no longer in use.",
-                                               :type "boolean"},
-                           :metrics {:description "Metrics to include as columns in your report.",
-                                     :type "array",
-                                     :items {:type "string",
-                                             :enum ["METRIC_UNKNOWN"
+                                  :type "string",
+                                  :description "Report type."},
+                           :metrics {:type "array",
+                                     :items {:enum ["METRIC_UNKNOWN"
                                                     "METRIC_IMPRESSIONS"
                                                     "METRIC_CLICKS"
                                                     "METRIC_LAST_IMPRESSIONS"
@@ -1812,7 +1268,16 @@
                                                     "METRIC_PERCENTAGE_FROM_CURRENT_IO_GOAL"
                                                     "METRIC_DUPLICATE_FLOODLIGHT_IMPRESSIONS"
                                                     "METRIC_COOKIE_CONSENTED_FLOODLIGHT_IMPRESSIONS"
-                                                    "METRIC_COOKIE_UNCONSENTED_FLOODLIGHT_IMPRESSIONS"],
+                                                    "METRIC_COOKIE_UNCONSENTED_FLOODLIGHT_IMPRESSIONS"
+                                                    "METRIC_TRACKING_UNCONSENTED_CLICKS"
+                                                    "METRIC_IMPRESSION_LOSS_TARGETED_IMPRESSIONS"
+                                                    "METRIC_LINEITEM_BID_RESPONSE_COUNT"
+                                                    "METRIC_WIN_LOSS_RATE"
+                                                    "METRIC_WIN_LOSS_DEAL_AVAILABLE_REQUESTS"
+                                                    "METRIC_WIN_LOSS_LINEITEM_AVAILABLE_REQUESTS"
+                                                    "METRIC_WIN_LOSS_DEAL_TARGETED_IMPRESSIONS"
+                                                    "METRIC_WIN_LOSS_LINEITEM_TARGETED_IMPRESSIONS"
+                                                    "METRIC_VERIFICATION_VIDEO_PLAYER_SIZE_MEASURABLE_IMPRESSIONS"],
                                              :enumDescriptions [""
                                                                 ""
                                                                 ""
@@ -2271,40 +1736,607 @@
                                                                 ""
                                                                 ""
                                                                 ""
-                                                                ""]}},
-                           :filters {:description "Filters used to match traffic data in your report.",
-                                     :type "array",
-                                     :items {:$ref "FilterPair"}}},
-              :description "Parameters of a query or report.",
-              :type "object"},
- :RunQueryRequest {:properties {:reportDataStartTimeMs {:format "int64",
-                                                        :description "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
-                                                        :type "string"},
-                                :reportDataEndTimeMs {:description "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
-                                                      :type "string",
-                                                      :format "int64"},
-                                :timezoneCode {:description "Canonical timezone code for report data time. Defaults to America/New_York.",
-                                               :type "string"},
-                                :dataRange {:enum ["CUSTOM_DATES"
-                                                   "CURRENT_DAY"
-                                                   "PREVIOUS_DAY"
-                                                   "WEEK_TO_DATE"
-                                                   "MONTH_TO_DATE"
-                                                   "QUARTER_TO_DATE"
-                                                   "YEAR_TO_DATE"
-                                                   "PREVIOUS_WEEK"
-                                                   "PREVIOUS_HALF_MONTH"
-                                                   "PREVIOUS_MONTH"
-                                                   "PREVIOUS_QUARTER"
-                                                   "PREVIOUS_YEAR"
-                                                   "LAST_7_DAYS"
-                                                   "LAST_30_DAYS"
-                                                   "LAST_90_DAYS"
-                                                   "LAST_365_DAYS"
-                                                   "ALL_TIME"
-                                                   "LAST_14_DAYS"
-                                                   "TYPE_NOT_SUPPORTED"
-                                                   "LAST_60_DAYS"],
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""
+                                                                ""],
+                                             :type "string"},
+                                     :description "Metrics to include as columns in your report."},
+                           :groupBys {:type "array",
+                                      :items {:enum ["FILTER_UNKNOWN"
+                                                     "FILTER_DATE"
+                                                     "FILTER_DAY_OF_WEEK"
+                                                     "FILTER_WEEK"
+                                                     "FILTER_MONTH"
+                                                     "FILTER_YEAR"
+                                                     "FILTER_TIME_OF_DAY"
+                                                     "FILTER_CONVERSION_DELAY"
+                                                     "FILTER_CREATIVE_ID"
+                                                     "FILTER_CREATIVE_SIZE"
+                                                     "FILTER_CREATIVE_TYPE"
+                                                     "FILTER_EXCHANGE_ID"
+                                                     "FILTER_AD_POSITION"
+                                                     "FILTER_PUBLIC_INVENTORY"
+                                                     "FILTER_INVENTORY_SOURCE"
+                                                     "FILTER_CITY"
+                                                     "FILTER_REGION"
+                                                     "FILTER_DMA"
+                                                     "FILTER_COUNTRY"
+                                                     "FILTER_SITE_ID"
+                                                     "FILTER_CHANNEL_ID"
+                                                     "FILTER_PARTNER"
+                                                     "FILTER_ADVERTISER"
+                                                     "FILTER_INSERTION_ORDER"
+                                                     "FILTER_LINE_ITEM"
+                                                     "FILTER_PARTNER_CURRENCY"
+                                                     "FILTER_ADVERTISER_CURRENCY"
+                                                     "FILTER_ADVERTISER_TIMEZONE"
+                                                     "FILTER_LINE_ITEM_TYPE"
+                                                     "FILTER_USER_LIST"
+                                                     "FILTER_USER_LIST_FIRST_PARTY"
+                                                     "FILTER_USER_LIST_THIRD_PARTY"
+                                                     "FILTER_TARGETED_USER_LIST"
+                                                     "FILTER_DATA_PROVIDER"
+                                                     "FILTER_ORDER_ID"
+                                                     "FILTER_VIDEO_PLAYER_SIZE"
+                                                     "FILTER_VIDEO_DURATION_SECONDS"
+                                                     "FILTER_KEYWORD"
+                                                     "FILTER_PAGE_CATEGORY"
+                                                     "FILTER_CAMPAIGN_DAILY_FREQUENCY"
+                                                     "FILTER_LINE_ITEM_DAILY_FREQUENCY"
+                                                     "FILTER_LINE_ITEM_LIFETIME_FREQUENCY"
+                                                     "FILTER_OS"
+                                                     "FILTER_BROWSER"
+                                                     "FILTER_CARRIER"
+                                                     "FILTER_SITE_LANGUAGE"
+                                                     "FILTER_INVENTORY_FORMAT"
+                                                     "FILTER_ZIP_CODE"
+                                                     "FILTER_VIDEO_RATING_TIER"
+                                                     "FILTER_VIDEO_FORMAT_SUPPORT"
+                                                     "FILTER_VIDEO_SKIPPABLE_SUPPORT"
+                                                     "FILTER_VIDEO_CREATIVE_DURATION"
+                                                     "FILTER_PAGE_LAYOUT"
+                                                     "FILTER_VIDEO_AD_POSITION_IN_STREAM"
+                                                     "FILTER_AGE"
+                                                     "FILTER_GENDER"
+                                                     "FILTER_QUARTER"
+                                                     "FILTER_TRUEVIEW_CONVERSION_TYPE"
+                                                     "FILTER_MOBILE_GEO"
+                                                     "FILTER_MRAID_SUPPORT"
+                                                     "FILTER_ACTIVE_VIEW_EXPECTED_VIEWABILITY"
+                                                     "FILTER_VIDEO_CREATIVE_DURATION_SKIPPABLE"
+                                                     "FILTER_NIELSEN_COUNTRY_CODE"
+                                                     "FILTER_NIELSEN_DEVICE_ID"
+                                                     "FILTER_NIELSEN_GENDER"
+                                                     "FILTER_NIELSEN_AGE"
+                                                     "FILTER_INVENTORY_SOURCE_TYPE"
+                                                     "FILTER_CREATIVE_WIDTH"
+                                                     "FILTER_CREATIVE_HEIGHT"
+                                                     "FILTER_DFP_ORDER_ID"
+                                                     "FILTER_TRUEVIEW_AGE"
+                                                     "FILTER_TRUEVIEW_GENDER"
+                                                     "FILTER_TRUEVIEW_PARENTAL_STATUS"
+                                                     "FILTER_TRUEVIEW_REMARKETING_LIST"
+                                                     "FILTER_TRUEVIEW_INTEREST"
+                                                     "FILTER_TRUEVIEW_AD_GROUP_ID"
+                                                     "FILTER_TRUEVIEW_AD_GROUP_AD_ID"
+                                                     "FILTER_TRUEVIEW_IAR_LANGUAGE"
+                                                     "FILTER_TRUEVIEW_IAR_GENDER"
+                                                     "FILTER_TRUEVIEW_IAR_AGE"
+                                                     "FILTER_TRUEVIEW_IAR_CATEGORY"
+                                                     "FILTER_TRUEVIEW_IAR_COUNTRY"
+                                                     "FILTER_TRUEVIEW_IAR_CITY"
+                                                     "FILTER_TRUEVIEW_IAR_REGION"
+                                                     "FILTER_TRUEVIEW_IAR_ZIPCODE"
+                                                     "FILTER_TRUEVIEW_IAR_REMARKETING_LIST"
+                                                     "FILTER_TRUEVIEW_IAR_INTEREST"
+                                                     "FILTER_TRUEVIEW_IAR_PARENTAL_STATUS"
+                                                     "FILTER_TRUEVIEW_IAR_TIME_OF_DAY"
+                                                     "FILTER_TRUEVIEW_CUSTOM_AFFINITY"
+                                                     "FILTER_TRUEVIEW_CATEGORY"
+                                                     "FILTER_TRUEVIEW_KEYWORD"
+                                                     "FILTER_TRUEVIEW_PLACEMENT"
+                                                     "FILTER_TRUEVIEW_URL"
+                                                     "FILTER_TRUEVIEW_COUNTRY"
+                                                     "FILTER_TRUEVIEW_REGION"
+                                                     "FILTER_TRUEVIEW_CITY"
+                                                     "FILTER_TRUEVIEW_DMA"
+                                                     "FILTER_TRUEVIEW_ZIPCODE"
+                                                     "FILTER_NOT_SUPPORTED"
+                                                     "FILTER_MEDIA_PLAN"
+                                                     "FILTER_TRUEVIEW_IAR_YOUTUBE_CHANNEL"
+                                                     "FILTER_TRUEVIEW_IAR_YOUTUBE_VIDEO"
+                                                     "FILTER_SKIPPABLE_SUPPORT"
+                                                     "FILTER_COMPANION_CREATIVE_ID"
+                                                     "FILTER_BUDGET_SEGMENT_DESCRIPTION"
+                                                     "FILTER_FLOODLIGHT_ACTIVITY_ID"
+                                                     "FILTER_DEVICE_MODEL"
+                                                     "FILTER_DEVICE_MAKE"
+                                                     "FILTER_DEVICE_TYPE"
+                                                     "FILTER_CREATIVE_ATTRIBUTE"
+                                                     "FILTER_INVENTORY_COMMITMENT_TYPE"
+                                                     "FILTER_INVENTORY_RATE_TYPE"
+                                                     "FILTER_INVENTORY_DELIVERY_METHOD"
+                                                     "FILTER_INVENTORY_SOURCE_EXTERNAL_ID"
+                                                     "FILTER_AUTHORIZED_SELLER_STATE"
+                                                     "FILTER_VIDEO_DURATION_SECONDS_RANGE"
+                                                     "FILTER_PARTNER_NAME"
+                                                     "FILTER_PARTNER_STATUS"
+                                                     "FILTER_ADVERTISER_NAME"
+                                                     "FILTER_ADVERTISER_INTEGRATION_CODE"
+                                                     "FILTER_ADVERTISER_INTEGRATION_STATUS"
+                                                     "FILTER_CARRIER_NAME"
+                                                     "FILTER_CHANNEL_NAME"
+                                                     "FILTER_CITY_NAME"
+                                                     "FILTER_COMPANION_CREATIVE_NAME"
+                                                     "FILTER_USER_LIST_FIRST_PARTY_NAME"
+                                                     "FILTER_USER_LIST_THIRD_PARTY_NAME"
+                                                     "FILTER_NIELSEN_RESTATEMENT_DATE"
+                                                     "FILTER_NIELSEN_DATE_RANGE"
+                                                     "FILTER_INSERTION_ORDER_NAME"
+                                                     "FILTER_REGION_NAME"
+                                                     "FILTER_DMA_NAME"
+                                                     "FILTER_TRUEVIEW_IAR_REGION_NAME"
+                                                     "FILTER_TRUEVIEW_DMA_NAME"
+                                                     "FILTER_TRUEVIEW_REGION_NAME"
+                                                     "FILTER_ACTIVE_VIEW_CUSTOM_METRIC_ID"
+                                                     "FILTER_ACTIVE_VIEW_CUSTOM_METRIC_NAME"
+                                                     "FILTER_AD_TYPE"
+                                                     "FILTER_ALGORITHM"
+                                                     "FILTER_ALGORITHM_ID"
+                                                     "FILTER_AMP_PAGE_REQUEST"
+                                                     "FILTER_ANONYMOUS_INVENTORY_MODELING"
+                                                     "FILTER_APP_URL"
+                                                     "FILTER_APP_URL_EXCLUDED"
+                                                     "FILTER_ATTRIBUTED_USERLIST"
+                                                     "FILTER_ATTRIBUTED_USERLIST_COST"
+                                                     "FILTER_ATTRIBUTED_USERLIST_TYPE"
+                                                     "FILTER_ATTRIBUTION_MODEL"
+                                                     "FILTER_AUDIENCE_LIST"
+                                                     "FILTER_AUDIENCE_LIST_COST"
+                                                     "FILTER_AUDIENCE_LIST_TYPE"
+                                                     "FILTER_AUDIENCE_NAME"
+                                                     "FILTER_AUDIENCE_TYPE"
+                                                     "FILTER_BILLABLE_OUTCOME"
+                                                     "FILTER_BRAND_LIFT_TYPE"
+                                                     "FILTER_CHANNEL_TYPE"
+                                                     "FILTER_CM_PLACEMENT_ID"
+                                                     "FILTER_CONVERSION_SOURCE"
+                                                     "FILTER_CONVERSION_SOURCE_ID"
+                                                     "FILTER_COUNTRY_ID"
+                                                     "FILTER_CREATIVE"
+                                                     "FILTER_CREATIVE_ASSET"
+                                                     "FILTER_CREATIVE_INTEGRATION_CODE"
+                                                     "FILTER_CREATIVE_RENDERED_IN_AMP"
+                                                     "FILTER_CREATIVE_SOURCE"
+                                                     "FILTER_CREATIVE_STATUS"
+                                                     "FILTER_DATA_PROVIDER_NAME"
+                                                     "FILTER_DETAILED_DEMOGRAPHICS"
+                                                     "FILTER_DETAILED_DEMOGRAPHICS_ID"
+                                                     "FILTER_DEVICE"
+                                                     "FILTER_GAM_INSERTION_ORDER"
+                                                     "FILTER_GAM_LINE_ITEM"
+                                                     "FILTER_GAM_LINE_ITEM_ID"
+                                                     "FILTER_DIGITAL_CONTENT_LABEL"
+                                                     "FILTER_DOMAIN"
+                                                     "FILTER_ELIGIBLE_COOKIES_ON_FIRST_PARTY_AUDIENCE_LIST"
+                                                     "FILTER_ELIGIBLE_COOKIES_ON_THIRD_PARTY_AUDIENCE_LIST_AND_INTEREST"
+                                                     "FILTER_EXCHANGE"
+                                                     "FILTER_EXCHANGE_CODE"
+                                                     "FILTER_EXTENSION"
+                                                     "FILTER_EXTENSION_STATUS"
+                                                     "FILTER_EXTENSION_TYPE"
+                                                     "FILTER_FIRST_PARTY_AUDIENCE_LIST_COST"
+                                                     "FILTER_FIRST_PARTY_AUDIENCE_LIST_TYPE"
+                                                     "FILTER_FLOODLIGHT_ACTIVITY"
+                                                     "FILTER_FORMAT"
+                                                     "FILTER_GMAIL_AGE"
+                                                     "FILTER_GMAIL_CITY"
+                                                     "FILTER_GMAIL_COUNTRY"
+                                                     "FILTER_GMAIL_COUNTRY_NAME"
+                                                     "FILTER_GMAIL_DEVICE_TYPE"
+                                                     "FILTER_GMAIL_DEVICE_TYPE_NAME"
+                                                     "FILTER_GMAIL_GENDER"
+                                                     "FILTER_GMAIL_REGION"
+                                                     "FILTER_GMAIL_REMARKETING_LIST"
+                                                     "FILTER_HOUSEHOLD_INCOME"
+                                                     "FILTER_IMPRESSION_COUNTING_METHOD"
+                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_INSERTION_ORDER"
+                                                     "FILTER_INSERTION_ORDER_INTEGRATION_CODE"
+                                                     "FILTER_INSERTION_ORDER_STATUS"
+                                                     "FILTER_INTEREST"
+                                                     "FILTER_INVENTORY_SOURCE_GROUP"
+                                                     "FILTER_INVENTORY_SOURCE_GROUP_ID"
+                                                     "FILTER_INVENTORY_SOURCE_ID"
+                                                     "FILTER_INVENTORY_SOURCE_NAME"
+                                                     "FILTER_LIFE_EVENT"
+                                                     "FILTER_LIFE_EVENTS"
+                                                     "FILTER_LINE_ITEM_INTEGRATION_CODE"
+                                                     "FILTER_LINE_ITEM_NAME"
+                                                     "FILTER_LINE_ITEM_STATUS"
+                                                     "FILTER_MATCH_RATIO"
+                                                     "FILTER_MEASUREMENT_SOURCE"
+                                                     "FILTER_MEDIA_PLAN_NAME"
+                                                     "FILTER_PARENTAL_STATUS"
+                                                     "FILTER_PLACEMENT_ALL_YOUTUBE_CHANNELS"
+                                                     "FILTER_PLATFORM"
+                                                     "FILTER_PLAYBACK_METHOD"
+                                                     "FILTER_POSITION_IN_CONTENT"
+                                                     "FILTER_PUBLISHER_PROPERTY"
+                                                     "FILTER_PUBLISHER_PROPERTY_ID"
+                                                     "FILTER_PUBLISHER_PROPERTY_SECTION"
+                                                     "FILTER_PUBLISHER_PROPERTY_SECTION_ID"
+                                                     "FILTER_REFUND_REASON"
+                                                     "FILTER_REMARKETING_LIST"
+                                                     "FILTER_REWARDED"
+                                                     "FILTER_SENSITIVE_CATEGORY"
+                                                     "FILTER_SERVED_PIXEL_DENSITY"
+                                                     "FILTER_TARGETED_DATA_PROVIDERS"
+                                                     "FILTER_THIRD_PARTY_AUDIENCE_LIST_COST"
+                                                     "FILTER_THIRD_PARTY_AUDIENCE_LIST_TYPE"
+                                                     "FILTER_TRUEVIEW_AD"
+                                                     "FILTER_TRUEVIEW_AD_GROUP"
+                                                     "FILTER_TRUEVIEW_DETAILED_DEMOGRAPHICS"
+                                                     "FILTER_TRUEVIEW_DETAILED_DEMOGRAPHICS_ID"
+                                                     "FILTER_TRUEVIEW_HOUSEHOLD_INCOME"
+                                                     "FILTER_TRUEVIEW_IAR_COUNTRY_NAME"
+                                                     "FILTER_TRUEVIEW_REMARKETING_LIST_NAME"
+                                                     "FILTER_VARIANT_ID"
+                                                     "FILTER_VARIANT_NAME"
+                                                     "FILTER_VARIANT_VERSION"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE"
+                                                     "FILTER_VERIFICATION_VIDEO_POSITION"
+                                                     "FILTER_VIDEO_COMPANION_CREATIVE_SIZE"
+                                                     "FILTER_VIDEO_CONTINUOUS_PLAY"
+                                                     "FILTER_VIDEO_DURATION"
+                                                     "FILTER_YOUTUBE_ADAPTED_AUDIENCE_LIST"
+                                                     "FILTER_YOUTUBE_AD_VIDEO"
+                                                     "FILTER_YOUTUBE_AD_VIDEO_ID"
+                                                     "FILTER_YOUTUBE_CHANNEL"
+                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_ADVERTISER"
+                                                     "FILTER_YOUTUBE_PROGRAMMATIC_GUARANTEED_PARTNER"
+                                                     "FILTER_YOUTUBE_VIDEO"
+                                                     "FILTER_ZIP_POSTAL_CODE"
+                                                     "FILTER_PLACEMENT_NAME_ALL_YOUTUBE_CHANNELS"
+                                                     "FILTER_TRUEVIEW_PLACEMENT_ID"
+                                                     "FILTER_PATH_PATTERN_ID"
+                                                     "FILTER_PATH_EVENT_INDEX"
+                                                     "FILTER_EVENT_TYPE"
+                                                     "FILTER_CHANNEL_GROUPING"
+                                                     "FILTER_OM_SDK_AVAILABLE"
+                                                     "FILTER_DATA_SOURCE"
+                                                     "FILTER_CM360_PLACEMENT_ID"
+                                                     "FILTER_TRUEVIEW_CLICK_TYPE_NAME"
+                                                     "FILTER_TRUEVIEW_AD_TYPE_NAME"
+                                                     "FILTER_VIDEO_CONTENT_DURATION"
+                                                     "FILTER_MATCHED_GENRE_TARGET"
+                                                     "FILTER_VIDEO_CONTENT_LIVE_STREAM"
+                                                     "FILTER_BUDGET_SEGMENT_TYPE"
+                                                     "FILTER_BUDGET_SEGMENT_BUDGET"
+                                                     "FILTER_BUDGET_SEGMENT_START_DATE"
+                                                     "FILTER_BUDGET_SEGMENT_END_DATE"
+                                                     "FILTER_BUDGET_SEGMENT_PACING_PERCENTAGE"
+                                                     "FILTER_LINE_ITEM_BUDGET"
+                                                     "FILTER_LINE_ITEM_START_DATE"
+                                                     "FILTER_LINE_ITEM_END_DATE"
+                                                     "FILTER_INSERTION_ORDER_GOAL_TYPE"
+                                                     "FILTER_LINE_ITEM_PACING_PERCENTAGE"
+                                                     "FILTER_INSERTION_ORDER_GOAL_VALUE"
+                                                     "FILTER_OMID_CAPABLE"
+                                                     "FILTER_VENDOR_MEASUREMENT_MODE"
+                                                     "FILTER_IMPRESSION_LOSS_REJECTION_REASON"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_START"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_FIRST_QUARTILE"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_MID_POINT"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_THIRD_QUARTILE"
+                                                     "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_COMPLETE"
+                                                     "FILTER_VERIFICATION_VIDEO_RESIZED"
+                                                     "FILTER_VERIFICATION_AUDIBILITY_START"
+                                                     "FILTER_VERIFICATION_AUDIBILITY_COMPLETE"],
+                                              :enumDescriptions [""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""
+                                                                 ""],
+                                              :type "string"},
+                                      :description "Data is grouped by the filters listed in this field."},
+                           :includeInviteData {:description "Deprecated. This field is no longer in use.",
+                                               :type "boolean"}},
+              :type "object",
+              :id "Parameters"},
+ :RunQueryRequest {:properties {:dataRange {:description "Report data range used to generate the report.",
+                                            :type "string",
                                             :enumDescriptions [""
                                                                ""
                                                                ""
@@ -2325,64 +2357,86 @@
                                                                ""
                                                                ""
                                                                ""],
-                                            :type "string",
-                                            :description "Report data range used to generate the report."}},
-                   :id "RunQueryRequest",
-                   :description "Request to run a stored query to generate a report.",
-                   :type "object"},
- :DisjunctiveMatchStatement {:id "DisjunctiveMatchStatement",
-                             :type "object",
-                             :description "DisjunctiveMatchStatement that OR's all contained filters.",
-                             :properties {:eventFilters {:description "Filters. There is a limit of 100 filters that can be set per disjunctive match statement.",
-                                                         :items {:$ref "EventFilter"},
-                                                         :type "array"}}},
- :ListReportsResponse {:type "object",
-                       :id "ListReportsResponse",
-                       :properties {:kind {:description "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listReportsResponse\".",
-                                           :type "string"},
-                                    :reports {:description "Retrieved reports.",
-                                              :type "array",
-                                              :items {:$ref "Report"}},
-                                    :nextPageToken {:type "string",
-                                                    :description "Next page's pagination token if one exists."}},
-                       :description "List reports response."},
- :ChannelGrouping {:description "A channel grouping defines a set of rules that can be used to categorize events in a path report.",
+                                            :enum ["CUSTOM_DATES"
+                                                   "CURRENT_DAY"
+                                                   "PREVIOUS_DAY"
+                                                   "WEEK_TO_DATE"
+                                                   "MONTH_TO_DATE"
+                                                   "QUARTER_TO_DATE"
+                                                   "YEAR_TO_DATE"
+                                                   "PREVIOUS_WEEK"
+                                                   "PREVIOUS_HALF_MONTH"
+                                                   "PREVIOUS_MONTH"
+                                                   "PREVIOUS_QUARTER"
+                                                   "PREVIOUS_YEAR"
+                                                   "LAST_7_DAYS"
+                                                   "LAST_30_DAYS"
+                                                   "LAST_90_DAYS"
+                                                   "LAST_365_DAYS"
+                                                   "ALL_TIME"
+                                                   "LAST_14_DAYS"
+                                                   "TYPE_NOT_SUPPORTED"
+                                                   "LAST_60_DAYS"]},
+                                :timezoneCode {:type "string",
+                                               :description "Canonical timezone code for report data time. Defaults to America/New_York."},
+                                :reportDataStartTimeMs {:description "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
+                                                        :type "string",
+                                                        :format "int64"},
+                                :reportDataEndTimeMs {:description "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
+                                                      :type "string",
+                                                      :format "int64"}},
                    :type "object",
+                   :id "RunQueryRequest",
+                   :description "Request to run a stored query to generate a report."},
+ :DisjunctiveMatchStatement {:description "DisjunctiveMatchStatement that OR's all contained filters.",
+                             :id "DisjunctiveMatchStatement",
+                             :properties {:eventFilters {:type "array",
+                                                         :items {:$ref "EventFilter"},
+                                                         :description "Filters. There is a limit of 100 filters that can be set per disjunctive match statement."}},
+                             :type "object"},
+ :ListReportsResponse {:id "ListReportsResponse",
+                       :description "List reports response.",
+                       :properties {:reports {:items {:$ref "Report"},
+                                              :type "array",
+                                              :description "Retrieved reports."},
+                                    :nextPageToken {:description "Next page's pagination token if one exists.",
+                                                    :type "string"},
+                                    :kind {:description "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listReportsResponse\".",
+                                           :type "string"}},
+                       :type "object"},
+ :ChannelGrouping {:id "ChannelGrouping",
                    :properties {:fallbackName {:type "string",
                                                :description "The name to apply to an event that does not match any of the rules in the channel grouping."},
-                                :name {:description "Channel Grouping name.",
-                                       :type "string"},
-                                :rules {:type "array",
+                                :rules {:items {:$ref "Rule"},
                                         :description "Rules within Channel Grouping. There is a limit of 100 rules that can be set per channel grouping.",
-                                        :items {:$ref "Rule"}}},
-                   :id "ChannelGrouping"},
- :PathFilter {:properties {:eventFilters {:type "array",
-                                          :description "Filter on an event to be applied to some part of the path.",
-                                          :items {:$ref "EventFilter"}},
-                           :pathMatchPosition {:enum ["ANY"
+                                        :type "array"},
+                                :name {:description "Channel Grouping name.",
+                                       :type "string"}},
+                   :type "object",
+                   :description "A channel grouping defines a set of rules that can be used to categorize events in a path report."},
+ :PathFilter {:properties {:pathMatchPosition {:enum ["ANY"
                                                       "FIRST"
                                                       "LAST"],
-                                               :type "string",
                                                :description "Indicates the position of the path the filter should match to (first, last, or any event in path).",
                                                :enumDescriptions [""
                                                                   ""
-                                                                  ""]}},
-              :id "PathFilter",
+                                                                  ""],
+                                               :type "string"},
+                           :eventFilters {:type "array",
+                                          :items {:$ref "EventFilter"},
+                                          :description "Filter on an event to be applied to some part of the path."}},
               :type "object",
-              :description "Path filters specify which paths to include in a report. A path is the result of combining DV360 events based on User ID to create a workflow of users' actions. When a path filter is set, the resulting report will only include paths that match the specified event at the specified position. All other paths will be excluded."},
- :PathQueryOptions {:id "PathQueryOptions",
-                    :description "Path Query Options for Report Options.",
-                    :type "object",
-                    :properties {:channelGrouping {:description "Custom Channel Groupings.",
-                                                   :$ref "ChannelGrouping"},
+              :description "Path filters specify which paths to include in a report. A path is the result of combining DV360 events based on User ID to create a workflow of users' actions. When a path filter is set, the resulting report will only include paths that match the specified event at the specified position. All other paths will be excluded.",
+              :id "PathFilter"},
+ :PathQueryOptions {:description "Path Query Options for Report Options.",
+                    :properties {:channelGrouping {:$ref "ChannelGrouping",
+                                                   :description "Custom Channel Groupings."},
                                  :pathFilters {:items {:$ref "PathFilter"},
                                                :description "Path Filters. There is a limit of 100 path filters that can be set per report.",
-                                               :type "array"}}},
- :FilterPair {:type "object",
-              :description "Filter used to match traffic data in your report.",
-              :properties {:type {:type "string",
-                                  :description "Filter type.",
-                                  :enum ["FILTER_UNKNOWN"
+                                               :type "array"}},
+                    :id "PathQueryOptions",
+                    :type "object"},
+ :FilterPair {:properties {:type {:enum ["FILTER_UNKNOWN"
                                          "FILTER_DATE"
                                          "FILTER_DAY_OF_WEEK"
                                          "FILTER_WEEK"
@@ -2661,8 +2715,30 @@
                                          "FILTER_INSERTION_ORDER_GOAL_TYPE"
                                          "FILTER_LINE_ITEM_PACING_PERCENTAGE"
                                          "FILTER_INSERTION_ORDER_GOAL_VALUE"
-                                         "FILTER_OMID_CAPABLE"],
+                                         "FILTER_OMID_CAPABLE"
+                                         "FILTER_VENDOR_MEASUREMENT_MODE"
+                                         "FILTER_IMPRESSION_LOSS_REJECTION_REASON"
+                                         "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_START"
+                                         "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_FIRST_QUARTILE"
+                                         "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_MID_POINT"
+                                         "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_THIRD_QUARTILE"
+                                         "FILTER_VERIFICATION_VIDEO_PLAYER_SIZE_COMPLETE"
+                                         "FILTER_VERIFICATION_VIDEO_RESIZED"
+                                         "FILTER_VERIFICATION_AUDIBILITY_START"
+                                         "FILTER_VERIFICATION_AUDIBILITY_COMPLETE"],
+                                  :type "string",
+                                  :description "Filter type.",
                                   :enumDescriptions [""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
+                                                     ""
                                                      ""
                                                      ""
                                                      ""
@@ -2944,25 +3020,11 @@
                                                      ""]},
                            :value {:type "string",
                                    :description "Filter value."}},
-              :id "FilterPair"},
- :ReportFailure {:properties {:errorCode {:enumDescriptions [""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""
-                                                             ""],
+              :id "FilterPair",
+              :type "object",
+              :description "Filter used to match traffic data in your report."},
+ :ReportFailure {:id "ReportFailure",
+                 :properties {:errorCode {:type "string",
                                           :enum ["AUTHENTICATION_ERROR"
                                                  "UNAUTHORIZED_API_ACCESS"
                                                  "SERVER_ERROR"
@@ -2981,72 +3043,88 @@
                                                  "REPORTING_INVALID_QUERY_TOO_MANY_UNFILTERED_LARGE_GROUP_BYS"
                                                  "REPORTING_INVALID_QUERY_TITLE_MISSING"
                                                  "REPORTING_INVALID_QUERY_MISSING_PARTNER_AND_ADVERTISER_FILTERS"],
-                                          :description "Error code that shows why the report was not created.",
-                                          :type "string"}},
+                                          :enumDescriptions [""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""
+                                                             ""],
+                                          :description "Error code that shows why the report was not created."}},
                  :type "object",
-                 :id "ReportFailure",
                  :description "An explanation of a report failure."},
- :Options {:properties {:includeOnlyTargetedUserLists {:description "Set to true and filter your report by `FILTER_INSERTION_ORDER` or `FILTER_LINE_ITEM` to include data for audience lists specifically targeted by those items.",
-                                                       :type "boolean"},
-                        :pathQueryOptions {:description "Options that contain Path Filters and Custom Channel Groupings.",
-                                           :$ref "PathQueryOptions"}},
-           :description "Additional query options.",
+ :Options {:properties {:pathQueryOptions {:description "Options that contain Path Filters and Custom Channel Groupings.",
+                                           :$ref "PathQueryOptions"},
+                        :includeOnlyTargetedUserLists {:description "Set to true and filter your report by `FILTER_INSERTION_ORDER` or `FILTER_LINE_ITEM` to include data for audience lists specifically targeted by those items.",
+                                                       :type "boolean"}},
+           :type "object",
            :id "Options",
-           :type "object"},
+           :description "Additional query options."},
  :ReportStatus {:type "object",
                 :description "Report status.",
-                :properties {:failure {:$ref "ReportFailure",
-                                       :description "If the report failed, this records the cause."},
-                             :state {:enum ["RUNNING" "DONE" "FAILED"],
-                                     :description "The state of the report.",
-                                     :type "string",
-                                     :enumDescriptions ["" "" ""]},
-                             :format {:description "The file type of the report.",
-                                      :enum ["CSV" "EXCEL_CSV" "XLSX"],
-                                      :type "string",
-                                      :enumDescriptions ["" "" ""]},
+                :id "ReportStatus",
+                :properties {:failure {:description "If the report failed, this records the cause.",
+                                       :$ref "ReportFailure"},
                              :finishTimeMs {:format "int64",
                                             :description "The time when this report either completed successfully or failed.",
-                                            :type "string"}},
-                :id "ReportStatus"},
- :Query {:type "object",
-         :description "Represents a query.",
-         :id "Query",
-         :properties {:schedule {:description "Information on how often and when to run a query.",
-                                 :$ref "QuerySchedule"},
-                      :kind {:description "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#query\".",
-                             :type "string"},
-                      :reportDataEndTimeMs {:type "string",
-                                            :description "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
-                                            :format "int64"},
-                      :queryId {:format "int64",
-                                :description "Query ID.",
-                                :type "string"},
-                      :timezoneCode {:description "Canonical timezone code for report data time. Defaults to America/New_York.",
-                                     :type "string"},
-                      :metadata {:description "Query metadata.",
+                                            :type "string"},
+                             :format {:enum ["CSV" "EXCEL_CSV" "XLSX"],
+                                      :description "The file type of the report.",
+                                      :type "string",
+                                      :enumDescriptions ["" "" ""]},
+                             :state {:enum ["RUNNING" "DONE" "FAILED"],
+                                     :type "string",
+                                     :enumDescriptions ["" "" ""],
+                                     :description "The state of the report."}}},
+ :Query {:description "Represents a query.",
+         :properties {:metadata {:description "Query metadata.",
                                  :$ref "QueryMetadata"},
+                      :reportDataStartTimeMs {:type "string",
+                                              :description "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
+                                              :format "int64"},
+                      :queryId {:type "string",
+                                :description "Query ID.",
+                                :format "int64"},
                       :params {:$ref "Parameters",
                                :description "Query parameters."},
-                      :reportDataStartTimeMs {:format "int64",
-                                              :description "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
-                                              :type "string"}}},
- :ListQueriesResponse {:description "List queries response.",
+                      :kind {:description "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#query\".",
+                             :type "string"},
+                      :reportDataEndTimeMs {:description "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
+                                            :format "int64",
+                                            :type "string"},
+                      :timezoneCode {:description "Canonical timezone code for report data time. Defaults to America/New_York.",
+                                     :type "string"},
+                      :schedule {:$ref "QuerySchedule",
+                                 :description "Information on how often and when to run a query."}},
+         :type "object",
+         :id "Query"},
+ :ListQueriesResponse {:id "ListQueriesResponse",
+                       :description "List queries response.",
                        :type "object",
-                       :properties {:queries {:description "Retrieved queries.",
-                                              :type "array",
-                                              :items {:$ref "Query"}},
+                       :properties {:nextPageToken {:type "string",
+                                                    :description "Next page's pagination token if one exists."},
                                     :kind {:description "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listQueriesResponse\".",
                                            :type "string"},
-                                    :nextPageToken {:description "Next page's pagination token if one exists.",
-                                                    :type "string"}},
-                       :id "ListQueriesResponse"},
- :ReportKey {:id "ReportKey",
-             :description "Key used to identify a report.",
-             :properties {:queryId {:type "string",
-                                    :description "Query ID.",
-                                    :format "int64"},
-                          :reportId {:description "Report ID.",
-                                     :type "string",
+                                    :queries {:items {:$ref "Query"},
+                                              :description "Retrieved queries.",
+                                              :type "array"}}},
+ :ReportKey {:properties {:queryId {:format "int64",
+                                    :type "string",
+                                    :description "Query ID."},
+                          :reportId {:type "string",
+                                     :description "Report ID.",
                                      :format "int64"}},
-             :type "object"}}
+             :description "Key used to identify a report.",
+             :type "object",
+             :id "ReportKey"}}

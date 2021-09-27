@@ -6,22 +6,40 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/list
+(defn create$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/create
   
   Required parameters: project, managedZone
   
-  Optional parameters: maxResults, pageToken, sortOrder, sortBy
+  Optional parameters: clientOperationId
   
-  Enumerates Changes to a ResourceRecordSet collection."
+  Body: 
+  
+  {:deletions [{:rrdatas [string],
+                :type string,
+                :ttl integer,
+                :signatureRrdatas [string],
+                :name string,
+                :kind string}],
+   :kind string,
+   :startTime string,
+   :isServing boolean,
+   :status string,
+   :id string,
+   :additions [{:rrdatas [string],
+                :type string,
+                :ttl integer,
+                :signatureRrdatas [string],
+                :name string,
+                :kind string}]}
+  
+  Atomically updates the ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://dns.googleapis.com/"
      "dns/v1/projects/{project}/managedZones/{managedZone}/changes"
@@ -29,7 +47,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -38,7 +58,7 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/get
   
-  Required parameters: changeId, project, managedZone
+  Required parameters: managedZone, changeId, project
   
   Optional parameters: clientOperationId
   
@@ -66,40 +86,22 @@
       :as :json}
      auth))))
 
-(defn create$
-  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/create
+(defn list$
+  "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/list
   
   Required parameters: managedZone, project
   
-  Optional parameters: clientOperationId
+  Optional parameters: maxResults, sortBy, pageToken, sortOrder
   
-  Body: 
-  
-  {:kind string,
-   :id string,
-   :status string,
-   :isServing boolean,
-   :deletions [{:signatureRrdatas [string],
-                :name string,
-                :type string,
-                :rrdatas [string],
-                :kind string,
-                :ttl integer}],
-   :startTime string,
-   :additions [{:signatureRrdatas [string],
-                :name string,
-                :type string,
-                :rrdatas [string],
-                :kind string,
-                :ttl integer}]}
-  
-  Atomically updates the ResourceRecordSet collection."
+  Enumerates Changes to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/ndev.clouddns.readonly"
             "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:managedZone :project})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://dns.googleapis.com/"
      "dns/v1/projects/{project}/managedZones/{managedZone}/changes"
@@ -107,9 +109,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

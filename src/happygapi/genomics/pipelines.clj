@@ -15,13 +15,13 @@
   
   Body: 
   
-  {:pubSubTopic string,
-   :pipeline {:actions [Action],
-              :resources Resources,
+  {:labels {},
+   :pipeline {:encryptedEnvironment Secret,
+              :actions [Action],
+              :timeout string,
               :environment {},
-              :encryptedEnvironment Secret,
-              :timeout string},
-   :labels {}}
+              :resources Resources},
+   :pubSubTopic string}
   
   Runs a pipeline. The returned Operation's metadata field will contain a google.genomics.v2alpha1.Metadata object describing the status of the pipeline execution. The [response] field will contain a google.genomics.v2alpha1.RunPipelineResponse object if the pipeline completes successfully. **Note:** Before you can use this method, the Genomics Service Agent must have access to your project. This is done automatically when the Cloud Genomics API is first enabled, but if you delete this permission, or if you enabled the Cloud Genomics API before the v2alpha1 API launch, you must disable and re-enable the API to grant the Genomics Service Agent the required permissions. Authorization requires the following [Google IAM](https://cloud.google.com/iam/) permission: * `genomics.operations.create` [1]: /genomics/gsa"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

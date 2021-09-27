@@ -6,61 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/delete
-  
-  Required parameters: project, firewall
-  
-  Optional parameters: requestId
-  
-  Deletes the specified firewall."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :firewall})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/firewalls/{firewall}"
-     #{:project :firewall}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/list
-  
-  Required parameters: project
-  
-  Optional parameters: maxResults, orderBy, filter, returnPartialSuccess, pageToken
-  
-  Retrieves the list of firewall rules available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/firewalls"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/get
   
@@ -113,7 +58,7 @@
    :sourceServiceAccounts [string],
    :targetServiceAccounts [string],
    :network string,
-   :logConfig {:metadata string, :enable boolean},
+   :logConfig {:enable boolean, :metadata string},
    :direction string,
    :sourceRanges [string],
    :allowed [{:ports [string], :IPProtocol string}]}
@@ -125,6 +70,85 @@
   {:pre [(util/has-keys? parameters #{:project :firewall})]}
   (util/get-response
    (http/put
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/firewalls/{firewall}"
+     #{:project :firewall}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/list
+  
+  Required parameters: project
+  
+  Optional parameters: returnPartialSuccess, pageToken, orderBy, maxResults, filter
+  
+  Retrieves the list of firewall rules available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/firewalls"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/patch
+  
+  Required parameters: project, firewall
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :disabled boolean,
+   :creationTimestamp string,
+   :name string,
+   :destinationRanges [string],
+   :selfLink string,
+   :targetTags [string],
+   :sourceTags [string],
+   :priority integer,
+   :id string,
+   :kind string,
+   :denied [{:IPProtocol string, :ports [string]}],
+   :sourceServiceAccounts [string],
+   :targetServiceAccounts [string],
+   :network string,
+   :logConfig {:enable boolean, :metadata string},
+   :direction string,
+   :sourceRanges [string],
+   :allowed [{:ports [string], :IPProtocol string}]}
+  
+  Updates the specified firewall rule with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :firewall})]}
+  (util/get-response
+   (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/firewalls/{firewall}"
@@ -164,7 +188,7 @@
    :sourceServiceAccounts [string],
    :targetServiceAccounts [string],
    :network string,
-   :logConfig {:metadata string, :enable boolean},
+   :logConfig {:enable boolean, :metadata string},
    :direction string,
    :sourceRanges [string],
    :allowed [{:ports [string], :IPProtocol string}]}
@@ -191,42 +215,20 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/patch
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/firewalls/delete
   
-  Required parameters: project, firewall
+  Required parameters: firewall, project
   
   Optional parameters: requestId
   
-  Body: 
-  
-  {:description string,
-   :disabled boolean,
-   :creationTimestamp string,
-   :name string,
-   :destinationRanges [string],
-   :selfLink string,
-   :targetTags [string],
-   :sourceTags [string],
-   :priority integer,
-   :id string,
-   :kind string,
-   :denied [{:IPProtocol string, :ports [string]}],
-   :sourceServiceAccounts [string],
-   :targetServiceAccounts [string],
-   :network string,
-   :logConfig {:metadata string, :enable boolean},
-   :direction string,
-   :sourceRanges [string],
-   :allowed [{:ports [string], :IPProtocol string}]}
-  
-  Updates the specified firewall rule with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Deletes the specified firewall."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:project :firewall})]}
   (util/get-response
-   (http/patch
+   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/firewalls/{firewall}"
@@ -234,9 +236,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -6,14 +6,14 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-jobs-list$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/list
+(defn locations-jobTemplates-list$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobTemplates/list
   
   Required parameters: parent
   
   Optional parameters: pageSize, pageToken
   
-  Lists jobs in the specified region."
+  Lists job templates in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -21,7 +21,7 @@
    (http/get
     (util/get-url
      "https://transcoder.googleapis.com/"
-     "v1beta1/{+parent}/jobs"
+     "v1beta1/{+parent}/jobTemplates"
      #{:parent}
      parameters)
     (merge-with
@@ -32,46 +32,16 @@
       :as :json}
      auth))))
 
-(defn locations-jobs-delete$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a job."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://transcoder.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobs-create$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/create
+(defn locations-jobTemplates-create$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobTemplates/create
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: jobTemplateId
   
   Body: 
   
-  {:originUri {:hls string, :dash string},
-   :outputUri string,
-   :ttlAfterCompletionDays integer,
-   :startTime string,
-   :config {:overlays [Overlay],
+  {:config {:overlays [Overlay],
             :manifests [Manifest],
             :adBreaks [AdBreak],
             :output Output,
@@ -81,21 +51,9 @@
             :muxStreams [MuxStream],
             :pubsubDestination PubsubDestination,
             :editList [EditAtom]},
-   :name string,
-   :endTime string,
-   :createTime string,
-   :state string,
-   :priority integer,
-   :failureDetails [{:description string}],
-   :templateId string,
-   :failureReason string,
-   :progress {:encoded number,
-              :uploaded number,
-              :analyzed number,
-              :notified number},
-   :inputUri string}
+   :name string}
   
-  Creates a job in the specified region."
+  Creates a job template in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -103,7 +61,7 @@
    (http/post
     (util/get-url
      "https://transcoder.googleapis.com/"
-     "v1beta1/{+parent}/jobs"
+     "v1beta1/{+parent}/jobTemplates"
      #{:parent}
      parameters)
     (merge-with
@@ -111,32 +69,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobs-get$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns the job data."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://transcoder.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -194,14 +126,72 @@
       :as :json}
      auth))))
 
-(defn locations-jobTemplates-list$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobTemplates/list
+(defn locations-jobs-create$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:originUri {:hls string, :dash string},
+   :outputUri string,
+   :ttlAfterCompletionDays integer,
+   :startTime string,
+   :config {:overlays [Overlay],
+            :manifests [Manifest],
+            :adBreaks [AdBreak],
+            :output Output,
+            :inputs [Input],
+            :spriteSheets [SpriteSheet],
+            :elementaryStreams [ElementaryStream],
+            :muxStreams [MuxStream],
+            :pubsubDestination PubsubDestination,
+            :editList [EditAtom]},
+   :name string,
+   :endTime string,
+   :createTime string,
+   :state string,
+   :priority integer,
+   :failureDetails [{:description string}],
+   :templateId string,
+   :failureReason string,
+   :progress {:notified number,
+              :encoded number,
+              :analyzed number,
+              :uploaded number},
+   :inputUri string}
+  
+  Creates a job in the specified region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://transcoder.googleapis.com/"
+     "v1beta1/{+parent}/jobs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-list$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/list
   
   Required parameters: parent
   
   Optional parameters: pageSize, pageToken
   
-  Lists job templates in the specified region."
+  Lists jobs in the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -209,7 +199,7 @@
    (http/get
     (util/get-url
      "https://transcoder.googleapis.com/"
-     "v1beta1/{+parent}/jobTemplates"
+     "v1beta1/{+parent}/jobs"
      #{:parent}
      parameters)
     (merge-with
@@ -220,43 +210,53 @@
       :as :json}
      auth))))
 
-(defn locations-jobTemplates-create$
-  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobTemplates/create
+(defn locations-jobs-get$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: jobTemplateId
+  Optional parameters: none
   
-  Body: 
-  
-  {:name string,
-   :config {:overlays [Overlay],
-            :manifests [Manifest],
-            :adBreaks [AdBreak],
-            :output Output,
-            :inputs [Input],
-            :spriteSheets [SpriteSheet],
-            :elementaryStreams [ElementaryStream],
-            :muxStreams [MuxStream],
-            :pubsubDestination PubsubDestination,
-            :editList [EditAtom]}}
-  
-  Creates a job template in the specified region."
+  Returns the job data."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://transcoder.googleapis.com/"
-     "v1beta1/{+parent}/jobTemplates"
-     #{:parent}
+     "v1beta1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobs-delete$
+  "https://cloud.google.com/transcoder/docs/api/reference/rest/v1beta1/projects/locations/jobs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a job."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://transcoder.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

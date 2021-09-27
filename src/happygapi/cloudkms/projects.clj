@@ -6,6 +6,66 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-generateRandomBytes$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/generateRandomBytes
+  
+  Required parameters: location
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:lengthBytes integer, :protectionLevel string}
+  
+  Generate random bytes using the Cloud KMS randomness source in the provided location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:location})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+location}:generateRandomBytes"
+     #{:location}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}/locations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-get$
   "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/get
   
@@ -33,47 +93,24 @@
       :as :json}
      auth))))
 
-(defn locations-list$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-list$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/list
+(defn locations-keyRings-create$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/create
   
   Required parameters: parent
   
-  Optional parameters: pageToken, filter, pageSize, orderBy
+  Optional parameters: keyRingId
   
-  Lists KeyRings."
+  Body: 
+  
+  {:createTime string, :name string}
+  
+  Create a new KeyRing in a given Project and Location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://cloudkms.googleapis.com/"
      "v1/{+parent}/keyRings"
@@ -81,7 +118,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -114,55 +153,32 @@
       :as :json}
      auth))))
 
-(defn locations-keyRings-getIamPolicy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/getIamPolicy
+(defn locations-keyRings-setIamPolicy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/setIamPolicy
   
   Required parameters: resource
   
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-create$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/create
-  
-  Required parameters: parent
-  
-  Optional parameters: keyRingId
+  Optional parameters: none
   
   Body: 
   
-  {:createTime string, :name string}
+  {:policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :version integer,
+            :etag string},
+   :updateMask string}
   
-  Create a new KeyRing in a given Project and Location."
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloudkms"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/keyRings"
-     #{:parent}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -207,8 +223,89 @@
       :as :json}
      auth))))
 
-(defn locations-keyRings-setIamPolicy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/setIamPolicy
+(defn locations-keyRings-getIamPolicy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-list$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, filter, pageToken, pageSize
+  
+  Lists KeyRings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/keyRings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-get$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns metadata for a given CryptoKey, as well as its primary CryptoKeyVersion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-setIamPolicy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/setIamPolicy
   
   Required parameters: resource
   
@@ -216,10 +313,10 @@
   
   Body: 
   
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
+  {:policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :version integer,
+            :etag string},
    :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
@@ -244,12 +341,753 @@
       :as :json}
      auth))))
 
+(defn locations-keyRings-cryptoKeys-patch$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:labels {},
+   :nextRotationTime string,
+   :importOnly boolean,
+   :primary {:reimportEligible boolean,
+             :algorithm string,
+             :generateTime string,
+             :importFailureReason string,
+             :name string,
+             :importTime string,
+             :createTime string,
+             :state string,
+             :externalProtectionLevelOptions ExternalProtectionLevelOptions,
+             :importJob string,
+             :attestation KeyOperationAttestation,
+             :protectionLevel string,
+             :destroyTime string,
+             :destroyEventTime string},
+   :purpose string,
+   :name string,
+   :createTime string,
+   :rotationPeriod string,
+   :versionTemplate {:algorithm string, :protectionLevel string},
+   :destroyScheduledDuration string}
+  
+  Update a CryptoKey."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-testIamPermissions$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-create$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/create
+  
+  Required parameters: parent
+  
+  Optional parameters: cryptoKeyId, skipInitialVersionCreation
+  
+  Body: 
+  
+  {:labels {},
+   :nextRotationTime string,
+   :importOnly boolean,
+   :primary {:reimportEligible boolean,
+             :algorithm string,
+             :generateTime string,
+             :importFailureReason string,
+             :name string,
+             :importTime string,
+             :createTime string,
+             :state string,
+             :externalProtectionLevelOptions ExternalProtectionLevelOptions,
+             :importJob string,
+             :attestation KeyOperationAttestation,
+             :protectionLevel string,
+             :destroyTime string,
+             :destroyEventTime string},
+   :purpose string,
+   :name string,
+   :createTime string,
+   :rotationPeriod string,
+   :versionTemplate {:algorithm string, :protectionLevel string},
+   :destroyScheduledDuration string}
+  
+  Create a new CryptoKey within a KeyRing. CryptoKey.purpose and CryptoKey.version_template.algorithm are required."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/cryptoKeys"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-encrypt$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/encrypt
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:plaintextCrc32c string,
+   :plaintext string,
+   :additionalAuthenticatedDataCrc32c string,
+   :additionalAuthenticatedData string}
+  
+  Encrypts data, so that it can only be recovered by a call to Decrypt. The CryptoKey.purpose must be ENCRYPT_DECRYPT."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:encrypt"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-getIamPolicy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-list$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/list
+  
+  Required parameters: parent
+  
+  Optional parameters: versionView, orderBy, filter, pageSize, pageToken
+  
+  Lists CryptoKeys."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/cryptoKeys"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-updatePrimaryVersion$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/updatePrimaryVersion
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:cryptoKeyVersionId string}
+  
+  Update the version of a CryptoKey that will be used in Encrypt. Returns an error if called on a key whose purpose is not ENCRYPT_DECRYPT."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:updatePrimaryVersion"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-decrypt$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/decrypt
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:ciphertext string,
+   :additionalAuthenticatedDataCrc32c string,
+   :additionalAuthenticatedData string,
+   :ciphertextCrc32c string}
+  
+  Decrypts data that was protected by Encrypt. The CryptoKey.purpose must be ENCRYPT_DECRYPT."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:decrypt"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-get$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns metadata for a given CryptoKeyVersion."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-patch$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:reimportEligible boolean,
+   :algorithm string,
+   :generateTime string,
+   :importFailureReason string,
+   :name string,
+   :importTime string,
+   :createTime string,
+   :state string,
+   :externalProtectionLevelOptions {:externalKeyUri string},
+   :importJob string,
+   :attestation {:content string,
+                 :certChains CertificateChains,
+                 :format string},
+   :protectionLevel string,
+   :destroyTime string,
+   :destroyEventTime string}
+  
+  Update a CryptoKeyVersion's metadata. state may be changed between ENABLED and DISABLED using this method. See DestroyCryptoKeyVersion and RestoreCryptoKeyVersion to move between other states."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-restore$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/restore
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Restore a CryptoKeyVersion in the DESTROY_SCHEDULED state. Upon restoration of the CryptoKeyVersion, state will be set to DISABLED, and destroy_time will be cleared."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:restore"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-create$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:reimportEligible boolean,
+   :algorithm string,
+   :generateTime string,
+   :importFailureReason string,
+   :name string,
+   :importTime string,
+   :createTime string,
+   :state string,
+   :externalProtectionLevelOptions {:externalKeyUri string},
+   :importJob string,
+   :attestation {:content string,
+                 :certChains CertificateChains,
+                 :format string},
+   :protectionLevel string,
+   :destroyTime string,
+   :destroyEventTime string}
+  
+  Create a new CryptoKeyVersion in a CryptoKey. The server will assign the next sequential id. If unset, state will be set to ENABLED."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/cryptoKeyVersions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-destroy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/destroy
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Schedule a CryptoKeyVersion for destruction. Upon calling this method, CryptoKeyVersion.state will be set to DESTROY_SCHEDULED, and destroy_time will be set to the time destroy_scheduled_duration in the future. At that time, the state will automatically change to DESTROYED, and the key material will be irrevocably destroyed. Before the destroy_time is reached, RestoreCryptoKeyVersion may be called to reverse the process."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:destroy"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-getPublicKey$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/getPublicKey
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the public key for the given CryptoKeyVersion. The CryptoKey.purpose must be ASYMMETRIC_SIGN or ASYMMETRIC_DECRYPT."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}/publicKey"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-asymmetricSign$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/asymmetricSign
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:digestCrc32c string,
+   :digest {:sha384 string, :sha256 string, :sha512 string}}
+  
+  Signs data using a CryptoKeyVersion with CryptoKey.purpose ASYMMETRIC_SIGN, producing a signature that can be verified with the public key retrieved from GetPublicKey."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:asymmetricSign"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-macSign$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/macSign
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:data string, :dataCrc32c string}
+  
+  Signs data using a CryptoKeyVersion with CryptoKey.purpose MAC, producing a tag that can be verified by another source with the same key."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:macSign"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-list$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, view, orderBy, filter, pageSize
+  
+  Lists CryptoKeyVersions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/cryptoKeyVersions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-macVerify$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/macVerify
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:mac string, :dataCrc32c string, :macCrc32c string, :data string}
+  
+  Verifies MAC tag using a CryptoKeyVersion with CryptoKey.purpose MAC, and returns a response that indicates whether or not the verification was successful."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:macVerify"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-import$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/import
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:algorithm string,
+   :importJob string,
+   :cryptoKeyVersion string,
+   :rsaAesWrappedKey string}
+  
+  Import wrapped key material into a CryptoKeyVersion. All requests must specify a CryptoKey. If a CryptoKeyVersion is additionally specified in the request, key material will be reimported into that version. Otherwise, a new version will be created, and will be assigned the next sequential id within the CryptoKey."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/cryptoKeyVersions:import"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-asymmetricDecrypt$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/asymmetricDecrypt
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:ciphertextCrc32c string, :ciphertext string}
+  
+  Decrypts data that was encrypted with a public key retrieved from GetPublicKey corresponding to a CryptoKeyVersion with CryptoKey.purpose ASYMMETRIC_DECRYPT."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}:asymmetricDecrypt"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyRings-importJobs-getIamPolicy$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/importJobs/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-keyRings-importJobs-list$
   "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/importJobs/list
   
   Required parameters: parent
   
-  Optional parameters: orderBy, pageToken, pageSize, filter
+  Optional parameters: pageToken, filter, orderBy, pageSize
   
   Lists ImportJobs."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -280,10 +1118,10 @@
   
   Body: 
   
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
+  {:policy {:auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :version integer,
+            :etag string},
    :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
@@ -407,734 +1245,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-importJobs-getIamPolicy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/importJobs/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-get$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns metadata for a given CryptoKey, as well as its primary CryptoKeyVersion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-setIamPolicy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-patch$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string,
-   :rotationPeriod string,
-   :primary {:algorithm string,
-             :generateTime string,
-             :importFailureReason string,
-             :name string,
-             :importTime string,
-             :createTime string,
-             :state string,
-             :externalProtectionLevelOptions ExternalProtectionLevelOptions,
-             :importJob string,
-             :attestation KeyOperationAttestation,
-             :protectionLevel string,
-             :destroyTime string,
-             :destroyEventTime string},
-   :nextRotationTime string,
-   :purpose string,
-   :labels {},
-   :createTime string,
-   :versionTemplate {:protectionLevel string, :algorithm string}}
-  
-  Update a CryptoKey."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-testIamPermissions$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-create$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/create
-  
-  Required parameters: parent
-  
-  Optional parameters: skipInitialVersionCreation, cryptoKeyId
-  
-  Body: 
-  
-  {:name string,
-   :rotationPeriod string,
-   :primary {:algorithm string,
-             :generateTime string,
-             :importFailureReason string,
-             :name string,
-             :importTime string,
-             :createTime string,
-             :state string,
-             :externalProtectionLevelOptions ExternalProtectionLevelOptions,
-             :importJob string,
-             :attestation KeyOperationAttestation,
-             :protectionLevel string,
-             :destroyTime string,
-             :destroyEventTime string},
-   :nextRotationTime string,
-   :purpose string,
-   :labels {},
-   :createTime string,
-   :versionTemplate {:protectionLevel string, :algorithm string}}
-  
-  Create a new CryptoKey within a KeyRing. CryptoKey.purpose and CryptoKey.version_template.algorithm are required."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/cryptoKeys"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-encrypt$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/encrypt
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:plaintextCrc32c string,
-   :additionalAuthenticatedDataCrc32c string,
-   :additionalAuthenticatedData string,
-   :plaintext string}
-  
-  Encrypts data, so that it can only be recovered by a call to Decrypt. The CryptoKey.purpose must be ENCRYPT_DECRYPT."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:encrypt"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-getIamPolicy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-list$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize, versionView, orderBy, filter
-  
-  Lists CryptoKeys."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/cryptoKeys"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-updatePrimaryVersion$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/updatePrimaryVersion
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:cryptoKeyVersionId string}
-  
-  Update the version of a CryptoKey that will be used in Encrypt. Returns an error if called on a key whose purpose is not ENCRYPT_DECRYPT."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:updatePrimaryVersion"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-decrypt$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/decrypt
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:additionalAuthenticatedDataCrc32c string,
-   :ciphertextCrc32c string,
-   :ciphertext string,
-   :additionalAuthenticatedData string}
-  
-  Decrypts data that was protected by Encrypt. The CryptoKey.purpose must be ENCRYPT_DECRYPT."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:decrypt"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-get$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns metadata for a given CryptoKeyVersion."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-patch$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:algorithm string,
-   :generateTime string,
-   :importFailureReason string,
-   :name string,
-   :importTime string,
-   :createTime string,
-   :state string,
-   :externalProtectionLevelOptions {:externalKeyUri string},
-   :importJob string,
-   :attestation {:content string,
-                 :certChains CertificateChains,
-                 :format string},
-   :protectionLevel string,
-   :destroyTime string,
-   :destroyEventTime string}
-  
-  Update a CryptoKeyVersion's metadata. state may be changed between ENABLED and DISABLED using this method. See DestroyCryptoKeyVersion and RestoreCryptoKeyVersion to move between other states."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-restore$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/restore
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Restore a CryptoKeyVersion in the DESTROY_SCHEDULED state. Upon restoration of the CryptoKeyVersion, state will be set to DISABLED, and destroy_time will be cleared."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:restore"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-create$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:algorithm string,
-   :generateTime string,
-   :importFailureReason string,
-   :name string,
-   :importTime string,
-   :createTime string,
-   :state string,
-   :externalProtectionLevelOptions {:externalKeyUri string},
-   :importJob string,
-   :attestation {:content string,
-                 :certChains CertificateChains,
-                 :format string},
-   :protectionLevel string,
-   :destroyTime string,
-   :destroyEventTime string}
-  
-  Create a new CryptoKeyVersion in a CryptoKey. The server will assign the next sequential id. If unset, state will be set to ENABLED."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/cryptoKeyVersions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-destroy$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/destroy
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Schedule a CryptoKeyVersion for destruction. Upon calling this method, CryptoKeyVersion.state will be set to DESTROY_SCHEDULED and destroy_time will be set to a time 24 hours in the future, at which point the state will be changed to DESTROYED, and the key material will be irrevocably destroyed. Before the destroy_time is reached, RestoreCryptoKeyVersion may be called to reverse the process."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:destroy"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-getPublicKey$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/getPublicKey
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns the public key for the given CryptoKeyVersion. The CryptoKey.purpose must be ASYMMETRIC_SIGN or ASYMMETRIC_DECRYPT."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}/publicKey"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-asymmetricSign$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/asymmetricSign
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:digestCrc32c string,
-   :digest {:sha384 string, :sha256 string, :sha512 string}}
-  
-  Signs data using a CryptoKeyVersion with CryptoKey.purpose ASYMMETRIC_SIGN, producing a signature that can be verified with the public key retrieved from GetPublicKey."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:asymmetricSign"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-list$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, view, pageSize, orderBy, pageToken
-  
-  Lists CryptoKeyVersions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/cryptoKeyVersions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-import$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/import
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:algorithm string, :rsaAesWrappedKey string, :importJob string}
-  
-  Imports a new CryptoKeyVersion into an existing CryptoKey using the wrapped key material provided in the request. The version ID will be assigned the next sequential id within the CryptoKey."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+parent}/cryptoKeyVersions:import"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keyRings-cryptoKeys-cryptoKeyVersions-asymmetricDecrypt$
-  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyRings/cryptoKeys/cryptoKeyVersions/asymmetricDecrypt
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:ciphertext string, :ciphertextCrc32c string}
-  
-  Decrypts data that was encrypted with a public key retrieved from GetPublicKey corresponding to a CryptoKeyVersion with CryptoKey.purpose ASYMMETRIC_DECRYPT."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloudkms"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudkms.googleapis.com/"
-     "v1/{+name}:asymmetricDecrypt"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

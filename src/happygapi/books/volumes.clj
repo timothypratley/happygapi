@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/get
+  
+  Required parameters: volumeId
+  
+  Optional parameters: includeNonComicsSeries, partner, country, user_library_consistent_read, source, projection
+  
+  Gets volume information for a single volume."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/volumes/{volumeId}"
+     #{:volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/list
   
@@ -32,38 +58,12 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/get
-  
-  Required parameters: volumeId
-  
-  Optional parameters: includeNonComicsSeries, country, partner, source, projection, user_library_consistent_read
-  
-  Gets volume information for a single volume."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:volumeId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/volumes/{volumeId}"
-     #{:volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn mybooks-list$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/mybooks/list
   
   Required parameters: none
   
-  Optional parameters: locale, processingState, acquireMethod, source, startIndex, maxResults, country
+  Optional parameters: source, acquireMethod, maxResults, country, processingState, startIndex, locale
   
   Return a list of books in My Library."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -89,7 +89,7 @@
   
   Required parameters: volumeId
   
-  Optional parameters: locale, association, source, maxAllowedMaturityRating
+  Optional parameters: maxAllowedMaturityRating, locale, source, association
   
   Return a list of associated books."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -110,23 +110,23 @@
       :as :json}
      auth))))
 
-(defn recommended-rate$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/recommended/rate
+(defn useruploaded-list$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/useruploaded/list
   
-  Required parameters: rating, volumeId
+  Required parameters: none
   
-  Optional parameters: locale, source
+  Optional parameters: startIndex, volumeId, maxResults, source, locale, processingState
   
-  Rate a recommended book for the current user."
+  Return a list of books uploaded by the current user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:volumeId :rating})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://books.googleapis.com/"
-     "books/v1/volumes/recommended/rate"
-     #{:volumeId :rating}
+     "books/v1/volumes/useruploaded"
+     #{}
      parameters)
     (merge-with
      merge
@@ -162,23 +162,23 @@
       :as :json}
      auth))))
 
-(defn useruploaded-list$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/useruploaded/list
+(defn recommended-rate$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/volumes/recommended/rate
   
-  Required parameters: none
+  Required parameters: volumeId, rating
   
-  Optional parameters: source, processingState, maxResults, volumeId, startIndex, locale
+  Optional parameters: locale, source
   
-  Return a list of books uploaded by the current user."
+  Rate a recommended book for the current user."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:volumeId :rating})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://books.googleapis.com/"
-     "books/v1/volumes/useruploaded"
-     #{}
+     "books/v1/volumes/recommended/rate"
+     #{:volumeId :rating}
      parameters)
     (merge-with
      merge

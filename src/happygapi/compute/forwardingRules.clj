@@ -6,38 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: orderBy, includeAllScopes, pageToken, maxResults, returnPartialSuccess, filter
-  
-  Retrieves an aggregated list of forwarding rules."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/forwardingRules"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/patch
   
-  Required parameters: forwardingRule, region, project
+  Required parameters: region, forwardingRule, project
   
   Optional parameters: requestId
   
@@ -57,16 +29,17 @@
    :region string,
    :serviceLabel string,
    :ports [string],
-   :serviceDirectoryRegistrations [{:namespace string,
-                                    :serviceDirectoryRegion string,
-                                    :service string}],
+   :serviceDirectoryRegistrations [{:service string,
+                                    :namespace string,
+                                    :serviceDirectoryRegion string}],
    :id string,
    :kind string,
-   :metadataFilters [{:filterLabels [MetadataFilterLabelMatch],
-                      :filterMatchCriteria string}],
+   :metadataFilters [{:filterMatchCriteria string,
+                      :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
    :isMirroringCollector boolean,
    :allPorts boolean,
+   :pscConnectionStatus string,
    :portRange string,
    :network string,
    :target string,
@@ -88,132 +61,6 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/forwardingRules/{forwardingRule}"
-     #{:region :project :forwardingRule}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/get
-  
-  Required parameters: region, project, forwardingRule
-  
-  Optional parameters: none
-  
-  Returns the specified ForwardingRule resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:region :project :forwardingRule})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/forwardingRules/{forwardingRule}"
-     #{:region :project :forwardingRule}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/list
-  
-  Required parameters: project, region
-  
-  Optional parameters: pageToken, filter, maxResults, returnPartialSuccess, orderBy
-  
-  Retrieves a list of ForwardingRule resources available to the specified project and region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/forwardingRules"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setLabels$
-  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/setLabels
-  
-  Required parameters: project, region, resource
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:labels {}, :labelFingerprint string}
-  
-  Sets the labels on the specified resource. To learn more about labels, read the Labeling Resources documentation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/forwardingRules/{resource}/setLabels"
-     #{:region :project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setTarget$
-  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/setTarget
-  
-  Required parameters: project, forwardingRule, region
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:target string}
-  
-  Changes target URL for forwarding rule. The new target should be of the same type as the old target."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:region :project :forwardingRule})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/forwardingRules/{forwardingRule}/setTarget"
      #{:region :project :forwardingRule}
      parameters)
     (merge-with
@@ -249,16 +96,17 @@
    :region string,
    :serviceLabel string,
    :ports [string],
-   :serviceDirectoryRegistrations [{:namespace string,
-                                    :serviceDirectoryRegion string,
-                                    :service string}],
+   :serviceDirectoryRegistrations [{:service string,
+                                    :namespace string,
+                                    :serviceDirectoryRegion string}],
    :id string,
    :kind string,
-   :metadataFilters [{:filterLabels [MetadataFilterLabelMatch],
-                      :filterMatchCriteria string}],
+   :metadataFilters [{:filterMatchCriteria string,
+                      :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
    :isMirroringCollector boolean,
    :allPorts boolean,
+   :pscConnectionStatus string,
    :portRange string,
    :network string,
    :target string,
@@ -290,10 +138,38 @@
       :as :json}
      auth))))
 
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: orderBy, maxResults, filter, pageToken, returnPartialSuccess, includeAllScopes
+  
+  Retrieves an aggregated list of forwarding rules."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/forwardingRules"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/delete
   
-  Required parameters: project, forwardingRule, region
+  Required parameters: region, forwardingRule, project
   
   Optional parameters: requestId
   
@@ -314,6 +190,132 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/get
+  
+  Required parameters: project, region, forwardingRule
+  
+  Optional parameters: none
+  
+  Returns the specified ForwardingRule resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:region :project :forwardingRule})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/forwardingRules/{forwardingRule}"
+     #{:region :project :forwardingRule}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setTarget$
+  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/setTarget
+  
+  Required parameters: region, forwardingRule, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:target string}
+  
+  Changes target URL for forwarding rule. The new target should be of the same type as the old target."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:region :project :forwardingRule})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/forwardingRules/{forwardingRule}/setTarget"
+     #{:region :project :forwardingRule}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/list
+  
+  Required parameters: project, region
+  
+  Optional parameters: returnPartialSuccess, orderBy, pageToken, filter, maxResults
+  
+  Retrieves a list of ForwardingRule resources available to the specified project and region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/forwardingRules"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules/setLabels
+  
+  Required parameters: region, resource, project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:labelFingerprint string, :labels {}}
+  
+  Sets the labels on the specified resource. To learn more about labels, read the Labeling Resources documentation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/forwardingRules/{resource}/setLabels"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

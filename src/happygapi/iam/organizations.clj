@@ -6,38 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn roles-delete$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/delete
-  
-  Required parameters: name
-  
-  Optional parameters: etag
-  
-  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://iam.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn roles-list$
   "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/list
   
   Required parameters: parent
   
-  Optional parameters: showDeleted, pageSize, view, pageToken
+  Optional parameters: pageSize, showDeleted, pageToken, view
   
   Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -116,6 +90,44 @@
       :as :json}
      auth))))
 
+(defn roles-patch$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :deleted boolean,
+   :includedPermissions [string],
+   :description string,
+   :title string,
+   :stage string,
+   :etag string}
+  
+  Updates the definition of a custom Role."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://iam.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn roles-create$
   "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/create
   
@@ -126,12 +138,12 @@
   Body: 
   
   {:role {:name string,
+          :deleted boolean,
           :includedPermissions [string],
           :description string,
-          :etag string,
-          :deleted boolean,
           :title string,
-          :stage string},
+          :stage string,
+          :etag string},
    :roleId string}
   
   Creates a new custom Role."
@@ -155,29 +167,19 @@
       :as :json}
      auth))))
 
-(defn roles-patch$
-  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/patch
+(defn roles-delete$
+  "https://cloud.google.com/iam/api/reference/rest/v1/organizations/roles/delete
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: etag
   
-  Body: 
-  
-  {:name string,
-   :includedPermissions [string],
-   :description string,
-   :etag string,
-   :deleted boolean,
-   :title string,
-   :stage string}
-  
-  Updates the definition of a custom Role."
+  Deletes a custom Role. When you delete a custom role, the following changes occur immediately: * You cannot bind a member to the custom role in an IAM Policy. * Existing bindings to the custom role are not changed, but they have no effect. * By default, the response from ListRoles does not include the custom role. You have 7 days to undelete the custom role. After 7 days, the following changes occur: * The custom role is permanently deleted and cannot be recovered. * If an IAM policy contains a binding to the custom role, the binding is permanently removed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/delete
     (util/get-url
      "https://iam.googleapis.com/"
      "v1/{+name}"
@@ -185,9 +187,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

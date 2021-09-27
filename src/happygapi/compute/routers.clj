@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/get
   
-  Required parameters: router, project, region
+  Required parameters: project, region, router
   
   Optional parameters: none
   
@@ -37,17 +37,20 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedVpnTunnel string,
-                 :ipRange string,
-                 :linkedInterconnectAttachment string,
+   :interfaces [{:linkedInterconnectAttachment string,
                  :managementType string,
+                 :privateIpAddress string,
+                 :ipRange string,
+                 :linkedVpnTunnel string,
+                 :redundantInterface string,
+                 :subnetwork string,
                  :name string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
@@ -64,11 +67,13 @@
            :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:enable string,
+   :bgpPeers [{:bfd RouterBgpPeerBfd,
+               :enable string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
+               :routerApplianceInstance string,
                :managementType string,
                :advertiseMode string,
                :peerAsn integer,
@@ -76,11 +81,11 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:keepaliveInterval integer,
-         :asn integer,
+   :bgp {:asn integer,
          :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :advertisedGroups [string]},
+         :advertisedGroups [string],
+         :keepaliveInterval integer},
    :region string,
    :id string,
    :kind string,
@@ -112,17 +117,20 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/patch
   
-  Required parameters: region, router, project
+  Required parameters: project, router, region
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedVpnTunnel string,
-                 :ipRange string,
-                 :linkedInterconnectAttachment string,
+   :interfaces [{:linkedInterconnectAttachment string,
                  :managementType string,
+                 :privateIpAddress string,
+                 :ipRange string,
+                 :linkedVpnTunnel string,
+                 :redundantInterface string,
+                 :subnetwork string,
                  :name string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
@@ -139,11 +147,13 @@
            :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:enable string,
+   :bgpPeers [{:bfd RouterBgpPeerBfd,
+               :enable string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
+               :routerApplianceInstance string,
                :managementType string,
                :advertiseMode string,
                :peerAsn integer,
@@ -151,11 +161,11 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:keepaliveInterval integer,
-         :asn integer,
+   :bgp {:asn integer,
          :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :advertisedGroups [string]},
+         :advertisedGroups [string],
+         :keepaliveInterval integer},
    :region string,
    :id string,
    :kind string,
@@ -217,7 +227,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, orderBy, pageToken, maxResults, includeAllScopes, filter
+  Optional parameters: filter, includeAllScopes, returnPartialSuccess, maxResults, pageToken, orderBy
   
   Retrieves an aggregated list of routers."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -243,17 +253,20 @@
 (defn update$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/update
   
-  Required parameters: router, region, project
+  Required parameters: project, router, region
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedVpnTunnel string,
-                 :ipRange string,
-                 :linkedInterconnectAttachment string,
+   :interfaces [{:linkedInterconnectAttachment string,
                  :managementType string,
+                 :privateIpAddress string,
+                 :ipRange string,
+                 :linkedVpnTunnel string,
+                 :redundantInterface string,
+                 :subnetwork string,
                  :name string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
@@ -270,11 +283,13 @@
            :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:enable string,
+   :bgpPeers [{:bfd RouterBgpPeerBfd,
+               :enable string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
+               :routerApplianceInstance string,
                :managementType string,
                :advertiseMode string,
                :peerAsn integer,
@@ -282,11 +297,11 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:keepaliveInterval integer,
-         :asn integer,
+   :bgp {:asn integer,
          :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :advertisedGroups [string]},
+         :advertisedGroups [string],
+         :keepaliveInterval integer},
    :region string,
    :id string,
    :kind string,
@@ -318,7 +333,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/delete
   
-  Required parameters: region, project, router
+  Required parameters: region, router, project
   
   Optional parameters: requestId
   
@@ -345,17 +360,20 @@
 (defn preview$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/preview
   
-  Required parameters: region, router, project
+  Required parameters: project, router, region
   
   Optional parameters: none
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedVpnTunnel string,
-                 :ipRange string,
-                 :linkedInterconnectAttachment string,
+   :interfaces [{:linkedInterconnectAttachment string,
                  :managementType string,
+                 :privateIpAddress string,
+                 :ipRange string,
+                 :linkedVpnTunnel string,
+                 :redundantInterface string,
+                 :subnetwork string,
                  :name string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
@@ -372,11 +390,13 @@
            :enableEndpointIndependentMapping boolean,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:enable string,
+   :bgpPeers [{:bfd RouterBgpPeerBfd,
+               :enable string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
+               :routerApplianceInstance string,
                :managementType string,
                :advertiseMode string,
                :peerAsn integer,
@@ -384,11 +404,11 @@
                :ipAddress string,
                :advertisedRoutePriority integer}],
    :selfLink string,
-   :bgp {:keepaliveInterval integer,
-         :asn integer,
+   :bgp {:asn integer,
          :advertiseMode string,
          :advertisedIpRanges [RouterAdvertisedIpRange],
-         :advertisedGroups [string]},
+         :advertisedGroups [string],
+         :keepaliveInterval integer},
    :region string,
    :id string,
    :kind string,
@@ -421,9 +441,9 @@
 (defn getNatMappingInfo$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/getNatMappingInfo
   
-  Required parameters: project, router, region
+  Required parameters: project, region, router
   
-  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
+  Optional parameters: filter, orderBy, returnPartialSuccess, maxResults, pageToken
   
   Retrieves runtime Nat mapping information of VM endpoints."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -449,9 +469,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/list
   
-  Required parameters: project, region
+  Required parameters: region, project
   
-  Optional parameters: maxResults, pageToken, orderBy, filter, returnPartialSuccess
+  Optional parameters: maxResults, filter, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of Router resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

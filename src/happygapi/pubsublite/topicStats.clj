@@ -6,38 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn projects-locations-topics-computeTimeCursor$
-  "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeTimeCursor
-  
-  Required parameters: topic
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:target {:eventTime string, :publishTime string}, :partition string}
-  
-  Compute the corresponding cursor for a publish or event time in a topic partition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:topic})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://pubsublite.googleapis.com/"
-     "v1/topicStats/{+topic}:computeTimeCursor"
-     #{:topic}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn projects-locations-topics-computeHeadCursor$
   "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeHeadCursor
   
@@ -58,6 +26,38 @@
     (util/get-url
      "https://pubsublite.googleapis.com/"
      "v1/topicStats/{+topic}:computeHeadCursor"
+     #{:topic}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn projects-locations-topics-computeTimeCursor$
+  "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeTimeCursor
+  
+  Required parameters: topic
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:target {:eventTime string, :publishTime string}, :partition string}
+  
+  Compute the corresponding cursor for a publish or event time in a topic partition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:topic})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsublite.googleapis.com/"
+     "v1/topicStats/{+topic}:computeTimeCursor"
      #{:topic}
      parameters)
     (merge-with

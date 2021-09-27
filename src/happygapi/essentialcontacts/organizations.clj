@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn contacts-compute$
-  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/compute
+(defn contacts-get$
+  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: notificationCategories, pageToken, pageSize
+  Optional parameters: none
   
-  Lists all contacts for the resource that are subscribed to the specified notification categories, including contacts inherited from any parent resources."
+  Gets a single contact."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://essentialcontacts.googleapis.com/"
-     "v1/{+parent}/contacts:compute"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -64,65 +64,19 @@
       :as :json}
      auth))))
 
-(defn contacts-create$
-  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:validateTime string,
-   :email string,
-   :languageTag string,
-   :notificationCategorySubscriptions [string],
-   :name string,
-   :validationState string}
-  
-  Adds a new contact for a resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://essentialcontacts.googleapis.com/"
-     "v1/{+parent}/contacts"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn contacts-patch$
-  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/patch
+(defn contacts-delete$
+  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/delete
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
-  Body: 
-  
-  {:validateTime string,
-   :email string,
-   :languageTag string,
-   :notificationCategorySubscriptions [string],
-   :name string,
-   :validationState string}
-  
-  Updates a contact. Note: A contact's email address cannot be changed."
+  Deletes a contact."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/delete
     (util/get-url
      "https://essentialcontacts.googleapis.com/"
      "v1/{+name}"
@@ -130,9 +84,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -164,19 +116,65 @@
       :as :json}
      auth))))
 
-(defn contacts-get$
-  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/get
+(defn contacts-create$
+  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/create
   
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
   
-  Gets a single contact."
+  Body: 
+  
+  {:name string,
+   :languageTag string,
+   :validationState string,
+   :validateTime string,
+   :email string,
+   :notificationCategorySubscriptions [string]}
+  
+  Adds a new contact for a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://essentialcontacts.googleapis.com/"
+     "v1/{+parent}/contacts"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn contacts-patch$
+  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :languageTag string,
+   :validationState string,
+   :validateTime string,
+   :email string,
+   :notificationCategorySubscriptions [string]}
+  
+  Updates a contact. Note: A contact's email address cannot be changed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://essentialcontacts.googleapis.com/"
      "v1/{+name}"
@@ -184,29 +182,31 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn contacts-delete$
-  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/delete
+(defn contacts-compute$
+  "https://cloud.google.com/essentialcontacts/docs/api/reference/rest/v1/organizations/contacts/compute
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize, notificationCategories
   
-  Deletes a contact."
+  Lists all contacts for the resource that are subscribed to the specified notification categories, including contacts inherited from any parent resources."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://essentialcontacts.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/contacts:compute"
+     #{:parent}
      parameters)
     (merge-with
      merge

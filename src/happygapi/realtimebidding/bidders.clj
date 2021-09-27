@@ -58,6 +58,32 @@
       :as :json}
      auth))))
 
+(defn creatives-list$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/creatives/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, view
+  
+  Lists creatives."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+parent}/creatives"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn creatives-watch$
   "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/creatives/watch
   
@@ -85,84 +111,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn creatives-list$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/creatives/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageToken, view, pageSize
-  
-  Lists creatives."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+parent}/creatives"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn endpoints-get$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/endpoints/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a bidder endpoint by its name."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn endpoints-list$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/endpoints/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists all the bidder's endpoints."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+parent}/endpoints"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -236,16 +184,16 @@
   Body: 
   
   {:billingId string,
-   :geoTargeting {:includedIds [string], :excludedIds [string]},
+   :geoTargeting {:excludedIds [string], :includedIds [string]},
    :includedMobileOperatingSystemIds [string],
    :invalidGeoIds [string],
-   :verticalTargeting {:includedIds [string], :excludedIds [string]},
+   :verticalTargeting {:excludedIds [string], :includedIds [string]},
    :displayName string,
    :name string,
-   :userListTargeting {:includedIds [string], :excludedIds [string]},
+   :userListTargeting {:excludedIds [string], :includedIds [string]},
    :includedLanguages [string],
-   :appTargeting {:mobileAppCategoryTargeting NumericTargetingDimension,
-                  :mobileAppTargeting StringTargetingDimension},
+   :appTargeting {:mobileAppTargeting StringTargetingDimension,
+                  :mobileAppCategoryTargeting NumericTargetingDimension},
    :webTargeting {:targetingMode string, :values [string]},
    :allowedUserTargetingModes [string],
    :state string,
@@ -355,16 +303,16 @@
   Body: 
   
   {:billingId string,
-   :geoTargeting {:includedIds [string], :excludedIds [string]},
+   :geoTargeting {:excludedIds [string], :includedIds [string]},
    :includedMobileOperatingSystemIds [string],
    :invalidGeoIds [string],
-   :verticalTargeting {:includedIds [string], :excludedIds [string]},
+   :verticalTargeting {:excludedIds [string], :includedIds [string]},
    :displayName string,
    :name string,
-   :userListTargeting {:includedIds [string], :excludedIds [string]},
+   :userListTargeting {:excludedIds [string], :includedIds [string]},
    :includedLanguages [string],
-   :appTargeting {:mobileAppCategoryTargeting NumericTargetingDimension,
-                  :mobileAppTargeting StringTargetingDimension},
+   :appTargeting {:mobileAppTargeting StringTargetingDimension,
+                  :mobileAppCategoryTargeting NumericTargetingDimension},
    :webTargeting {:targetingMode string, :values [string]},
    :allowedUserTargetingModes [string],
    :state string,
@@ -589,7 +537,7 @@
   
   Body: 
   
-  {:publisherIds [string], :targetingMode string}
+  {:targetingMode string, :publisherIds [string]}
   
   Adds targeted publishers to the pretargeting config."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
@@ -607,6 +555,58 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn endpoints-get$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/endpoints/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a bidder endpoint by its name."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn endpoints-list$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders/endpoints/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists all the bidder's endpoints."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+parent}/endpoints"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

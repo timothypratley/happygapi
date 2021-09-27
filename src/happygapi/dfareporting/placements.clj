@@ -9,7 +9,7 @@
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/patch
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   
@@ -17,100 +17,100 @@
   
   {:archived boolean,
    :directorySiteId string,
-   :placementGroupIdDimensionValue {:dimensionName string,
-                                    :value string,
-                                    :kind string,
+   :placementGroupIdDimensionValue {:kind string,
+                                    :dimensionName string,
                                     :matchType string,
-                                    :id string,
-                                    :etag string},
+                                    :value string,
+                                    :etag string,
+                                    :id string},
    :keyName string,
    :primary boolean,
    :siteId string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
-   :additionalSizes [{:kind string,
-                      :iab boolean,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :additionalSizes [{:width integer,
+                      :kind string,
                       :height integer,
-                      :width integer,
+                      :iab boolean,
                       :id string}],
    :wrappingOptOut boolean,
-   :pricingSchedule {:testingStartDate string,
+   :pricingSchedule {:endDate string,
                      :flighted boolean,
+                     :pricingType string,
                      :startDate string,
-                     :floodlightActivityId string,
                      :pricingPeriods [PricingSchedulePricingPeriod],
-                     :endDate string,
-                     :capCostOption string,
-                     :pricingType string},
+                     :floodlightActivityId string,
+                     :testingStartDate string,
+                     :capCostOption string},
    :adBlockingOptOut boolean,
    :compatibility string,
    :tagFormats [string],
    :vpaidAdapterChoice string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :placementStrategyId string,
    :campaignId string,
    :createInfo {:time string},
    :videoActiveViewOptOut boolean,
-   :partnerWrappingData {:tagWrappingMode string,
+   :partnerWrappingData {:measurementPartner string,
                          :linkStatus string,
-                         :measurementPartner string,
+                         :tagWrappingMode string,
                          :wrappedTag string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
                               :matchType string,
-                              :id string,
-                              :etag string},
-   :size {:kind string,
-          :iab boolean,
+                              :value string,
+                              :etag string,
+                              :id string},
+   :size {:width integer,
+          :kind string,
           :height integer,
-          :width integer,
+          :iab boolean,
           :id string},
    :placementGroupId string,
-   :tagSetting {:keywordOption string,
+   :tagSetting {:additionalKeyValues string,
+                :includeClickThroughUrls boolean,
                 :includeClickTracking boolean,
-                :additionalKeyValues string,
-                :includeClickThroughUrls boolean},
+                :keywordOption string},
    :contentCategoryId string,
-   :videoSettings {:skippableSettings SkippableSetting,
-                   :companionSettings CompanionSetting,
-                   :durationSeconds integer,
+   :videoSettings {:obaSettings ObaIcon,
+                   :orientation string,
                    :obaEnabled boolean,
                    :kind string,
-                   :orientation string,
-                   :obaSettings ObaIcon,
-                   :transcodeSettings TranscodeSetting},
+                   :skippableSettings SkippableSetting,
+                   :durationSeconds integer,
+                   :transcodeSettings TranscodeSetting,
+                   :companionSettings CompanionSetting},
    :advertiserId string,
    :externalId string,
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
                                    :matchType string,
-                                   :id string,
-                                   :etag string},
+                                   :value string,
+                                   :etag string,
+                                   :id string},
    :status string,
    :sslRequired boolean,
    :id string,
-   :siteIdDimensionValue {:dimensionName string,
-                          :value string,
-                          :kind string,
+   :siteIdDimensionValue {:kind string,
+                          :dimensionName string,
                           :matchType string,
-                          :id string,
-                          :etag string},
+                          :value string,
+                          :etag string,
+                          :id string},
    :kind string,
    :comment string,
-   :lookbackConfiguration {:clickDuration integer,
-                           :postImpressionActivitiesDuration integer},
+   :lookbackConfiguration {:postImpressionActivitiesDuration integer,
+                           :clickDuration integer},
    :lastModifiedInfo {:time string},
    :publisherUpdateInfo {:time string},
    :subaccountId string,
@@ -139,150 +139,19 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/get
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Gets one placement by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/placements/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/insert
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/list
   
   Required parameters: profileId
   
-  Optional parameters: none
+  Optional parameters: archived, pricingTypes, minEndDate, campaignIds, contentCategoryIds, ids, searchString, groupIds, pageToken, compatibilities, sortField, minStartDate, advertiserIds, maxEndDate, sortOrder, sizeIds, placementStrategyIds, directorySiteIds, maxStartDate, paymentSource, maxResults, siteIds
   
-  Body: 
-  
-  {:archived boolean,
-   :directorySiteId string,
-   :placementGroupIdDimensionValue {:dimensionName string,
-                                    :value string,
-                                    :kind string,
-                                    :matchType string,
-                                    :id string,
-                                    :etag string},
-   :keyName string,
-   :primary boolean,
-   :siteId string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :additionalSizes [{:kind string,
-                      :iab boolean,
-                      :height integer,
-                      :width integer,
-                      :id string}],
-   :wrappingOptOut boolean,
-   :pricingSchedule {:testingStartDate string,
-                     :flighted boolean,
-                     :startDate string,
-                     :floodlightActivityId string,
-                     :pricingPeriods [PricingSchedulePricingPeriod],
-                     :endDate string,
-                     :capCostOption string,
-                     :pricingType string},
-   :adBlockingOptOut boolean,
-   :compatibility string,
-   :tagFormats [string],
-   :vpaidAdapterChoice string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :name string,
-   :placementStrategyId string,
-   :campaignId string,
-   :createInfo {:time string},
-   :videoActiveViewOptOut boolean,
-   :partnerWrappingData {:tagWrappingMode string,
-                         :linkStatus string,
-                         :measurementPartner string,
-                         :wrappedTag string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
-                              :matchType string,
-                              :id string,
-                              :etag string},
-   :size {:kind string,
-          :iab boolean,
-          :height integer,
-          :width integer,
-          :id string},
-   :placementGroupId string,
-   :tagSetting {:keywordOption string,
-                :includeClickTracking boolean,
-                :additionalKeyValues string,
-                :includeClickThroughUrls boolean},
-   :contentCategoryId string,
-   :videoSettings {:skippableSettings SkippableSetting,
-                   :companionSettings CompanionSetting,
-                   :durationSeconds integer,
-                   :obaEnabled boolean,
-                   :kind string,
-                   :orientation string,
-                   :obaSettings ObaIcon,
-                   :transcodeSettings TranscodeSetting},
-   :advertiserId string,
-   :externalId string,
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
-                                   :matchType string,
-                                   :id string,
-                                   :etag string},
-   :status string,
-   :sslRequired boolean,
-   :id string,
-   :siteIdDimensionValue {:dimensionName string,
-                          :value string,
-                          :kind string,
-                          :matchType string,
-                          :id string,
-                          :etag string},
-   :kind string,
-   :comment string,
-   :lookbackConfiguration {:clickDuration integer,
-                           :postImpressionActivitiesDuration integer},
-   :lastModifiedInfo {:time string},
-   :publisherUpdateInfo {:time string},
-   :subaccountId string,
-   :paymentApproved boolean,
-   :accountId string,
-   :paymentSource string}
-  
-  Inserts a new placement."
+  Retrieves a list of placements, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/placements"
@@ -290,9 +159,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -309,100 +176,100 @@
   
   {:archived boolean,
    :directorySiteId string,
-   :placementGroupIdDimensionValue {:dimensionName string,
-                                    :value string,
-                                    :kind string,
+   :placementGroupIdDimensionValue {:kind string,
+                                    :dimensionName string,
                                     :matchType string,
-                                    :id string,
-                                    :etag string},
+                                    :value string,
+                                    :etag string,
+                                    :id string},
    :keyName string,
    :primary boolean,
    :siteId string,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
-   :additionalSizes [{:kind string,
-                      :iab boolean,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :additionalSizes [{:width integer,
+                      :kind string,
                       :height integer,
-                      :width integer,
+                      :iab boolean,
                       :id string}],
    :wrappingOptOut boolean,
-   :pricingSchedule {:testingStartDate string,
+   :pricingSchedule {:endDate string,
                      :flighted boolean,
+                     :pricingType string,
                      :startDate string,
-                     :floodlightActivityId string,
                      :pricingPeriods [PricingSchedulePricingPeriod],
-                     :endDate string,
-                     :capCostOption string,
-                     :pricingType string},
+                     :floodlightActivityId string,
+                     :testingStartDate string,
+                     :capCostOption string},
    :adBlockingOptOut boolean,
    :compatibility string,
    :tagFormats [string],
    :vpaidAdapterChoice string,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :placementStrategyId string,
    :campaignId string,
    :createInfo {:time string},
    :videoActiveViewOptOut boolean,
-   :partnerWrappingData {:tagWrappingMode string,
+   :partnerWrappingData {:measurementPartner string,
                          :linkStatus string,
-                         :measurementPartner string,
+                         :tagWrappingMode string,
                          :wrappedTag string},
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
                               :matchType string,
-                              :id string,
-                              :etag string},
-   :size {:kind string,
-          :iab boolean,
+                              :value string,
+                              :etag string,
+                              :id string},
+   :size {:width integer,
+          :kind string,
           :height integer,
-          :width integer,
+          :iab boolean,
           :id string},
    :placementGroupId string,
-   :tagSetting {:keywordOption string,
+   :tagSetting {:additionalKeyValues string,
+                :includeClickThroughUrls boolean,
                 :includeClickTracking boolean,
-                :additionalKeyValues string,
-                :includeClickThroughUrls boolean},
+                :keywordOption string},
    :contentCategoryId string,
-   :videoSettings {:skippableSettings SkippableSetting,
-                   :companionSettings CompanionSetting,
-                   :durationSeconds integer,
+   :videoSettings {:obaSettings ObaIcon,
+                   :orientation string,
                    :obaEnabled boolean,
                    :kind string,
-                   :orientation string,
-                   :obaSettings ObaIcon,
-                   :transcodeSettings TranscodeSetting},
+                   :skippableSettings SkippableSetting,
+                   :durationSeconds integer,
+                   :transcodeSettings TranscodeSetting,
+                   :companionSettings CompanionSetting},
    :advertiserId string,
    :externalId string,
-   :directorySiteIdDimensionValue {:dimensionName string,
-                                   :value string,
-                                   :kind string,
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
                                    :matchType string,
-                                   :id string,
-                                   :etag string},
+                                   :value string,
+                                   :etag string,
+                                   :id string},
    :status string,
    :sslRequired boolean,
    :id string,
-   :siteIdDimensionValue {:dimensionName string,
-                          :value string,
-                          :kind string,
+   :siteIdDimensionValue {:kind string,
+                          :dimensionName string,
                           :matchType string,
-                          :id string,
-                          :etag string},
+                          :value string,
+                          :etag string,
+                          :id string},
    :kind string,
    :comment string,
-   :lookbackConfiguration {:clickDuration integer,
-                           :postImpressionActivitiesDuration integer},
+   :lookbackConfiguration {:postImpressionActivitiesDuration integer,
+                           :clickDuration integer},
    :lastModifiedInfo {:time string},
    :publisherUpdateInfo {:time string},
    :subaccountId string,
@@ -431,12 +298,38 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/get
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Gets one placement by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/placements/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn generatetags$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/generatetags
   
   Required parameters: profileId
   
-  Optional parameters: tagFormats, placementIds, campaignId
+  Optional parameters: placementIds, tagFormats, campaignId
   
   Generates tags for a placement."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -457,19 +350,124 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/list
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placements/insert
   
   Required parameters: profileId
   
-  Optional parameters: archived, pricingTypes, minEndDate, campaignIds, contentCategoryIds, ids, searchString, groupIds, pageToken, compatibilities, sortField, minStartDate, advertiserIds, maxEndDate, sortOrder, sizeIds, placementStrategyIds, directorySiteIds, maxStartDate, paymentSource, maxResults, siteIds
+  Optional parameters: none
   
-  Retrieves a list of placements, possibly filtered. This method supports paging."
+  Body: 
+  
+  {:archived boolean,
+   :directorySiteId string,
+   :placementGroupIdDimensionValue {:kind string,
+                                    :dimensionName string,
+                                    :matchType string,
+                                    :value string,
+                                    :etag string,
+                                    :id string},
+   :keyName string,
+   :primary boolean,
+   :siteId string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :additionalSizes [{:width integer,
+                      :kind string,
+                      :height integer,
+                      :iab boolean,
+                      :id string}],
+   :wrappingOptOut boolean,
+   :pricingSchedule {:endDate string,
+                     :flighted boolean,
+                     :pricingType string,
+                     :startDate string,
+                     :pricingPeriods [PricingSchedulePricingPeriod],
+                     :floodlightActivityId string,
+                     :testingStartDate string,
+                     :capCostOption string},
+   :adBlockingOptOut boolean,
+   :compatibility string,
+   :tagFormats [string],
+   :vpaidAdapterChoice string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :name string,
+   :placementStrategyId string,
+   :campaignId string,
+   :createInfo {:time string},
+   :videoActiveViewOptOut boolean,
+   :partnerWrappingData {:measurementPartner string,
+                         :linkStatus string,
+                         :tagWrappingMode string,
+                         :wrappedTag string},
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
+                              :matchType string,
+                              :value string,
+                              :etag string,
+                              :id string},
+   :size {:width integer,
+          :kind string,
+          :height integer,
+          :iab boolean,
+          :id string},
+   :placementGroupId string,
+   :tagSetting {:additionalKeyValues string,
+                :includeClickThroughUrls boolean,
+                :includeClickTracking boolean,
+                :keywordOption string},
+   :contentCategoryId string,
+   :videoSettings {:obaSettings ObaIcon,
+                   :orientation string,
+                   :obaEnabled boolean,
+                   :kind string,
+                   :skippableSettings SkippableSetting,
+                   :durationSeconds integer,
+                   :transcodeSettings TranscodeSetting,
+                   :companionSettings CompanionSetting},
+   :advertiserId string,
+   :externalId string,
+   :directorySiteIdDimensionValue {:kind string,
+                                   :dimensionName string,
+                                   :matchType string,
+                                   :value string,
+                                   :etag string,
+                                   :id string},
+   :status string,
+   :sslRequired boolean,
+   :id string,
+   :siteIdDimensionValue {:kind string,
+                          :dimensionName string,
+                          :matchType string,
+                          :value string,
+                          :etag string,
+                          :id string},
+   :kind string,
+   :comment string,
+   :lookbackConfiguration {:postImpressionActivitiesDuration integer,
+                           :clickDuration integer},
+   :lastModifiedInfo {:time string},
+   :publisherUpdateInfo {:time string},
+   :subaccountId string,
+   :paymentApproved boolean,
+   :accountId string,
+   :paymentSource string}
+  
+  Inserts a new placement."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/placements"
@@ -477,7 +475,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/directorySites/list
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/directorySites/get
   
-  Required parameters: profileId
+  Required parameters: id, profileId
   
-  Optional parameters: acceptsInterstitialPlacements, dfpNetworkCode, ids, acceptsInStreamVideoPlacements, searchString, pageToken, sortField, active, sortOrder, acceptsPublisherPaidPlacements, maxResults
+  Optional parameters: none
   
-  Retrieves a list of directory sites, possibly filtered. This method supports paging."
+  Gets one directory site by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/directorySites"
-     #{:profileId}
+     "dfareporting/v3.5/userprofiles/{profileId}/directorySites/{id}"
+     #{:id :profileId}
      parameters)
     (merge-with
      merge
@@ -41,22 +41,22 @@
   
   Body: 
   
-  {:idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :interstitialTagFormats [string],
-   :inpageTagFormats [string],
-   :settings {:dfpSettings DfpSettings,
-              :interstitialPlacementAccepted boolean,
-              :activeViewOptOut boolean,
-              :instreamVideoPlacementAccepted boolean},
-   :url string,
-   :kind string,
+  {:inpageTagFormats [string],
+   :id string,
    :name string,
-   :id string}
+   :url string,
+   :settings {:interstitialPlacementAccepted boolean,
+              :activeViewOptOut boolean,
+              :dfpSettings DfpSettings,
+              :instreamVideoPlacementAccepted boolean},
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :interstitialTagFormats [string],
+   :kind string}
   
   Inserts a new directory site."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -79,23 +79,23 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/directorySites/get
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/directorySites/list
   
-  Required parameters: id, profileId
+  Required parameters: profileId
   
-  Optional parameters: none
+  Optional parameters: acceptsInterstitialPlacements, dfpNetworkCode, ids, acceptsInStreamVideoPlacements, searchString, pageToken, sortField, active, sortOrder, acceptsPublisherPaidPlacements, maxResults
   
-  Gets one directory site by ID."
+  Retrieves a list of directory sites, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/directorySites/{id}"
-     #{:id :profileId}
+     "dfareporting/v3.5/userprofiles/{profileId}/directorySites"
+     #{:profileId}
      parameters)
     (merge-with
      merge

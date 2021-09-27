@@ -58,6 +58,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/repricingrules/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: pageSize, countryCode, pageToken, languageCode
+  
+  Lists the repricing rules in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/repricingrules"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn create$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/repricingrules/create
   
@@ -71,14 +97,14 @@
                  :useAutoPricingMinPrice boolean},
    :effectiveTimePeriod {:fixedTimePeriods [RepricingRuleEffectiveTimeFixedTimePeriod]},
    :paused boolean,
-   :eligibleOfferMatcher {:itemGroupIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
-                          :matcherOption string,
+   :eligibleOfferMatcher {:skipWhenOnPromotion boolean,
+                          :offerIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
+                          :itemGroupIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
                           :brandMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
-                          :skipWhenOnPromotion boolean,
-                          :offerIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher},
+                          :matcherOption string},
    :type string,
    :title string,
-   :statsBasedRule {:percentageDelta integer, :priceDelta string},
+   :statsBasedRule {:priceDelta string, :percentageDelta integer},
    :languageCode string,
    :ruleId string,
    :cogsBasedRule {:priceDelta string, :percentageDelta integer},
@@ -106,36 +132,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/repricingrules/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: pageSize, countryCode, pageToken, languageCode
-  
-  Lists the repricing rules in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/repricingrules"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/repricingrules/patch
   
-  Required parameters: ruleId, merchantId
+  Required parameters: merchantId, ruleId
   
   Optional parameters: none
   
@@ -145,14 +145,14 @@
                  :useAutoPricingMinPrice boolean},
    :effectiveTimePeriod {:fixedTimePeriods [RepricingRuleEffectiveTimeFixedTimePeriod]},
    :paused boolean,
-   :eligibleOfferMatcher {:itemGroupIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
-                          :matcherOption string,
+   :eligibleOfferMatcher {:skipWhenOnPromotion boolean,
+                          :offerIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
+                          :itemGroupIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
                           :brandMatcher RepricingRuleEligibleOfferMatcherStringMatcher,
-                          :skipWhenOnPromotion boolean,
-                          :offerIdMatcher RepricingRuleEligibleOfferMatcherStringMatcher},
+                          :matcherOption string},
    :type string,
    :title string,
-   :statsBasedRule {:percentageDelta integer, :priceDelta string},
+   :statsBasedRule {:priceDelta string, :percentageDelta integer},
    :languageCode string,
    :ruleId string,
    :cogsBasedRule {:priceDelta string, :percentageDelta integer},
@@ -183,9 +183,9 @@
 (defn repricingreports-list$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/repricingrules/repricingreports/list
   
-  Required parameters: ruleId, merchantId
+  Required parameters: merchantId, ruleId
   
-  Optional parameters: pageToken, endDate, pageSize, startDate
+  Optional parameters: pageSize, startDate, endDate, pageToken
   
   Lists the metrics report for a given Repricing rule."
   {:scopes ["https://www.googleapis.com/auth/content"]}

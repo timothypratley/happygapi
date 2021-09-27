@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/get
+  
+  Required parameters: groupUniqueId
+  
+  Optional parameters: none
+  
+  Gets one resource by id."
+  {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/groups/v1/groups/"
+     "{groupUniqueId}"
+     #{:groupUniqueId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/patch
   
@@ -39,6 +65,7 @@
    :name string,
    :whoCanMarkNoResponseNeeded string,
    :allowExternalMembers string,
+   :default_sender string,
    :defaultMessageDenyNotificationText string,
    :whoCanApproveMembers string,
    :isArchived string,
@@ -98,32 +125,6 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/get
-  
-  Required parameters: groupUniqueId
-  
-  Optional parameters: none
-  
-  Gets one resource by id."
-  {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/groups/v1/groups/"
-     "{groupUniqueId}"
-     #{:groupUniqueId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/update
   
@@ -157,6 +158,7 @@
    :name string,
    :whoCanMarkNoResponseNeeded string,
    :allowExternalMembers string,
+   :default_sender string,
    :defaultMessageDenyNotificationText string,
    :whoCanApproveMembers string,
    :isArchived string,

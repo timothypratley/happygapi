@@ -6,6 +6,123 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn customers-list$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/customers/list
+  
+  Required parameters: partnerId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the customers that are enrolled to the reseller identified by the `partnerId` argument. This list includes customers that the reseller created and customers that enrolled themselves using the portal."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:partnerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/partners/{+partnerId}/customers"
+     #{:partnerId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customers-create$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/customers/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:customer {:companyName string,
+              :companyId string,
+              :name string,
+              :skipWelcomeEmail boolean,
+              :adminEmails [string],
+              :languageCode string,
+              :termsStatus string,
+              :ownerEmails [string]}}
+  
+  Creates a customer for zero-touch enrollment. After the method returns successfully, admin and owner roles can manage devices and EMM configs by calling API methods or using their zero-touch enrollment portal. The customer receives an email that welcomes them to zero-touch enrollment and explains how to sign into the portal."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/customers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn vendors-list$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the vendors of the partner."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/vendors"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn vendors-customers-list$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/customers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the customers of the vendor."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/customers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn devices-get$
   "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/devices/get
   
@@ -41,10 +158,10 @@
   
   Body: 
   
-  {:pageToken string,
+  {:limit string,
    :customerId [string],
    :sectionType string,
-   :limit string}
+   :pageToken string}
   
   Finds devices claimed for customers. The results only contain devices registered to the reseller that's identified by the `partnerId` argument. The customer's devices purchased from other resellers don't appear in the results."
   {:scopes nil}
@@ -76,13 +193,13 @@
   
   Body: 
   
-  {:deviceIdentifier {:model string,
-                      :imei string,
+  {:pageToken string,
+   :limit string,
+   :deviceIdentifier {:imei string,
                       :manufacturer string,
                       :serialNumber string,
-                      :meid string},
-   :limit string,
-   :pageToken string}
+                      :model string,
+                      :meid string}}
   
   Finds devices by hardware identifiers, such as IMEI."
   {:scopes nil}
@@ -114,15 +231,15 @@
   
   Body: 
   
-  {:vacationModeExpireTime string,
+  {:sectionType string,
    :vacationModeDays integer,
-   :deviceId string,
-   :sectionType string,
-   :deviceIdentifier {:model string,
-                      :imei string,
+   :deviceIdentifier {:imei string,
                       :manufacturer string,
                       :serialNumber string,
-                      :meid string}}
+                      :model string,
+                      :meid string},
+   :vacationModeExpireTime string,
+   :deviceId string}
   
   Unclaims a device from a customer and removes it from zero-touch enrollment."
   {:scopes nil}
@@ -154,10 +271,10 @@
   
   Body: 
   
-  {:claims [{:sectionType string,
+  {:claims [{:deviceIdentifier DeviceIdentifier,
              :deviceMetadata DeviceMetadata,
              :customerId string,
-             :deviceIdentifier DeviceIdentifier}]}
+             :sectionType string}]}
   
   Claims a batch of devices for a customer asynchronously. Adds the devices to zero-touch enrollment. To learn more, read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
   {:scopes nil}
@@ -189,8 +306,8 @@
   
   Body: 
   
-  {:updates [{:deviceMetadata DeviceMetadata,
-              :deviceIdentifier DeviceIdentifier,
+  {:updates [{:deviceIdentifier DeviceIdentifier,
+              :deviceMetadata DeviceMetadata,
               :deviceId string}]}
   
   Updates the reseller metadata attached to a batch of devices. This method updates devices asynchronously and returns an `Operation` that can be used to track progress. Read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
@@ -223,11 +340,11 @@
   
   Body: 
   
-  {:unclaims [{:deviceId string,
-               :sectionType string,
-               :vacationModeExpireTime string,
+  {:unclaims [{:sectionType string,
                :deviceIdentifier DeviceIdentifier,
-               :vacationModeDays integer}]}
+               :deviceId string,
+               :vacationModeDays integer,
+               :vacationModeExpireTime string}]}
   
   Unclaims a batch of devices for a customer asynchronously. Removes the devices from zero-touch enrollment. To learn more, read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
   {:scopes nil}
@@ -253,7 +370,7 @@
 (defn devices-metadata$
   "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/devices/metadata
   
-  Required parameters: deviceId, metadataOwnerId
+  Required parameters: metadataOwnerId, deviceId
   
   Optional parameters: none
   
@@ -291,14 +408,14 @@
   
   Body: 
   
-  {:sectionType string,
-   :customerId string,
-   :deviceIdentifier {:model string,
-                      :imei string,
+  {:deviceMetadata {:entries {}},
+   :deviceIdentifier {:imei string,
                       :manufacturer string,
                       :serialNumber string,
+                      :model string,
                       :meid string},
-   :deviceMetadata {:entries {}}}
+   :customerId string,
+   :sectionType string}
   
   Claims a device for a customer and adds it to zero-touch enrollment. If the device is already claimed by another customer, the call returns an error."
   {:scopes nil}
@@ -316,121 +433,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customers-create$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/customers/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:customer {:companyName string,
-              :companyId string,
-              :name string,
-              :termsStatus string,
-              :ownerEmails [string],
-              :adminEmails [string]}}
-  
-  Creates a customer for zero-touch enrollment. After the method returns successfully, admin and owner roles can manage devices and EMM configs by calling API methods or using their zero-touch enrollment portal. The customer receives an email that welcomes them to zero-touch enrollment and explains how to sign into the portal."
-  {:scopes nil}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/customers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customers-list$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/customers/list
-  
-  Required parameters: partnerId
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the customers that are enrolled to the reseller identified by the `partnerId` argument. This list includes customers that the reseller created and customers that enrolled themselves using the portal."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:partnerId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/partners/{+partnerId}/customers"
-     #{:partnerId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn vendors-list$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the vendors of the partner."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/vendors"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn vendors-customers-list$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/customers/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the customers of the vendor."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/customers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

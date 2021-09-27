@@ -17,8 +17,8 @@
   
   {:description string,
    :relatedEntities [{:entity Entity}],
-   :abuseTypes [{:id string}],
-   :subject {:url string, :typeId string, :id string}}
+   :subject {:typeId string, :id string, :url string},
+   :abuseTypes [{:id string}]}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"

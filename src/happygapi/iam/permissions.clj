@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:pageSize integer, :pageToken string, :fullResourceName string}
+  {:fullResourceName string, :pageToken string, :pageSize integer}
   
   Lists every permission that you can test on a resource. A permission is testable if you can check whether a member has that permission on the resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

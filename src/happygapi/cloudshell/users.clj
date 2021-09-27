@@ -6,6 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn environments-start$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/start
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:accessToken string, :publicKeys [string]}
+  
+  Starts an existing environment, allowing clients to connect to it. The returned operation will contain an instance of StartEnvironmentMetadata in its metadata field. Users can wait for the environment to start by polling this operation via GetOperation. Once the environment has finished starting and is ready to accept connections, the operation will contain a StartEnvironmentResponse in its response field."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudshell.googleapis.com/"
+     "v1/{+name}:start"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn environments-get$
   "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/get
   
@@ -27,38 +59,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn environments-authorize$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:idToken string, :expireTime string, :accessToken string}
-  
-  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudshell.googleapis.com/"
-     "v1/{+name}:authorize"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -96,38 +96,6 @@
       :as :json}
      auth))))
 
-(defn environments-start$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/start
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:accessToken string, :publicKeys [string]}
-  
-  Starts an existing environment, allowing clients to connect to it. The returned operation will contain an instance of StartEnvironmentMetadata in its metadata field. Users can wait for the environment to start by polling this operation via GetOperation. Once the environment has finished starting and is ready to accept connections, the operation will contain a StartEnvironmentResponse in its response field."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudshell.googleapis.com/"
-     "v1/{+name}:start"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn environments-addPublicKey$
   "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/addPublicKey
   
@@ -149,6 +117,38 @@
      "https://cloudshell.googleapis.com/"
      "v1/{+environment}:addPublicKey"
      #{:environment}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn environments-authorize$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:idToken string, :expireTime string, :accessToken string}
+  
+  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudshell.googleapis.com/"
+     "v1/{+name}:authorize"
+     #{:name}
      parameters)
     (merge-with
      merge

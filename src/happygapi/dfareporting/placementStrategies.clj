@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: sortField, ids, sortOrder, pageToken, searchString, maxResults
+  
+  Retrieves a list of placement strategies, possibly filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/placementStrategies"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/insert
   
@@ -15,7 +41,7 @@
   
   Body: 
   
-  {:kind string, :id string, :accountId string, :name string}
+  {:kind string, :name string, :id string, :accountId string}
   
   Inserts a new placement strategy."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -38,27 +64,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/patch
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/update
   
-  Required parameters: id, profileId
+  Required parameters: profileId
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string, :id string, :accountId string, :name string}
+  {:kind string, :name string, :id string, :accountId string}
   
-  Updates an existing placement strategy. This method supports patch semantics."
+  Updates an existing placement strategy."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
-   (http/patch
+   (http/put
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/placementStrategies"
-     #{:id :profileId}
+     #{:profileId}
      parameters)
     (merge-with
      merge
@@ -70,36 +96,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: sortOrder, pageToken, searchString, ids, maxResults, sortField
-  
-  Retrieves a list of placement strategies, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/placementStrategies"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/get
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   
@@ -148,27 +148,27 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/update
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/placementStrategies/patch
   
-  Required parameters: profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string, :id string, :accountId string, :name string}
+  {:kind string, :name string, :id string, :accountId string}
   
-  Updates an existing placement strategy."
+  Updates an existing placement strategy. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
-   (http/put
+   (http/patch
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/placementStrategies"
-     #{:profileId}
+     #{:id :profileId}
      parameters)
     (merge-with
      merge

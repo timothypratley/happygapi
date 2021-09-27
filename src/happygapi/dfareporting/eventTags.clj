@@ -6,118 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: adId, campaignId, ids, searchString, eventTagTypes, sortField, definitionsOnly, advertiserId, sortOrder, enabled
-  
-  Retrieves a list of event tags, possibly filtered."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/eventTags"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/insert
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :name string,
-   :campaignId string,
-   :urlEscapeLevels integer,
-   :type string,
-   :siteFilterType string,
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
-                              :matchType string,
-                              :id string,
-                              :etag string},
-   :excludeFromAdxRequests boolean,
-   :advertiserId string,
-   :status string,
-   :id string,
-   :kind string,
-   :url string,
-   :enabledByDefault boolean,
-   :subaccountId string,
-   :accountId string,
-   :siteIds [string]}
-  
-  Inserts a new event tag."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/eventTags"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/patch
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   
   Body: 
   
   {:sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :campaignId string,
    :urlEscapeLevels integer,
    :type string,
    :siteFilterType string,
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
                               :matchType string,
-                              :id string,
-                              :etag string},
+                              :value string,
+                              :etag string,
+                              :id string},
    :excludeFromAdxRequests boolean,
    :advertiserId string,
    :status string,
@@ -150,6 +65,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: adId, campaignId, ids, searchString, eventTagTypes, sortField, definitionsOnly, advertiserId, sortOrder, enabled
+  
+  Retrieves a list of event tags, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/eventTags"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/update
   
@@ -160,23 +101,23 @@
   Body: 
   
   {:sslCompliant boolean,
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :campaignId string,
    :urlEscapeLevels integer,
    :type string,
    :siteFilterType string,
-   :campaignIdDimensionValue {:dimensionName string,
-                              :value string,
-                              :kind string,
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
                               :matchType string,
-                              :id string,
-                              :etag string},
+                              :value string,
+                              :etag string,
+                              :id string},
    :excludeFromAdxRequests boolean,
    :advertiserId string,
    :status string,
@@ -194,6 +135,65 @@
   {:pre [(util/has-keys? parameters #{:profileId})]}
   (util/get-response
    (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/eventTags"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/insert
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:sslCompliant boolean,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :name string,
+   :campaignId string,
+   :urlEscapeLevels integer,
+   :type string,
+   :siteFilterType string,
+   :campaignIdDimensionValue {:kind string,
+                              :dimensionName string,
+                              :matchType string,
+                              :value string,
+                              :etag string,
+                              :id string},
+   :excludeFromAdxRequests boolean,
+   :advertiserId string,
+   :status string,
+   :id string,
+   :kind string,
+   :url string,
+   :enabledByDefault boolean,
+   :subaccountId string,
+   :accountId string,
+   :siteIds [string]}
+  
+  Inserts a new event tag."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/post
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/eventTags"
@@ -238,7 +238,7 @@
 (defn delete$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/eventTags/delete
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   

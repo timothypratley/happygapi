@@ -6,40 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/update
-  
-  Required parameters: deviceId, userId, enterpriseId, installId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:installState string, :productId string, :versionCode integer}
-  
-  Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :deviceId :installId :userId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
-     #{:enterpriseId :deviceId :installId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/get
   
@@ -71,7 +37,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/delete
   
-  Required parameters: enterpriseId, installId, deviceId, userId
+  Required parameters: installId, enterpriseId, deviceId, userId
   
   Optional parameters: none
   
@@ -99,7 +65,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/list
   
-  Required parameters: enterpriseId, deviceId, userId
+  Required parameters: deviceId, enterpriseId, userId
   
   Optional parameters: none
   
@@ -119,6 +85,40 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/installs/update
+  
+  Required parameters: userId, installId, enterpriseId, deviceId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:productId string, :versionCode integer, :installState string}
+  
+  Requests to install the latest version of an app to a device. If the app is already installed, then it is updated to the latest version if necessary."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :deviceId :installId :userId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/devices/{deviceId}/installs/{installId}"
+     #{:enterpriseId :deviceId :installId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

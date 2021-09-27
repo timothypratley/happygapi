@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, orderBy, maxResults, filter
+  Optional parameters: pageToken, orderBy, filter, maxResults
   
   Lists all resource types for Deployment Manager."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

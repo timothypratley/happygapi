@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/display-video/api/reference/rest/v1/customLists/list
+  
+  Required parameters: none
+  
+  Optional parameters: advertiserId, pageToken, pageSize, filter, orderBy
+  
+  Lists custom lists. The order is defined by the order_by parameter."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/customLists"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/display-video/api/reference/rest/v1/customLists/get
   
@@ -23,32 +49,6 @@
      "https://displayvideo.googleapis.com/"
      "v1/customLists/{+customListId}"
      #{:customListId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/customLists/list
-  
-  Required parameters: none
-  
-  Optional parameters: filter, advertiserId, pageToken, orderBy, pageSize
-  
-  Lists custom lists. The order is defined by the order_by parameter."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/customLists"
-     #{}
      parameters)
     (merge-with
      merge

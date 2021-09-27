@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/get
   
-  Required parameters: project, instanceGroup, zone
+  Required parameters: zone, project, instanceGroup
   
   Optional parameters: none
   
@@ -55,7 +55,7 @@
    :network string,
    :fingerprint string,
    :subnetwork string,
-   :namedPorts [{:port integer, :name string}]}
+   :namedPorts [{:name string, :port integer}]}
   
   Creates an instance group in the specified project using the parameters that are included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -82,7 +82,7 @@
 (defn addInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/addInstances
   
-  Required parameters: zone, instanceGroup, project
+  Required parameters: zone, project, instanceGroup
   
   Optional parameters: requestId
   
@@ -117,7 +117,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, returnPartialSuccess, includeAllScopes, orderBy, filter, maxResults
+  Optional parameters: returnPartialSuccess, filter, includeAllScopes, maxResults, orderBy, pageToken
   
   Retrieves the list of instance groups and sorts them by zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -143,7 +143,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/delete
   
-  Required parameters: instanceGroup, project, zone
+  Required parameters: project, instanceGroup, zone
   
   Optional parameters: requestId
   
@@ -170,13 +170,13 @@
 (defn setNamedPorts$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/setNamedPorts
   
-  Required parameters: instanceGroup, zone, project
+  Required parameters: instanceGroup, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:fingerprint string, :namedPorts [{:port integer, :name string}]}
+  {:namedPorts [{:name string, :port integer}], :fingerprint string}
   
   Sets the named ports for the specified instance group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -205,7 +205,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: returnPartialSuccess, filter, pageToken, maxResults, orderBy
+  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
   
   Retrieves the list of zonal instance group resources contained within the specified zone. For managed instance groups, use the instanceGroupManagers or regionInstanceGroupManagers methods instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -231,9 +231,9 @@
 (defn listInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/listInstances
   
-  Required parameters: project, instanceGroup, zone
+  Required parameters: zone, project, instanceGroup
   
-  Optional parameters: pageToken, filter, returnPartialSuccess, maxResults, orderBy
+  Optional parameters: orderBy, pageToken, filter, maxResults, returnPartialSuccess
   
   Body: 
   
@@ -265,7 +265,7 @@
 (defn removeInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/removeInstances
   
-  Required parameters: instanceGroup, project, zone
+  Required parameters: zone, instanceGroup, project
   
   Optional parameters: requestId
   

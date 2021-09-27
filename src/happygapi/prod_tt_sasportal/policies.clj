@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/get
+(defn set$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/set
   
   Required parameters: none
   
@@ -15,9 +15,11 @@
   
   Body: 
   
-  {:resource string}
+  {:disableNotification boolean,
+   :resource string,
+   :policy {:assignments [SasPortalAssignment], :etag string}}
   
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -25,7 +27,7 @@
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/policies:get"
+     "v1alpha1/policies:set"
      #{}
      parameters)
     (merge-with
@@ -70,8 +72,8 @@
       :as :json}
      auth))))
 
-(defn set$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/set
+(defn get$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/get
   
   Required parameters: none
   
@@ -79,11 +81,9 @@
   
   Body: 
   
-  {:disableNotification boolean,
-   :policy {:assignments [SasPortalAssignment], :etag string},
-   :resource string}
+  {:resource string}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -91,7 +91,7 @@
    (http/post
     (util/get-url
      "https://prod-tt-sasportal.googleapis.com/"
-     "v1alpha1/policies:set"
+     "v1alpha1/policies:get"
      #{}
      parameters)
     (merge-with

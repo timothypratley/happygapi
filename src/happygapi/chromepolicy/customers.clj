@@ -6,6 +6,33 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn policySchemas-list$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policySchemas/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Gets a list of policy schemas that match a specified filter value for a given customer."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"
+            "https://www.googleapis.com/auth/chrome.management.policy.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+parent}/policySchemas"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn policySchemas-get$
   "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policySchemas/get
   
@@ -33,33 +60,6 @@
       :as :json}
      auth))))
 
-(defn policySchemas-list$
-  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policySchemas/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  Gets a list of policy schemas that match a specified filter value for a given customer."
-  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"
-            "https://www.googleapis.com/auth/chrome.management.policy.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chromepolicy.googleapis.com/"
-     "v1/{+parent}/policySchemas"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn policies-resolve$
   "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/resolve
   
@@ -70,8 +70,8 @@
   Body: 
   
   {:policyTargetKey {:targetResource string, :additionalTargetKeys {}},
-   :pageSize integer,
    :policySchemaFilter string,
+   :pageSize integer,
    :pageToken string}
   
   Gets the resolved policy values for a list of policies that match a search query."
@@ -96,8 +96,8 @@
       :as :json}
      auth))))
 
-(defn policies-orgunits-batchModify$
-  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchModify
+(defn policies-orgunits-batchInherit$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchInherit
   
   Required parameters: customer
   
@@ -105,11 +105,10 @@
   
   Body: 
   
-  {:requests [{:policyValue GoogleChromePolicyV1PolicyValue,
-               :policyTargetKey GoogleChromePolicyV1PolicyTargetKey,
-               :updateMask string}]}
+  {:requests [{:policyTargetKey GoogleChromePolicyV1PolicyTargetKey,
+               :policySchema string}]}
   
-  Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
+  Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customer})]}
@@ -117,7 +116,7 @@
    (http/post
     (util/get-url
      "https://chromepolicy.googleapis.com/"
-     "v1/{+customer}/policies/orgunits:batchModify"
+     "v1/{+customer}/policies/orgunits:batchInherit"
      #{:customer}
      parameters)
     (merge-with
@@ -130,8 +129,8 @@
       :as :json}
      auth))))
 
-(defn policies-orgunits-batchInherit$
-  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchInherit
+(defn policies-orgunits-batchModify$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchModify
   
   Required parameters: customer
   
@@ -139,10 +138,11 @@
   
   Body: 
   
-  {:requests [{:policySchema string,
-               :policyTargetKey GoogleChromePolicyV1PolicyTargetKey}]}
+  {:requests [{:policyTargetKey GoogleChromePolicyV1PolicyTargetKey,
+               :policyValue GoogleChromePolicyV1PolicyValue,
+               :updateMask string}]}
   
-  Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
+  Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customer})]}
@@ -150,7 +150,7 @@
    (http/post
     (util/get-url
      "https://chromepolicy.googleapis.com/"
-     "v1/{+customer}/policies/orgunits:batchInherit"
+     "v1/{+customer}/policies/orgunits:batchModify"
      #{:customer}
      parameters)
     (merge-with

@@ -11,7 +11,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: ids, sortOrder, searchString, maxResults, advertiserIds, sortField, pageToken
+  Optional parameters: searchString, ids, pageToken, advertiserIds, sortField, maxResults, sortOrder
   
   Retrieves a list of projects, possibly filtered. This method supports paging ."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -35,7 +35,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/projects/get
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   

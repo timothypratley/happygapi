@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/get
   
-  Required parameters: image, project
+  Required parameters: project, image
   
   Optional parameters: none
   
@@ -37,20 +37,20 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/setIamPolicy
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:policy {:rules [Rule],
-            :bindings [Binding],
+  {:policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string},
-   :bindings [{:condition Expr,
-               :members [string],
+            :rules [Rule],
+            :bindings [Binding]},
+   :bindings [{:members [string],
+               :condition Expr,
                :bindingId string,
                :role string}],
    :etag string}
@@ -82,29 +82,32 @@
   
   Required parameters: project
   
-  Optional parameters: forceCreate, requestId
+  Optional parameters: requestId, forceCreate
   
   Body: 
   
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :rawKey string,
                                  :kmsKeyServiceAccount string,
-                                 :sha256 string},
+                                 :sha256 string,
+                                 :rawKey string,
+                                 :rsaEncryptedKey string},
    :guestOsFeatures [{:type string}],
    :family string,
    :sourceImage string,
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :rawKey string,
                               :kmsKeyServiceAccount string,
-                              :sha256 string},
+                              :sha256 string,
+                              :rawKey string,
+                              :rsaEncryptedKey string},
    :imageEncryptionKey {:kmsKeyName string,
-                        :rawKey string,
                         :kmsKeyServiceAccount string,
-                        :sha256 string},
+                        :sha256 string,
+                        :rawKey string,
+                        :rsaEncryptedKey string},
    :name string,
    :sourceDisk string,
    :sourceImageId string,
@@ -112,16 +115,17 @@
    :selfLink string,
    :sourceSnapshot string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :rawKey string,
                              :kmsKeyServiceAccount string,
-                             :sha256 string},
+                             :sha256 string,
+                             :rawKey string,
+                             :rsaEncryptedKey string},
    :satisfiesPzs boolean,
    :status string,
-   :deprecated {:replacement string,
-                :deprecated string,
+   :deprecated {:deprecated string,
                 :state string,
-                :obsolete string,
-                :deleted string},
+                :replacement string,
+                :deleted string,
+                :obsolete string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
@@ -132,10 +136,10 @@
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
-   :shieldedInstanceInitialState {:dbs [FileContentBuffer],
-                                  :pk FileContentBuffer,
+   :shieldedInstanceInitialState {:keks [FileContentBuffer],
                                   :dbxs [FileContentBuffer],
-                                  :keks [FileContentBuffer]},
+                                  :dbs [FileContentBuffer],
+                                  :pk FileContentBuffer},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -167,7 +171,7 @@
 (defn getFromFamily$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/getFromFamily
   
-  Required parameters: project, family
+  Required parameters: family, project
   
   Optional parameters: none
   
@@ -195,7 +199,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/patch
   
-  Required parameters: image, project
+  Required parameters: project, image
   
   Optional parameters: requestId
   
@@ -204,22 +208,25 @@
   {:description string,
    :labels {},
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :rawKey string,
                                  :kmsKeyServiceAccount string,
-                                 :sha256 string},
+                                 :sha256 string,
+                                 :rawKey string,
+                                 :rsaEncryptedKey string},
    :guestOsFeatures [{:type string}],
    :family string,
    :sourceImage string,
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :rawKey string,
                               :kmsKeyServiceAccount string,
-                              :sha256 string},
+                              :sha256 string,
+                              :rawKey string,
+                              :rsaEncryptedKey string},
    :imageEncryptionKey {:kmsKeyName string,
-                        :rawKey string,
                         :kmsKeyServiceAccount string,
-                        :sha256 string},
+                        :sha256 string,
+                        :rawKey string,
+                        :rsaEncryptedKey string},
    :name string,
    :sourceDisk string,
    :sourceImageId string,
@@ -227,16 +234,17 @@
    :selfLink string,
    :sourceSnapshot string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :rawKey string,
                              :kmsKeyServiceAccount string,
-                             :sha256 string},
+                             :sha256 string,
+                             :rawKey string,
+                             :rsaEncryptedKey string},
    :satisfiesPzs boolean,
    :status string,
-   :deprecated {:replacement string,
-                :deprecated string,
+   :deprecated {:deprecated string,
                 :state string,
-                :obsolete string,
-                :deleted string},
+                :replacement string,
+                :deleted string,
+                :obsolete string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
@@ -247,10 +255,10 @@
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
-   :shieldedInstanceInitialState {:dbs [FileContentBuffer],
-                                  :pk FileContentBuffer,
+   :shieldedInstanceInitialState {:keks [FileContentBuffer],
                                   :dbxs [FileContentBuffer],
-                                  :keks [FileContentBuffer]},
+                                  :dbs [FileContentBuffer],
+                                  :pk FileContentBuffer},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -279,7 +287,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/testIamPermissions
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
@@ -373,7 +381,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/getIamPolicy
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -403,7 +411,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, orderBy, filter, maxResults, returnPartialSuccess
+  Optional parameters: orderBy, pageToken, returnPartialSuccess, filter, maxResults
   
   Retrieves the list of custom images available to the specified project. Custom images are images you create that belong to your project. This method does not get any images that belong to other projects, including publicly-available images, like Debian 8. If you want to get a list of publicly-available images, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -429,17 +437,17 @@
 (defn deprecate$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/deprecate
   
-  Required parameters: project, image
+  Required parameters: image, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:replacement string,
-   :deprecated string,
+  {:deprecated string,
    :state string,
-   :obsolete string,
-   :deleted string}
+   :replacement string,
+   :deleted string,
+   :obsolete string}
   
   Sets the deprecation status of an image. If an empty request body is given, clears the deprecation status instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

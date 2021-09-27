@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, readTime, pageToken, assetTypes, contentType
+  Optional parameters: pageSize, relationshipTypes, readTime, contentType, pageToken, assetTypes
   
   Lists assets with time and resource types and returns paged results in response."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

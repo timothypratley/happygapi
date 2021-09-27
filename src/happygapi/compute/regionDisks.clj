@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/get
   
-  Required parameters: region, disk, project
+  Required parameters: region, project, disk
   
   Optional parameters: none
   
@@ -37,23 +37,23 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/setIamPolicy
   
-  Required parameters: project, region, resource
+  Required parameters: resource, region, project
   
   Optional parameters: none
   
   Body: 
   
-  {:policy {:rules [Rule],
-            :bindings [Binding],
+  {:etag string,
+   :bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
             :iamOwned boolean,
             :version integer,
-            :etag string},
-   :etag string,
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}]}
+            :rules [Rule],
+            :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -82,7 +82,7 @@
   
   Required parameters: region, project
   
-  Optional parameters: sourceImage, requestId
+  Optional parameters: requestId, sourceImage
   
   Body: 
   
@@ -90,18 +90,20 @@
    :labels {},
    :locationHint string,
    :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :rawKey string,
                                  :kmsKeyServiceAccount string,
-                                 :sha256 string},
+                                 :sha256 string,
+                                 :rawKey string,
+                                 :rsaEncryptedKey string},
    :guestOsFeatures [{:type string}],
    :resourcePolicies [string],
    :sourceImage string,
    :sourceDiskId string,
    :creationTimestamp string,
    :sourceImageEncryptionKey {:kmsKeyName string,
-                              :rawKey string,
                               :kmsKeyServiceAccount string,
-                              :sha256 string},
+                              :sha256 string,
+                              :rawKey string,
+                              :rsaEncryptedKey string},
    :zone string,
    :name string,
    :sizeGb string,
@@ -125,9 +127,10 @@
    :replicaZones [string],
    :options string,
    :diskEncryptionKey {:kmsKeyName string,
-                       :rawKey string,
                        :kmsKeyServiceAccount string,
-                       :sha256 string},
+                       :sha256 string,
+                       :rawKey string,
+                       :rsaEncryptedKey string},
    :users [string],
    :labelFingerprint string,
    :provisionedIops string}
@@ -191,7 +194,7 @@
 (defn createSnapshot$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/createSnapshot
   
-  Required parameters: disk, project, region
+  Required parameters: project, region, disk
   
   Optional parameters: requestId
   
@@ -210,9 +213,10 @@
    :licenses [string],
    :selfLink string,
    :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :rawKey string,
                              :kmsKeyServiceAccount string,
-                             :sha256 string},
+                             :sha256 string,
+                             :rawKey string,
+                             :rsaEncryptedKey string},
    :satisfiesPzs boolean,
    :status string,
    :id string,
@@ -221,9 +225,10 @@
    :licenseCodes [string],
    :storageBytesStatus string,
    :snapshotEncryptionKey {:kmsKeyName string,
-                           :rawKey string,
                            :kmsKeyServiceAccount string,
-                           :sha256 string},
+                           :sha256 string,
+                           :rawKey string,
+                           :rsaEncryptedKey string},
    :storageLocations [string],
    :storageBytes string,
    :labelFingerprint string}
@@ -253,13 +258,13 @@
 (defn setLabels$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/setLabels
   
-  Required parameters: resource, region, project
+  Required parameters: project, region, resource
   
   Optional parameters: requestId
   
   Body: 
   
-  {:labels {}, :labelFingerprint string}
+  {:labelFingerprint string, :labels {}}
   
   Sets the labels on the target regional disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -286,7 +291,7 @@
 (defn removeResourcePolicies$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/removeResourcePolicies
   
-  Required parameters: disk, project, region
+  Required parameters: project, disk, region
   
   Optional parameters: requestId
   
@@ -319,7 +324,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/delete
   
-  Required parameters: project, region, disk
+  Required parameters: region, project, disk
   
   Optional parameters: requestId
   
@@ -346,7 +351,7 @@
 (defn resize$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/resize
   
-  Required parameters: disk, region, project
+  Required parameters: region, disk, project
   
   Optional parameters: requestId
   
@@ -379,7 +384,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/getIamPolicy
   
-  Required parameters: resource, region, project
+  Required parameters: project, resource, region
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -407,7 +412,7 @@
 (defn addResourcePolicies$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/addResourcePolicies
   
-  Required parameters: disk, region, project
+  Required parameters: project, region, disk
   
   Optional parameters: requestId
   
@@ -440,9 +445,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/list
   
-  Required parameters: project, region
+  Required parameters: region, project
   
-  Optional parameters: orderBy, maxResults, returnPartialSuccess, pageToken, filter
+  Optional parameters: maxResults, orderBy, pageToken, filter, returnPartialSuccess
   
   Retrieves the list of persistent disks contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

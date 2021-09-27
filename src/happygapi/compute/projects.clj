@@ -168,7 +168,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, returnPartialSuccess, maxResults, orderBy, pageToken
+  Optional parameters: returnPartialSuccess, pageToken, orderBy, maxResults, filter
   
   Gets service resources (a.k.a service project) associated with this host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -199,8 +199,8 @@
   
   Body: 
   
-  {:kind string,
-   :items [{:key string, :value string}],
+  {:items [{:key string, :value string}],
+   :kind string,
    :fingerprint string}
   
   Sets metadata common to all instances within the specified project using the data included in the request."
@@ -234,7 +234,7 @@
   
   Body: 
   
-  {:destinationZone string, :targetInstance string}
+  {:targetInstance string, :destinationZone string}
   
   Moves an instance and its attached persistent disks from one zone to another."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -294,7 +294,7 @@
   
   Body: 
   
-  {:xpnResource {:type string, :id string}}
+  {:xpnResource {:id string, :type string}}
   
   Disable a service resource (also known as service project) associated with this host project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -354,7 +354,7 @@
   
   Body: 
   
-  {:xpnResource {:type string, :id string}}
+  {:xpnResource {:id string, :type string}}
   
   Enable service resource (a.k.a service project) for a host project, so that subnets in the host project can be used by instances in the service project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -383,7 +383,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, filter, returnPartialSuccess, maxResults, pageToken
+  Optional parameters: maxResults, pageToken, returnPartialSuccess, orderBy, filter
   
   Body: 
   

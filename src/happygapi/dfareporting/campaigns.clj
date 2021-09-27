@@ -16,34 +16,34 @@
   Body: 
   
   {:archived boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
+                      :value string,
+                      :etag string,
+                      :id string},
    :creativeGroupIds [string],
-   :measurementPartnerLink {:linkStatus string,
-                            :measurementPartner string,
-                            :partnerCampaignId string},
-   :additionalCreativeOptimizationConfigurations [{:optimizationModel string,
-                                                   :optimizationActivitys [OptimizationActivity],
-                                                   :id string,
-                                                   :name string}],
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :measurementPartnerLink {:measurementPartner string,
+                            :partnerCampaignId string,
+                            :linkStatus string},
+   :additionalCreativeOptimizationConfigurations [{:optimizationActivitys [OptimizationActivity],
+                                                   :name string,
+                                                   :optimizationModel string,
+                                                   :id string}],
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :traffickerEmails [string],
    :name string,
    :startDate string,
    :createInfo {:time string},
    :advertiserGroupId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
-   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
-                                           :defaultClickThroughEventTagId string},
+   :eventTagOverrides [{:id string, :enabled boolean}],
+   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
+                                           :overrideInheritedEventTag boolean},
    :adBlockingConfiguration {:enabled boolean},
    :endDate string,
    :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
@@ -54,16 +54,16 @@
    :id string,
    :kind string,
    :comment string,
-   :creativeOptimizationConfiguration {:optimizationModel string,
-                                       :optimizationActivitys [OptimizationActivity],
-                                       :id string,
-                                       :name string},
+   :creativeOptimizationConfiguration {:optimizationActivitys [OptimizationActivity],
+                                       :name string,
+                                       :optimizationModel string,
+                                       :id string},
    :billingInvoiceCode string,
    :lastModifiedInfo {:time string},
    :subaccountId string,
    :accountId string,
-   :audienceSegmentGroups [{:id string,
-                            :name string,
+   :audienceSegmentGroups [{:name string,
+                            :id string,
                             :audienceSegments [AudienceSegment]}],
    :nielsenOcrEnabled boolean}
   
@@ -88,83 +88,27 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaigns/patch
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaigns/get
   
   Required parameters: id, profileId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:archived boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
-                      :matchType string,
-                      :id string,
-                      :etag string},
-   :creativeGroupIds [string],
-   :measurementPartnerLink {:linkStatus string,
-                            :measurementPartner string,
-                            :partnerCampaignId string},
-   :additionalCreativeOptimizationConfigurations [{:optimizationModel string,
-                                                   :optimizationActivitys [OptimizationActivity],
-                                                   :id string,
-                                                   :name string}],
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :traffickerEmails [string],
-   :name string,
-   :startDate string,
-   :createInfo {:time string},
-   :advertiserGroupId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
-   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
-                                           :defaultClickThroughEventTagId string},
-   :adBlockingConfiguration {:enabled boolean},
-   :endDate string,
-   :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
-                                     :clickThroughUrlSuffix string},
-   :advertiserId string,
-   :externalId string,
-   :defaultLandingPageId string,
-   :id string,
-   :kind string,
-   :comment string,
-   :creativeOptimizationConfiguration {:optimizationModel string,
-                                       :optimizationActivitys [OptimizationActivity],
-                                       :id string,
-                                       :name string},
-   :billingInvoiceCode string,
-   :lastModifiedInfo {:time string},
-   :subaccountId string,
-   :accountId string,
-   :audienceSegmentGroups [{:id string,
-                            :name string,
-                            :audienceSegments [AudienceSegment]}],
-   :nielsenOcrEnabled boolean}
-  
-  Updates an existing campaign. This method supports patch semantics."
+  Gets one campaign by ID."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:id :profileId})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/campaigns"
+     "dfareporting/v3.5/userprofiles/{profileId}/campaigns/{id}"
      #{:id :profileId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -180,34 +124,34 @@
   Body: 
   
   {:archived boolean,
-   :idDimensionValue {:dimensionName string,
-                      :value string,
-                      :kind string,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
                       :matchType string,
-                      :id string,
-                      :etag string},
+                      :value string,
+                      :etag string,
+                      :id string},
    :creativeGroupIds [string],
-   :measurementPartnerLink {:linkStatus string,
-                            :measurementPartner string,
-                            :partnerCampaignId string},
-   :additionalCreativeOptimizationConfigurations [{:optimizationModel string,
-                                                   :optimizationActivitys [OptimizationActivity],
-                                                   :id string,
-                                                   :name string}],
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :measurementPartnerLink {:measurementPartner string,
+                            :partnerCampaignId string,
+                            :linkStatus string},
+   :additionalCreativeOptimizationConfigurations [{:optimizationActivitys [OptimizationActivity],
+                                                   :name string,
+                                                   :optimizationModel string,
+                                                   :id string}],
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :traffickerEmails [string],
    :name string,
    :startDate string,
    :createInfo {:time string},
    :advertiserGroupId string,
-   :eventTagOverrides [{:enabled boolean, :id string}],
-   :defaultClickThroughEventTagProperties {:overrideInheritedEventTag boolean,
-                                           :defaultClickThroughEventTagId string},
+   :eventTagOverrides [{:id string, :enabled boolean}],
+   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
+                                           :overrideInheritedEventTag boolean},
    :adBlockingConfiguration {:enabled boolean},
    :endDate string,
    :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
@@ -218,16 +162,16 @@
    :id string,
    :kind string,
    :comment string,
-   :creativeOptimizationConfiguration {:optimizationModel string,
-                                       :optimizationActivitys [OptimizationActivity],
-                                       :id string,
-                                       :name string},
+   :creativeOptimizationConfiguration {:optimizationActivitys [OptimizationActivity],
+                                       :name string,
+                                       :optimizationModel string,
+                                       :id string},
    :billingInvoiceCode string,
    :lastModifiedInfo {:time string},
    :subaccountId string,
    :accountId string,
-   :audienceSegmentGroups [{:id string,
-                            :name string,
+   :audienceSegmentGroups [{:name string,
+                            :id string,
                             :audienceSegments [AudienceSegment]}],
    :nielsenOcrEnabled boolean}
   
@@ -247,32 +191,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaigns/get
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Gets one campaign by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/campaigns/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -299,6 +217,88 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/campaigns/patch
+  
+  Required parameters: id, profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:archived boolean,
+   :idDimensionValue {:kind string,
+                      :dimensionName string,
+                      :matchType string,
+                      :value string,
+                      :etag string,
+                      :id string},
+   :creativeGroupIds [string],
+   :measurementPartnerLink {:measurementPartner string,
+                            :partnerCampaignId string,
+                            :linkStatus string},
+   :additionalCreativeOptimizationConfigurations [{:optimizationActivitys [OptimizationActivity],
+                                                   :name string,
+                                                   :optimizationModel string,
+                                                   :id string}],
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :traffickerEmails [string],
+   :name string,
+   :startDate string,
+   :createInfo {:time string},
+   :advertiserGroupId string,
+   :eventTagOverrides [{:id string, :enabled boolean}],
+   :defaultClickThroughEventTagProperties {:defaultClickThroughEventTagId string,
+                                           :overrideInheritedEventTag boolean},
+   :adBlockingConfiguration {:enabled boolean},
+   :endDate string,
+   :clickThroughUrlSuffixProperties {:overrideInheritedSuffix boolean,
+                                     :clickThroughUrlSuffix string},
+   :advertiserId string,
+   :externalId string,
+   :defaultLandingPageId string,
+   :id string,
+   :kind string,
+   :comment string,
+   :creativeOptimizationConfiguration {:optimizationActivitys [OptimizationActivity],
+                                       :name string,
+                                       :optimizationModel string,
+                                       :id string},
+   :billingInvoiceCode string,
+   :lastModifiedInfo {:time string},
+   :subaccountId string,
+   :accountId string,
+   :audienceSegmentGroups [{:name string,
+                            :id string,
+                            :audienceSegments [AudienceSegment]}],
+   :nielsenOcrEnabled boolean}
+  
+  Updates an existing campaign. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/campaigns"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

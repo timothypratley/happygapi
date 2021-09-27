@@ -6,10 +6,36 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn aggregated-usableSubnetworks-list$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/aggregated/usableSubnetworks/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter
+  
+  Lists subnetworks that are usable for creating clusters in a project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+parent}/aggregated/usableSubnetworks"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn zones-getServerconfig$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/getServerconfig
   
-  Required parameters: zone, projectId
+  Required parameters: projectId, zone
   
   Optional parameters: name
   
@@ -32,104 +58,20 @@
       :as :json}
      auth))))
 
-(defn zones-operations-cancel$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/cancel
-  
-  Required parameters: operationId, projectId, zone
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:zone string, :projectId string, :operationId string, :name string}
-  
-  Cancels the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:zone :projectId :operationId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}:cancel"
-     #{:zone :projectId :operationId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn zones-operations-list$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/list
-  
-  Required parameters: projectId, zone
-  
-  Optional parameters: parent
-  
-  Lists all operations in a project in a specific zone or all zones."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations"
-     #{:zone :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn zones-operations-get$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/get
-  
-  Required parameters: projectId, zone, operationId
-  
-  Optional parameters: name
-  
-  Gets the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :projectId :operationId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}"
-     #{:zone :projectId :operationId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn zones-clusters-monitoring$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/monitoring
   
-  Required parameters: zone, clusterId, projectId
+  Required parameters: clusterId, projectId, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterId string,
-   :zone string,
+  {:projectId string,
    :monitoringService string,
-   :name string,
-   :projectId string}
+   :clusterId string,
+   :zone string,
+   :name string}
   
   Sets the monitoring service for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -187,8 +129,8 @@
   
   Body: 
   
-  {:parent string,
-   :projectId string,
+  {:projectId string,
+   :parent string,
    :cluster {:description string,
              :currentNodeCount integer,
              :tpuIpv4CidrBlock string,
@@ -196,6 +138,8 @@
              :networkPolicy NetworkPolicy,
              :instanceGroupUrls [string],
              :autopilot Autopilot,
+             :monitoringConfig MonitoringConfig,
+             :loggingConfig LoggingConfig,
              :autoscaling ClusterAutoscaling,
              :enableKubernetesAlpha boolean,
              :nodeConfig NodeConfig,
@@ -282,9 +226,12 @@
             :desiredDatabaseEncryption DatabaseEncryption,
             :desiredAddonsConfig AddonsConfig,
             :desiredNodePoolId string,
+            :desiredMonitoringConfig MonitoringConfig,
             :desiredLocations [string],
             :desiredAutopilot Autopilot,
+            :desiredLoggingConfig LoggingConfig,
             :desiredResourceUsageExportConfig ResourceUsageExportConfig,
+            :desiredAuthenticatorGroupsConfig AuthenticatorGroupsConfig,
             :desiredImageType string,
             :desiredLoggingService string,
             :desiredNodePoolAutoscaling NodePoolAutoscaling,
@@ -303,8 +250,8 @@
             :desiredMasterAuthorizedNetworksConfig MasterAuthorizedNetworksConfig,
             :desiredVerticalPodAutoscaling VerticalPodAutoscaling},
    :zone string,
-   :name string,
    :projectId string,
+   :name string,
    :clusterId string}
   
   Updates the settings of a specific cluster."
@@ -331,7 +278,7 @@
 (defn zones-clusters-delete$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/delete
   
-  Required parameters: zone, projectId, clusterId
+  Required parameters: clusterId, zone, projectId
   
   Optional parameters: name
   
@@ -357,17 +304,17 @@
 (defn zones-clusters-legacyAbac$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/legacyAbac
   
-  Required parameters: clusterId, projectId, zone
+  Required parameters: zone, clusterId, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:enabled boolean,
+  {:projectId string,
+   :enabled boolean,
    :name string,
-   :zone string,
    :clusterId string,
-   :projectId string}
+   :zone string}
   
   Enables or disables the ABAC authorization mechanism on a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -393,7 +340,7 @@
 (defn zones-clusters-locations$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/locations
   
-  Required parameters: clusterId, zone, projectId
+  Required parameters: projectId, zone, clusterId
   
   Optional parameters: none
   
@@ -401,9 +348,9 @@
   
   {:projectId string,
    :zone string,
-   :locations [string],
    :name string,
-   :clusterId string}
+   :clusterId string,
+   :locations [string]}
   
   Sets the locations for a specific cluster. Deprecated. Use [projects.locations.clusters.update](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters/update) instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -429,17 +376,17 @@
 (defn zones-clusters-logging$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/logging
   
-  Required parameters: projectId, clusterId, zone
+  Required parameters: clusterId, zone, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterId string,
+  {:name string,
+   :zone string,
    :projectId string,
-   :name string,
    :loggingService string,
-   :zone string}
+   :clusterId string}
   
   Sets the logging service for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -465,18 +412,18 @@
 (defn zones-clusters-resourceLabels$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/resourceLabels
   
-  Required parameters: projectId, zone, clusterId
+  Required parameters: projectId, clusterId, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:projectId string,
-   :resourceLabels {},
+  {:labelFingerprint string,
+   :clusterId string,
    :zone string,
+   :resourceLabels {},
    :name string,
-   :labelFingerprint string,
-   :clusterId string}
+   :projectId string}
   
   Sets labels on a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -502,23 +449,23 @@
 (defn zones-clusters-setMasterAuth$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/setMasterAuth
   
-  Required parameters: zone, clusterId, projectId
+  Required parameters: clusterId, projectId, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterId string,
+  {:projectId string,
+   :clusterId string,
    :update {:clientCertificate string,
             :clusterCaCertificate string,
-            :password string,
-            :username string,
             :clientKey string,
-            :clientCertificateConfig ClientCertificateConfig},
+            :clientCertificateConfig ClientCertificateConfig,
+            :password string,
+            :username string},
    :zone string,
-   :name string,
-   :projectId string,
-   :action string}
+   :action string,
+   :name string}
   
   Sets master auth materials. Currently supports changing the admin password or a specific cluster, either via password generation or explicitly setting the password."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -544,7 +491,7 @@
 (defn zones-clusters-list$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/list
   
-  Required parameters: zone, projectId
+  Required parameters: projectId, zone
   
   Optional parameters: parent
   
@@ -570,17 +517,17 @@
 (defn zones-clusters-setNetworkPolicy$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/setNetworkPolicy
   
-  Required parameters: zone, projectId, clusterId
+  Required parameters: projectId, zone, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterId string,
+  {:networkPolicy {:enabled boolean, :provider string},
    :projectId string,
    :zone string,
-   :networkPolicy {:provider string, :enabled boolean},
-   :name string}
+   :name string,
+   :clusterId string}
   
   Enables or disables Network Policy for a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -606,24 +553,25 @@
 (defn zones-clusters-addons$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/addons
   
-  Required parameters: projectId, zone, clusterId
+  Required parameters: clusterId, zone, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:addonsConfig {:networkPolicyConfig NetworkPolicyConfig,
-                  :cloudRunConfig CloudRunConfig,
+  {:addonsConfig {:gcePersistentDiskCsiDriverConfig GcePersistentDiskCsiDriverConfig,
                   :configConnectorConfig ConfigConnectorConfig,
-                  :dnsCacheConfig DnsCacheConfig,
+                  :cloudRunConfig CloudRunConfig,
+                  :networkPolicyConfig NetworkPolicyConfig,
                   :httpLoadBalancing HttpLoadBalancing,
                   :kubernetesDashboard KubernetesDashboard,
-                  :horizontalPodAutoscaling HorizontalPodAutoscaling,
-                  :gcePersistentDiskCsiDriverConfig GcePersistentDiskCsiDriverConfig},
-   :projectId string,
+                  :dnsCacheConfig DnsCacheConfig,
+                  :gcpFilestoreCsiDriverConfig GcpFilestoreCsiDriverConfig,
+                  :horizontalPodAutoscaling HorizontalPodAutoscaling},
+   :name string,
    :zone string,
-   :clusterId string,
-   :name string}
+   :projectId string,
+   :clusterId string}
   
   Sets the addons for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -649,17 +597,17 @@
 (defn zones-clusters-startIpRotation$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/startIpRotation
   
-  Required parameters: zone, clusterId, projectId
+  Required parameters: projectId, zone, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:zone string,
+  {:rotateCredentials boolean,
+   :projectId string,
    :clusterId string,
    :name string,
-   :rotateCredentials boolean,
-   :projectId string}
+   :zone string}
   
   Starts master IP rotation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -685,13 +633,13 @@
 (defn zones-clusters-completeIpRotation$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/completeIpRotation
   
-  Required parameters: zone, clusterId, projectId
+  Required parameters: clusterId, zone, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:zone string, :clusterId string, :projectId string, :name string}
+  {:name string, :projectId string, :zone string, :clusterId string}
   
   Completes master IP rotation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -717,16 +665,16 @@
 (defn zones-clusters-master$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/master
   
-  Required parameters: projectId, clusterId, zone
+  Required parameters: projectId, zone, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:zone string,
+  {:masterVersion string,
    :projectId string,
+   :zone string,
    :name string,
-   :masterVersion string,
    :clusterId string}
   
   Updates the master for a specific cluster."
@@ -753,18 +701,18 @@
 (defn zones-clusters-setMaintenancePolicy$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/setMaintenancePolicy
   
-  Required parameters: projectId, zone, clusterId
+  Required parameters: clusterId, projectId, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:maintenancePolicy {:resourceVersion string,
-                       :window MaintenanceWindow},
-   :name string,
+  {:maintenancePolicy {:window MaintenanceWindow,
+                       :resourceVersion string},
    :clusterId string,
-   :zone string,
-   :projectId string}
+   :name string,
+   :projectId string,
+   :zone string}
   
   Sets the maintenance policy for a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -790,17 +738,17 @@
 (defn zones-clusters-nodePools-rollback$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/rollback
   
-  Required parameters: projectId, zone, nodePoolId, clusterId
+  Required parameters: zone, clusterId, nodePoolId, projectId
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterId string,
-   :nodePoolId string,
+  {:name string,
+   :zone string,
    :projectId string,
-   :name string,
-   :zone string}
+   :nodePoolId string,
+   :clusterId string}
   
   Rolls back a previously Aborted or Failed NodePool upgrade. This makes no changes if the last upgrade successfully completed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -828,7 +776,7 @@
 (defn zones-clusters-nodePools-get$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/get
   
-  Required parameters: clusterId, projectId, nodePoolId, zone
+  Required parameters: nodePoolId, projectId, zone, clusterId
   
   Optional parameters: name
   
@@ -862,15 +810,15 @@
   
   Body: 
   
-  {:clusterId string,
-   :nodePoolId string,
-   :autoscaling {:minNodeCount integer,
-                 :maxNodeCount integer,
-                 :enabled boolean,
-                 :autoprovisioned boolean},
-   :name string,
+  {:nodePoolId string,
+   :zone string,
    :projectId string,
-   :zone string}
+   :name string,
+   :autoscaling {:autoprovisioned boolean,
+                 :enabled boolean,
+                 :maxNodeCount integer,
+                 :minNodeCount integer},
+   :clusterId string}
   
   Sets the autoscaling settings for the specified node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -898,7 +846,7 @@
 (defn zones-clusters-nodePools-create$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/create
   
-  Required parameters: clusterId, zone, projectId
+  Required parameters: zone, clusterId, projectId
   
   Optional parameters: none
   
@@ -906,8 +854,8 @@
   
   {:projectId string,
    :clusterId string,
-   :zone string,
    :parent string,
+   :zone string,
    :nodePool {:instanceGroupUrls [string],
               :maxPodsConstraint MaxPodsConstraint,
               :podIpv4CidrSize integer,
@@ -916,6 +864,7 @@
               :name string,
               :statusMessage string,
               :selfLink string,
+              :networkConfig NodeNetworkConfig,
               :locations [string],
               :initialNodeCount integer,
               :conditions [StatusCondition],
@@ -948,20 +897,20 @@
 (defn zones-clusters-nodePools-setManagement$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/setManagement
   
-  Required parameters: zone, clusterId, projectId, nodePoolId
+  Required parameters: projectId, zone, nodePoolId, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:nodePoolId string,
-   :projectId string,
-   :name string,
-   :clusterId string,
+  {:name string,
+   :management {:autoUpgrade boolean,
+                :autoRepair boolean,
+                :upgradeOptions AutoUpgradeOptions},
    :zone string,
-   :management {:upgradeOptions AutoUpgradeOptions,
-                :autoUpgrade boolean,
-                :autoRepair boolean}}
+   :projectId string,
+   :nodePoolId string,
+   :clusterId string}
   
   Sets the NodeManagement options for a node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -989,7 +938,7 @@
 (defn zones-clusters-nodePools-update$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/update
   
-  Required parameters: clusterId, zone, nodePoolId, projectId
+  Required parameters: zone, clusterId, nodePoolId, projectId
   
   Optional parameters: none
   
@@ -1001,14 +950,15 @@
    :clusterId string,
    :imageType string,
    :linuxNodeConfig {:sysctls {}},
-   :kubeletConfig {:cpuManagerPolicy string,
-                   :cpuCfsQuotaPeriod string,
-                   :cpuCfsQuota boolean},
+   :kubeletConfig {:cpuCfsQuota boolean,
+                   :cpuManagerPolicy string,
+                   :cpuCfsQuotaPeriod string},
    :locations [string],
    :projectId string,
    :workloadMetadataConfig {:mode string},
    :nodeVersion string,
-   :upgradeSettings {:maxSurge integer, :maxUnavailable integer}}
+   :gvnic {:enabled boolean},
+   :upgradeSettings {:maxUnavailable integer, :maxSurge integer}}
   
   Updates the version and/or image type for the specified node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1036,7 +986,7 @@
 (defn zones-clusters-nodePools-delete$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/delete
   
-  Required parameters: zone, nodePoolId, projectId, clusterId
+  Required parameters: clusterId, zone, nodePoolId, projectId
   
   Optional parameters: name
   
@@ -1064,18 +1014,18 @@
 (defn zones-clusters-nodePools-setSize$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/setSize
   
-  Required parameters: clusterId, projectId, zone, nodePoolId
+  Required parameters: zone, projectId, nodePoolId, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:name string,
-   :projectId string,
+  {:zone string,
    :nodePoolId string,
    :nodeCount integer,
-   :zone string,
-   :clusterId string}
+   :name string,
+   :clusterId string,
+   :projectId string}
   
   Sets the size for a specific node pool. The new size will be used for all replicas, including future replicas created by modifying NodePool.locations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1103,7 +1053,7 @@
 (defn zones-clusters-nodePools-list$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/clusters/nodePools/list
   
-  Required parameters: zone, clusterId, projectId
+  Required parameters: clusterId, projectId, zone
   
   Optional parameters: parent
   
@@ -1126,12 +1076,96 @@
       :as :json}
      auth))))
 
+(defn zones-operations-list$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/list
+  
+  Required parameters: zone, projectId
+  
+  Optional parameters: parent
+  
+  Lists all operations in a project in a specific zone or all zones."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations"
+     #{:zone :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn zones-operations-cancel$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/cancel
+  
+  Required parameters: zone, projectId, operationId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :operationId string, :zone string, :projectId string}
+  
+  Cancels the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :projectId :operationId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}:cancel"
+     #{:zone :projectId :operationId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn zones-operations-get$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/zones/operations/get
+  
+  Required parameters: projectId, operationId, zone
+  
+  Optional parameters: name
+  
+  Gets the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :projectId :operationId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/projects/{projectId}/zones/{zone}/operations/{operationId}"
+     #{:zone :projectId :operationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-getServerConfig$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/getServerConfig
   
   Required parameters: name
   
-  Optional parameters: projectId, zone
+  Optional parameters: zone, projectId
   
   Returns configuration info about the Google Kubernetes Engine service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1147,6 +1181,90 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: zone, projectId, operationId
+  
+  Gets the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: zone, projectId
+  
+  Lists all operations in a project in a specific zone or all zones."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+parent}/operations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string, :operationId string, :zone string, :projectId string}
+  
+  Cancels the specified operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://container.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -1187,10 +1305,10 @@
   
   Body: 
   
-  {:zone string,
+  {:masterVersion string,
    :projectId string,
+   :zone string,
    :name string,
-   :masterVersion string,
    :clusterId string}
   
   Updates the master for a specific cluster."
@@ -1219,7 +1337,7 @@
   
   Required parameters: name
   
-  Optional parameters: projectId, clusterId, zone
+  Optional parameters: clusterId, zone, projectId
   
   Gets the details of a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1249,12 +1367,12 @@
   
   Body: 
   
-  {:projectId string,
-   :resourceLabels {},
+  {:labelFingerprint string,
+   :clusterId string,
    :zone string,
+   :resourceLabels {},
    :name string,
-   :labelFingerprint string,
-   :clusterId string}
+   :projectId string}
   
   Sets labels on a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1286,8 +1404,8 @@
   
   Body: 
   
-  {:parent string,
-   :projectId string,
+  {:projectId string,
+   :parent string,
    :cluster {:description string,
              :currentNodeCount integer,
              :tpuIpv4CidrBlock string,
@@ -1295,6 +1413,8 @@
              :networkPolicy NetworkPolicy,
              :instanceGroupUrls [string],
              :autopilot Autopilot,
+             :monitoringConfig MonitoringConfig,
+             :loggingConfig LoggingConfig,
              :autoscaling ClusterAutoscaling,
              :enableKubernetesAlpha boolean,
              :nodeConfig NodeConfig,
@@ -1375,18 +1495,19 @@
   
   Body: 
   
-  {:addonsConfig {:networkPolicyConfig NetworkPolicyConfig,
-                  :cloudRunConfig CloudRunConfig,
+  {:addonsConfig {:gcePersistentDiskCsiDriverConfig GcePersistentDiskCsiDriverConfig,
                   :configConnectorConfig ConfigConnectorConfig,
-                  :dnsCacheConfig DnsCacheConfig,
+                  :cloudRunConfig CloudRunConfig,
+                  :networkPolicyConfig NetworkPolicyConfig,
                   :httpLoadBalancing HttpLoadBalancing,
                   :kubernetesDashboard KubernetesDashboard,
-                  :horizontalPodAutoscaling HorizontalPodAutoscaling,
-                  :gcePersistentDiskCsiDriverConfig GcePersistentDiskCsiDriverConfig},
-   :projectId string,
+                  :dnsCacheConfig DnsCacheConfig,
+                  :gcpFilestoreCsiDriverConfig GcpFilestoreCsiDriverConfig,
+                  :horizontalPodAutoscaling HorizontalPodAutoscaling},
+   :name string,
    :zone string,
-   :clusterId string,
-   :name string}
+   :projectId string,
+   :clusterId string}
   
   Sets the addons for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1424,9 +1545,12 @@
             :desiredDatabaseEncryption DatabaseEncryption,
             :desiredAddonsConfig AddonsConfig,
             :desiredNodePoolId string,
+            :desiredMonitoringConfig MonitoringConfig,
             :desiredLocations [string],
             :desiredAutopilot Autopilot,
+            :desiredLoggingConfig LoggingConfig,
             :desiredResourceUsageExportConfig ResourceUsageExportConfig,
+            :desiredAuthenticatorGroupsConfig AuthenticatorGroupsConfig,
             :desiredImageType string,
             :desiredLoggingService string,
             :desiredNodePoolAutoscaling NodePoolAutoscaling,
@@ -1445,8 +1569,8 @@
             :desiredMasterAuthorizedNetworksConfig MasterAuthorizedNetworksConfig,
             :desiredVerticalPodAutoscaling VerticalPodAutoscaling},
    :zone string,
-   :name string,
    :projectId string,
+   :name string,
    :clusterId string}
   
   Updates the settings of a specific cluster."
@@ -1475,7 +1599,7 @@
   
   Required parameters: name
   
-  Optional parameters: clusterId, zone, projectId
+  Optional parameters: clusterId, projectId, zone
   
   Deletes the cluster, including the Kubernetes endpoint and all worker nodes. Firewalls and routes that were configured during cluster creation are also deleted. Other Google Compute Engine resources that might be in use by the cluster, such as load balancer resources, are not deleted if they weren't present when the cluster was initially created."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1505,11 +1629,11 @@
   
   Body: 
   
-  {:clusterId string,
+  {:name string,
+   :zone string,
    :projectId string,
-   :name string,
    :loggingService string,
-   :zone string}
+   :clusterId string}
   
   Sets the logging service for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1541,17 +1665,17 @@
   
   Body: 
   
-  {:clusterId string,
+  {:projectId string,
+   :clusterId string,
    :update {:clientCertificate string,
             :clusterCaCertificate string,
-            :password string,
-            :username string,
             :clientKey string,
-            :clientCertificateConfig ClientCertificateConfig},
+            :clientCertificateConfig ClientCertificateConfig,
+            :password string,
+            :username string},
    :zone string,
-   :name string,
-   :projectId string,
-   :action string}
+   :action string,
+   :name string}
   
   Sets master auth materials. Currently supports changing the admin password or a specific cluster, either via password generation or explicitly setting the password."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1609,11 +1733,11 @@
   
   Body: 
   
-  {:clusterId string,
+  {:networkPolicy {:enabled boolean, :provider string},
    :projectId string,
    :zone string,
-   :networkPolicy {:provider string, :enabled boolean},
-   :name string}
+   :name string,
+   :clusterId string}
   
   Enables or disables Network Policy for a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1645,11 +1769,11 @@
   
   Body: 
   
-  {:clusterId string,
-   :zone string,
+  {:projectId string,
    :monitoringService string,
-   :name string,
-   :projectId string}
+   :clusterId string,
+   :zone string,
+   :name string}
   
   Sets the monitoring service for a specific cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1681,11 +1805,11 @@
   
   Body: 
   
-  {:zone string,
+  {:rotateCredentials boolean,
+   :projectId string,
    :clusterId string,
    :name string,
-   :rotateCredentials boolean,
-   :projectId string}
+   :zone string}
   
   Starts master IP rotation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1717,7 +1841,7 @@
   
   Body: 
   
-  {:zone string, :clusterId string, :projectId string, :name string}
+  {:name string, :projectId string, :zone string, :clusterId string}
   
   Completes master IP rotation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1751,9 +1875,9 @@
   
   {:projectId string,
    :zone string,
-   :locations [string],
    :name string,
-   :clusterId string}
+   :clusterId string,
+   :locations [string]}
   
   Sets the locations for a specific cluster. Deprecated. Use [projects.locations.clusters.update](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters/update) instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1785,11 +1909,11 @@
   
   Body: 
   
-  {:enabled boolean,
+  {:projectId string,
+   :enabled boolean,
    :name string,
-   :zone string,
    :clusterId string,
-   :projectId string}
+   :zone string}
   
   Enables or disables the ABAC authorization mechanism on a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1821,12 +1945,12 @@
   
   Body: 
   
-  {:maintenancePolicy {:resourceVersion string,
-                       :window MaintenanceWindow},
-   :name string,
+  {:maintenancePolicy {:window MaintenanceWindow,
+                       :resourceVersion string},
    :clusterId string,
-   :zone string,
-   :projectId string}
+   :name string,
+   :projectId string,
+   :zone string}
   
   Sets the maintenance policy for a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1849,32 +1973,6 @@
       :as :json}
      auth))))
 
-(defn locations-clusters-well-known-getOpenid-configuration$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/clusters/well-known/getOpenid-configuration
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Gets the OIDC discovery document for the cluster. See the [OpenID Connect Discovery 1.0 specification](https://openid.net/specs/openid-connect-discovery-1_0.html) for details. This API is not yet intended for general use, and is not available for all clusters."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+parent}/.well-known/openid-configuration"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-clusters-nodePools-rollback$
   "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/clusters/nodePools/rollback
   
@@ -1884,11 +1982,11 @@
   
   Body: 
   
-  {:clusterId string,
-   :nodePoolId string,
+  {:name string,
+   :zone string,
    :projectId string,
-   :name string,
-   :zone string}
+   :nodePoolId string,
+   :clusterId string}
   
   Rolls back a previously Aborted or Failed NodePool upgrade. This makes no changes if the last upgrade successfully completed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1916,7 +2014,7 @@
   
   Required parameters: name
   
-  Optional parameters: clusterId, nodePoolId, projectId, zone
+  Optional parameters: clusterId, projectId, nodePoolId, zone
   
   Retrieves the requested node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1948,8 +2046,8 @@
   
   {:projectId string,
    :clusterId string,
-   :zone string,
    :parent string,
+   :zone string,
    :nodePool {:instanceGroupUrls [string],
               :maxPodsConstraint MaxPodsConstraint,
               :podIpv4CidrSize integer,
@@ -1958,6 +2056,7 @@
               :name string,
               :statusMessage string,
               :selfLink string,
+              :networkConfig NodeNetworkConfig,
               :locations [string],
               :initialNodeCount integer,
               :conditions [StatusCondition],
@@ -1996,15 +2095,15 @@
   
   Body: 
   
-  {:clusterId string,
-   :nodePoolId string,
-   :autoscaling {:minNodeCount integer,
-                 :maxNodeCount integer,
-                 :enabled boolean,
-                 :autoprovisioned boolean},
-   :name string,
+  {:nodePoolId string,
+   :zone string,
    :projectId string,
-   :zone string}
+   :name string,
+   :autoscaling {:autoprovisioned boolean,
+                 :enabled boolean,
+                 :maxNodeCount integer,
+                 :minNodeCount integer},
+   :clusterId string}
   
   Sets the autoscaling settings for the specified node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2036,14 +2135,14 @@
   
   Body: 
   
-  {:nodePoolId string,
-   :projectId string,
-   :name string,
-   :clusterId string,
+  {:name string,
+   :management {:autoUpgrade boolean,
+                :autoRepair boolean,
+                :upgradeOptions AutoUpgradeOptions},
    :zone string,
-   :management {:upgradeOptions AutoUpgradeOptions,
-                :autoUpgrade boolean,
-                :autoRepair boolean}}
+   :projectId string,
+   :nodePoolId string,
+   :clusterId string}
   
   Sets the NodeManagement options for a node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2081,14 +2180,15 @@
    :clusterId string,
    :imageType string,
    :linuxNodeConfig {:sysctls {}},
-   :kubeletConfig {:cpuManagerPolicy string,
-                   :cpuCfsQuotaPeriod string,
-                   :cpuCfsQuota boolean},
+   :kubeletConfig {:cpuCfsQuota boolean,
+                   :cpuManagerPolicy string,
+                   :cpuCfsQuotaPeriod string},
    :locations [string],
    :projectId string,
    :workloadMetadataConfig {:mode string},
    :nodeVersion string,
-   :upgradeSettings {:maxSurge integer, :maxUnavailable integer}}
+   :gvnic {:enabled boolean},
+   :upgradeSettings {:maxUnavailable integer, :maxSurge integer}}
   
   Updates the version and/or image type for the specified node pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2116,7 +2216,7 @@
   
   Required parameters: name
   
-  Optional parameters: zone, projectId, nodePoolId, clusterId
+  Optional parameters: zone, nodePoolId, clusterId, projectId
   
   Deletes a node pool from a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2146,12 +2246,12 @@
   
   Body: 
   
-  {:name string,
-   :projectId string,
+  {:zone string,
    :nodePoolId string,
    :nodeCount integer,
-   :zone string,
-   :clusterId string}
+   :name string,
+   :clusterId string,
+   :projectId string}
   
   Sets the size for a specific node pool. The new size will be used for all replicas, including future replicas created by modifying NodePool.locations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2179,7 +2279,7 @@
   
   Required parameters: parent
   
-  Optional parameters: clusterId, projectId, zone
+  Optional parameters: clusterId, zone, projectId
   
   Lists the node pools for a cluster."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -2200,106 +2300,22 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/list
+(defn locations-clusters-well-known-getOpenid-configuration$
+  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/clusters/well-known/getOpenid-configuration
   
   Required parameters: parent
-  
-  Optional parameters: zone, projectId
-  
-  Lists all operations in a project in a specific zone or all zones."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+parent}/operations"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/cancel
-  
-  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:zone string, :projectId string, :operationId string, :name string}
-  
-  Cancels the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: projectId, operationId, zone
-  
-  Gets the specified operation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://container.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn aggregated-usableSubnetworks-list$
-  "https://cloud.google.com/container-engine/api/reference/rest/v1/projects/aggregated/usableSubnetworks/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  Lists subnetworks that are usable for creating clusters in a project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  Gets the OIDC discovery document for the cluster. See the [OpenID Connect Discovery 1.0 specification](https://openid.net/specs/openid-connect-discovery-1_0.html) for details. This API is not yet intended for general use, and is not available for all clusters."
+  {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://container.googleapis.com/"
-     "v1/{+parent}/aggregated/usableSubnetworks"
+     "v1/{+parent}/.well-known/openid-configuration"
      #{:parent}
      parameters)
     (merge-with

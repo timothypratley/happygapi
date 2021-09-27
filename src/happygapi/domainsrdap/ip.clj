@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/domains/rdap/api/reference/rest/v1/ip/get
   
-  Required parameters: ipId1, ipId
+  Required parameters: ipId, ipId1
   
   Optional parameters: none
   

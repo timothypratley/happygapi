@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/insert
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/update
   
   Required parameters: creativeFieldId, profileId
   
@@ -15,67 +15,7 @@
   
   Body: 
   
-  {:id string, :kind string, :value string}
-  
-  Inserts a new creative field value."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:creativeFieldId :profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
-     #{:creativeFieldId :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/delete
-  
-  Required parameters: creativeFieldId, id, profileId
-  
-  Optional parameters: none
-  
-  Deletes an existing creative field value."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:id :creativeFieldId :profileId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
-     #{:id :creativeFieldId :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/update
-  
-  Required parameters: profileId, creativeFieldId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:id string, :kind string, :value string}
+  {:kind string, :id string, :value string}
   
   Updates an existing creative field value."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -101,13 +41,13 @@
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/patch
   
-  Required parameters: profileId, id, creativeFieldId
+  Required parameters: creativeFieldId, profileId, id
   
   Optional parameters: none
   
   Body: 
   
-  {:id string, :kind string, :value string}
+  {:kind string, :id string, :value string}
   
   Updates an existing creative field value. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -137,7 +77,7 @@
   
   Required parameters: creativeFieldId, profileId
   
-  Optional parameters: sortOrder, maxResults, searchString, ids, pageToken, sortField
+  Optional parameters: maxResults, ids, sortField, pageToken, sortOrder, searchString
   
   Retrieves a list of creative field values, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -158,10 +98,42 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/insert
+  
+  Required parameters: creativeFieldId, profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string, :id string, :value string}
+  
+  Inserts a new creative field value."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:creativeFieldId :profileId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues"
+     #{:creativeFieldId :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/get
   
-  Required parameters: id, profileId, creativeFieldId
+  Required parameters: creativeFieldId, profileId, id
   
   Optional parameters: none
   
@@ -173,6 +145,34 @@
           #{:id :creativeFieldId :profileId})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"
+     #{:id :creativeFieldId :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeFieldValues/delete
+  
+  Required parameters: profileId, creativeFieldId, id
+  
+  Optional parameters: none
+  
+  Deletes an existing creative field value."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:id :creativeFieldId :profileId})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/creativeFields/{creativeFieldId}/creativeFieldValues/{id}"

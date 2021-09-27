@@ -9,19 +9,19 @@
 (defn update$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/update
   
-  Required parameters: merchantId, accountId
+  Required parameters: accountId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:rules [{:ratePercent string,
-            :useGlobalRate boolean,
-            :country string,
-            :shippingTaxed boolean,
-            :locationId string}],
+  {:kind string,
    :accountId string,
-   :kind string}
+   :rules [{:useGlobalRate boolean,
+            :country string,
+            :locationId string,
+            :ratePercent string,
+            :shippingTaxed boolean}]}
   
   Updates the tax settings of the account. Any fields that are not provided are deleted from the resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -107,8 +107,8 @@
   
   {:entries [{:accountId string,
               :method string,
-              :accountTax AccountTax,
               :batchId integer,
+              :accountTax AccountTax,
               :merchantId string}]}
   
   Retrieves and updates tax settings of multiple accounts in a single request."

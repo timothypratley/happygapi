@@ -6,38 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: includeAllScopes, filter, orderBy, maxResults, pageToken, returnPartialSuccess
-  
-  Retrieves an aggregated list of node templates."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/nodeTemplates"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/delete
   
-  Required parameters: project, region, nodeTemplate
+  Required parameters: region, nodeTemplate, project
   
   Optional parameters: requestId
   
@@ -61,57 +33,44 @@
       :as :json}
      auth))))
 
-(defn getIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/getIamPolicy
+(defn setIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/setIamPolicy
   
-  Required parameters: region, project, resource
+  Required parameters: resource, project, region
   
-  Optional parameters: optionsRequestedPolicyVersion
+  Optional parameters: none
   
-  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  Body: 
+  
+  {:etag string,
+   :bindings [{:members [string],
+               :condition Expr,
+               :bindingId string,
+               :role string}],
+   :policy {:etag string,
+            :auditConfigs [AuditConfig],
+            :iamOwned boolean,
+            :version integer,
+            :rules [Rule],
+            :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:region :project :resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/nodeTemplates/{resource}/getIamPolicy"
+     "projects/{project}/regions/{region}/nodeTemplates/{resource}/setIamPolicy"
      #{:region :project :resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/get
-  
-  Required parameters: region, project, nodeTemplate
-  
-  Optional parameters: none
-  
-  Returns the specified node template. Gets a list of available node templates by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:nodeTemplate :region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/nodeTemplates/{nodeTemplate}"
-     #{:nodeTemplate :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -120,7 +79,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/testIamPermissions
   
-  Required parameters: project, resource, region
+  Required parameters: region, project, resource
   
   Optional parameters: none
   
@@ -151,44 +110,57 @@
       :as :json}
      auth))))
 
-(defn setIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/setIamPolicy
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/aggregatedList
   
-  Required parameters: resource, project, region
+  Required parameters: project
   
-  Optional parameters: none
+  Optional parameters: filter, pageToken, includeAllScopes, maxResults, returnPartialSuccess, orderBy
   
-  Body: 
-  
-  {:policy {:rules [Rule],
-            :bindings [Binding],
-            :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
-            :etag string},
-   :etag string,
-   :bindings [{:condition Expr,
-               :members [string],
-               :bindingId string,
-               :role string}]}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy."
+  Retrieves an aggregated list of node templates."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/nodeTemplates/{resource}/setIamPolicy"
-     #{:region :project :resource}
+     "projects/{project}/aggregated/nodeTemplates"
+     #{:project}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/get
+  
+  Required parameters: region, nodeTemplate, project
+  
+  Optional parameters: none
+  
+  Returns the specified node template. Gets a list of available node templates by making a list() request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:nodeTemplate :region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/nodeTemplates/{nodeTemplate}"
+     #{:nodeTemplate :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -205,7 +177,7 @@
   
   {:description string,
    :nodeAffinityLabels {},
-   :nodeTypeFlexibility {:cpus string, :localSsd string, :memory string},
+   :nodeTypeFlexibility {:cpus string, :memory string, :localSsd string},
    :cpuOvercommitType string,
    :nodeType string,
    :creationTimestamp string,
@@ -216,9 +188,9 @@
    :status string,
    :id string,
    :kind string,
-   :disks [{:diskSizeGb integer, :diskCount integer, :diskType string}],
+   :disks [{:diskType string, :diskSizeGb integer, :diskCount integer}],
    :serverBinding {:type string},
-   :accelerators [{:acceleratorType string, :acceleratorCount integer}]}
+   :accelerators [{:acceleratorCount integer, :acceleratorType string}]}
   
   Creates a NodeTemplate resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -242,12 +214,40 @@
       :as :json}
      auth))))
 
+(defn getIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/getIamPolicy
+  
+  Required parameters: region, resource, project
+  
+  Optional parameters: optionsRequestedPolicyVersion
+  
+  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/nodeTemplates/{resource}/getIamPolicy"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeTemplates/list
   
   Required parameters: project, region
   
-  Optional parameters: maxResults, returnPartialSuccess, filter, orderBy, pageToken
+  Optional parameters: maxResults, pageToken, orderBy, returnPartialSuccess, filter
   
   Retrieves a list of node templates available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

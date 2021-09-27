@@ -41,11 +41,11 @@
   
   Body: 
   
-  {:name string,
+  {:assetDiscoveryConfig {:projectIds [string],
+                          :inclusionMode string,
+                          :folderIds [string]},
    :enableAssetDiscovery boolean,
-   :assetDiscoveryConfig {:inclusionMode string,
-                          :projectIds [string],
-                          :folderIds [string]}}
+   :name string}
   
   Updates an organization's settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -84,32 +84,6 @@
     (util/get-url
      "https://securitycenter.googleapis.com/"
      "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-delete$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -172,76 +146,14 @@
       :as :json}
      auth))))
 
-(defn notificationConfigs-patch$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:pubsubTopic string,
-   :description string,
-   :serviceAccount string,
-   :streamingConfig {:filter string},
-   :name string}
-  
-   Updates a notification config. The following update fields are allowed: description, pubsub_topic, streaming_config.filter"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationConfigs-get$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/get
+(defn operations-delete$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/operations/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets a notification config."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationConfigs-delete$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a notification config."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -255,195 +167,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationConfigs-create$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/create
-  
-  Required parameters: parent
-  
-  Optional parameters: configId
-  
-  Body: 
-  
-  {:pubsubTopic string,
-   :description string,
-   :serviceAccount string,
-   :streamingConfig {:filter string},
-   :name string}
-  
-  Creates a notification config."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/notificationConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn notificationConfigs-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists notification configs."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/notificationConfigs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn assets-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, compareDuration, pageSize, fieldMask, readTime, pageToken, filter
-  
-  Lists an organization's assets."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/assets"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn assets-runDiscovery$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/runDiscovery
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Runs asset discovery. The discovery is tracked with a long-running operation. This API can only be called with limited frequency for an organization. If it is called too frequently the caller will receive a TOO_MANY_REQUESTS error."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/assets:runDiscovery"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn assets-group$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/group
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:readTime string,
-   :filter string,
-   :pageToken string,
-   :groupBy string,
-   :compareDuration string,
-   :pageSize integer}
-  
-  Filters an organization's assets and groups them by their specified properties."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/assets:group"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn assets-updateSecurityMarks$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/updateSecurityMarks
-  
-  Required parameters: name
-  
-  Optional parameters: startTime, updateMask
-  
-  Body: 
-  
-  {:marks {}, :name string, :canonicalName string}
-  
-  Updates security marks."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -484,10 +207,10 @@
   
   Body: 
   
-  {:displayName string,
-   :description string,
+  {:description string,
    :name string,
-   :canonicalName string}
+   :canonicalName string,
+   :displayName string}
   
   Creates a source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -510,99 +233,6 @@
       :as :json}
      auth))))
 
-(defn sources-testIamPermissions$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns the permissions that a caller has on the specified source."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists all sources belonging to an organization."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/sources"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-patch$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:displayName string,
-   :description string,
-   :name string,
-   :canonicalName string}
-  
-  Updates a source."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn sources-setIamPolicy$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/setIamPolicy
   
@@ -612,11 +242,11 @@
   
   Body: 
   
-  {:policy {:etag string,
-            :version integer,
+  {:updateMask string,
+   :policy {:etag string,
             :bindings [Binding],
-            :auditConfigs [AuditConfig]},
-   :updateMask string}
+            :version integer,
+            :auditConfigs [AuditConfig]}}
   
   Sets the access control policy on the specified Source."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -671,6 +301,203 @@
       :as :json}
      auth))))
 
+(defn sources-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists all sources belonging to an organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/sources"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-patch$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :name string,
+   :canonicalName string,
+   :displayName string}
+  
+  Updates a source."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-testIamPermissions$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns the permissions that a caller has on the specified source."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-findings-patch$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:category string,
+   :parent string,
+   :name string,
+   :createTime string,
+   :vulnerability {:cve Cve},
+   :state string,
+   :canonicalName string,
+   :externalUri string,
+   :resourceName string,
+   :securityMarks {:name string, :marks {}, :canonicalName string},
+   :sourceProperties {},
+   :indicator {:ipAddresses [string], :domains [string]},
+   :severity string,
+   :eventTime string,
+   :findingClass string}
+  
+  Creates or updates a finding. The corresponding source must exist for a finding creation to succeed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-findings-updateSecurityMarks$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/updateSecurityMarks
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask, startTime
+  
+  Body: 
+  
+  {:name string, :marks {}, :canonicalName string}
+  
+  Updates security marks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sources-findings-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: fieldMask, filter, pageSize, orderBy, pageToken, compareDuration, readTime
+  
+  Lists an organization or source's findings. To list across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/findings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn sources-findings-setState$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/setState
   
@@ -703,32 +530,6 @@
       :as :json}
      auth))))
 
-(defn sources-findings-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, readTime, filter, compareDuration, pageSize, fieldMask, pageToken
-  
-  Lists an organization or source's findings. To list across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn sources-findings-group$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/group
   
@@ -738,12 +539,12 @@
   
   Body: 
   
-  {:pageSize integer,
-   :groupBy string,
+  {:groupBy string,
+   :compareDuration string,
+   :pageSize integer,
    :pageToken string,
    :filter string,
-   :readTime string,
-   :compareDuration string}
+   :readTime string}
   
   Filters an organization or source's findings and groups them by their specified properties. To group across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings, /v1/folders/{folder_id}/sources/-/findings, /v1/projects/{project_id}/sources/-/findings"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -755,38 +556,6 @@
      "https://securitycenter.googleapis.com/"
      "v1/{+parent}/findings:group"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-updateSecurityMarks$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/updateSecurityMarks
-  
-  Required parameters: name
-  
-  Optional parameters: startTime, updateMask
-  
-  Body: 
-  
-  {:marks {}, :name string, :canonicalName string}
-  
-  Updates security marks."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -811,14 +580,17 @@
    :parent string,
    :name string,
    :createTime string,
+   :vulnerability {:cve Cve},
    :state string,
    :canonicalName string,
    :externalUri string,
    :resourceName string,
-   :securityMarks {:marks {}, :name string, :canonicalName string},
+   :securityMarks {:name string, :marks {}, :canonicalName string},
    :sourceProperties {},
+   :indicator {:ipAddresses [string], :domains [string]},
    :severity string,
-   :eventTime string}
+   :eventTime string,
+   :findingClass string}
   
   Creates a finding. The corresponding source must exist for finding creation to succeed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -841,8 +613,34 @@
       :as :json}
      auth))))
 
-(defn sources-findings-patch$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/sources/findings/patch
+(defn notificationConfigs-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists notification configs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/notificationConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-patch$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/patch
   
   Required parameters: name
   
@@ -850,20 +648,13 @@
   
   Body: 
   
-  {:category string,
-   :parent string,
+  {:pubsubTopic string,
+   :description string,
+   :serviceAccount string,
    :name string,
-   :createTime string,
-   :state string,
-   :canonicalName string,
-   :externalUri string,
-   :resourceName string,
-   :securityMarks {:marks {}, :name string, :canonicalName string},
-   :sourceProperties {},
-   :severity string,
-   :eventTime string}
+   :streamingConfig {:filter string}}
   
-  Creates or updates a finding. The corresponding source must exist for a finding creation to succeed."
+   Updates a notification config. The following update fields are allowed: description, pubsub_topic, streaming_config.filter"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -879,6 +670,221 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-delete$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-create$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: configId
+  
+  Body: 
+  
+  {:pubsubTopic string,
+   :description string,
+   :serviceAccount string,
+   :name string,
+   :streamingConfig {:filter string}}
+  
+  Creates a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/notificationConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn notificationConfigs-get$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/notificationConfigs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a notification config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assets-group$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/group
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:pageSize integer,
+   :readTime string,
+   :pageToken string,
+   :filter string,
+   :compareDuration string,
+   :groupBy string}
+  
+  Filters an organization's assets and groups them by their specified properties."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/assets:group"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assets-runDiscovery$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/runDiscovery
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Runs asset discovery. The discovery is tracked with a long-running operation. This API can only be called with limited frequency for an organization. If it is called too frequently the caller will receive a TOO_MANY_REQUESTS error."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/assets:runDiscovery"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assets-updateSecurityMarks$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/updateSecurityMarks
+  
+  Required parameters: name
+  
+  Optional parameters: startTime, updateMask
+  
+  Body: 
+  
+  {:name string, :marks {}, :canonicalName string}
+  
+  Updates security marks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assets-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/assets/list
+  
+  Required parameters: parent
+  
+  Optional parameters: readTime, pageToken, pageSize, fieldMask, filter, orderBy, compareDuration
+  
+  Lists an organization's assets."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/assets"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

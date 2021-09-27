@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/get
   
-  Required parameters: enterpriseId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
@@ -41,12 +41,12 @@
   
   Body: 
   
-  {:primaryEmail string,
-   :id string,
-   :displayName string,
-   :accountType string,
+  {:displayName string,
    :managementType string,
-   :accountIdentifier string}
+   :id string,
+   :accountIdentifier string,
+   :accountType string,
+   :primaryEmail string}
   
   Creates a new EMM-managed user. The Users resource passed in the body of the request should include an accountIdentifier and an accountType. If a corresponding user already exists with the same account identifier, the user will be updated with the resource. In this case only the displayName field can be changed."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -72,7 +72,7 @@
 (defn generateAuthenticationToken$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/generateAuthenticationToken
   
-  Required parameters: enterpriseId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
@@ -104,12 +104,12 @@
   
   Body: 
   
-  {:primaryEmail string,
-   :id string,
-   :displayName string,
-   :accountType string,
+  {:displayName string,
    :managementType string,
-   :accountIdentifier string}
+   :id string,
+   :accountIdentifier string,
+   :accountType string,
+   :primaryEmail string}
   
   Updates the details of an EMM-managed user. Can be used with EMM-managed users only (not Google managed users). Pass the new details in the Users resource in the request body. Only the displayName field can be changed. Other fields must either be unset or have the currently active value."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -135,7 +135,7 @@
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/delete
   
-  Required parameters: enterpriseId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
@@ -161,7 +161,7 @@
 (defn revokeDeviceAccess$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/users/revokeDeviceAccess
   
-  Required parameters: userId, enterpriseId
+  Required parameters: enterpriseId, userId
   
   Optional parameters: none
   
@@ -247,8 +247,8 @@
   
   {:productId [string],
    :productVisibility [{:tracks [string],
-                        :productId string,
-                        :trackIds [string]}],
+                        :trackIds [string],
+                        :productId string}],
    :productSetBehavior string}
   
   Modifies the set of products that a user is entitled to access (referred to as *whitelisted* products). Only products that are approved or products that were previously approved (products with revoked approval) can be whitelisted."

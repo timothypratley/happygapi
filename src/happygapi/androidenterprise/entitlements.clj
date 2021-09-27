@@ -6,53 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/delete
+(defn list$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/list
   
-  Required parameters: enterpriseId, userId, entitlementId
-  
-  Optional parameters: none
-  
-  Removes an entitlement to an app for a user."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :entitlementId :userId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
-     #{:enterpriseId :entitlementId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/get
-  
-  Required parameters: enterpriseId, entitlementId, userId
+  Required parameters: userId, enterpriseId
   
   Optional parameters: none
   
-  Retrieves details of an entitlement."
+  Lists all entitlements for the specified user. Only the ID is set."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :entitlementId :userId})]}
+  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
-     #{:enterpriseId :entitlementId :userId}
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements"
+     #{:enterpriseId :userId}
      parameters)
     (merge-with
      merge
@@ -65,7 +35,7 @@
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/update
   
-  Required parameters: entitlementId, userId, enterpriseId
+  Required parameters: enterpriseId, userId, entitlementId
   
   Optional parameters: install
   
@@ -96,23 +66,53 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/list
+(defn get$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/get
   
-  Required parameters: enterpriseId, userId
+  Required parameters: entitlementId, userId, enterpriseId
   
   Optional parameters: none
   
-  Lists all entitlements for the specified user. Only the ID is set."
+  Retrieves details of an entitlement."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements"
-     #{:enterpriseId :userId}
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
+     #{:enterpriseId :entitlementId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/delete
+  
+  Required parameters: userId, entitlementId, enterpriseId
+  
+  Optional parameters: none
+  
+  Removes an entitlement to an app for a user."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
+     #{:enterpriseId :entitlementId :userId}
      parameters)
     (merge-with
      merge

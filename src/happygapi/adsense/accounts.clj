@@ -6,12 +6,39 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about the selected AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/list
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists all accounts available to this user."
   {:scopes ["https://www.googleapis.com/auth/adsense"
@@ -51,33 +78,6 @@
      "https://adsense.googleapis.com/"
      "v2/{+parent}:listChildAccounts"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about the selected AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adsense.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -141,24 +141,24 @@
       :as :json}
      auth))))
 
-(defn adclients-adunits-getAdcode$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/adunits/getAdcode
+(defn adclients-adunits-list$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/adunits/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize
   
-  Gets the AdSense code for a given ad unit."
+  Lists all ad units under a specified account and ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adsense.googleapis.com/"
-     "v2/{+name}/adcode"
-     #{:name}
+     "v2/{+parent}/adunits"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -200,7 +200,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists all the custom channels available for an ad unit."
   {:scopes ["https://www.googleapis.com/auth/adsense"
@@ -222,14 +222,41 @@
       :as :json}
      auth))))
 
-(defn adclients-adunits-list$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/adunits/list
+(defn adclients-adunits-getAdcode$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/adunits/getAdcode
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the AdSense code for a given ad unit."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+name}/adcode"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adclients-urlchannels-list$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/urlchannels/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
-  Lists all ad units under a specified account and ad client."
+  Lists active url channels."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth parameters]
@@ -238,7 +265,7 @@
    (http/get
     (util/get-url
      "https://adsense.googleapis.com/"
-     "v2/{+parent}/adunits"
+     "v2/{+parent}/urlchannels"
      #{:parent}
      parameters)
     (merge-with
@@ -254,7 +281,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists all the custom channels available in an ad client."
   {:scopes ["https://www.googleapis.com/auth/adsense"
@@ -330,78 +357,24 @@
       :as :json}
      auth))))
 
-(defn adclients-urlchannels-list$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/adclients/urlchannels/list
+(defn reports-generateCsv$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/reports/generateCsv
   
-  Required parameters: parent
+  Required parameters: account
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: dateRange, limit, filters, startDate.day, dimensions, reportingTimeZone, endDate.month, endDate.day, languageCode, startDate.year, currencyCode, startDate.month, metrics, endDate.year, orderBy
   
-  Lists active url channels."
+  Generates a csv formatted ad hoc report."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:account})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adsense.googleapis.com/"
-     "v2/{+parent}/urlchannels"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn alerts-list$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/alerts/list
-  
-  Required parameters: parent
-  
-  Optional parameters: languageCode
-  
-  Lists all the alerts available in an account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adsense.googleapis.com/"
-     "v2/{+parent}/alerts"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn payments-list$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/payments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Lists all the payments available for an account."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adsense.googleapis.com/"
-     "v2/{+parent}/payments"
-     #{:parent}
+     "v2/{+account}/reports:generateCsv"
+     #{:account}
      parameters)
     (merge-with
      merge
@@ -428,33 +401,6 @@
     (util/get-url
      "https://adsense.googleapis.com/"
      "v2/{+account}/reports:generate"
-     #{:account}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn reports-generateCsv$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/reports/generateCsv
-  
-  Required parameters: account
-  
-  Optional parameters: dateRange, limit, filters, startDate.day, dimensions, reportingTimeZone, endDate.month, endDate.day, languageCode, startDate.year, currencyCode, startDate.month, metrics, endDate.year, orderBy
-  
-  Generates a csv formatted ad hoc report."
-  {:scopes ["https://www.googleapis.com/auth/adsense"
-            "https://www.googleapis.com/auth/adsense.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:account})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://adsense.googleapis.com/"
-     "v2/{+account}/reports:generateCsv"
      #{:account}
      parameters)
     (merge-with
@@ -492,6 +438,33 @@
       :as :json}
      auth))))
 
+(defn reports-saved-generate$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/reports/saved/generate
+  
+  Required parameters: name
+  
+  Optional parameters: dateRange, startDate.day, reportingTimeZone, endDate.month, endDate.day, languageCode, startDate.year, currencyCode, startDate.month, endDate.year
+  
+  Generates a saved report."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+name}/saved:generate"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn reports-saved-list$
   "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/reports/saved/list
   
@@ -519,24 +492,24 @@
       :as :json}
      auth))))
 
-(defn reports-saved-generate$
-  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/reports/saved/generate
+(defn payments-list$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/payments/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: dateRange, startDate.day, reportingTimeZone, endDate.month, endDate.day, languageCode, startDate.year, currencyCode, startDate.month, endDate.year
+  Optional parameters: none
   
-  Generates a saved report."
+  Lists all the payments available for an account."
   {:scopes ["https://www.googleapis.com/auth/adsense"
             "https://www.googleapis.com/auth/adsense.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://adsense.googleapis.com/"
-     "v2/{+name}/saved:generate"
-     #{:name}
+     "v2/{+parent}/payments"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -591,6 +564,33 @@
      "https://adsense.googleapis.com/"
      "v2/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn alerts-list$
+  "http://code.google.com/apis/adsense/management/api/reference/rest/v2/accounts/alerts/list
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Lists all the alerts available in an account."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+parent}/alerts"
+     #{:parent}
      parameters)
     (merge-with
      merge

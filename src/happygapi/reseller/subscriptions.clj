@@ -9,11 +9,11 @@
 (defn get$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/get
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   
-  Get a specific subscription. The `subscriptionId` can be found using the [Retrieve all reseller subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_all_subscriptions) method. For more information about retrieving a specific subscription, see the information descrived in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_subscription)."
+  Gets a specific subscription. The `subscriptionId` can be found using the [Retrieve all reseller subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_all_subscriptions) method. For more information about retrieving a specific subscription, see the information descrived in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#get_subscription)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
             "https://www.googleapis.com/auth/apps.order.readonly"]}
   [auth parameters]
@@ -50,25 +50,25 @@
    :suspensionReasons [string],
    :resourceUiUrl string,
    :customerId string,
-   :transferInfo {:minimumTransferableSeats integer,
-                  :currentLegacySkuId string,
-                  :transferabilityExpirationTime string},
+   :transferInfo {:currentLegacySkuId string,
+                  :transferabilityExpirationTime string,
+                  :minimumTransferableSeats integer},
    :customerDomain string,
    :status string,
    :kind string,
    :skuId string,
-   :seats {:licensedNumberOfSeats integer,
+   :seats {:numberOfSeats integer,
            :maximumNumberOfSeats integer,
-           :numberOfSeats integer,
+           :licensedNumberOfSeats integer,
            :kind string},
-   :plan {:isCommitmentPlan boolean,
+   :plan {:planName string,
           :commitmentInterval {:endTime string, :startTime string},
-          :planName string},
+          :isCommitmentPlan boolean},
    :renewalSettings {:renewalType string, :kind string},
    :dealCode string,
    :subscriptionId string}
   
-  Create or transfer a subscription. Create a subscription for a customer's account that you ordered using the [Order a new customer account](/admin-sdk/reseller/v1/reference/customers/insert.html) method. For more information about creating a subscription for different payment plans, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#create_subscription).\\ If you did not order the customer's account using the customer insert method, use the customer's `customerAuthToken` when creating a subscription for that customer. If transferring a G Suite subscription with an associated Google Drive or Google Vault subscription, use the [batch operation](/admin-sdk/reseller/v1/how-tos/batch.html) to transfer all of these subscriptions. For more information, see how to [transfer subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#transfer_a_subscription)."
+  Creates or transfer a subscription. Create a subscription for a customer's account that you ordered using the [Order a new customer account](/admin-sdk/reseller/v1/reference/customers/insert.html) method. For more information about creating a subscription for different payment plans, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#create_subscription).\\ If you did not order the customer's account using the customer insert method, use the customer's `customerAuthToken` when creating a subscription for that customer. If transferring a G Suite subscription with an associated Google Drive or Google Vault subscription, use the [batch operation](/admin-sdk/reseller/v1/how-tos/batch.html) to transfer all of these subscriptions. For more information, see how to [transfer subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#transfer_a_subscription)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customerId})]}
@@ -100,7 +100,7 @@
   
   {:renewalType string, :kind string}
   
-  Update a user license's renewal settings. This is applicable for accounts with annual commitment plans only. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_renewal)."
+  Updates a user license's renewal settings. This is applicable for accounts with annual commitment plans only. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_renewal)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
@@ -124,11 +124,11 @@
 (defn delete$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/delete
   
-  Required parameters: deletionType, subscriptionId, customerId
+  Required parameters: subscriptionId, customerId, deletionType
   
   Optional parameters: none
   
-  Cancel, suspend, or transfer a subscription to direct."
+  Cancels, suspends, or transfers a subscription to direct."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
   [auth parameters]
   {:pre [(util/has-keys?
@@ -152,7 +152,7 @@
 (defn suspend$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/suspend
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   
@@ -180,9 +180,9 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, customerAuthToken, customerId, maxResults, customerNamePrefix
+  Optional parameters: pageToken, maxResults, customerNamePrefix, customerAuthToken, customerId
   
-  List of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions. Optionally, this method can filter the response by a `customerNamePrefix`. For more information, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions)."
+  Lists of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions. Optionally, this method can filter the response by a `customerNamePrefix`. For more information, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
             "https://www.googleapis.com/auth/apps.order.readonly"]}
   [auth parameters]
@@ -205,22 +205,22 @@
 (defn changePlan$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/changePlan
   
-  Required parameters: customerId, subscriptionId
+  Required parameters: subscriptionId, customerId
   
   Optional parameters: none
   
   Body: 
   
-  {:planName string,
-   :seats {:licensedNumberOfSeats integer,
-           :maximumNumberOfSeats integer,
-           :numberOfSeats integer,
-           :kind string},
-   :purchaseOrderId string,
+  {:purchaseOrderId string,
    :kind string,
-   :dealCode string}
+   :planName string,
+   :dealCode string,
+   :seats {:numberOfSeats integer,
+           :maximumNumberOfSeats integer,
+           :licensedNumberOfSeats integer,
+           :kind string}}
   
-  Update a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments. How a plan is updated differs depending on the plan and the products. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_plan)."
+  Updates a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments. How a plan is updated differs depending on the plan and the products. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_plan)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}
@@ -250,12 +250,12 @@
   
   Body: 
   
-  {:licensedNumberOfSeats integer,
+  {:numberOfSeats integer,
    :maximumNumberOfSeats integer,
-   :numberOfSeats integer,
+   :licensedNumberOfSeats integer,
    :kind string}
   
-  Update a subscription's user license settings. For more information about updating an annual commitment plan or a flexible plan subscription’s licenses, see [Manage Subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_seat)."
+  Updates a subscription's user license settings. For more information about updating an annual commitment plan or a flexible plan subscription’s licenses, see [Manage Subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_seat)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customerId :subscriptionId})]}

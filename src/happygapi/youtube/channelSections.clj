@@ -6,35 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/list
-  
-  Required parameters: part
-  
-  Optional parameters: id, hl, mine, onBehalfOfContentOwner, channelId
-  
-  Retrieves a list of resources, possibly filtered."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/channelSections"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/update
   
@@ -44,21 +15,21 @@
   
   Body: 
   
-  {:contentDetails {:channels [string], :playlists [string]},
-   :targeting {:countries [string],
-               :regions [string],
-               :languages [string]},
-   :snippet {:localized ChannelSectionLocalization,
-             :channelId string,
+  {:etag string,
+   :kind string,
+   :id string,
+   :snippet {:defaultLanguage string,
+             :title string,
+             :style string,
              :position integer,
              :type string,
-             :style string,
-             :defaultLanguage string,
-             :title string},
-   :kind string,
-   :localizations {},
-   :etag string,
-   :id string}
+             :localized ChannelSectionLocalization,
+             :channelId string},
+   :contentDetails {:playlists [string], :channels [string]},
+   :targeting {:regions [string],
+               :languages [string],
+               :countries [string]},
+   :localizations {}}
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -68,54 +39,6 @@
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
    (http/put
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/channelSections"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/insert
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:contentDetails {:channels [string], :playlists [string]},
-   :targeting {:countries [string],
-               :regions [string],
-               :languages [string]},
-   :snippet {:localized ChannelSectionLocalization,
-             :channelId string,
-             :position integer,
-             :type string,
-             :style string,
-             :defaultLanguage string,
-             :title string},
-   :kind string,
-   :localizations {},
-   :etag string,
-   :id string}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/channelSections"
@@ -154,6 +77,83 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/list
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner, id, mine, channelId, hl
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/channelSections/insert
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  
+  Body: 
+  
+  {:etag string,
+   :kind string,
+   :id string,
+   :snippet {:defaultLanguage string,
+             :title string,
+             :style string,
+             :position integer,
+             :type string,
+             :localized ChannelSectionLocalization,
+             :channelId string},
+   :contentDetails {:playlists [string], :channels [string]},
+   :targeting {:regions [string],
+               :languages [string],
+               :countries [string]},
+   :localizations {}}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/channelSections"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

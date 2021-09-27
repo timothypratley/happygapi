@@ -6,18 +6,70 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn download$
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/download
+  
+  Required parameters: id
+  
+  Optional parameters: onBehalfOf, tlang, onBehalfOfContentOwner, tfmt
+  
+  Downloads a caption track."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions/{id}"
+     #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/captions/list
+  
+  Required parameters: videoId, part
+  
+  Optional parameters: onBehalfOfContentOwner, onBehalfOf, id
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part :videoId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/captions"
+     #{:part :videoId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/youtube/api/reference/rest/v3/captions/insert
   
   Required parameters: part
   
-  Optional parameters: sync, onBehalfOfContentOwner, onBehalfOf
+  Optional parameters: sync, onBehalfOf, onBehalfOfContentOwner
   
   Body: 
   
-  {:kind string,
-   :id string,
-   :snippet {:isLarge boolean,
+  {:snippet {:isLarge boolean,
              :trackKind string,
              :audioTrackType string,
              :name string,
@@ -30,6 +82,8 @@
              :lastUpdated string,
              :failureReason string,
              :isAutoSynced boolean},
+   :id string,
+   :kind string,
    :etag string}
   
   Inserts a new resource into this collection."
@@ -63,9 +117,7 @@
   
   Body: 
   
-  {:kind string,
-   :id string,
-   :snippet {:isLarge boolean,
+  {:snippet {:isLarge boolean,
              :trackKind string,
              :audioTrackType string,
              :name string,
@@ -78,6 +130,8 @@
              :lastUpdated string,
              :failureReason string,
              :isAutoSynced boolean},
+   :id string,
+   :kind string,
    :etag string}
   
   Updates an existing resource."
@@ -102,39 +156,12 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/captions/list
-  
-  Required parameters: part, videoId
-  
-  Optional parameters: onBehalfOf, id, onBehalfOfContentOwner
-  
-  Retrieves a list of resources, possibly filtered."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :videoId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/captions"
-     #{:part :videoId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/captions/delete
   
   Required parameters: id
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOf
+  Optional parameters: onBehalfOf, onBehalfOfContentOwner
   
   Deletes a resource."
   {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
@@ -146,33 +173,6 @@
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/captions"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn download$
-  "https://developers.google.com/youtube/api/reference/rest/v3/captions/download
-  
-  Required parameters: id
-  
-  Optional parameters: onBehalfOfContentOwner, onBehalfOf, tlang, tfmt
-  
-  Downloads a caption track."
-  {:scopes ["https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/captions/{id}"
      #{:id}
      parameters)
     (merge-with

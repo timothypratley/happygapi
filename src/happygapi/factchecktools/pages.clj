@@ -15,19 +15,19 @@
   
   Body: 
   
-  {:name string,
-   :claimReviewAuthor {:name string, :imageUrl string},
-   :publishDate string,
+  {:publishDate string,
    :versionId string,
-   :pageUrl string,
-   :claimReviewMarkups [{:claimFirstAppearance string,
+   :claimReviewAuthor {:imageUrl string, :name string},
+   :claimReviewMarkups [{:url string,
                          :claimAuthor GoogleFactcheckingFactchecktoolsV1alpha1ClaimAuthor,
-                         :url string,
-                         :claimDate string,
-                         :claimAppearances [string],
                          :claimLocation string,
+                         :claimDate string,
+                         :claimFirstAppearance string,
+                         :claimReviewed string,
                          :rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
-                         :claimReviewed string}]}
+                         :claimAppearances [string]}],
+   :name string,
+   :pageUrl string}
   
   Create `ClaimReview` markup on a page."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -81,7 +81,7 @@
   
   Required parameters: none
   
-  Optional parameters: offset, pageToken, pageSize, organization, url
+  Optional parameters: pageToken, pageSize, organization, offset, url
   
   List the `ClaimReview` markup pages for a specific URL or for an organization."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
@@ -111,19 +111,19 @@
   
   Body: 
   
-  {:name string,
-   :claimReviewAuthor {:name string, :imageUrl string},
-   :publishDate string,
+  {:publishDate string,
    :versionId string,
-   :pageUrl string,
-   :claimReviewMarkups [{:claimFirstAppearance string,
+   :claimReviewAuthor {:imageUrl string, :name string},
+   :claimReviewMarkups [{:url string,
                          :claimAuthor GoogleFactcheckingFactchecktoolsV1alpha1ClaimAuthor,
-                         :url string,
-                         :claimDate string,
-                         :claimAppearances [string],
                          :claimLocation string,
+                         :claimDate string,
+                         :claimFirstAppearance string,
+                         :claimReviewed string,
                          :rating GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating,
-                         :claimReviewed string}]}
+                         :claimAppearances [string]}],
+   :name string,
+   :pageUrl string}
   
   Update for all `ClaimReview` markup on a page Note that this is a full update. To retain the existing `ClaimReview` markup on a page, first perform a Get operation, then modify the returned markup, and finally call Update with the entire `ClaimReview` markup as the body."
   {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}

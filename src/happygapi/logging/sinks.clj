@@ -6,33 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/sinks/delete
-  
-  Required parameters: sinkName
-  
-  Optional parameters: none
-  
-  Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:sinkName})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+sinkName}"
-     #{:sinkName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/sinks/get
   
@@ -72,18 +45,18 @@
   Body: 
   
   {:description string,
-   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
-                     :usePartitionedTables boolean},
+   :bigqueryOptions {:usePartitionedTables boolean,
+                     :usesTimestampColumnPartitioning boolean},
    :includeChildren boolean,
    :disabled boolean,
    :name string,
    :createTime string,
-   :exclusions [{:createTime string,
-                 :description string,
-                 :updateTime string,
-                 :disabled boolean,
+   :exclusions [{:description string,
                  :name string,
-                 :filter string}],
+                 :createTime string,
+                 :disabled boolean,
+                 :filter string,
+                 :updateTime string}],
    :updateTime string,
    :filter string,
    :outputVersionFormat string,
@@ -151,18 +124,18 @@
   Body: 
   
   {:description string,
-   :bigqueryOptions {:usesTimestampColumnPartitioning boolean,
-                     :usePartitionedTables boolean},
+   :bigqueryOptions {:usePartitionedTables boolean,
+                     :usesTimestampColumnPartitioning boolean},
    :includeChildren boolean,
    :disabled boolean,
    :name string,
    :createTime string,
-   :exclusions [{:createTime string,
-                 :description string,
-                 :updateTime string,
-                 :disabled boolean,
+   :exclusions [{:description string,
                  :name string,
-                 :filter string}],
+                 :createTime string,
+                 :disabled boolean,
+                 :filter string,
+                 :updateTime string}],
    :updateTime string,
    :filter string,
    :outputVersionFormat string,
@@ -186,6 +159,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/sinks/delete
+  
+  Required parameters: sinkName
+  
+  Optional parameters: none
+  
+  Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sinkName})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+sinkName}"
+     #{:sinkName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

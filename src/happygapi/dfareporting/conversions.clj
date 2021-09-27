@@ -15,11 +15,10 @@
   
   Body: 
   
-  {:kind string,
-   :encryptionInfo {:kind string,
-                    :encryptionEntityId string,
+  {:encryptionInfo {:encryptionEntityId string,
+                    :encryptionSource string,
                     :encryptionEntityType string,
-                    :encryptionSource string},
+                    :kind string},
    :conversions [{:encryptedUserId string,
                   :childDirectedTreatment boolean,
                   :treatmentForUnderage boolean,
@@ -37,7 +36,8 @@
                   :customVariables [CustomFloodlightVariable],
                   :quantity string,
                   :gclid string,
-                  :floodlightActivityId string}]}
+                  :floodlightActivityId string}],
+   :kind string}
   
   Inserts conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}
@@ -70,10 +70,6 @@
   Body: 
   
   {:kind string,
-   :encryptionInfo {:kind string,
-                    :encryptionEntityId string,
-                    :encryptionEntityType string,
-                    :encryptionSource string},
    :conversions [{:encryptedUserId string,
                   :childDirectedTreatment boolean,
                   :treatmentForUnderage boolean,
@@ -91,7 +87,11 @@
                   :customVariables [CustomFloodlightVariable],
                   :quantity string,
                   :gclid string,
-                  :floodlightActivityId string}]}
+                  :floodlightActivityId string}],
+   :encryptionInfo {:encryptionEntityId string,
+                    :encryptionSource string,
+                    :encryptionEntityType string,
+                    :kind string}}
   
   Updates existing conversions."
   {:scopes ["https://www.googleapis.com/auth/ddmconversions"]}

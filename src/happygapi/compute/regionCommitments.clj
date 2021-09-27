@@ -6,10 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: filter, maxResults, pageToken, returnPartialSuccess, orderBy
+  
+  Retrieves a list of commitments contained within the specified region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/commitments"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
@@ -22,6 +50,7 @@
    :statusMessage string,
    :endTimestamp string,
    :selfLink string,
+   :type string,
    :licenseResource {:amount string,
                      :license string,
                      :coresPerLicense string},
@@ -30,7 +59,7 @@
    :id string,
    :kind string,
    :startTimestamp string,
-   :resources [{:amount string, :type string, :acceleratorType string}],
+   :resources [{:acceleratorType string, :amount string, :type string}],
    :reservations [{:description string,
                    :creationTimestamp string,
                    :zone string,
@@ -67,10 +96,38 @@
       :as :json}
      auth))))
 
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: maxResults, orderBy, pageToken, filter, includeAllScopes, returnPartialSuccess
+  
+  Retrieves an aggregated list of commitments by region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/commitments"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/get
   
-  Required parameters: commitment, region, project
+  Required parameters: project, region, commitment
   
   Optional parameters: none
   
@@ -86,62 +143,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/commitments/{commitment}"
      #{:commitment :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/list
-  
-  Required parameters: region, project
-  
-  Optional parameters: orderBy, filter, pageToken, maxResults, returnPartialSuccess
-  
-  Retrieves a list of commitments contained within the specified region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/commitments"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionCommitments/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: maxResults, includeAllScopes, filter, pageToken, orderBy, returnPartialSuccess
-  
-  Retrieves an aggregated list of commitments."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/commitments"
-     #{:project}
      parameters)
     (merge-with
      merge

@@ -6,6 +6,262 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-autoscalingPolicies-setIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-create$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :basicAlgorithm {:cooldownPeriod string,
+                    :yarnConfig BasicYarnAutoscalingConfig},
+   :workerConfig {:maxInstances integer,
+                  :minInstances integer,
+                  :weight integer},
+   :secondaryWorkerConfig {:maxInstances integer,
+                           :minInstances integer,
+                           :weight integer},
+   :id string}
+  
+  Creates new autoscaling policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/autoscalingPolicies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-delete$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes an autoscaling policy. It is an error to delete an autoscaling policy that is in use by one or more clusters."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-get$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves autoscaling policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-update$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/update
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :basicAlgorithm {:cooldownPeriod string,
+                    :yarnConfig BasicYarnAutoscalingConfig},
+   :workerConfig {:maxInstances integer,
+                  :minInstances integer,
+                  :weight integer},
+   :secondaryWorkerConfig {:maxInstances integer,
+                           :minInstances integer,
+                           :weight integer},
+   :id string}
+  
+  Updates (replaces) autoscaling policy.Disabled check for update_mask, because all updates will be full replacements."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-getIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-list$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists autoscaling policies in the project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/autoscalingPolicies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-autoscalingPolicies-testIamPermissions$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-workflowTemplates-get$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/workflowTemplates/get
   
@@ -41,7 +297,7 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -124,12 +380,12 @@
    :id string,
    :dagTimeout string,
    :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
                  :validation ParameterValidation,
-                 :name string}]}
+                 :name string,
+                 :fields [string]}]}
   
   Instantiates a template and begins execution.This method is equivalent to executing the sequence CreateWorkflowTemplate, InstantiateWorkflowTemplate, DeleteWorkflowTemplate.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -180,12 +436,12 @@
    :id string,
    :dagTimeout string,
    :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
                  :validation ParameterValidation,
-                 :name string}]}
+                 :name string,
+                 :fields [string]}]}
   
   Creates new workflow template."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -236,12 +492,12 @@
    :id string,
    :dagTimeout string,
    :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
                  :validation ParameterValidation,
-                 :name string}]}
+                 :name string,
+                 :fields [string]}]}
   
   Updates (replaces) workflow template. The updated template must contain version that matches the current server version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -357,7 +613,7 @@
   
   Body: 
   
-  {:parameters {}, :requestId string, :version integer}
+  {:version integer, :requestId string, :parameters {}}
   
   Instantiates a template and begins execution.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -380,19 +636,19 @@
       :as :json}
      auth))))
 
-(defn locations-autoscalingPolicies-delete$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/delete
+(defn regions-workflowTemplates-get$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/get
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: version
   
-  Deletes an autoscaling policy. It is an error to delete an autoscaling policy that is in use by one or more clusters."
+  Retrieves the latest workflow template.Can retrieve previously instantiated template by specifying optional version parameter."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://dataproc.googleapis.com/"
      "v1/{+name}"
@@ -406,8 +662,8 @@
       :as :json}
      auth))))
 
-(defn locations-autoscalingPolicies-getIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/getIamPolicy
+(defn regions-workflowTemplates-setIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/setIamPolicy
   
   Required parameters: resource
   
@@ -415,121 +671,7 @@
   
   Body: 
   
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-autoscalingPolicies-create$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:basicAlgorithm {:cooldownPeriod string,
-                    :yarnConfig BasicYarnAutoscalingConfig},
-   :id string,
-   :secondaryWorkerConfig {:weight integer,
-                           :maxInstances integer,
-                           :minInstances integer},
-   :workerConfig {:weight integer,
-                  :maxInstances integer,
-                  :minInstances integer},
-   :name string}
-  
-  Creates new autoscaling policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/autoscalingPolicies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-autoscalingPolicies-update$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/update
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:basicAlgorithm {:cooldownPeriod string,
-                    :yarnConfig BasicYarnAutoscalingConfig},
-   :id string,
-   :secondaryWorkerConfig {:weight integer,
-                           :maxInstances integer,
-                           :minInstances integer},
-   :workerConfig {:weight integer,
-                  :maxInstances integer,
-                  :minInstances integer},
-   :name string}
-  
-  Updates (replaces) autoscaling policy.Disabled check for update_mask, because all updates will be full replacements."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-autoscalingPolicies-setIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -552,8 +694,8 @@
       :as :json}
      auth))))
 
-(defn locations-autoscalingPolicies-testIamPermissions$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/testIamPermissions
+(defn regions-workflowTemplates-testIamPermissions$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/testIamPermissions
   
   Required parameters: resource
   
@@ -584,45 +726,187 @@
       :as :json}
      auth))))
 
-(defn locations-autoscalingPolicies-list$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/list
+(defn regions-workflowTemplates-instantiateInline$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/instantiateInline
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: requestId
   
-  Lists autoscaling policies in the project."
+  Body: 
+  
+  {:labels {},
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :jobs [{:labels {},
+           :prerequisiteStepIds [string],
+           :sparkSqlJob SparkSqlJob,
+           :prestoJob PrestoJob,
+           :scheduling JobScheduling,
+           :pigJob PigJob,
+           :hiveJob HiveJob,
+           :sparkJob SparkJob,
+           :stepId string,
+           :pysparkJob PySparkJob,
+           :sparkRJob SparkRJob,
+           :hadoopJob HadoopJob}],
+   :id string,
+   :dagTimeout string,
+   :version integer,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
+                 :validation ParameterValidation,
+                 :name string,
+                 :fields [string]}]}
+  
+  Instantiates a template and begins execution.This method is equivalent to executing the sequence CreateWorkflowTemplate, InstantiateWorkflowTemplate, DeleteWorkflowTemplate.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://dataproc.googleapis.com/"
-     "v1/{+parent}/autoscalingPolicies"
+     "v1/{+parent}/workflowTemplates:instantiateInline"
      #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn locations-autoscalingPolicies-get$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/locations/autoscalingPolicies/get
+(defn regions-workflowTemplates-create$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labels {},
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :jobs [{:labels {},
+           :prerequisiteStepIds [string],
+           :sparkSqlJob SparkSqlJob,
+           :prestoJob PrestoJob,
+           :scheduling JobScheduling,
+           :pigJob PigJob,
+           :hiveJob HiveJob,
+           :sparkJob SparkJob,
+           :stepId string,
+           :pysparkJob PySparkJob,
+           :sparkRJob SparkRJob,
+           :hadoopJob HadoopJob}],
+   :id string,
+   :dagTimeout string,
+   :version integer,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
+                 :validation ParameterValidation,
+                 :name string,
+                 :fields [string]}]}
+  
+  Creates new workflow template."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/workflowTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-workflowTemplates-update$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/update
   
   Required parameters: name
   
   Optional parameters: none
   
-  Retrieves autoscaling policy."
+  Body: 
+  
+  {:labels {},
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :jobs [{:labels {},
+           :prerequisiteStepIds [string],
+           :sparkSqlJob SparkSqlJob,
+           :prestoJob PrestoJob,
+           :scheduling JobScheduling,
+           :pigJob PigJob,
+           :hiveJob HiveJob,
+           :sparkJob SparkJob,
+           :stepId string,
+           :pysparkJob PySparkJob,
+           :sparkRJob SparkRJob,
+           :hadoopJob HadoopJob}],
+   :id string,
+   :dagTimeout string,
+   :version integer,
+   :placement {:clusterSelector ClusterSelector,
+               :managedCluster ManagedCluster},
+   :parameters [{:description string,
+                 :validation ParameterValidation,
+                 :name string,
+                 :fields [string]}]}
+  
+  Updates (replaces) workflow template. The updated template must contain version that matches the current server version."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-workflowTemplates-delete$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/delete
+  
+  Required parameters: name
+  
+  Optional parameters: version
+  
+  Deletes a workflow template. It does not cancel in-progress workflows."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://dataproc.googleapis.com/"
      "v1/{+name}"
@@ -636,10 +920,100 @@
       :as :json}
      auth))))
 
+(defn regions-workflowTemplates-getIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-workflowTemplates-list$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists workflows that match the specified filter in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/workflowTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-workflowTemplates-instantiate$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/instantiate
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:version integer, :requestId string, :parameters {}}
+  
+  Instantiates a template and begins execution.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}:instantiate"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn regions-jobs-get$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/jobs/get
   
-  Required parameters: jobId, projectId, region
+  Required parameters: region, projectId, jobId
   
   Optional parameters: none
   
@@ -671,7 +1045,7 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -697,90 +1071,90 @@
 (defn regions-jobs-patch$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/jobs/patch
   
-  Required parameters: jobId, projectId, region
+  Required parameters: projectId, jobId, region
   
   Optional parameters: updateMask
   
   Body: 
   
   {:labels {},
-   :sparkSqlJob {:queryList QueryList,
-                 :queryFileUri string,
+   :sparkSqlJob {:jarFileUris [string],
                  :loggingConfig LoggingConfig,
-                 :jarFileUris [string],
+                 :scriptVariables {},
                  :properties {},
-                 :scriptVariables {}},
+                 :queryFileUri string,
+                 :queryList QueryList},
    :prestoJob {:properties {},
+               :queryFileUri string,
+               :outputFormat string,
                :loggingConfig LoggingConfig,
                :continueOnFailure boolean,
-               :outputFormat string,
-               :queryList QueryList,
                :clientTags [string],
-               :queryFileUri string},
+               :queryList QueryList},
    :scheduling {:maxFailuresPerHour integer, :maxFailuresTotal integer},
    :done boolean,
    :driverOutputResourceUri string,
-   :pigJob {:scriptVariables {},
-            :loggingConfig LoggingConfig,
-            :queryFileUri string,
-            :jarFileUris [string],
+   :pigJob {:jarFileUris [string],
             :continueOnFailure boolean,
             :properties {},
-            :queryList QueryList},
-   :yarnApplications [{:state string,
+            :queryList QueryList,
+            :queryFileUri string,
+            :scriptVariables {},
+            :loggingConfig LoggingConfig},
+   :yarnApplications [{:name string,
+                       :state string,
                        :progress number,
-                       :trackingUrl string,
-                       :name string}],
-   :hiveJob {:continueOnFailure boolean,
-             :queryList QueryList,
+                       :trackingUrl string}],
+   :hiveJob {:scriptVariables {},
              :queryFileUri string,
+             :queryList QueryList,
+             :properties {},
              :jarFileUris [string],
-             :scriptVariables {},
-             :properties {}},
-   :sparkJob {:loggingConfig LoggingConfig,
-              :fileUris [string],
-              :jarFileUris [string],
+             :continueOnFailure boolean},
+   :sparkJob {:archiveUris [string],
               :mainClass string,
-              :archiveUris [string],
+              :jarFileUris [string],
+              :args [string],
+              :loggingConfig LoggingConfig,
+              :fileUris [string],
               :mainJarFileUri string,
-              :properties {},
-              :args [string]},
+              :properties {}},
    :reference {:jobId string, :projectId string},
-   :status {:substate string,
-            :details string,
+   :status {:stateStartTime string,
+            :substate string,
             :state string,
-            :stateStartTime string},
-   :pysparkJob {:loggingConfig LoggingConfig,
+            :details string},
+   :pysparkJob {:properties {},
+                :loggingConfig LoggingConfig,
                 :pythonFileUris [string],
-                :properties {},
                 :mainPythonFileUri string,
-                :jarFileUris [string],
                 :args [string],
                 :fileUris [string],
+                :jarFileUris [string],
                 :archiveUris [string]},
-   :sparkRJob {:loggingConfig LoggingConfig,
+   :sparkRJob {:archiveUris [string],
                :fileUris [string],
-               :mainRFileUri string,
                :args [string],
+               :loggingConfig LoggingConfig,
                :properties {},
-               :archiveUris [string]},
+               :mainRFileUri string},
    :jobUuid string,
    :placement {:clusterName string,
                :clusterLabels {},
                :clusterUuid string},
-   :hadoopJob {:archiveUris [string],
-               :loggingConfig LoggingConfig,
-               :args [string],
-               :mainClass string,
+   :hadoopJob {:properties {},
                :jarFileUris [string],
-               :properties {},
                :fileUris [string],
+               :args [string],
+               :loggingConfig LoggingConfig,
+               :mainClass string,
+               :archiveUris [string],
                :mainJarFileUri string},
    :driverControlFilesUri string,
-   :statusHistory [{:substate string,
-                    :details string,
+   :statusHistory [{:stateStartTime string,
+                    :substate string,
                     :state string,
-                    :stateStartTime string}]}
+                    :details string}]}
   
   Updates a job in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -838,7 +1212,7 @@
 (defn regions-jobs-submit$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/jobs/submit
   
-  Required parameters: region, projectId
+  Required parameters: projectId, region
   
   Optional parameters: none
   
@@ -949,7 +1323,7 @@
   
   Required parameters: projectId, region
   
-  Optional parameters: jobStateMatcher, clusterName, pageToken, pageSize, filter
+  Optional parameters: jobStateMatcher, filter, clusterName, pageToken, pageSize
   
   Lists regions/{region}/jobs in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1024,7 +1398,7 @@
 (defn regions-jobs-cancel$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/jobs/cancel
   
-  Required parameters: jobId, projectId, region
+  Required parameters: projectId, region, jobId
   
   Optional parameters: none
   
@@ -1111,6 +1485,84 @@
       :as :json}
      auth))))
 
+(defn regions-operations-cancel$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-operations-get$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-operations-list$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.NOTE: the name binding allows API services to override the binding to use different resource name schemes, such as users/*/operations. To override the binding, API services can add a binding such as \"/v1/{name=users/*}/operations\" to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn regions-operations-setIamPolicy$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/setIamPolicy
   
@@ -1120,7 +1572,7 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1175,14 +1627,55 @@
       :as :json}
      auth))))
 
-(defn regions-operations-list$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/list
+(defn regions-autoscalingPolicies-create$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :basicAlgorithm {:cooldownPeriod string,
+                    :yarnConfig BasicYarnAutoscalingConfig},
+   :workerConfig {:maxInstances integer,
+                  :minInstances integer,
+                  :weight integer},
+   :secondaryWorkerConfig {:maxInstances integer,
+                           :minInstances integer,
+                           :weight integer},
+   :id string}
+  
+  Creates new autoscaling policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/autoscalingPolicies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-autoscalingPolicies-get$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/get
   
   Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.NOTE: the name binding allows API services to override the binding to use different resource name schemes, such as users/*/operations. To override the binding, API services can add a binding such as \"/v1/{name=users/*}/operations\" to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Retrieves autoscaling policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1201,23 +1694,160 @@
       :as :json}
      auth))))
 
-(defn regions-operations-cancel$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/cancel
+(defn regions-autoscalingPolicies-setIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-autoscalingPolicies-getIamPolicy$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-autoscalingPolicies-update$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/update
   
   Required parameters: name
   
   Optional parameters: none
   
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED."
+  Body: 
+  
+  {:name string,
+   :basicAlgorithm {:cooldownPeriod string,
+                    :yarnConfig BasicYarnAutoscalingConfig},
+   :workerConfig {:maxInstances integer,
+                  :minInstances integer,
+                  :weight integer},
+   :secondaryWorkerConfig {:maxInstances integer,
+                           :minInstances integer,
+                           :weight integer},
+   :id string}
+  
+  Updates (replaces) autoscaling policy.Disabled check for update_mask, because all updates will be full replacements."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-autoscalingPolicies-testIamPermissions$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dataproc.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn regions-autoscalingPolicies-list$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists autoscaling policies in the project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/{+parent}/autoscalingPolicies"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1227,19 +1857,19 @@
       :as :json}
      auth))))
 
-(defn regions-operations-get$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/operations/get
+(defn regions-autoscalingPolicies-delete$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Deletes an autoscaling policy. It is an error to delete an autoscaling policy that is in use by one or more clusters."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://dataproc.googleapis.com/"
      "v1/{+name}"
@@ -1256,7 +1886,7 @@
 (defn regions-clusters-get$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/get
   
-  Required parameters: clusterName, region, projectId
+  Required parameters: projectId, region, clusterName
   
   Optional parameters: none
   
@@ -1290,7 +1920,7 @@
   
   Body: 
   
-  {:policy {:version integer, :bindings [Binding], :etag string}}
+  {:policy {:version integer, :etag string, :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1316,18 +1946,14 @@
 (defn regions-clusters-patch$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/patch
   
-  Required parameters: projectId, region, clusterName
+  Required parameters: projectId, clusterName, region
   
   Optional parameters: gracefulDecommissionTimeout, requestId, updateMask
   
   Body: 
   
-  {:statusHistory [{:stateStartTime string,
-                    :state string,
-                    :substate string,
-                    :detail string}],
-   :metrics {:hdfsMetrics {}, :yarnMetrics {}},
-   :clusterName string,
+  {:clusterName string,
+   :projectId string,
    :clusterUuid string,
    :config {:configBucket string,
             :gceClusterConfig GceClusterConfig,
@@ -1344,14 +1970,18 @@
             :encryptionConfig EncryptionConfig,
             :gkeClusterConfig GkeClusterConfig,
             :autoscalingConfig AutoscalingConfig},
-   :status {:stateStartTime string,
+   :statusHistory [{:detail string,
+                    :state string,
+                    :stateStartTime string,
+                    :substate string}],
+   :labels {},
+   :metrics {:hdfsMetrics {}, :yarnMetrics {}},
+   :status {:detail string,
             :state string,
-            :substate string,
-            :detail string},
-   :projectId string,
-   :labels {}}
+            :stateStartTime string,
+            :substate string}}
   
-  Updates a cluster in a project. The returned Operation.metadata will be ClusterOperationMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#clusteroperationmetadata)."
+  Updates a cluster in a project. The returned Operation.metadata will be ClusterOperationMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#clusteroperationmetadata). The cluster must be in a RUNNING state or an error is returned."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys?
@@ -1409,13 +2039,13 @@
 (defn regions-clusters-injectCredentials$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/injectCredentials
   
-  Required parameters: project, region, cluster
+  Required parameters: region, project, cluster
   
   Optional parameters: none
   
   Body: 
   
-  {:credentialsCiphertext string, :clusterUuid string}
+  {:clusterUuid string, :credentialsCiphertext string}
   
   Inject encrypted credentials into all of the VMs in a cluster.The target cluster must be a personal auth cluster assigned to the user who is issuing the RPC."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1443,16 +2073,12 @@
   
   Required parameters: region, projectId
   
-  Optional parameters: requestId
+  Optional parameters: requestId, actionOnFailedPrimaryWorkers
   
   Body: 
   
-  {:statusHistory [{:stateStartTime string,
-                    :state string,
-                    :substate string,
-                    :detail string}],
-   :metrics {:hdfsMetrics {}, :yarnMetrics {}},
-   :clusterName string,
+  {:clusterName string,
+   :projectId string,
    :clusterUuid string,
    :config {:configBucket string,
             :gceClusterConfig GceClusterConfig,
@@ -1469,12 +2095,16 @@
             :encryptionConfig EncryptionConfig,
             :gkeClusterConfig GkeClusterConfig,
             :autoscalingConfig AutoscalingConfig},
-   :status {:stateStartTime string,
+   :statusHistory [{:detail string,
+                    :state string,
+                    :stateStartTime string,
+                    :substate string}],
+   :labels {},
+   :metrics {:hdfsMetrics {}, :yarnMetrics {}},
+   :status {:detail string,
             :state string,
-            :substate string,
-            :detail string},
-   :projectId string,
-   :labels {}}
+            :stateStartTime string,
+            :substate string}}
   
   Creates a cluster in a project. The returned Operation.metadata will be ClusterOperationMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#clusteroperationmetadata)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1500,7 +2130,7 @@
 (defn regions-clusters-start$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/start
   
-  Required parameters: clusterName, projectId, region
+  Required parameters: projectId, region, clusterName
   
   Optional parameters: none
   
@@ -1531,12 +2161,46 @@
       :as :json}
      auth))))
 
+(defn regions-clusters-repair$
+  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/repair
+  
+  Required parameters: region, projectId, clusterName
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:clusterUuid string, :requestId string}
+  
+  Repairs a cluster."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:clusterName :region :projectId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataproc.googleapis.com/"
+     "v1/projects/{projectId}/regions/{region}/clusters/{clusterName}:repair"
+     #{:clusterName :region :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn regions-clusters-delete$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/delete
   
-  Required parameters: projectId, clusterName, region
+  Required parameters: clusterName, projectId, region
   
-  Optional parameters: requestId, clusterUuid
+  Optional parameters: clusterUuid, requestId
   
   Deletes a cluster in a project. The returned Operation.metadata will be ClusterOperationMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#clusteroperationmetadata)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1562,7 +2226,7 @@
 (defn regions-clusters-diagnose$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/diagnose
   
-  Required parameters: region, clusterName, projectId
+  Required parameters: clusterName, projectId, region
   
   Optional parameters: none
   
@@ -1628,13 +2292,13 @@
 (defn regions-clusters-stop$
   "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/clusters/stop
   
-  Required parameters: clusterName, region, projectId
+  Required parameters: projectId, region, clusterName
   
   Optional parameters: none
   
   Body: 
   
-  {:clusterUuid string, :requestId string}
+  {:requestId string, :clusterUuid string}
   
   Stops a cluster in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1664,7 +2328,7 @@
   
   Required parameters: region, projectId
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageToken, filter, pageSize
   
   Lists all regions/{region}/clusters in a project alphabetically."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1680,636 +2344,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-list$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists autoscaling policies in the project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/autoscalingPolicies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-update$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/update
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:basicAlgorithm {:cooldownPeriod string,
-                    :yarnConfig BasicYarnAutoscalingConfig},
-   :id string,
-   :secondaryWorkerConfig {:weight integer,
-                           :maxInstances integer,
-                           :minInstances integer},
-   :workerConfig {:weight integer,
-                  :maxInstances integer,
-                  :minInstances integer},
-   :name string}
-  
-  Updates (replaces) autoscaling policy.Disabled check for update_mask, because all updates will be full replacements."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-delete$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes an autoscaling policy. It is an error to delete an autoscaling policy that is in use by one or more clusters."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-setIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer, :bindings [Binding], :etag string}}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-testIamPermissions$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-getIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-create$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:basicAlgorithm {:cooldownPeriod string,
-                    :yarnConfig BasicYarnAutoscalingConfig},
-   :id string,
-   :secondaryWorkerConfig {:weight integer,
-                           :maxInstances integer,
-                           :minInstances integer},
-   :workerConfig {:weight integer,
-                  :maxInstances integer,
-                  :minInstances integer},
-   :name string}
-  
-  Creates new autoscaling policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/autoscalingPolicies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-autoscalingPolicies-get$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/autoscalingPolicies/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves autoscaling policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-get$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/get
-  
-  Required parameters: name
-  
-  Optional parameters: version
-  
-  Retrieves the latest workflow template.Can retrieve previously instantiated template by specifying optional version parameter."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-setIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer, :bindings [Binding], :etag string}}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-testIamPermissions$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-instantiateInline$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/instantiateInline
-  
-  Required parameters: parent
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:labels {},
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :jobs [{:labels {},
-           :prerequisiteStepIds [string],
-           :sparkSqlJob SparkSqlJob,
-           :prestoJob PrestoJob,
-           :scheduling JobScheduling,
-           :pigJob PigJob,
-           :hiveJob HiveJob,
-           :sparkJob SparkJob,
-           :stepId string,
-           :pysparkJob PySparkJob,
-           :sparkRJob SparkRJob,
-           :hadoopJob HadoopJob}],
-   :id string,
-   :dagTimeout string,
-   :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
-                 :validation ParameterValidation,
-                 :name string}]}
-  
-  Instantiates a template and begins execution.This method is equivalent to executing the sequence CreateWorkflowTemplate, InstantiateWorkflowTemplate, DeleteWorkflowTemplate.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/workflowTemplates:instantiateInline"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-create$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labels {},
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :jobs [{:labels {},
-           :prerequisiteStepIds [string],
-           :sparkSqlJob SparkSqlJob,
-           :prestoJob PrestoJob,
-           :scheduling JobScheduling,
-           :pigJob PigJob,
-           :hiveJob HiveJob,
-           :sparkJob SparkJob,
-           :stepId string,
-           :pysparkJob PySparkJob,
-           :sparkRJob SparkRJob,
-           :hadoopJob HadoopJob}],
-   :id string,
-   :dagTimeout string,
-   :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
-                 :validation ParameterValidation,
-                 :name string}]}
-  
-  Creates new workflow template."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/workflowTemplates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-update$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/update
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labels {},
-   :name string,
-   :createTime string,
-   :updateTime string,
-   :jobs [{:labels {},
-           :prerequisiteStepIds [string],
-           :sparkSqlJob SparkSqlJob,
-           :prestoJob PrestoJob,
-           :scheduling JobScheduling,
-           :pigJob PigJob,
-           :hiveJob HiveJob,
-           :sparkJob SparkJob,
-           :stepId string,
-           :pysparkJob PySparkJob,
-           :sparkRJob SparkRJob,
-           :hadoopJob HadoopJob}],
-   :id string,
-   :dagTimeout string,
-   :version integer,
-   :placement {:managedCluster ManagedCluster,
-               :clusterSelector ClusterSelector},
-   :parameters [{:fields [string],
-                 :description string,
-                 :validation ParameterValidation,
-                 :name string}]}
-  
-  Updates (replaces) workflow template. The updated template must contain version that matches the current server version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-delete$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/delete
-  
-  Required parameters: name
-  
-  Optional parameters: version
-  
-  Deletes a workflow template. It does not cancel in-progress workflows."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-getIamPolicy$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-list$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists workflows that match the specified filter in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+parent}/workflowTemplates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn regions-workflowTemplates-instantiate$
-  "https://cloud.google.com/dataproc/api/reference/rest/v1/projects/regions/workflowTemplates/instantiate
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:parameters {}, :requestId string, :version integer}
-  
-  Instantiates a template and begins execution.The returned Operation can be used to track execution of workflow by polling operations.get. The Operation will complete when entire workflow is finished.The running workflow can be aborted via operations.cancel. This will cause any inflight jobs to be cancelled and workflow-owned clusters to be deleted.The Operation.metadata will be WorkflowMetadata (https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#workflowmetadata). Also see Using WorkflowMetadata (https://cloud.google.com/dataproc/docs/concepts/workflows/debugging#using_workflowmetadata).On successful completion, Operation.response will be Empty."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dataproc.googleapis.com/"
-     "v1/{+name}:instantiate"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

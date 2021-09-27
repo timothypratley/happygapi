@@ -11,7 +11,7 @@
   
   Required parameters: applicationId
   
-  Optional parameters: maxResults, pageToken
+  Optional parameters: pageToken, maxResults
   
   Get the list of players hidden from the given application. This method is only available to user accounts for your developer console."
   {:scopes ["https://www.googleapis.com/auth/games"]}

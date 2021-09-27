@@ -9,9 +9,9 @@
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZoneOperations/list
   
-  Required parameters: managedZone, project
+  Required parameters: project, managedZone
   
-  Optional parameters: sortBy, pageToken, maxResults
+  Optional parameters: maxResults, sortBy, pageToken
   
   Enumerates Operations for the given ManagedZone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -38,7 +38,7 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/managedZoneOperations/get
   
-  Required parameters: operation, managedZone, project
+  Required parameters: managedZone, operation, project
   
   Optional parameters: clientOperationId
   

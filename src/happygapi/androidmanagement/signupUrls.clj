@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: projectId, callbackUrl
+  Optional parameters: callbackUrl, projectId
   
   Creates an enterprise signup URL."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}

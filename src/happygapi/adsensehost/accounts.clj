@@ -58,77 +58,23 @@
       :as :json}
      auth))))
 
-(defn adclients-get$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adclients/get
+(defn reports-generate$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/reports/generate
   
-  Required parameters: accountId, adClientId
+  Required parameters: startDate, endDate, accountId
   
-  Optional parameters: none
+  Optional parameters: locale, filter, dimension, startIndex, metric, sort, maxResults
   
-  Get information about one of the ad clients in the specified publisher's AdSense account."
+  Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
+  {:pre [(util/has-keys? parameters #{:startDate :endDate :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}"
-     #{:adClientId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn adclients-list$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adclients/list
-  
-  Required parameters: accountId
-  
-  Optional parameters: maxResults, pageToken
-  
-  List all hosted ad clients in the specified hosted account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients"
-     #{:accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn adunits-getAdCode$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/getAdCode
-  
-  Required parameters: accountId, adUnitId, adClientId
-  
-  Optional parameters: hostCustomChannelId
-  
-  Get ad code for the specified ad unit, attaching the specified host custom channels."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:adUnitId :adClientId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/adcode"
-     #{:adUnitId :adClientId :accountId}
+     "accounts/{accountId}/reports"
+     #{:startDate :endDate :accountId}
      parameters)
     (merge-with
      merge
@@ -147,28 +93,28 @@
   
   Body: 
   
-  {:status string,
-   :name string,
-   :kind string,
-   :customStyle {:corners string,
-                 :kind string,
-                 :colors {:border string,
-                          :text string,
-                          :title string,
-                          :url string,
-                          :background string},
-                 :font {:family string, :size string}},
-   :mobileContentAdsSettings {:markupLanguage string,
-                              :type string,
-                              :scriptingLanguage string,
-                              :size string},
+  {:kind string,
+   :status string,
    :code string,
-   :contentAdsSettings {:backupOption {:url string,
-                                       :type string,
-                                       :color string},
-                        :size string,
-                        :type string},
-   :id string}
+   :id string,
+   :name string,
+   :contentAdsSettings {:size string,
+                        :type string,
+                        :backupOption {:color string,
+                                       :url string,
+                                       :type string}},
+   :mobileContentAdsSettings {:scriptingLanguage string,
+                              :markupLanguage string,
+                              :type string,
+                              :size string},
+   :customStyle {:kind string,
+                 :colors {:text string,
+                          :url string,
+                          :background string,
+                          :title string,
+                          :border string},
+                 :font {:size string, :family string},
+                 :corners string}}
   
   Update the supplied ad unit in the specified publisher AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
@@ -191,172 +137,10 @@
       :as :json}
      auth))))
 
-(defn adunits-list$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/list
-  
-  Required parameters: accountId, adClientId
-  
-  Optional parameters: includeInactive, pageToken, maxResults
-  
-  List all ad units in the specified publisher's AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}/adunits"
-     #{:adClientId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn adunits-patch$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/patch
-  
-  Required parameters: adUnitId, accountId, adClientId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:status string,
-   :name string,
-   :kind string,
-   :customStyle {:corners string,
-                 :kind string,
-                 :colors {:border string,
-                          :text string,
-                          :title string,
-                          :url string,
-                          :background string},
-                 :font {:family string, :size string}},
-   :mobileContentAdsSettings {:markupLanguage string,
-                              :type string,
-                              :scriptingLanguage string,
-                              :size string},
-   :code string,
-   :contentAdsSettings {:backupOption {:url string,
-                                       :type string,
-                                       :color string},
-                        :size string,
-                        :type string},
-   :id string}
-  
-  Update the supplied ad unit in the specified publisher AdSense account. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:adUnitId :adClientId :accountId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}/adunits"
-     #{:adUnitId :adClientId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn adunits-get$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/get
-  
-  Required parameters: accountId, adClientId, adUnitId
-  
-  Optional parameters: none
-  
-  Get the specified host ad unit in this AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:adUnitId :adClientId :accountId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}"
-     #{:adUnitId :adClientId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn adunits-insert$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/insert
-  
-  Required parameters: accountId, adClientId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:status string,
-   :name string,
-   :kind string,
-   :customStyle {:corners string,
-                 :kind string,
-                 :colors {:border string,
-                          :text string,
-                          :title string,
-                          :url string,
-                          :background string},
-                 :font {:family string, :size string}},
-   :mobileContentAdsSettings {:markupLanguage string,
-                              :type string,
-                              :scriptingLanguage string,
-                              :size string},
-   :code string,
-   :contentAdsSettings {:backupOption {:url string,
-                                       :type string,
-                                       :color string},
-                        :size string,
-                        :type string},
-   :id string}
-  
-  Insert the supplied ad unit into the specified publisher AdSense account."
-  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/adclients/{adClientId}/adunits"
-     #{:adClientId :accountId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn adunits-delete$
   "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/delete
   
-  Required parameters: accountId, adClientId, adUnitId
+  Required parameters: adUnitId, adClientId, accountId
   
   Optional parameters: none
   
@@ -381,23 +165,239 @@
       :as :json}
      auth))))
 
-(defn reports-generate$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/reports/generate
+(defn adunits-insert$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/insert
   
-  Required parameters: startDate, endDate, accountId
+  Required parameters: accountId, adClientId
   
-  Optional parameters: locale, filter, dimension, startIndex, metric, sort, maxResults
+  Optional parameters: none
   
-  Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter."
+  Body: 
+  
+  {:kind string,
+   :status string,
+   :code string,
+   :id string,
+   :name string,
+   :contentAdsSettings {:size string,
+                        :type string,
+                        :backupOption {:color string,
+                                       :url string,
+                                       :type string}},
+   :mobileContentAdsSettings {:scriptingLanguage string,
+                              :markupLanguage string,
+                              :type string,
+                              :size string},
+   :customStyle {:kind string,
+                 :colors {:text string,
+                          :url string,
+                          :background string,
+                          :title string,
+                          :border string},
+                 :font {:size string, :family string},
+                 :corners string}}
+  
+  Insert the supplied ad unit into the specified publisher AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients/{adClientId}/adunits"
+     #{:adClientId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adunits-patch$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/patch
+  
+  Required parameters: adClientId, adUnitId, accountId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :status string,
+   :code string,
+   :id string,
+   :name string,
+   :contentAdsSettings {:size string,
+                        :type string,
+                        :backupOption {:color string,
+                                       :url string,
+                                       :type string}},
+   :mobileContentAdsSettings {:scriptingLanguage string,
+                              :markupLanguage string,
+                              :type string,
+                              :size string},
+   :customStyle {:kind string,
+                 :colors {:text string,
+                          :url string,
+                          :background string,
+                          :title string,
+                          :border string},
+                 :font {:size string, :family string},
+                 :corners string}}
+  
+  Update the supplied ad unit in the specified publisher AdSense account. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:adUnitId :adClientId :accountId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients/{adClientId}/adunits"
+     #{:adUnitId :adClientId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adunits-getAdCode$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/getAdCode
+  
+  Required parameters: accountId, adClientId, adUnitId
+  
+  Optional parameters: hostCustomChannelId
+  
+  Get ad code for the specified ad unit, attaching the specified host custom channels."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:startDate :endDate :accountId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:adUnitId :adClientId :accountId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
-     "accounts/{accountId}/reports"
-     #{:startDate :endDate :accountId}
+     "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/adcode"
+     #{:adUnitId :adClientId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adunits-get$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/get
+  
+  Required parameters: adUnitId, adClientId, accountId
+  
+  Optional parameters: none
+  
+  Get the specified host ad unit in this AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:adUnitId :adClientId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}"
+     #{:adUnitId :adClientId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adunits-list$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adunits/list
+  
+  Required parameters: accountId, adClientId
+  
+  Optional parameters: includeInactive, maxResults, pageToken
+  
+  List all ad units in the specified publisher's AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients/{adClientId}/adunits"
+     #{:adClientId :accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adclients-list$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adclients/list
+  
+  Required parameters: accountId
+  
+  Optional parameters: pageToken, maxResults
+  
+  List all hosted ad clients in the specified hosted account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients"
+     #{:accountId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn adclients-get$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/accounts/adclients/get
+  
+  Required parameters: adClientId, accountId
+  
+  Optional parameters: none
+  
+  Get information about one of the ad clients in the specified publisher's AdSense account."
+  {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:adClientId :accountId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/adsensehost/v4.1/"
+     "accounts/{accountId}/adclients/{adClientId}"
+     #{:adClientId :accountId}
      parameters)
     (merge-with
      merge

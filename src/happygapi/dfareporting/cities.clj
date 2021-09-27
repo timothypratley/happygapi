@@ -11,7 +11,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: namePrefix, countryDartIds, dartIds, regionDartIds
+  Optional parameters: dartIds, regionDartIds, countryDartIds, namePrefix
   
   Retrieves a list of cities, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}

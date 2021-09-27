@@ -6,20 +6,28 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getDataSharingSettings$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/getDataSharingSettings
+(defn patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/patch
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
-  Get data sharing settings on an account. Data sharing settings are singletons."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
+  Body: 
+  
+  {:deleted boolean,
+   :name string,
+   :createTime string,
+   :updateTime string,
+   :displayName string,
+   :regionCode string}
+  
+  Updates an account."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
      "v1alpha/{+name}"
@@ -27,73 +35,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn searchChangeHistoryEvents$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/searchChangeHistoryEvents
-  
-  Required parameters: account
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:action [string],
-   :earliestChangeTime string,
-   :actorEmail [string],
-   :pageSize integer,
-   :pageToken string,
-   :resourceType [string],
-   :property string,
-   :latestChangeTime string}
-  
-  Searches through all changes to an account or its children given the specified set of filters."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:account})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1alpha/{+account}:searchChangeHistoryEvents"
-     #{:account}
-     parameters)
-    (merge-with
-     merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageSize, showDeleted, pageToken
-  
-  Returns all accounts accessible by the caller. Note that these accounts might not currently have GA4 properties. Soft-deleted (ie: \"trashed\") accounts are excluded by default. Returns an empty list if no relevant accounts are found."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1alpha/accounts"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -125,6 +69,87 @@
       :as :json}
      auth))))
 
+(defn get$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Lookup for a single Account."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1alpha/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/list
+  
+  Required parameters: none
+  
+  Optional parameters: showDeleted, pageSize, pageToken
+  
+  Returns all accounts accessible by the caller. Note that these accounts might not currently have GA4 properties. Soft-deleted (ie: \"trashed\") accounts are excluded by default. Returns an empty list if no relevant accounts are found."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1alpha/accounts"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getDataSharingSettings$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/getDataSharingSettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get data sharing settings on an account. Data sharing settings are singletons."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1alpha/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn provisionAccountTicket$
   "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/provisionAccountTicket
   
@@ -134,12 +159,12 @@
   
   Body: 
   
-  {:account {:createTime string,
-             :regionCode string,
-             :deleted boolean,
-             :updateTime string,
+  {:account {:deleted boolean,
              :name string,
-             :displayName string},
+             :createTime string,
+             :updateTime string,
+             :displayName string,
+             :regionCode string},
    :redirectUri string}
   
   Requests a ticket for creating an account."
@@ -163,65 +188,40 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/patch
+(defn searchChangeHistoryEvents$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/searchChangeHistoryEvents
   
-  Required parameters: name
+  Required parameters: account
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
   Body: 
   
-  {:createTime string,
-   :regionCode string,
-   :deleted boolean,
-   :updateTime string,
-   :name string,
-   :displayName string}
+  {:action [string],
+   :property string,
+   :latestChangeTime string,
+   :pageSize integer,
+   :pageToken string,
+   :earliestChangeTime string,
+   :actorEmail [string],
+   :resourceType [string]}
   
-  Updates an account."
+  Searches through all changes to an account or its children given the specified set of filters."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:account})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1alpha/{+name}"
-     #{:name}
+     "v1alpha/{+account}:searchChangeHistoryEvents"
+     #{:account}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1alpha/accounts/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Lookup for a single Account."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1alpha/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -263,7 +263,7 @@
   
   Body: 
   
-  {:emailAddress string, :directRoles [string], :name string}
+  {:directRoles [string], :emailAddress string, :name string}
   
   Updates a user link on an account or property."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -327,7 +327,7 @@
   
   Body: 
   
-  {:emailAddress string, :directRoles [string], :name string}
+  {:directRoles [string], :emailAddress string, :name string}
   
   Creates a user link on an account or property. If the user with the specified email already has permissions on the account or property, then the user's existing permissions will be unioned with the permissions specified in the new UserLink."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -387,9 +387,9 @@
   Body: 
   
   {:notifyNewUsers boolean,
-   :requests [{:userLink GoogleAnalyticsAdminV1alphaUserLink,
-               :parent string,
-               :notifyNewUser boolean}]}
+   :requests [{:notifyNewUser boolean,
+               :userLink GoogleAnalyticsAdminV1alphaUserLink,
+               :parent string}]}
   
   Creates information about multiple users' links to an account or property. This method is transactional. If any UserLink cannot be created, none of the UserLinks will be created."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"]}
@@ -506,7 +506,7 @@
   
   Body: 
   
-  {:pageToken string, :pageSize integer}
+  {:pageSize integer, :pageToken string}
   
   Lists all user links on an account or property, including implicit ones that come from effective permissions granted by groups or organization admin roles. If a returned user link does not have direct permissions, they cannot be removed from the account or property directly with the DeleteUserLink command. They have to be removed from the group/etc that gives them permissions, which is currently only usable/discoverable in the GA or GMP UIs."
   {:scopes ["https://www.googleapis.com/auth/analytics.manage.users"

@@ -6,6 +6,48 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn patch$
+  "https://developers.google.com/display-video/api/reference/rest/v1/floodlightGroups/patch
+  
+  Required parameters: floodlightGroupId
+  
+  Optional parameters: updateMask, partnerId
+  
+  Body: 
+  
+  {:name string,
+   :webTagType string,
+   :activeViewConfig {:minimumQuartile string,
+                      :displayName string,
+                      :minimumDuration string,
+                      :minimumViewability string,
+                      :minimumVolume string},
+   :customVariables {},
+   :displayName string,
+   :lookbackWindow {:clickDays integer, :impressionDays integer},
+   :floodlightGroupId string}
+  
+  Updates an existing Floodlight group. Returns the updated Floodlight group if successful."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:floodlightGroupId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/floodlightGroups/{floodlightGroupId}"
+     #{:floodlightGroupId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/display-video/api/reference/rest/v1/floodlightGroups/get
   
@@ -27,48 +69,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/display-video/api/reference/rest/v1/floodlightGroups/patch
-  
-  Required parameters: floodlightGroupId
-  
-  Optional parameters: updateMask, partnerId
-  
-  Body: 
-  
-  {:floodlightGroupId string,
-   :lookbackWindow {:impressionDays integer, :clickDays integer},
-   :activeViewConfig {:minimumVolume string,
-                      :minimumViewability string,
-                      :displayName string,
-                      :minimumDuration string,
-                      :minimumQuartile string},
-   :displayName string,
-   :webTagType string,
-   :customVariables {},
-   :name string}
-  
-  Updates an existing Floodlight group. Returns the updated Floodlight group if successful."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:floodlightGroupId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/floodlightGroups/{floodlightGroupId}"
-     #{:floodlightGroupId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

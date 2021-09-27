@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/operations/get
   
-  Required parameters: operation, project
+  Required parameters: project, operation
   
   Optional parameters: none
   
@@ -40,7 +40,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, orderBy, pageToken
+  Optional parameters: filter, orderBy, maxResults, pageToken
   
   Lists all operations for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

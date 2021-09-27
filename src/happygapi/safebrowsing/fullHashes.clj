@@ -15,13 +15,13 @@
   
   Body: 
   
-  {:threatInfo {:platformTypes [string],
-                :threatEntryTypes [string],
-                :threatEntries [GoogleSecuritySafebrowsingV4ThreatEntry],
-                :threatTypes [string]},
-   :client {:clientId string, :clientVersion string},
-   :clientStates [string],
-   :apiClient {:clientId string, :clientVersion string}}
+  {:threatInfo {:threatEntries [GoogleSecuritySafebrowsingV4ThreatEntry],
+                :threatTypes [string],
+                :platformTypes [string],
+                :threatEntryTypes [string]},
+   :apiClient {:clientVersion string, :clientId string},
+   :client {:clientVersion string, :clientId string},
+   :clientStates [string]}
   
   Finds the full hashes that match the requested hash prefixes."
   {:scopes nil}

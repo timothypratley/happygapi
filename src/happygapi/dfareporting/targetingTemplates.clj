@@ -6,71 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/update
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:dayPartTargeting {:daysOfWeek [string],
-                      :userLocalTime boolean,
-                      :hoursOfDay [integer]},
-   :languageTargeting {:languages [Language]},
-   :geoTargeting {:metros [Metro],
-                  :countries [Country],
-                  :regions [Region],
-                  :excludeCountries boolean,
-                  :cities [City],
-                  :postalCodes [PostalCode]},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
-                                :matchType string,
-                                :id string,
-                                :etag string},
-   :name string,
-   :advertiserId string,
-   :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:connectionTypes [ConnectionType],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType],
-                         :mobileCarriers [MobileCarrier],
-                         :browsers [Browser],
-                         :operatingSystemVersions [OperatingSystemVersion]},
-   :id string,
-   :kind string,
-   :listTargetingExpression {:expression string},
-   :subaccountId string,
-   :accountId string}
-  
-  Updates an existing targeting template."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/targetingTemplates"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -102,31 +41,31 @@
   
   Body: 
   
-  {:dayPartTargeting {:daysOfWeek [string],
-                      :userLocalTime boolean,
-                      :hoursOfDay [integer]},
+  {:dayPartTargeting {:userLocalTime boolean,
+                      :hoursOfDay [integer],
+                      :daysOfWeek [string]},
    :languageTargeting {:languages [Language]},
-   :geoTargeting {:metros [Metro],
-                  :countries [Country],
+   :geoTargeting {:countries [Country],
+                  :metros [Metro],
                   :regions [Region],
-                  :excludeCountries boolean,
+                  :postalCodes [PostalCode],
                   :cities [City],
-                  :postalCodes [PostalCode]},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+                  :excludeCountries boolean},
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :advertiserId string,
    :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:connectionTypes [ConnectionType],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType],
+   :technologyTargeting {:operatingSystems [OperatingSystem],
                          :mobileCarriers [MobileCarrier],
+                         :platformTypes [PlatformType],
                          :browsers [Browser],
-                         :operatingSystemVersions [OperatingSystemVersion]},
+                         :operatingSystemVersions [OperatingSystemVersion],
+                         :connectionTypes [ConnectionType]},
    :id string,
    :kind string,
    :listTargetingExpression {:expression string},
@@ -154,66 +93,40 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/list
-  
-  Required parameters: profileId
-  
-  Optional parameters: sortOrder, pageToken, ids, advertiserId, sortField, maxResults, searchString
-  
-  Retrieves a list of targeting templates, optionally filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/targetingTemplates"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/patch
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
   Body: 
   
-  {:dayPartTargeting {:daysOfWeek [string],
-                      :userLocalTime boolean,
-                      :hoursOfDay [integer]},
+  {:dayPartTargeting {:userLocalTime boolean,
+                      :hoursOfDay [integer],
+                      :daysOfWeek [string]},
    :languageTargeting {:languages [Language]},
-   :geoTargeting {:metros [Metro],
-                  :countries [Country],
+   :geoTargeting {:countries [Country],
+                  :metros [Metro],
                   :regions [Region],
-                  :excludeCountries boolean,
+                  :postalCodes [PostalCode],
                   :cities [City],
-                  :postalCodes [PostalCode]},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+                  :excludeCountries boolean},
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :advertiserId string,
    :keyValueTargetingExpression {:expression string},
-   :technologyTargeting {:connectionTypes [ConnectionType],
-                         :operatingSystems [OperatingSystem],
-                         :platformTypes [PlatformType],
+   :technologyTargeting {:operatingSystems [OperatingSystem],
                          :mobileCarriers [MobileCarrier],
+                         :platformTypes [PlatformType],
                          :browsers [Browser],
-                         :operatingSystemVersions [OperatingSystemVersion]},
+                         :operatingSystemVersions [OperatingSystemVersion],
+                         :connectionTypes [ConnectionType]},
    :id string,
    :kind string,
    :listTargetingExpression {:expression string},
@@ -236,6 +149,93 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:dayPartTargeting {:userLocalTime boolean,
+                      :hoursOfDay [integer],
+                      :daysOfWeek [string]},
+   :languageTargeting {:languages [Language]},
+   :geoTargeting {:countries [Country],
+                  :metros [Metro],
+                  :regions [Region],
+                  :postalCodes [PostalCode],
+                  :cities [City],
+                  :excludeCountries boolean},
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
+                                :matchType string,
+                                :value string,
+                                :etag string,
+                                :id string},
+   :name string,
+   :advertiserId string,
+   :keyValueTargetingExpression {:expression string},
+   :technologyTargeting {:operatingSystems [OperatingSystem],
+                         :mobileCarriers [MobileCarrier],
+                         :platformTypes [PlatformType],
+                         :browsers [Browser],
+                         :operatingSystemVersions [OperatingSystemVersion],
+                         :connectionTypes [ConnectionType]},
+   :id string,
+   :kind string,
+   :listTargetingExpression {:expression string},
+   :subaccountId string,
+   :accountId string}
+  
+  Updates an existing targeting template."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/targetingTemplates"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/targetingTemplates/list
+  
+  Required parameters: profileId
+  
+  Optional parameters: pageToken, searchString, maxResults, sortOrder, sortField, ids, advertiserId
+  
+  Retrieves a list of targeting templates, optionally filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/targetingTemplates"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

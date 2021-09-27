@@ -6,10 +6,93 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/get
+  
+  Required parameters: project, targetGrpcProxy
+  
+  Optional parameters: none
+  
+  Returns the specified TargetGrpcProxy resource in the given scope."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :targetGrpcProxy})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
+     #{:project :targetGrpcProxy}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/delete
+  
+  Required parameters: targetGrpcProxy, project
+  
+  Optional parameters: requestId
+  
+  Deletes the specified TargetGrpcProxy in the given scope"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project :targetGrpcProxy})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
+     #{:project :targetGrpcProxy}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/list
+  
+  Required parameters: project
+  
+  Optional parameters: returnPartialSuccess, maxResults, orderBy, filter, pageToken
+  
+  Lists the TargetGrpcProxies for a project in the given scope."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetGrpcProxies"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/patch
   
-  Required parameters: targetGrpcProxy, project
+  Required parameters: project, targetGrpcProxy
   
   Optional parameters: requestId
   
@@ -43,33 +126,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/delete
-  
-  Required parameters: project, targetGrpcProxy
-  
-  Optional parameters: requestId
-  
-  Deletes the specified TargetGrpcProxy in the given scope"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :targetGrpcProxy})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
-     #{:project :targetGrpcProxy}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -112,62 +168,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/get
-  
-  Required parameters: targetGrpcProxy, project
-  
-  Optional parameters: none
-  
-  Returns the specified TargetGrpcProxy resource in the given scope."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :targetGrpcProxy})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
-     #{:project :targetGrpcProxy}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/list
-  
-  Required parameters: project
-  
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, orderBy, filter
-  
-  Lists the TargetGrpcProxies for a project in the given scope."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetGrpcProxies"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: levels, address, roles, includeOffices
+  Optional parameters: includeOffices, address, roles, levels
   
   Looks up political geography and representative information for a single address."
   {:scopes nil}
@@ -37,7 +37,7 @@
   
   Required parameters: ocdId
   
-  Optional parameters: levels, recursive, roles
+  Optional parameters: recursive, roles, levels
   
   Looks up representative information for a single geographic division."
   {:scopes nil}

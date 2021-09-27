@@ -20,12 +20,12 @@
    :listPopulationRule {:listPopulationClauses [ListPopulationClause],
                         :floodlightActivityId string,
                         :floodlightActivityName string},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :lifeSpan string,
    :advertiserId string,
@@ -57,6 +57,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingLists/list
+  
+  Required parameters: advertiserId, profileId
+  
+  Optional parameters: name, pageToken, sortField, active, sortOrder, maxResults, floodlightActivityId
+  
+  Retrieves a list of remarketing lists, possibly filtered. This method supports paging."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:advertiserId :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/remarketingLists"
+     #{:advertiserId :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingLists/update
   
@@ -71,12 +97,12 @@
    :listPopulationRule {:listPopulationClauses [ListPopulationClause],
                         :floodlightActivityId string,
                         :floodlightActivityName string},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :lifeSpan string,
    :advertiserId string,
@@ -111,7 +137,7 @@
 (defn get$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingLists/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -134,36 +160,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingLists/list
-  
-  Required parameters: advertiserId, profileId
-  
-  Optional parameters: name, pageToken, sortField, active, sortOrder, maxResults, floodlightActivityId
-  
-  Retrieves a list of remarketing lists, possibly filtered. This method supports paging."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:advertiserId :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/remarketingLists"
-     #{:advertiserId :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/remarketingLists/patch
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -174,12 +174,12 @@
    :listPopulationRule {:listPopulationClauses [ListPopulationClause],
                         :floodlightActivityId string,
                         :floodlightActivityName string},
-   :advertiserIdDimensionValue {:dimensionName string,
-                                :value string,
-                                :kind string,
+   :advertiserIdDimensionValue {:kind string,
+                                :dimensionName string,
                                 :matchType string,
-                                :id string,
-                                :etag string},
+                                :value string,
+                                :etag string,
+                                :id string},
    :name string,
    :lifeSpan string,
    :advertiserId string,

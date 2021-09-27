@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: pageToken, filter, pageSize
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -111,11 +111,11 @@
   
   Body: 
   
-  {:policy {:version integer,
-            :etag string,
+  {:updateMask string,
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
-            :bindings [Binding]},
-   :updateMask string}
+            :bindings [Binding],
+            :version integer}}
   
   Sets the access control policy on an instance resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -189,14 +189,15 @@
   
   Body: 
   
-  {:instance {:labels {},
-              :displayName string,
-              :state string,
+  {:instanceId string,
+   :instance {:createTime string,
               :name string,
+              :state string,
+              :labels {},
+              :displayName string,
               :type string},
-   :clusters {},
-   :instanceId string,
-   :parent string}
+   :parent string,
+   :clusters {}}
   
   Create an instance within a project."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -233,10 +234,11 @@
   
   Body: 
   
-  {:labels {},
-   :displayName string,
-   :state string,
+  {:createTime string,
    :name string,
+   :state string,
+   :labels {},
+   :displayName string,
    :type string}
   
   Updates an instance within a project. This method updates only the display name and type for an Instance. To update other Instance properties, such as labels, use PartialUpdateInstance."
@@ -374,10 +376,11 @@
   
   Body: 
   
-  {:labels {},
-   :displayName string,
-   :state string,
+  {:createTime string,
    :name string,
+   :state string,
+   :labels {},
+   :displayName string,
    :type string}
   
   Partially updates an instance within a project. This method can modify all fields of an Instance and is the preferred way to update an Instance."
@@ -401,6 +404,519 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-partialUpdateCluster$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/partialUpdateCluster
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :defaultStorageType string,
+   :serveNodes integer,
+   :location string,
+   :state string,
+   :encryptionConfig {:kmsKeyName string}}
+  
+  Partially updates a cluster within a project. This method is the preferred way to update a Cluster. "
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-list$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken
+  
+  Lists information about clusters in an instance."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+parent}/clusters"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-delete$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a cluster from an instance."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-create$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/create
+  
+  Required parameters: parent
+  
+  Optional parameters: clusterId
+  
+  Body: 
+  
+  {:name string,
+   :defaultStorageType string,
+   :serveNodes integer,
+   :location string,
+   :state string,
+   :encryptionConfig {:kmsKeyName string}}
+  
+  Creates a cluster within an instance."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+parent}/clusters"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-update$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/update
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :defaultStorageType string,
+   :serveNodes integer,
+   :location string,
+   :state string,
+   :encryptionConfig {:kmsKeyName string}}
+  
+  Updates a cluster within an instance. UpdateCluster is deprecated. Please use PartialUpdateCluster instead."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-get$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about a cluster."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/bigtable.admin.instance"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-getIamPolicy$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a Table resource. Returns an empty policy if the resource exists but does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-create$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/create
+  
+  Required parameters: parent
+  
+  Optional parameters: backupId
+  
+  Body: 
+  
+  {:startTime string,
+   :encryptionInfo {:encryptionType string,
+                    :encryptionStatus Status,
+                    :kmsKeyVersion string},
+   :sourceTable string,
+   :state string,
+   :endTime string,
+   :name string,
+   :expireTime string,
+   :sizeBytes string}
+  
+  Starts creating a new Cloud Bigtable Backup. The returned backup long-running operation can be used to track creation of the backup. The metadata field type is CreateBackupMetadata. The response field type is Backup, if successful. Cancelling the returned operation will stop the creation and delete the backup."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-setIamPolicy$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateMask string,
+   :policy {:etag string,
+            :auditConfigs [AuditConfig],
+            :bindings [Binding],
+            :version integer}}
+  
+  Sets the access control policy on a Table resource. Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-testIamPermissions$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that the caller has on the specified table resource."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-patch$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:startTime string,
+   :encryptionInfo {:encryptionType string,
+                    :encryptionStatus Status,
+                    :kmsKeyVersion string},
+   :sourceTable string,
+   :state string,
+   :endTime string,
+   :name string,
+   :expireTime string,
+   :sizeBytes string}
+  
+  Updates a pending or completed Cloud Bigtable Backup."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-get$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets metadata on a pending or completed Cloud Bigtable Backup."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-delete$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a pending or completed Cloud Bigtable backup."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-clusters-backups-list$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, orderBy, pageSize, filter
+  
+  Lists Cloud Bigtable backups. Returns both completed and pending backups."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -446,11 +962,11 @@
   
   Body: 
   
-  {:policy {:version integer,
-            :etag string,
+  {:updateMask string,
+   :policy {:etag string,
             :auditConfigs [AuditConfig],
-            :bindings [Binding]},
-   :updateMask string}
+            :bindings [Binding],
+            :version integer}}
   
   Sets the access control policy on a Table resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -558,7 +1074,7 @@
   
   Body: 
   
-  {:backup string, :tableId string}
+  {:tableId string, :backup string}
   
   Create a new table by restoring from a completed backup. The new table must be in the same project as the instance containing the backup. The returned table long-running operation can be used to track the progress of the operation, and to cancel it. The metadata field type is RestoreTableMetadata. The response type is Table, if successful."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -594,9 +1110,9 @@
   
   Body: 
   
-  {:table {:name string,
+  {:table {:granularity string,
            :columnFamilies {},
-           :granularity string,
+           :name string,
            :restoreInfo RestoreInfo,
            :clusterStates {}},
    :tableId string,
@@ -637,9 +1153,9 @@
   Body: 
   
   {:modifications [{:id string,
-                    :update ColumnFamily,
                     :create ColumnFamily,
-                    :drop boolean}]}
+                    :drop boolean,
+                    :update ColumnFamily}]}
   
   Performs a series of column family modifications on the specified table. Either all or none of the modifications will occur before this method returns, but data requests received prior to that point may see a table where only some modifications have taken effect."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -809,7 +1325,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, view
+  Optional parameters: pageSize, view, pageToken
   
   Lists all tables served from a specified instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -835,129 +1351,14 @@
       :as :json}
      auth))))
 
-(defn instances-clusters-update$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/update
+(defn instances-appProfiles-get$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:encryptionConfig {:kmsKeyName string},
-   :defaultStorageType string,
-   :name string,
-   :serveNodes integer,
-   :location string,
-   :state string}
-  
-  Updates a cluster within an instance. UpdateCluster is deprecated. Please use PartialUpdateCluster instead."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-create$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/create
-  
-  Required parameters: parent
-  
-  Optional parameters: clusterId
-  
-  Body: 
-  
-  {:encryptionConfig {:kmsKeyName string},
-   :defaultStorageType string,
-   :name string,
-   :serveNodes integer,
-   :location string,
-   :state string}
-  
-  Creates a cluster within an instance."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+parent}/clusters"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-delete$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a cluster from an instance."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-list$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken
-  
-  Lists information about clusters in an instance."
+  Gets information about an app profile."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.cluster"
             "https://www.googleapis.com/auth/bigtable.admin.instance"
@@ -966,13 +1367,13 @@
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://bigtableadmin.googleapis.com/"
-     "v2/{+parent}/clusters"
-     #{:parent}
+     "v2/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -982,23 +1383,23 @@
       :as :json}
      auth))))
 
-(defn instances-clusters-partialUpdateCluster$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/partialUpdateCluster
+(defn instances-appProfiles-patch$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/patch
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: updateMask, ignoreWarnings
   
   Body: 
   
-  {:encryptionConfig {:kmsKeyName string},
-   :defaultStorageType string,
+  {:singleClusterRouting {:allowTransactionalWrites boolean,
+                          :clusterId string},
    :name string,
-   :serveNodes integer,
-   :location string,
-   :state string}
+   :etag string,
+   :multiClusterRoutingUseAny {},
+   :description string}
   
-  Partially updates a cluster within a project. This method is the preferred way to update a Cluster. "
+  Updates an app profile within an instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.cluster"
             "https://www.googleapis.com/auth/bigtable.admin.instance"
@@ -1024,317 +1425,24 @@
       :as :json}
      auth))))
 
-(defn instances-clusters-get$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/get
+(defn instances-appProfiles-delete$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/delete
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: ignoreWarnings
   
-  Gets information about a cluster."
+  Deletes an app profile from an instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.cluster"
             "https://www.googleapis.com/auth/bigtable.admin.instance"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
             "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-create$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/create
-  
-  Required parameters: parent
-  
-  Optional parameters: backupId
-  
-  Body: 
-  
-  {:name string,
-   :state string,
-   :endTime string,
-   :sizeBytes string,
-   :startTime string,
-   :expireTime string,
-   :sourceTable string,
-   :encryptionInfo {:encryptionType string,
-                    :kmsKeyVersion string,
-                    :encryptionStatus Status}}
-  
-  Starts creating a new Cloud Bigtable Backup. The returned backup long-running operation can be used to track creation of the backup. The metadata field type is CreateBackupMetadata. The response field type is Backup, if successful. Cancelling the returned operation will stop the creation and delete the backup."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+parent}/backups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-delete$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a pending or completed Cloud Bigtable backup."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-patch$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string,
-   :state string,
-   :endTime string,
-   :sizeBytes string,
-   :startTime string,
-   :expireTime string,
-   :sourceTable string,
-   :encryptionInfo {:encryptionType string,
-                    :kmsKeyVersion string,
-                    :encryptionStatus Status}}
-  
-  Updates a pending or completed Cloud Bigtable Backup."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-setIamPolicy$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :etag string,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding]},
-   :updateMask string}
-  
-  Sets the access control policy on a Table resource. Replaces any existing policy."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-list$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, pageToken, pageSize, filter
-  
-  Lists Cloud Bigtable backups. Returns both completed and pending backups."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+parent}/backups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-getIamPolicy$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:options {:requestedPolicyVersion integer}}
-  
-  Gets the access control policy for a Table resource. Returns an empty policy if the resource exists but does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-testIamPermissions$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that the caller has on the specified table resource."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-clusters-backups-get$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/clusters/backups/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets metadata on a pending or completed Cloud Bigtable Backup."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://bigtableadmin.googleapis.com/"
      "v2/{+name}"
@@ -1384,7 +1492,7 @@
   
   Required parameters: parent
   
-  Optional parameters: appProfileId, ignoreWarnings
+  Optional parameters: ignoreWarnings, appProfileId
   
   Body: 
   
@@ -1392,8 +1500,8 @@
                           :clusterId string},
    :name string,
    :etag string,
-   :description string,
-   :multiClusterRoutingUseAny {}}
+   :multiClusterRoutingUseAny {},
+   :description string}
   
   Creates an app profile within an instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -1410,111 +1518,6 @@
      "https://bigtableadmin.googleapis.com/"
      "v2/{+parent}/appProfiles"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-appProfiles-get$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets information about an app profile."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-appProfiles-delete$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/delete
-  
-  Required parameters: name
-  
-  Optional parameters: ignoreWarnings
-  
-  Deletes an app profile from an instance."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-appProfiles-patch$
-  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/appProfiles/patch
-  
-  Required parameters: name
-  
-  Optional parameters: ignoreWarnings, updateMask
-  
-  Body: 
-  
-  {:singleClusterRouting {:allowTransactionalWrites boolean,
-                          :clusterId string},
-   :name string,
-   :etag string,
-   :description string,
-   :multiClusterRoutingUseAny {}}
-  
-  Updates an app profile within an instance."
-  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
-            "https://www.googleapis.com/auth/bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/bigtable.admin.instance"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin"
-            "https://www.googleapis.com/auth/cloud-bigtable.admin.cluster"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://bigtableadmin.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge

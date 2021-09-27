@@ -7,6 +7,32 @@
             [happy.util :as util]))
 
 (defn $
+  "https://cloud.google.com/iapapi/reference/rest/v1/getIapSettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the IAP settings on a particular IAP protected resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://iap.googleapis.com/"
+     "v1/{+name}:iapSettings"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn $
   "https://cloud.google.com/iapapi/reference/rest/v1/getIamPolicy
   
   Required parameters: resource
@@ -27,45 +53,6 @@
      "https://iap.googleapis.com/"
      "v1/{+resource}:getIamPolicy"
      #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/updateIapSettings
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string,
-   :applicationSettings {:accessDeniedPageSettings AccessDeniedPageSettings,
-                         :cookieDomain string,
-                         :csmSettings CsmSettings},
-   :accessSettings {:gcipSettings GcipSettings,
-                    :corsSettings CorsSettings,
-                    :oauthSettings OAuthSettings,
-                    :policyDelegationSettings PolicyDelegationSettings}}
-  
-  Updates the IAP settings on a particular IAP protected resource. It replaces all fields unless the `update_mask` is set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://iap.googleapis.com/"
-     "v1/{+name}:iapSettings"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -142,18 +129,29 @@
      auth))))
 
 (defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/getIapSettings
+  "https://cloud.google.com/iapapi/reference/rest/v1/updateIapSettings
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
-  Gets the IAP settings on a particular IAP protected resource."
+  Body: 
+  
+  {:applicationSettings {:csmSettings CsmSettings,
+                         :accessDeniedPageSettings AccessDeniedPageSettings,
+                         :cookieDomain string},
+   :accessSettings {:policyDelegationSettings PolicyDelegationSettings,
+                    :gcipSettings GcipSettings,
+                    :corsSettings CorsSettings,
+                    :oauthSettings OAuthSettings},
+   :name string}
+  
+  Updates the IAP settings on a particular IAP protected resource. It replaces all fields unless the `update_mask` is set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://iap.googleapis.com/"
      "v1/{+name}:iapSettings"
@@ -161,7 +159,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

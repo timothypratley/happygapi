@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogUserInfos/get
   
-  Required parameters: userId, blogId
+  Required parameters: blogId, userId
   
   Optional parameters: maxPosts
   

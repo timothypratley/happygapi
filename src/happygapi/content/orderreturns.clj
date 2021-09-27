@@ -15,16 +15,16 @@
   
   Body: 
   
-  {:refundShippingFee {:fullRefund boolean,
-                       :partialRefund OrderreturnsPartialRefund,
+  {:operationId string,
+   :returnItems [{:reject OrderreturnsRejectOperation,
+                  :refund OrderreturnsRefundOperation,
+                  :returnItemId string}],
+   :refundShippingFee {:returnRefundReason string,
                        :paymentType string,
-                       :returnRefundReason string,
-                       :reasonText string},
-   :operationId string,
-   :fullChargeReturnShippingCost boolean,
-   :returnItems [{:refund OrderreturnsRefundOperation,
-                  :reject OrderreturnsRejectOperation,
-                  :returnItemId string}]}
+                       :partialRefund OrderreturnsPartialRefund,
+                       :reasonText string,
+                       :fullRefund boolean},
+   :fullChargeReturnShippingCost boolean}
   
   Processes return in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -50,7 +50,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/get
   
-  Required parameters: returnId, merchantId
+  Required parameters: merchantId, returnId
   
   Optional parameters: none
   
@@ -73,27 +73,32 @@
       :as :json}
      auth))))
 
-(defn acknowledge$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/acknowledge
+(defn createorderreturn$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/createorderreturn
   
-  Required parameters: returnId, merchantId
+  Required parameters: merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:operationId string}
+  {:lineItems [{:quantity integer,
+                :lineItemId string,
+                :productId string}],
+   :operationId string,
+   :returnMethodType string,
+   :orderId string}
   
-  Acks an order return in your Merchant Center account."
+  Create return in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:returnId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreturns/{returnId}/acknowledge"
-     #{:returnId :merchantId}
+     "{merchantId}/orderreturns/createOrderReturn"
+     #{:merchantId}
      parameters)
     (merge-with
      merge
@@ -131,32 +136,27 @@
       :as :json}
      auth))))
 
-(defn createorderreturn$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/createorderreturn
+(defn acknowledge$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/acknowledge
   
-  Required parameters: merchantId
+  Required parameters: merchantId, returnId
   
   Optional parameters: none
   
   Body: 
   
-  {:returnMethodType string,
-   :orderId string,
-   :lineItems [{:lineItemId string,
-                :productId string,
-                :quantity integer}],
-   :operationId string}
+  {:operationId string}
   
-  Create return in your Merchant Center account."
+  Acks an order return in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  {:pre [(util/has-keys? parameters #{:returnId :merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreturns/createOrderReturn"
-     #{:merchantId}
+     "{merchantId}/orderreturns/{returnId}/acknowledge"
+     #{:returnId :merchantId}
      parameters)
     (merge-with
      merge
@@ -171,13 +171,13 @@
 (defn labels-create$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/labels/create
   
-  Required parameters: merchantId, returnId
+  Required parameters: returnId, merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:labelUri string, :trackingId string, :carrier string}
+  {:labelUri string, :carrier string, :trackingId string}
   
   Links a return shipping label to a return id. You can only create one return label per return id. Since the label is sent to the buyer, the linked return label cannot be updated or deleted. If you try to create multiple return shipping labels for a single return id, every create request except the first will fail."
   {:scopes ["https://www.googleapis.com/auth/content"]}

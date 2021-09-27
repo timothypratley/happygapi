@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:listUpdateRequests [{:threatType string,
-                         :constraints GoogleSecuritySafebrowsingV4FetchThreatListUpdatesRequestListUpdateRequestConstraints,
+  {:listUpdateRequests [{:constraints GoogleSecuritySafebrowsingV4FetchThreatListUpdatesRequestListUpdateRequestConstraints,
+                         :threatType string,
+                         :threatEntryType string,
                          :state string,
-                         :platformType string,
-                         :threatEntryType string}],
-   :client {:clientId string, :clientVersion string}}
+                         :platformType string}],
+   :client {:clientVersion string, :clientId string}}
   
   Fetches the most recent threat list updates. A client can request updates for multiple lists at once."
   {:scopes nil}

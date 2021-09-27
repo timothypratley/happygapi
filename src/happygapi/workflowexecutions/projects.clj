@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-workflows-executions-list$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/executions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, view
-  
-  Returns a list of executions which belong to the workflow with the given name. The method returns executions of all workflow revisions. Returned executions are ordered by their start time (newest first)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://workflowexecutions.googleapis.com/"
-     "v1/{+parent}/executions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-workflows-executions-create$
   "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/executions/create
   
@@ -41,14 +15,15 @@
   
   Body: 
   
-  {:error {:context string, :payload string, :stackTrace StackTrace},
-   :startTime string,
+  {:startTime string,
    :workflowRevisionId string,
+   :name string,
    :endTime string,
-   :argument string,
    :state string,
+   :argument string,
    :result string,
-   :name string}
+   :error {:payload string, :stackTrace StackTrace, :context string},
+   :callLogLevel string}
   
   Creates a new execution using the latest revision of the given workflow."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -66,6 +41,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workflows-executions-list$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/executions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: view, pageToken, pageSize
+  
+  Returns a list of executions which belong to the workflow with the given name. The method returns executions of all workflow revisions. Returned executions are ordered by their start time (newest first)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://workflowexecutions.googleapis.com/"
+     "v1/{+parent}/executions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -6,33 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1/snapshots/list
-  
-  Required parameters: playerId
-  
-  Optional parameters: pageToken, language, maxResults
-  
-  Retrieves a list of snapshots created by your application for the player corresponding to the player ID."
-  {:scopes ["https://www.googleapis.com/auth/drive.appdata"
-            "https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:playerId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/players/{playerId}/snapshots"
-     #{:playerId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/games/api/reference/rest/v1/snapshots/get
   
@@ -51,6 +24,33 @@
      "https://games.googleapis.com/"
      "games/v1/snapshots/{snapshotId}"
      #{:snapshotId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1/snapshots/list
+  
+  Required parameters: playerId
+  
+  Optional parameters: language, pageToken, maxResults
+  
+  Retrieves a list of snapshots created by your application for the player corresponding to the player ID."
+  {:scopes ["https://www.googleapis.com/auth/drive.appdata"
+            "https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:playerId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/players/{playerId}/snapshots"
+     #{:playerId}
      parameters)
     (merge-with
      merge

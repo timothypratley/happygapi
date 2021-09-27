@@ -1,48 +1,15 @@
 (ns happygapi.sqladmin.sslCerts
   "Cloud SQL Admin API: sslCerts.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts"
+  See: https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn createEphemeral$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/createEphemeral
-  
-  Required parameters: instance, project
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:access_token string, :public_key string}
-  
-  Generates a short-lived X509 certificate containing the provided public key and signed by a private key specific to the target instance. Users may use the certificate to authenticate as themselves when connecting to the database."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:instance :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/createEphemeral"
-     #{:instance :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/list
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/list
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -55,7 +22,7 @@
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts"
+     "v1/projects/{project}/instances/{instance}/sslCerts"
      #{:instance :project}
      parameters)
     (merge-with
@@ -66,14 +33,47 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/delete
+(defn createEphemeral$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/createEphemeral
   
-  Required parameters: instance, sha1Fingerprint, project
+  Required parameters: instance, project
   
   Optional parameters: none
   
-  Deletes the SSL certificate. For First Generation instances, the certificate remains valid until the instance is restarted."
+  Body: 
+  
+  {:public_key string, :access_token string}
+  
+  Generates a short-lived X509 certificate containing the provided public key and signed by a private key specific to the target instance. Users may use the certificate to authenticate as themselves when connecting to the database."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "v1/projects/{project}/instances/{instance}/createEphemeral"
+     #{:instance :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/get
+  
+  Required parameters: instance, project, sha1Fingerprint
+  
+  Optional parameters: none
+  
+  Retrieves a particular SSL certificate. Does not include the private key (required for usage). The private key must be saved from the response to initial creation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
@@ -81,10 +81,10 @@
           parameters
           #{:instance :project :sha1Fingerprint})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
+     "v1/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
      #{:instance :project :sha1Fingerprint}
      parameters)
     (merge-with
@@ -96,7 +96,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/insert
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/insert
   
   Required parameters: instance, project
   
@@ -115,7 +115,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts"
+     "v1/projects/{project}/instances/{instance}/sslCerts"
      #{:instance :project}
      parameters)
     (merge-with
@@ -128,14 +128,14 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/sslCerts/get
+(defn delete$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/delete
   
-  Required parameters: sha1Fingerprint, project, instance
+  Required parameters: sha1Fingerprint, instance, project
   
   Optional parameters: none
   
-  Retrieves a particular SSL certificate. Does not include the private key (required for usage). The private key must be saved from the response to initial creation."
+  Deletes the SSL certificate. For First Generation instances, the certificate remains valid until the instance is restarted."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
@@ -143,10 +143,10 @@
           parameters
           #{:instance :project :sha1Fingerprint})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
+     "v1/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
      #{:instance :project :sha1Fingerprint}
      parameters)
     (merge-with

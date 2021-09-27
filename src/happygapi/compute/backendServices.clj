@@ -42,7 +42,7 @@
 (defn getHealth$
   "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/getHealth
   
-  Required parameters: project, backendService
+  Required parameters: backendService, project
   
   Optional parameters: none
   
@@ -146,27 +146,27 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:minimumRingSize string,
+   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
                     :httpHeaderName string,
-                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
+                    :minimumRingSize string},
    :port integer,
    :healthChecks [string],
    :region string,
-   :circuitBreakers {:maxConnections integer,
-                     :maxPendingRequests integer,
-                     :maxRequests integer,
+   :circuitBreakers {:maxRetries integer,
                      :maxRequestsPerConnection integer,
-                     :maxRetries integer},
-   :iap {:oauth2ClientSecretSha256 string,
-         :oauth2ClientSecret string,
+                     :maxConnections integer,
+                     :maxRequests integer,
+                     :maxPendingRequests integer},
+   :iap {:enabled boolean,
+         :oauth2ClientSecretSha256 string,
          :oauth2ClientId string,
-         :enabled boolean},
+         :oauth2ClientSecret string},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
-                    :disableConnectionDrainOnFailover boolean,
-                    :failoverRatio number},
+   :failoverPolicy {:failoverRatio number,
+                    :dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
@@ -213,7 +213,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/backendServices/patch
   
-  Required parameters: project, backendService
+  Required parameters: backendService, project
   
   Optional parameters: requestId
   
@@ -255,27 +255,27 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:minimumRingSize string,
+   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
                     :httpHeaderName string,
-                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
+                    :minimumRingSize string},
    :port integer,
    :healthChecks [string],
    :region string,
-   :circuitBreakers {:maxConnections integer,
-                     :maxPendingRequests integer,
-                     :maxRequests integer,
+   :circuitBreakers {:maxRetries integer,
                      :maxRequestsPerConnection integer,
-                     :maxRetries integer},
-   :iap {:oauth2ClientSecretSha256 string,
-         :oauth2ClientSecret string,
+                     :maxConnections integer,
+                     :maxRequests integer,
+                     :maxPendingRequests integer},
+   :iap {:enabled boolean,
+         :oauth2ClientSecretSha256 string,
          :oauth2ClientId string,
-         :enabled boolean},
+         :oauth2ClientSecret string},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
-                    :disableConnectionDrainOnFailover boolean,
-                    :failoverRatio number},
+   :failoverPolicy {:failoverRatio number,
+                    :dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
@@ -324,7 +324,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, includeAllScopes, orderBy, filter
+  Optional parameters: filter, pageToken, orderBy, returnPartialSuccess, maxResults, includeAllScopes
   
   Retrieves the list of all BackendService resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -392,27 +392,27 @@
                       :enforcingConsecutiveErrors integer},
    :selfLink string,
    :loadBalancingScheme string,
-   :consistentHash {:minimumRingSize string,
+   :consistentHash {:httpCookie ConsistentHashLoadBalancerSettingsHttpCookie,
                     :httpHeaderName string,
-                    :httpCookie ConsistentHashLoadBalancerSettingsHttpCookie},
+                    :minimumRingSize string},
    :port integer,
    :healthChecks [string],
    :region string,
-   :circuitBreakers {:maxConnections integer,
-                     :maxPendingRequests integer,
-                     :maxRequests integer,
+   :circuitBreakers {:maxRetries integer,
                      :maxRequestsPerConnection integer,
-                     :maxRetries integer},
-   :iap {:oauth2ClientSecretSha256 string,
-         :oauth2ClientSecret string,
+                     :maxConnections integer,
+                     :maxRequests integer,
+                     :maxPendingRequests integer},
+   :iap {:enabled boolean,
+         :oauth2ClientSecretSha256 string,
          :oauth2ClientId string,
-         :enabled boolean},
+         :oauth2ClientSecret string},
    :id string,
    :kind string,
    :localityLbPolicy string,
-   :failoverPolicy {:dropTrafficIfUnhealthy boolean,
-                    :disableConnectionDrainOnFailover boolean,
-                    :failoverRatio number},
+   :failoverPolicy {:failoverRatio number,
+                    :dropTrafficIfUnhealthy boolean,
+                    :disableConnectionDrainOnFailover boolean},
    :sessionAffinity string,
    :timeoutSec integer,
    :network string,
@@ -488,7 +488,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, returnPartialSuccess, pageToken, orderBy, filter
+  Optional parameters: orderBy, returnPartialSuccess, filter, pageToken, maxResults
   
   Retrieves the list of BackendService resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

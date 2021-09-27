@@ -42,9 +42,9 @@
   
   Body: 
   
-  {:policy {:bindings [Binding],
+  {:policy {:etag string,
+            :bindings [Binding],
             :version integer,
-            :etag string,
             :auditConfigs [AuditConfig]},
    :updateMask string}
   
@@ -79,16 +79,16 @@
   
   Body: 
   
-  {:cloudSql {:credential CloudSqlCredential,
-              :instanceId string,
-              :type string,
-              :database string},
-   :friendlyName string,
+  {:creationTime string,
+   :cloudSql {:type string,
+              :credential CloudSqlCredential,
+              :database string,
+              :instanceId string},
    :hasCredential boolean,
    :name string,
    :description string,
-   :lastModifiedTime string,
-   :creationTime string}
+   :friendlyName string,
+   :lastModifiedTime string}
   
   Updates the specified connection. For security reasons, also resets credential if connection properties are in the update field mask."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -154,16 +154,16 @@
   
   Body: 
   
-  {:cloudSql {:credential CloudSqlCredential,
-              :instanceId string,
-              :type string,
-              :database string},
-   :friendlyName string,
+  {:creationTime string,
+   :cloudSql {:type string,
+              :credential CloudSqlCredential,
+              :database string,
+              :instanceId string},
    :hasCredential boolean,
    :name string,
    :description string,
-   :lastModifiedTime string,
-   :creationTime string}
+   :friendlyName string,
+   :lastModifiedTime string}
   
   Creates a new connection."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

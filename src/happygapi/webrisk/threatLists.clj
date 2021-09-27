@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: versionToken, constraints.maxDatabaseEntries, constraints.maxDiffEntries, constraints.supportedCompressions, threatType
+  Optional parameters: constraints.maxDatabaseEntries, constraints.maxDiffEntries, threatType, constraints.supportedCompressions, versionToken
   
   Gets the most recent threat list diffs. These diffs should be applied to a local database of hashes to keep it up-to-date. If the local database is empty or excessively out-of-date, a complete snapshot of the database will be returned. This Method only updates a single ThreatList at a time. To update multiple ThreatList databases, this method needs to be called once for each list."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

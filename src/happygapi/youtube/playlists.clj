@@ -6,6 +6,106 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/update
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:player {:embedHtml string},
+   :etag string,
+   :snippet {:description string,
+             :tags [string],
+             :publishedAt string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :localized PlaylistLocalization,
+             :channelTitle string,
+             :thumbnailVideoId string,
+             :defaultLanguage string},
+   :status {:privacyStatus string},
+   :kind string,
+   :contentDetails {:itemCount integer},
+   :id string,
+   :localizations {}}
+  
+  Updates an existing resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/insert
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  
+  Body: 
+  
+  {:player {:embedHtml string},
+   :etag string,
+   :snippet {:description string,
+             :tags [string],
+             :publishedAt string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :localized PlaylistLocalization,
+             :channelTitle string,
+             :thumbnailVideoId string,
+             :defaultLanguage string},
+   :status {:privacyStatus string},
+   :kind string,
+   :contentDetails {:itemCount integer},
+   :id string,
+   :localizations {}}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlists"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/youtube/api/reference/rest/v3/playlists/list
   
@@ -58,106 +158,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/insert
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:kind string,
-   :localizations {},
-   :player {:embedHtml string},
-   :id string,
-   :etag string,
-   :snippet {:description string,
-             :tags [string],
-             :publishedAt string,
-             :channelId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :localized PlaylistLocalization,
-             :channelTitle string,
-             :thumbnailVideoId string,
-             :defaultLanguage string},
-   :status {:privacyStatus string},
-   :contentDetails {:itemCount integer}}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/playlists"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlists/update
-  
-  Required parameters: part
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:kind string,
-   :localizations {},
-   :player {:embedHtml string},
-   :id string,
-   :etag string,
-   :snippet {:description string,
-             :tags [string],
-             :publishedAt string,
-             :channelId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :localized PlaylistLocalization,
-             :channelTitle string,
-             :thumbnailVideoId string,
-             :defaultLanguage string},
-   :status {:privacyStatus string},
-   :contentDetails {:itemCount integer}}
-  
-  Updates an existing resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/playlists"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

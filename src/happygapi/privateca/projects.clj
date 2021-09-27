@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/get
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://privateca.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -94,10 +94,10 @@
   Body: 
   
   {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+   :policy {:etag string,
+            :auditConfigs [AuditConfig],
             :version integer,
-            :bindings [Binding],
-            :etag string}}
+            :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -129,15 +129,15 @@
   
   Body: 
   
-  {:tier string,
-   :publishingOptions {:publishCrl boolean, :publishCaCert boolean},
-   :labels {},
-   :issuancePolicy {:baselineValues X509Parameters,
-                    :maximumLifetime string,
-                    :allowedIssuanceModes IssuanceModes,
-                    :passthroughExtensions CertificateExtensionConstraints,
+  {:issuancePolicy {:maximumLifetime string,
                     :identityConstraints CertificateIdentityConstraints,
+                    :passthroughExtensions CertificateExtensionConstraints,
+                    :baselineValues X509Parameters,
+                    :allowedIssuanceModes IssuanceModes,
                     :allowedKeyTypes [AllowedKeyType]},
+   :publishingOptions {:publishCaCert boolean, :publishCrl boolean},
+   :labels {},
+   :tier string,
    :name string}
   
   Update a CaPool."
@@ -230,19 +230,19 @@
   
   Required parameters: parent
   
-  Optional parameters: caPoolId, requestId
+  Optional parameters: requestId, caPoolId
   
   Body: 
   
-  {:tier string,
-   :publishingOptions {:publishCrl boolean, :publishCaCert boolean},
-   :labels {},
-   :issuancePolicy {:baselineValues X509Parameters,
-                    :maximumLifetime string,
-                    :allowedIssuanceModes IssuanceModes,
-                    :passthroughExtensions CertificateExtensionConstraints,
+  {:issuancePolicy {:maximumLifetime string,
                     :identityConstraints CertificateIdentityConstraints,
+                    :passthroughExtensions CertificateExtensionConstraints,
+                    :baselineValues X509Parameters,
+                    :allowedIssuanceModes IssuanceModes,
                     :allowedKeyTypes [AllowedKeyType]},
+   :publishingOptions {:publishCaCert boolean, :publishCrl boolean},
+   :labels {},
+   :tier string,
    :name string}
   
   Create a CaPool."
@@ -323,7 +323,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, filter, pageSize, orderBy
+  Optional parameters: pageToken, orderBy, pageSize, filter
   
   Lists CaPools."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -447,27 +447,27 @@
    :tier string,
    :deleteTime string,
    :gcsBucket string,
-   :config {:publicKey PublicKey,
-            :subjectConfig SubjectConfig,
-            :x509Config X509Parameters},
+   :config {:subjectConfig SubjectConfig,
+            :x509Config X509Parameters,
+            :publicKey PublicKey},
    :name string,
    :createTime string,
-   :keySpec {:algorithm string, :cloudKmsKeyVersion string},
+   :keySpec {:cloudKmsKeyVersion string, :algorithm string},
    :type string,
    :state string,
-   :subordinateConfig {:certificateAuthority string,
-                       :pemIssuerChain SubordinateConfigChain},
+   :subordinateConfig {:pemIssuerChain SubordinateConfigChain,
+                       :certificateAuthority string},
    :updateTime string,
    :accessUrls {:crlAccessUrls [string], :caCertificateAccessUrl string},
    :lifetime string,
-   :caCertificateDescriptions [{:crlDistributionPoints [string],
-                                :subjectKeyId KeyId,
-                                :x509Description X509Parameters,
-                                :subjectDescription SubjectDescription,
-                                :authorityKeyId KeyId,
+   :caCertificateDescriptions [{:subjectKeyId KeyId,
                                 :publicKey PublicKey,
+                                :certFingerprint CertificateFingerprint,
+                                :authorityKeyId KeyId,
+                                :x509Description X509Parameters,
                                 :aiaIssuingCertificateUrls [string],
-                                :certFingerprint CertificateFingerprint}],
+                                :subjectDescription SubjectDescription,
+                                :crlDistributionPoints [string]}],
    :expireTime string,
    :pemCaCertificates [string]}
   
@@ -505,27 +505,27 @@
    :tier string,
    :deleteTime string,
    :gcsBucket string,
-   :config {:publicKey PublicKey,
-            :subjectConfig SubjectConfig,
-            :x509Config X509Parameters},
+   :config {:subjectConfig SubjectConfig,
+            :x509Config X509Parameters,
+            :publicKey PublicKey},
    :name string,
    :createTime string,
-   :keySpec {:algorithm string, :cloudKmsKeyVersion string},
+   :keySpec {:cloudKmsKeyVersion string, :algorithm string},
    :type string,
    :state string,
-   :subordinateConfig {:certificateAuthority string,
-                       :pemIssuerChain SubordinateConfigChain},
+   :subordinateConfig {:pemIssuerChain SubordinateConfigChain,
+                       :certificateAuthority string},
    :updateTime string,
    :accessUrls {:crlAccessUrls [string], :caCertificateAccessUrl string},
    :lifetime string,
-   :caCertificateDescriptions [{:crlDistributionPoints [string],
-                                :subjectKeyId KeyId,
-                                :x509Description X509Parameters,
-                                :subjectDescription SubjectDescription,
-                                :authorityKeyId KeyId,
+   :caCertificateDescriptions [{:subjectKeyId KeyId,
                                 :publicKey PublicKey,
+                                :certFingerprint CertificateFingerprint,
+                                :authorityKeyId KeyId,
+                                :x509Description X509Parameters,
                                 :aiaIssuingCertificateUrls [string],
-                                :certFingerprint CertificateFingerprint}],
+                                :subjectDescription SubjectDescription,
+                                :crlDistributionPoints [string]}],
    :expireTime string,
    :pemCaCertificates [string]}
   
@@ -613,7 +613,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, orderBy, pageToken, filter
+  Optional parameters: pageToken, filter, pageSize, orderBy
   
   Lists CertificateAuthorities."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -669,10 +669,10 @@
   
   Body: 
   
-  {:subordinateConfig {:certificateAuthority string,
-                       :pemIssuerChain SubordinateConfigChain},
-   :pemCaCertificate string,
-   :requestId string}
+  {:requestId string,
+   :subordinateConfig {:pemIssuerChain SubordinateConfigChain,
+                       :certificateAuthority string},
+   :pemCaCertificate string}
   
   Activate a CertificateAuthority that is in state AWAITING_USER_ACTIVATION and is of type SUBORDINATE. After the parent Certificate Authority signs a certificate signing request from FetchCertificateAuthorityCsr, this method can complete the activation process."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -684,74 +684,6 @@
      "https://privateca.googleapis.com/"
      "v1/{+name}:activate"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-caPools-certificateAuthorities-certificateRevocationLists-testIamPermissions$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-caPools-certificateAuthorities-certificateRevocationLists-setIamPolicy$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
-            :version integer,
-            :bindings [Binding],
-            :etag string}}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
      parameters)
     (merge-with
      merge
@@ -789,6 +721,49 @@
       :as :json}
      auth))))
 
+(defn locations-caPools-certificateAuthorities-certificateRevocationLists-patch$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask, requestId
+  
+  Body: 
+  
+  {:sequenceNumber string,
+   :labels {},
+   :accessUrl string,
+   :name string,
+   :createTime string,
+   :revisionId string,
+   :state string,
+   :updateTime string,
+   :revokedCertificates [{:revocationReason string,
+                          :hexSerialNumber string,
+                          :certificate string}],
+   :pemCrl string}
+  
+  Update a CertificateRevocationList."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-caPools-certificateAuthorities-certificateRevocationLists-get$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/get
   
@@ -815,38 +790,27 @@
       :as :json}
      auth))))
 
-(defn locations-caPools-certificateAuthorities-certificateRevocationLists-patch$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/patch
+(defn locations-caPools-certificateAuthorities-certificateRevocationLists-testIamPermissions$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/testIamPermissions
   
-  Required parameters: name
+  Required parameters: resource
   
-  Optional parameters: updateMask, requestId
+  Optional parameters: none
   
   Body: 
   
-  {:sequenceNumber string,
-   :labels {},
-   :accessUrl string,
-   :name string,
-   :createTime string,
-   :revisionId string,
-   :state string,
-   :updateTime string,
-   :revokedCertificates [{:revocationReason string,
-                          :certificate string,
-                          :hexSerialNumber string}],
-   :pemCrl string}
+  {:permissions [string]}
   
-  Update a CertificateRevocationList."
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://privateca.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -863,7 +827,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, orderBy, pageToken, filter
+  Optional parameters: pageToken, filter, orderBy, pageSize
   
   Lists CertificateRevocationLists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -884,49 +848,31 @@
       :as :json}
      auth))))
 
-(defn locations-caPools-certificates-create$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificates/create
+(defn locations-caPools-certificateAuthorities-certificateRevocationLists-setIamPolicy$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificateAuthorities/certificateRevocationLists/setIamPolicy
   
-  Required parameters: parent
+  Required parameters: resource
   
-  Optional parameters: certificateId, issuingCertificateAuthorityId, requestId, validateOnly
+  Optional parameters: none
   
   Body: 
   
-  {:revocationDetails {:revocationState string, :revocationTime string},
-   :labels {},
-   :certificateTemplate string,
-   :issuerCertificateAuthority string,
-   :config {:publicKey PublicKey,
-            :subjectConfig SubjectConfig,
-            :x509Config X509Parameters},
-   :name string,
-   :createTime string,
-   :subjectMode string,
-   :updateTime string,
-   :pemCertificate string,
-   :pemCsr string,
-   :lifetime string,
-   :certificateDescription {:crlDistributionPoints [string],
-                            :subjectKeyId KeyId,
-                            :x509Description X509Parameters,
-                            :subjectDescription SubjectDescription,
-                            :authorityKeyId KeyId,
-                            :publicKey PublicKey,
-                            :aiaIssuingCertificateUrls [string],
-                            :certFingerprint CertificateFingerprint},
-   :pemCertificateChain [string]}
+  {:updateMask string,
+   :policy {:etag string,
+            :auditConfigs [AuditConfig],
+            :version integer,
+            :bindings [Binding]}}
   
-  Create a new Certificate in a given Project, Location from a particular CaPool."
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://privateca.googleapis.com/"
-     "v1/{+parent}/certificates"
-     #{:parent}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -943,7 +889,7 @@
   
   Required parameters: parent
   
-  Optional parameters: orderBy, filter, pageToken, pageSize
+  Optional parameters: pageSize, orderBy, pageToken, filter
   
   Lists Certificates."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -964,38 +910,6 @@
       :as :json}
      auth))))
 
-(defn locations-caPools-certificates-revoke$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificates/revoke
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requestId string, :reason string}
-  
-  Revoke a Certificate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+name}:revoke"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-caPools-certificates-patch$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificates/patch
   
@@ -1009,9 +923,9 @@
    :labels {},
    :certificateTemplate string,
    :issuerCertificateAuthority string,
-   :config {:publicKey PublicKey,
-            :subjectConfig SubjectConfig,
-            :x509Config X509Parameters},
+   :config {:subjectConfig SubjectConfig,
+            :x509Config X509Parameters,
+            :publicKey PublicKey},
    :name string,
    :createTime string,
    :subjectMode string,
@@ -1019,14 +933,14 @@
    :pemCertificate string,
    :pemCsr string,
    :lifetime string,
-   :certificateDescription {:crlDistributionPoints [string],
-                            :subjectKeyId KeyId,
-                            :x509Description X509Parameters,
-                            :subjectDescription SubjectDescription,
-                            :authorityKeyId KeyId,
+   :certificateDescription {:subjectKeyId KeyId,
                             :publicKey PublicKey,
+                            :certFingerprint CertificateFingerprint,
+                            :authorityKeyId KeyId,
+                            :x509Description X509Parameters,
                             :aiaIssuingCertificateUrls [string],
-                            :certFingerprint CertificateFingerprint},
+                            :subjectDescription SubjectDescription,
+                            :crlDistributionPoints [string]},
    :pemCertificateChain [string]}
   
   Update a Certificate. Currently, the only field you can update is the labels field."
@@ -1076,23 +990,109 @@
       :as :json}
      auth))))
 
-(defn locations-certificateTemplates-list$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/list
+(defn locations-caPools-certificates-revoke$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificates/revoke
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requestId string, :reason string}
+  
+  Revoke a Certificate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+name}:revoke"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-caPools-certificates-create$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/caPools/certificates/create
   
   Required parameters: parent
   
-  Optional parameters: filter, orderBy, pageSize, pageToken
+  Optional parameters: validateOnly, issuingCertificateAuthorityId, certificateId, requestId
   
-  Lists CertificateTemplates."
+  Body: 
+  
+  {:revocationDetails {:revocationState string, :revocationTime string},
+   :labels {},
+   :certificateTemplate string,
+   :issuerCertificateAuthority string,
+   :config {:subjectConfig SubjectConfig,
+            :x509Config X509Parameters,
+            :publicKey PublicKey},
+   :name string,
+   :createTime string,
+   :subjectMode string,
+   :updateTime string,
+   :pemCertificate string,
+   :pemCsr string,
+   :lifetime string,
+   :certificateDescription {:subjectKeyId KeyId,
+                            :publicKey PublicKey,
+                            :certFingerprint CertificateFingerprint,
+                            :authorityKeyId KeyId,
+                            :x509Description X509Parameters,
+                            :aiaIssuingCertificateUrls [string],
+                            :subjectDescription SubjectDescription,
+                            :crlDistributionPoints [string]},
+   :pemCertificateChain [string]}
+  
+  Create a new Certificate in a given Project, Location from a particular CaPool."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+parent}/certificates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-certificateTemplates-get$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns a CertificateTemplate."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://privateca.googleapis.com/"
-     "v1/{+parent}/certificateTemplates"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -1160,6 +1160,52 @@
       :as :json}
      auth))))
 
+(defn locations-certificateTemplates-patch$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask, requestId
+  
+  Body: 
+  
+  {:identityConstraints {:allowSubjectAltNamesPassthrough boolean,
+                         :celExpression Expr,
+                         :allowSubjectPassthrough boolean},
+   :name string,
+   :labels {},
+   :updateTime string,
+   :predefinedValues {:additionalExtensions [X509Extension],
+                      :aiaOcspServers [string],
+                      :caOptions CaOptions,
+                      :keyUsage KeyUsage,
+                      :policyIds [ObjectId]},
+   :description string,
+   :createTime string,
+   :passthroughExtensions {:additionalExtensions [ObjectId],
+                           :knownExtensions [string]}}
+  
+  Update a CertificateTemplate."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-certificateTemplates-delete$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/delete
   
@@ -1186,112 +1232,30 @@
       :as :json}
      auth))))
 
-(defn locations-certificateTemplates-patch$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask, requestId
-  
-  Body: 
-  
-  {:createTime string,
-   :labels {},
-   :predefinedValues {:aiaOcspServers [string],
-                      :keyUsage KeyUsage,
-                      :additionalExtensions [X509Extension],
-                      :caOptions CaOptions,
-                      :policyIds [ObjectId]},
-   :updateTime string,
-   :name string,
-   :description string,
-   :passthroughExtensions {:knownExtensions [string],
-                           :additionalExtensions [ObjectId]},
-   :identityConstraints {:allowSubjectPassthrough boolean,
-                         :allowSubjectAltNamesPassthrough boolean,
-                         :celExpression Expr}}
-  
-  Update a CertificateTemplate."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-certificateTemplates-setIamPolicy$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
-            :version integer,
-            :bindings [Binding],
-            :etag string}}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-certificateTemplates-create$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/create
   
   Required parameters: parent
   
-  Optional parameters: requestId, certificateTemplateId
+  Optional parameters: certificateTemplateId, requestId
   
   Body: 
   
-  {:createTime string,
-   :labels {},
-   :predefinedValues {:aiaOcspServers [string],
-                      :keyUsage KeyUsage,
-                      :additionalExtensions [X509Extension],
-                      :caOptions CaOptions,
-                      :policyIds [ObjectId]},
-   :updateTime string,
+  {:identityConstraints {:allowSubjectAltNamesPassthrough boolean,
+                         :celExpression Expr,
+                         :allowSubjectPassthrough boolean},
    :name string,
+   :labels {},
+   :updateTime string,
+   :predefinedValues {:additionalExtensions [X509Extension],
+                      :aiaOcspServers [string],
+                      :caOptions CaOptions,
+                      :keyUsage KeyUsage,
+                      :policyIds [ObjectId]},
    :description string,
-   :passthroughExtensions {:knownExtensions [string],
-                           :additionalExtensions [ObjectId]},
-   :identityConstraints {:allowSubjectPassthrough boolean,
-                         :allowSubjectAltNamesPassthrough boolean,
-                         :celExpression Expr}}
+   :createTime string,
+   :passthroughExtensions {:additionalExtensions [ObjectId],
+                           :knownExtensions [string]}}
   
   Create a new CertificateTemplate in a given Project and Location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1314,19 +1278,107 @@
       :as :json}
      auth))))
 
-(defn locations-certificateTemplates-get$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/get
+(defn locations-certificateTemplates-setIamPolicy$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
-  Returns a CertificateTemplate."
+  Body: 
+  
+  {:updateMask string,
+   :policy {:etag string,
+            :auditConfigs [AuditConfig],
+            :version integer,
+            :bindings [Binding]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-certificateTemplates-list$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/certificateTemplates/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, orderBy, pageSize
+  
+  Lists CertificateTemplates."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+parent}/certificateTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://privateca.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-delete$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://privateca.googleapis.com/"
      "v1/{+name}"
@@ -1366,32 +1418,6 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-operations-cancel$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/operations/cancel
   
@@ -1419,32 +1445,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-delete$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://privateca.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

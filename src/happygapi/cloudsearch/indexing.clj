@@ -6,34 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn datasources-deleteSchema$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/deleteSchema
-  
-  Required parameters: name
-  
-  Optional parameters: debugOptions.enableDebugging
-  
-  Deletes the schema of a data source. **Note:** This API requires an admin or service account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.settings"
-            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/indexing/{+name}/schema"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn datasources-getSchema$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/getSchema
   
@@ -62,6 +34,34 @@
       :as :json}
      auth))))
 
+(defn datasources-deleteSchema$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/deleteSchema
+  
+  Required parameters: name
+  
+  Optional parameters: debugOptions.enableDebugging
+  
+  Deletes the schema of a data source. **Note:** This API requires an admin or service account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.settings"
+            "https://www.googleapis.com/auth/cloud_search.settings.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/indexing/{+name}/schema"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn datasources-updateSchema$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing/datasources/updateSchema
   
@@ -72,9 +72,9 @@
   Body: 
   
   {:validateOnly boolean,
-   :schema {:operationIds [string],
-            :objectDefinitions [ObjectDefinition]},
-   :debugOptions {:enableDebugging boolean}}
+   :debugOptions {:enableDebugging boolean},
+   :schema {:objectDefinitions [ObjectDefinition],
+            :operationIds [string]}}
   
   Updates the schema of a data source. This method does not perform incremental updates to the schema. Instead, this method updates the schema by overwriting the entire schema. **Note:** This API requires an admin or service account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -135,13 +135,13 @@
   
   Body: 
   
-  {:item {:payload string,
-          :metadataHash string,
+  {:item {:queue string,
           :contentHash string,
-          :type string,
+          :payload string,
           :repositoryError RepositoryError,
           :structuredDataHash string,
-          :queue string},
+          :type string,
+          :metadataHash string},
    :connectorName string,
    :debugOptions {:enableDebugging boolean}}
   
@@ -176,7 +176,10 @@
   
   Body: 
   
-  {:mode string,
+  {:debugOptions {:enableDebugging boolean},
+   :connectorName string,
+   :mode string,
+   :indexItemOptions {:allowUnknownGsuitePrincipals boolean},
    :item {:payload string,
           :queue string,
           :content ItemContent,
@@ -186,10 +189,7 @@
           :itemType string,
           :version string,
           :structuredData ItemStructuredData,
-          :metadata ItemMetadata},
-   :connectorName string,
-   :indexItemOptions {:allowUnknownGsuitePrincipals boolean},
-   :debugOptions {:enableDebugging boolean}}
+          :metadata ItemMetadata}}
   
   Updates Item ACL, metadata, and content. It will insert the Item if it does not exist. This method does not support partial updates. Fields with no provided values are cleared out in the Cloud Search index. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -218,7 +218,7 @@
   
   Required parameters: name
   
-  Optional parameters: version, connectorName, mode, debugOptions.enableDebugging
+  Optional parameters: version, debugOptions.enableDebugging, mode, connectorName
   
   Deletes Item resource for the specified resource name. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -249,9 +249,9 @@
   
   Body: 
   
-  {:queue string,
+  {:debugOptions {:enableDebugging boolean},
    :connectorName string,
-   :debugOptions {:enableDebugging boolean}}
+   :queue string}
   
   Deletes all items in a queue. This method is useful for deleting stale items. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -284,11 +284,11 @@
   
   Body: 
   
-  {:debugOptions {:enableDebugging boolean},
-   :connectorName string,
-   :statusCodes [string],
+  {:connectorName string,
+   :debugOptions {:enableDebugging boolean},
    :limit integer,
-   :queue string}
+   :queue string,
+   :statusCodes [string]}
   
   Polls for unreserved items from the indexing queue and marks a set as reserved, starting with items that have the oldest timestamp from the highest priority ItemStatus. The priority order is as follows: ERROR MODIFIED NEW_ITEM ACCEPTED Reserving items ensures that polling from other threads cannot create overlapping sets. After handling the reserved items, the client should put items back into the unreserved state, either by calling index, or by calling push with the type REQUEUE. Items automatically become available (unreserved) after 4 hours even if no update or push method is called. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -317,7 +317,7 @@
   
   Required parameters: name
   
-  Optional parameters: brief, debugOptions.enableDebugging, pageToken, connectorName, pageSize
+  Optional parameters: pageSize, debugOptions.enableDebugging, brief, pageToken, connectorName
   
   Lists all or a subset of Item resources. This API requires an admin or service account to execute. The service account used is the one whitelisted in the corresponding data source."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"

@@ -6,38 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listtransactions$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreports/listtransactions
-  
-  Required parameters: disbursementId, merchantId
-  
-  Optional parameters: transactionStartDate, transactionEndDate, maxResults, pageToken
-  
-  Retrieves a list of transactions for a disbursement from your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:disbursementId :merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreports/disbursements/{disbursementId}/transactions"
-     #{:disbursementId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn listdisbursements$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreports/listdisbursements
   
   Required parameters: merchantId
   
-  Optional parameters: disbursementStartDate, pageToken, maxResults, disbursementEndDate
+  Optional parameters: pageToken, disbursementEndDate, disbursementStartDate, maxResults
   
   Retrieves a report for disbursements from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -49,6 +23,32 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/orderreports/disbursements"
      #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listtransactions$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreports/listtransactions
+  
+  Required parameters: merchantId, disbursementId
+  
+  Optional parameters: transactionStartDate, maxResults, transactionEndDate, pageToken
+  
+  Retrieves a list of transactions for a disbursement from your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:disbursementId :merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/orderreports/disbursements/{disbursementId}/transactions"
+     #{:disbursementId :merchantId}
      parameters)
     (merge-with
      merge

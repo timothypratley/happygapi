@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/dnsKeys/get
   
-  Required parameters: project, dnsKeyId, managedZone
+  Required parameters: managedZone, dnsKeyId, project
   
   Optional parameters: clientOperationId, digestType
   
@@ -40,7 +40,7 @@
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/dnsKeys/list
   
-  Required parameters: project, managedZone
+  Required parameters: managedZone, project
   
   Optional parameters: pageToken, digestType, maxResults
   

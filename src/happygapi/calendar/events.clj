@@ -9,9 +9,9 @@
 (defn get$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events/get
   
-  Required parameters: calendarId, eventId
+  Required parameters: eventId, calendarId
   
-  Optional parameters: maxAttendees, alwaysIncludeEmail, timeZone
+  Optional parameters: alwaysIncludeEmail, timeZone, maxAttendees
   
   Returns an event."
   {:scopes ["https://www.googleapis.com/auth/calendar"
@@ -40,7 +40,7 @@
   
   Required parameters: calendarId
   
-  Optional parameters: maxAttendees, sendNotifications, sendUpdates, conferenceDataVersion, supportsAttachments
+  Optional parameters: conferenceDataVersion, supportsAttachments, sendNotifications, sendUpdates, maxAttendees
   
   Body: 
   
@@ -48,33 +48,33 @@
    :recurringEventId string,
    :description string,
    :eventType string,
-   :creator {:displayName string,
+   :creator {:self boolean,
+             :displayName string,
              :email string,
-             :self boolean,
              :id string},
    :privateCopy boolean,
-   :extendedProperties {:shared {}, :private {}},
+   :extendedProperties {:private {}, :shared {}},
    :updated string,
    :endTimeUnspecified boolean,
-   :attachments [{:mimeType string,
+   :attachments [{:iconLink string,
                   :title string,
                   :fileUrl string,
-                  :iconLink string,
-                  :fileId string}],
-   :conferenceData {:parameters ConferenceParameters,
-                    :notes string,
+                  :fileId string,
+                  :mimeType string}],
+   :conferenceData {:notes string,
                     :createRequest CreateConferenceRequest,
+                    :signature string,
                     :conferenceId string,
-                    :entryPoints [EntryPoint],
+                    :parameters ConferenceParameters,
                     :conferenceSolution ConferenceSolution,
-                    :signature string},
+                    :entryPoints [EntryPoint]},
    :htmlLink string,
-   :start {:date string, :dateTime string, :timeZone string},
+   :start {:timeZone string, :dateTime string, :date string},
    :etag string,
    :created string,
    :guestsCanSeeOtherGuests boolean,
-   :originalStartTime {:date string, :dateTime string, :timeZone string},
-   :source {:url string, :title string},
+   :originalStartTime {:timeZone string, :dateTime string, :date string},
+   :source {:title string, :url string},
    :summary string,
    :attendees [{:email string,
                 :displayName string,
@@ -95,25 +95,25 @@
    :sequence integer,
    :guestsCanInviteOthers boolean,
    :recurrence [string],
-   :gadget {:type string,
-            :preferences {},
-            :width integer,
-            :iconLink string,
+   :gadget {:width integer,
+            :type string,
             :display string,
+            :iconLink string,
             :link string,
+            :title string,
             :height integer,
-            :title string},
+            :preferences {}},
    :reminders {:useDefault boolean,
-               :overrides [{:method string, :minutes integer}]},
+               :overrides [{:minutes integer, :method string}]},
    :guestsCanModify boolean,
-   :end {:date string, :dateTime string, :timeZone string},
+   :end {:timeZone string, :dateTime string, :date string},
    :colorId string,
    :location string,
    :visibility string,
    :hangoutLink string,
-   :organizer {:id string,
+   :organizer {:displayName string,
+               :id string,
                :self boolean,
-               :displayName string,
                :email string},
    :transparency string}
   
@@ -144,7 +144,7 @@
   
   Required parameters: eventId, calendarId
   
-  Optional parameters: supportsAttachments, sendNotifications, maxAttendees, conferenceDataVersion, sendUpdates, alwaysIncludeEmail
+  Optional parameters: conferenceDataVersion, sendUpdates, alwaysIncludeEmail, supportsAttachments, sendNotifications, maxAttendees
   
   Body: 
   
@@ -152,33 +152,33 @@
    :recurringEventId string,
    :description string,
    :eventType string,
-   :creator {:displayName string,
+   :creator {:self boolean,
+             :displayName string,
              :email string,
-             :self boolean,
              :id string},
    :privateCopy boolean,
-   :extendedProperties {:shared {}, :private {}},
+   :extendedProperties {:private {}, :shared {}},
    :updated string,
    :endTimeUnspecified boolean,
-   :attachments [{:mimeType string,
+   :attachments [{:iconLink string,
                   :title string,
                   :fileUrl string,
-                  :iconLink string,
-                  :fileId string}],
-   :conferenceData {:parameters ConferenceParameters,
-                    :notes string,
+                  :fileId string,
+                  :mimeType string}],
+   :conferenceData {:notes string,
                     :createRequest CreateConferenceRequest,
+                    :signature string,
                     :conferenceId string,
-                    :entryPoints [EntryPoint],
+                    :parameters ConferenceParameters,
                     :conferenceSolution ConferenceSolution,
-                    :signature string},
+                    :entryPoints [EntryPoint]},
    :htmlLink string,
-   :start {:date string, :dateTime string, :timeZone string},
+   :start {:timeZone string, :dateTime string, :date string},
    :etag string,
    :created string,
    :guestsCanSeeOtherGuests boolean,
-   :originalStartTime {:date string, :dateTime string, :timeZone string},
-   :source {:url string, :title string},
+   :originalStartTime {:timeZone string, :dateTime string, :date string},
+   :source {:title string, :url string},
    :summary string,
    :attendees [{:email string,
                 :displayName string,
@@ -199,25 +199,25 @@
    :sequence integer,
    :guestsCanInviteOthers boolean,
    :recurrence [string],
-   :gadget {:type string,
-            :preferences {},
-            :width integer,
-            :iconLink string,
+   :gadget {:width integer,
+            :type string,
             :display string,
+            :iconLink string,
             :link string,
+            :title string,
             :height integer,
-            :title string},
+            :preferences {}},
    :reminders {:useDefault boolean,
-               :overrides [{:method string, :minutes integer}]},
+               :overrides [{:minutes integer, :method string}]},
    :guestsCanModify boolean,
-   :end {:date string, :dateTime string, :timeZone string},
+   :end {:timeZone string, :dateTime string, :date string},
    :colorId string,
    :location string,
    :visibility string,
    :hangoutLink string,
-   :organizer {:id string,
+   :organizer {:displayName string,
+               :id string,
                :self boolean,
-               :displayName string,
                :email string},
    :transparency string}
   
@@ -246,7 +246,7 @@
 (defn move$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events/move
   
-  Required parameters: calendarId, eventId, destination
+  Required parameters: destination, eventId, calendarId
   
   Optional parameters: sendUpdates, sendNotifications
   
@@ -275,9 +275,9 @@
 (defn update$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events/update
   
-  Required parameters: calendarId, eventId
+  Required parameters: eventId, calendarId
   
-  Optional parameters: maxAttendees, conferenceDataVersion, sendUpdates, alwaysIncludeEmail, sendNotifications, supportsAttachments
+  Optional parameters: alwaysIncludeEmail, supportsAttachments, sendNotifications, conferenceDataVersion, maxAttendees, sendUpdates
   
   Body: 
   
@@ -285,33 +285,33 @@
    :recurringEventId string,
    :description string,
    :eventType string,
-   :creator {:displayName string,
+   :creator {:self boolean,
+             :displayName string,
              :email string,
-             :self boolean,
              :id string},
    :privateCopy boolean,
-   :extendedProperties {:shared {}, :private {}},
+   :extendedProperties {:private {}, :shared {}},
    :updated string,
    :endTimeUnspecified boolean,
-   :attachments [{:mimeType string,
+   :attachments [{:iconLink string,
                   :title string,
                   :fileUrl string,
-                  :iconLink string,
-                  :fileId string}],
-   :conferenceData {:parameters ConferenceParameters,
-                    :notes string,
+                  :fileId string,
+                  :mimeType string}],
+   :conferenceData {:notes string,
                     :createRequest CreateConferenceRequest,
+                    :signature string,
                     :conferenceId string,
-                    :entryPoints [EntryPoint],
+                    :parameters ConferenceParameters,
                     :conferenceSolution ConferenceSolution,
-                    :signature string},
+                    :entryPoints [EntryPoint]},
    :htmlLink string,
-   :start {:date string, :dateTime string, :timeZone string},
+   :start {:timeZone string, :dateTime string, :date string},
    :etag string,
    :created string,
    :guestsCanSeeOtherGuests boolean,
-   :originalStartTime {:date string, :dateTime string, :timeZone string},
-   :source {:url string, :title string},
+   :originalStartTime {:timeZone string, :dateTime string, :date string},
+   :source {:title string, :url string},
    :summary string,
    :attendees [{:email string,
                 :displayName string,
@@ -332,25 +332,25 @@
    :sequence integer,
    :guestsCanInviteOthers boolean,
    :recurrence [string],
-   :gadget {:type string,
-            :preferences {},
-            :width integer,
-            :iconLink string,
+   :gadget {:width integer,
+            :type string,
             :display string,
+            :iconLink string,
             :link string,
+            :title string,
             :height integer,
-            :title string},
+            :preferences {}},
    :reminders {:useDefault boolean,
-               :overrides [{:method string, :minutes integer}]},
+               :overrides [{:minutes integer, :method string}]},
    :guestsCanModify boolean,
-   :end {:date string, :dateTime string, :timeZone string},
+   :end {:timeZone string, :dateTime string, :date string},
    :colorId string,
    :location string,
    :visibility string,
    :hangoutLink string,
-   :organizer {:id string,
+   :organizer {:displayName string,
+               :id string,
                :self boolean,
-               :displayName string,
                :email string},
    :transparency string}
   
@@ -379,7 +379,7 @@
 (defn delete$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events/delete
   
-  Required parameters: eventId, calendarId
+  Required parameters: calendarId, eventId
   
   Optional parameters: sendNotifications, sendUpdates
   
@@ -508,7 +508,7 @@
 (defn quickAdd$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events/quickAdd
   
-  Required parameters: calendarId, text
+  Required parameters: text, calendarId
   
   Optional parameters: sendUpdates, sendNotifications
   
@@ -537,7 +537,7 @@
   
   Required parameters: calendarId
   
-  Optional parameters: supportsAttachments, conferenceDataVersion
+  Optional parameters: conferenceDataVersion, supportsAttachments
   
   Body: 
   
@@ -545,33 +545,33 @@
    :recurringEventId string,
    :description string,
    :eventType string,
-   :creator {:displayName string,
+   :creator {:self boolean,
+             :displayName string,
              :email string,
-             :self boolean,
              :id string},
    :privateCopy boolean,
-   :extendedProperties {:shared {}, :private {}},
+   :extendedProperties {:private {}, :shared {}},
    :updated string,
    :endTimeUnspecified boolean,
-   :attachments [{:mimeType string,
+   :attachments [{:iconLink string,
                   :title string,
                   :fileUrl string,
-                  :iconLink string,
-                  :fileId string}],
-   :conferenceData {:parameters ConferenceParameters,
-                    :notes string,
+                  :fileId string,
+                  :mimeType string}],
+   :conferenceData {:notes string,
                     :createRequest CreateConferenceRequest,
+                    :signature string,
                     :conferenceId string,
-                    :entryPoints [EntryPoint],
+                    :parameters ConferenceParameters,
                     :conferenceSolution ConferenceSolution,
-                    :signature string},
+                    :entryPoints [EntryPoint]},
    :htmlLink string,
-   :start {:date string, :dateTime string, :timeZone string},
+   :start {:timeZone string, :dateTime string, :date string},
    :etag string,
    :created string,
    :guestsCanSeeOtherGuests boolean,
-   :originalStartTime {:date string, :dateTime string, :timeZone string},
-   :source {:url string, :title string},
+   :originalStartTime {:timeZone string, :dateTime string, :date string},
+   :source {:title string, :url string},
    :summary string,
    :attendees [{:email string,
                 :displayName string,
@@ -592,25 +592,25 @@
    :sequence integer,
    :guestsCanInviteOthers boolean,
    :recurrence [string],
-   :gadget {:type string,
-            :preferences {},
-            :width integer,
-            :iconLink string,
+   :gadget {:width integer,
+            :type string,
             :display string,
+            :iconLink string,
             :link string,
+            :title string,
             :height integer,
-            :title string},
+            :preferences {}},
    :reminders {:useDefault boolean,
-               :overrides [{:method string, :minutes integer}]},
+               :overrides [{:minutes integer, :method string}]},
    :guestsCanModify boolean,
-   :end {:date string, :dateTime string, :timeZone string},
+   :end {:timeZone string, :dateTime string, :date string},
    :colorId string,
    :location string,
    :visibility string,
    :hangoutLink string,
-   :organizer {:id string,
+   :organizer {:displayName string,
+               :id string,
                :self boolean,
-               :displayName string,
                :email string},
    :transparency string}
   

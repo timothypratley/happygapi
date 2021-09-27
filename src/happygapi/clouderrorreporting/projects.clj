@@ -32,6 +32,32 @@
       :as :json}
      auth))))
 
+(defn groupStats-list$
+  "https://cloud.google.com/error-reporting/api/reference/rest/v1beta1/projects/groupStats/list
+  
+  Required parameters: projectName
+  
+  Optional parameters: groupId, serviceFilter.resourceType, alignment, pageToken, alignmentTime, pageSize, serviceFilter.version, timeRange.period, order, timedCountDuration, serviceFilter.service
+  
+  Lists the specified groups."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectName})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://clouderrorreporting.googleapis.com/"
+     "v1beta1/{+projectName}/groupStats"
+     #{:projectName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn events-report$
   "https://cloud.google.com/error-reporting/api/reference/rest/v1beta1/projects/events/report
   
@@ -41,15 +67,15 @@
   
   Body: 
   
-  {:context {:user string,
+  {:context {:httpRequest HttpRequestContext,
              :reportLocation SourceLocation,
-             :sourceReferences [SourceReference],
-             :httpRequest HttpRequestContext},
+             :user string,
+             :sourceReferences [SourceReference]},
    :message string,
-   :serviceContext {:resourceType string,
+   :eventTime string,
+   :serviceContext {:version string,
                     :service string,
-                    :version string},
-   :eventTime string}
+                    :resourceType string}}
   
   Report an individual error event and record the event to a log. This endpoint accepts **either** an OAuth token, **or** an [API key](https://support.google.com/cloud/answer/6158862) for authentication. To use an API key, append it to the URL as the value of a `key` parameter. For example: `POST https://clouderrorreporting.googleapis.com/v1beta1/{projectName}/events:report?key=123ABC456` **Note:** [Error Reporting] (https://cloud.google.com/error-reporting) is a global service built on Cloud Logging and doesn't analyze logs stored in regional log buckets or logs routed to other Google Cloud projects. For more information, see [Using Error Reporting with regionalized logs] (https://cloud.google.com/error-reporting/docs/regionalization)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -77,7 +103,7 @@
   
   Required parameters: projectName
   
-  Optional parameters: pageToken, serviceFilter.service, groupId, serviceFilter.resourceType, serviceFilter.version, pageSize, timeRange.period
+  Optional parameters: serviceFilter.version, pageToken, serviceFilter.resourceType, timeRange.period, groupId, pageSize, serviceFilter.service
   
   Lists the specified events."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -88,32 +114,6 @@
     (util/get-url
      "https://clouderrorreporting.googleapis.com/"
      "v1beta1/{+projectName}/events"
-     #{:projectName}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn groupStats-list$
-  "https://cloud.google.com/error-reporting/api/reference/rest/v1beta1/projects/groupStats/list
-  
-  Required parameters: projectName
-  
-  Optional parameters: groupId, serviceFilter.resourceType, alignment, pageToken, alignmentTime, pageSize, serviceFilter.version, timeRange.period, order, timedCountDuration, serviceFilter.service
-  
-  Lists the specified groups."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectName})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://clouderrorreporting.googleapis.com/"
-     "v1beta1/{+projectName}/groupStats"
      #{:projectName}
      parameters)
     (merge-with
@@ -159,10 +159,10 @@
   
   Body: 
   
-  {:resolutionStatus string,
-   :trackingIssues [{:url string}],
+  {:trackingIssues [{:url string}],
    :name string,
-   :groupId string}
+   :groupId string,
+   :resolutionStatus string}
   
   Replace the data for the specified group. Fails if the group does not exist."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

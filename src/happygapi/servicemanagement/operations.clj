@@ -38,7 +38,7 @@
   
   Required parameters: none
   
-  Optional parameters: filter, pageToken, name, pageSize
+  Optional parameters: filter, name, pageSize, pageToken
   
   Lists service operations that match the specified filter in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

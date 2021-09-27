@@ -6,45 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn suggest$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/suggest
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:query string,
-   :dataSourceRestrictions [{:filterOptions [FilterOptions],
-                             :source Source}],
-   :requestOptions {:languageCode string,
-                    :searchApplicationId string,
-                    :debugOptions DebugOptions,
-                    :timeZone string}}
-  
-  Provides suggestions for autocompleting the query. **Note:** This API requires a standard end user account to execute. A service account can't perform Query API requests directly; to use a service account to perform queries, set up [Google Workspace domain-wide delegation of authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.query"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/query/suggest"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn search$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/search
   
@@ -54,19 +15,20 @@
   
   Body: 
   
-  {:sortOptions {:operatorName string, :sortOrder string},
+  {:sortOptions {:sortOrder string, :operatorName string},
    :contextAttributes [{:name string, :values [string]}],
    :start integer,
-   :requestOptions {:languageCode string,
-                    :searchApplicationId string,
+   :requestOptions {:timeZone string,
                     :debugOptions DebugOptions,
-                    :timeZone string},
+                    :searchApplicationId string,
+                    :languageCode string},
    :pageSize integer,
-   :facetOptions [{:sourceName string,
-                   :objectType string,
-                   :operatorName string,
-                   :numFacetBuckets integer}],
-   :queryInterpretationOptions {:disableNlInterpretation boolean,
+   :facetOptions [{:operatorName string,
+                   :numFacetBuckets integer,
+                   :sourceName string,
+                   :objectType string}],
+   :queryInterpretationOptions {:disableSupplementalResults boolean,
+                                :disableNlInterpretation boolean,
                                 :enableVerbatimMode boolean},
    :dataSourceRestrictions [{:filterOptions [FilterOptions],
                              :source Source}],
@@ -94,12 +56,51 @@
       :as :json}
      auth))))
 
+(defn suggest$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/suggest
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requestOptions {:timeZone string,
+                    :debugOptions DebugOptions,
+                    :searchApplicationId string,
+                    :languageCode string},
+   :dataSourceRestrictions [{:filterOptions [FilterOptions],
+                             :source Source}],
+   :query string}
+  
+  Provides suggestions for autocompleting the query. **Note:** This API requires a standard end user account to execute. A service account can't perform Query API requests directly; to use a service account to perform queries, set up [Google Workspace domain-wide delegation of authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.query"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/query/suggest"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn sources-list$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/query/sources/list
   
   Required parameters: none
   
-  Optional parameters: requestOptions.languageCode, requestOptions.searchApplicationId, pageToken, requestOptions.timeZone, requestOptions.debugOptions.enableDebugging
+  Optional parameters: requestOptions.searchApplicationId, requestOptions.languageCode, requestOptions.debugOptions.enableDebugging, pageToken, requestOptions.timeZone
   
   Returns list of sources that user can use for Search and Suggest APIs. **Note:** This API requires a standard end user account to execute. A service account can't perform Query API requests directly; to use a service account to perform queries, set up [Google Workspace domain-wide delegation of authority](https://developers.google.com/cloud-search/docs/guides/delegation/)."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"

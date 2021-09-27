@@ -1,13 +1,13 @@
 (ns happygapi.sqladmin.instances
   "Cloud SQL Admin API: instances.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances"
+  See: https://developers.google.com/cloud-sql/api/reference/rest/v1/instances"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn failover$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/failover
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/failover
   
   Required parameters: instance, project
   
@@ -17,7 +17,7 @@
   
   {:failoverContext {:kind string, :settingsVersion string}}
   
-  Failover the instance to its failover replica instance. Using this operation might cause your instance to restart."
+  Initiates a manual failover of a high availability (HA) primary instance to a standby instance, which becomes the primary instance. Users are then rerouted to the new primary. For more information, see the Overview of high availability page in the Cloud SQL documentation. If using Legacy HA (MySQL only), this causes the instance to failover to its failover replica instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters body]
@@ -26,7 +26,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/failover"
+     "v1/projects/{project}/instances/{instance}/failover"
      #{:instance :project}
      parameters)
     (merge-with
@@ -40,9 +40,9 @@
      auth))))
 
 (defn get$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/get
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/get
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
@@ -55,7 +55,7 @@
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}"
+     "v1/projects/{project}/instances/{instance}"
      #{:instance :project}
      parameters)
     (merge-with
@@ -67,7 +67,7 @@
      auth))))
 
 (defn insert$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/insert
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/insert
   
   Required parameters: project
   
@@ -75,14 +75,15 @@
   
   Body: 
   
-  {:onPremisesConfiguration {:username string,
-                             :kind string,
+  {:onPremisesConfiguration {:sourceInstance InstanceReference,
                              :clientCertificate string,
-                             :dumpFilePath string,
-                             :caCertificate string,
-                             :hostPort string,
                              :password string,
-                             :clientKey string},
+                             :clientKey string,
+                             :caCertificate string,
+                             :username string,
+                             :kind string,
+                             :dumpFilePath string,
+                             :hostPort string},
    :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
@@ -92,11 +93,13 @@
    :gceZone string,
    :name string,
    :masterInstanceName string,
+   :createTime string,
    :settings {:activeDirectoryConfig SqlActiveDirectoryConfig,
               :availabilityType string,
               :tier string,
               :databaseFlags [DatabaseFlags],
               :databaseReplicationEnabled boolean,
+              :sqlServerAuditConfig SqlServerAuditConfig,
               :settingsVersion string,
               :storageAutoResizeLimit string,
               :crashSafeReplicationEnabled boolean,
@@ -118,24 +121,25 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
+   :ipAddresses [{:ipAddress string, :type string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
    :diskEncryptionStatus {:kind string, :kmsKeyVersionName string},
    :replicaNames [string],
-   :failoverReplica {:name string, :available boolean},
+   :failoverReplica {:available boolean, :name string},
    :satisfiesPzs boolean,
    :project string,
    :kind string,
    :backendType string,
    :serviceAccountEmailAddress string,
    :scheduledMaintenance {:canReschedule boolean,
-                          :startTime string,
-                          :canDefer boolean},
-   :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :failoverTarget boolean,
-                          :kind string},
+                          :canDefer boolean,
+                          :scheduleDeadlineTime string,
+                          :startTime string},
+   :replicaConfiguration {:kind string,
+                          :mysqlReplicaConfiguration MySqlReplicaConfiguration,
+                          :failoverTarget boolean},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -147,8 +151,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
-   :outOfDiskReport {:sqlOutOfDiskState string,
-                     :sqlMinRecommendedIncreaseSizeGb integer},
+   :outOfDiskReport {:sqlMinRecommendedIncreaseSizeGb integer,
+                     :sqlOutOfDiskState string},
    :suspensionReason [string]}
   
   Creates a new Cloud SQL instance."
@@ -160,7 +164,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances"
+     "v1/projects/{project}/instances"
      #{:project}
      parameters)
     (merge-with
@@ -174,7 +178,7 @@
      auth))))
 
 (defn demoteMaster$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/demoteMaster
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/demoteMaster
   
   Required parameters: instance, project
   
@@ -182,9 +186,10 @@
   
   Body: 
   
-  {:demoteMasterContext {:masterInstanceName string,
+  {:demoteMasterContext {:kind string,
+                         :masterInstanceName string,
+                         :skipReplicationSetup boolean,
                          :verifyGtidConsistency boolean,
-                         :kind string,
                          :replicaConfiguration DemoteMasterConfiguration}}
   
   Demotes the stand-alone instance to be a Cloud SQL read replica for an external database server."
@@ -196,7 +201,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/demoteMaster"
+     "v1/projects/{project}/instances/{instance}/demoteMaster"
      #{:instance :project}
      parameters)
     (merge-with
@@ -210,7 +215,7 @@
      auth))))
 
 (defn restart$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/restart
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/restart
   
   Required parameters: project, instance
   
@@ -225,7 +230,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/restart"
+     "v1/projects/{project}/instances/{instance}/restart"
      #{:instance :project}
      parameters)
     (merge-with
@@ -237,22 +242,23 @@
      auth))))
 
 (defn patch$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/patch
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/patch
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:onPremisesConfiguration {:username string,
-                             :kind string,
+  {:onPremisesConfiguration {:sourceInstance InstanceReference,
                              :clientCertificate string,
-                             :dumpFilePath string,
-                             :caCertificate string,
-                             :hostPort string,
                              :password string,
-                             :clientKey string},
+                             :clientKey string,
+                             :caCertificate string,
+                             :username string,
+                             :kind string,
+                             :dumpFilePath string,
+                             :hostPort string},
    :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
@@ -262,11 +268,13 @@
    :gceZone string,
    :name string,
    :masterInstanceName string,
+   :createTime string,
    :settings {:activeDirectoryConfig SqlActiveDirectoryConfig,
               :availabilityType string,
               :tier string,
               :databaseFlags [DatabaseFlags],
               :databaseReplicationEnabled boolean,
+              :sqlServerAuditConfig SqlServerAuditConfig,
               :settingsVersion string,
               :storageAutoResizeLimit string,
               :crashSafeReplicationEnabled boolean,
@@ -288,24 +296,25 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
+   :ipAddresses [{:ipAddress string, :type string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
    :diskEncryptionStatus {:kind string, :kmsKeyVersionName string},
    :replicaNames [string],
-   :failoverReplica {:name string, :available boolean},
+   :failoverReplica {:available boolean, :name string},
    :satisfiesPzs boolean,
    :project string,
    :kind string,
    :backendType string,
    :serviceAccountEmailAddress string,
    :scheduledMaintenance {:canReschedule boolean,
-                          :startTime string,
-                          :canDefer boolean},
-   :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :failoverTarget boolean,
-                          :kind string},
+                          :canDefer boolean,
+                          :scheduleDeadlineTime string,
+                          :startTime string},
+   :replicaConfiguration {:kind string,
+                          :mysqlReplicaConfiguration MySqlReplicaConfiguration,
+                          :failoverTarget boolean},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -317,8 +326,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
-   :outOfDiskReport {:sqlOutOfDiskState string,
-                     :sqlMinRecommendedIncreaseSizeGb integer},
+   :outOfDiskReport {:sqlMinRecommendedIncreaseSizeGb integer,
+                     :sqlOutOfDiskState string},
    :suspensionReason [string]}
   
   Updates settings of a Cloud SQL instance. This method supports patch semantics."
@@ -330,7 +339,7 @@
    (http/patch
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}"
+     "v1/projects/{project}/instances/{instance}"
      #{:instance :project}
      parameters)
     (merge-with
@@ -344,13 +353,13 @@
      auth))))
 
 (defn addServerCa$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/addServerCa
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/addServerCa
   
   Required parameters: project, instance
   
   Optional parameters: none
   
-  Add a new trusted Certificate Authority (CA) version for the specified instance. Required to prepare for a certificate rotation. If a CA version was previously added but never used in a certificate rotation, this operation replaces that version. There cannot be more than one CA version waiting to be rotated in."
+  Adds a new trusted Certificate Authority (CA) version for the specified instance. Required to prepare for a certificate rotation. If a CA version was previously added but never used in a certificate rotation, this operation replaces that version. There cannot be more than one CA version waiting to be rotated in."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
@@ -359,7 +368,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/addServerCa"
+     "v1/projects/{project}/instances/{instance}/addServerCa"
      #{:instance :project}
      parameters)
     (merge-with
@@ -371,9 +380,9 @@
      auth))))
 
 (defn stopReplica$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/stopReplica
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/stopReplica
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -386,7 +395,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/stopReplica"
+     "v1/projects/{project}/instances/{instance}/stopReplica"
      #{:instance :project}
      parameters)
     (merge-with
@@ -398,7 +407,7 @@
      auth))))
 
 (defn update$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/update
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/update
   
   Required parameters: instance, project
   
@@ -406,14 +415,15 @@
   
   Body: 
   
-  {:onPremisesConfiguration {:username string,
-                             :kind string,
+  {:onPremisesConfiguration {:sourceInstance InstanceReference,
                              :clientCertificate string,
-                             :dumpFilePath string,
-                             :caCertificate string,
-                             :hostPort string,
                              :password string,
-                             :clientKey string},
+                             :clientKey string,
+                             :caCertificate string,
+                             :username string,
+                             :kind string,
+                             :dumpFilePath string,
+                             :hostPort string},
    :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
    :databaseVersion string,
    :maxDiskSize string,
@@ -423,11 +433,13 @@
    :gceZone string,
    :name string,
    :masterInstanceName string,
+   :createTime string,
    :settings {:activeDirectoryConfig SqlActiveDirectoryConfig,
               :availabilityType string,
               :tier string,
               :databaseFlags [DatabaseFlags],
               :databaseReplicationEnabled boolean,
+              :sqlServerAuditConfig SqlServerAuditConfig,
               :settingsVersion string,
               :storageAutoResizeLimit string,
               :crashSafeReplicationEnabled boolean,
@@ -449,24 +461,25 @@
               :authorizedGaeApplications [string]},
    :selfLink string,
    :etag string,
-   :ipAddresses [{:type string, :ipAddress string, :timeToRetire string}],
+   :ipAddresses [{:ipAddress string, :type string, :timeToRetire string}],
    :state string,
    :ipv6Address string,
    :region string,
    :diskEncryptionStatus {:kind string, :kmsKeyVersionName string},
    :replicaNames [string],
-   :failoverReplica {:name string, :available boolean},
+   :failoverReplica {:available boolean, :name string},
    :satisfiesPzs boolean,
    :project string,
    :kind string,
    :backendType string,
    :serviceAccountEmailAddress string,
    :scheduledMaintenance {:canReschedule boolean,
-                          :startTime string,
-                          :canDefer boolean},
-   :replicaConfiguration {:mysqlReplicaConfiguration MySqlReplicaConfiguration,
-                          :failoverTarget boolean,
-                          :kind string},
+                          :canDefer boolean,
+                          :scheduleDeadlineTime string,
+                          :startTime string},
+   :replicaConfiguration {:kind string,
+                          :mysqlReplicaConfiguration MySqlReplicaConfiguration,
+                          :failoverTarget boolean},
    :serverCaCert {:instance string,
                   :expirationTime string,
                   :cert string,
@@ -478,8 +491,8 @@
                   :certSerialNumber string},
    :connectionName string,
    :secondaryGceZone string,
-   :outOfDiskReport {:sqlOutOfDiskState string,
-                     :sqlMinRecommendedIncreaseSizeGb integer},
+   :outOfDiskReport {:sqlMinRecommendedIncreaseSizeGb integer,
+                     :sqlOutOfDiskState string},
    :suspensionReason [string]}
   
   Updates settings of a Cloud SQL instance. Using this operation might cause your instance to restart."
@@ -491,7 +504,7 @@
    (http/put
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}"
+     "v1/projects/{project}/instances/{instance}"
      #{:instance :project}
      parameters)
     (merge-with
@@ -505,7 +518,7 @@
      auth))))
 
 (defn delete$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/delete
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/delete
   
   Required parameters: instance, project
   
@@ -520,7 +533,7 @@
    (http/delete
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}"
+     "v1/projects/{project}/instances/{instance}"
      #{:instance :project}
      parameters)
     (merge-with
@@ -532,7 +545,7 @@
      auth))))
 
 (defn export$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/export
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/export
   
   Required parameters: project, instance
   
@@ -540,15 +553,19 @@
   
   Body: 
   
-  {:exportContext {:fileType string,
-                   :sqlExportOptions {:schemaOnly boolean,
-                                      :mysqlExportOptions {:masterData integer},
-                                      :tables [string]},
-                   :csvExportOptions {:selectQuery string},
-                   :databases [string],
-                   :kind string,
+  {:exportContext {:databases [string],
                    :uri string,
-                   :offload boolean}}
+                   :sqlExportOptions {:tables [string],
+                                      :schemaOnly boolean,
+                                      :mysqlExportOptions {:masterData integer}},
+                   :kind string,
+                   :csvExportOptions {:quoteCharacter string,
+                                      :linesTerminatedBy string,
+                                      :selectQuery string,
+                                      :escapeCharacter string,
+                                      :fieldsTerminatedBy string},
+                   :offload boolean,
+                   :fileType string}}
   
   Exports data from a Cloud SQL instance to a Cloud Storage bucket as a SQL dump or CSV file."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -558,7 +575,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/export"
+     "v1/projects/{project}/instances/{instance}/export"
      #{:instance :project}
      parameters)
     (merge-with
@@ -572,9 +589,9 @@
      auth))))
 
 (defn listServerCas$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/listServerCas
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/listServerCas
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -587,7 +604,7 @@
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/listServerCas"
+     "v1/projects/{project}/instances/{instance}/listServerCas"
      #{:instance :project}
      parameters)
     (merge-with
@@ -599,7 +616,7 @@
      auth))))
 
 (defn promoteReplica$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/promoteReplica
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/promoteReplica
   
   Required parameters: project, instance
   
@@ -614,7 +631,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/promoteReplica"
+     "v1/projects/{project}/instances/{instance}/promoteReplica"
      #{:instance :project}
      parameters)
     (merge-with
@@ -626,7 +643,7 @@
      auth))))
 
 (defn resetSslConfig$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/resetSslConfig
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/resetSslConfig
   
   Required parameters: instance, project
   
@@ -641,7 +658,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/resetSslConfig"
+     "v1/projects/{project}/instances/{instance}/resetSslConfig"
      #{:instance :project}
      parameters)
     (merge-with
@@ -653,7 +670,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/list
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/list
   
   Required parameters: project
   
@@ -668,7 +685,7 @@
    (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances"
+     "v1/projects/{project}/instances"
      #{:project}
      parameters)
     (merge-with
@@ -680,7 +697,7 @@
      auth))))
 
 (defn clone$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/clone
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/clone
   
   Required parameters: instance, project
   
@@ -689,10 +706,10 @@
   Body: 
   
   {:cloneContext {:kind string,
-                  :pointInTime string,
-                  :pitrTimestampMs string,
+                  :binLogCoordinates BinLogCoordinates,
                   :destinationInstanceName string,
-                  :binLogCoordinates BinLogCoordinates}}
+                  :pointInTime string,
+                  :pitrTimestampMs string}}
   
   Creates a Cloud SQL instance as a clone of the source instance. Using this operation might cause your instance to restart."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -703,7 +720,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/clone"
+     "v1/projects/{project}/instances/{instance}/clone"
      #{:instance :project}
      parameters)
     (merge-with
@@ -717,7 +734,7 @@
      auth))))
 
 (defn restoreBackup$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/restoreBackup
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/restoreBackup
   
   Required parameters: project, instance
   
@@ -725,10 +742,10 @@
   
   Body: 
   
-  {:restoreBackupContext {:project string,
+  {:restoreBackupContext {:kind string,
                           :instanceId string,
-                          :backupRunId string,
-                          :kind string}}
+                          :project string,
+                          :backupRunId string}}
   
   Restores a backup of a Cloud SQL instance. Using this operation might cause your instance to restart."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -739,7 +756,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/restoreBackup"
+     "v1/projects/{project}/instances/{instance}/restoreBackup"
      #{:instance :project}
      parameters)
     (merge-with
@@ -753,7 +770,7 @@
      auth))))
 
 (defn startReplica$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/startReplica
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/startReplica
   
   Required parameters: project, instance
   
@@ -768,7 +785,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/startReplica"
+     "v1/projects/{project}/instances/{instance}/startReplica"
      #{:instance :project}
      parameters)
     (merge-with
@@ -780,15 +797,15 @@
      auth))))
 
 (defn rotateServerCa$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/rotateServerCa
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/rotateServerCa
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:rotateServerCaContext {:nextVersion string, :kind string}}
+  {:rotateServerCaContext {:kind string, :nextVersion string}}
   
   Rotates the server certificate to one signed by the Certificate Authority (CA) version previously added with the addServerCA method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -799,7 +816,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/rotateServerCa"
+     "v1/projects/{project}/instances/{instance}/rotateServerCa"
      #{:instance :project}
      parameters)
     (merge-with
@@ -813,7 +830,7 @@
      auth))))
 
 (defn truncateLog$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/truncateLog
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/truncateLog
   
   Required parameters: instance, project
   
@@ -821,7 +838,7 @@
   
   Body: 
   
-  {:truncateLogContext {:kind string, :logType string}}
+  {:truncateLogContext {:logType string, :kind string}}
   
   Truncate MySQL general and slow query log tables MySQL only."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -832,7 +849,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/truncateLog"
+     "v1/projects/{project}/instances/{instance}/truncateLog"
      #{:instance :project}
      parameters)
     (merge-with
@@ -846,23 +863,28 @@
      auth))))
 
 (defn import$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1beta4/instances/import
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/instances/import
   
-  Required parameters: project, instance
+  Required parameters: instance, project
   
   Optional parameters: none
   
   Body: 
   
-  {:importContext {:kind string,
-                   :importUser string,
-                   :database string,
-                   :csvImportOptions {:table string, :columns [string]},
-                   :uri string,
-                   :fileType string,
+  {:importContext {:fileType string,
+                   :kind string,
                    :bakImportOptions {:encryptionOptions {:pvkPath string,
                                                           :certPath string,
-                                                          :pvkPassword string}}}}
+                                                          :pvkPassword string}},
+                   :database string,
+                   :importUser string,
+                   :csvImportOptions {:fieldsTerminatedBy string,
+                                      :columns [string],
+                                      :linesTerminatedBy string,
+                                      :escapeCharacter string,
+                                      :table string,
+                                      :quoteCharacter string},
+                   :uri string}}
   
   Imports data into a Cloud SQL instance from a SQL dump or CSV file in Cloud Storage."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -872,7 +894,7 @@
    (http/post
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "sql/v1beta4/projects/{project}/instances/{instance}/import"
+     "v1/projects/{project}/instances/{instance}/import"
      #{:instance :project}
      parameters)
     (merge-with

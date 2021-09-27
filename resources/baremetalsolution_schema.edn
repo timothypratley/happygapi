@@ -1,0 +1,8 @@
+{:ResetInstanceRequest {:id "ResetInstanceRequest",
+                        :properties {},
+                        :description "Request for ResetInstance.",
+                        :type "object"},
+ :ResetInstanceResponse {:description "Response for ResetInstance.",
+                         :type "object",
+                         :properties {},
+                         :id "ResetInstanceResponse"}}

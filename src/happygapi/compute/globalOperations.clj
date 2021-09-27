@@ -6,10 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/list
+  
+  Required parameters: project
+  
+  Optional parameters: orderBy, maxResults, returnPartialSuccess, filter, pageToken
+  
+  Retrieves a list of Operation resources contained within the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/operations"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn wait$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/wait
   
-  Required parameters: operation, project
+  Required parameters: project, operation
   
   Optional parameters: none
   
@@ -37,7 +65,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/delete
   
-  Required parameters: project, operation
+  Required parameters: operation, project
   
   Optional parameters: none
   
@@ -61,40 +89,12 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/get
-  
-  Required parameters: project, operation
-  
-  Optional parameters: none
-  
-  Retrieves the specified Operations resource. Gets a list of operations by making a `list()` request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:operation :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/operations/{operation}"
-     #{:operation :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn aggregatedList$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, filter, orderBy, includeAllScopes
+  Optional parameters: pageToken, orderBy, filter, includeAllScopes, maxResults, returnPartialSuccess
   
   Retrieves an aggregated list of all operations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -117,25 +117,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/list
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalOperations/get
   
-  Required parameters: project
+  Required parameters: operation, project
   
-  Optional parameters: filter, orderBy, returnPartialSuccess, pageToken, maxResults
+  Optional parameters: none
   
-  Retrieves a list of Operation resources contained within the specified project."
+  Retrieves the specified Operations resource. Gets a list of operations by making a `list()` request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:operation :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/operations"
-     #{:project}
+     "projects/{project}/global/operations/{operation}"
+     #{:operation :project}
      parameters)
     (merge-with
      merge

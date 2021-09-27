@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/display-video/api/reference/rest/v1/inventorySources/list
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, pageToken, filter, advertiserId, partnerId, orderBy
+  
+  Lists inventory sources that are accessible to the current user. The order is defined by the order_by parameter. If a filter by entity_status is not specified, inventory sources with entity status `ENTITY_STATUS_ARCHIVED` will not be included in the results."
+  {:scopes ["https://www.googleapis.com/auth/display-video"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v1/inventorySources"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/display-video/api/reference/rest/v1/inventorySources/get
   
@@ -23,32 +49,6 @@
      "https://displayvideo.googleapis.com/"
      "v1/inventorySources/{+inventorySourceId}"
      #{:inventorySourceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/inventorySources/list
-  
-  Required parameters: none
-  
-  Optional parameters: advertiserId, filter, orderBy, pageSize, partnerId, pageToken
-  
-  Lists inventory sources that are accessible to the current user. The order is defined by the order_by parameter. If a filter by entity_status is not specified, inventory sources with entity status `ENTITY_STATUS_ARCHIVED` will not be included in the results."
-  {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/inventorySources"
-     #{}
      parameters)
     (merge-with
      merge

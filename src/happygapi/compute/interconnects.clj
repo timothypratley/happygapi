@@ -6,29 +6,64 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/get
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/insert
   
-  Required parameters: project, interconnect
+  Required parameters: project
   
-  Optional parameters: none
+  Optional parameters: requestId
   
-  Returns the specified interconnect. Get a list of available interconnects by making a list() request."
+  Body: 
+  
+  {:description string,
+   :provisionedLinkCount integer,
+   :peerIpAddress string,
+   :creationTimestamp string,
+   :name string,
+   :customerName string,
+   :interconnectAttachments [string],
+   :selfLink string,
+   :requestedLinkCount integer,
+   :state string,
+   :interconnectType string,
+   :id string,
+   :kind string,
+   :nocContactEmail string,
+   :expectedOutages [{:endTime string,
+                      :state string,
+                      :description string,
+                      :name string,
+                      :issueType string,
+                      :source string,
+                      :affectedCircuits [string],
+                      :startTime string}],
+   :adminEnabled boolean,
+   :googleIpAddress string,
+   :operationalStatus string,
+   :circuitInfos [{:googleDemarcId string,
+                   :customerDemarcId string,
+                   :googleCircuitId string}],
+   :location string,
+   :googleReferenceId string,
+   :linkType string}
+  
+  Creates a Interconnect in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:interconnect :project})]}
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/interconnects/{interconnect}"
-     #{:interconnect :project}
+     "projects/{project}/global/interconnects"
+     #{:project}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -61,54 +96,21 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/patch
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/get
   
   Required parameters: project, interconnect
   
-  Optional parameters: requestId
+  Optional parameters: none
   
-  Body: 
-  
-  {:description string,
-   :provisionedLinkCount integer,
-   :peerIpAddress string,
-   :creationTimestamp string,
-   :name string,
-   :customerName string,
-   :interconnectAttachments [string],
-   :selfLink string,
-   :requestedLinkCount integer,
-   :state string,
-   :interconnectType string,
-   :id string,
-   :kind string,
-   :nocContactEmail string,
-   :expectedOutages [{:endTime string,
-                      :description string,
-                      :state string,
-                      :affectedCircuits [string],
-                      :issueType string,
-                      :source string,
-                      :name string,
-                      :startTime string}],
-   :adminEnabled boolean,
-   :googleIpAddress string,
-   :operationalStatus string,
-   :circuitInfos [{:googleDemarcId string,
-                   :customerDemarcId string,
-                   :googleCircuitId string}],
-   :location string,
-   :googleReferenceId string,
-   :linkType string}
-  
-  Updates the specified interconnect with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
+  Returns the specified interconnect. Get a list of available interconnects by making a list() request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:interconnect :project})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/interconnects/{interconnect}"
@@ -116,9 +118,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -129,7 +129,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
+  Optional parameters: maxResults, filter, returnPartialSuccess, pageToken, orderBy
   
   Retrieves the list of interconnect available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -152,10 +152,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/insert
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/interconnects/patch
   
-  Required parameters: project
+  Required parameters: interconnect, project
   
   Optional parameters: requestId
   
@@ -176,12 +176,12 @@
    :kind string,
    :nocContactEmail string,
    :expectedOutages [{:endTime string,
-                      :description string,
                       :state string,
-                      :affectedCircuits [string],
+                      :description string,
+                      :name string,
                       :issueType string,
                       :source string,
-                      :name string,
+                      :affectedCircuits [string],
                       :startTime string}],
    :adminEnabled boolean,
    :googleIpAddress string,
@@ -193,17 +193,17 @@
    :googleReferenceId string,
    :linkType string}
   
-  Creates a Interconnect in the specified project using the data included in the request."
+  Updates the specified interconnect with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:interconnect :project})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/interconnects"
-     #{:project}
+     "projects/{project}/global/interconnects/{interconnect}"
+     #{:interconnect :project}
      parameters)
     (merge-with
      merge

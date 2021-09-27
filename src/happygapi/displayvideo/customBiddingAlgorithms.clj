@@ -11,7 +11,7 @@
   
   Required parameters: customBiddingAlgorithmId
   
-  Optional parameters: partnerId, advertiserId
+  Optional parameters: advertiserId, partnerId
   
   Gets a custom bidding algorithm."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: partnerId, filter, pageSize, orderBy, pageToken, advertiserId
+  Optional parameters: partnerId, filter, pageToken, pageSize, orderBy, advertiserId
   
   Lists custom bidding algorithms that are accessible to the current user and can be used in bidding stratgies. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}

@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listScriptProcesses$
-  "https://developers.google.com/apps-script/api/api/reference/rest/v1/processes/listScriptProcesses
-  
-  Required parameters: none
-  
-  Optional parameters: scriptProcessFilter.startTime, scriptProcessFilter.endTime, scriptProcessFilter.userAccessLevels, scriptId, scriptProcessFilter.deploymentId, pageToken, pageSize, scriptProcessFilter.functionName, scriptProcessFilter.statuses, scriptProcessFilter.types
-  
-  List information about a script's executed processes, such as process type and current status."
-  {:scopes ["https://www.googleapis.com/auth/script.processes"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://script.googleapis.com/"
-     "v1/processes:listScriptProcesses"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/apps-script/api/api/reference/rest/v1/processes/list
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://script.googleapis.com/"
      "v1/processes"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listScriptProcesses$
+  "https://developers.google.com/apps-script/api/api/reference/rest/v1/processes/listScriptProcesses
+  
+  Required parameters: none
+  
+  Optional parameters: scriptProcessFilter.startTime, scriptProcessFilter.endTime, scriptProcessFilter.userAccessLevels, scriptId, scriptProcessFilter.deploymentId, pageToken, pageSize, scriptProcessFilter.functionName, scriptProcessFilter.statuses, scriptProcessFilter.types
+  
+  List information about a script's executed processes, such as process type and current status."
+  {:scopes ["https://www.googleapis.com/auth/script.processes"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://script.googleapis.com/"
+     "v1/processes:listScriptProcesses"
      #{}
      parameters)
     (merge-with

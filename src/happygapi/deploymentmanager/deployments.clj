@@ -71,18 +71,18 @@
 (defn setIamPolicy$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/setIamPolicy
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:policy {:version integer,
-            :bindings [Binding],
+  {:etag string,
+   :policy {:bindings [Binding],
             :auditConfigs [AuditConfig],
+            :version integer,
             :etag string},
-   :bindings [{:members [string], :condition Expr, :role string}],
-   :etag string}
+   :bindings [{:condition Expr, :role string, :members [string]}]}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -111,7 +111,7 @@
   
   Required parameters: project
   
-  Optional parameters: createPolicy, preview
+  Optional parameters: preview, createPolicy
   
   Body: 
   
@@ -127,8 +127,8 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:data [{:value string, :key string}],
-                           :message string,
+               :warnings [{:message string,
+                           :data [{:value string, :key string}],
                            :code string}],
                :clientOperationId string,
                :region string,
@@ -139,17 +139,17 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:code string,
-                                 :message string,
-                                 :location string}]},
+               :error {:errors [{:message string,
+                                 :location string,
+                                 :code string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
    :update {:description string,
-            :manifest string,
-            :labels [DeploymentUpdateLabelEntry]},
+            :labels [DeploymentUpdateLabelEntry],
+            :manifest string},
    :manifest string,
    :updateTime string,
    :id string,
@@ -184,7 +184,7 @@
   
   Required parameters: project, deployment
   
-  Optional parameters: deletePolicy, preview, createPolicy
+  Optional parameters: createPolicy, deletePolicy, preview
   
   Body: 
   
@@ -200,8 +200,8 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:data [{:value string, :key string}],
-                           :message string,
+               :warnings [{:message string,
+                           :data [{:value string, :key string}],
                            :code string}],
                :clientOperationId string,
                :region string,
@@ -212,17 +212,17 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:code string,
-                                 :message string,
-                                 :location string}]},
+               :error {:errors [{:message string,
+                                 :location string,
+                                 :code string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
    :update {:description string,
-            :manifest string,
-            :labels [DeploymentUpdateLabelEntry]},
+            :labels [DeploymentUpdateLabelEntry],
+            :manifest string},
    :manifest string,
    :updateTime string,
    :id string,
@@ -288,9 +288,9 @@
 (defn update$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/update
   
-  Required parameters: project, deployment
+  Required parameters: deployment, project
   
-  Optional parameters: createPolicy, preview, deletePolicy
+  Optional parameters: deletePolicy, createPolicy, preview
   
   Body: 
   
@@ -306,8 +306,8 @@
                :endTime string,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:data [{:value string, :key string}],
-                           :message string,
+               :warnings [{:message string,
+                           :data [{:value string, :key string}],
                            :code string}],
                :clientOperationId string,
                :region string,
@@ -318,17 +318,17 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:code string,
-                                 :message string,
-                                 :location string}]},
+               :error {:errors [{:message string,
+                                 :location string,
+                                 :code string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
    :update {:description string,
-            :manifest string,
-            :labels [DeploymentUpdateLabelEntry]},
+            :labels [DeploymentUpdateLabelEntry],
+            :manifest string},
    :manifest string,
    :updateTime string,
    :id string,
@@ -361,7 +361,7 @@
 (defn delete$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/delete
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
   Optional parameters: deletePolicy
   
@@ -415,7 +415,7 @@
 (defn stop$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/stop
   
-  Required parameters: project, deployment
+  Required parameters: deployment, project
   
   Optional parameters: none
   
@@ -450,7 +450,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, filter, pageToken, maxResults
+  Optional parameters: pageToken, filter, maxResults, orderBy
   
   Lists all deployments for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

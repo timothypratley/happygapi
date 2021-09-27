@@ -16,10 +16,10 @@
   Body: 
   
   {:kind string,
-   :dimensionName string,
-   :filters [{:kind string, :dimensionName string, :value string}],
+   :startDate string,
    :endDate string,
-   :startDate string}
+   :dimensionName string,
+   :filters [{:kind string, :dimensionName string, :value string}]}
   
   Retrieves list of report dimension values for a list of filters."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}

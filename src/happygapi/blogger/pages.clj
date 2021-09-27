@@ -6,59 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/list
-  
-  Required parameters: blogId
-  
-  Optional parameters: view, pageToken, status, fetchBodies, maxResults
-  
-  Lists pages."
-  {:scopes ["https://www.googleapis.com/auth/blogger"
-            "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://blogger.googleapis.com/"
-     "v3/blogs/{blogId}/pages"
-     #{:blogId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn publish$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/publish
-  
-  Required parameters: blogId, pageId
-  
-  Optional parameters: none
-  
-  Publishes a page."
-  {:scopes ["https://www.googleapis.com/auth/blogger"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://blogger.googleapis.com/"
-     "v3/blogs/{blogId}/pages/{pageId}/publish"
-     #{:blogId :pageId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/insert
   
@@ -108,9 +55,9 @@
 (defn patch$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/patch
   
-  Required parameters: pageId, blogId
+  Required parameters: blogId, pageId
   
-  Optional parameters: publish, revert
+  Optional parameters: revert, publish
   
   Body: 
   
@@ -151,12 +98,92 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/update
+(defn revert$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/revert
   
   Required parameters: pageId, blogId
   
-  Optional parameters: revert, publish
+  Optional parameters: none
+  
+  Reverts a published or scheduled page to draft state."
+  {:scopes ["https://www.googleapis.com/auth/blogger"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/pages/{pageId}/revert"
+     #{:blogId :pageId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/list
+  
+  Required parameters: blogId
+  
+  Optional parameters: status, pageToken, fetchBodies, maxResults, view
+  
+  Lists pages."
+  {:scopes ["https://www.googleapis.com/auth/blogger"
+            "https://www.googleapis.com/auth/blogger.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/pages"
+     #{:blogId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/get
+  
+  Required parameters: blogId, pageId
+  
+  Optional parameters: view
+  
+  Gets a page by blog id and page id."
+  {:scopes ["https://www.googleapis.com/auth/blogger"
+            "https://www.googleapis.com/auth/blogger.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://blogger.googleapis.com/"
+     "v3/blogs/{blogId}/pages/{pageId}"
+     #{:blogId :pageId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/update
+  
+  Required parameters: blogId, pageId
+  
+  Optional parameters: publish, revert
   
   Body: 
   
@@ -223,14 +250,14 @@
       :as :json}
      auth))))
 
-(defn revert$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/revert
+(defn publish$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/publish
   
-  Required parameters: pageId, blogId
+  Required parameters: blogId, pageId
   
   Optional parameters: none
   
-  Reverts a published or scheduled page to draft state."
+  Publishes a page."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
@@ -238,34 +265,7 @@
    (http/post
     (util/get-url
      "https://blogger.googleapis.com/"
-     "v3/blogs/{blogId}/pages/{pageId}/revert"
-     #{:blogId :pageId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pages/get
-  
-  Required parameters: pageId, blogId
-  
-  Optional parameters: view
-  
-  Gets a page by blog id and page id."
-  {:scopes ["https://www.googleapis.com/auth/blogger"
-            "https://www.googleapis.com/auth/blogger.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId :pageId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://blogger.googleapis.com/"
-     "v3/blogs/{blogId}/pages/{pageId}"
+     "v3/blogs/{blogId}/pages/{pageId}/publish"
      #{:blogId :pageId}
      parameters)
     (merge-with

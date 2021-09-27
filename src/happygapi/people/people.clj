@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: sources, personFields
+  Optional parameters: personFields, sources
   
   Body: 
   
@@ -27,43 +27,43 @@
                 :country string,
                 :metadata FieldMetadata,
                 :countryCode string}],
-   :urls [{:formattedType string,
+   :urls [{:type string,
            :metadata FieldMetadata,
-           :type string,
-           :value string}],
+           :value string,
+           :formattedType string}],
    :relationshipStatuses [{:formattedValue string,
-                           :value string,
-                           :metadata FieldMetadata}],
+                           :metadata FieldMetadata,
+                           :value string}],
    :coverPhotos [{:url string,
-                  :metadata FieldMetadata,
-                  :default boolean}],
-   :birthdays [{:metadata FieldMetadata, :date Date, :text string}],
-   :relations [{:person string,
-                :metadata FieldMetadata,
+                  :default boolean,
+                  :metadata FieldMetadata}],
+   :birthdays [{:date Date, :text string, :metadata FieldMetadata}],
+   :relations [{:metadata FieldMetadata,
                 :type string,
+                :person string,
                 :formattedType string}],
    :ageRange string,
    :events [{:date Date,
+             :metadata FieldMetadata,
              :formattedType string,
-             :type string,
-             :metadata FieldMetadata}],
+             :type string}],
    :phoneNumbers [{:value string,
-                   :type string,
-                   :metadata FieldMetadata,
                    :formattedType string,
-                   :canonicalForm string}],
+                   :metadata FieldMetadata,
+                   :canonicalForm string,
+                   :type string}],
    :etag string,
    :fileAses [{:metadata FieldMetadata, :value string}],
-   :biographies [{:metadata FieldMetadata,
-                  :value string,
+   :biographies [{:value string,
+                  :metadata FieldMetadata,
                   :contentType string}],
-   :emailAddresses [{:displayName string,
-                     :formattedType string,
-                     :value string,
+   :emailAddresses [{:type string,
                      :metadata FieldMetadata,
-                     :type string}],
-   :miscKeywords [{:metadata FieldMetadata,
-                   :formattedType string,
+                     :displayName string,
+                     :formattedType string,
+                     :value string}],
+   :miscKeywords [{:formattedType string,
+                   :metadata FieldMetadata,
                    :value string,
                    :type string}],
    :organizations [{:department string,
@@ -72,7 +72,9 @@
                     :name string,
                     :startDate Date,
                     :type string,
+                    :fullTimeEquivalentMillipercent integer,
                     :phoneticName string,
+                    :costCenter string,
                     :title string,
                     :endDate Date,
                     :jobDescription string,
@@ -80,61 +82,61 @@
                     :domain string,
                     :location string,
                     :metadata FieldMetadata}],
-   :sipAddresses [{:type string,
-                   :metadata FieldMetadata,
+   :sipAddresses [{:formattedType string,
+                   :type string,
                    :value string,
-                   :formattedType string}],
+                   :metadata FieldMetadata}],
    :braggingRights [{:metadata FieldMetadata, :value string}],
    :resourceName string,
-   :locations [{:type string,
-                :current boolean,
-                :deskCode string,
+   :locations [{:metadata FieldMetadata,
+                :type string,
                 :floor string,
                 :floorSection string,
-                :value string,
+                :deskCode string,
                 :buildingId string,
-                :metadata FieldMetadata}],
-   :externalIds [{:value string,
-                  :type string,
+                :value string,
+                :current boolean}],
+   :externalIds [{:formattedType string,
+                  :value string,
                   :metadata FieldMetadata,
-                  :formattedType string}],
-   :relationshipInterests [{:value string,
+                  :type string}],
+   :relationshipInterests [{:metadata FieldMetadata,
                             :formattedValue string,
-                            :metadata FieldMetadata}],
+                            :value string}],
    :photos [{:default boolean, :metadata FieldMetadata, :url string}],
-   :skills [{:metadata FieldMetadata, :value string}],
+   :skills [{:value string, :metadata FieldMetadata}],
    :locales [{:value string, :metadata FieldMetadata}],
    :ageRanges [{:ageRange string, :metadata FieldMetadata}],
-   :memberships [{:contactGroupMembership ContactGroupMembership,
+   :memberships [{:domainMembership DomainMembership,
                   :metadata FieldMetadata,
-                  :domainMembership DomainMembership}],
-   :clientData [{:value string, :key string, :metadata FieldMetadata}],
-   :interests [{:value string, :metadata FieldMetadata}],
-   :nicknames [{:value string, :type string, :metadata FieldMetadata}],
-   :residences [{:current boolean,
-                 :value string,
-                 :metadata FieldMetadata}],
-   :imClients [{:protocol string,
-                :type string,
+                  :contactGroupMembership ContactGroupMembership}],
+   :clientData [{:key string, :metadata FieldMetadata, :value string}],
+   :interests [{:metadata FieldMetadata, :value string}],
+   :nicknames [{:value string, :metadata FieldMetadata, :type string}],
+   :residences [{:metadata FieldMetadata,
+                 :current boolean,
+                 :value string}],
+   :imClients [{:formattedProtocol string,
                 :formattedType string,
-                :formattedProtocol string,
                 :metadata FieldMetadata,
+                :protocol string,
+                :type string,
                 :username string}],
    :genders [{:addressMeAs string,
               :formattedValue string,
-              :value string,
-              :metadata FieldMetadata}],
-   :calendarUrls [{:metadata FieldMetadata,
-                   :type string,
+              :metadata FieldMetadata,
+              :value string}],
+   :calendarUrls [{:formattedType string,
+                   :metadata FieldMetadata,
                    :url string,
-                   :formattedType string}],
+                   :type string}],
    :taglines [{:value string, :metadata FieldMetadata}],
-   :occupations [{:metadata FieldMetadata, :value string}],
-   :metadata {:linkedPeopleResourceNames [string],
-              :previousResourceNames [string],
+   :occupations [{:value string, :metadata FieldMetadata}],
+   :metadata {:previousResourceNames [string],
               :sources [Source],
+              :deleted boolean,
               :objectType string,
-              :deleted boolean},
+              :linkedPeopleResourceNames [string]},
    :names [{:middleName string,
             :phoneticHonorificPrefix string,
             :phoneticHonorificSuffix string,
@@ -150,7 +152,7 @@
             :givenName string,
             :honorificSuffix string,
             :metadata FieldMetadata}],
-   :userDefined [{:key string, :value string, :metadata FieldMetadata}]}
+   :userDefined [{:key string, :metadata FieldMetadata, :value string}]}
   
   Create a new contact and return the person resource for that contact. The request returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names"
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
@@ -178,9 +180,9 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, readMask, query, sources
+  Optional parameters: readMask, pageSize, sources, query
   
-  Provides a list of contacts in the authenticated user's grouped contacts that matches the search query. The query matches on a contact's `names`, `nickNames`, `emailAddresses`, `phoneNumbers`, and `organizations` fields that are from the CONTACT\" source. **IMPORTANT**: Before searching, clients should send a warmup request with an empty query to update the cache. See https://developers.google.com/people/v1/contacts#search_the_users_contacts"
+  Provides a list of contacts in the authenticated user's grouped contacts that matches the search query. The query matches on a contact's `names`, `nickNames`, `emailAddresses`, `phoneNumbers`, and `organizations` fields that are from the CONTACT source. **IMPORTANT**: Before searching, clients should send a warmup request with an empty query to update the cache. See https://developers.google.com/people/v1/contacts#search_the_users_contacts"
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
   [auth parameters]
@@ -205,7 +207,7 @@
   
   Required parameters: resourceName
   
-  Optional parameters: sources, personFields, requestMask.includeField
+  Optional parameters: personFields, requestMask.includeField, sources
   
   Provides information about a person by specifying a resource name. Use `people/me` to indicate the authenticated user. The request returns a 400 error if 'personFields' is not specified."
   {:scopes ["https://www.googleapis.com/auth/contacts"
@@ -241,7 +243,7 @@
   
   Required parameters: none
   
-  Optional parameters: mergeSources, pageSize, sources, query, readMask, pageToken
+  Optional parameters: readMask, sources, pageSize, mergeSources, pageToken, query
   
   Provides a list of domain profiles and domain contacts in the authenticated user's domain directory that match the search query."
   {:scopes ["https://www.googleapis.com/auth/directory.readonly"]}
@@ -293,7 +295,7 @@
   
   Required parameters: resourceName
   
-  Optional parameters: sources, updatePersonFields, personFields
+  Optional parameters: personFields, sources, updatePersonFields
   
   Body: 
   
@@ -309,43 +311,43 @@
                 :country string,
                 :metadata FieldMetadata,
                 :countryCode string}],
-   :urls [{:formattedType string,
+   :urls [{:type string,
            :metadata FieldMetadata,
-           :type string,
-           :value string}],
+           :value string,
+           :formattedType string}],
    :relationshipStatuses [{:formattedValue string,
-                           :value string,
-                           :metadata FieldMetadata}],
+                           :metadata FieldMetadata,
+                           :value string}],
    :coverPhotos [{:url string,
-                  :metadata FieldMetadata,
-                  :default boolean}],
-   :birthdays [{:metadata FieldMetadata, :date Date, :text string}],
-   :relations [{:person string,
-                :metadata FieldMetadata,
+                  :default boolean,
+                  :metadata FieldMetadata}],
+   :birthdays [{:date Date, :text string, :metadata FieldMetadata}],
+   :relations [{:metadata FieldMetadata,
                 :type string,
+                :person string,
                 :formattedType string}],
    :ageRange string,
    :events [{:date Date,
+             :metadata FieldMetadata,
              :formattedType string,
-             :type string,
-             :metadata FieldMetadata}],
+             :type string}],
    :phoneNumbers [{:value string,
-                   :type string,
-                   :metadata FieldMetadata,
                    :formattedType string,
-                   :canonicalForm string}],
+                   :metadata FieldMetadata,
+                   :canonicalForm string,
+                   :type string}],
    :etag string,
    :fileAses [{:metadata FieldMetadata, :value string}],
-   :biographies [{:metadata FieldMetadata,
-                  :value string,
+   :biographies [{:value string,
+                  :metadata FieldMetadata,
                   :contentType string}],
-   :emailAddresses [{:displayName string,
-                     :formattedType string,
-                     :value string,
+   :emailAddresses [{:type string,
                      :metadata FieldMetadata,
-                     :type string}],
-   :miscKeywords [{:metadata FieldMetadata,
-                   :formattedType string,
+                     :displayName string,
+                     :formattedType string,
+                     :value string}],
+   :miscKeywords [{:formattedType string,
+                   :metadata FieldMetadata,
                    :value string,
                    :type string}],
    :organizations [{:department string,
@@ -354,7 +356,9 @@
                     :name string,
                     :startDate Date,
                     :type string,
+                    :fullTimeEquivalentMillipercent integer,
                     :phoneticName string,
+                    :costCenter string,
                     :title string,
                     :endDate Date,
                     :jobDescription string,
@@ -362,61 +366,61 @@
                     :domain string,
                     :location string,
                     :metadata FieldMetadata}],
-   :sipAddresses [{:type string,
-                   :metadata FieldMetadata,
+   :sipAddresses [{:formattedType string,
+                   :type string,
                    :value string,
-                   :formattedType string}],
+                   :metadata FieldMetadata}],
    :braggingRights [{:metadata FieldMetadata, :value string}],
    :resourceName string,
-   :locations [{:type string,
-                :current boolean,
-                :deskCode string,
+   :locations [{:metadata FieldMetadata,
+                :type string,
                 :floor string,
                 :floorSection string,
-                :value string,
+                :deskCode string,
                 :buildingId string,
-                :metadata FieldMetadata}],
-   :externalIds [{:value string,
-                  :type string,
+                :value string,
+                :current boolean}],
+   :externalIds [{:formattedType string,
+                  :value string,
                   :metadata FieldMetadata,
-                  :formattedType string}],
-   :relationshipInterests [{:value string,
+                  :type string}],
+   :relationshipInterests [{:metadata FieldMetadata,
                             :formattedValue string,
-                            :metadata FieldMetadata}],
+                            :value string}],
    :photos [{:default boolean, :metadata FieldMetadata, :url string}],
-   :skills [{:metadata FieldMetadata, :value string}],
+   :skills [{:value string, :metadata FieldMetadata}],
    :locales [{:value string, :metadata FieldMetadata}],
    :ageRanges [{:ageRange string, :metadata FieldMetadata}],
-   :memberships [{:contactGroupMembership ContactGroupMembership,
+   :memberships [{:domainMembership DomainMembership,
                   :metadata FieldMetadata,
-                  :domainMembership DomainMembership}],
-   :clientData [{:value string, :key string, :metadata FieldMetadata}],
-   :interests [{:value string, :metadata FieldMetadata}],
-   :nicknames [{:value string, :type string, :metadata FieldMetadata}],
-   :residences [{:current boolean,
-                 :value string,
-                 :metadata FieldMetadata}],
-   :imClients [{:protocol string,
-                :type string,
+                  :contactGroupMembership ContactGroupMembership}],
+   :clientData [{:key string, :metadata FieldMetadata, :value string}],
+   :interests [{:metadata FieldMetadata, :value string}],
+   :nicknames [{:value string, :metadata FieldMetadata, :type string}],
+   :residences [{:metadata FieldMetadata,
+                 :current boolean,
+                 :value string}],
+   :imClients [{:formattedProtocol string,
                 :formattedType string,
-                :formattedProtocol string,
                 :metadata FieldMetadata,
+                :protocol string,
+                :type string,
                 :username string}],
    :genders [{:addressMeAs string,
               :formattedValue string,
-              :value string,
-              :metadata FieldMetadata}],
-   :calendarUrls [{:metadata FieldMetadata,
-                   :type string,
+              :metadata FieldMetadata,
+              :value string}],
+   :calendarUrls [{:formattedType string,
+                   :metadata FieldMetadata,
                    :url string,
-                   :formattedType string}],
+                   :type string}],
    :taglines [{:value string, :metadata FieldMetadata}],
-   :occupations [{:metadata FieldMetadata, :value string}],
-   :metadata {:linkedPeopleResourceNames [string],
-              :previousResourceNames [string],
+   :occupations [{:value string, :metadata FieldMetadata}],
+   :metadata {:previousResourceNames [string],
               :sources [Source],
+              :deleted boolean,
               :objectType string,
-              :deleted boolean},
+              :linkedPeopleResourceNames [string]},
    :names [{:middleName string,
             :phoneticHonorificPrefix string,
             :phoneticHonorificSuffix string,
@@ -432,7 +436,7 @@
             :givenName string,
             :honorificSuffix string,
             :metadata FieldMetadata}],
-   :userDefined [{:key string, :value string, :metadata FieldMetadata}]}
+   :userDefined [{:key string, :metadata FieldMetadata, :value string}]}
   
   Update contact data for an existing contact person. Any non-contact data will not be modified. Any non-contact data in the person to update will be ignored. All fields specified in the `update_mask` will be replaced. The server returns a 400 error if `person.metadata.sources` is not specified for the contact to be updated or if there is no contact source. The server returns a 400 error with reason `\"failedPrecondition\"` if `person.metadata.sources.etag` is different than the contact's etag, which indicates the contact has changed since its data was read. Clients should get the latest person and merge their updates into the latest person. The server returns a 400 error if `memberships` are being updated and there are no contact group memberships specified on the person. The server returns a 400 error if more than one field is specified on a field that is a singleton for contact sources: * biographies * birthdays * genders * names"
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
@@ -464,7 +468,7 @@
   
   Body: 
   
-  {:photoBytes string, :sources [string], :personFields string}
+  {:sources [string], :photoBytes string, :personFields string}
   
   Update a contact's photo."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
@@ -585,9 +589,9 @@
   
   Required parameters: none
   
-  Optional parameters: syncToken, readMask, sources, pageToken, requestSyncToken, pageSize, mergeSources
+  Optional parameters: pageSize, sources, syncToken, pageToken, requestSyncToken, readMask, mergeSources
   
-  Provides a list of domain profiles and domain contacts in the authenticated user's domain directory."
+  Provides a list of domain profiles and domain contacts in the authenticated user's domain directory. When the `sync_token` is specified, resources deleted since the last sync will be returned as a person with `PersonMetadata.deleted` set to true. When the `page_token` or `sync_token` is specified, all other request parameters must match the first call. Writes may have a propagation delay of several minutes for sync requests. Incremental syncs are not intended for read-after-write use cases. See example usage at [List the directory people that have changed](/people/v1/directory#list_the_directory_people_that_have_changed)."
   {:scopes ["https://www.googleapis.com/auth/directory.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
@@ -611,7 +615,7 @@
   
   Required parameters: none
   
-  Optional parameters: requestMask.includeField, resourceNames, sources, personFields
+  Optional parameters: resourceNames, requestMask.includeField, personFields, sources
   
   Provides information about a list of specific people by specifying a list of requested resource names. Use `people/me` to indicate the authenticated user. The request returns a 400 error if 'personFields' is not specified."
   {:scopes ["https://www.googleapis.com/auth/contacts"
@@ -651,9 +655,9 @@
   
   Body: 
   
-  {:readMask string,
+  {:contacts [{:contactPerson Person}],
    :sources [string],
-   :contacts [{:contactPerson Person}]}
+   :readMask string}
   
   Create a batch of new contacts and return the PersonResponses for the newly created contacts. Limited to 10 parallel requests per user."
   {:scopes ["https://www.googleapis.com/auth/contacts"]}
@@ -683,7 +687,7 @@
   
   Optional parameters: requestSyncToken, requestMask.includeField, sources, personFields, syncToken, pageToken, pageSize, sortOrder
   
-  Provides a list of the authenticated user's contacts. The request returns a 400 error if `personFields` is not specified. The request returns a 410 error if `sync_token` is specified and is expired. Sync tokens expire after 7 days to prevent data drift between clients and the server. To handle a sync token expired error, a request should be sent without `sync_token` to get all contacts."
+  Provides a list of the authenticated user's contacts. Sync tokens expire 7 days after the full sync. A request with an expired sync token will result in a 410 error. In the case of such an error clients should make a full sync request without a `sync_token`. The first page of a full sync request has an additional quota. If the quota is exceeded, a 429 error will be returned. This quota is fixed and can not be increased. When the `sync_token` is specified, resources deleted since the last sync will be returned as a person with `PersonMetadata.deleted` set to true. When the `page_token` or `sync_token` is specified, all other request parameters must match the first call. Writes may have a propagation delay of several minutes for sync requests. Incremental syncs are not intended for read-after-write use cases. See example usage at [List the user's contacts that have changed](/people/v1/contacts#list_the_users_contacts_that_have_changed)."
   {:scopes ["https://www.googleapis.com/auth/contacts"
             "https://www.googleapis.com/auth/contacts.readonly"]}
   [auth parameters]

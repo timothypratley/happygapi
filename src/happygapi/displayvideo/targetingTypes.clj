@@ -6,36 +6,29 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn targetingOptions-search$
-  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/search
+(defn targetingOptions-get$
+  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/get
   
-  Required parameters: targetingType
+  Required parameters: targetingType, targetingOptionId
   
-  Optional parameters: none
+  Optional parameters: advertiserId
   
-  Body: 
-  
-  {:pageToken string,
-   :pageSize integer,
-   :geoRegionSearchTerms {:geoRegionQuery string},
-   :advertiserId string}
-  
-  Searches for targeting options of a given type based on the given search terms."
+  Gets a single targeting option."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:targetingType})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetingOptionId :targetingType})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/targetingTypes/{+targetingType}/targetingOptions:search"
-     #{:targetingType}
+     "v1/targetingTypes/{+targetingType}/targetingOptions/{+targetingOptionId}"
+     #{:targetingOptionId :targetingType}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -46,7 +39,7 @@
   
   Required parameters: targetingType
   
-  Optional parameters: filter, advertiserId, orderBy, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, orderBy, filter, advertiserId
   
   Lists targeting options of a given type."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -67,29 +60,39 @@
       :as :json}
      auth))))
 
-(defn targetingOptions-get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/get
+(defn targetingOptions-search$
+  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/search
   
-  Required parameters: targetingOptionId, targetingType
+  Required parameters: targetingType
   
-  Optional parameters: advertiserId
+  Optional parameters: none
   
-  Gets a single targeting option."
+  Body: 
+  
+  {:advertiserId string,
+   :pageSize integer,
+   :poiSearchTerms {:poiQuery string},
+   :pageToken string,
+   :businessChainSearchTerms {:businessChainQuery string,
+                              :regionQuery string},
+   :geoRegionSearchTerms {:geoRegionQuery string}}
+  
+  Searches for targeting options of a given type based on the given search terms."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetingOptionId :targetingType})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetingType})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/targetingTypes/{+targetingType}/targetingOptions/{+targetingOptionId}"
-     #{:targetingOptionId :targetingType}
+     "v1/targetingTypes/{+targetingType}/targetingOptions:search"
+     #{:targetingType}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

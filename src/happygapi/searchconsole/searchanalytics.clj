@@ -21,8 +21,8 @@
    :rowLimit integer,
    :dimensions [string],
    :endDate string,
-   :dimensionFilterGroups [{:groupType string,
-                            :filters [ApiDimensionFilter]}],
+   :dimensionFilterGroups [{:filters [ApiDimensionFilter],
+                            :groupType string}],
    :startRow integer,
    :aggregationType string}
   

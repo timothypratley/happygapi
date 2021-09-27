@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:updateMask string,
-   :projectConfig {:name string,
+  {:projectConfig {:pubsubConfigs {},
                    :enablePrivateKeyCheck boolean,
-                   :pubsubConfigs {}}}
+                   :name string},
+   :updateMask string}
   
   Updates the Cloud Source Repositories configuration of the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -105,11 +105,11 @@
   
   Body: 
   
-  {:policy {:etag string,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :version integer},
-   :updateMask string}
+  {:updateMask string,
+   :policy {:auditConfigs [AuditConfig],
+            :etag string,
+            :version integer,
+            :bindings [Binding]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -142,11 +142,11 @@
   
   Body: 
   
-  {:repo {:name string,
-          :size string,
+  {:repo {:url string,
+          :mirrorConfig MirrorConfig,
           :pubsubConfigs {},
-          :url string,
-          :mirrorConfig MirrorConfig},
+          :size string,
+          :name string},
    :updateMask string}
   
   Updates information about a repo."
@@ -214,11 +214,11 @@
   
   Body: 
   
-  {:name string,
-   :size string,
+  {:url string,
+   :mirrorConfig {:url string, :webhookId string, :deployKeyId string},
    :pubsubConfigs {},
-   :url string,
-   :mirrorConfig {:webhookId string, :url string, :deployKeyId string}}
+   :size string,
+   :name string}
   
   Creates a repo in the given project with the given name. If the named repository already exists, `CreateRepo` returns `ALREADY_EXISTS`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

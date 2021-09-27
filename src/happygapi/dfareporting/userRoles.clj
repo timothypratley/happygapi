@@ -6,101 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/delete
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Deletes an existing user role."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/userRoles/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/patch
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :permissions [{:permissionGroupId string,
-                  :kind string,
-                  :name string,
-                  :id string,
-                  :availability string}],
-   :parentUserRoleId string,
-   :defaultUserRole boolean,
-   :kind string,
-   :subaccountId string,
-   :id string,
-   :accountId string}
-  
-  Updates an existing user role. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/userRoles"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/get
-  
-  Required parameters: id, profileId
-  
-  Optional parameters: none
-  
-  Gets one user role by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/userRoles/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/update
   
@@ -110,18 +15,18 @@
   
   Body: 
   
-  {:name string,
-   :permissions [{:permissionGroupId string,
-                  :kind string,
-                  :name string,
-                  :id string,
-                  :availability string}],
+  {:defaultUserRole boolean,
+   :name string,
    :parentUserRoleId string,
-   :defaultUserRole boolean,
+   :permissions [{:permissionGroupId string,
+                  :name string,
+                  :availability string,
+                  :id string,
+                  :kind string}],
    :kind string,
    :subaccountId string,
-   :id string,
-   :accountId string}
+   :accountId string,
+   :id string}
   
   Updates an existing user role."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -170,6 +75,49 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/patch
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:defaultUserRole boolean,
+   :name string,
+   :parentUserRoleId string,
+   :permissions [{:permissionGroupId string,
+                  :name string,
+                  :availability string,
+                  :id string,
+                  :kind string}],
+   :kind string,
+   :subaccountId string,
+   :accountId string,
+   :id string}
+  
+  Updates an existing user role. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/userRoles"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/insert
   
@@ -179,18 +127,18 @@
   
   Body: 
   
-  {:name string,
-   :permissions [{:permissionGroupId string,
-                  :kind string,
-                  :name string,
-                  :id string,
-                  :availability string}],
+  {:defaultUserRole boolean,
+   :name string,
    :parentUserRoleId string,
-   :defaultUserRole boolean,
+   :permissions [{:permissionGroupId string,
+                  :name string,
+                  :availability string,
+                  :id string,
+                  :kind string}],
    :kind string,
    :subaccountId string,
-   :id string,
-   :accountId string}
+   :accountId string,
+   :id string}
   
   Inserts a new user role."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -208,6 +156,58 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/delete
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Deletes an existing user role."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/userRoles/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/userRoles/get
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Gets one user role by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/userRoles/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

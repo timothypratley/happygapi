@@ -6,34 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1/scores/list
-  
-  Required parameters: leaderboardId, collection, timeSpan
-  
-  Optional parameters: maxResults, pageToken, language
-  
-  Lists the scores in a leaderboard, starting from the top."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:timeSpan :leaderboardId :collection})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/leaderboards/{leaderboardId}/scores/{collection}"
-     #{:timeSpan :leaderboardId :collection}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn submitMultiple$
   "https://developers.google.com/games/api/reference/rest/v1/scores/submitMultiple
   
@@ -43,11 +15,11 @@
   
   Body: 
   
-  {:scores [{:score string,
-             :kind string,
-             :signature string,
+  {:scores [{:kind string,
              :leaderboardId string,
-             :scoreTag string}],
+             :scoreTag string,
+             :signature string,
+             :score string}],
    :kind string}
   
   Submits multiple scores to leaderboards."
@@ -71,12 +43,68 @@
       :as :json}
      auth))))
 
+(defn listWindow$
+  "https://developers.google.com/games/api/reference/rest/v1/scores/listWindow
+  
+  Required parameters: timeSpan, leaderboardId, collection
+  
+  Optional parameters: maxResults, returnTopIfAbsent, resultsAbove, pageToken, language
+  
+  Lists the scores in a leaderboard around (and including) a player's score."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:timeSpan :leaderboardId :collection})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/leaderboards/{leaderboardId}/window/{collection}"
+     #{:timeSpan :leaderboardId :collection}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1/scores/list
+  
+  Required parameters: collection, timeSpan, leaderboardId
+  
+  Optional parameters: pageToken, maxResults, language
+  
+  Lists the scores in a leaderboard, starting from the top."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:timeSpan :leaderboardId :collection})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/leaderboards/{leaderboardId}/scores/{collection}"
+     #{:timeSpan :leaderboardId :collection}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/games/api/reference/rest/v1/scores/get
   
-  Required parameters: playerId, leaderboardId, timeSpan
+  Required parameters: timeSpan, leaderboardId, playerId
   
-  Optional parameters: maxResults, pageToken, includeRankType, language
+  Optional parameters: pageToken, language, includeRankType, maxResults
   
   Get high scores, and optionally ranks, in leaderboards for the currently authenticated player. For a specific time span, `leaderboardId` can be set to `ALL` to retrieve data for all leaderboards in a given time span. `NOTE: You cannot ask for 'ALL' leaderboards and 'ALL' timeSpans in the same request; only one parameter may be set to 'ALL'."
   {:scopes ["https://www.googleapis.com/auth/games"]}
@@ -102,7 +130,7 @@
 (defn submit$
   "https://developers.google.com/games/api/reference/rest/v1/scores/submit
   
-  Required parameters: score, leaderboardId
+  Required parameters: leaderboardId, score
   
   Optional parameters: scoreTag, language
   
@@ -116,34 +144,6 @@
      "https://games.googleapis.com/"
      "games/v1/leaderboards/{leaderboardId}/scores"
      #{:leaderboardId :score}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn listWindow$
-  "https://developers.google.com/games/api/reference/rest/v1/scores/listWindow
-  
-  Required parameters: timeSpan, collection, leaderboardId
-  
-  Optional parameters: pageToken, resultsAbove, returnTopIfAbsent, maxResults, language
-  
-  Lists the scores in a leaderboard around (and including) a player's score."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:timeSpan :leaderboardId :collection})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://games.googleapis.com/"
-     "games/v1/leaderboards/{leaderboardId}/window/{collection}"
-     #{:timeSpan :leaderboardId :collection}
      parameters)
     (merge-with
      merge

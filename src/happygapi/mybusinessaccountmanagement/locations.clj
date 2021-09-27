@@ -38,32 +38,6 @@
       :as :json}
      auth))))
 
-(defn admins-delete$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/admins/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Removes the specified admin as a manager of the specified location."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn admins-create$
   "https://developers.google.com/my-business/api/reference/rest/v1/locations/admins/create
   
@@ -73,9 +47,9 @@
   
   Body: 
   
-  {:admin string,
+  {:role string,
+   :admin string,
    :pendingInvitation boolean,
-   :role string,
    :name string}
   
   Invites the specified user to become an administrator for the specified location. The invitee must accept the invitation in order to be granted access to the location. See AcceptInvitation to programmatically accept an invitation."
@@ -88,41 +62,6 @@
      "https://mybusinessaccountmanagement.googleapis.com/"
      "v1/{+parent}/admins"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn admins-patch$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/admins/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:admin string,
-   :pendingInvitation boolean,
-   :role string,
-   :name string}
-  
-  Updates the Admin for the specified location. Only the AdminRole of the Admin can be updated."
-  {:scopes nil}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://mybusinessaccountmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -155,6 +94,67 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn admins-delete$
+  "https://developers.google.com/my-business/api/reference/rest/v1/locations/admins/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Removes the specified admin as a manager of the specified location."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://mybusinessaccountmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn admins-patch$
+  "https://developers.google.com/my-business/api/reference/rest/v1/locations/admins/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:role string,
+   :admin string,
+   :pendingInvitation boolean,
+   :name string}
+  
+  Updates the Admin for the specified location. Only the AdminRole of the Admin can be updated."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://mybusinessaccountmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

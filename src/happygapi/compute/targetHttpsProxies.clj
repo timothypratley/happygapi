@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/get
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: none
   
@@ -84,7 +84,7 @@
 (defn setQuicOverride$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setQuicOverride
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -117,7 +117,7 @@
 (defn setSslPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setSslPolicy
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -150,7 +150,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/patch
   
-  Required parameters: project, targetHttpsProxy
+  Required parameters: targetHttpsProxy, project
   
   Optional parameters: requestId
   
@@ -232,7 +232,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, includeAllScopes, pageToken, orderBy, filter, returnPartialSuccess
+  Optional parameters: filter, orderBy, includeAllScopes, maxResults, returnPartialSuccess, pageToken
   
   Retrieves the list of all TargetHttpsProxy resources, regional and global, available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -320,7 +320,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, pageToken, filter, maxResults, orderBy
+  Optional parameters: filter, pageToken, maxResults, returnPartialSuccess, orderBy
   
   Retrieves the list of TargetHttpsProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

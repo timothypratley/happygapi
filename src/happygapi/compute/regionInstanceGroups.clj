@@ -6,40 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/list
-  
-  Required parameters: project, region
-  
-  Optional parameters: returnPartialSuccess, orderBy, maxResults, filter, pageToken
-  
-  Retrieves the list of instance group resources contained within the specified region."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/instanceGroups"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn listInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/listInstances
   
-  Required parameters: project, instanceGroup, region
+  Required parameters: region, project, instanceGroup
   
-  Optional parameters: orderBy, filter, returnPartialSuccess, maxResults, pageToken
+  Optional parameters: returnPartialSuccess, filter, orderBy, maxResults, pageToken
   
   Body: 
   
@@ -70,10 +42,73 @@
       :as :json}
      auth))))
 
+(defn setNamedPorts$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/setNamedPorts
+  
+  Required parameters: project, region, instanceGroup
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:fingerprint string, :namedPorts [{:name string, :port integer}]}
+  
+  Sets the named ports for the specified regional instance group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:region :project :instanceGroup})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/instanceGroups/{instanceGroup}/setNamedPorts"
+     #{:region :project :instanceGroup}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/list
+  
+  Required parameters: region, project
+  
+  Optional parameters: filter, returnPartialSuccess, maxResults, pageToken, orderBy
+  
+  Retrieves the list of instance group resources contained within the specified region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/instanceGroups"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/get
   
-  Required parameters: instanceGroup, project, region
+  Required parameters: instanceGroup, region, project
   
   Optional parameters: none
   
@@ -95,41 +130,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setNamedPorts$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionInstanceGroups/setNamedPorts
-  
-  Required parameters: project, region, instanceGroup
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:namedPorts [{:port integer, :name string}], :fingerprint string}
-  
-  Sets the named ports for the specified regional instance group."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:region :project :instanceGroup})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/instanceGroups/{instanceGroup}/setNamedPorts"
-     #{:region :project :instanceGroup}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

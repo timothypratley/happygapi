@@ -16,10 +16,10 @@
   Body: 
   
   {:activityTypes [string],
+   :pageToken string,
+   :user {:userId string, :type string},
    :pageSize integer,
    :dateRange {:startDate string, :endDate string},
-   :user {:userId string, :type string},
-   :pageToken string,
    :viewId string}
   
   Returns User Activity data."

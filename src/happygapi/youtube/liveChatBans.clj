@@ -6,6 +6,45 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatBans/insert
+  
+  Required parameters: part
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string,
+   :kind string,
+   :etag string,
+   :snippet {:type string,
+             :bannedUserDetails ChannelProfileDetails,
+             :liveChatId string,
+             :banDurationSeconds string}}
+  
+  Inserts a new resource into this collection."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/bans"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveChatBans/delete
   
@@ -28,45 +67,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatBans/insert
-  
-  Required parameters: part
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string,
-   :snippet {:type string,
-             :bannedUserDetails ChannelProfileDetails,
-             :banDurationSeconds string,
-             :liveChatId string},
-   :kind string,
-   :id string}
-  
-  Inserts a new resource into this collection."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveChat/bans"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

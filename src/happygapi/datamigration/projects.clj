@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-list$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-get$
   "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/get
   
@@ -48,6 +22,32 @@
     (util/get-url
      "https://datamigration.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-list$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -84,78 +84,52 @@
       :as :json}
      auth))))
 
-(defn locations-connectionProfiles-list$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/list
+(defn locations-connectionProfiles-patch$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: filter, orderBy, pageToken, pageSize
-  
-  Retrieve a list of all connection profiles in a given project and location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+parent}/connectionProfiles"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-connectionProfiles-create$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/create
-  
-  Required parameters: parent
-  
-  Optional parameters: connectionProfileId, requestId
+  Optional parameters: requestId, updateMask
   
   Body: 
   
   {:labels {},
-   :postgresql {:passwordSet boolean,
-                :password string,
-                :ssl SslConfig,
+   :postgresql {:host string,
                 :username string,
                 :cloudSqlId string,
-                :host string,
-                :port integer},
+                :ssl SslConfig,
+                :port integer,
+                :password string,
+                :passwordSet boolean},
    :displayName string,
    :name string,
    :createTime string,
-   :cloudsql {:privateIp string,
+   :cloudsql {:publicIp string,
               :cloudSqlId string,
               :settings CloudSqlSettings,
-              :publicIp string},
+              :privateIp string},
    :state string,
    :updateTime string,
    :error {:details [{}], :message string, :code integer},
    :provider string,
    :mysql {:port integer,
-           :host string,
-           :password string,
-           :ssl SslConfig,
            :passwordSet boolean,
+           :host string,
+           :ssl SslConfig,
            :cloudSqlId string,
-           :username string}}
+           :username string,
+           :password string}}
   
-  Creates a new connection profile in a given project and location."
+  Update the configuration of a single connection profile."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://datamigration.googleapis.com/"
-     "v1/{+parent}/connectionProfiles"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -172,7 +146,7 @@
   
   Required parameters: name
   
-  Optional parameters: requestId, force
+  Optional parameters: force, requestId
   
   Deletes a single Database Migration Service connection profile. A connection profile can only be deleted if it is not in use by any active migration jobs."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -193,27 +167,37 @@
       :as :json}
      auth))))
 
-(defn locations-connectionProfiles-get$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/get
+(defn locations-connectionProfiles-setIamPolicy$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
-  Gets details of a single connection profile."
+  Body: 
+  
+  {:updateMask string,
+   :policy {:version integer,
+            :etag string,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://datamigration.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -251,52 +235,52 @@
       :as :json}
      auth))))
 
-(defn locations-connectionProfiles-patch$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/patch
+(defn locations-connectionProfiles-create$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/create
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: requestId, updateMask
+  Optional parameters: requestId, connectionProfileId
   
   Body: 
   
   {:labels {},
-   :postgresql {:passwordSet boolean,
-                :password string,
-                :ssl SslConfig,
+   :postgresql {:host string,
                 :username string,
                 :cloudSqlId string,
-                :host string,
-                :port integer},
+                :ssl SslConfig,
+                :port integer,
+                :password string,
+                :passwordSet boolean},
    :displayName string,
    :name string,
    :createTime string,
-   :cloudsql {:privateIp string,
+   :cloudsql {:publicIp string,
               :cloudSqlId string,
               :settings CloudSqlSettings,
-              :publicIp string},
+              :privateIp string},
    :state string,
    :updateTime string,
    :error {:details [{}], :message string, :code integer},
    :provider string,
    :mysql {:port integer,
-           :host string,
-           :password string,
-           :ssl SslConfig,
            :passwordSet boolean,
+           :host string,
+           :ssl SslConfig,
            :cloudSqlId string,
-           :username string}}
+           :username string,
+           :password string}}
   
-  Update the configuration of a single connection profile."
+  Creates a new connection profile in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://datamigration.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/connectionProfiles"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -308,31 +292,157 @@
       :as :json}
      auth))))
 
-(defn locations-connectionProfiles-setIamPolicy$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/setIamPolicy
+(defn locations-connectionProfiles-get$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/get
   
-  Required parameters: resource
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets details of a single connection profile."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-connectionProfiles-list$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/connectionProfiles/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageSize, pageToken, filter
+  
+  Retrieve a list of all connection profiles in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+parent}/connectionProfiles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-delete$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://datamigration.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/cancel
+  
+  Required parameters: name
   
   Optional parameters: none
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
-            :auditConfigs [AuditConfig],
-            :bindings [Binding],
-            :version integer}}
+  {}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://datamigration.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
+     "v1/{+name}:cancel"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -380,10 +490,10 @@
   Body: 
   
   {:updateMask string,
-   :policy {:etag string,
-            :auditConfigs [AuditConfig],
+   :policy {:version integer,
+            :etag string,
             :bindings [Binding],
-            :version integer}}
+            :auditConfigs [AuditConfig]}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -443,7 +553,7 @@
   
   Required parameters: name
   
-  Optional parameters: updateMask, requestId
+  Optional parameters: requestId, updateMask
   
   Body: 
   
@@ -452,7 +562,7 @@
                             :vmIp string,
                             :vpc string,
                             :vm string},
-   :destinationDatabase {:provider string, :engine string},
+   :destinationDatabase {:engine string, :provider string},
    :dumpPath string,
    :displayName string,
    :name string,
@@ -466,7 +576,7 @@
    :source string,
    :updateTime string,
    :error {:details [{}], :message string, :code integer},
-   :sourceDatabase {:provider string, :engine string},
+   :sourceDatabase {:engine string, :provider string},
    :vpcPeeringConnectivity {:vpc string},
    :destination string}
   
@@ -532,12 +642,12 @@
   
   Body: 
   
-  {:vmSelectionConfig {:vmZone string},
-   :vmPort integer,
-   :vm string,
+  {:vm string,
    :vmCreationConfig {:vmMachineType string,
                       :subnet string,
-                      :vmZone string}}
+                      :vmZone string},
+   :vmSelectionConfig {:vmZone string},
+   :vmPort integer}
   
   Generate a SSH configuration script to configure the reverse SSH connectivity."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -574,7 +684,7 @@
                             :vmIp string,
                             :vpc string,
                             :vm string},
-   :destinationDatabase {:provider string, :engine string},
+   :destinationDatabase {:engine string, :provider string},
    :dumpPath string,
    :displayName string,
    :name string,
@@ -588,7 +698,7 @@
    :source string,
    :updateTime string,
    :error {:details [{}], :message string, :code integer},
-   :sourceDatabase {:provider string, :engine string},
+   :sourceDatabase {:engine string, :provider string},
    :vpcPeeringConnectivity {:vpc string},
    :destination string}
   
@@ -734,7 +844,7 @@
   
   Required parameters: parent
   
-  Optional parameters: orderBy, filter, pageToken, pageSize
+  Optional parameters: orderBy, pageToken, pageSize, filter
   
   Lists migration jobs in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -839,116 +949,6 @@
     (util/get-url
      "https://datamigration.googleapis.com/"
      "v1/{+name}:promote"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-list$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-delete$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "https://cloud.google.com/database-migration/api/reference/rest/v1/projects/locations/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://datamigration.googleapis.com/"
-     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with

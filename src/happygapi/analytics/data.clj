@@ -35,6 +35,33 @@
       :as :json}
      auth))))
 
+(defn realtime-get$
+  "https://developers.google.com/analytics/api/reference/rest/v3/data/realtime/get
+  
+  Required parameters: metrics, ids
+  
+  Optional parameters: filters, max-results, sort, dimensions
+  
+  Returns real time data for a view (profile)."
+  {:scopes ["https://www.googleapis.com/auth/analytics"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:ids :metrics})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/analytics/v3/"
+     "data/realtime"
+     #{:ids :metrics}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn ga-get$
   "https://developers.google.com/analytics/api/reference/rest/v3/data/ga/get
   
@@ -55,33 +82,6 @@
      "https://www.googleapis.com/analytics/v3/"
      "data/ga"
      #{:end-date :ids :start-date :metrics}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn realtime-get$
-  "https://developers.google.com/analytics/api/reference/rest/v3/data/realtime/get
-  
-  Required parameters: metrics, ids
-  
-  Optional parameters: sort, dimensions, max-results, filters
-  
-  Returns real time data for a view (profile)."
-  {:scopes ["https://www.googleapis.com/auth/analytics"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:ids :metrics})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/analytics/v3/"
-     "data/realtime"
-     #{:ids :metrics}
      parameters)
     (merge-with
      merge

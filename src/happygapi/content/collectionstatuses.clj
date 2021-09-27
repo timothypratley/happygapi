@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collectionstatuses/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the statuses of the collections in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/collectionstatuses"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collectionstatuses/get
   
@@ -23,32 +49,6 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/collectionstatuses/{collectionId}"
      #{:collectionId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collectionstatuses/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the statuses of the collections in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/collectionstatuses"
-     #{:merchantId}
      parameters)
     (merge-with
      merge

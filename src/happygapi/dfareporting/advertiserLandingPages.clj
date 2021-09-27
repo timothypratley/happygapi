@@ -6,6 +6,74 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/get
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Gets one landing page by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/insert
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :name string,
+   :url string,
+   :deepLinks [{:appUrl string,
+                :fallbackUrl string,
+                :kind string,
+                :remarketingListIds [string],
+                :mobileApp MobileApp}],
+   :id string,
+   :advertiserId string,
+   :archived boolean}
+  
+  Inserts a new landing page."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages"
+     #{:profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/patch
   
@@ -15,17 +83,17 @@
   
   Body: 
   
-  {:name string,
-   :id string,
-   :kind string,
-   :advertiserId string,
+  {:kind string,
+   :name string,
    :url string,
-   :archived boolean,
-   :deepLinks [{:remarketingListIds [string],
-                :mobileApp MobileApp,
+   :deepLinks [{:appUrl string,
+                :fallbackUrl string,
                 :kind string,
-                :appUrl string,
-                :fallbackUrl string}]}
+                :remarketingListIds [string],
+                :mobileApp MobileApp}],
+   :id string,
+   :advertiserId string,
+   :archived boolean}
   
   Updates an existing advertiser landing page. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -37,6 +105,48 @@
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages"
      #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/update
+  
+  Required parameters: profileId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :name string,
+   :url string,
+   :deepLinks [{:appUrl string,
+                :fallbackUrl string,
+                :kind string,
+                :remarketingListIds [string],
+                :mobileApp MobileApp}],
+   :id string,
+   :advertiserId string,
+   :archived boolean}
+  
+  Updates an existing landing page."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:profileId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages"
+     #{:profileId}
      parameters)
     (merge-with
      merge
@@ -69,116 +179,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/get
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Gets one landing page by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages/{id}"
-     #{:id :profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/update
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :id string,
-   :kind string,
-   :advertiserId string,
-   :url string,
-   :archived boolean,
-   :deepLinks [{:remarketingListIds [string],
-                :mobileApp MobileApp,
-                :kind string,
-                :appUrl string,
-                :fallbackUrl string}]}
-  
-  Updates an existing landing page."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/advertiserLandingPages/insert
-  
-  Required parameters: profileId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:name string,
-   :id string,
-   :kind string,
-   :advertiserId string,
-   :url string,
-   :archived boolean,
-   :deepLinks [{:remarketingListIds [string],
-                :mobileApp MobileApp,
-                :kind string,
-                :appUrl string,
-                :fallbackUrl string}]}
-  
-  Inserts a new landing page."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:profileId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/advertiserLandingPages"
-     #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

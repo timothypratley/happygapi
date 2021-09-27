@@ -6,6 +6,93 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn devices-list$
+  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageToken, pageSize
+  
+  Lists devices managed by the enterprise."
+  {:scopes ["https://www.googleapis.com/auth/sdm.service"
+            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://smartdevicemanagement.googleapis.com/"
+     "v1/{+parent}/devices"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-executeCommand$
+  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/executeCommand
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:params {}, :command string}
+  
+  Executes a command to device managed by the enterprise."
+  {:scopes ["https://www.googleapis.com/auth/sdm.service"
+            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://smartdevicemanagement.googleapis.com/"
+     "v1/{+name}:executeCommand"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-get$
+  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a device managed by the enterprise."
+  {:scopes ["https://www.googleapis.com/auth/sdm.service"
+            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://smartdevicemanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn structures-get$
   "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/structures/get
   
@@ -92,7 +179,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists rooms managed by the enterprise."
   {:scopes ["https://www.googleapis.com/auth/sdm.service"
@@ -109,93 +196,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-get$
-  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a device managed by the enterprise."
-  {:scopes ["https://www.googleapis.com/auth/sdm.service"
-            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://smartdevicemanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-list$
-  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  Lists devices managed by the enterprise."
-  {:scopes ["https://www.googleapis.com/auth/sdm.service"
-            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://smartdevicemanagement.googleapis.com/"
-     "v1/{+parent}/devices"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn devices-executeCommand$
-  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/executeCommand
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:params {}, :command string}
-  
-  Executes a command to device managed by the enterprise."
-  {:scopes ["https://www.googleapis.com/auth/sdm.service"
-            "https://www.googleapis.com/auth/sdm.thermostat.service"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://smartdevicemanagement.googleapis.com/"
-     "v1/{+name}:executeCommand"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

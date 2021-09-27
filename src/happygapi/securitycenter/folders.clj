@@ -64,44 +64,32 @@
       :as :json}
      auth))))
 
-(defn sources-findings-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/list
-  
-  Required parameters: parent
-  
-  Optional parameters: compareDuration, fieldMask, filter, orderBy, pageSize, readTime, pageToken
-  
-  Lists an organization or source's findings. To list across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/findings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sources-findings-updateSecurityMarks$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/updateSecurityMarks
+(defn sources-findings-patch$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/patch
   
   Required parameters: name
   
-  Optional parameters: startTime, updateMask
+  Optional parameters: updateMask
   
   Body: 
   
-  {:marks {}, :name string, :canonicalName string}
+  {:category string,
+   :parent string,
+   :name string,
+   :createTime string,
+   :vulnerability {:cve Cve},
+   :state string,
+   :canonicalName string,
+   :externalUri string,
+   :resourceName string,
+   :securityMarks {:name string, :marks {}, :canonicalName string},
+   :sourceProperties {},
+   :indicator {:ipAddresses [string], :domains [string]},
+   :severity string,
+   :eventTime string,
+   :findingClass string}
   
-  Updates security marks."
+  Creates or updates a finding. The corresponding source must exist for a finding creation to succeed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -122,6 +110,32 @@
       :as :json}
      auth))))
 
+(defn sources-findings-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: fieldMask, readTime, pageToken, orderBy, compareDuration, filter, pageSize
+  
+  Lists an organization or source's findings. To list across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/findings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn sources-findings-group$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/group
   
@@ -131,12 +145,12 @@
   
   Body: 
   
-  {:pageSize integer,
-   :groupBy string,
+  {:groupBy string,
+   :compareDuration string,
+   :pageSize integer,
    :pageToken string,
    :filter string,
-   :readTime string,
-   :compareDuration string}
+   :readTime string}
   
   Filters an organization or source's findings and groups them by their specified properties. To group across all sources provide a `-` as the source id. Example: /v1/organizations/{organization_id}/sources/-/findings, /v1/folders/{folder_id}/sources/-/findings, /v1/projects/{project_id}/sources/-/findings"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -159,29 +173,18 @@
       :as :json}
      auth))))
 
-(defn sources-findings-patch$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/patch
+(defn sources-findings-updateSecurityMarks$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/sources/findings/updateSecurityMarks
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: updateMask, startTime
   
   Body: 
   
-  {:category string,
-   :parent string,
-   :name string,
-   :createTime string,
-   :state string,
-   :canonicalName string,
-   :externalUri string,
-   :resourceName string,
-   :securityMarks {:marks {}, :name string, :canonicalName string},
-   :sourceProperties {},
-   :severity string,
-   :eventTime string}
+  {:name string, :marks {}, :canonicalName string}
   
-  Creates or updates a finding. The corresponding source must exist for a finding creation to succeed."
+  Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -211,7 +214,7 @@
   
   Body: 
   
-  {:marks {}, :name string, :canonicalName string}
+  {:name string, :marks {}, :canonicalName string}
   
   Updates security marks."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -234,32 +237,6 @@
       :as :json}
      auth))))
 
-(defn assets-list$
-  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/assets/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, fieldMask, compareDuration, pageSize, filter, readTime, orderBy
-  
-  Lists an organization's assets."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://securitycenter.googleapis.com/"
-     "v1/{+parent}/assets"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn assets-group$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/assets/group
   
@@ -269,12 +246,12 @@
   
   Body: 
   
-  {:readTime string,
-   :filter string,
+  {:pageSize integer,
+   :readTime string,
    :pageToken string,
-   :groupBy string,
+   :filter string,
    :compareDuration string,
-   :pageSize integer}
+   :groupBy string}
   
   Filters an organization's assets and groups them by their specified properties."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -292,6 +269,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn assets-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/folders/assets/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, compareDuration, filter, pageToken, fieldMask, pageSize, readTime
+  
+  Lists an organization's assets."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/assets"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

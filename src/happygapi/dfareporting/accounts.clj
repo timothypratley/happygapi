@@ -6,10 +6,36 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/get
+  
+  Required parameters: profileId, id
+  
+  Optional parameters: none
+  
+  Gets one account by ID."
+  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id :profileId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dfareporting.googleapis.com/"
+     "dfareporting/v3.5/userprofiles/{profileId}/accounts/{id}"
+     #{:id :profileId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn patch$
   "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/patch
   
-  Required parameters: profileId, id
+  Required parameters: id, profileId
   
   Optional parameters: none
   
@@ -115,7 +141,7 @@
   
   Required parameters: profileId
   
-  Optional parameters: ids, sortOrder, active, pageToken, searchString, maxResults, sortField
+  Optional parameters: sortField, searchString, pageToken, maxResults, sortOrder, ids, active
   
   Retrieves the list of accounts, possibly filtered. This method supports paging."
   {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
@@ -127,32 +153,6 @@
      "https://dfareporting.googleapis.com/"
      "dfareporting/v3.5/userprofiles/{profileId}/accounts"
      #{:profileId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accounts/get
-  
-  Required parameters: profileId, id
-  
-  Optional parameters: none
-  
-  Gets one account by ID."
-  {:scopes ["https://www.googleapis.com/auth/dfatrafficking"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id :profileId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/accounts/{id}"
-     #{:id :profileId}
      parameters)
     (merge-with
      merge
