@@ -3,8 +3,12 @@
             [happy.util :as util]))
 
 (deftest get-url-test
-  (is (= "BASE/a/B/c" (util/get-url "BASE/" "a/{b}/c" #{:b} {:b "B"}))
-      "should put required arguments into the url"))
+  (is (= "BASE/a/B/c"
+         (util/get-url "BASE/" "a/{b}/c" #{:b} {:b "B"}))
+      "should put required arguments into the url")
+  (is (= "BASE/a/B/c"
+         (util/get-url "BASE/" "a/{+b}/c" #{:b} {:b "B"}))
+      "should work with required arguments"))
 
 (deftest has-keys?-test
   (testing "When map contains required keys"

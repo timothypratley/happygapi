@@ -9,7 +9,9 @@
   [base-url path params args]
   (str base-url
        (reduce (fn [path param]
-                 (str/replace path (str "{" (name param) "}") (get args param)))
+                 (-> path
+                     (str/replace (str "{" (name param) "}") (get args param))
+                     (str/replace (str "{+" (name param) "}") (get args param))))
                path
                params)))
 
