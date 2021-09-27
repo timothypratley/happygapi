@@ -169,7 +169,8 @@ lein test
 ## Deploying
 
 ```
-lein deploy
+lein release
+lein deploy clojars
 ```
 
 ## License
