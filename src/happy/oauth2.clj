@@ -131,7 +131,8 @@
   (boolean (or refresh_token private_key)))
 
 (defn credential-scopes [credentials]
-  (str/split (:scope credentials) #" "))
+  (when (:scope credentials)
+    (str/split (:scope credentials) #" ")))
 
 (defn has-scopes? [credentials scopes]
   ;; TODO: scopes have a hierarchy
