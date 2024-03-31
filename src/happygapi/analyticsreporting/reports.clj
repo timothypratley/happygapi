@@ -15,8 +15,7 @@
   
   Body: 
   
-  {:useResourceQuotas boolean,
-   :reportRequests [{:filtersExpression string,
+  {:reportRequests [{:filtersExpression string,
                      :hideTotals boolean,
                      :viewId string,
                      :dimensionFilterClauses [DimensionFilterClause],
@@ -32,7 +31,8 @@
                      :pivots [Pivot],
                      :dateRanges [DateRange],
                      :orderBys [OrderBy],
-                     :metrics [Metric]}]}
+                     :metrics [Metric]}],
+   :useResourceQuotas boolean}
   
   Returns the Analytics data."
   {:scopes ["https://www.googleapis.com/auth/analytics"

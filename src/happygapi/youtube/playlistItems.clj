@@ -6,72 +6,22 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/delete
-  
-  Required parameters: id
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Deletes a resource."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/playlistItems"
-     #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/insert
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/list
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner
+  Optional parameters: videoId, pageToken, maxResults, onBehalfOfContentOwner, id, playlistId
   
-  Body: 
-  
-  {:kind string,
-   :contentDetails {:startAt string,
-                    :videoPublishedAt string,
-                    :note string,
-                    :endAt string,
-                    :videoId string},
-   :id string,
-   :etag string,
-   :snippet {:videoOwnerChannelTitle string,
-             :description string,
-             :publishedAt string,
-             :channelId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :resourceId ResourceId,
-             :videoOwnerChannelId string,
-             :position integer,
-             :channelTitle string,
-             :playlistId string},
-   :status {:privacyStatus string}}
-  
-  Inserts a new resource into this collection."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/playlistItems"
@@ -79,9 +29,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -96,14 +44,7 @@
   
   Body: 
   
-  {:kind string,
-   :contentDetails {:startAt string,
-                    :videoPublishedAt string,
-                    :note string,
-                    :endAt string,
-                    :videoId string},
-   :id string,
-   :etag string,
+  {:id string,
    :snippet {:videoOwnerChannelTitle string,
              :description string,
              :publishedAt string,
@@ -115,7 +56,14 @@
              :position integer,
              :channelTitle string,
              :playlistId string},
-   :status {:privacyStatus string}}
+   :contentDetails {:startAt string,
+                    :videoPublishedAt string,
+                    :note string,
+                    :videoId string,
+                    :endAt string},
+   :status {:privacyStatus string},
+   :etag string,
+   :kind string}
   
   Updates an existing resource."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -140,26 +88,78 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/list
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/insert
   
   Required parameters: part
   
-  Optional parameters: pageToken, maxResults, id, videoId, onBehalfOfContentOwner, playlistId
+  Optional parameters: onBehalfOfContentOwner
   
-  Retrieves a list of resources, possibly filtered."
+  Body: 
+  
+  {:id string,
+   :snippet {:videoOwnerChannelTitle string,
+             :description string,
+             :publishedAt string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :resourceId ResourceId,
+             :videoOwnerChannelId string,
+             :position integer,
+             :channelTitle string,
+             :playlistId string},
+   :contentDetails {:startAt string,
+                    :videoPublishedAt string,
+                    :note string,
+                    :videoId string,
+                    :endAt string},
+   :status {:privacyStatus string},
+   :etag string,
+   :kind string}
+  
+  Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
             "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"
             "https://www.googleapis.com/auth/youtubepartner"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/playlistItems"
      #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/playlistItems/delete
+  
+  Required parameters: id
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Deletes a resource."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/playlistItems"
+     #{:id}
      parameters)
     (merge-with
      merge

@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, returnPartialSuccess, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of HealthCheck resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -34,14 +34,42 @@
       :as :json}
      auth))))
 
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
+  
+  Retrieves the list of all HealthCheck resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/healthChecks"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/get
   
-  Required parameters: project, healthCheck
+  Required parameters: healthCheck, project
   
   Optional parameters: none
   
-  Returns the specified HealthCheck resource. Gets a list of available health checks by making a list() request."
+  Returns the specified HealthCheck resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -57,6 +85,88 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :httpHealthCheck {:port integer,
+                     :portName string,
+                     :portSpecification string,
+                     :host string,
+                     :requestPath string,
+                     :proxyHeader string,
+                     :response string},
+   :sslHealthCheck {:port integer,
+                    :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
+                    :proxyHeader string},
+   :creationTimestamp string,
+   :tcpHealthCheck {:port integer,
+                    :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
+                    :proxyHeader string},
+   :healthyThreshold integer,
+   :name string,
+   :selfLink string,
+   :type string,
+   :region string,
+   :http2HealthCheck {:port integer,
+                      :portName string,
+                      :portSpecification string,
+                      :host string,
+                      :requestPath string,
+                      :proxyHeader string,
+                      :response string},
+   :id string,
+   :httpsHealthCheck {:port integer,
+                      :portName string,
+                      :portSpecification string,
+                      :host string,
+                      :requestPath string,
+                      :proxyHeader string,
+                      :response string},
+   :kind string,
+   :checkIntervalSec integer,
+   :timeoutSec integer,
+   :unhealthyThreshold integer,
+   :grpcHealthCheck {:port integer,
+                     :portName string,
+                     :portSpecification string,
+                     :grpcServiceName string},
+   :logConfig {:enable boolean}}
+  
+  Creates a HealthCheck resource in the specified project using the data included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/healthChecks"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -89,77 +199,77 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/insert
+(defn update$
+  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/update
   
-  Required parameters: project
+  Required parameters: healthCheck, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :httpHealthCheck {:proxyHeader string,
-                     :response string,
-                     :port integer,
-                     :host string,
+   :httpHealthCheck {:port integer,
+                     :portName string,
                      :portSpecification string,
+                     :host string,
                      :requestPath string,
-                     :portName string},
-   :sslHealthCheck {:portName string,
-                    :port integer,
-                    :response string,
-                    :proxyHeader string,
-                    :portSpecification string,
-                    :request string},
-   :creationTimestamp string,
-   :tcpHealthCheck {:request string,
-                    :portSpecification string,
-                    :response string,
-                    :port integer,
+                     :proxyHeader string,
+                     :response string},
+   :sslHealthCheck {:port integer,
                     :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
+                    :proxyHeader string},
+   :creationTimestamp string,
+   :tcpHealthCheck {:port integer,
+                    :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
                     :proxyHeader string},
    :healthyThreshold integer,
    :name string,
    :selfLink string,
    :type string,
    :region string,
-   :http2HealthCheck {:requestPath string,
-                      :port integer,
+   :http2HealthCheck {:port integer,
                       :portName string,
-                      :host string,
                       :portSpecification string,
-                      :response string,
-                      :proxyHeader string},
-   :id string,
-   :httpsHealthCheck {:portName string,
-                      :port integer,
                       :host string,
-                      :response string,
+                      :requestPath string,
                       :proxyHeader string,
+                      :response string},
+   :id string,
+   :httpsHealthCheck {:port integer,
+                      :portName string,
                       :portSpecification string,
-                      :requestPath string},
+                      :host string,
+                      :requestPath string,
+                      :proxyHeader string,
+                      :response string},
    :kind string,
    :checkIntervalSec integer,
    :timeoutSec integer,
    :unhealthyThreshold integer,
-   :grpcHealthCheck {:grpcServiceName string,
-                     :portSpecification string,
+   :grpcHealthCheck {:port integer,
                      :portName string,
-                     :port integer},
+                     :portSpecification string,
+                     :grpcServiceName string},
    :logConfig {:enable boolean}}
   
-  Creates a HealthCheck resource in the specified project using the data included in the request."
+  Updates a HealthCheck resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:project :healthCheck})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/healthChecks"
-     #{:project}
+     "projects/{project}/global/healthChecks/{healthCheck}"
+     #{:project :healthCheck}
      parameters)
     (merge-with
      merge
@@ -181,54 +291,54 @@
   Body: 
   
   {:description string,
-   :httpHealthCheck {:proxyHeader string,
-                     :response string,
-                     :port integer,
-                     :host string,
+   :httpHealthCheck {:port integer,
+                     :portName string,
                      :portSpecification string,
+                     :host string,
                      :requestPath string,
-                     :portName string},
-   :sslHealthCheck {:portName string,
-                    :port integer,
-                    :response string,
-                    :proxyHeader string,
-                    :portSpecification string,
-                    :request string},
-   :creationTimestamp string,
-   :tcpHealthCheck {:request string,
-                    :portSpecification string,
-                    :response string,
-                    :port integer,
+                     :proxyHeader string,
+                     :response string},
+   :sslHealthCheck {:port integer,
                     :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
+                    :proxyHeader string},
+   :creationTimestamp string,
+   :tcpHealthCheck {:port integer,
+                    :portName string,
+                    :portSpecification string,
+                    :request string,
+                    :response string,
                     :proxyHeader string},
    :healthyThreshold integer,
    :name string,
    :selfLink string,
    :type string,
    :region string,
-   :http2HealthCheck {:requestPath string,
-                      :port integer,
+   :http2HealthCheck {:port integer,
                       :portName string,
-                      :host string,
                       :portSpecification string,
-                      :response string,
-                      :proxyHeader string},
-   :id string,
-   :httpsHealthCheck {:portName string,
-                      :port integer,
                       :host string,
-                      :response string,
+                      :requestPath string,
                       :proxyHeader string,
+                      :response string},
+   :id string,
+   :httpsHealthCheck {:port integer,
+                      :portName string,
                       :portSpecification string,
-                      :requestPath string},
+                      :host string,
+                      :requestPath string,
+                      :proxyHeader string,
+                      :response string},
    :kind string,
    :checkIntervalSec integer,
    :timeoutSec integer,
    :unhealthyThreshold integer,
-   :grpcHealthCheck {:grpcServiceName string,
-                     :portSpecification string,
+   :grpcHealthCheck {:port integer,
                      :portName string,
-                     :port integer},
+                     :portSpecification string,
+                     :grpcServiceName string},
    :logConfig {:enable boolean}}
   
   Updates a HealthCheck resource in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
@@ -238,116 +348,6 @@
   {:pre [(util/has-keys? parameters #{:project :healthCheck})]}
   (util/get-response
    (http/patch
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/healthChecks/{healthCheck}"
-     #{:project :healthCheck}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter, includeAllScopes
-  
-  Retrieves the list of all HealthCheck resources, regional and global, available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/healthChecks"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://cloud.google.com/compute/api/reference/rest/v1/healthChecks/update
-  
-  Required parameters: project, healthCheck
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :httpHealthCheck {:proxyHeader string,
-                     :response string,
-                     :port integer,
-                     :host string,
-                     :portSpecification string,
-                     :requestPath string,
-                     :portName string},
-   :sslHealthCheck {:portName string,
-                    :port integer,
-                    :response string,
-                    :proxyHeader string,
-                    :portSpecification string,
-                    :request string},
-   :creationTimestamp string,
-   :tcpHealthCheck {:request string,
-                    :portSpecification string,
-                    :response string,
-                    :port integer,
-                    :portName string,
-                    :proxyHeader string},
-   :healthyThreshold integer,
-   :name string,
-   :selfLink string,
-   :type string,
-   :region string,
-   :http2HealthCheck {:requestPath string,
-                      :port integer,
-                      :portName string,
-                      :host string,
-                      :portSpecification string,
-                      :response string,
-                      :proxyHeader string},
-   :id string,
-   :httpsHealthCheck {:portName string,
-                      :port integer,
-                      :host string,
-                      :response string,
-                      :proxyHeader string,
-                      :portSpecification string,
-                      :requestPath string},
-   :kind string,
-   :checkIntervalSec integer,
-   :timeoutSec integer,
-   :unhealthyThreshold integer,
-   :grpcHealthCheck {:grpcServiceName string,
-                     :portSpecification string,
-                     :portName string,
-                     :port integer},
-   :logConfig {:enable boolean}}
-  
-  Updates a HealthCheck resource in the specified project using the data included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :healthCheck})]}
-  (util/get-response
-   (http/put
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/healthChecks/{healthCheck}"

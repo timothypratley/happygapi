@@ -6,10 +6,39 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/delete
+  
+  Required parameters: datasetId, projectId, routineId
+  
+  Optional parameters: none
+  
+  Deletes the routine specified by routineId from the dataset."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :projectId :routineId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
+     #{:datasetId :projectId :routineId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/get
   
-  Required parameters: datasetId, routineId, projectId
+  Required parameters: datasetId, projectId, routineId
   
   Optional parameters: readMask
   
@@ -36,10 +65,10 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/update
+(defn insert$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/insert
   
-  Required parameters: routineId, projectId, datasetId
+  Required parameters: datasetId, projectId
   
   Optional parameters: none
   
@@ -47,39 +76,55 @@
   
   {:creationTime string,
    :description string,
+   :remoteFunctionOptions {:connection string,
+                           :endpoint string,
+                           :maxBatchingRows string,
+                           :userDefinedContext {}},
    :importedLibraries [string],
-   :arguments [{:name string,
+   :arguments [{:argumentKind string,
+                :dataType StandardSqlDataType,
+                :isAggregate boolean,
                 :mode string,
-                :argumentKind string,
-                :dataType StandardSqlDataType}],
+                :name string}],
+   :securityMode string,
    :etag string,
+   :dataGovernanceType string,
    :returnType {:arrayElementType StandardSqlDataType,
-                :typeKind string,
-                :structType StandardSqlStructType},
+                :rangeElementType StandardSqlDataType,
+                :structType StandardSqlStructType,
+                :typeKind string},
    :routineType string,
    :lastModifiedTime string,
    :definitionBody string,
    :language string,
    :routineReference {:datasetId string,
-                      :routineId string,
-                      :projectId string},
+                      :projectId string,
+                      :routineId string},
    :returnTableType {:columns [StandardSqlField]},
+   :sparkOptions {:properties {},
+                  :archiveUris [string],
+                  :containerImage string,
+                  :mainClass string,
+                  :pyFileUris [string],
+                  :jarUris [string],
+                  :fileUris [string],
+                  :runtimeVersion string,
+                  :connection string,
+                  :mainFileUri string},
    :determinismLevel string,
    :strictMode boolean}
   
-  Updates information in an existing routine. The update method replaces the entire Routine resource."
+  Creates a new routine in the dataset."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:datasetId :projectId :routineId})]}
+  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
-     #{:datasetId :projectId :routineId}
+     "projects/{+projectId}/datasets/{+datasetId}/routines"
+     #{:datasetId :projectId}
      parameters)
     (merge-with
      merge
@@ -94,9 +139,9 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
-  Optional parameters: readMask, maxResults, filter, pageToken
+  Optional parameters: filter, maxResults, pageToken, readMask
   
   Lists all routines in the specified dataset. Requires the READER dataset role."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -119,39 +164,10 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/delete
+(defn update$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/update
   
-  Required parameters: routineId, datasetId, projectId
-  
-  Optional parameters: none
-  
-  Deletes the routine specified by routineId from the dataset."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:datasetId :projectId :routineId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
-     #{:datasetId :projectId :routineId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/routines/insert
-  
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId, routineId
   
   Optional parameters: none
   
@@ -159,37 +175,57 @@
   
   {:creationTime string,
    :description string,
+   :remoteFunctionOptions {:connection string,
+                           :endpoint string,
+                           :maxBatchingRows string,
+                           :userDefinedContext {}},
    :importedLibraries [string],
-   :arguments [{:name string,
+   :arguments [{:argumentKind string,
+                :dataType StandardSqlDataType,
+                :isAggregate boolean,
                 :mode string,
-                :argumentKind string,
-                :dataType StandardSqlDataType}],
+                :name string}],
+   :securityMode string,
    :etag string,
+   :dataGovernanceType string,
    :returnType {:arrayElementType StandardSqlDataType,
-                :typeKind string,
-                :structType StandardSqlStructType},
+                :rangeElementType StandardSqlDataType,
+                :structType StandardSqlStructType,
+                :typeKind string},
    :routineType string,
    :lastModifiedTime string,
    :definitionBody string,
    :language string,
    :routineReference {:datasetId string,
-                      :routineId string,
-                      :projectId string},
+                      :projectId string,
+                      :routineId string},
    :returnTableType {:columns [StandardSqlField]},
+   :sparkOptions {:properties {},
+                  :archiveUris [string],
+                  :containerImage string,
+                  :mainClass string,
+                  :pyFileUris [string],
+                  :jarUris [string],
+                  :fileUris [string],
+                  :runtimeVersion string,
+                  :connection string,
+                  :mainFileUri string},
    :determinismLevel string,
    :strictMode boolean}
   
-  Creates a new routine in the dataset."
+  Updates information in an existing routine. The update method replaces the entire Routine resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:datasetId :projectId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :projectId :routineId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/routines"
-     #{:datasetId :projectId}
+     "projects/{+projectId}/datasets/{+datasetId}/routines/{+routineId}"
+     #{:datasetId :projectId :routineId}
      parameters)
     (merge-with
      merge

@@ -6,38 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn electionQuery$
-  "https://developers.google.com/civic-information/api/reference/rest/v2/elections/electionQuery
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  List of available elections to query."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://civicinfo.googleapis.com/"
-     "civicinfo/v2/elections"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn voterInfoQuery$
   "https://developers.google.com/civic-information/api/reference/rest/v2/elections/voterInfoQuery
   
   Required parameters: address
   
-  Optional parameters: returnAllAvailableData, electionId, officialOnly
+  Optional parameters: electionId, officialOnly, returnAllAvailableData, productionDataOnly
   
   Looks up information relevant to a voter based on the voter's registered address."
   {:scopes nil}
@@ -49,6 +23,32 @@
      "https://civicinfo.googleapis.com/"
      "civicinfo/v2/voterinfo"
      #{:address}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn electionQuery$
+  "https://developers.google.com/civic-information/api/reference/rest/v2/elections/electionQuery
+  
+  Required parameters: none
+  
+  Optional parameters: productionDataOnly
+  
+  List of available elections to query."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://civicinfo.googleapis.com/"
+     "civicinfo/v2/elections"
+     #{}
      parameters)
     (merge-with
      merge

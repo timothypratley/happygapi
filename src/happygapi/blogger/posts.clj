@@ -1,5 +1,5 @@
 (ns happygapi.blogger.posts
-  "Blogger API v3: posts.
+  "Blogger API: posts.
   The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts"
   (:require [cheshire.core :as json]
@@ -38,7 +38,7 @@
   
   Required parameters: blogId
   
-  Optional parameters: fetchBody, isDraft, fetchImages
+  Optional parameters: fetchImages, isDraft, fetchBody
   
   Body: 
   
@@ -51,32 +51,33 @@
    :etag string,
    :title string,
    :author {:image {:url string},
-            :url string,
             :id string,
-            :displayName string},
-   :replies {:totalItems string,
-             :selfLink string,
-             :items [{:inReplyTo {:id string},
+            :displayName string,
+            :url string},
+   :replies {:items [{:inReplyTo {:id string},
                       :content string,
                       :updated string,
                       :selfLink string,
                       :author {:image {:url string},
-                               :displayName string,
                                :id string,
+                               :displayName string,
                                :url string},
                       :status string,
                       :id string,
                       :kind string,
                       :post {:id string},
                       :blog {:id string},
-                      :published string}]},
+                      :published string}],
+             :selfLink string,
+             :totalItems string},
    :status string,
    :customMetaData string,
+   :trashed string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:name string, :lat number, :span string, :lng number},
+   :location {:lng number, :name string, :span string, :lat number},
    :blog {:id string},
    :published string}
   
@@ -106,7 +107,7 @@
   
   Required parameters: postId, blogId
   
-  Optional parameters: fetchImages, publish, fetchBody, maxComments, revert
+  Optional parameters: fetchImages, revert, maxComments, fetchBody, publish
   
   Body: 
   
@@ -119,32 +120,33 @@
    :etag string,
    :title string,
    :author {:image {:url string},
-            :url string,
             :id string,
-            :displayName string},
-   :replies {:totalItems string,
-             :selfLink string,
-             :items [{:inReplyTo {:id string},
+            :displayName string,
+            :url string},
+   :replies {:items [{:inReplyTo {:id string},
                       :content string,
                       :updated string,
                       :selfLink string,
                       :author {:image {:url string},
-                               :displayName string,
                                :id string,
+                               :displayName string,
                                :url string},
                       :status string,
                       :id string,
                       :kind string,
                       :post {:id string},
                       :blog {:id string},
-                      :published string}]},
+                      :published string}],
+             :selfLink string,
+             :totalItems string},
    :status string,
    :customMetaData string,
+   :trashed string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:name string, :lat number, :span string, :lng number},
+   :location {:lng number, :name string, :span string, :lat number},
    :blog {:id string},
    :published string}
   
@@ -174,7 +176,7 @@
   
   Required parameters: blogId, postId
   
-  Optional parameters: publish, revert, fetchBody, maxComments, fetchImages
+  Optional parameters: fetchImages, revert, maxComments, publish, fetchBody
   
   Body: 
   
@@ -187,32 +189,33 @@
    :etag string,
    :title string,
    :author {:image {:url string},
-            :url string,
             :id string,
-            :displayName string},
-   :replies {:totalItems string,
-             :selfLink string,
-             :items [{:inReplyTo {:id string},
+            :displayName string,
+            :url string},
+   :replies {:items [{:inReplyTo {:id string},
                       :content string,
                       :updated string,
                       :selfLink string,
                       :author {:image {:url string},
-                               :displayName string,
                                :id string,
+                               :displayName string,
                                :url string},
                       :status string,
                       :id string,
                       :kind string,
                       :post {:id string},
                       :blog {:id string},
-                      :published string}]},
+                      :published string}],
+             :selfLink string,
+             :totalItems string},
    :status string,
    :customMetaData string,
+   :trashed string,
    :id string,
    :kind string,
    :url string,
    :readerComments string,
-   :location {:name string, :lat number, :span string, :lng number},
+   :location {:lng number, :name string, :span string, :lat number},
    :blog {:id string},
    :published string}
   
@@ -240,9 +243,9 @@
 (defn delete$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/delete
   
-  Required parameters: postId, blogId
+  Required parameters: blogId, postId
   
-  Optional parameters: none
+  Optional parameters: useTrash
   
   Deletes a post by blog id and post id."
   {:scopes ["https://www.googleapis.com/auth/blogger"]}
@@ -266,9 +269,9 @@
 (defn search$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/search
   
-  Required parameters: q, blogId
+  Required parameters: blogId, q
   
-  Optional parameters: fetchBodies, orderBy
+  Optional parameters: orderBy, fetchBodies
   
   Searches for posts matching given query terms in the specified blog."
   {:scopes ["https://www.googleapis.com/auth/blogger"
@@ -293,7 +296,7 @@
 (defn revert$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/revert
   
-  Required parameters: postId, blogId
+  Required parameters: blogId, postId
   
   Optional parameters: none
   
@@ -321,7 +324,7 @@
   
   Required parameters: blogId
   
-  Optional parameters: labels, startDate, pageToken, endDate, fetchBodies, status, fetchImages, maxResults, view, orderBy
+  Optional parameters: labels, startDate, sortOption, pageToken, endDate, fetchBodies, status, fetchImages, maxResults, view, orderBy
   
   Lists posts."
   {:scopes ["https://www.googleapis.com/auth/blogger"
@@ -346,7 +349,7 @@
 (defn publish$
   "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/posts/publish
   
-  Required parameters: postId, blogId
+  Required parameters: blogId, postId
   
   Optional parameters: publishDate
   
@@ -374,7 +377,7 @@
   
   Required parameters: blogId, path
   
-  Optional parameters: maxComments, view
+  Optional parameters: view, maxComments
   
   Gets a post by path."
   {:scopes ["https://www.googleapis.com/auth/blogger"

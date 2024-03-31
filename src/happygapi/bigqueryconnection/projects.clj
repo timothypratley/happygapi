@@ -1,13 +1,81 @@
 (ns happygapi.bigqueryconnection.projects
   "BigQuery Connection API: projects.
   Allows users to manage BigQuery connections to external data sources.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-connections-create$
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/create
+  
+  Required parameters: parent
+  
+  Optional parameters: connectionId
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :aws {:accessRole AwsAccessRole},
+   :cloudResource {:serviceAccountId string},
+   :hasCredential boolean,
+   :cloudSpanner {:database string,
+                  :useParallelism boolean,
+                  :maxParallelism integer,
+                  :useServerlessAnalytics boolean,
+                  :useDataBoost boolean,
+                  :databaseRole string},
+   :name string,
+   :lastModifiedTime string,
+   :friendlyName string,
+   :kmsKeyName string,
+   :azure {:application string,
+           :clientId string,
+           :objectId string,
+           :customerTenantId string,
+           :redirectUri string,
+           :federatedApplicationClientId string,
+           :identity string},
+   :configuration {:connectorId string,
+                   :endpoint ConnectorConfigurationEndpoint,
+                   :authentication ConnectorConfigurationAuthentication},
+   :salesforceDataCloud {:instanceUri string,
+                         :identity string,
+                         :tenantId string},
+   :spark {:serviceAccountId string,
+           :metastoreServiceConfig MetastoreServiceConfig,
+           :sparkHistoryServerConfig SparkHistoryServerConfig},
+   :cloudSql {:instanceId string,
+              :database string,
+              :type string,
+              :credential CloudSqlCredential,
+              :serviceAccountId string}}
+  
+  Creates a new connection."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigqueryconnection.googleapis.com/"
+     "v1/{+parent}/connections"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-connections-get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/get
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/get
   
   Required parameters: name
   
@@ -22,7 +90,7 @@
    (http/get
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -33,45 +101,35 @@
       :as :json}
      auth))))
 
-(defn locations-connections-setIamPolicy$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/setIamPolicy
+(defn locations-connections-list$
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/list
   
-  Required parameters: resource
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken
   
-  Body: 
-  
-  {:policy {:etag string,
-            :bindings [Binding],
-            :version integer,
-            :auditConfigs [AuditConfig]},
-   :updateMask string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  Returns a list of connections in the given project."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
-     #{:resource}
+     "v1/{+parent}/connections"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
 (defn locations-connections-patch$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/patch
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/patch
   
   Required parameters: name
   
@@ -80,15 +138,41 @@
   Body: 
   
   {:creationTime string,
-   :cloudSql {:type string,
-              :credential CloudSqlCredential,
-              :database string,
-              :instanceId string},
-   :hasCredential boolean,
-   :name string,
    :description string,
+   :aws {:accessRole AwsAccessRole},
+   :cloudResource {:serviceAccountId string},
+   :hasCredential boolean,
+   :cloudSpanner {:database string,
+                  :useParallelism boolean,
+                  :maxParallelism integer,
+                  :useServerlessAnalytics boolean,
+                  :useDataBoost boolean,
+                  :databaseRole string},
+   :name string,
+   :lastModifiedTime string,
    :friendlyName string,
-   :lastModifiedTime string}
+   :kmsKeyName string,
+   :azure {:application string,
+           :clientId string,
+           :objectId string,
+           :customerTenantId string,
+           :redirectUri string,
+           :federatedApplicationClientId string,
+           :identity string},
+   :configuration {:connectorId string,
+                   :endpoint ConnectorConfigurationEndpoint,
+                   :authentication ConnectorConfigurationAuthentication},
+   :salesforceDataCloud {:instanceUri string,
+                         :identity string,
+                         :tenantId string},
+   :spark {:serviceAccountId string,
+           :metastoreServiceConfig MetastoreServiceConfig,
+           :sparkHistoryServerConfig SparkHistoryServerConfig},
+   :cloudSql {:instanceId string,
+              :database string,
+              :type string,
+              :credential CloudSqlCredential,
+              :serviceAccountId string}}
   
   Updates the specified connection. For security reasons, also resets credential if connection properties are in the update field mask."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -99,83 +183,8 @@
    (http/patch
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-connections-testIamPermissions$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/testIamPermissions
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-connections-create$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/create
-  
-  Required parameters: parent
-  
-  Optional parameters: connectionId
-  
-  Body: 
-  
-  {:creationTime string,
-   :cloudSql {:type string,
-              :credential CloudSqlCredential,
-              :database string,
-              :instanceId string},
-   :hasCredential boolean,
-   :name string,
-   :description string,
-   :friendlyName string,
-   :lastModifiedTime string}
-  
-  Creates a new connection."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+parent}/connections"
-     #{:parent}
      parameters)
     (merge-with
      merge
@@ -188,7 +197,7 @@
      auth))))
 
 (defn locations-connections-delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/delete
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/delete
   
   Required parameters: name
   
@@ -203,7 +212,7 @@
    (http/delete
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -215,7 +224,7 @@
      auth))))
 
 (defn locations-connections-getIamPolicy$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/getIamPolicy
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/getIamPolicy
   
   Required parameters: resource
   
@@ -234,7 +243,7 @@
    (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
+     "v1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -247,28 +256,32 @@
       :as :json}
      auth))))
 
-(defn locations-connections-updateCredential$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/updateCredential
+(defn locations-connections-setIamPolicy$
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {:cloudSql {:username string, :password string}}
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
   
-  Sets the credential for the specified connection."
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -280,28 +293,34 @@
       :as :json}
      auth))))
 
-(defn locations-connections-list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v1beta1/projects/locations/connections/list
+(defn locations-connections-testIamPermissions$
+  "https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects/locations/connections/testIamPermissions
   
-  Required parameters: parent
+  Required parameters: resource
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: none
   
-  Returns a list of connections in the given project."
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://bigqueryconnection.googleapis.com/"
-     "v1beta1/{+parent}/connections"
-     #{:parent}
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

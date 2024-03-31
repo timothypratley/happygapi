@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: q, lr, num, excludeTerms, relatedSite, fileType, searchType, siteSearch, imgSize, orTerms, start, cr, hq, filter, imgColorType, exactTerms, hl, rights, imgDominantColor, imgType, cx, gl, dateRestrict, googlehost, c2coff, safe, siteSearchFilter, lowRange, sort, linkSite, highRange
+  Optional parameters: q, lr, num, excludeTerms, relatedSite, fileType, searchType, siteSearch, imgSize, orTerms, start, cr, hq, filter, imgColorType, exactTerms, hl, rights, imgDominantColor, imgType, cx, gl, snippetLength, dateRestrict, googlehost, c2coff, safe, siteSearchFilter, lowRange, sort, linkSite, highRange
   
   Returns metadata about the search performed, metadata about the engine used for the search, and the search results."
   {:scopes nil}
@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: q, lr, num, excludeTerms, relatedSite, fileType, searchType, siteSearch, imgSize, orTerms, start, cr, hq, filter, imgColorType, exactTerms, hl, rights, imgDominantColor, imgType, cx, gl, dateRestrict, googlehost, c2coff, safe, siteSearchFilter, lowRange, sort, linkSite, highRange
+  Optional parameters: q, lr, num, excludeTerms, relatedSite, fileType, searchType, siteSearch, imgSize, orTerms, start, cr, hq, filter, imgColorType, exactTerms, hl, rights, imgDominantColor, imgType, cx, gl, snippetLength, dateRestrict, googlehost, c2coff, safe, siteSearchFilter, lowRange, sort, linkSite, highRange
   
   Returns metadata about the search performed, metadata about the engine used for the search, and the search results. Uses a small set of url patterns."
   {:scopes nil}

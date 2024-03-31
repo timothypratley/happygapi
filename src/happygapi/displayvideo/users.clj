@@ -1,58 +1,19 @@
 (ns happygapi.displayvideo.users
   "Display & Video 360 API: users.
-  Display & Video 360 API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/display-video/api/reference/rest/v1/users"
+  Display & Video 360 API allows users to automate complex Display & Video 360 workflows, such as creating insertion orders and setting targeting options for individual line items.
+  See: https://developers.google.com/display-video/api/reference/rest/v3/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patch$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/patch
-  
-  Required parameters: userId
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:assignedUserRoles [{:partnerId string,
-                        :userRole string,
-                        :assignedUserRoleId string,
-                        :advertiserId string}],
-   :userId string,
-   :name string,
-   :email string,
-   :displayName string}
-  
-  Updates an existing user. Returns the updated user if successful."
-  {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:userId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://displayvideo.googleapis.com/"
-     "v1/users/{+userId}"
-     #{:userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/get
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/get
   
   Required parameters: userId
   
   Optional parameters: none
   
-  Gets a user."
+  Gets a user. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:userId})]}
@@ -60,7 +21,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/users/{+userId}"
+     "v3/users/{+userId}"
      #{:userId}
      parameters)
     (merge-with
@@ -71,23 +32,23 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/delete
+(defn list$
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/list
   
-  Required parameters: userId
+  Required parameters: none
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken, orderBy, filter
   
-  Deletes a user."
+  Lists users that are accessible to the current user. If two users have user roles on the same partner or advertiser, they can access each other. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:userId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/users/{+userId}"
-     #{:userId}
+     "v3/users"
+     #{}
      parameters)
     (merge-with
      merge
@@ -98,7 +59,7 @@
      auth))))
 
 (defn create$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/create
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/create
   
   Required parameters: none
   
@@ -106,16 +67,17 @@
   
   Body: 
   
-  {:assignedUserRoles [{:partnerId string,
-                        :userRole string,
-                        :assignedUserRoleId string,
-                        :advertiserId string}],
+  {:name string,
    :userId string,
-   :name string,
    :email string,
-   :displayName string}
+   :displayName string,
+   :assignedUserRoles [{:assignedUserRoleId string,
+                        :partnerId string,
+                        :advertiserId string,
+                        :userRole string}],
+   :lastLoginTime string}
   
-  Creates a new user. Returns the newly created user if successful."
+  Creates a new user. Returns the newly created user if successful. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -123,7 +85,7 @@
    (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/users"
+     "v3/users"
      #{}
      parameters)
     (merge-with
@@ -136,23 +98,63 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/list
+(defn patch$
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/patch
   
-  Required parameters: none
+  Required parameters: userId
   
-  Optional parameters: orderBy, pageSize, filter, pageToken
+  Optional parameters: updateMask
   
-  Lists users that are accessible to the current user. If two users have user roles on the same partner or advertiser, they can access each other."
+  Body: 
+  
+  {:name string,
+   :userId string,
+   :email string,
+   :displayName string,
+   :assignedUserRoles [{:assignedUserRoleId string,
+                        :partnerId string,
+                        :advertiserId string,
+                        :userRole string}],
+   :lastLoginTime string}
+  
+  Updates an existing user. Returns the updated user if successful. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/users"
-     #{}
+     "v3/users/{+userId}"
+     #{:userId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/delete
+  
+  Required parameters: userId
+  
+  Optional parameters: none
+  
+  Deletes a user. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
+  {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://displayvideo.googleapis.com/"
+     "v3/users/{+userId}"
+     #{:userId}
      parameters)
     (merge-with
      merge
@@ -163,7 +165,7 @@
      auth))))
 
 (defn bulkEditAssignedUserRoles$
-  "https://developers.google.com/display-video/api/reference/rest/v1/users/bulkEditAssignedUserRoles
+  "https://developers.google.com/display-video/api/reference/rest/v3/users/bulkEditAssignedUserRoles
   
   Required parameters: userId
   
@@ -172,12 +174,12 @@
   Body: 
   
   {:deletedAssignedUserRoles [string],
-   :createdAssignedUserRoles [{:partnerId string,
-                               :userRole string,
-                               :assignedUserRoleId string,
-                               :advertiserId string}]}
+   :createdAssignedUserRoles [{:assignedUserRoleId string,
+                               :partnerId string,
+                               :advertiserId string,
+                               :userRole string}]}
   
-  Bulk edits user roles for a user. The operation will delete the assigned user roles provided in BulkEditAssignedUserRolesRequest.deletedAssignedUserRoles and then assign the user roles provided in BulkEditAssignedUserRolesRequest.createdAssignedUserRoles."
+  Bulk edits user roles for a user. The operation will delete the assigned user roles provided in BulkEditAssignedUserRolesRequest.deletedAssignedUserRoles and then assign the user roles provided in BulkEditAssignedUserRolesRequest.createdAssignedUserRoles. This method has unique authentication requirements. Read the prerequisites in our [Managing Users guide](/display-video/api/guides/users/overview#prerequisites) before using this method. The \"Try this method\" feature does not work for this method."
   {:scopes ["https://www.googleapis.com/auth/display-video-user-management"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:userId})]}
@@ -185,7 +187,7 @@
    (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/users/{+userId}:bulkEditAssignedUserRoles"
+     "v3/users/{+userId}:bulkEditAssignedUserRoles"
      #{:userId}
      parameters)
     (merge-with

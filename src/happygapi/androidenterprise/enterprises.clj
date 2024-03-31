@@ -99,14 +99,14 @@
   
   Body: 
   
-  {:privateApps {:enabled boolean},
+  {:permission [string],
    :parent string,
-   :webApps {:enabled boolean},
-   :managedConfigurations {:enabled boolean},
-   :zeroTouch {:enabled boolean},
-   :permission [string],
    :playSearch {:enabled boolean, :approveApps boolean},
-   :storeBuilder {:enabled boolean}}
+   :privateApps {:enabled boolean},
+   :webApps {:enabled boolean},
+   :storeBuilder {:enabled boolean},
+   :managedConfigurations {:enabled boolean},
+   :zeroTouch {:enabled boolean}}
   
   Returns a unique token to access an embeddable UI. To generate a web UI, pass the generated token into the managed Google Play javascript API. Each token may only be used to start one UI session. See the javascript API documentation for further information."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -124,6 +124,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn createEnrollmentToken$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/enterprises/createEnrollmentToken
+  
+  Required parameters: enterpriseId
+  
+  Optional parameters: deviceType
+  
+  Returns a token for device enrollment. The DPC can encode this token within the QR/NFC/zero-touch enrollment payload or fetch it before calling the on-device API to authenticate the user. The token can be generated for each device or reused across multiple devices."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/createEnrollmentToken"
+     #{:enterpriseId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -378,10 +404,12 @@
   
   Body: 
   
-  {:name string,
+  {:id string,
+   :primaryDomain string,
+   :name string,
    :administrator [{:email string}],
-   :id string,
-   :primaryDomain string}
+   :googleAuthenticationSettings {:googleAuthenticationRequired string,
+                                  :dedicatedDevicesAllowed string}}
   
   Enrolls an enterprise with the calling EMM."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}

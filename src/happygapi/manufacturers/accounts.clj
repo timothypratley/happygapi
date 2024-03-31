@@ -6,38 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn products-delete$
-  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
-  
-  Required parameters: name, parent
-  
-  Optional parameters: none
-  
-  Deletes the product from a Manufacturer Center account."
-  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent :name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://manufacturers.googleapis.com/"
-     "v1/{+parent}/products/{+name}"
-     #{:parent :name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn products-list$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/list
   
   Required parameters: parent
   
-  Optional parameters: include, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, include
   
   Lists all the products in a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
@@ -58,10 +32,36 @@
       :as :json}
      auth))))
 
+(defn products-get$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/get
+  
+  Required parameters: parent, name
+  
+  Optional parameters: include
+  
+  Gets the product from a Manufacturer Center account, including product issues. A recently updated product takes around 15 minutes to process. Changes are only visible after it has been processed. While some issues may be available once the product has been processed, other issues may take days to appear."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent :name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/products/{+name}"
+     #{:parent :name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn products-update$
   "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/update
   
-  Required parameters: name, parent
+  Required parameters: parent, name
   
   Optional parameters: none
   
@@ -72,20 +72,20 @@
    :format string,
    :ageGroup string,
    :sizeSystem string,
-   :suggestedRetailPrice {:currency string, :amount string},
+   :suggestedRetailPrice {:amount string, :currency string},
    :flavor string,
    :color string,
    :productLine string,
    :capacity {:value string, :unit string},
    :includedDestination [string],
-   :additionalImageLink [{:status string,
-                          :type string,
+   :additionalImageLink [{:type string,
+                          :status string,
                           :imageUrl string}],
    :productPageUrl string,
    :releaseDate string,
-   :productDetail [{:attributeName string,
-                    :attributeValue string,
-                    :sectionName string}],
+   :productDetail [{:sectionName string,
+                    :attributeName string,
+                    :attributeValue string}],
    :productName string,
    :sizeType [string],
    :size string,
@@ -95,17 +95,71 @@
    :excludedDestination [string],
    :scent string,
    :itemGroupId string,
+   :certification [{:name string, :authority string, :code string}],
    :productType [string],
    :disclosureDate string,
-   :featureDescription [{:headline string, :image Image, :text string}],
-   :count {:unit string, :value string},
+   :featureDescription [{:headline string, :text string, :image Image}],
+   :count {:value string, :unit string},
    :material string,
+   :virtualModelLink string,
    :videoLink [string],
+   :grocery {:allergens string,
+             :directions string,
+             :nutritionClaim [string],
+             :activeIngredients string,
+             :storageInstructions string,
+             :indications string,
+             :ingredients string,
+             :derivedNutritionClaim [string],
+             :alcoholByVolume number},
    :gtin [string],
    :gender string,
    :targetClientId string,
    :productHighlight [string],
-   :imageLink {:status string, :type string, :imageUrl string},
+   :nutrition {:folateDailyPercentage number,
+               :saturatedFatDailyPercentage number,
+               :calciumDailyPercentage number,
+               :totalFat FloatUnit,
+               :nutritionFactMeasure string,
+               :totalSugarsDailyPercentage number,
+               :vitaminDDailyPercentage number,
+               :monounsaturatedFat FloatUnit,
+               :servingsPerContainer string,
+               :servingSizeMeasure FloatUnit,
+               :energyFromFat FloatUnit,
+               :potassiumDailyPercentage number,
+               :folateMcgDfe number,
+               :addedSugarsDailyPercentage number,
+               :transFatDailyPercentage number,
+               :voluntaryNutritionFact [VoluntaryNutritionFact],
+               :energy FloatUnit,
+               :preparedSizeDescription string,
+               :calcium FloatUnit,
+               :dietaryFiberDailyPercentage number,
+               :iron FloatUnit,
+               :saturatedFat FloatUnit,
+               :potassium FloatUnit,
+               :proteinDailyPercentage number,
+               :cholesterolDailyPercentage number,
+               :polyols FloatUnit,
+               :cholesterol FloatUnit,
+               :folateFolicAcid FloatUnit,
+               :ironDailyPercentage number,
+               :dietaryFiber FloatUnit,
+               :transFat FloatUnit,
+               :totalFatDailyPercentage number,
+               :totalCarbohydrateDailyPercentage number,
+               :sodium FloatUnit,
+               :protein FloatUnit,
+               :totalSugars FloatUnit,
+               :vitaminD FloatUnit,
+               :totalCarbohydrate FloatUnit,
+               :sodiumDailyPercentage number,
+               :addedSugars FloatUnit,
+               :starch FloatUnit,
+               :servingSizeDescription string,
+               :polyunsaturatedFat FloatUnit},
+   :imageLink {:type string, :status string, :imageUrl string},
    :pattern string,
    :richProductContent [string]}
   
@@ -130,23 +184,155 @@
       :as :json}
      auth))))
 
-(defn products-get$
-  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/get
+(defn products-delete$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/products/delete
   
-  Required parameters: name, parent
+  Required parameters: parent, name
   
-  Optional parameters: include
+  Optional parameters: none
   
-  Gets the product from a Manufacturer Center account, including product issues. A recently updated product takes around 15 minutes to process. Changes are only visible after it has been processed. While some issues may be available once the product has been processed, other issues may take days to appear."
+  Deletes the product from a Manufacturer Center account."
   {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent :name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://manufacturers.googleapis.com/"
      "v1/{+parent}/products/{+name}"
      #{:parent :name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn languages-productCertifications-patch$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/languages/productCertifications/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:mpn [string],
+   :issues [{:type string,
+             :severity string,
+             :attribute string,
+             :title string,
+             :description string,
+             :resolution string,
+             :destination string,
+             :timestamp string}],
+   :destinationStatuses [{:destination string, :status string}],
+   :name string,
+   :brand string,
+   :title string,
+   :certification [{:name string,
+                    :authority string,
+                    :code string,
+                    :value string,
+                    :link string,
+                    :logo string,
+                    :validUntil string}],
+   :productType [string],
+   :productCode [string],
+   :countryCode [string]}
+  
+  Updates (or creates if allow_missing = true) a product certification which links certifications with products. This method can only be called by certification bodies."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn languages-productCertifications-list$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/languages/productCertifications/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists product certifications from a specified certification body. This method can only be called by certification bodies."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+parent}/productCertifications"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn languages-productCertifications-get$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/languages/productCertifications/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a product certification by its name. This method can only be called by certification bodies."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn languages-productCertifications-delete$
+  "https://developers.google.com/manufacturers/api/reference/rest/v1/accounts/languages/productCertifications/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a product certification by its name. This method can only be called by certification bodies."
+  {:scopes ["https://www.googleapis.com/auth/manufacturercenter"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://manufacturers.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

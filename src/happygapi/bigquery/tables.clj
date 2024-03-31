@@ -9,9 +9,9 @@
 (defn get$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/get
   
-  Required parameters: tableId, datasetId, projectId
+  Required parameters: datasetId, projectId, tableId
   
-  Optional parameters: selectedFields
+  Optional parameters: selectedFields, view
   
   Gets the specified table resource by table ID. This method does not return the data in the table, it only returns the table resource, which describes the structure of this table."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -23,7 +23,7 @@
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}"
      #{:tableId :datasetId :projectId}
      parameters)
     (merge-with
@@ -43,11 +43,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:etag string,
+  {:policy {:auditConfigs [AuditConfig],
             :bindings [Binding],
-            :version integer,
-            :auditConfigs [AuditConfig]}}
+            :etag string,
+            :version integer},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -82,25 +82,37 @@
   
   {:creationTime string,
    :description string,
+   :maxStaleness string,
    :numBytes string,
    :schema {:fields [TableFieldSchema]},
    :labels {},
+   :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
    :numRows string,
    :expirationTime string,
+   :tableReplicationInfo {:replicatedSourceLastRefreshTime string,
+                          :replicationError ErrorProto,
+                          :replicationIntervalMs string,
+                          :replicationStatus string,
+                          :sourceTable TableReference},
+   :numLongTermLogicalBytes string,
+   :materializedViewStatus {:lastRefreshStatus ErrorProto,
+                            :refreshWatermark string},
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:type string,
-                      :requirePartitionFilter boolean,
+   :numTotalLogicalBytes string,
+   :timePartitioning {:expirationMs string,
                       :field string,
-                      :expirationMs string},
+                      :requirePartitionFilter boolean,
+                      :type string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :fileSetSpecType string,
                                :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
@@ -111,38 +123,68 @@
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
-                               :maxBadRecords integer},
+                               :maxBadRecords integer,
+                               :jsonOptions JsonOptions,
+                               :objectMetadata string,
+                               :referenceFileSchemaUri string,
+                               :metadataCacheMode string,
+                               :jsonExtension string},
    :lastModifiedTime string,
+   :partitionDefinition {:partitionedColumn [PartitionedColumn]},
+   :resourceTags {},
+   :defaultRoundingMode string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
                     :projectId string,
                     :tableId string},
    :id string,
-   :rangePartitioning {:range {:start string,
+   :rangePartitioning {:field string,
+                       :range {:end string,
                                :interval string,
-                               :end string},
-                       :field string},
+                               :start string}},
    :kind string,
+   :replicas [{:datasetId string, :projectId string, :tableId string}],
    :defaultCollation string,
+   :cloneDefinition {:baseTableReference TableReference,
+                     :cloneTime string},
+   :numPartitions string,
+   :numActiveLogicalBytes string,
+   :tableConstraints {:foreignKeys [{:columnReferences [{:referencedColumn string,
+                                                         :referencingColumn string}],
+                                     :name string,
+                                     :referencedTable {:datasetId string,
+                                                       :projectId string,
+                                                       :tableId string}}],
+                      :primaryKey {:columns [string]}},
    :streamingBuffer {:estimatedBytes string,
-                     :oldestEntryTime string,
-                     :estimatedRows string},
+                     :estimatedRows string,
+                     :oldestEntryTime string},
+   :numActivePhysicalBytes string,
+   :biglakeConfiguration {:connectionId string,
+                          :fileFormat string,
+                          :storageUri string,
+                          :tableFormat string},
    :location string,
-   :materializedView {:enableRefresh boolean,
+   :numLongTermPhysicalBytes string,
+   :materializedView {:allowNonIncrementalDefinition boolean,
+                      :enableRefresh boolean,
                       :lastRefreshTime string,
-                      :refreshIntervalMs string,
-                      :query string},
+                      :maxStaleness string,
+                      :query string,
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
+   :numTotalPhysicalBytes string,
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
-   :view {:useExplicitColumnNames boolean,
-          :useLegacySql boolean,
+   :view {:privacyPolicy PrivacyPolicy,
           :query string,
+          :useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:modelOptions {:modelType string,
-                          :labels [string],
-                          :lossType string},
+   :model {:modelOptions {:labels [string],
+                          :lossType string,
+                          :modelType string},
            :trainingRuns [BqmlTrainingRun]}}
   
   Creates a new, empty table in the dataset."
@@ -154,7 +196,7 @@
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables"
+     "projects/{+projectId}/datasets/{+datasetId}/tables"
      #{:datasetId :projectId}
      parameters)
     (merge-with
@@ -172,31 +214,43 @@
   
   Required parameters: datasetId, projectId, tableId
   
-  Optional parameters: none
+  Optional parameters: autodetect_schema
   
   Body: 
   
   {:creationTime string,
    :description string,
+   :maxStaleness string,
    :numBytes string,
    :schema {:fields [TableFieldSchema]},
    :labels {},
+   :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
    :numRows string,
    :expirationTime string,
+   :tableReplicationInfo {:replicatedSourceLastRefreshTime string,
+                          :replicationError ErrorProto,
+                          :replicationIntervalMs string,
+                          :replicationStatus string,
+                          :sourceTable TableReference},
+   :numLongTermLogicalBytes string,
+   :materializedViewStatus {:lastRefreshStatus ErrorProto,
+                            :refreshWatermark string},
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:type string,
-                      :requirePartitionFilter boolean,
+   :numTotalLogicalBytes string,
+   :timePartitioning {:expirationMs string,
                       :field string,
-                      :expirationMs string},
+                      :requirePartitionFilter boolean,
+                      :type string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :fileSetSpecType string,
                                :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
@@ -207,41 +261,71 @@
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
-                               :maxBadRecords integer},
+                               :maxBadRecords integer,
+                               :jsonOptions JsonOptions,
+                               :objectMetadata string,
+                               :referenceFileSchemaUri string,
+                               :metadataCacheMode string,
+                               :jsonExtension string},
    :lastModifiedTime string,
+   :partitionDefinition {:partitionedColumn [PartitionedColumn]},
+   :resourceTags {},
+   :defaultRoundingMode string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
                     :projectId string,
                     :tableId string},
    :id string,
-   :rangePartitioning {:range {:start string,
+   :rangePartitioning {:field string,
+                       :range {:end string,
                                :interval string,
-                               :end string},
-                       :field string},
+                               :start string}},
    :kind string,
+   :replicas [{:datasetId string, :projectId string, :tableId string}],
    :defaultCollation string,
+   :cloneDefinition {:baseTableReference TableReference,
+                     :cloneTime string},
+   :numPartitions string,
+   :numActiveLogicalBytes string,
+   :tableConstraints {:foreignKeys [{:columnReferences [{:referencedColumn string,
+                                                         :referencingColumn string}],
+                                     :name string,
+                                     :referencedTable {:datasetId string,
+                                                       :projectId string,
+                                                       :tableId string}}],
+                      :primaryKey {:columns [string]}},
    :streamingBuffer {:estimatedBytes string,
-                     :oldestEntryTime string,
-                     :estimatedRows string},
+                     :estimatedRows string,
+                     :oldestEntryTime string},
+   :numActivePhysicalBytes string,
+   :biglakeConfiguration {:connectionId string,
+                          :fileFormat string,
+                          :storageUri string,
+                          :tableFormat string},
    :location string,
-   :materializedView {:enableRefresh boolean,
+   :numLongTermPhysicalBytes string,
+   :materializedView {:allowNonIncrementalDefinition boolean,
+                      :enableRefresh boolean,
                       :lastRefreshTime string,
-                      :refreshIntervalMs string,
-                      :query string},
+                      :maxStaleness string,
+                      :query string,
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
+   :numTotalPhysicalBytes string,
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
-   :view {:useExplicitColumnNames boolean,
-          :useLegacySql boolean,
+   :view {:privacyPolicy PrivacyPolicy,
           :query string,
+          :useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:modelOptions {:modelType string,
-                          :labels [string],
-                          :lossType string},
+   :model {:modelOptions {:labels [string],
+                          :lossType string,
+                          :modelType string},
            :trainingRuns [BqmlTrainingRun]}}
   
-  Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource. This method supports patch semantics."
+  Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource. This method supports RFC5789 patch semantics."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -250,7 +334,7 @@
    (http/patch
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}"
      #{:tableId :datasetId :projectId}
      parameters)
     (merge-with
@@ -300,33 +384,45 @@
 (defn update$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/update
   
-  Required parameters: tableId, datasetId, projectId
+  Required parameters: datasetId, projectId, tableId
   
-  Optional parameters: none
+  Optional parameters: autodetect_schema
   
   Body: 
   
   {:creationTime string,
    :description string,
+   :maxStaleness string,
    :numBytes string,
    :schema {:fields [TableFieldSchema]},
    :labels {},
+   :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
    :numRows string,
    :expirationTime string,
+   :tableReplicationInfo {:replicatedSourceLastRefreshTime string,
+                          :replicationError ErrorProto,
+                          :replicationIntervalMs string,
+                          :replicationStatus string,
+                          :sourceTable TableReference},
+   :numLongTermLogicalBytes string,
+   :materializedViewStatus {:lastRefreshStatus ErrorProto,
+                            :refreshWatermark string},
    :selfLink string,
    :type string,
    :etag string,
-   :timePartitioning {:type string,
-                      :requirePartitionFilter boolean,
+   :numTotalLogicalBytes string,
+   :timePartitioning {:expirationMs string,
                       :field string,
-                      :expirationMs string},
+                      :requirePartitionFilter boolean,
+                      :type string},
    :requirePartitionFilter boolean,
    :externalDataConfiguration {:schema TableSchema,
                                :bigtableOptions BigtableOptions,
                                :connectionId string,
                                :csvOptions CsvOptions,
+                               :fileSetSpecType string,
                                :parquetOptions ParquetOptions,
                                :autodetect boolean,
                                :compression string,
@@ -337,41 +433,71 @@
                                :hivePartitioningOptions HivePartitioningOptions,
                                :decimalTargetTypes [string],
                                :sourceUris [string],
-                               :maxBadRecords integer},
+                               :maxBadRecords integer,
+                               :jsonOptions JsonOptions,
+                               :objectMetadata string,
+                               :referenceFileSchemaUri string,
+                               :metadataCacheMode string,
+                               :jsonExtension string},
    :lastModifiedTime string,
+   :partitionDefinition {:partitionedColumn [PartitionedColumn]},
+   :resourceTags {},
+   :defaultRoundingMode string,
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
                     :projectId string,
                     :tableId string},
    :id string,
-   :rangePartitioning {:range {:start string,
+   :rangePartitioning {:field string,
+                       :range {:end string,
                                :interval string,
-                               :end string},
-                       :field string},
+                               :start string}},
    :kind string,
+   :replicas [{:datasetId string, :projectId string, :tableId string}],
    :defaultCollation string,
+   :cloneDefinition {:baseTableReference TableReference,
+                     :cloneTime string},
+   :numPartitions string,
+   :numActiveLogicalBytes string,
+   :tableConstraints {:foreignKeys [{:columnReferences [{:referencedColumn string,
+                                                         :referencingColumn string}],
+                                     :name string,
+                                     :referencedTable {:datasetId string,
+                                                       :projectId string,
+                                                       :tableId string}}],
+                      :primaryKey {:columns [string]}},
    :streamingBuffer {:estimatedBytes string,
-                     :oldestEntryTime string,
-                     :estimatedRows string},
+                     :estimatedRows string,
+                     :oldestEntryTime string},
+   :numActivePhysicalBytes string,
+   :biglakeConfiguration {:connectionId string,
+                          :fileFormat string,
+                          :storageUri string,
+                          :tableFormat string},
    :location string,
-   :materializedView {:enableRefresh boolean,
+   :numLongTermPhysicalBytes string,
+   :materializedView {:allowNonIncrementalDefinition boolean,
+                      :enableRefresh boolean,
                       :lastRefreshTime string,
-                      :refreshIntervalMs string,
-                      :query string},
+                      :maxStaleness string,
+                      :query string,
+                      :refreshIntervalMs string},
    :encryptionConfiguration {:kmsKeyName string},
+   :numTotalPhysicalBytes string,
    :snapshotDefinition {:baseTableReference TableReference,
                         :snapshotTime string},
-   :view {:useExplicitColumnNames boolean,
-          :useLegacySql boolean,
+   :view {:privacyPolicy PrivacyPolicy,
           :query string,
+          :useExplicitColumnNames boolean,
+          :useLegacySql boolean,
           :userDefinedFunctionResources [UserDefinedFunctionResource]},
-   :model {:modelOptions {:modelType string,
-                          :labels [string],
-                          :lossType string},
+   :model {:modelOptions {:labels [string],
+                          :lossType string,
+                          :modelType string},
            :trainingRuns [BqmlTrainingRun]}}
   
-  Updates information in an existing table. The update method replaces the entire table resource, whereas the patch method only replaces fields that are provided in the submitted table resource."
+  Updates information in an existing table. The update method replaces the entire Table resource, whereas the patch method only replaces fields that are provided in the submitted Table resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
@@ -380,7 +506,7 @@
    (http/put
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}"
      #{:tableId :datasetId :projectId}
      parameters)
     (merge-with
@@ -409,7 +535,7 @@
    (http/delete
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}"
      #{:tableId :datasetId :projectId}
      parameters)
     (merge-with
@@ -457,7 +583,7 @@
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tables/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
   Optional parameters: maxResults, pageToken
   
@@ -471,7 +597,7 @@
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables"
+     "projects/{+projectId}/datasets/{+datasetId}/tables"
      #{:datasetId :projectId}
      parameters)
     (merge-with

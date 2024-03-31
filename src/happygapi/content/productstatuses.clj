@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: destinations, maxResults, pageToken
-  
-  Lists the statuses of the products in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/productstatuses"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn custombatch$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/custombatch
   
@@ -41,12 +15,12 @@
   
   Body: 
   
-  {:entries [{:destinations [string],
-              :includeAttributes boolean,
-              :batchId integer,
+  {:entries [{:batchId integer,
               :merchantId string,
+              :method string,
               :productId string,
-              :method string}]}
+              :includeAttributes boolean,
+              :destinations [string]}]}
   
   Gets the statuses of multiple products in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -95,23 +69,23 @@
       :as :json}
      auth))))
 
-(defn repricingreports-list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/repricingreports/list
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/productstatuses/list
   
-  Required parameters: merchantId, productId
+  Required parameters: merchantId
   
-  Optional parameters: pageSize, pageToken, startDate, endDate, ruleId
+  Optional parameters: maxResults, pageToken, destinations
   
-  Lists the metrics report for a given Repricing product."
+  Lists the statuses of the products in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:productId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/productstatuses/{productId}/repricingreports"
-     #{:productId :merchantId}
+     "{merchantId}/productstatuses"
+     #{:merchantId}
      parameters)
     (merge-with
      merge

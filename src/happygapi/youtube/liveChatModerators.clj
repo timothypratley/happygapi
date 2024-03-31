@@ -6,24 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/delete
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
   
-  Required parameters: id
+  Required parameters: liveChatId, part
   
-  Optional parameters: none
+  Optional parameters: pageToken, maxResults
   
-  Deletes a chat moderator."
+  Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:id})]}
+  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/liveChat/moderators"
-     #{:id}
+     #{:part :liveChatId}
      parameters)
     (merge-with
      merge
@@ -43,10 +44,10 @@
   Body: 
   
   {:kind string,
-   :etag string,
    :id string,
-   :snippet {:moderatorDetails ChannelProfileDetails,
-             :liveChatId string}}
+   :snippet {:liveChatId string,
+             :moderatorDetails ChannelProfileDetails},
+   :etag string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -70,25 +71,24 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/delete
   
-  Required parameters: liveChatId, part
+  Required parameters: id
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: none
   
-  Retrieves a list of resources, possibly filtered."
+  Deletes a chat moderator."
   {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
+  {:pre [(util/has-keys? parameters #{:id})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/liveChat/moderators"
-     #{:part :liveChatId}
+     #{:id}
      parameters)
     (merge-with
      merge

@@ -1,6 +1,6 @@
 (ns happygapi.keep.media
   "Google Keep API: media.
-  This API is an enterprise-only API used to create and manage the Keep notes within your domain, including resolving issues identified by CASB software.
+  The Google Keep API is used in an enterprise environment to manage Google Keep content and resolve issues identified by cloud security software.
   See: https://developers.google.com/keep/apiapi/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]

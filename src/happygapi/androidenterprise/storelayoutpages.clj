@@ -6,64 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/insert
-  
-  Required parameters: enterpriseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:link [string], :name [{:locale string, :text string}], :id string}
-  
-  Inserts a new store page."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages"
-     #{:enterpriseId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/get
-  
-  Required parameters: pageId, enterpriseId
-  
-  Optional parameters: none
-  
-  Retrieves details of a store page."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
-     #{:enterpriseId :pageId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/list
   
@@ -90,19 +32,51 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/delete
+(defn insert$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/insert
   
-  Required parameters: pageId, enterpriseId
+  Required parameters: enterpriseId
   
   Optional parameters: none
   
-  Deletes a store page."
+  Body: 
+  
+  {:id string, :name [{:locale string, :text string}], :link [string]}
+  
+  Inserts a new store page."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages"
+     #{:enterpriseId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/get
+  
+  Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
+  
+  Retrieves details of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://androidenterprise.googleapis.com/"
      "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
@@ -125,7 +99,7 @@
   
   Body: 
   
-  {:link [string], :name [{:locale string, :text string}], :id string}
+  {:id string, :name [{:locale string, :text string}], :link [string]}
   
   Updates the content of a store page."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
@@ -143,6 +117,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutpages/delete
+  
+  Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
+  
+  Deletes a store page."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}"
+     #{:enterpriseId :pageId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

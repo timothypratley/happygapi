@@ -6,6 +6,60 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Fetches an organization resource identified by the specified resource name."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn search$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/search
+  
+  Required parameters: none
+  
+  Optional parameters: pageSize, pageToken, query
+  
+  Searches organization resources that are visible to the user and satisfy the specified filter. This method returns organizations in an unspecified order. New organizations do not necessarily appear at the end of the results, and may take a small amount of time to appear. Search will only return organizations on which the user has the permission `resourcemanager.organizations.get` or has super admin privileges."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/organizations:search"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn getIamPolicy$
   "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/getIamPolicy
   
@@ -39,28 +93,37 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/get
+(defn setIamPolicy$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
-  Fetches an organization resource identified by the specified resource name."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on an organization resource. Replaces any existing policy. The `resource` field should be the organization's resource name, for example: \"organizations/123\". Authorization requires the IAM permission `resourcemanager.organizations.setIamPolicy` on the specified organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
+     "v3/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -87,69 +150,6 @@
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
      "v3/{+resource}:testIamPermissions"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn search$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/search
-  
-  Required parameters: none
-  
-  Optional parameters: query, pageSize, pageToken
-  
-  Searches organization resources that are visible to the user and satisfy the specified filter. This method returns organizations in an unspecified order. New organizations do not necessarily appear at the end of the results, and may take a small amount of time to appear. Search will only return organizations on which the user has the permission `resourcemanager.organizations.get`"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudresourcemanager.googleapis.com/"
-     "v3/organizations:search"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setIamPolicy$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/organizations/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
-   :updateMask string}
-  
-  Sets the access control policy on an organization resource. Replaces any existing policy. The `resource` field should be the organization's resource name, for example: \"organizations/123\". Authorization requires the IAM permission `resourcemanager.organizations.setIamPolicy` on the specified organization."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudresourcemanager.googleapis.com/"
-     "v3/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with

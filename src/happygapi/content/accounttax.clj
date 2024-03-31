@@ -6,33 +6,31 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn update$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/update
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/custombatch
   
-  Required parameters: accountId, merchantId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string,
-   :accountId string,
-   :rules [{:useGlobalRate boolean,
-            :country string,
-            :locationId string,
-            :ratePercent string,
-            :shippingTaxed boolean}]}
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :method string,
+              :accountId string,
+              :accountTax AccountTax}]}
   
-  Updates the tax settings of the account. Any fields that are not provided are deleted from the resource."
+  Retrieves and updates tax settings of multiple accounts in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/accounttax/{accountId}"
-     #{:accountId :merchantId}
+     "accounttax/batch"
+     #{}
      parameters)
     (merge-with
      merge
@@ -47,7 +45,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/get
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   
@@ -96,31 +94,33 @@
       :as :json}
      auth))))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/custombatch
+(defn update$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accounttax/update
   
-  Required parameters: none
+  Required parameters: merchantId, accountId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:accountId string,
-              :method string,
-              :batchId integer,
-              :accountTax AccountTax,
-              :merchantId string}]}
+  {:accountId string,
+   :rules [{:country string,
+            :locationId string,
+            :useGlobalRate boolean,
+            :ratePercent string,
+            :shippingTaxed boolean}],
+   :kind string}
   
-  Retrieves and updates tax settings of multiple accounts in a single request."
+  Updates the tax settings of the account. Any fields that are not provided are deleted from the resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:accountId :merchantId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "accounttax/batch"
-     #{}
+     "{merchantId}/accounttax/{accountId}"
+     #{:accountId :merchantId}
      parameters)
     (merge-with
      merge

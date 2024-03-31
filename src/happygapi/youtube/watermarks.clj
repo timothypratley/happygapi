@@ -43,11 +43,11 @@
   
   Body: 
   
-  {:timing {:offsetMs string, :type string, :durationMs string},
-   :imageUrl string,
+  {:targetChannelId string,
+   :position {:type string, :cornerPosition string},
    :imageBytes string,
-   :position {:cornerPosition string, :type string},
-   :targetChannelId string}
+   :imageUrl string,
+   :timing {:type string, :durationMs string, :offsetMs string}}
   
   Allows upload of watermark image and setting it for a channel."
   {:scopes ["https://www.googleapis.com/auth/youtube"

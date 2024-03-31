@@ -7,26 +7,32 @@
             [happy.util :as util]))
 
 (defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/getIapSettings
+  "https://cloud.google.com/iapapi/reference/rest/v1/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
   Optional parameters: none
   
-  Gets the IAP settings on a particular IAP protected resource."
+  Body: 
+  
+  {:policy {:version integer, :bindings [Binding], :etag string}}
+  
+  Sets the access control policy for an Identity-Aware Proxy protected resource. Replaces any existing policy. More information about managing access via IAP can be found at: https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://iap.googleapis.com/"
-     "v1/{+name}:iapSettings"
-     #{:name}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -97,32 +103,26 @@
      auth))))
 
 (defn $
-  "https://cloud.google.com/iapapi/reference/rest/v1/setIamPolicy
+  "https://cloud.google.com/iapapi/reference/rest/v1/getIapSettings
   
-  Required parameters: resource
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:policy {:etag string, :version integer, :bindings [Binding]}}
-  
-  Sets the access control policy for an Identity-Aware Proxy protected resource. Replaces any existing policy. More information about managing access via IAP can be found at: https://cloud.google.com/iap/docs/managing-access#managing_access_via_the_api"
+  Gets the IAP settings on a particular IAP protected resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://iap.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
+     "v1/{+name}:iapSettings"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -137,14 +137,17 @@
   
   Body: 
   
-  {:applicationSettings {:csmSettings CsmSettings,
-                         :accessDeniedPageSettings AccessDeniedPageSettings,
-                         :cookieDomain string},
-   :accessSettings {:policyDelegationSettings PolicyDelegationSettings,
-                    :gcipSettings GcipSettings,
+  {:name string,
+   :accessSettings {:gcipSettings GcipSettings,
                     :corsSettings CorsSettings,
-                    :oauthSettings OAuthSettings},
-   :name string}
+                    :oauthSettings OAuthSettings,
+                    :policyDelegationSettings PolicyDelegationSettings,
+                    :reauthSettings ReauthSettings,
+                    :allowedDomainsSettings AllowedDomainsSettings},
+   :applicationSettings {:csmSettings CsmSettings,
+                         :accessDeniedPageSettings AccessDeniedPageSettings,
+                         :cookieDomain string,
+                         :attributePropagationSettings AttributePropagationSettings}}
   
   Updates the IAP settings on a particular IAP protected resource. It replaces all fields unless the `update_mask` is set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -162,6 +165,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn $
+  "https://cloud.google.com/iapapi/reference/rest/v1/validateAttributeExpression
+  
+  Required parameters: name
+  
+  Optional parameters: expression
+  
+  Validates that a given CEL expression conforms to IAP restrictions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://iap.googleapis.com/"
+     "v1/{+name}:validateAttributeExpression"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

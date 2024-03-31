@@ -1,58 +1,38 @@
 (ns happygapi.androidpublisher.edits
   "Google Play Android Developer API: edits.
-  Lets Android application developers access their Google Play accounts.
+  Lets Android application developers access their Google Play accounts. At a high level, the expected workflow is to \"insert\" an Edit, make changes as necessary, and then \"commit\" it. 
   See: https://developers.google.com/android-publisherapi/reference/rest/v3/edits"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/delete
+(defn insert$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/insert
   
-  Required parameters: packageName, editId
-  
-  Optional parameters: none
-  
-  Deletes an app edit."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}"
-     #{:packageName :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn validate$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/validate
-  
-  Required parameters: editId, packageName
+  Required parameters: packageName
   
   Optional parameters: none
   
-  Validates an app edit."
+  Body: 
+  
+  {:id string, :expiryTimeSeconds string}
+  
+  Creates a new edit for an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}:validate"
-     #{:packageName :editId}
+     "androidpublisher/v3/applications/{packageName}/edits"
+     #{:packageName}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -84,33 +64,27 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/insert
+(defn delete$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/delete
   
-  Required parameters: packageName
+  Required parameters: packageName, editId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:expiryTimeSeconds string, :id string}
-  
-  Creates a new edit for an app."
+  Deletes an app edit."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:packageName})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits"
-     #{:packageName}
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}"
+     #{:packageName :editId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -119,7 +93,7 @@
 (defn commit$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/commit
   
-  Required parameters: editId, packageName
+  Required parameters: packageName, editId
   
   Optional parameters: changesNotSentForReview
   
@@ -133,6 +107,58 @@
      "https://androidpublisher.googleapis.com/"
      "androidpublisher/v3/applications/{packageName}/edits/{editId}:commit"
      #{:packageName :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn validate$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/validate
+  
+  Required parameters: packageName, editId
+  
+  Optional parameters: none
+  
+  Validates an app edit."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}:validate"
+     #{:packageName :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn countryavailability-get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/countryavailability/get
+  
+  Required parameters: packageName, editId, track
+  
+  Optional parameters: none
+  
+  Gets country availability."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/countryAvailability/{track}"
+     #{:packageName :editId :track}
      parameters)
     (merge-with
      merge
@@ -171,9 +197,9 @@
 (defn bundles-upload$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/bundles/upload
   
-  Required parameters: editId, packageName
+  Required parameters: packageName, editId
   
-  Optional parameters: ackBundleInstallationWarning
+  Optional parameters: ackBundleInstallationWarning, deviceTierConfigId
   
   Uploads a new Android App Bundle to this edit. If you are using the Google API client libraries, please increase the timeout of the http request before calling this endpoint (a timeout of 2 minutes is recommended). See [Timeouts and Errors](https://developers.google.com/api-client-library/java/google-api-java-client/errors) for an example in java."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -197,7 +223,7 @@
 (defn images-list$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/images/list
   
-  Required parameters: language, imageType, editId, packageName
+  Required parameters: packageName, editId, language, imageType
   
   Optional parameters: none
   
@@ -222,38 +248,10 @@
       :as :json}
      auth))))
 
-(defn images-upload$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/images/upload
-  
-  Required parameters: language, packageName, imageType, editId
-  
-  Optional parameters: none
-  
-  Uploads an image of the specified language and image type, and adds to the edit."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:packageName :imageType :language :editId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}/{imageType}"
-     #{:packageName :imageType :language :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn images-delete$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/images/delete
   
-  Required parameters: imageId, packageName, language, imageType, editId
+  Required parameters: packageName, editId, language, imageType, imageId
   
   Optional parameters: none
   
@@ -281,7 +279,7 @@
 (defn images-deleteall$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/images/deleteall
   
-  Required parameters: language, imageType, packageName, editId
+  Required parameters: packageName, editId, language, imageType
   
   Optional parameters: none
   
@@ -297,6 +295,60 @@
      "https://androidpublisher.googleapis.com/"
      "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}/{imageType}"
      #{:packageName :imageType :language :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn images-upload$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/images/upload
+  
+  Required parameters: packageName, editId, language, imageType
+  
+  Optional parameters: none
+  
+  Uploads an image of the specified language and image type, and adds to the edit."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :imageType :language :editId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}/{imageType}"
+     #{:packageName :imageType :language :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn tracks-get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/get
+  
+  Required parameters: packageName, editId, track
+  
+  Optional parameters: none
+  
+  Gets a track."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/tracks/{track}"
+     #{:packageName :editId :track}
      parameters)
     (merge-with
      merge
@@ -332,8 +384,8 @@
       :as :json}
      auth))))
 
-(defn tracks-patch$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/patch
+(defn tracks-update$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/update
   
   Required parameters: packageName, editId, track
   
@@ -341,53 +393,14 @@
   
   Body: 
   
-  {:releases [{:releaseNotes [LocalizedText],
+  {:track string,
+   :releases [{:name string,
+               :versionCodes [string],
+               :releaseNotes [LocalizedText],
                :status string,
                :userFraction number,
-               :name string,
                :countryTargeting CountryTargeting,
-               :versionCodes [string],
-               :inAppUpdatePriority integer}],
-   :track string}
-  
-  Patches a track."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/tracks/{track}"
-     #{:packageName :editId :track}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn tracks-update$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/update
-  
-  Required parameters: editId, track, packageName
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:releases [{:releaseNotes [LocalizedText],
-               :status string,
-               :userFraction number,
-               :name string,
-               :countryTargeting CountryTargeting,
-               :versionCodes [string],
-               :inAppUpdatePriority integer}],
-   :track string}
+               :inAppUpdatePriority integer}]}
   
   Updates a track."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -410,19 +423,30 @@
       :as :json}
      auth))))
 
-(defn tracks-get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/get
+(defn tracks-patch$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/patch
   
-  Required parameters: track, editId, packageName
+  Required parameters: packageName, editId, track
   
   Optional parameters: none
   
-  Gets a track."
+  Body: 
+  
+  {:track string,
+   :releases [{:name string,
+               :versionCodes [string],
+               :releaseNotes [LocalizedText],
+               :status string,
+               :userFraction number,
+               :countryTargeting CountryTargeting,
+               :inAppUpdatePriority integer}]}
+  
+  Patches a track."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://androidpublisher.googleapis.com/"
      "androidpublisher/v3/applications/{packageName}/edits/{editId}/tracks/{track}"
@@ -430,7 +454,41 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn tracks-create$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/tracks/create
+  
+  Required parameters: packageName, editId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:track string, :type string, :formFactor string}
+  
+  Creates a new track."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/tracks"
+     #{:packageName :editId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -439,7 +497,7 @@
 (defn deobfuscationfiles-upload$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/deobfuscationfiles/upload
   
-  Required parameters: editId, apkVersionCode, packageName, deobfuscationFileType
+  Required parameters: packageName, editId, apkVersionCode, deobfuscationFileType
   
   Optional parameters: none
   
@@ -458,6 +516,58 @@
      "https://androidpublisher.googleapis.com/"
      "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks/{apkVersionCode}/deobfuscationFiles/{deobfuscationFileType}"
      #{:packageName :deobfuscationFileType :editId :apkVersionCode}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn apks-upload$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/apks/upload
+  
+  Required parameters: packageName, editId
+  
+  Optional parameters: none
+  
+  Uploads an APK and adds to the current edit."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks"
+     #{:packageName :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn apks-list$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/apks/list
+  
+  Required parameters: packageName, editId
+  
+  Optional parameters: none
+  
+  Lists all current APKs of the app and edit."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks"
+     #{:packageName :editId}
      parameters)
     (merge-with
      merge
@@ -513,40 +623,14 @@
       :as :json}
      auth))))
 
-(defn apks-upload$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/apks/upload
+(defn details-get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/details/get
   
   Required parameters: packageName, editId
   
   Optional parameters: none
   
-  Uploads an APK and adds to the current edit."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks"
-     #{:packageName :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn apks-list$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/apks/list
-  
-  Required parameters: editId, packageName
-  
-  Optional parameters: none
-  
-  Lists all current APKs of the app and edit."
+  Gets details of an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:packageName :editId})]}
@@ -554,7 +638,7 @@
    (http/get
     (util/get-url
      "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/details"
      #{:packageName :editId}
      parameters)
     (merge-with
@@ -568,16 +652,16 @@
 (defn details-update$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/details/update
   
-  Required parameters: editId, packageName
+  Required parameters: packageName, editId
   
   Optional parameters: none
   
   Body: 
   
-  {:contactWebsite string,
-   :defaultLanguage string,
-   :contactPhone string,
-   :contactEmail string}
+  {:defaultLanguage string,
+   :contactWebsite string,
+   :contactEmail string,
+   :contactPhone string}
   
   Updates details of an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -609,10 +693,10 @@
   
   Body: 
   
-  {:contactWebsite string,
-   :defaultLanguage string,
-   :contactPhone string,
-   :contactEmail string}
+  {:defaultLanguage string,
+   :contactWebsite string,
+   :contactEmail string,
+   :contactPhone string}
   
   Patches details of an app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -635,72 +719,14 @@
       :as :json}
      auth))))
 
-(defn details-get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/details/get
-  
-  Required parameters: editId, packageName
-  
-  Optional parameters: none
-  
-  Gets details of an app."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/details"
-     #{:packageName :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn testers-patch$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/testers/patch
-  
-  Required parameters: track, packageName, editId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:googleGroups [string]}
-  
-  Patches testers."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/testers/{track}"
-     #{:packageName :editId :track}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn testers-get$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/testers/get
   
-  Required parameters: packageName, track, editId
+  Required parameters: packageName, editId, track
   
   Optional parameters: none
   
-  Gets testers."
+  Gets testers. Note: Testers resource does not support email lists."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
@@ -722,7 +748,7 @@
 (defn testers-update$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/testers/update
   
-  Required parameters: track, editId, packageName
+  Required parameters: packageName, editId, track
   
   Optional parameters: none
   
@@ -730,7 +756,7 @@
   
   {:googleGroups [string]}
   
-  Updates testers."
+  Updates testers. Note: Testers resource does not support email lists."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
@@ -751,83 +777,27 @@
       :as :json}
      auth))))
 
-(defn listings-deleteall$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/deleteall
+(defn testers-patch$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/testers/patch
   
-  Required parameters: editId, packageName
-  
-  Optional parameters: none
-  
-  Deletes all store listings."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings"
-     #{:packageName :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn listings-delete$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/delete
-  
-  Required parameters: language, editId, packageName
-  
-  Optional parameters: none
-  
-  Deletes a localized store listing."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:packageName :language :editId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}"
-     #{:packageName :language :editId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn listings-patch$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/patch
-  
-  Required parameters: language, packageName, editId
+  Required parameters: packageName, editId, track
   
   Optional parameters: none
   
   Body: 
   
-  {:fullDescription string,
-   :shortDescription string,
-   :language string,
-   :video string,
-   :title string}
+  {:googleGroups [string]}
   
-  Patches a localized store listing."
+  Patches testers. Note: Testers resource does not support email lists."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:packageName :language :editId})]}
+  {:pre [(util/has-keys? parameters #{:packageName :editId :track})]}
   (util/get-response
    (http/patch
     (util/get-url
      "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}"
-     #{:packageName :language :editId}
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/testers/{track}"
+     #{:packageName :editId :track}
      parameters)
     (merge-with
      merge
@@ -842,17 +812,17 @@
 (defn listings-update$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/update
   
-  Required parameters: editId, packageName, language
+  Required parameters: packageName, editId, language
   
   Optional parameters: none
   
   Body: 
   
-  {:fullDescription string,
+  {:language string,
+   :title string,
+   :fullDescription string,
    :shortDescription string,
-   :language string,
-   :video string,
-   :title string}
+   :video string}
   
   Creates or updates a localized store listing."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -875,10 +845,46 @@
       :as :json}
      auth))))
 
+(defn listings-patch$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/patch
+  
+  Required parameters: packageName, editId, language
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:language string,
+   :title string,
+   :fullDescription string,
+   :shortDescription string,
+   :video string}
+  
+  Patches a localized store listing."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:packageName :language :editId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}"
+     #{:packageName :language :editId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn listings-get$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/get
   
-  Required parameters: packageName, language, editId
+  Required parameters: packageName, editId, language
   
   Optional parameters: none
   
@@ -927,10 +933,90 @@
       :as :json}
      auth))))
 
+(defn listings-delete$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/delete
+  
+  Required parameters: packageName, editId, language
+  
+  Optional parameters: none
+  
+  Deletes a localized store listing."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :language :editId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings/{language}"
+     #{:packageName :language :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn listings-deleteall$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/listings/deleteall
+  
+  Required parameters: packageName, editId
+  
+  Optional parameters: none
+  
+  Deletes all store listings."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:packageName :editId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/listings"
+     #{:packageName :editId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn expansionfiles-get$
+  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/expansionfiles/get
+  
+  Required parameters: packageName, editId, apkVersionCode, expansionFileType
+  
+  Optional parameters: none
+  
+  Fetches the expansion file configuration for the specified APK."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packageName :expansionFileType :editId :apkVersionCode})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidpublisher.googleapis.com/"
+     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks/{apkVersionCode}/expansionFiles/{expansionFileType}"
+     #{:packageName :expansionFileType :editId :apkVersionCode}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn expansionfiles-update$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/expansionfiles/update
   
-  Required parameters: packageName, expansionFileType, editId, apkVersionCode
+  Required parameters: packageName, editId, apkVersionCode, expansionFileType
   
   Optional parameters: none
   
@@ -964,7 +1050,7 @@
 (defn expansionfiles-patch$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/expansionfiles/patch
   
-  Required parameters: apkVersionCode, expansionFileType, packageName, editId
+  Required parameters: packageName, editId, apkVersionCode, expansionFileType
   
   Optional parameters: none
   
@@ -995,38 +1081,10 @@
       :as :json}
      auth))))
 
-(defn expansionfiles-get$
-  "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/expansionfiles/get
-  
-  Required parameters: editId, packageName, expansionFileType, apkVersionCode
-  
-  Optional parameters: none
-  
-  Fetches the expansion file configuration for the specified APK."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:packageName :expansionFileType :editId :apkVersionCode})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidpublisher.googleapis.com/"
-     "androidpublisher/v3/applications/{packageName}/edits/{editId}/apks/{apkVersionCode}/expansionFiles/{expansionFileType}"
-     #{:packageName :expansionFileType :editId :apkVersionCode}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn expansionfiles-upload$
   "https://developers.google.com/android-publisherapi/reference/rest/v3/edits/expansionfiles/upload
   
-  Required parameters: packageName, expansionFileType, apkVersionCode, editId
+  Required parameters: packageName, editId, apkVersionCode, expansionFileType
   
   Optional parameters: none
   

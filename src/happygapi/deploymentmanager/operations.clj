@@ -40,7 +40,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, orderBy, maxResults, pageToken
+  Optional parameters: maxResults, pageToken, filter, orderBy
   
   Lists all operations for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

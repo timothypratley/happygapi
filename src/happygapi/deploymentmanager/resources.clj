@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/resources/get
   
-  Required parameters: project, resource, deployment
+  Required parameters: project, deployment, resource
   
   Optional parameters: none
   
@@ -38,9 +38,9 @@
 (defn list$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/resources/list
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
-  Optional parameters: filter, orderBy, pageToken, maxResults
+  Optional parameters: maxResults, pageToken, filter, orderBy
   
   Lists all resources in a given deployment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

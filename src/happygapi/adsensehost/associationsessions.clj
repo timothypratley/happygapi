@@ -11,7 +11,7 @@
   
   Required parameters: productCode, websiteUrl
   
-  Optional parameters: callbackUrl, websiteLocale, userLocale
+  Optional parameters: callbackUrl, userLocale, websiteLocale
   
   Create an association session for initiating an association with an AdSense user."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}

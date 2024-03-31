@@ -6,33 +6,55 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-keys-undelete$
-  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/undelete
+(defn locations-keys-getKeyString$
+  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/getKeyString
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {}
-  
-  Undeletes an API key which was deleted within 30 days. NOTE: Key is a global resource; hence the only supported value for location is `global`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
+  Get the key string for an API key. NOTE: Key is a global resource; hence the only supported value for location is `global`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://apikeys.googleapis.com/"
-     "v2/{+name}:undelete"
+     "v2/{+name}/keyString"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keys-list$
+  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, showDeleted, pageToken
+  
+  Lists the API keys owned by a project. The key string of the API key isn't included in the response. NOTE: Key is a global resource; hence the only supported value for location is `global`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://apikeys.googleapis.com/"
+     "v2/{+parent}/keys"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -65,77 +87,6 @@
       :as :json}
      auth))))
 
-(defn locations-keys-list$
-  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, filter, pageSize
-  
-  Lists the API keys owned by a project. The key string of the API key isn't included in the response. NOTE: Key is a global resource; hence the only supported value for location is `global`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://apikeys.googleapis.com/"
-     "v2/{+parent}/keys"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keys-create$
-  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/create
-  
-  Required parameters: parent
-  
-  Optional parameters: keyId
-  
-  Body: 
-  
-  {:restrictions {:iosKeyRestrictions V2IosKeyRestrictions,
-                  :apiTargets [V2ApiTarget],
-                  :browserKeyRestrictions V2BrowserKeyRestrictions,
-                  :androidKeyRestrictions V2AndroidKeyRestrictions,
-                  :serverKeyRestrictions V2ServerKeyRestrictions},
-   :deleteTime string,
-   :displayName string,
-   :uid string,
-   :name string,
-   :createTime string,
-   :keyString string,
-   :etag string,
-   :updateTime string}
-  
-  Creates a new API key. NOTE: Key is a global resource; hence the only supported value for location is `global`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apikeys.googleapis.com/"
-     "v2/{+parent}/keys"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-keys-delete$
   "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/delete
   
@@ -162,28 +113,78 @@
       :as :json}
      auth))))
 
-(defn locations-keys-getKeyString$
-  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/getKeyString
+(defn locations-keys-create$
+  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/create
+  
+  Required parameters: parent
+  
+  Optional parameters: keyId
+  
+  Body: 
+  
+  {:restrictions {:browserKeyRestrictions V2BrowserKeyRestrictions,
+                  :serverKeyRestrictions V2ServerKeyRestrictions,
+                  :apiTargets [V2ApiTarget],
+                  :iosKeyRestrictions V2IosKeyRestrictions,
+                  :androidKeyRestrictions V2AndroidKeyRestrictions},
+   :deleteTime string,
+   :displayName string,
+   :uid string,
+   :name string,
+   :createTime string,
+   :keyString string,
+   :etag string,
+   :updateTime string,
+   :annotations {}}
+  
+  Creates a new API key. NOTE: Key is a global resource; hence the only supported value for location is `global`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://apikeys.googleapis.com/"
+     "v2/{+parent}/keys"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keys-undelete$
+  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/undelete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Get the key string for an API key. NOTE: Key is a global resource; hence the only supported value for location is `global`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
+  Body: 
+  
+  {}
+  
+  Undeletes an API key which was deleted within 30 days. NOTE: Key is a global resource; hence the only supported value for location is `global`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://apikeys.googleapis.com/"
-     "v2/{+name}/keyString"
+     "v2/{+name}:undelete"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -198,11 +199,11 @@
   
   Body: 
   
-  {:restrictions {:iosKeyRestrictions V2IosKeyRestrictions,
+  {:restrictions {:browserKeyRestrictions V2BrowserKeyRestrictions,
+                  :serverKeyRestrictions V2ServerKeyRestrictions,
                   :apiTargets [V2ApiTarget],
-                  :browserKeyRestrictions V2BrowserKeyRestrictions,
-                  :androidKeyRestrictions V2AndroidKeyRestrictions,
-                  :serverKeyRestrictions V2ServerKeyRestrictions},
+                  :iosKeyRestrictions V2IosKeyRestrictions,
+                  :androidKeyRestrictions V2AndroidKeyRestrictions},
    :deleteTime string,
    :displayName string,
    :uid string,
@@ -210,7 +211,8 @@
    :createTime string,
    :keyString string,
    :etag string,
-   :updateTime string}
+   :updateTime string,
+   :annotations {}}
   
   Patches the modifiable fields of an API key. The key string of the API key isn't included in the response. NOTE: Key is a global resource; hence the only supported value for location is `global`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -221,38 +223,6 @@
     (util/get-url
      "https://apikeys.googleapis.com/"
      "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-keys-clone$
-  "https://cloud.google.com/api-keys/docsapi/reference/rest/v2/projects/locations/keys/clone
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:keyId string}
-  
-  Clones the existing key's restriction and display name to a new API key. The service account must have the `apikeys.keys.get` and `apikeys.keys.create` permissions in the project. NOTE: Key is a global resource; hence the only supported value for location is `global`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://apikeys.googleapis.com/"
-     "v2/{+name}:clone"
      #{:name}
      parameters)
     (merge-with

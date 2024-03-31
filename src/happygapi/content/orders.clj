@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:fullRefund boolean,
-   :amount {:priceAmount Price, :taxAmount Price},
-   :reasonText string,
+  {:operationId string,
    :reason string,
-   :operationId string}
+   :reasonText string,
+   :fullRefund boolean,
+   :amount {:priceAmount Price, :taxAmount Price}}
   
   Issues a partial or total refund for an order."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -51,8 +51,7 @@
   
   Body: 
   
-  {:templateName string,
-   :testOrder {:promotions [OrderPromotion],
+  {:testOrder {:promotions [OrderPromotion],
                :predefinedPickupDetails string,
                :shippingOption string,
                :pickupDetails TestOrderPickupDetails,
@@ -65,6 +64,7 @@
                :predefinedDeliveryAddress string,
                :predefinedEmail string,
                :notificationMode string},
+   :templateName string,
    :country string}
   
   Sandbox only. Creates a test order."
@@ -91,17 +91,17 @@
 (defn updatelineitemshippingdetails$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/updatelineitemshippingdetails
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:shipByDate string,
-   :deliverByDate string,
-   :productId string,
+  {:operationId string,
    :lineItemId string,
-   :operationId string}
+   :productId string,
+   :shipByDate string,
+   :deliverByDate string}
   
   Updates ship by and delivery by dates for a line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -127,7 +127,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/get
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
@@ -185,18 +185,18 @@
 (defn setlineitemmetadata$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/setlineitemmetadata
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:productId string,
-   :annotations [{:value string, :key string}],
+  {:operationId string,
    :lineItemId string,
-   :operationId string}
+   :productId string,
+   :annotations [{:key string, :value string}]}
   
-  Sets (or overrides if it already exists) merchant provided annotations in the form of key-value pairs. A common use case would be to supply us with additional structured information about a line item that cannot be provided via other methods. Submitted key-value pairs can be retrieved as part of the orders resource."
+  Sets (or overrides if it already exists) merchant provided annotations in the form of key-value pairs. A common use case would be to supply us with additional structured information about a line item that cannot be provided through other methods. Submitted key-value pairs can be retrieved as part of the orders resource."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
@@ -220,13 +220,13 @@
 (defn createtestreturn$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/createtestreturn
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:items [{:quantity integer, :lineItemId string}]}
+  {:items [{:lineItemId string, :quantity integer}]}
   
   Sandbox only. Creates a test return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -252,18 +252,18 @@
 (defn cancellineitem$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/cancellineitem
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:reason string,
+  {:operationId string,
+   :lineItemId string,
    :quantity integer,
+   :reason string,
    :reasonText string,
-   :operationId string,
-   :productId string,
-   :lineItemId string}
+   :productId string}
   
   Cancels a line item, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -337,12 +337,12 @@
   
   Body: 
   
-  {:quantity integer,
-   :operationId string,
+  {:operationId string,
    :lineItemId string,
-   :reasonText string,
    :productId string,
-   :reason string}
+   :quantity integer,
+   :reason string,
+   :reasonText string}
   
   Rejects return on an line item."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -368,22 +368,22 @@
 (defn instorerefundlineitem$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/instorerefundlineitem
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
   Body: 
   
-  {:quantity integer,
-   :reasonText string,
+  {:operationId string,
    :lineItemId string,
-   :taxAmount {:value string, :currency string},
-   :priceAmount {:value string, :currency string},
    :productId string,
-   :operationId string,
-   :reason string}
+   :quantity integer,
+   :reason string,
+   :reasonText string,
+   :priceAmount {:value string, :currency string},
+   :taxAmount {:value string, :currency string}}
   
-  Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (e.g. cash refund done in store). Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding via Google then via an in-store return."
+  Deprecated. Notifies that item return and refund was handled directly by merchant outside of Google payments processing (for example, cash refund done in store). Note: We recommend calling the returnrefundlineitem method to refund in-store returns. We will issue the refund directly to the customer. This helps to prevent possible differences arising between merchant and Google transaction records. We also recommend having the point of sale system communicate with Google to ensure that customers do not receive a double refund by first refunding through Google then through an in-store return."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
@@ -409,7 +409,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: orderBy, placedDateEnd, acknowledged, maxResults, statuses, pageToken, placedDateStart
+  Optional parameters: maxResults, pageToken, statuses, placedDateStart, placedDateEnd, orderBy, acknowledged
   
   Lists the orders in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -439,14 +439,14 @@
   
   Body: 
   
-  {:lineItems [{:lineItemId string,
+  {:operationId string,
+   :lineItems [{:lineItemId string,
                 :quantity integer,
                 :productId string}],
-   :shipmentGroupId string,
-   :operationId string,
-   :shipmentInfos [{:trackingId string,
-                    :shipmentId string,
-                    :carrier string}]}
+   :shipmentInfos [{:shipmentId string,
+                    :carrier string,
+                    :trackingId string}],
+   :shipmentGroupId string}
   
   Marks line item(s) as shipped."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -504,7 +504,7 @@
 (defn gettestordertemplate$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/gettestordertemplate
   
-  Required parameters: templateName, merchantId
+  Required parameters: merchantId, templateName
   
   Optional parameters: country
   
@@ -562,7 +562,7 @@
   
   Body: 
   
-  {:operationId string, :reasonText string, :reason string}
+  {:operationId string, :reason string, :reasonText string}
   
   Cancels all line items in an order, making a full refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -620,14 +620,14 @@
   
   Body: 
   
-  {:reasonText string,
+  {:operationId string,
    :reason string,
-   :operationId string,
-   :items [{:amount MonetaryAmount,
+   :reasonText string,
+   :items [{:lineItemId string,
+            :productId string,
             :quantity integer,
-            :lineItemId string,
             :fullRefund boolean,
-            :productId string}],
+            :amount MonetaryAmount}],
    :shipping {:fullRefund boolean, :amount Price}}
   
   Issues a partial or total refund for items and shipment."
@@ -660,16 +660,16 @@
   
   Body: 
   
-  {:quantity integer,
+  {:operationId string,
    :lineItemId string,
-   :operationId string,
-   :taxAmount {:value string, :currency string},
-   :reason string,
-   :priceAmount {:value string, :currency string},
    :productId string,
-   :reasonText string}
+   :quantity integer,
+   :reason string,
+   :reasonText string,
+   :priceAmount {:value string, :currency string},
+   :taxAmount {:value string, :currency string}}
   
-  Returns and refunds a line item. Note that this method can only be called on fully shipped orders. Please also note that the Orderreturns API is the preferred way to handle returns after you receive a return from a customer. You can use Orderreturns.list or Orderreturns.get to search for the return, and then use Orderreturns.processreturn to issue the refund. If the return cannot be found, then we recommend using this API to issue a refund."
+  Returns and refunds a line item. Note that this method can only be called on fully shipped orders. The Orderreturns API is the preferred way to handle returns after you receive a return from a customer. You can use Orderreturns.list or Orderreturns.get to search for the return, and then use Orderreturns.processreturn to issue the refund. If the return cannot be found, then we recommend using this API to issue a refund."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
@@ -693,7 +693,7 @@
 (defn canceltestorderbycustomer$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orders/canceltestorderbycustomer
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
@@ -731,7 +731,7 @@
   
   Body: 
   
-  {:merchantOrderId string, :operationId string}
+  {:operationId string, :merchantOrderId string}
   
   Updates the merchant order ID for a given order."
   {:scopes ["https://www.googleapis.com/auth/content"]}

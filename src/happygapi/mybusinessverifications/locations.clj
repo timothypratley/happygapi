@@ -41,7 +41,7 @@
   
   Body: 
   
-  {:context {:address PostalAddress}, :languageCode string}
+  {:languageCode string, :context {:address PostalAddress}}
   
   Reports all eligible verification options for a location in a specific language."
   {:scopes nil}
@@ -73,12 +73,12 @@
   
   Body: 
   
-  {:phoneNumber string,
-   :token {:tokenString string},
-   :method string,
+  {:method string,
    :languageCode string,
-   :mailerContact string,
    :emailAddress string,
+   :mailerContact string,
+   :phoneNumber string,
+   :token {:tokenString string},
    :context {:address PostalAddress}}
   
   Starts the verification process for a location."

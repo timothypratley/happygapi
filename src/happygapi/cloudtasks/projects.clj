@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -40,6 +40,64 @@
   Optional parameters: none
   
   Gets information about a location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudtasks.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-updateCmekConfig$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/updateCmekConfig
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string, :kmsKey string}
+  
+  Creates or Updates a CMEK config. Updates the Customer Managed Encryption Key assotiated with the Cloud Tasks location (Creates if the key does not already exist). All new tasks created in the location will be encrypted at-rest with the KMS-key provided in the config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://cloudtasks.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-getCmekConfig$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/getCmekConfig
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the CMEK config. Gets the Customer Managed Encryption Key configured with the Cloud Tasks lcoation. By default there is no kms_key configured."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -93,7 +151,7 @@
   
   Body: 
   
-  {:policy {:etag string, :bindings [Binding], :version integer}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
   Sets the access control policy for a Queue. Replaces any existing policy. Note: The Cloud Console does not check queue-level IAM permissions yet. Project-level permissions are required to use the Cloud Console. Authorization requires the following [Google IAM](https://cloud.google.com/iam) permission on the specified resource parent: * `cloudtasks.queues.setIamPolicy`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -125,22 +183,27 @@
   
   Body: 
   
-  {:stackdriverLoggingConfig {:samplingRatio number},
-   :rateLimits {:maxDispatchesPerSecond number,
-                :maxConcurrentDispatches integer,
-                :maxBurstSize integer},
-   :name string,
-   :purgeTime string,
-   :retryConfig {:maxDoublings integer,
-                 :maxAttempts integer,
-                 :maxBackoff string,
-                 :minBackoff string,
-                 :maxRetryDuration string},
-   :appEngineRoutingOverride {:instance string,
+  {:name string,
+   :appEngineRoutingOverride {:service string,
                               :version string,
-                              :host string,
-                              :service string},
-   :state string}
+                              :instance string,
+                              :host string},
+   :httpTarget {:uriOverride UriOverride,
+                :httpMethod string,
+                :headerOverrides [HeaderOverride],
+                :oauthToken OAuthToken,
+                :oidcToken OidcToken},
+   :rateLimits {:maxDispatchesPerSecond number,
+                :maxBurstSize integer,
+                :maxConcurrentDispatches integer},
+   :retryConfig {:maxAttempts integer,
+                 :maxRetryDuration string,
+                 :minBackoff string,
+                 :maxBackoff string,
+                 :maxDoublings integer},
+   :state string,
+   :purgeTime string,
+   :stackdriverLoggingConfig {:samplingRatio number}}
   
   Updates a queue. This method creates the queue if it does not exist and updates the queue if it does exist. Queues created with this method allow tasks to live for a maximum of 31 days. After a task is 31 days old, the task will be deleted regardless of whether it was dispatched or not. WARNING: Using this method may have unintended side effects if you are using an App Engine `queue.yaml` or `queue.xml` file to manage your queues. Read [Overview of Queue Management and queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -204,22 +267,27 @@
   
   Body: 
   
-  {:stackdriverLoggingConfig {:samplingRatio number},
-   :rateLimits {:maxDispatchesPerSecond number,
-                :maxConcurrentDispatches integer,
-                :maxBurstSize integer},
-   :name string,
-   :purgeTime string,
-   :retryConfig {:maxDoublings integer,
-                 :maxAttempts integer,
-                 :maxBackoff string,
-                 :minBackoff string,
-                 :maxRetryDuration string},
-   :appEngineRoutingOverride {:instance string,
+  {:name string,
+   :appEngineRoutingOverride {:service string,
                               :version string,
-                              :host string,
-                              :service string},
-   :state string}
+                              :instance string,
+                              :host string},
+   :httpTarget {:uriOverride UriOverride,
+                :httpMethod string,
+                :headerOverrides [HeaderOverride],
+                :oauthToken OAuthToken,
+                :oidcToken OidcToken},
+   :rateLimits {:maxDispatchesPerSecond number,
+                :maxBurstSize integer,
+                :maxConcurrentDispatches integer},
+   :retryConfig {:maxAttempts integer,
+                 :maxRetryDuration string,
+                 :minBackoff string,
+                 :maxBackoff string,
+                 :maxDoublings integer},
+   :state string,
+   :purgeTime string,
+   :stackdriverLoggingConfig {:samplingRatio number}}
   
   Creates a queue. Queues created with this method allow tasks to live for a maximum of 31 days. After a task is 31 days old, the task will be deleted regardless of whether it was dispatched or not. WARNING: Using this method may have unintended side effects if you are using an App Engine `queue.yaml` or `queue.xml` file to manage your queues. Read [Overview of Queue Management and queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -249,7 +317,7 @@
   
   Optional parameters: none
   
-  Deletes a queue. This command will delete the queue even if it has tasks in it. Note: If you delete a queue, a queue with the same name can't be created for 7 days. WARNING: Using this method may have unintended side effects if you are using an App Engine `queue.yaml` or `queue.xml` file to manage your queues. Read [Overview of Queue Management and queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using this method."
+  Deletes a queue. This command will delete the queue even if it has tasks in it. Note: If you delete a queue, you may be prevented from creating a new queue with the same name as the deleted queue for a tombstone window of up to 3 days. During this window, the CreateQueue operation may appear to recreate the queue, but this can be misleading. If you attempt to create a queue with the same name as one that is in the tombstone window, run GetQueue to confirm that the queue creation was successful. If GetQueue returns 200 response code, your queue was successfully created with the name of the previously deleted queue. Otherwise, your queue did not successfully recreate. WARNING: Using this method may have unintended side effects if you are using an App Engine `queue.yaml` or `queue.xml` file to manage your queues. Read [Overview of Queue Management and queue.yaml](https://cloud.google.com/tasks/docs/queue-yaml) before using this method."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -305,7 +373,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: filter, pageSize, pageToken
   
   Lists queues. Queues are returned in lexicographical order."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -422,23 +490,23 @@
       :as :json}
      auth))))
 
-(defn locations-queues-tasks-delete$
-  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/delete
+(defn locations-queues-tasks-list$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: responseView, pageSize, pageToken
   
-  Deletes a task. A task can be deleted if it is scheduled or dispatched. A task cannot be deleted if it has executed successfully or permanently failed."
+  Lists the tasks in a queue. By default, only the BASIC view is retrieved due to performance considerations; response_view controls the subset of information which is returned. The tasks may be returned in any order. The ordering may change at any time."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://cloudtasks.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
+     "v2/{+parent}/tasks"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -474,23 +542,66 @@
       :as :json}
      auth))))
 
-(defn locations-queues-tasks-list$
-  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/list
+(defn locations-queues-tasks-create$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/create
   
   Required parameters: parent
   
-  Optional parameters: pageToken, responseView, pageSize
+  Optional parameters: none
   
-  Lists the tasks in a queue. By default, only the BASIC view is retrieved due to performance considerations; response_view controls the subset of information which is returned. The tasks may be returned in any order. The ordering may change at any time."
+  Body: 
+  
+  {:task {:responseCount integer,
+          :dispatchCount integer,
+          :name string,
+          :scheduleTime string,
+          :createTime string,
+          :firstAttempt Attempt,
+          :dispatchDeadline string,
+          :httpRequest HttpRequest,
+          :appEngineHttpRequest AppEngineHttpRequest,
+          :view string,
+          :lastAttempt Attempt},
+   :responseView string}
+  
+  Creates a task and adds it to a queue. Tasks cannot be updated after creation; there is no UpdateTask command. * The maximum task size is 100KB."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
      "v2/{+parent}/tasks"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-queues-tasks-delete$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a task. A task can be deleted if it is scheduled or dispatched. A task cannot be deleted if it has executed successfully or permanently failed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudtasks.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -532,38 +643,27 @@
       :as :json}
      auth))))
 
-(defn locations-queues-tasks-create$
-  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/create
+(defn locations-queues-tasks-buffer$
+  "https://cloud.google.com/tasks/api/reference/rest/v2/projects/locations/queues/tasks/buffer
   
-  Required parameters: parent
+  Required parameters: queue, taskId
   
   Optional parameters: none
   
   Body: 
   
-  {:responseView string,
-   :task {:responseCount integer,
-          :dispatchCount integer,
-          :name string,
-          :scheduleTime string,
-          :createTime string,
-          :firstAttempt Attempt,
-          :dispatchDeadline string,
-          :httpRequest HttpRequest,
-          :appEngineHttpRequest AppEngineHttpRequest,
-          :view string,
-          :lastAttempt Attempt}}
+  {:body {:contentType string, :data string, :extensions [{}]}}
   
-  Creates a task and adds it to a queue. Tasks cannot be updated after creation; there is no UpdateTask command. * The maximum task size is 100KB."
+  Creates and buffers a new task without the need to explicitly define a Task message. The queue must have HTTP target. To create the task with a custom ID, use the following format and set TASK_ID to your desired ID: projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID:buffer To create the task with an automatically generated ID, use the following format: projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks:buffer."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:queue :taskId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudtasks.googleapis.com/"
-     "v2/{+parent}/tasks"
-     #{:parent}
+     "v2/{+queue}/tasks/{taskId}:buffer"
+     #{:queue :taskId}
      parameters)
     (merge-with
      merge

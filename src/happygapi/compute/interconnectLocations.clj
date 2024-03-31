@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, maxResults, filter, pageToken, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of interconnect locations available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -37,7 +37,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/interconnectLocations/get
   
-  Required parameters: project, interconnectLocation
+  Required parameters: interconnectLocation, project
   
   Optional parameters: none
   

@@ -6,109 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn dataSources-update$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/update
-  
-  Required parameters: dataSourceId, userId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:device {:type string,
-            :manufacturer string,
-            :version string,
-            :uid string,
-            :model string},
-   :dataStreamId string,
-   :type string,
-   :dataQualityStandard [string],
-   :dataStreamName string,
-   :name string,
-   :application {:detailsUrl string,
-                 :name string,
-                 :packageName string,
-                 :version string},
-   :dataType {:name string, :field [DataTypeField]}}
-  
-  Updates the specified data source. The dataStreamId, dataType, type, dataStreamName, and device properties with the exception of version, cannot be modified. Data sources are identified by their dataStreamId."
-  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
-            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
-            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
-            "https://www.googleapis.com/auth/fitness.body.write"
-            "https://www.googleapis.com/auth/fitness.body_temperature.write"
-            "https://www.googleapis.com/auth/fitness.heart_rate.write"
-            "https://www.googleapis.com/auth/fitness.location.write"
-            "https://www.googleapis.com/auth/fitness.nutrition.write"
-            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
-            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
-            "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/dataSources/{dataSourceId}"
-     #{:dataSourceId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dataSources-list$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/list
-  
-  Required parameters: userId
-  
-  Optional parameters: dataTypeName
-  
-  Lists all data sources that are visible to the developer, using the OAuth scopes provided. The list is not exhaustive; the user may have private data sources that are only visible to other developers, or calls using other scopes."
-  {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
-            "https://www.googleapis.com/auth/fitness.activity.write"
-            "https://www.googleapis.com/auth/fitness.blood_glucose.read"
-            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
-            "https://www.googleapis.com/auth/fitness.blood_pressure.read"
-            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
-            "https://www.googleapis.com/auth/fitness.body.read"
-            "https://www.googleapis.com/auth/fitness.body.write"
-            "https://www.googleapis.com/auth/fitness.body_temperature.read"
-            "https://www.googleapis.com/auth/fitness.body_temperature.write"
-            "https://www.googleapis.com/auth/fitness.heart_rate.read"
-            "https://www.googleapis.com/auth/fitness.heart_rate.write"
-            "https://www.googleapis.com/auth/fitness.location.read"
-            "https://www.googleapis.com/auth/fitness.location.write"
-            "https://www.googleapis.com/auth/fitness.nutrition.read"
-            "https://www.googleapis.com/auth/fitness.nutrition.write"
-            "https://www.googleapis.com/auth/fitness.oxygen_saturation.read"
-            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
-            "https://www.googleapis.com/auth/fitness.reproductive_health.read"
-            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
-            "https://www.googleapis.com/auth/fitness.sleep.read"
-            "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/dataSources"
-     #{:userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn dataSources-create$
   "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/create
   
@@ -118,21 +15,21 @@
   
   Body: 
   
-  {:device {:type string,
-            :manufacturer string,
-            :version string,
-            :uid string,
-            :model string},
-   :dataStreamId string,
-   :type string,
-   :dataQualityStandard [string],
-   :dataStreamName string,
+  {:dataQualityStandard [string],
    :name string,
-   :application {:detailsUrl string,
-                 :name string,
+   :dataType {:field [DataTypeField], :name string},
+   :type string,
+   :dataStreamName string,
+   :application {:name string,
+                 :detailsUrl string,
                  :packageName string,
                  :version string},
-   :dataType {:name string, :field [DataTypeField]}}
+   :dataStreamId string,
+   :device {:model string,
+            :uid string,
+            :version string,
+            :type string,
+            :manufacturer string}}
   
   Creates a new data source that is unique across all data sources belonging to this user. A data source is a unique source of sensor data. Data sources can expose raw data coming from hardware sensors on local or companion devices. They can also expose derived data, created by transforming or merging other data sources. Multiple data sources can exist for the same data type. Every data point in every dataset inserted into or read from the Fitness API has an associated data source. Each data source produces a unique stream of dataset updates, with a unique data source identifier. Not all changes to data source affect the data stream ID, so that data collected by updated versions of the same application/device can still be considered to belong to the same data source. Data sources are identified using a string generated by the server, based on the contents of the source being created. The dataStreamId field should not be set when invoking this method. It will be automatically generated by the server with the correct format. If a dataStreamId is set, it must match the format that the server would generate. This format is a combination of some fields from the data source, and has a specific order. If it doesn't match, the request will fail with an error. Specifying a DataType which is not a known type (beginning with \"com.google.\") will create a DataSource with a *custom data type*. Custom data types are only readable by the application that created them. Custom data types are *deprecated*; use standard data types instead. In addition to the data source fields included in the data source ID, the developer project number that is authenticated when creating the data source is included. This developer project number is obfuscated when read by any other developer reading public data types."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
@@ -168,7 +65,7 @@
 (defn dataSources-get$
   "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/get
   
-  Required parameters: userId, dataSourceId
+  Required parameters: dataSourceId, userId
   
   Optional parameters: none
   
@@ -248,29 +145,79 @@
       :as :json}
      auth))))
 
-(defn dataSources-datasets-patch$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/datasets/patch
+(defn dataSources-list$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/list
   
-  Required parameters: userId, datasetId, dataSourceId
+  Required parameters: userId
+  
+  Optional parameters: dataTypeName
+  
+  Lists all data sources that are visible to the developer, using the OAuth scopes provided. The list is not exhaustive; the user may have private data sources that are only visible to other developers, or calls using other scopes."
+  {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
+            "https://www.googleapis.com/auth/fitness.activity.write"
+            "https://www.googleapis.com/auth/fitness.blood_glucose.read"
+            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
+            "https://www.googleapis.com/auth/fitness.blood_pressure.read"
+            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
+            "https://www.googleapis.com/auth/fitness.body.read"
+            "https://www.googleapis.com/auth/fitness.body.write"
+            "https://www.googleapis.com/auth/fitness.body_temperature.read"
+            "https://www.googleapis.com/auth/fitness.body_temperature.write"
+            "https://www.googleapis.com/auth/fitness.heart_rate.read"
+            "https://www.googleapis.com/auth/fitness.heart_rate.write"
+            "https://www.googleapis.com/auth/fitness.location.read"
+            "https://www.googleapis.com/auth/fitness.location.write"
+            "https://www.googleapis.com/auth/fitness.nutrition.read"
+            "https://www.googleapis.com/auth/fitness.nutrition.write"
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.read"
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
+            "https://www.googleapis.com/auth/fitness.reproductive_health.read"
+            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+            "https://www.googleapis.com/auth/fitness.sleep.read"
+            "https://www.googleapis.com/auth/fitness.sleep.write"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://fitness.googleapis.com/fitness/v1/users/"
+     "{userId}/dataSources"
+     #{:userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn dataSources-update$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/update
+  
+  Required parameters: userId, dataSourceId
   
   Optional parameters: none
   
   Body: 
   
-  {:minStartTimeNs string,
-   :nextPageToken string,
-   :maxEndTimeNs string,
-   :point [{:value [Value],
-            :rawTimestampNanos string,
-            :dataTypeName string,
-            :modifiedTimeMillis string,
-            :endTimeNanos string,
-            :startTimeNanos string,
-            :originDataSourceId string,
-            :computationTimeMillis string}],
-   :dataSourceId string}
+  {:dataQualityStandard [string],
+   :name string,
+   :dataType {:field [DataTypeField], :name string},
+   :type string,
+   :dataStreamName string,
+   :application {:name string,
+                 :detailsUrl string,
+                 :packageName string,
+                 :version string},
+   :dataStreamId string,
+   :device {:model string,
+            :uid string,
+            :version string,
+            :type string,
+            :manufacturer string}}
   
-  Adds data points to a dataset. The dataset need not be previously created. All points within the given dataset will be returned with subsquent calls to retrieve this dataset. Data points can belong to more than one dataset. This method does not use patch semantics: the data points provided are merely inserted, with no existing data replaced."
+  Updates the specified data source. The dataStreamId, dataType, type, dataStreamName, and device properties with the exception of version, cannot be modified. Data sources are identified by their dataStreamId."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
             "https://www.googleapis.com/auth/fitness.blood_glucose.write"
             "https://www.googleapis.com/auth/fitness.blood_pressure.write"
@@ -283,15 +230,13 @@
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"
             "https://www.googleapis.com/auth/fitness.sleep.write"]}
   [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:datasetId :dataSourceId :userId})]}
+  {:pre [(util/has-keys? parameters #{:dataSourceId :userId})]}
   (util/get-response
-   (http/patch
+   (http/put
     (util/get-url
      "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
-     #{:datasetId :dataSourceId :userId}
+     "{userId}/dataSources/{dataSourceId}"
+     #{:dataSourceId :userId}
      parameters)
     (merge-with
      merge
@@ -303,10 +248,48 @@
       :as :json}
      auth))))
 
+(defn dataSources-datasets-delete$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/datasets/delete
+  
+  Required parameters: userId, datasetId, dataSourceId
+  
+  Optional parameters: none
+  
+  Performs an inclusive delete of all data points whose start and end times have any overlap with the time range specified by the dataset ID. For most data types, the entire data point will be deleted. For data types where the time span represents a consistent value (such as com.google.activity.segment), and a data point straddles either end point of the dataset, only the overlapping portion of the data point will be deleted."
+  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
+            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
+            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
+            "https://www.googleapis.com/auth/fitness.body.write"
+            "https://www.googleapis.com/auth/fitness.body_temperature.write"
+            "https://www.googleapis.com/auth/fitness.heart_rate.write"
+            "https://www.googleapis.com/auth/fitness.location.write"
+            "https://www.googleapis.com/auth/fitness.nutrition.write"
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
+            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+            "https://www.googleapis.com/auth/fitness.sleep.write"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:datasetId :dataSourceId :userId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://fitness.googleapis.com/fitness/v1/users/"
+     "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
+     #{:datasetId :dataSourceId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn dataSources-datasets-get$
   "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/datasets/get
   
-  Required parameters: datasetId, userId, dataSourceId
+  Required parameters: userId, dataSourceId, datasetId
   
   Optional parameters: limit, pageToken
   
@@ -352,14 +335,29 @@
       :as :json}
      auth))))
 
-(defn dataSources-datasets-delete$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/datasets/delete
+(defn dataSources-datasets-patch$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataSources/datasets/patch
   
-  Required parameters: userId, dataSourceId, datasetId
+  Required parameters: dataSourceId, userId, datasetId
   
   Optional parameters: none
   
-  Performs an inclusive delete of all data points whose start and end times have any overlap with the time range specified by the dataset ID. For most data types, the entire data point will be deleted. For data types where the time span represents a consistent value (such as com.google.activity.segment), and a data point straddles either end point of the dataset, only the overlapping portion of the data point will be deleted."
+  Body: 
+  
+  {:minStartTimeNs string,
+   :dataSourceId string,
+   :maxEndTimeNs string,
+   :point [{:rawTimestampNanos string,
+            :endTimeNanos string,
+            :computationTimeMillis string,
+            :modifiedTimeMillis string,
+            :dataTypeName string,
+            :startTimeNanos string,
+            :originDataSourceId string,
+            :value [Value]}],
+   :nextPageToken string}
+  
+  Adds data points to a dataset. The dataset need not be previously created. All points within the given dataset will be returned with subsquent calls to retrieve this dataset. Data points can belong to more than one dataset. This method does not use patch semantics: the data points provided are merely inserted, with no existing data replaced."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
             "https://www.googleapis.com/auth/fitness.blood_glucose.write"
             "https://www.googleapis.com/auth/fitness.blood_pressure.write"
@@ -371,12 +369,12 @@
             "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
             "https://www.googleapis.com/auth/fitness.reproductive_health.write"
             "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys?
           parameters
           #{:datasetId :dataSourceId :userId})]}
   (util/get-response
-   (http/delete
+   (http/patch
     (util/get-url
      "https://fitness.googleapis.com/fitness/v1/users/"
      "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}"
@@ -384,7 +382,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -437,124 +437,6 @@
       :as :json}
      auth))))
 
-(defn sessions-delete$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/delete
-  
-  Required parameters: userId, sessionId
-  
-  Optional parameters: none
-  
-  Deletes a session specified by the given session ID."
-  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
-            "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/sessions/{sessionId}"
-     #{:sessionId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sessions-update$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/update
-  
-  Required parameters: sessionId, userId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:description string,
-   :application {:detailsUrl string,
-                 :name string,
-                 :packageName string,
-                 :version string},
-   :name string,
-   :endTimeMillis string,
-   :activityType integer,
-   :modifiedTimeMillis string,
-   :id string,
-   :startTimeMillis string,
-   :activeTimeMillis string}
-  
-  Updates or insert a given session."
-  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
-            "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/sessions/{sessionId}"
-     #{:sessionId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn sessions-list$
-  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/list
-  
-  Required parameters: userId
-  
-  Optional parameters: endTime, activityType, pageToken, includeDeleted, startTime
-  
-  Lists sessions previously created."
-  {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
-            "https://www.googleapis.com/auth/fitness.activity.write"
-            "https://www.googleapis.com/auth/fitness.blood_glucose.read"
-            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
-            "https://www.googleapis.com/auth/fitness.blood_pressure.read"
-            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
-            "https://www.googleapis.com/auth/fitness.body.read"
-            "https://www.googleapis.com/auth/fitness.body.write"
-            "https://www.googleapis.com/auth/fitness.body_temperature.read"
-            "https://www.googleapis.com/auth/fitness.body_temperature.write"
-            "https://www.googleapis.com/auth/fitness.heart_rate.read"
-            "https://www.googleapis.com/auth/fitness.heart_rate.write"
-            "https://www.googleapis.com/auth/fitness.location.read"
-            "https://www.googleapis.com/auth/fitness.location.write"
-            "https://www.googleapis.com/auth/fitness.nutrition.read"
-            "https://www.googleapis.com/auth/fitness.nutrition.write"
-            "https://www.googleapis.com/auth/fitness.oxygen_saturation.read"
-            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
-            "https://www.googleapis.com/auth/fitness.reproductive_health.read"
-            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
-            "https://www.googleapis.com/auth/fitness.sleep.read"
-            "https://www.googleapis.com/auth/fitness.sleep.write"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://fitness.googleapis.com/fitness/v1/users/"
-     "{userId}/sessions"
-     #{:userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn dataset-aggregate$
   "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/dataset/aggregate
   
@@ -564,16 +446,16 @@
   
   Body: 
   
-  {:bucketByActivityType {:activityDataSourceId string,
+  {:startTimeMillis string,
+   :bucketByActivityType {:activityDataSourceId string,
                           :minDurationMillis string},
    :bucketByActivitySegment {:activityDataSourceId string,
                              :minDurationMillis string},
-   :startTimeMillis string,
+   :aggregateBy [{:dataTypeName string, :dataSourceId string}],
    :endTimeMillis string,
-   :filteredDataQualityStandard [string],
+   :bucketByTime {:durationMillis string, :period BucketByTimePeriod},
    :bucketBySession {:minDurationMillis string},
-   :aggregateBy [{:dataSourceId string, :dataTypeName string}],
-   :bucketByTime {:period BucketByTimePeriod, :durationMillis string}}
+   :filteredDataQualityStandard [string]}
   
   Aggregates data of a certain type or stream into buckets divided by a given type of boundary. Multiple data sets of multiple types and from multiple sources can be aggregated into exactly one bucket type per request."
   {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
@@ -612,6 +494,124 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sessions-update$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/update
+  
+  Required parameters: sessionId, userId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :application {:name string,
+                 :detailsUrl string,
+                 :packageName string,
+                 :version string},
+   :name string,
+   :endTimeMillis string,
+   :activityType integer,
+   :modifiedTimeMillis string,
+   :id string,
+   :startTimeMillis string,
+   :activeTimeMillis string}
+  
+  Updates or insert a given session."
+  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
+            "https://www.googleapis.com/auth/fitness.sleep.write"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://fitness.googleapis.com/fitness/v1/users/"
+     "{userId}/sessions/{sessionId}"
+     #{:sessionId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sessions-delete$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/delete
+  
+  Required parameters: userId, sessionId
+  
+  Optional parameters: none
+  
+  Deletes a session specified by the given session ID."
+  {:scopes ["https://www.googleapis.com/auth/fitness.activity.write"
+            "https://www.googleapis.com/auth/fitness.sleep.write"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sessionId :userId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://fitness.googleapis.com/fitness/v1/users/"
+     "{userId}/sessions/{sessionId}"
+     #{:sessionId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn sessions-list$
+  "https://developers.google.com/fit/rest/v1/get-startedapi/reference/rest/v1/users/sessions/list
+  
+  Required parameters: userId
+  
+  Optional parameters: pageToken, startTime, includeDeleted, activityType, endTime
+  
+  Lists sessions previously created."
+  {:scopes ["https://www.googleapis.com/auth/fitness.activity.read"
+            "https://www.googleapis.com/auth/fitness.activity.write"
+            "https://www.googleapis.com/auth/fitness.blood_glucose.read"
+            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
+            "https://www.googleapis.com/auth/fitness.blood_pressure.read"
+            "https://www.googleapis.com/auth/fitness.blood_pressure.write"
+            "https://www.googleapis.com/auth/fitness.body.read"
+            "https://www.googleapis.com/auth/fitness.body.write"
+            "https://www.googleapis.com/auth/fitness.body_temperature.read"
+            "https://www.googleapis.com/auth/fitness.body_temperature.write"
+            "https://www.googleapis.com/auth/fitness.heart_rate.read"
+            "https://www.googleapis.com/auth/fitness.heart_rate.write"
+            "https://www.googleapis.com/auth/fitness.location.read"
+            "https://www.googleapis.com/auth/fitness.location.write"
+            "https://www.googleapis.com/auth/fitness.nutrition.read"
+            "https://www.googleapis.com/auth/fitness.nutrition.write"
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.read"
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write"
+            "https://www.googleapis.com/auth/fitness.reproductive_health.read"
+            "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+            "https://www.googleapis.com/auth/fitness.sleep.read"
+            "https://www.googleapis.com/auth/fitness.sleep.write"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:userId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://fitness.googleapis.com/fitness/v1/users/"
+     "{userId}/sessions"
+     #{:userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

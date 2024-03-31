@@ -11,7 +11,7 @@
   
   Required parameters: entityType, entityKey, date
   
-  Optional parameters: parameters, maxResults, customerId, pageToken, filters
+  Optional parameters: customerId, filters, maxResults, pageToken, parameters
   
   Retrieves a report which is a collection of properties and statistics for entities used by users within the account. For more information, see the Entities Usage Report guide. For more information about the entities report's parameters, see the Entities Usage parameters reference guides."
   {:scopes ["https://www.googleapis.com/auth/admin.reports.usage.readonly"]}

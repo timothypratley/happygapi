@@ -1,6 +1,6 @@
 (ns happygapi.mybusinessplaceactions.placeActionTypeMetadata
   "My Business Place Actions API: placeActionTypeMetadata.
-  The My Business Place Actions API provides an interface for managing place action links of a location on Google.
+  The My Business Place Actions API provides an interface for managing place action links of a location on Google. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
   See: https://developers.google.com/my-business/api/reference/rest/v1/placeActionTypeMetadata"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize, languageCode, filter
+  Optional parameters: languageCode, pageSize, pageToken, filter
   
   Returns the list of available place action types for a location or country."
   {:scopes nil}

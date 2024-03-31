@@ -4,14 +4,14 @@
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :main happy.lion
-  :dependencies [[org.clojure/clojure "1.10.3"]
-                 [clj-http "3.12.2"]
-                 [cheshire "5.10.0"]
-                 [buddy/buddy-sign "3.4.1"]]
+  :dependencies [[org.clojure/clojure "1.11.2"]
+                 [clj-http "3.12.3"]
+                 [cheshire "5.12.0"]
+                 [buddy/buddy-sign "3.5.351"]]
   :deploy-repositories {"releases" {:url "https://repo.clojars.org"}}
   :profiles {:dev     {:source-paths ["dev"]
-                       :dependencies [[fipp "0.6.23"]
-                                      [meander/epsilon "0.0.602"]
-                                      [ring "1.9.3"]
-                                      [org.slf4j/slf4j-nop "1.7.31"]]}
+                       :dependencies [[fipp "0.6.26"]
+                                      [meander/epsilon "0.0.650"]
+                                      [ring "1.12.1"]
+                                      [org.slf4j/slf4j-nop "2.0.12"]]}
              :uberjar {:aot :all}})

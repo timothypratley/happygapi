@@ -9,7 +9,7 @@
 (defn removeRule$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/removeRule
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
   Optional parameters: priority
   
@@ -36,7 +36,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/get
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
   Optional parameters: none
   
@@ -66,25 +66,44 @@
   
   Required parameters: project
   
-  Optional parameters: requestId
+  Optional parameters: requestId, validateOnly
   
   Body: 
   
   {:description string,
+   :labels {},
+   :userDefinedFields [{:name string,
+                        :base string,
+                        :offset integer,
+                        :size integer,
+                        :mask string}],
    :creationTimestamp string,
    :name string,
    :selfLink string,
-   :rules [{:preview boolean,
-            :action string,
-            :match SecurityPolicyRuleMatcher,
-            :kind string,
+   :type string,
+   :rules [{:description string,
+            :headerAction SecurityPolicyRuleHttpHeaderAction,
+            :networkMatch SecurityPolicyRuleNetworkMatcher,
+            :redirectOptions SecurityPolicyRuleRedirectOptions,
+            :preconfiguredWafConfig SecurityPolicyRulePreconfiguredWafConfig,
+            :preview boolean,
+            :rateLimitOptions SecurityPolicyRuleRateLimitOptions,
             :priority integer,
-            :description string}],
+            :kind string,
+            :action string,
+            :match SecurityPolicyRuleMatcher}],
+   :region string,
+   :recaptchaOptionsConfig {:redirectSiteKey string},
    :id string,
    :adaptiveProtectionConfig {:layer7DdosDefenseConfig SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig},
    :kind string,
-   :advancedOptionsConfig {:jsonParsing string, :logLevel string},
-   :fingerprint string}
+   :ddosProtectionConfig {:ddosProtection string},
+   :advancedOptionsConfig {:jsonParsing string,
+                           :jsonCustomConfig SecurityPolicyAdvancedOptionsConfigJsonCustomConfig,
+                           :logLevel string,
+                           :userIpRequestHeaders [string]},
+   :fingerprint string,
+   :labelFingerprint string}
   
   Creates a new policy in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -113,7 +132,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, orderBy, pageToken, filter, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Gets the current list of preconfigured Web Application Firewall (WAF) expressions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -141,27 +160,46 @@
   
   Required parameters: project, securityPolicy
   
-  Optional parameters: requestId
+  Optional parameters: requestId, updateMask
   
   Body: 
   
   {:description string,
+   :labels {},
+   :userDefinedFields [{:name string,
+                        :base string,
+                        :offset integer,
+                        :size integer,
+                        :mask string}],
    :creationTimestamp string,
    :name string,
    :selfLink string,
-   :rules [{:preview boolean,
-            :action string,
-            :match SecurityPolicyRuleMatcher,
-            :kind string,
+   :type string,
+   :rules [{:description string,
+            :headerAction SecurityPolicyRuleHttpHeaderAction,
+            :networkMatch SecurityPolicyRuleNetworkMatcher,
+            :redirectOptions SecurityPolicyRuleRedirectOptions,
+            :preconfiguredWafConfig SecurityPolicyRulePreconfiguredWafConfig,
+            :preview boolean,
+            :rateLimitOptions SecurityPolicyRuleRateLimitOptions,
             :priority integer,
-            :description string}],
+            :kind string,
+            :action string,
+            :match SecurityPolicyRuleMatcher}],
+   :region string,
+   :recaptchaOptionsConfig {:redirectSiteKey string},
    :id string,
    :adaptiveProtectionConfig {:layer7DdosDefenseConfig SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig},
    :kind string,
-   :advancedOptionsConfig {:jsonParsing string, :logLevel string},
-   :fingerprint string}
+   :ddosProtectionConfig {:ddosProtection string},
+   :advancedOptionsConfig {:jsonParsing string,
+                           :jsonCustomConfig SecurityPolicyAdvancedOptionsConfigJsonCustomConfig,
+                           :logLevel string,
+                           :userIpRequestHeaders [string]},
+   :fingerprint string,
+   :labelFingerprint string}
   
-  Patches the specified policy with the data included in the request. This cannot be used to be update the rules in the policy. Please use the per rule methods like addRule, patchRule, and removeRule instead."
+  Patches the specified policy with the data included in the request. To clear fields in the policy, leave the fields empty and specify them in the updateMask. This cannot be used to be update the rules in the policy. Please use the per rule methods like addRule, patchRule, and removeRule instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -183,10 +221,71 @@
       :as :json}
      auth))))
 
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/setLabels
+  
+  Required parameters: project, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labels {}, :labelFingerprint string}
+  
+  Sets the labels on a security policy. To learn more about labels, read the Labeling Resources documentation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/securityPolicies/{resource}/setLabels"
+     #{:project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
+  
+  Retrieves the list of all SecurityPolicy resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/securityPolicies"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/delete
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
   Optional parameters: requestId
   
@@ -213,22 +312,43 @@
 (defn patchRule$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/patchRule
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
-  Optional parameters: priority
+  Optional parameters: priority, updateMask, validateOnly
   
   Body: 
   
-  {:preview boolean,
-   :action string,
-   :match {:versionedExpr string,
-           :config SecurityPolicyRuleMatcherConfig,
-           :expr Expr},
-   :kind string,
+  {:description string,
+   :headerAction {:requestHeadersToAdds [SecurityPolicyRuleHttpHeaderActionHttpHeaderOption]},
+   :networkMatch {:userDefinedFields [SecurityPolicyRuleNetworkMatcherUserDefinedFieldMatch],
+                  :srcIpRanges [string],
+                  :destIpRanges [string],
+                  :ipProtocols [string],
+                  :srcPorts [string],
+                  :destPorts [string],
+                  :srcRegionCodes [string],
+                  :srcAsns [integer]},
+   :redirectOptions {:type string, :target string},
+   :preconfiguredWafConfig {:exclusions [SecurityPolicyRulePreconfiguredWafConfigExclusion]},
+   :preview boolean,
+   :rateLimitOptions {:enforceOnKeyConfigs [SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig],
+                      :enforceOnKey string,
+                      :exceedAction string,
+                      :banDurationSec integer,
+                      :enforceOnKeyName string,
+                      :rateLimitThreshold SecurityPolicyRuleRateLimitOptionsThreshold,
+                      :banThreshold SecurityPolicyRuleRateLimitOptionsThreshold,
+                      :conformAction string,
+                      :exceedRedirectOptions SecurityPolicyRuleRedirectOptions},
    :priority integer,
-   :description string}
+   :kind string,
+   :action string,
+   :match {:expr Expr,
+           :exprOptions SecurityPolicyRuleMatcherExprOptions,
+           :versionedExpr string,
+           :config SecurityPolicyRuleMatcherConfig}}
   
-  Patches a rule at the specified priority."
+  Patches a rule at the specified priority. To clear fields in the rule, leave the fields empty and specify them in the updateMask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -253,20 +373,41 @@
 (defn addRule$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/addRule
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
-  Optional parameters: none
+  Optional parameters: validateOnly
   
   Body: 
   
-  {:preview boolean,
-   :action string,
-   :match {:versionedExpr string,
-           :config SecurityPolicyRuleMatcherConfig,
-           :expr Expr},
-   :kind string,
+  {:description string,
+   :headerAction {:requestHeadersToAdds [SecurityPolicyRuleHttpHeaderActionHttpHeaderOption]},
+   :networkMatch {:userDefinedFields [SecurityPolicyRuleNetworkMatcherUserDefinedFieldMatch],
+                  :srcIpRanges [string],
+                  :destIpRanges [string],
+                  :ipProtocols [string],
+                  :srcPorts [string],
+                  :destPorts [string],
+                  :srcRegionCodes [string],
+                  :srcAsns [integer]},
+   :redirectOptions {:type string, :target string},
+   :preconfiguredWafConfig {:exclusions [SecurityPolicyRulePreconfiguredWafConfigExclusion]},
+   :preview boolean,
+   :rateLimitOptions {:enforceOnKeyConfigs [SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig],
+                      :enforceOnKey string,
+                      :exceedAction string,
+                      :banDurationSec integer,
+                      :enforceOnKeyName string,
+                      :rateLimitThreshold SecurityPolicyRuleRateLimitOptionsThreshold,
+                      :banThreshold SecurityPolicyRuleRateLimitOptionsThreshold,
+                      :conformAction string,
+                      :exceedRedirectOptions SecurityPolicyRuleRedirectOptions},
    :priority integer,
-   :description string}
+   :kind string,
+   :action string,
+   :match {:expr Expr,
+           :exprOptions SecurityPolicyRuleMatcherExprOptions,
+           :versionedExpr string,
+           :config SecurityPolicyRuleMatcherConfig}}
   
   Inserts a rule into a security policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -295,7 +436,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, orderBy, pageToken, filter, maxResults
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   List all the policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -321,7 +462,7 @@
 (defn getRule$
   "https://cloud.google.com/compute/api/reference/rest/v1/securityPolicies/getRule
   
-  Required parameters: securityPolicy, project
+  Required parameters: project, securityPolicy
   
   Optional parameters: priority
   

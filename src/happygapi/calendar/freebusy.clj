@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:timeMin string,
-   :timeMax string,
-   :items [{:id string}],
+  {:calendarExpansionMax integer,
    :groupExpansionMax integer,
-   :calendarExpansionMax integer,
+   :items [{:id string}],
+   :timeMax string,
+   :timeMin string,
    :timeZone string}
   
   Returns free/busy information for a set of calendars."

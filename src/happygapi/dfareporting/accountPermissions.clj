@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.accountPermissions
   "Campaign Manager 360 API: accountPermissions.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountPermissions"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/accountPermissions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountPermissions/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/accountPermissions/get
   
   Required parameters: profileId, id
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/accountPermissions/{id}"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/accountPermissions/{+id}"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountPermissions/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/accountPermissions/list
   
   Required parameters: profileId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/accountPermissions"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/accountPermissions"
      #{:profileId}
      parameters)
     (merge-with

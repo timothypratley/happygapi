@@ -11,7 +11,7 @@
   
   Required parameters: merchantId
   
-  Optional parameters: pageToken, disbursementEndDate, disbursementStartDate, maxResults
+  Optional parameters: maxResults, pageToken, disbursementStartDate, disbursementEndDate
   
   Retrieves a report for disbursements from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -37,7 +37,7 @@
   
   Required parameters: merchantId, disbursementId
   
-  Optional parameters: transactionStartDate, maxResults, transactionEndDate, pageToken
+  Optional parameters: maxResults, pageToken, transactionStartDate, transactionEndDate
   
   Retrieves a list of transactions for a disbursement from your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}

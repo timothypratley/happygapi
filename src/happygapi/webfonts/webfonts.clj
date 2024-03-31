@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: sort
+  Optional parameters: sort, capability, family, subset
   
   Retrieves the list of fonts currently served by the Google Fonts Developer API."
   {:scopes nil}

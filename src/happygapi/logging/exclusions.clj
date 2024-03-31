@@ -1,29 +1,31 @@
 (ns happygapi.logging.exclusions
   "Cloud Logging API: exclusions.
-  Writes log entries and manages your Cloud Logging configuration. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the documentation at https://cloud.google.com/logging/docs.
+  Writes log entries and manages your Cloud Logging configuration.
   See: https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/delete
+(defn list$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize
   
-  Deletes an exclusion."
+  Lists all the exclusions on the _Default sink in a parent resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://logging.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
+     "v2/{+parent}/exclusions"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -33,29 +35,22 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/patch
+(defn get$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/get
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: none
   
-  Body: 
-  
-  {:description string,
-   :name string,
-   :createTime string,
-   :disabled boolean,
-   :filter string,
-   :updateTime string}
-  
-  Changes one or more properties of an existing exclusion."
+  Gets the description of an exclusion in the _Default sink."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/logging.admin"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/get
     (util/get-url
      "https://logging.googleapis.com/"
      "v2/{+name}"
@@ -63,9 +58,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -80,14 +73,14 @@
   
   Body: 
   
-  {:description string,
-   :name string,
-   :createTime string,
-   :disabled boolean,
+  {:name string,
+   :description string,
    :filter string,
+   :disabled boolean,
+   :createTime string,
    :updateTime string}
   
-  Creates a new exclusion in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
+  Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters body]
@@ -109,22 +102,29 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/get
+(defn patch$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/patch
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask
   
-  Gets the description of an exclusion."
+  Body: 
+  
+  {:name string,
+   :description string,
+   :filter string,
+   :disabled boolean,
+   :createTime string,
+   :updateTime string}
+  
+  Changes one or more properties of an existing exclusion in the _Default sink."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/logging.admin"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://logging.googleapis.com/"
      "v2/{+name}"
@@ -132,32 +132,32 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/list
+(defn delete$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions/delete
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: none
   
-  Lists all the exclusions in a parent resource."
+  Deletes an exclusion in the _Default sink."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
+            "https://www.googleapis.com/auth/logging.admin"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://logging.googleapis.com/"
-     "v2/{+parent}/exclusions"
-     #{:parent}
+     "v2/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

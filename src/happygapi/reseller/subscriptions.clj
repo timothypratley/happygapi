@@ -38,7 +38,7 @@
   
   Required parameters: customerId
   
-  Optional parameters: customerAuthToken
+  Optional parameters: customerAuthToken, action, sourceSkuId
   
   Body: 
   
@@ -50,9 +50,9 @@
    :suspensionReasons [string],
    :resourceUiUrl string,
    :customerId string,
-   :transferInfo {:currentLegacySkuId string,
-                  :transferabilityExpirationTime string,
-                  :minimumTransferableSeats integer},
+   :transferInfo {:transferabilityExpirationTime string,
+                  :minimumTransferableSeats integer,
+                  :currentLegacySkuId string},
    :customerDomain string,
    :status string,
    :kind string,
@@ -62,8 +62,8 @@
            :licensedNumberOfSeats integer,
            :kind string},
    :plan {:planName string,
-          :commitmentInterval {:endTime string, :startTime string},
-          :isCommitmentPlan boolean},
+          :isCommitmentPlan boolean,
+          :commitmentInterval {:startTime string, :endTime string}},
    :renewalSettings {:renewalType string, :kind string},
    :dealCode string,
    :subscriptionId string}
@@ -92,7 +92,7 @@
 (defn changeRenewalSettings$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/changeRenewalSettings
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   
@@ -124,7 +124,7 @@
 (defn delete$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/delete
   
-  Required parameters: subscriptionId, customerId, deletionType
+  Required parameters: customerId, subscriptionId, deletionType
   
   Optional parameters: none
   
@@ -180,7 +180,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, maxResults, customerNamePrefix, customerAuthToken, customerId
+  Optional parameters: customerAuthToken, customerId, customerNamePrefix, maxResults, pageToken
   
   Lists of subscriptions managed by the reseller. The list can be all subscriptions, all of a customer's subscriptions, or all of a customer's transferable subscriptions. Optionally, this method can filter the response by a `customerNamePrefix`. For more information, see [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"
@@ -205,20 +205,20 @@
 (defn changePlan$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/changePlan
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   
   Body: 
   
-  {:purchaseOrderId string,
-   :kind string,
+  {:kind string,
    :planName string,
-   :dealCode string,
    :seats {:numberOfSeats integer,
            :maximumNumberOfSeats integer,
            :licensedNumberOfSeats integer,
-           :kind string}}
+           :kind string},
+   :purchaseOrderId string,
+   :dealCode string}
   
   Updates a subscription plan. Use this method to update a plan for a 30-day trial or a flexible plan subscription to an annual commitment plan with monthly or yearly payments. How a plan is updated differs depending on the plan and the products. For more information, see the description in [manage subscriptions](/admin-sdk/reseller/v1/how-tos/manage_subscriptions#update_subscription_plan)."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -244,7 +244,7 @@
 (defn changeSeats$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/changeSeats
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   
@@ -279,7 +279,7 @@
 (defn activate$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/subscriptions/activate
   
-  Required parameters: subscriptionId, customerId
+  Required parameters: customerId, subscriptionId
   
   Optional parameters: none
   

@@ -1,27 +1,11 @@
-{:Deployment {:properties {:labels {:additionalProperties {:type "string"},
-                                    :type "object",
-                                    :description "Labels identify the deployment within the user universe and same target. Validation regex for label names: `^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$`. Value for an individual label must be <= 512 bytes, the total size of all label names and values must be <= 1024 bytes. Label named \"language\" can be used to record the programming language of the profiled deployment. The standard choices for the value include \"java\", \"go\", \"python\", \"ruby\", \"nodejs\", \"php\", \"dotnet\". For deployments running on Google Cloud Platform, \"zone\" or \"region\" label should be present describing the deployment location. An example of a zone is \"us-central1-a\", an example of a region is \"us-central1\" or \"us-central\"."},
-                           :target {:type "string",
-                                    :description "Target is the service name used to group related deployments: * Service name for App Engine Flex / Standard. * Cluster and container name for GKE. * User-specified string for direct Compute Engine profiling (e.g. Java). * Job name for Dataflow. Validation regex: `^[a-z]([-a-z0-9_.]{0,253}[a-z0-9])?$`."},
-                           :projectId {:type "string",
-                                       :description "Project ID is the ID of a cloud project. Validation regex: `^a-z{4,61}[a-z0-9]$`."}},
-              :type "object",
-              :id "Deployment",
-              :description "Deployment contains the deployment identification information."},
- :CreateProfileRequest {:description "CreateProfileRequest describes a profile resource online creation request. The deployment field must be populated. The profile_type specifies the list of profile types supported by the agent. The creation call will hang until a profile of one of these types needs to be collected.",
-                        :id "CreateProfileRequest",
+{:CreateProfileRequest {:id "CreateProfileRequest",
+                        :description "CreateProfileRequest describes a profile resource online creation request. The deployment field must be populated. The profile_type specifies the list of profile types supported by the agent. The creation call will hang until a profile of one of these types needs to be collected. ",
                         :type "object",
-                        :properties {:profileType {:type "array",
-                                                   :description "Required. One or more profile types that the agent is capable of providing.",
+                        :properties {:deployment {:description "Deployment details.",
+                                                  :$ref "Deployment"},
+                                     :profileType {:description "One or more profile types that the agent is capable of providing.",
+                                                   :type "array",
                                                    :items {:type "string",
-                                                           :enum ["PROFILE_TYPE_UNSPECIFIED"
-                                                                  "CPU"
-                                                                  "WALL"
-                                                                  "HEAP"
-                                                                  "THREADS"
-                                                                  "CONTENTION"
-                                                                  "PEAK_HEAP"
-                                                                  "HEAP_ALLOC"],
                                                            :enumDescriptions ["Unspecified profile type."
                                                                               "Thread CPU time sampling."
                                                                               "Wallclock time sampling. More expensive as stops all threads."
@@ -29,20 +13,33 @@
                                                                               "Single-shot collection of all thread stacks."
                                                                               "Synchronization contention profile."
                                                                               "Peak heap profile."
-                                                                              "Heap allocation profile. It represents the aggregation of all allocations made over the duration of the profile. All allocations are included, including those that might have been freed by the end of the profiling interval. The profile is in particular useful for garbage collecting languages to understand which parts of the code create most of the garbage collection pressure to see if those can be optimized."]}},
-                                     :deployment {:description "Required. Deployment details.",
-                                                  :$ref "Deployment"}}},
- :Profile {:properties {:name {:type "string",
-                               :description "Output only. Opaque, server-assigned, unique ID for this profile.",
-                               :readOnly true},
-                        :profileType {:enum ["PROFILE_TYPE_UNSPECIFIED"
-                                             "CPU"
-                                             "WALL"
-                                             "HEAP"
-                                             "THREADS"
-                                             "CONTENTION"
-                                             "PEAK_HEAP"
-                                             "HEAP_ALLOC"],
+                                                                              "Heap allocation profile. It represents the aggregation of all allocations made over the duration of the profile. All allocations are included, including those that might have been freed by the end of the profiling interval. The profile is in particular useful for garbage collecting languages to understand which parts of the code create most of the garbage collection pressure to see if those can be optimized."],
+                                                           :enum ["PROFILE_TYPE_UNSPECIFIED"
+                                                                  "CPU"
+                                                                  "WALL"
+                                                                  "HEAP"
+                                                                  "THREADS"
+                                                                  "CONTENTION"
+                                                                  "PEAK_HEAP"
+                                                                  "HEAP_ALLOC"]}}}},
+ :Deployment {:id "Deployment",
+              :description "Deployment contains the deployment identification information.",
+              :type "object",
+              :properties {:projectId {:description "Project ID is the ID of a cloud project. Validation regex: `^a-z{4,61}[a-z0-9]$`.",
+                                       :type "string"},
+                           :target {:description "Target is the service name used to group related deployments: * Service name for App Engine Flex / Standard. * Cluster and container name for GKE. * User-specified string for direct Compute Engine profiling (e.g. Java). * Job name for Dataflow. Validation regex: `^[a-z0-9]([-a-z0-9_.]{0,253}[a-z0-9])?$`.",
+                                    :type "string"},
+                           :labels {:description "Labels identify the deployment within the user universe and same target. Validation regex for label names: `^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$`. Value for an individual label must be <= 512 bytes, the total size of all label names and values must be <= 1024 bytes. Label named \"language\" can be used to record the programming language of the profiled deployment. The standard choices for the value include \"java\", \"go\", \"python\", \"ruby\", \"nodejs\", \"php\", \"dotnet\". For deployments running on Google Cloud Platform, \"zone\" or \"region\" label should be present describing the deployment location. An example of a zone is \"us-central1-a\", an example of a region is \"us-central1\" or \"us-central\".",
+                                    :type "object",
+                                    :additionalProperties {:type "string"}}}},
+ :Profile {:id "Profile",
+           :description "Profile resource.",
+           :type "object",
+           :properties {:name {:description "Output only. Opaque, server-assigned, unique ID for this profile.",
+                               :readOnly true,
+                               :type "string"},
+                        :profileType {:description "Type of profile. For offline mode, this must be specified when creating the profile. For online mode it is assigned and returned by the server.",
+                                      :type "string",
                                       :enumDescriptions ["Unspecified profile type."
                                                          "Thread CPU time sampling."
                                                          "Wallclock time sampling. More expensive as stops all threads."
@@ -51,19 +48,37 @@
                                                          "Synchronization contention profile."
                                                          "Peak heap profile."
                                                          "Heap allocation profile. It represents the aggregation of all allocations made over the duration of the profile. All allocations are included, including those that might have been freed by the end of the profiling interval. The profile is in particular useful for garbage collecting languages to understand which parts of the code create most of the garbage collection pressure to see if those can be optimized."],
-                                      :type "string",
-                                      :description "Type of profile. For offline mode, this must be specified when creating the profile. For online mode it is assigned and returned by the server."},
-                        :duration {:type "string",
-                                   :description "Duration of the profiling session. Input (for the offline mode) or output (for the online mode). The field represents requested profiling duration. It may slightly differ from the effective profiling duration, which is recorded in the profile data, in case the profiling can't be stopped immediately (e.g. in case stopping the profiling is handled asynchronously).",
+                                      :enum ["PROFILE_TYPE_UNSPECIFIED"
+                                             "CPU"
+                                             "WALL"
+                                             "HEAP"
+                                             "THREADS"
+                                             "CONTENTION"
+                                             "PEAK_HEAP"
+                                             "HEAP_ALLOC"]},
+                        :deployment {:description "Deployment this profile corresponds to.",
+                                     :$ref "Deployment"},
+                        :duration {:description "Duration of the profiling session. Input (for the offline mode) or output (for the online mode). The field represents requested profiling duration. It may slightly differ from the effective profiling duration, which is recorded in the profile data, in case the profiling can't be stopped immediately (e.g. in case stopping the profiling is handled asynchronously).",
+                                   :type "string",
                                    :format "google-duration"},
-                        :deployment {:$ref "Deployment",
-                                     :description "Deployment this profile corresponds to."},
-                        :profileBytes {:format "byte",
-                                       :description "Input only. Profile bytes, as a gzip compressed serialized proto, the format is https://github.com/google/pprof/blob/master/proto/profile.proto.",
-                                       :type "string"},
-                        :labels {:additionalProperties {:type "string"},
-                                 :description "Input only. Labels associated to this specific profile. These labels will get merged with the deployment labels for the final data set. See documentation on deployment labels for validation rules and limits.",
-                                 :type "object"}},
-           :type "object",
-           :description "Profile resource.",
-           :id "Profile"}}
+                        :profileBytes {:description "Input only. Profile bytes, as a gzip compressed serialized proto, the format is https://github.com/google/pprof/blob/master/proto/profile.proto.",
+                                       :type "string",
+                                       :format "byte"},
+                        :labels {:description "Input only. Labels associated to this specific profile. These labels will get merged with the deployment labels for the final data set. See documentation on deployment labels for validation rules and limits.",
+                                 :type "object",
+                                 :additionalProperties {:type "string"}},
+                        :startTime {:description "Output only. Start time for the profile. This output is only present in response from the ListProfiles method.",
+                                    :readOnly true,
+                                    :type "string",
+                                    :format "google-datetime"}}},
+ :ListProfilesResponse {:id "ListProfilesResponse",
+                        :description "ListProfileResponse contains the list of collected profiles for deployments in projects which the user has permissions to view.",
+                        :type "object",
+                        :properties {:profiles {:description "List of profiles fetched.",
+                                                :type "array",
+                                                :items {:$ref "Profile"}},
+                                     :nextPageToken {:description "Token to receive the next page of results. This field maybe empty if there are no more profiles to fetch.",
+                                                     :type "string"},
+                                     :skippedProfiles {:description "Number of profiles that were skipped in the current page since they were not able to be fetched successfully. This should typically be zero. A non-zero value may indicate a transient failure, in which case if the number is too high for your use case, the call may be retried.",
+                                                       :type "integer",
+                                                       :format "int32"}}}}

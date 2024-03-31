@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/get
   
-  Required parameters: project, packetMirroring, region
+  Required parameters: packetMirroring, project, region
   
   Optional parameters: none
   
@@ -36,40 +36,6 @@
       :as :json}
      auth))))
 
-(defn testIamPermissions$
-  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/testIamPermissions
-  
-  Required parameters: resource, region, project
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that a caller has on the specified resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/packetMirrorings/{resource}/testIamPermissions"
-     #{:region :project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/insert
   
@@ -83,13 +49,13 @@
    :enable string,
    :creationTimestamp string,
    :mirroredResources {:subnetworks [PacketMirroringMirroredResourceInfoSubnetInfo],
-                       :tags [string],
-                       :instances [PacketMirroringMirroredResourceInfoInstanceInfo]},
+                       :instances [PacketMirroringMirroredResourceInfoInstanceInfo],
+                       :tags [string]},
    :name string,
    :selfLink string,
    :region string,
-   :filter {:IPProtocols [string],
-            :cidrRanges [string],
+   :filter {:cidrRanges [string],
+            :IPProtocols [string],
             :direction string},
    :priority integer,
    :id string,
@@ -119,67 +85,10 @@
       :as :json}
      auth))))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/aggregatedList
-  
-  Required parameters: project
-  
-  Optional parameters: returnPartialSuccess, orderBy, pageToken, maxResults, filter, includeAllScopes
-  
-  Retrieves an aggregated list of packetMirrorings."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/packetMirrorings"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/delete
-  
-  Required parameters: project, packetMirroring, region
-  
-  Optional parameters: requestId
-  
-  Deletes the specified PacketMirroring resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:packetMirroring :region :project})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/packetMirrorings/{packetMirroring}"
-     #{:packetMirroring :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/patch
   
-  Required parameters: project, region, packetMirroring
+  Required parameters: packetMirroring, project, region
   
   Optional parameters: requestId
   
@@ -189,13 +98,13 @@
    :enable string,
    :creationTimestamp string,
    :mirroredResources {:subnetworks [PacketMirroringMirroredResourceInfoSubnetInfo],
-                       :tags [string],
-                       :instances [PacketMirroringMirroredResourceInfoInstanceInfo]},
+                       :instances [PacketMirroringMirroredResourceInfoInstanceInfo],
+                       :tags [string]},
    :name string,
    :selfLink string,
    :region string,
-   :filter {:IPProtocols [string],
-            :cidrRanges [string],
+   :filter {:cidrRanges [string],
+            :IPProtocols [string],
             :direction string},
    :priority integer,
    :id string,
@@ -227,12 +136,41 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/delete
+  
+  Required parameters: packetMirroring, project, region
+  
+  Optional parameters: requestId
+  
+  Deletes the specified PacketMirroring resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:packetMirroring :region :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/packetMirrorings/{packetMirroring}"
+     #{:packetMirroring :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/list
   
   Required parameters: project, region
   
-  Optional parameters: pageToken, returnPartialSuccess, filter, orderBy, maxResults
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of PacketMirroring resources available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -250,6 +188,68 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
+  
+  Retrieves an aggregated list of packetMirrorings. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/packetMirrorings"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn testIamPermissions$
+  "https://cloud.google.com/compute/api/reference/rest/v1/packetMirrorings/testIamPermissions
+  
+  Required parameters: project, region, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/packetMirrorings/{resource}/testIamPermissions"
+     #{:region :project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

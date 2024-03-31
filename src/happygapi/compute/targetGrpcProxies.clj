@@ -6,6 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/list
+  
+  Required parameters: project
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Lists the TargetGrpcProxies for a project in the given scope."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetGrpcProxies"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/get
   
@@ -34,10 +62,52 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :creationTimestamp string,
+   :urlMap string,
+   :name string,
+   :selfLink string,
+   :validateForProxyless boolean,
+   :selfLinkWithId string,
+   :id string,
+   :kind string,
+   :fingerprint string}
+  
+  Creates a TargetGrpcProxy in the specified project in the given scope using the parameters that are included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetGrpcProxies"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/delete
   
-  Required parameters: targetGrpcProxy, project
+  Required parameters: project, targetGrpcProxy
   
   Optional parameters: requestId
   
@@ -52,34 +122,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
      #{:project :targetGrpcProxy}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/list
-  
-  Required parameters: project
-  
-  Optional parameters: returnPartialSuccess, maxResults, orderBy, filter, pageToken
-  
-  Lists the TargetGrpcProxies for a project in the given scope."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetGrpcProxies"
-     #{:project}
      parameters)
     (merge-with
      merge
@@ -120,48 +162,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/targetGrpcProxies/{targetGrpcProxy}"
      #{:project :targetGrpcProxy}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetGrpcProxies/insert
-  
-  Required parameters: project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :creationTimestamp string,
-   :urlMap string,
-   :name string,
-   :selfLink string,
-   :validateForProxyless boolean,
-   :selfLinkWithId string,
-   :id string,
-   :kind string,
-   :fingerprint string}
-  
-  Creates a TargetGrpcProxy in the specified project in the given scope using the parameters that are included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/targetGrpcProxies"
-     #{:project}
      parameters)
     (merge-with
      merge

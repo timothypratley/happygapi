@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.creativeAssets
   "Campaign Manager 360 API: creativeAssets.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeAssets"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/creativeAssets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn insert$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/creativeAssets/insert
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/creativeAssets/insert
   
   Required parameters: profileId, advertiserId
   
@@ -26,12 +26,12 @@
                           :exitClickThroughUrl CreativeClickThroughUrl,
                           :advertiserCustomEventType string}],
    :richMedia boolean,
-   :idDimensionValue {:kind string,
-                      :dimensionName string,
-                      :matchType string,
+   :idDimensionValue {:dimensionName string,
                       :value string,
-                      :etag string,
-                      :id string},
+                      :id string,
+                      :matchType string,
+                      :kind string,
+                      :etag string},
    :timerCustomEvents [{:advertiserCustomEventName string,
                         :popupWindowProperties PopupWindowProperties,
                         :artworkType string,
@@ -56,9 +56,9 @@
    :warnedValidationRules [string],
    :id string,
    :kind string,
-   :clickTags [{:clickThroughUrl CreativeClickThroughUrl,
+   :clickTags [{:name string,
                 :eventName string,
-                :name string}],
+                :clickThroughUrl CreativeClickThroughUrl}],
    :assetIdentifier {:type string, :name string}}
   
   Inserts a new creative asset."
@@ -68,8 +68,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/creativeAssets/{advertiserId}/creativeAssets"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/creativeAssets/{+advertiserId}/creativeAssets"
      #{:advertiserId :profileId}
      parameters)
     (merge-with

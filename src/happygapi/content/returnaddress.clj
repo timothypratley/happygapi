@@ -6,63 +6,31 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/list
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/custombatch
   
-  Required parameters: merchantId
-  
-  Optional parameters: maxResults, country, pageToken
-  
-  Lists the return addresses of the Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/returnaddress"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/insert
-  
-  Required parameters: merchantId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string,
-   :returnAddressId string,
-   :address {:country string,
-             :region string,
-             :streetAddress [string],
-             :recipientName string,
-             :postalCode string,
-             :locality string},
-   :country string,
-   :phoneNumber string,
-   :label string}
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :method string,
+              :returnAddressId string,
+              :returnAddress ReturnAddress}]}
   
-  Inserts a return address for the Merchant Center account."
+  Batches multiple return address related calls in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/returnaddress"
-     #{:merchantId}
+     "returnaddress/batch"
+     #{}
      parameters)
     (merge-with
      merge
@@ -103,7 +71,7 @@
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/get
   
-  Required parameters: returnAddressId, merchantId
+  Required parameters: merchantId, returnAddressId
   
   Optional parameters: none
   
@@ -126,37 +94,69 @@
       :as :json}
      auth))))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/custombatch
+(defn insert$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/insert
   
-  Required parameters: none
+  Required parameters: merchantId
   
   Optional parameters: none
   
   Body: 
   
-  {:entries [{:merchantId string,
-              :method string,
-              :returnAddress ReturnAddress,
-              :batchId integer,
-              :returnAddressId string}]}
+  {:returnAddressId string,
+   :label string,
+   :country string,
+   :address {:recipientName string,
+             :streetAddress [string],
+             :locality string,
+             :region string,
+             :postalCode string,
+             :country string},
+   :phoneNumber string,
+   :kind string}
   
-  Batches multiple return address related calls in a single request."
+  Inserts a return address for the Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "returnaddress/batch"
-     #{}
+     "{merchantId}/returnaddress"
+     #{:merchantId}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnaddress/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: maxResults, pageToken, country
+  
+  Lists the return addresses of the Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/returnaddress"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

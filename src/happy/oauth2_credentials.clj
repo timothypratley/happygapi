@@ -44,8 +44,11 @@
 
 (defn init!
   ([]
+   ;; TODO: shouldn't have these defaults
    (init! ["https://www.googleapis.com/auth/spreadsheets"
-           "https://www.googleapis.com/auth/drive"]))
+           "https://www.googleapis.com/auth/drive"
+           "https://www.googleapis.com/auth/youtube"
+           "https://www.googleapis.com/auth/cloud-vision"]))
   ([scopes]
    (init! (merge
             ;; If you download secret.json or service.json from your Google Console,

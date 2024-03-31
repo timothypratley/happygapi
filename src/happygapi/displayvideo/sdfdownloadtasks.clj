@@ -1,13 +1,13 @@
 (ns happygapi.displayvideo.sdfdownloadtasks
   "Display & Video 360 API: sdfdownloadtasks.
-  Display & Video 360 API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/display-video/api/reference/rest/v1/sdfdownloadtasks"
+  Display & Video 360 API allows users to automate complex Display & Video 360 workflows, such as creating insertion orders and setting targeting options for individual line items.
+  See: https://developers.google.com/display-video/api/reference/rest/v3/sdfdownloadtasks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn create$
-  "https://developers.google.com/display-video/api/reference/rest/v1/sdfdownloadtasks/create
+  "https://developers.google.com/display-video/api/reference/rest/v3/sdfdownloadtasks/create
   
   Required parameters: none
   
@@ -15,19 +15,19 @@
   
   Body: 
   
-  {:version string,
-   :parentEntityFilter {:filterType string,
-                        :filterIds [string],
-                        :fileType [string]},
-   :partnerId string,
+  {:partnerId string,
    :advertiserId string,
-   :inventorySourceFilter {:inventorySourceIds [string]},
+   :parentEntityFilter {:fileType [string],
+                        :filterType string,
+                        :filterIds [string]},
    :idFilter {:campaignIds [string],
-              :adGroupAdIds [string],
-              :lineItemIds [string],
               :mediaProductIds [string],
               :insertionOrderIds [string],
-              :adGroupIds [string]}}
+              :lineItemIds [string],
+              :adGroupIds [string],
+              :adGroupAdIds [string]},
+   :inventorySourceFilter {:inventorySourceIds [string]},
+   :version string}
   
   Creates an SDF Download Task. Returns an Operation. An SDF Download Task is a long-running, asynchronous operation. The metadata type of this operation is SdfDownloadTaskMetadata. If the request is successful, the response type of the operation is SdfDownloadTask. The response will not include the download files, which must be retrieved with media.download. The state of operation can be retrieved with sdfdownloadtask.operations.get. Any errors can be found in the error.message. Note that error.details is expected to be empty."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -37,7 +37,7 @@
    (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/sdfdownloadtasks"
+     "v3/sdfdownloadtasks"
      #{}
      parameters)
     (merge-with
@@ -51,7 +51,7 @@
      auth))))
 
 (defn operations-get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/sdfdownloadtasks/operations/get
+  "https://developers.google.com/display-video/api/reference/rest/v3/sdfdownloadtasks/operations/get
   
   Required parameters: name
   
@@ -66,7 +66,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/{+name}"
+     "v3/{+name}"
      #{:name}
      parameters)
     (merge-with

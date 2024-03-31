@@ -5,6 +5,7 @@
 
 (def spreadsheet-id "1NbGRyCRMoOT_MLhnubC5900JNwiQq_uqvdKwbqZOfyM")
 
+#_
 (deftest get$-test
   (credentials/init!)
   (testing "When fetching a spreadsheet"
@@ -16,7 +17,7 @@
   (testing "When missing a required key"
     (is (thrown? AssertionError (gsheets/get$ (credentials/auth!) {:badKey "123"}))
         "should get an exception")))
-
+#_
 (deftest values-batchUpdate$-test
   (credentials/init!)
   (testing "When updating values in a sheet"

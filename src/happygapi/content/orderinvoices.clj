@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn createrefundinvoice$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createrefundinvoice
+(defn createchargeinvoice$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createchargeinvoice
   
   Required parameters: merchantId, orderId
   
@@ -15,15 +15,17 @@
   
   Body: 
   
-  {:refundOnlyOption {:reason string, :description string},
-   :shipmentInvoices [{:invoiceSummary InvoiceSummary,
-                       :lineItemInvoices [ShipmentInvoiceLineItemInvoice],
-                       :shipmentGroupId string}],
-   :invoiceId string,
-   :returnOption {:description string, :reason string},
-   :operationId string}
+  {:invoiceId string,
+   :operationId string,
+   :shipmentGroupId string,
+   :lineItemInvoices [{:lineItemId string,
+                       :productId string,
+                       :shipmentUnitIds [string],
+                       :unitInvoice UnitInvoice}],
+   :invoiceSummary {:productTotal Amount,
+                    :additionalChargeSummaries [InvoiceSummaryAdditionalChargeSummary]}}
   
-  Creates a refund invoice for one or more shipment groups, and triggers a refund for orderinvoice enabled orders. This can only be used for line items that have previously been charged using `createChargeInvoice`. All amounts (except for the summary) are incremental with respect to the previous invoice."
+  Creates a charge invoice for a shipment group, and triggers a charge capture for orderinvoice enabled orders."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
@@ -31,7 +33,7 @@
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderinvoices/{orderId}/createRefundInvoice"
+     "{merchantId}/orderinvoices/{orderId}/createChargeInvoice"
      #{:merchantId :orderId}
      parameters)
     (merge-with
@@ -44,10 +46,10 @@
       :as :json}
      auth))))
 
-(defn createchargeinvoice$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createchargeinvoice
+(defn createrefundinvoice$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices/createrefundinvoice
   
-  Required parameters: orderId, merchantId
+  Required parameters: merchantId, orderId
   
   Optional parameters: none
   
@@ -55,15 +57,13 @@
   
   {:invoiceId string,
    :operationId string,
-   :shipmentGroupId string,
-   :invoiceSummary {:productTotal Amount,
-                    :additionalChargeSummaries [InvoiceSummaryAdditionalChargeSummary]},
-   :lineItemInvoices [{:productId string,
-                       :shipmentUnitIds [string],
-                       :lineItemId string,
-                       :unitInvoice UnitInvoice}]}
+   :refundOnlyOption {:reason string, :description string},
+   :shipmentInvoices [{:shipmentGroupId string,
+                       :lineItemInvoices [ShipmentInvoiceLineItemInvoice],
+                       :invoiceSummary InvoiceSummary}],
+   :returnOption {:reason string, :description string}}
   
-  Creates a charge invoice for a shipment group, and triggers a charge capture for orderinvoice enabled orders."
+  Creates a refund invoice for one or more shipment groups, and triggers a refund for orderinvoice enabled orders. This can only be used for line items that have previously been charged using `createChargeInvoice`. All amounts (except for the summary) are incremental with respect to the previous invoice."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:merchantId :orderId})]}
@@ -71,7 +71,7 @@
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderinvoices/{orderId}/createChargeInvoice"
+     "{merchantId}/orderinvoices/{orderId}/createRefundInvoice"
      #{:merchantId :orderId}
      parameters)
     (merge-with

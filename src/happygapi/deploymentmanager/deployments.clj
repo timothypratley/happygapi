@@ -77,12 +77,12 @@
   
   Body: 
   
-  {:etag string,
-   :policy {:bindings [Binding],
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :version integer,
             :etag string},
-   :bindings [{:condition Expr, :role string, :members [string]}]}
+   :bindings [{:role string, :members [string], :condition Expr}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -116,7 +116,7 @@
   Body: 
   
   {:description string,
-   :labels [{:value string, :key string}],
+   :labels [{:key string, :value string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -125,11 +125,12 @@
                :name string,
                :targetId string,
                :endTime string,
+               :instancesBulkInsertOperationMetadata InstancesBulkInsertOperationMetadata,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:message string,
-                           :data [{:value string, :key string}],
-                           :code string}],
+               :warnings [{:code string,
+                           :message string,
+                           :data [{:key string, :value string}]}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
@@ -139,22 +140,23 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:message string,
+               :setCommonInstanceMetadataOperationMetadata SetCommonInstanceMetadataOperationMetadata,
+               :error {:errors [{:code string,
                                  :location string,
-                                 :code string}]},
+                                 :message string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
+   :update {:manifest string,
             :labels [DeploymentUpdateLabelEntry],
-            :manifest string},
+            :description string},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:imports [ImportFile], :config ConfigFile},
+   :target {:config ConfigFile, :imports [ImportFile]},
    :fingerprint string}
   
   Creates a deployment and all of the resources described by the deployment manifest."
@@ -189,7 +191,7 @@
   Body: 
   
   {:description string,
-   :labels [{:value string, :key string}],
+   :labels [{:key string, :value string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -198,11 +200,12 @@
                :name string,
                :targetId string,
                :endTime string,
+               :instancesBulkInsertOperationMetadata InstancesBulkInsertOperationMetadata,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:message string,
-                           :data [{:value string, :key string}],
-                           :code string}],
+               :warnings [{:code string,
+                           :message string,
+                           :data [{:key string, :value string}]}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
@@ -212,22 +215,23 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:message string,
+               :setCommonInstanceMetadataOperationMetadata SetCommonInstanceMetadataOperationMetadata,
+               :error {:errors [{:code string,
                                  :location string,
-                                 :code string}]},
+                                 :message string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
+   :update {:manifest string,
             :labels [DeploymentUpdateLabelEntry],
-            :manifest string},
+            :description string},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:imports [ImportFile], :config ConfigFile},
+   :target {:config ConfigFile, :imports [ImportFile]},
    :fingerprint string}
   
   Patches a deployment and all of the resources described by the deployment manifest."
@@ -288,14 +292,14 @@
 (defn update$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/update
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
-  Optional parameters: deletePolicy, createPolicy, preview
+  Optional parameters: createPolicy, deletePolicy, preview
   
   Body: 
   
   {:description string,
-   :labels [{:value string, :key string}],
+   :labels [{:key string, :value string}],
    :name string,
    :operation {:description string,
                :creationTimestamp string,
@@ -304,11 +308,12 @@
                :name string,
                :targetId string,
                :endTime string,
+               :instancesBulkInsertOperationMetadata InstancesBulkInsertOperationMetadata,
                :statusMessage string,
                :selfLink string,
-               :warnings [{:message string,
-                           :data [{:value string, :key string}],
-                           :code string}],
+               :warnings [{:code string,
+                           :message string,
+                           :data [{:key string, :value string}]}],
                :clientOperationId string,
                :region string,
                :httpErrorStatusCode integer,
@@ -318,22 +323,23 @@
                :id string,
                :insertTime string,
                :kind string,
-               :error {:errors [{:message string,
+               :setCommonInstanceMetadataOperationMetadata SetCommonInstanceMetadataOperationMetadata,
+               :error {:errors [{:code string,
                                  :location string,
-                                 :code string}]},
+                                 :message string}]},
                :progress integer,
                :user string,
                :httpErrorMessage string,
                :operationType string},
    :selfLink string,
-   :update {:description string,
+   :update {:manifest string,
             :labels [DeploymentUpdateLabelEntry],
-            :manifest string},
+            :description string},
    :manifest string,
    :updateTime string,
    :id string,
    :insertTime string,
-   :target {:imports [ImportFile], :config ConfigFile},
+   :target {:config ConfigFile, :imports [ImportFile]},
    :fingerprint string}
   
   Updates a deployment and all of the resources described by the deployment manifest."
@@ -415,7 +421,7 @@
 (defn stop$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/deployments/stop
   
-  Required parameters: deployment, project
+  Required parameters: project, deployment
   
   Optional parameters: none
   
@@ -450,7 +456,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, filter, maxResults, orderBy
+  Optional parameters: maxResults, pageToken, filter, orderBy
   
   Lists all deployments for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

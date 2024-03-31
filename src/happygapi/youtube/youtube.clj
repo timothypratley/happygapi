@@ -15,16 +15,16 @@
   
   Body: 
   
-  {:kind string,
-   :etag string,
-   :replies {:comments [Comment]},
-   :id string,
-   :snippet {:videoId string,
+  {:replies {:comments [Comment]},
+   :kind string,
+   :snippet {:channelId string,
+             :topLevelComment Comment,
+             :videoId string,
              :totalReplyCount integer,
              :canReply boolean,
-             :isPublic boolean,
-             :channelId string,
-             :topLevelComment Comment}}
+             :isPublic boolean},
+   :id string,
+   :etag string}
   
   Updates an existing resource."
   {:scopes nil}

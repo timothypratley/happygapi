@@ -9,7 +9,7 @@
 (defn cancel$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/cancel
   
-  Required parameters: projectId, jobId
+  Required parameters: jobId, projectId
   
   Optional parameters: location
   
@@ -22,7 +22,34 @@
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs/{jobId}/cancel"
+     "projects/{+projectId}/jobs/{+jobId}/cancel"
+     #{:projectId :jobId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/delete
+  
+  Required parameters: jobId, projectId
+  
+  Optional parameters: location
+  
+  Requests the deletion of the metadata of a job. This call returns when the job's metadata is deleted."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:projectId :jobId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/jobs/{+jobId}/delete"
      #{:projectId :jobId}
      parameters)
     (merge-with
@@ -50,7 +77,7 @@
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs/{jobId}"
+     "projects/{+projectId}/jobs/{+jobId}"
      #{:projectId :jobId}
      parameters)
     (merge-with
@@ -61,23 +88,24 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/delete
+(defn getQueryResults$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/getQueryResults
   
   Required parameters: jobId, projectId
   
-  Optional parameters: location
+  Optional parameters: formatOptions.useInt64Timestamp, location, maxResults, pageToken, startIndex, timeoutMs
   
-  Requests that a job is deleted. This call will return when the job is deleted. This method is available in limited preview."
+  RPC to get the results of a query job."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:projectId :jobId})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/jobs/{+jobId}/delete"
+     "projects/{+projectId}/queries/{+jobId}"
      #{:projectId :jobId}
      parameters)
     (merge-with
@@ -88,8 +116,8 @@
       :as :json}
      auth))))
 
-(defn query$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/query
+(defn insert$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/insert
   
   Required parameters: projectId
   
@@ -97,37 +125,60 @@
   
   Body: 
   
-  {:dryRun boolean,
-   :labels {},
-   :maximumBytesBilled string,
-   :queryParameters [{:name string,
-                      :parameterType QueryParameterType,
-                      :parameterValue QueryParameterValue}],
-   :parameterMode string,
-   :connectionProperties [{:key string, :value string}],
-   :defaultDataset {:projectId string, :datasetId string},
-   :preserveNulls boolean,
-   :timeoutMs integer,
-   :requestId string,
+  {:principal_subject string,
+   :selfLink string,
+   :etag string,
+   :user_email string,
+   :jobReference {:jobId string, :location string, :projectId string},
+   :statistics {:reservation_id string,
+                :creationTime string,
+                :load JobStatistics3,
+                :dataMaskingStatistics DataMaskingStatistics,
+                :transactionInfo TransactionInfo,
+                :copy JobStatistics5,
+                :startTime string,
+                :reservationUsage [{:name string, :slotMs string}],
+                :endTime string,
+                :totalSlotMs string,
+                :completionRatio number,
+                :numChildJobs string,
+                :finalExecutionDurationMs string,
+                :parentJobId string,
+                :rowLevelSecurityStatistics RowLevelSecurityStatistics,
+                :extract JobStatistics4,
+                :totalBytesProcessed string,
+                :scriptStatistics ScriptStatistics,
+                :quotaDeferments [string],
+                :query JobStatistics2,
+                :sessionInfo SessionInfo},
+   :jobCreationReason {:code string},
+   :status {:errorResult ErrorProto,
+            :errors [ErrorProto],
+            :state string},
+   :id string,
    :kind string,
-   :useQueryCache boolean,
-   :query string,
-   :useLegacySql boolean,
-   :location string,
-   :createSession boolean,
-   :maxResults integer}
+   :configuration {:copy JobConfigurationTableCopy,
+                   :dryRun boolean,
+                   :extract JobConfigurationExtract,
+                   :jobTimeoutMs string,
+                   :jobType string,
+                   :labels {},
+                   :load JobConfigurationLoad,
+                   :query JobConfigurationQuery}}
   
-  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
+  Starts a new asynchronous job. This API has two different kinds of endpoint URIs, as this method supports a variety of use cases. * The *Metadata* URI is used for most interactions, as it accepts the job configuration directly. * The *Upload* URI is ONLY for the case when you're sending both a load job configuration and a data stream together. In this case, the Upload URI accepts the job configuration and the data as two distinct multipart MIME parts."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+            "https://www.googleapis.com/auth/devstorage.full_control"
+            "https://www.googleapis.com/auth/devstorage.read_only"
+            "https://www.googleapis.com/auth/devstorage.read_write"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/queries"
+     "projects/{+projectId}/jobs"
      #{:projectId}
      parameters)
     (merge-with
@@ -157,7 +208,7 @@
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs"
+     "projects/{+projectId}/jobs"
      #{:projectId}
      parameters)
     (merge-with
@@ -168,8 +219,8 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/insert
+(defn query$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/query
   
   Required parameters: projectId
   
@@ -177,55 +228,40 @@
   
   Body: 
   
-  {:selfLink string,
-   :etag string,
-   :user_email string,
-   :jobReference {:jobId string, :location string, :projectId string},
-   :statistics {:reservation_id string,
-                :creationTime string,
-                :load JobStatistics3,
-                :transactionInfo TransactionInfo,
-                :startTime string,
-                :reservationUsage [{:slotMs string, :name string}],
-                :endTime string,
-                :totalSlotMs string,
-                :completionRatio number,
-                :numChildJobs string,
-                :parentJobId string,
-                :rowLevelSecurityStatistics RowLevelSecurityStatistics,
-                :extract JobStatistics4,
-                :totalBytesProcessed string,
-                :scriptStatistics ScriptStatistics,
-                :quotaDeferments [string],
-                :query JobStatistics2,
-                :sessionInfo SessionInfo},
-   :status {:errors [ErrorProto],
-            :errorResult ErrorProto,
-            :state string},
-   :id string,
+  {:dryRun boolean,
+   :labels {},
+   :maximumBytesBilled string,
+   :queryParameters [{:name string,
+                      :parameterType QueryParameterType,
+                      :parameterValue QueryParameterValue}],
+   :parameterMode string,
+   :connectionProperties [{:key string, :value string}],
+   :jobCreationMode string,
+   :continuous boolean,
+   :defaultDataset {:datasetId string, :projectId string},
+   :preserveNulls boolean,
+   :timeoutMs integer,
+   :requestId string,
    :kind string,
-   :configuration {:extract JobConfigurationExtract,
-                   :load JobConfigurationLoad,
-                   :jobType string,
-                   :copy JobConfigurationTableCopy,
-                   :query JobConfigurationQuery,
-                   :dryRun boolean,
-                   :labels {},
-                   :jobTimeoutMs string}}
+   :useQueryCache boolean,
+   :formatOptions {:useInt64Timestamp boolean},
+   :query string,
+   :useLegacySql boolean,
+   :location string,
+   :createSession boolean,
+   :maxResults integer}
   
-  Starts a new asynchronous job. Requires the Can View project role."
+  Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/devstorage.full_control"
-            "https://www.googleapis.com/auth/devstorage.read_only"
-            "https://www.googleapis.com/auth/devstorage.read_write"]}
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:projectId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/jobs"
+     "projects/{+projectId}/queries"
      #{:projectId}
      parameters)
     (merge-with
@@ -233,34 +269,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getQueryResults$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/jobs/getQueryResults
-  
-  Required parameters: jobId, projectId
-  
-  Optional parameters: timeoutMs, pageToken, maxResults, startIndex, location
-  
-  Retrieves the results of a query job."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:projectId :jobId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/queries/{jobId}"
-     #{:projectId :jobId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

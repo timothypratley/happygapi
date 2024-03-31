@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/get
   
-  Required parameters: region, project, disk
+  Required parameters: disk, project, region
   
   Optional parameters: none
   
@@ -34,26 +34,52 @@
       :as :json}
      auth))))
 
+(defn stopAsyncReplication$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/stopAsyncReplication
+  
+  Required parameters: disk, project, region
+  
+  Optional parameters: requestId
+  
+  Stops asynchronous replication. Can be invoked either on the primary or on the secondary disk."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/disks/{disk}/stopAsyncReplication"
+     #{:disk :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/setIamPolicy
   
-  Required parameters: resource, region, project
+  Required parameters: project, region, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:etag string,
-   :bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]}}
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -80,57 +106,74 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId, sourceImage
   
   Body: 
   
   {:description string,
+   :provisionedThroughput string,
    :labels {},
    :locationHint string,
-   :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
+   :sourceSnapshotEncryptionKey {:rawKey string,
+                                 :rsaEncryptedKey string,
+                                 :kmsKeyName string,
                                  :sha256 string,
-                                 :rawKey string,
-                                 :rsaEncryptedKey string},
+                                 :kmsKeyServiceAccount string},
    :guestOsFeatures [{:type string}],
    :resourcePolicies [string],
    :sourceImage string,
+   :sourceConsistencyGroupPolicyId string,
    :sourceDiskId string,
+   :architecture string,
    :creationTimestamp string,
-   :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
+   :resourceStatus {:asyncPrimaryDisk DiskResourceStatusAsyncReplicationStatus,
+                    :asyncSecondaryDisks {}},
+   :satisfiesPzi boolean,
+   :sourceImageEncryptionKey {:rawKey string,
+                              :rsaEncryptedKey string,
+                              :kmsKeyName string,
                               :sha256 string,
-                              :rawKey string,
-                              :rsaEncryptedKey string},
+                              :kmsKeyServiceAccount string},
    :zone string,
    :name string,
    :sizeGb string,
+   :storagePool string,
    :sourceDisk string,
    :physicalBlockSizeBytes string,
    :sourceImageId string,
    :lastDetachTimestamp string,
+   :params {:resourceManagerTags {}},
    :licenses [string],
    :selfLink string,
    :type string,
    :sourceSnapshot string,
+   :sourceInstantSnapshot string,
    :region string,
    :lastAttachTimestamp string,
    :satisfiesPzs boolean,
    :status string,
    :id string,
+   :asyncPrimaryDisk {:disk string,
+                      :diskId string,
+                      :consistencyGroupPolicy string,
+                      :consistencyGroupPolicyId string},
+   :sourceInstantSnapshotId string,
    :kind string,
    :sourceSnapshotId string,
    :sourceStorageObject string,
+   :asyncSecondaryDisks {},
    :licenseCodes [string],
    :replicaZones [string],
    :options string,
-   :diskEncryptionKey {:kmsKeyName string,
-                       :kmsKeyServiceAccount string,
+   :diskEncryptionKey {:rawKey string,
+                       :rsaEncryptedKey string,
+                       :kmsKeyName string,
                        :sha256 string,
-                       :rawKey string,
-                       :rsaEncryptedKey string},
+                       :kmsKeyServiceAccount string},
+   :enableConfidentialCompute boolean,
+   :sourceConsistencyGroupPolicy string,
    :users [string],
    :labelFingerprint string,
    :provisionedIops string}
@@ -157,10 +200,43 @@
       :as :json}
      auth))))
 
+(defn startAsyncReplication$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/startAsyncReplication
+  
+  Required parameters: disk, project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:asyncSecondaryDisk string}
+  
+  Starts asynchronous replication. Must be invoked on the primary disk."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/disks/{disk}/startAsyncReplication"
+     #{:disk :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/testIamPermissions
   
-  Required parameters: project, resource, region
+  Required parameters: project, region, resource
   
   Optional parameters: none
   
@@ -194,7 +270,7 @@
 (defn createSnapshot$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/createSnapshot
   
-  Required parameters: project, region, disk
+  Required parameters: disk, project, region
   
   Optional parameters: requestId
   
@@ -203,37 +279,53 @@
   {:description string,
    :labels {},
    :autoCreated boolean,
+   :snapshotType string,
    :locationHint string,
+   :guestOsFeatures [{:type string}],
    :sourceDiskId string,
+   :architecture string,
    :downloadBytes string,
    :creationTimestamp string,
    :chainName string,
+   :satisfiesPzi boolean,
    :name string,
+   :sourceDiskForRecoveryCheckpoint string,
    :sourceDisk string,
+   :sourceSnapshotSchedulePolicy string,
    :licenses [string],
    :selfLink string,
-   :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
+   :sourceInstantSnapshot string,
+   :sourceDiskEncryptionKey {:rawKey string,
+                             :rsaEncryptedKey string,
+                             :kmsKeyName string,
                              :sha256 string,
-                             :rawKey string,
-                             :rsaEncryptedKey string},
+                             :kmsKeyServiceAccount string},
    :satisfiesPzs boolean,
    :status string,
    :id string,
+   :sourceInstantSnapshotId string,
    :kind string,
+   :sourceInstantSnapshotEncryptionKey {:rawKey string,
+                                        :rsaEncryptedKey string,
+                                        :kmsKeyName string,
+                                        :sha256 string,
+                                        :kmsKeyServiceAccount string},
    :diskSizeGb string,
    :licenseCodes [string],
    :storageBytesStatus string,
-   :snapshotEncryptionKey {:kmsKeyName string,
-                           :kmsKeyServiceAccount string,
+   :snapshotEncryptionKey {:rawKey string,
+                           :rsaEncryptedKey string,
+                           :kmsKeyName string,
                            :sha256 string,
-                           :rawKey string,
-                           :rsaEncryptedKey string},
+                           :kmsKeyServiceAccount string},
+   :creationSizeBytes string,
    :storageLocations [string],
    :storageBytes string,
-   :labelFingerprint string}
+   :enableConfidentialCompute boolean,
+   :labelFingerprint string,
+   :sourceSnapshotSchedulePolicyId string}
   
-  Creates a snapshot of this regional disk."
+  Creates a snapshot of a specified persistent disk. For regular snapshot creation, consider using snapshots.insert instead, as that method supports more features, such as creating snapshots in a project different from the source disk project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -264,7 +356,7 @@
   
   Body: 
   
-  {:labelFingerprint string, :labels {}}
+  {:labels {}, :labelFingerprint string}
   
   Sets the labels on the target regional disk."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -291,7 +383,7 @@
 (defn removeResourcePolicies$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/removeResourcePolicies
   
-  Required parameters: project, disk, region
+  Required parameters: disk, project, region
   
   Optional parameters: requestId
   
@@ -321,10 +413,140 @@
       :as :json}
      auth))))
 
+(defn stopGroupAsyncReplication$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/stopGroupAsyncReplication
+  
+  Required parameters: project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:resourcePolicy string}
+  
+  Stops asynchronous replication for a consistency group of disks. Can be invoked either in the primary or secondary scope."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/disks/stopGroupAsyncReplication"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/update
+  
+  Required parameters: disk, project, region
+  
+  Optional parameters: paths, requestId, updateMask
+  
+  Body: 
+  
+  {:description string,
+   :provisionedThroughput string,
+   :labels {},
+   :locationHint string,
+   :sourceSnapshotEncryptionKey {:rawKey string,
+                                 :rsaEncryptedKey string,
+                                 :kmsKeyName string,
+                                 :sha256 string,
+                                 :kmsKeyServiceAccount string},
+   :guestOsFeatures [{:type string}],
+   :resourcePolicies [string],
+   :sourceImage string,
+   :sourceConsistencyGroupPolicyId string,
+   :sourceDiskId string,
+   :architecture string,
+   :creationTimestamp string,
+   :resourceStatus {:asyncPrimaryDisk DiskResourceStatusAsyncReplicationStatus,
+                    :asyncSecondaryDisks {}},
+   :satisfiesPzi boolean,
+   :sourceImageEncryptionKey {:rawKey string,
+                              :rsaEncryptedKey string,
+                              :kmsKeyName string,
+                              :sha256 string,
+                              :kmsKeyServiceAccount string},
+   :zone string,
+   :name string,
+   :sizeGb string,
+   :storagePool string,
+   :sourceDisk string,
+   :physicalBlockSizeBytes string,
+   :sourceImageId string,
+   :lastDetachTimestamp string,
+   :params {:resourceManagerTags {}},
+   :licenses [string],
+   :selfLink string,
+   :type string,
+   :sourceSnapshot string,
+   :sourceInstantSnapshot string,
+   :region string,
+   :lastAttachTimestamp string,
+   :satisfiesPzs boolean,
+   :status string,
+   :id string,
+   :asyncPrimaryDisk {:disk string,
+                      :diskId string,
+                      :consistencyGroupPolicy string,
+                      :consistencyGroupPolicyId string},
+   :sourceInstantSnapshotId string,
+   :kind string,
+   :sourceSnapshotId string,
+   :sourceStorageObject string,
+   :asyncSecondaryDisks {},
+   :licenseCodes [string],
+   :replicaZones [string],
+   :options string,
+   :diskEncryptionKey {:rawKey string,
+                       :rsaEncryptedKey string,
+                       :kmsKeyName string,
+                       :sha256 string,
+                       :kmsKeyServiceAccount string},
+   :enableConfidentialCompute boolean,
+   :sourceConsistencyGroupPolicy string,
+   :users [string],
+   :labelFingerprint string,
+   :provisionedIops string}
+  
+  Update the specified disk with the data included in the request. Update is performed only on selected fields included as part of update-mask. Only the following fields can be modified: user_license."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:disk :region :project})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/disks/{disk}"
+     #{:disk :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/delete
   
-  Required parameters: region, project, disk
+  Required parameters: disk, project, region
   
   Optional parameters: requestId
   
@@ -351,7 +573,7 @@
 (defn resize$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/resize
   
-  Required parameters: region, disk, project
+  Required parameters: disk, project, region
   
   Optional parameters: requestId
   
@@ -384,7 +606,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/getIamPolicy
   
-  Required parameters: project, resource, region
+  Required parameters: project, region, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -412,7 +634,7 @@
 (defn addResourcePolicies$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/addResourcePolicies
   
-  Required parameters: project, region, disk
+  Required parameters: disk, project, region
   
   Optional parameters: requestId
   
@@ -445,9 +667,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: maxResults, orderBy, pageToken, filter, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of persistent disks contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -465,6 +687,39 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bulkInsert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionDisks/bulkInsert
+  
+  Required parameters: project, region
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:sourceConsistencyGroupPolicy string}
+  
+  Bulk create a set of disks."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/disks/bulkInsert"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -11,7 +11,7 @@
   
   Required parameters: url
   
-  Optional parameters: category, locale, utm_campaign, captchaToken, strategy, utm_source
+  Optional parameters: category, locale, strategy, utm_campaign, utm_source, captchaToken
   
   Runs PageSpeed analysis on the page at the specified URL, and returns PageSpeed scores, a list of suggestions to make that page faster, and other information."
   {:scopes ["openid"]}

@@ -9,7 +9,7 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationssettings/list
   
-  Required parameters: productId, enterpriseId
+  Required parameters: enterpriseId, productId
   
   Optional parameters: none
   

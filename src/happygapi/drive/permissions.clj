@@ -1,6 +1,6 @@
 (ns happygapi.drive.permissions
-  "Drive API: permissions.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: permissions.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/permissions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -22,21 +22,22 @@
    :displayName string,
    :emailAddress string,
    :type string,
-   :permissionDetails [{:inherited boolean,
+   :permissionDetails [{:permissionType string,
                         :inheritedFrom string,
-                        :permissionType string,
-                        :role string}],
-   :teamDrivePermissionDetails [{:inherited boolean,
+                        :role string,
+                        :inherited boolean}],
+   :teamDrivePermissionDetails [{:teamDrivePermissionType string,
                                  :inheritedFrom string,
                                  :role string,
-                                 :teamDrivePermissionType string}],
+                                 :inherited boolean}],
    :id string,
    :kind string,
+   :pendingOwner boolean,
    :domain string,
    :view string,
    :photoLink string}
   
-  Creates a permission for a file or shared drive."
+  Creates a permission for a file or shared drive. **Warning:** Concurrent permissions operations on the same file are not supported; only the last update is applied."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth parameters body]
@@ -65,7 +66,7 @@
   
   Optional parameters: supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
   
-  Deletes a permission."
+  Deletes a permission. **Warning:** Concurrent permissions operations on the same file are not supported; only the last update is applied."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth parameters]
@@ -121,7 +122,7 @@
   
   Required parameters: fileId
   
-  Optional parameters: includePermissionsForView, pageSize, pageToken, supportsAllDrives, supportsTeamDrives, useDomainAdminAccess
+  Optional parameters: pageSize, pageToken, supportsAllDrives, supportsTeamDrives, useDomainAdminAccess, includePermissionsForView
   
   Lists a file's or shared drive's permissions."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -163,21 +164,22 @@
    :displayName string,
    :emailAddress string,
    :type string,
-   :permissionDetails [{:inherited boolean,
+   :permissionDetails [{:permissionType string,
                         :inheritedFrom string,
-                        :permissionType string,
-                        :role string}],
-   :teamDrivePermissionDetails [{:inherited boolean,
+                        :role string,
+                        :inherited boolean}],
+   :teamDrivePermissionDetails [{:teamDrivePermissionType string,
                                  :inheritedFrom string,
                                  :role string,
-                                 :teamDrivePermissionType string}],
+                                 :inherited boolean}],
    :id string,
    :kind string,
+   :pendingOwner boolean,
    :domain string,
    :view string,
    :photoLink string}
   
-  Updates a permission with patch semantics."
+  Updates a permission with patch semantics. **Warning:** Concurrent permissions operations on the same file are not supported; only the last update is applied."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth parameters body]

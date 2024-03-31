@@ -1,15 +1,15 @@
 (ns happygapi.dfareporting.platformTypes
   "Campaign Manager 360 API: platformTypes.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/platformTypes"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/platformTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/platformTypes/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/platformTypes/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/platformTypes/{id}"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/platformTypes/{+id}"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/platformTypes/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/platformTypes/list
   
   Required parameters: profileId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/platformTypes"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/platformTypes"
      #{:profileId}
      parameters)
     (merge-with

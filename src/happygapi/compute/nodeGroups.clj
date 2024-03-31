@@ -37,22 +37,21 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/setIamPolicy
   
-  Required parameters: zone, project, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]},
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
    :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
@@ -80,7 +79,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/insert
   
-  Required parameters: zone, project, initialNodeCount
+  Required parameters: initialNodeCount, project, zone
   
   Optional parameters: requestId
   
@@ -91,6 +90,7 @@
    :creationTimestamp string,
    :zone string,
    :name string,
+   :shareSettings {:shareType string, :projectMap {}},
    :selfLink string,
    :size integer,
    :nodeTemplate string,
@@ -98,10 +98,10 @@
    :status string,
    :id string,
    :kind string,
-   :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
+   :maintenanceWindow {:startTime string, :maintenanceDuration Duration},
    :autoscalingPolicy {:mode string,
-                       :maxNodes integer,
-                       :minNodes integer},
+                       :minNodes integer,
+                       :maxNodes integer},
    :fingerprint string}
   
   Creates a NodeGroup resource in the specified project using the data included in the request."
@@ -131,7 +131,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/patch
   
-  Required parameters: project, zone, nodeGroup
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: requestId
   
@@ -142,6 +142,7 @@
    :creationTimestamp string,
    :zone string,
    :name string,
+   :shareSettings {:shareType string, :projectMap {}},
    :selfLink string,
    :size integer,
    :nodeTemplate string,
@@ -149,10 +150,10 @@
    :status string,
    :id string,
    :kind string,
-   :maintenanceWindow {:maintenanceDuration Duration, :startTime string},
+   :maintenanceWindow {:startTime string, :maintenanceDuration Duration},
    :autoscalingPolicy {:mode string,
-                       :maxNodes integer,
-                       :minNodes integer},
+                       :minNodes integer,
+                       :maxNodes integer},
    :fingerprint string}
   
   Updates the specified node group."
@@ -180,7 +181,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/testIamPermissions
   
-  Required parameters: resource, project, zone
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
@@ -216,9 +217,9 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, pageToken, maxResults, filter, includeAllScopes
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of node groups. Note: use nodeGroups.listNodes for more details about each group."
+  Retrieves an aggregated list of node groups. Note: use nodeGroups.listNodes for more details about each group. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -242,7 +243,7 @@
 (defn addNodes$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/addNodes
   
-  Required parameters: project, zone, nodeGroup
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: requestId
   
@@ -302,7 +303,7 @@
 (defn deleteNodes$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/deleteNodes
   
-  Required parameters: zone, nodeGroup, project
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: requestId
   
@@ -335,7 +336,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/getIamPolicy
   
-  Required parameters: project, zone, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -363,9 +364,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/list
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, orderBy, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of node groups available to the specified project. Note: use nodeGroups.listNodes for more details about each group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -391,7 +392,7 @@
 (defn setNodeTemplate$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/setNodeTemplate
   
-  Required parameters: nodeGroup, zone, project
+  Required parameters: nodeGroup, project, zone
   
   Optional parameters: requestId
   
@@ -421,12 +422,45 @@
       :as :json}
      auth))))
 
+(defn simulateMaintenanceEvent$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/simulateMaintenanceEvent
+  
+  Required parameters: nodeGroup, project, zone
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:nodes [string]}
+  
+  Simulates maintenance event on specified nodes from the node group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :nodeGroup :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/simulateMaintenanceEvent"
+     #{:zone :nodeGroup :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn listNodes$
   "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/listNodes
   
-  Required parameters: project, zone, nodeGroup
+  Required parameters: nodeGroup, project, zone
   
-  Optional parameters: returnPartialSuccess, orderBy, maxResults, pageToken, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists nodes in the node group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

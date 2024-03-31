@@ -9,7 +9,7 @@
 (defn get$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/connect/get
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: readTime
   
@@ -36,13 +36,16 @@
 (defn generateEphemeral$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/connect/generateEphemeral
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
   Body: 
   
-  {:access_token string, :readTime string, :public_key string}
+  {:public_key string,
+   :access_token string,
+   :readTime string,
+   :validDuration string}
   
   Generates a short-lived X509 certificate containing the provided public key and signed by a private key specific to the target instance. Users may use the certificate to authenticate as themselves when connecting to the database."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

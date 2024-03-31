@@ -6,14 +6,42 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/acceleratorTypes/list
+  
+  Required parameters: project, zone
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Retrieves a list of accelerator types that are available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/acceleratorTypes"
+     #{:zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn aggregatedList$
   "https://cloud.google.com/compute/api/reference/rest/v1/acceleratorTypes/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, filter, orderBy, pageToken, includeAllScopes, maxResults
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of accelerator types."
+  Retrieves an aggregated list of accelerator types. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -55,34 +83,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/zones/{zone}/acceleratorTypes/{acceleratorType}"
      #{:acceleratorType :zone :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/acceleratorTypes/list
-  
-  Required parameters: zone, project
-  
-  Optional parameters: returnPartialSuccess, maxResults, orderBy, filter, pageToken
-  
-  Retrieves a list of accelerator types that are available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/zones/{zone}/acceleratorTypes"
-     #{:zone :project}
      parameters)
     (merge-with
      merge

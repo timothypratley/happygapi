@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getRest$
-  "https://developers.google.com/discovery/api/reference/rest/v1/apis/getRest
-  
-  Required parameters: version, api
-  
-  Optional parameters: none
-  
-  Retrieve the description of a particular version of an api."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:api :version})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/discovery/v1/"
-     "apis/{api}/{version}/rest"
-     #{:api :version}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/discovery/api/reference/rest/v1/apis/list
   
@@ -49,6 +23,32 @@
      "https://www.googleapis.com/discovery/v1/"
      "apis"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getRest$
+  "https://developers.google.com/discovery/api/reference/rest/v1/apis/getRest
+  
+  Required parameters: version, api
+  
+  Optional parameters: none
+  
+  Retrieve the description of a particular version of an api."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:api :version})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/discovery/v1/"
+     "apis/{api}/{version}/rest"
+     #{:api :version}
      parameters)
     (merge-with
      merge

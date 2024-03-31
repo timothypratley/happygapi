@@ -1,6 +1,6 @@
 (ns happygapi.drive.drives
-  "Drive API: drives.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: drives.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/drives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -25,6 +25,7 @@
                   :canDeleteChildren boolean,
                   :canListChildren boolean,
                   :canRename boolean,
+                  :canChangeSharingFoldersRequiresOrganizerPermissionRestriction boolean,
                   :canReadRevisions boolean,
                   :canDeleteDrive boolean,
                   :canChangeCopyRequiresWriterPermissionRestriction boolean,
@@ -32,17 +33,20 @@
                   :canComment boolean,
                   :canAddChildren boolean,
                   :canChangeDriveBackground boolean,
+                  :canResetDriveRestrictions boolean,
                   :canShare boolean},
-   :restrictions {:adminManagedRestrictions boolean,
-                  :copyRequiresWriterPermission boolean,
+   :restrictions {:copyRequiresWriterPermission boolean,
                   :domainUsersOnly boolean,
-                  :driveMembersOnly boolean},
+                  :driveMembersOnly boolean,
+                  :adminManagedRestrictions boolean,
+                  :sharingFoldersRequiresOrganizerPermission boolean},
    :themeId string,
    :backgroundImageFile {:id string,
-                         :width number,
                          :xCoordinate number,
-                         :yCoordinate number},
+                         :yCoordinate number,
+                         :width number},
    :name string,
+   :orgUnitId string,
    :createdTime string,
    :hidden boolean,
    :id string,
@@ -50,7 +54,7 @@
    :colorRgb string,
    :backgroundImageLink string}
   
-  Creates a new shared drive."
+  Creates a shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:requestId})]}
@@ -76,9 +80,9 @@
   
   Required parameters: driveId
   
-  Optional parameters: none
+  Optional parameters: useDomainAdminAccess, allowItemDeletion
   
-  Permanently deletes a shared drive for which the user is an organizer. The shared drive cannot contain any untrashed items."
+  Permanently deletes a shared drive for which the user is an `organizer`. The shared drive cannot contain any untrashed items."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:driveId})]}
@@ -157,7 +161,7 @@
   
   Optional parameters: pageSize, pageToken, q, useDomainAdminAccess
   
-  Lists the user's shared drives."
+   Lists the user's shared drives. This method accepts the `q` parameter, which is a search query combining one or more search terms. For more information, see the [Search for shared drives](/drive/api/guides/search-shareddrives) guide."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth parameters]
@@ -222,6 +226,7 @@
                   :canDeleteChildren boolean,
                   :canListChildren boolean,
                   :canRename boolean,
+                  :canChangeSharingFoldersRequiresOrganizerPermissionRestriction boolean,
                   :canReadRevisions boolean,
                   :canDeleteDrive boolean,
                   :canChangeCopyRequiresWriterPermissionRestriction boolean,
@@ -229,17 +234,20 @@
                   :canComment boolean,
                   :canAddChildren boolean,
                   :canChangeDriveBackground boolean,
+                  :canResetDriveRestrictions boolean,
                   :canShare boolean},
-   :restrictions {:adminManagedRestrictions boolean,
-                  :copyRequiresWriterPermission boolean,
+   :restrictions {:copyRequiresWriterPermission boolean,
                   :domainUsersOnly boolean,
-                  :driveMembersOnly boolean},
+                  :driveMembersOnly boolean,
+                  :adminManagedRestrictions boolean,
+                  :sharingFoldersRequiresOrganizerPermission boolean},
    :themeId string,
    :backgroundImageFile {:id string,
-                         :width number,
                          :xCoordinate number,
-                         :yCoordinate number},
+                         :yCoordinate number,
+                         :width number},
    :name string,
+   :orgUnitId string,
    :createdTime string,
    :hidden boolean,
    :id string,

@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: categoryId, maxAllowedMaturityRating, pageToken, locale, pageSize
+  Optional parameters: categoryId, locale, maxAllowedMaturityRating, pageSize, pageToken
   
   List available volumes under categories for onboarding experience."
   {:scopes ["https://www.googleapis.com/auth/books"]}

@@ -1,13 +1,13 @@
 (ns happygapi.firebaseappcheck.jwks
   "Firebase App Check API: jwks.
-  App Check works alongside other Firebase services to help protect your backend resources from abuse, such as billing fraud or phishing. With App Check, devices running your app will use an app or device attestation provider that attests to one or both of the following: * Requests originate from your authentic app * Requests originate from an authentic, untampered device This attestation is attached to every request your app makes to your Firebase backend resources. The Firebase App Check REST API allows you to manage your App Check configurations programmatically. It also allows you to exchange attestation material for App Check tokens directly without using a Firebase SDK. Finally, it allows you to obtain the public key set necessary to validate an App Check token yourself. [Learn more about App Check](https://firebase.google.com/docs/app-check).
-  See: https://firebase.google.com/docs/app-checkapi/reference/rest/v1beta/jwks"
+  Firebase App Check works alongside other Firebase services to help protect your backend resources from abuse, such as billing fraud or phishing.
+  See: https://firebase.google.com/docs/app-checkapi/reference/rest/v1/jwks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://firebase.google.com/docs/app-checkapi/reference/rest/v1beta/jwks/get
+  "https://firebase.google.com/docs/app-checkapi/reference/rest/v1/jwks/get
   
   Required parameters: name
   
@@ -22,7 +22,7 @@
    (http/get
     (util/get-url
      "https://firebaseappcheck.googleapis.com/"
-     "v1beta/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with

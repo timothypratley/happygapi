@@ -1,270 +1,239 @@
 {:SocialMetaTagInfo {:id "SocialMetaTagInfo",
-                     :type "object",
                      :description "Parameters for social meta tag params. Used to set meta tag data for link previews on social sites.",
                      :properties {:socialTitle {:type "string",
                                                 :description "Title to be displayed. Optional."},
-                                  :socialImageLink {:type "string",
-                                                    :description "An image url string. Optional."},
-                                  :socialDescription {:type "string",
-                                                      :description "A short description of the link. Optional."}}},
- :GetIosPostInstallAttributionResponse {:id "GetIosPostInstallAttributionResponse",
-                                        :properties {:resolvedLink {:description "The entire FDL, expanded from a short link. It is the same as the requested_link, if it is long. Parameters from this should not be used directly (ie: server can default utm_[campaign|medium|source] to a value when requested_link lack them, server determine the best fallback_link when requested_link specifies >1 fallback links).",
+                                  :socialImageLink {:description "An image url string. Optional.",
+                                                    :type "string"},
+                                  :socialDescription {:description "A short description of the link. Optional.",
+                                                      :type "string"}},
+                     :type "object"},
+ :GetIosPostInstallAttributionResponse {:properties {:resolvedLink {:description "The entire FDL, expanded from a short link. It is the same as the requested_link, if it is long. Parameters from this should not be used directly (ie: server can default utm_[campaign|medium|source] to a value when requested_link lack them, server determine the best fallback_link when requested_link specifies >1 fallback links).",
                                                                     :type "string"},
                                                      :externalBrowserDestinationLink {:type "string",
                                                                                       :description "User-agent specific custom-scheme URIs for iSDK to open. This will be set according to the user-agent tha the click was originally made in. There is no Safari-equivalent custom-scheme open URLs. ie: googlechrome://www.example.com ie: firefox://open-url?url=http://www.example.com ie: opera-http://example.com"},
-                                                     :requestIpVersion {:enumDescriptions ["Unset."
-                                                                                           "Request made from an IPv4 IP address."
-                                                                                           "Request made from an IPv6 IP address."],
-                                                                        :type "string",
+                                                     :requestIpVersion {:type "string",
                                                                         :enum ["UNKNOWN_IP_VERSION"
                                                                                "IP_V4"
                                                                                "IP_V6"],
-                                                                        :description "Which IP version the request was made from."},
-                                                     :matchMessage {:description "Describes why match failed, ie: \"discarded due to low confidence\". This message will be publicly visible.",
-                                                                    :type "string"},
-                                                     :utmTerm {:type "string",
-                                                               :description "Scion term value to be propagated by iSDK to Scion at app-reopen."},
-                                                     :deepLink {:description "The deep-link attributed post-install via one of several techniques (fingerprint, copy unique).",
+                                                                        :description "Which IP version the request was made from.",
+                                                                        :enumDescriptions ["Unset."
+                                                                                           "Request made from an IPv4 IP address."
+                                                                                           "Request made from an IPv6 IP address."]},
+                                                     :matchMessage {:type "string",
+                                                                    :description "Describes why match failed, ie: \"discarded due to low confidence\". This message will be publicly visible."},
+                                                     :utmTerm {:description "Scion term value to be propagated by iSDK to Scion at app-reopen.",
+                                                               :type "string"},
+                                                     :deepLink {:description "The deep-link attributed post-install via one of several techniques (device heuristics, copy unique).",
                                                                 :type "string"},
                                                      :fallbackLink {:type "string",
                                                                     :description "The link to navigate to update the app if min version is not met. This is either (in order): 1) fallback link (from ?ifl= parameter, if specified by developer) or 2) AppStore URL (from ?isi= parameter, if specified), or 3) the payload link (from required link= parameter)."},
-                                                     :requestedLink {:description "Entire FDL (short or long) attributed post-install via one of several techniques (fingerprint, copy unique).",
-                                                                     :type "string"},
-                                                     :invitationId {:description "Invitation ID attributed post-install via one of several techniques (fingerprint, copy unique).",
+                                                     :requestedLink {:type "string",
+                                                                     :description "Entire FDL (short or long) attributed post-install via one of several techniques (device heuristics, copy unique)."},
+                                                     :invitationId {:description "Invitation ID attributed post-install via one of several techniques (device heuristics, copy unique).",
                                                                     :type "string"},
                                                      :utmContent {:description "Scion content value to be propagated by iSDK to Scion at app-reopen.",
                                                                   :type "string"},
-                                                     :utmCampaign {:description "Scion campaign value to be propagated by iSDK to Scion at post-install.",
-                                                                   :type "string"},
+                                                     :utmCampaign {:type "string",
+                                                                   :description "Scion campaign value to be propagated by iSDK to Scion at post-install."},
                                                      :isStrongMatchExecutable {:description "Instruction for iSDK to attemmpt to perform strong match. For instance, if browser does not support/allow cookie or outside of support browsers, this will be false.",
                                                                                :type "boolean"},
                                                      :utmMedium {:type "string",
                                                                  :description "Scion medium value to be propagated by iSDK to Scion at post-install."},
                                                      :appMinimumVersion {:type "string",
                                                                          :description "The minimum version for app, specified by dev through ?imv= parameter. Return to iSDK to allow app to evaluate if current version meets this."},
-                                                     :utmSource {:description "Scion source value to be propagated by iSDK to Scion at post-install.",
-                                                                 :type "string"},
-                                                     :attributionConfidence {:type "string",
-                                                                             :enumDescriptions ["Unset."
-                                                                                                "Weak confidence, more than one matching link found or link suspected to be false positive"
-                                                                                                "Default confidence, match based on fingerprint"
-                                                                                                "Unique confidence, match based on \"unique match link to check\" or other means"],
+                                                     :utmSource {:type "string",
+                                                                 :description "Scion source value to be propagated by iSDK to Scion at post-install."},
+                                                     :attributionConfidence {:enumDescriptions ["Unset."
+                                                                                                "Weak confidence, more than one matching link found or link suspected to be false positive."
+                                                                                                "Default confidence, match based on device heuristics."
+                                                                                                "Unique confidence, match based on \"unique match link to check\" or other means."],
+                                                                             :type "string",
                                                                              :enum ["UNKNOWN_ATTRIBUTION_CONFIDENCE"
                                                                                     "WEAK"
                                                                                     "DEFAULT"
                                                                                     "UNIQUE"],
                                                                              :description "The confidence of the returned attribution."}},
+                                        :id "GetIosPostInstallAttributionResponse",
                                         :type "object",
-                                        :description "Response for iSDK to execute strong match flow for post-install attribution."},
- :Suffix {:id "Suffix",
-          :properties {:customSuffix {:type "string",
-                                      :description "Only applies to Option.CUSTOM."},
-                       :option {:enumDescriptions ["The suffix option is not specified, performs as UNGUESSABLE ."
-                                                   "Short Dynamic Link suffix is a base62 [0-9A-Za-z] encoded string of a random generated 96 bit random number, which has a length of 17 chars. For example, \"nlAR8U4SlKRZw1cb2\". It prevents other people from guessing and crawling short Dynamic Links that contain personal identifiable information."
-                                                   "Short Dynamic Link suffix is a base62 [0-9A-Za-z] string starting with a length of 4 chars. the length will increase when all the space is occupied."
-                                                   "Custom DDL suffix is a client specified string, for example, \"buy2get1free\". NOTE: custom suffix should only be available to managed short link creation"],
+                                        :description "Response for iSDK to execute strong match flow for post-install attribution. Information of the resolved FDL link."},
+ :Suffix {:description "Short Dynamic Link suffix.",
+          :type "object",
+          :properties {:option {:type "string",
                                 :enum ["OPTION_UNSPECIFIED"
                                        "UNGUESSABLE"
                                        "SHORT"
                                        "CUSTOM"],
-                                :description "Suffix option.",
-                                :type "string"}},
-          :type "object",
-          :description "Short Dynamic Link suffix."},
- :IosInfo {:properties {:iosFallbackLink {:description "Link to open on iOS if the app is not installed.",
-                                          :type "string"},
-                        :iosAppStoreId {:description "iOS App Store ID.",
-                                        :type "string"},
-                        :iosIpadBundleId {:type "string",
-                                          :description "iPad bundle ID of the app."},
-                        :iosMinimumVersion {:description "iOS minimum version.",
-                                            :type "string"},
-                        :iosBundleId {:description "iOS bundle ID of the app.",
-                                      :type "string"},
+                                :enumDescriptions ["The suffix option is not specified, performs as UNGUESSABLE ."
+                                                   "Short Dynamic Link suffix is a base62 [0-9A-Za-z] encoded string of a random generated 96 bit random number, which has a length of 17 chars. For example, \"nlAR8U4SlKRZw1cb2\". It prevents other people from guessing and crawling short Dynamic Links that contain personal identifiable information."
+                                                   "Short Dynamic Link suffix is a base62 [0-9A-Za-z] string starting with a length of 4 chars. the length will increase when all the space is occupied."
+                                                   "Custom DDL suffix is a client specified string, for example, \"buy2get1free\". NOTE: custom suffix should only be available to managed short link creation"],
+                                :description "Suffix option."},
+                       :customSuffix {:description "Only applies to Option.CUSTOM.",
+                                      :type "string"}},
+          :id "Suffix"},
+ :IosInfo {:id "IosInfo",
+           :description "iOS related attributes to the Dynamic Link..",
+           :properties {:iosCustomScheme {:type "string",
+                                          :description "Custom (destination) scheme to use for iOS. By default, we’ll use the bundle ID as the custom scheme. Developer can override this behavior using this param."},
+                        :iosBundleId {:type "string",
+                                      :description "iOS bundle ID of the app."},
                         :iosIpadFallbackLink {:type "string",
                                               :description "If specified, this overrides the ios_fallback_link value on iPads."},
-                        :iosCustomScheme {:type "string",
-                                          :description "Custom (destination) scheme to use for iOS. By default, we’ll use the bundle ID as the custom scheme. Developer can override this behavior using this param."}},
-           :description "iOS related attributes to the Dynamic Link..",
-           :id "IosInfo",
+                        :iosMinimumVersion {:description "iOS minimum version.",
+                                            :type "string"},
+                        :iosFallbackLink {:type "string",
+                                          :description "Link to open on iOS if the app is not installed."},
+                        :iosAppStoreId {:type "string",
+                                        :description "iOS App Store ID."},
+                        :iosIpadBundleId {:description "iPad bundle ID of the app.",
+                                          :type "string"}},
            :type "object"},
- :AndroidInfo {:properties {:androidFallbackLink {:description "Link to open on Android if the app is not installed.",
-                                                  :type "string"},
-                            :androidPackageName {:description "Android package name of the app.",
-                                                 :type "string"},
-                            :androidLink {:type "string",
+ :AndroidInfo {:id "AndroidInfo",
+               :description "Android related attributes to the Dynamic Link.",
+               :properties {:androidLink {:type "string",
                                           :description "If specified, this overrides the ‘link’ parameter on Android."},
+                            :androidFallbackLink {:type "string",
+                                                  :description "Link to open on Android if the app is not installed."},
                             :androidMinPackageVersionCode {:type "string",
-                                                           :description "Minimum version code for the Android app. If the installed app’s version code is lower, then the user is taken to the Play Store."}},
-               :id "AndroidInfo",
-               :type "object",
-               :description "Android related attributes to the Dynamic Link."},
- :DeviceInfo {:id "DeviceInfo",
-              :properties {:languageCodeFromWebview {:description "Device language code setting obtained by executing JavaScript code in WebView.",
-                                                     :type "string"},
-                           :languageCodeRaw {:description "Device language code raw setting. iOS does returns language code in different format than iOS WebView. For example WebView returns en_US, but iOS returns en-US. Field below will return raw value returned by iOS.",
-                                             :type "string"},
-                           :languageCode {:type "string",
-                                          :description "Device language code setting."},
-                           :screenResolutionWidth {:type "string",
-                                                   :format "int64",
-                                                   :description "Device display resolution width."},
+                                                           :description "Minimum version code for the Android app. If the installed app’s version code is lower, then the user is taken to the Play Store."},
+                            :androidPackageName {:type "string",
+                                                 :description "Android package name of the app."}},
+               :type "object"},
+ :DeviceInfo {:type "object",
+              :id "DeviceInfo",
+              :properties {:screenResolutionHeight {:type "string",
+                                                    :description "Device display resolution height.",
+                                                    :format "int64"},
                            :timezone {:description "Device timezone setting.",
                                       :type "string"},
-                           :deviceModelName {:type "string",
-                                             :description "Device model name."},
-                           :screenResolutionHeight {:format "int64",
-                                                    :description "Device display resolution height.",
-                                                    :type "string"}},
-              :description "Signals associated with the device making the request.",
-              :type "object"},
- :DynamicLinkStats {:id "DynamicLinkStats",
-                    :type "object",
-                    :properties {:linkEventStats {:type "array",
-                                                  :description "Dynamic Link event stats.",
-                                                  :items {:$ref "DynamicLinkEventStat"}}},
-                    :description "Analytics stats of a Dynamic Link for a given timeframe."},
+                           :deviceModelName {:description "Device model name.",
+                                             :type "string"},
+                           :languageCode {:type "string",
+                                          :description "Device language code setting.",
+                                          :deprecated true},
+                           :screenResolutionWidth {:type "string",
+                                                   :description "Device display resolution width.",
+                                                   :format "int64"},
+                           :languageCodeRaw {:type "string",
+                                             :deprecated true,
+                                             :description "Device language code raw setting. iOS does returns language code in different format than iOS WebView. For example WebView returns en_US, but iOS returns en-US. Field below will return raw value returned by iOS."},
+                           :languageCodeFromWebview {:type "string",
+                                                     :description "Device language code setting obtained by executing JavaScript code in WebView."}},
+              :description "Signals associated with the device making the request."},
+ :DynamicLinkStats {:type "object",
+                    :description "Analytics stats of a Dynamic Link for a given timeframe.",
+                    :properties {:linkEventStats {:items {:$ref "DynamicLinkEventStat"},
+                                                  :type "array",
+                                                  :description "Dynamic Link event stats."}},
+                    :id "DynamicLinkStats"},
  :CreateManagedShortLinkRequest {:id "CreateManagedShortLinkRequest",
-                                 :description "Request to create a managed Short Dynamic Link.",
-                                 :type "object",
-                                 :properties {:name {:description "Link name to associate with the link. It's used for marketer to identify manually-created links in the Firebase console (https://console.firebase.google.com/). Links must be named to be tracked.",
-                                                     :type "string"},
+                                 :properties {:name {:type "string",
+                                                     :description "Link name to associate with the link. It's used for marketer to identify manually-created links in the Firebase console (https://console.firebase.google.com/). Links must be named to be tracked."},
+                                              :longDynamicLink {:description "Full long Dynamic Link URL with desired query parameters specified. For example, \"https://sample.app.goo.gl/?link=http://www.google.com&apn=com.sample\", [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener).",
+                                                                :type "string"},
+                                              :suffix {:$ref "Suffix",
+                                                       :description "Short Dynamic Link suffix. Optional."},
                                               :sdkVersion {:type "string",
                                                            :description "Google SDK version. Version takes the form \"$major.$minor.$patch\""},
-                                              :dynamicLinkInfo {:description "Information about the Dynamic Link to be shortened. [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener).",
-                                                                :$ref "DynamicLinkInfo"},
-                                              :suffix {:description "Short Dynamic Link suffix. Optional.",
-                                                       :$ref "Suffix"},
-                                              :longDynamicLink {:type "string",
-                                                                :description "Full long Dynamic Link URL with desired query parameters specified. For example, \"https://sample.app.goo.gl/?link=http://www.google.com&apn=com.sample\", [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."}}},
+                                              :dynamicLinkInfo {:$ref "DynamicLinkInfo",
+                                                                :description "Information about the Dynamic Link to be shortened. [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."}},
+                                 :description "Request to create a managed Short Dynamic Link.",
+                                 :type "object"},
  :CreateShortDynamicLinkResponse {:type "object",
-                                  :description "Response to create a short Dynamic Link.",
-                                  :properties {:warning {:description "Information about potential warnings on link creation.",
+                                  :properties {:previewLink {:description "Preview link to show the link flow chart. (debug info.)",
+                                                             :type "string"},
+                                               :warning {:description "Information about potential warnings on link creation.",
                                                          :items {:$ref "DynamicLinkWarning"},
                                                          :type "array"},
-                                               :previewLink {:description "Preview link to show the link flow chart. (debug info.)",
-                                                             :type "string"},
                                                :shortLink {:description "Short Dynamic Link value. e.g. https://abcd.app.goo.gl/wxyz",
                                                            :type "string"}},
+                                  :description "Response to create a short Dynamic Link.",
                                   :id "CreateShortDynamicLinkResponse"},
- :GetIosPostInstallAttributionRequest {:properties {:visualStyle {:description "Strong match page information. Disambiguates between default UI and custom page to present when strong match succeeds/fails to find cookie.",
-                                                                  :enum ["UNKNOWN_VISUAL_STYLE"
-                                                                         "DEFAULT_STYLE"
-                                                                         "CUSTOM_STYLE"],
-                                                                  :type "string",
-                                                                  :enumDescriptions ["Unknown style."
-                                                                                     "Default style."
-                                                                                     "Custom style."]},
-                                                    :appInstallationTime {:description "App installation epoch time (https://en.wikipedia.org/wiki/Unix_time). This is a client signal for a more accurate weak match.",
-                                                                          :type "string",
-                                                                          :format "int64"},
-                                                    :uniqueMatchLinkToCheck {:description "Possible unique matched link that server need to check before performing fingerprint match. If passed link is short server need to expand the link. If link is long server need to vslidate the link.",
-                                                                             :type "string"},
-                                                    :bundleId {:description "APP bundle ID.",
-                                                               :type "string"},
-                                                    :device {:$ref "DeviceInfo",
-                                                             :description "Device information."},
-                                                    :retrievalMethod {:description "App post install attribution retrieval information. Disambiguates mechanism (iSDK or developer invoked) to retrieve payload from clicked link.",
-                                                                      :type "string",
+ :GetIosPostInstallAttributionRequest {:description "Request for iSDK to execute strong match flow for post-install attribution. This is meant for iOS requests only. Requests from other platforms will not be honored.",
+                                       :id "GetIosPostInstallAttributionRequest",
+                                       :properties {:iosVersion {:description "iOS version, ie: 9.3.5. Consider adding \"build\".",
+                                                                 :type "string"},
+                                                    :uniqueMatchLinkToCheck {:type "string",
+                                                                             :description "Possible unique matched link that server need to check before performing device heuristics match. If passed link is short server need to expand the link. If link is long server need to vslidate the link."},
+                                                    :retrievalMethod {:type "string",
+                                                                      :description "App post install attribution retrieval information. Disambiguates mechanism (iSDK or developer invoked) to retrieve payload from clicked link.",
                                                                       :enumDescriptions ["Unknown method."
-                                                                                         "iSDK performs a server lookup by device fingerprint in the background when app is first-opened; no API called by developer."
-                                                                                         "iSDK performs a server lookup by device fingerprint upon a dev API call."
+                                                                                         "iSDK performs a server lookup by device heuristics in the background when app is first-opened; no API called by developer."
+                                                                                         "iSDK performs a server lookup by device heuristics upon a dev API call."
                                                                                          "iSDK performs a strong match only if weak match is found upon a dev API call."],
                                                                       :enum ["UNKNOWN_PAYLOAD_RETRIEVAL_METHOD"
                                                                              "IMPLICIT_WEAK_MATCH"
                                                                              "EXPLICIT_WEAK_MATCH"
                                                                              "EXPLICIT_STRONG_AFTER_WEAK_MATCH"]},
-                                                    :iosVersion {:type "string",
-                                                                 :description "iOS version, ie: 9.3.5. Consider adding \"build\"."},
-                                                    :sdkVersion {:description "Google SDK version. Version takes the form \"$major.$minor.$patch\"",
-                                                                 :type "string"}},
-                                       :type "object",
-                                       :description "Request for iSDK to execute strong match flow for post-install attribution. This is meant for iOS requests only. Requests from other platforms will not be honored.",
-                                       :id "GetIosPostInstallAttributionRequest"},
+                                                    :sdkVersion {:type "string",
+                                                                 :description "Google SDK version. Version takes the form \"$major.$minor.$patch\""},
+                                                    :device {:description "Device information.",
+                                                             :$ref "DeviceInfo"},
+                                                    :visualStyle {:type "string",
+                                                                  :description "Strong match page information. Disambiguates between default UI and custom page to present when strong match succeeds/fails to find cookie.",
+                                                                  :enum ["UNKNOWN_VISUAL_STYLE"
+                                                                         "DEFAULT_STYLE"
+                                                                         "CUSTOM_STYLE"],
+                                                                  :enumDescriptions ["Unknown style."
+                                                                                     "Default style."
+                                                                                     "Custom style."]},
+                                                    :appInstallationTime {:format "int64",
+                                                                          :type "string",
+                                                                          :description "App installation epoch time (https://en.wikipedia.org/wiki/Unix_time). This is a client signal for a more accurate weak match."},
+                                                    :bundleId {:type "string",
+                                                               :description "APP bundle ID."}},
+                                       :type "object"},
  :CreateShortDynamicLinkRequest {:type "object",
-                                 :id "CreateShortDynamicLinkRequest",
-                                 :properties {:suffix {:$ref "Suffix",
-                                                       :description "Short Dynamic Link suffix. Optional."},
-                                              :dynamicLinkInfo {:$ref "DynamicLinkInfo",
-                                                                :description "Information about the Dynamic Link to be shortened. [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."},
+                                 :description "Request to create a short Dynamic Link.",
+                                 :properties {:suffix {:description "Short Dynamic Link suffix. Optional.",
+                                                       :$ref "Suffix"},
+                                              :longDynamicLink {:type "string",
+                                                                :description "Full long Dynamic Link URL with desired query parameters specified. For example, \"https://sample.app.goo.gl/?link=http://www.google.com&apn=com.sample\", [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."},
                                               :sdkVersion {:type "string",
                                                            :description "Google SDK version. Version takes the form \"$major.$minor.$patch\""},
-                                              :longDynamicLink {:type "string",
-                                                                :description "Full long Dynamic Link URL with desired query parameters specified. For example, \"https://sample.app.goo.gl/?link=http://www.google.com&apn=com.sample\", [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."}},
-                                 :description "Request to create a short Dynamic Link."},
- :ITunesConnectAnalytics {:type "object",
+                                              :dynamicLinkInfo {:$ref "DynamicLinkInfo",
+                                                                :description "Information about the Dynamic Link to be shortened. [Learn more](https://firebase.google.com/docs/reference/dynamic-links/link-shortener)."}},
+                                 :id "CreateShortDynamicLinkRequest"},
+ :ITunesConnectAnalytics {:description "Parameters for iTunes Connect App Analytics.",
+                          :properties {:mt {:description "iTune media types, including music, podcasts, audiobooks and so on.",
+                                            :type "string"},
+                                       :at {:type "string",
+                                            :description "Affiliate token used to create affiliate-coded links."},
+                                       :ct {:type "string",
+                                            :description "Campaign text that developers can optionally add to any link in order to track sales from a specific marketing campaign."},
+                                       :pt {:type "string",
+                                            :description "Provider token that enables analytics for Dynamic Links from within iTunes Connect."}},
                           :id "ITunesConnectAnalytics",
-                          :properties {:pt {:type "string",
-                                            :description "Provider token that enables analytics for Dynamic Links from within iTunes Connect."},
-                                       :mt {:description "iTune media types, including music, podcasts, audiobooks and so on.",
-                                            :type "string"},
-                                       :ct {:description "Campaign text that developers can optionally add to any link in order to track sales from a specific marketing campaign.",
-                                            :type "string"},
-                                       :at {:description "Affiliate token used to create affiliate-coded links.",
-                                            :type "string"}},
-                          :description "Parameters for iTunes Connect App Analytics."},
+                          :type "object"},
  :GetIosReopenAttributionResponse {:properties {:resolvedLink {:description "The entire FDL, expanded from a short link. It is the same as the requested_link, if it is long.",
                                                                :type "string"},
                                                 :utmTerm {:type "string",
                                                           :description "Scion term value to be propagated by iSDK to Scion at app-reopen."},
-                                                :deepLink {:type "string",
-                                                           :description "The deep-link attributed the app universal link open. For both regular FDL links and invite FDL links."},
-                                                :invitationId {:description "Optional invitation ID, for only invite typed requested FDL links.",
-                                                               :type "string"},
-                                                :utmContent {:description "Scion content value to be propagated by iSDK to Scion at app-reopen.",
-                                                             :type "string"},
+                                                :deepLink {:description "The deep-link attributed the app universal link open. For both regular FDL links and invite FDL links.",
+                                                           :type "string"},
+                                                :invitationId {:type "string",
+                                                               :description "Optional invitation ID, for only invite typed requested FDL links."},
+                                                :utmContent {:type "string",
+                                                             :description "Scion content value to be propagated by iSDK to Scion at app-reopen."},
                                                 :iosMinAppVersion {:type "string",
                                                                    :description "FDL input value of the \"&imv=\" parameter, minimum app version to be returned to Google Firebase SDK running on iOS-9."},
-                                                :utmCampaign {:type "string",
-                                                              :description "Scion campaign value to be propagated by iSDK to Scion at app-reopen."},
-                                                :utmMedium {:description "Scion medium value to be propagated by iSDK to Scion at app-reopen.",
-                                                            :type "string"},
-                                                :utmSource {:type "string",
-                                                            :description "Scion source value to be propagated by iSDK to Scion at app-reopen."}},
+                                                :utmCampaign {:description "Scion campaign value to be propagated by iSDK to Scion at app-reopen.",
+                                                              :type "string"},
+                                                :utmMedium {:type "string",
+                                                            :description "Scion medium value to be propagated by iSDK to Scion at app-reopen."},
+                                                :utmSource {:description "Scion source value to be propagated by iSDK to Scion at app-reopen.",
+                                                            :type "string"}},
+                                   :description "Response for iSDK to get reopen attribution for app universal link open deeplinking. This endpoint is meant for only iOS requests.",
                                    :type "object",
-                                   :id "GetIosReopenAttributionResponse",
-                                   :description "Response for iSDK to get reopen attribution for app universal link open deeplinking. This endpoint is meant for only iOS requests."},
- :NavigationInfo {:type "object",
+                                   :id "GetIosReopenAttributionResponse"},
+ :NavigationInfo {:description "Information of navigation behavior.",
                   :id "NavigationInfo",
-                  :description "Information of navigation behavior.",
                   :properties {:enableForcedRedirect {:description "If this option is on, FDL click will be forced to redirect rather than show an interstitial page.",
-                                                      :type "boolean"}}},
- :DynamicLinkWarning {:id "DynamicLinkWarning",
-                      :type "object",
-                      :properties {:warningDocumentLink {:type "string",
-                                                         :description "The document describing the warning, and helps resolve."},
-                                   :warningMessage {:description "The warning message to help developers improve their requests.",
+                                                      :type "boolean"}},
+                  :type "object"},
+ :DynamicLinkWarning {:properties {:warningMessage {:description "The warning message to help developers improve their requests.",
                                                     :type "string"},
-                                   :warningCode {:enumDescriptions ["Unknown code."
-                                                                    "The Android package does not match any in developer's DevConsole project."
-                                                                    "The Android minimum version code has to be a valid integer."
-                                                                    "Android package min version param is not needed, e.g. when 'apn' is missing."
-                                                                    "Android link is not a valid URI."
-                                                                    "Android link param is not needed, e.g. when param 'al' and 'link' have the same value.."
-                                                                    "Android fallback link is not a valid URI."
-                                                                    "Android fallback link has an invalid (non http/https) URI scheme."
-                                                                    "The iOS bundle ID does not match any in developer's DevConsole project."
-                                                                    "The iPad bundle ID does not match any in developer's DevConsole project."
-                                                                    "iOS URL scheme is not needed, e.g. when 'ibi' are 'ipbi' are all missing."
-                                                                    "iOS app store ID format is incorrect, e.g. not numeric."
-                                                                    "iOS app store ID is not needed."
-                                                                    "iOS fallback link is not a valid URI."
-                                                                    "iOS fallback link has an invalid (non http/https) URI scheme."
-                                                                    "iPad fallback link is not a valid URI."
-                                                                    "iPad fallback link has an invalid (non http/https) URI scheme."
-                                                                    "Debug param format is incorrect."
-                                                                    "isAd param format is incorrect."
-                                                                    "Indicates a certain param is deprecated."
-                                                                    "Indicates certain paramater is not recognized."
-                                                                    "Indicates certain paramater is too long."
-                                                                    "Social meta tag image link is not a valid URI."
-                                                                    "Social meta tag image link has an invalid (non http/https) URI scheme."
-                                                                    ""
-                                                                    ""
-                                                                    "Dynamic Link URL length is too long."
-                                                                    "Dynamic Link URL contains fragments."
-                                                                    "The iOS bundle ID does not match with the given iOS store ID."],
-                                                 :description "The warning code.",
+                                   :warningCode {:type "string",
                                                  :enum ["CODE_UNSPECIFIED"
                                                         "NOT_IN_PROJECT_ANDROID_PACKAGE_NAME"
                                                         "NOT_INTEGER_ANDROID_PACKAGE_MIN_VERSION"
@@ -294,32 +263,76 @@
                                                         "LINK_LENGTH_TOO_LONG"
                                                         "LINK_WITH_FRAGMENTS"
                                                         "NOT_MATCHING_IOS_BUNDLE_ID_AND_STORE_ID"],
-                                                 :type "string"}},
+                                                 :description "The warning code.",
+                                                 :enumDescriptions ["Unknown code."
+                                                                    "The Android package does not match any in developer's DevConsole project."
+                                                                    "The Android minimum version code has to be a valid integer."
+                                                                    "Android package min version param is not needed, e.g. when 'apn' is missing."
+                                                                    "Android link is not a valid URI."
+                                                                    "Android link param is not needed, e.g. when param 'al' and 'link' have the same value.."
+                                                                    "Android fallback link is not a valid URI."
+                                                                    "Android fallback link has an invalid (non http/https) URI scheme."
+                                                                    "The iOS bundle ID does not match any in developer's DevConsole project."
+                                                                    "The iPad bundle ID does not match any in developer's DevConsole project."
+                                                                    "iOS URL scheme is not needed, e.g. when 'ibi' are 'ipbi' are all missing."
+                                                                    "iOS app store ID format is incorrect, e.g. not numeric."
+                                                                    "iOS app store ID is not needed."
+                                                                    "iOS fallback link is not a valid URI."
+                                                                    "iOS fallback link has an invalid (non http/https) URI scheme."
+                                                                    "iPad fallback link is not a valid URI."
+                                                                    "iPad fallback link has an invalid (non http/https) URI scheme."
+                                                                    "Debug param format is incorrect."
+                                                                    "isAd param format is incorrect."
+                                                                    "Indicates a certain param is deprecated."
+                                                                    "Indicates certain paramater is not recognized."
+                                                                    "Indicates certain paramater is too long."
+                                                                    "Social meta tag image link is not a valid URI."
+                                                                    "Social meta tag image link has an invalid (non http/https) URI scheme."
+                                                                    ""
+                                                                    ""
+                                                                    "Dynamic Link URL length is too long."
+                                                                    "Dynamic Link URL contains fragments."
+                                                                    "The iOS bundle ID does not match with the given iOS store ID."]},
+                                   :warningDocumentLink {:description "The document describing the warning, and helps resolve.",
+                                                         :type "string"}},
+                      :type "object",
+                      :id "DynamicLinkWarning",
                       :description "Dynamic Links warning messages."},
- :GetIosReopenAttributionRequest {:description "Request for iSDK to get reopen attribution for app universal link open deeplinking. This endpoint is meant for only iOS requests.",
-                                  :properties {:bundleId {:description "APP bundle ID.",
-                                                          :type "string"},
+ :GetIosReopenAttributionRequest {:type "object",
+                                  :id "GetIosReopenAttributionRequest",
+                                  :description "Request for iSDK to get reopen attribution for app universal link open deeplinking. This endpoint is meant for only iOS requests.",
+                                  :properties {:sdkVersion {:type "string",
+                                                            :description "Google SDK version. Version takes the form \"$major.$minor.$patch\""},
                                                :requestedLink {:description "FDL link to be verified from an app universal link open. The FDL link can be one of: 1) short FDL. e.g. .page.link/, or 2) long FDL. e.g. .page.link/?{query params}, or 3) Invite FDL. e.g. .page.link/i/",
                                                                :type "string"},
-                                               :sdkVersion {:type "string",
-                                                            :description "Google SDK version. Version takes the form \"$major.$minor.$patch\""}},
+                                               :bundleId {:description "APP bundle ID.",
+                                                          :type "string"}}},
+ :CreateManagedShortLinkResponse {:description "Response to create a short Dynamic Link.",
                                   :type "object",
-                                  :id "GetIosReopenAttributionRequest"},
- :CreateManagedShortLinkResponse {:properties {:managedShortLink {:$ref "ManagedShortLink",
-                                                                  :description "Short Dynamic Link value. e.g. https://abcd.app.goo.gl/wxyz"},
-                                               :warning {:description "Information about potential warnings on link creation.",
-                                                         :type "array",
+                                  :properties {:warning {:type "array",
+                                                         :description "Information about potential warnings on link creation.",
                                                          :items {:$ref "DynamicLinkWarning"}},
-                                               :previewLink {:type "string",
-                                                             :description "Preview link to show the link flow chart. (debug info.)"}},
-                                  :description "Response to create a short Dynamic Link.",
-                                  :id "CreateManagedShortLinkResponse",
-                                  :type "object"},
- :DynamicLinkEventStat {:type "object",
-                        :id "DynamicLinkEventStat",
-                        :description "Dynamic Link event stat.",
-                        :properties {:platform {:description "Requested platform.",
-                                                :enumDescriptions ["Unspecified platform."
+                                               :previewLink {:description "Preview link to show the link flow chart. (debug info.)",
+                                                             :type "string"},
+                                               :managedShortLink {:description "Short Dynamic Link value. e.g. https://abcd.app.goo.gl/wxyz",
+                                                                  :$ref "ManagedShortLink"}},
+                                  :id "CreateManagedShortLinkResponse"},
+ :DynamicLinkEventStat {:description "Dynamic Link event stat.",
+                        :properties {:event {:description "Link event.",
+                                             :enumDescriptions ["Unspecified type."
+                                                                "Indicates that an FDL is clicked by users."
+                                                                "Indicates that an FDL redirects users to fallback link."
+                                                                "Indicates that an FDL triggers an app install from Play store, currently it's impossible to get stats from App store."
+                                                                "Indicates that the app is opened for the first time after an install triggered by FDLs"
+                                                                "Indicates that the app is opened via an FDL for non-first time."],
+                                             :enum ["DYNAMIC_LINK_EVENT_UNSPECIFIED"
+                                                    "CLICK"
+                                                    "REDIRECT"
+                                                    "APP_INSTALL"
+                                                    "APP_FIRST_OPEN"
+                                                    "APP_RE_OPEN"],
+                                             :type "string"},
+                                     :platform {:enumDescriptions ["Unspecified platform."
                                                                    "Represents Android platform. All apps and browsers on Android are classfied in this category."
                                                                    "Represents iOS platform. All apps and browsers on iOS are classfied in this category."
                                                                    "Represents desktop."
@@ -329,98 +342,94 @@
                                                        "IOS"
                                                        "DESKTOP"
                                                        "OTHER"],
+                                                :enumDeprecated [false
+                                                                 false
+                                                                 false
+                                                                 true
+                                                                 false],
+                                                :description "Requested platform.",
                                                 :type "string"},
                                      :count {:description "The number of times this event occurred.",
-                                             :type "string",
-                                             :format "int64"},
-                                     :event {:type "string",
-                                             :description "Link event.",
-                                             :enum ["DYNAMIC_LINK_EVENT_UNSPECIFIED"
-                                                    "CLICK"
-                                                    "REDIRECT"
-                                                    "APP_INSTALL"
-                                                    "APP_FIRST_OPEN"
-                                                    "APP_RE_OPEN"],
-                                             :enumDescriptions ["Unspecified type."
-                                                                "Indicates that an FDL is clicked by users."
-                                                                "Indicates that an FDL redirects users to fallback link."
-                                                                "Indicates that an FDL triggers an app install from Play store, currently it's impossible to get stats from App store."
-                                                                "Indicates that the app is opened for the first time after an install triggered by FDLs"
-                                                                "Indicates that the app is opened via an FDL for non-first time."]}}},
- :GooglePlayAnalytics {:description "Parameters for Google Play Campaign Measurements. [Learn more](https://developers.google.com/analytics/devguides/collection/android/v4/campaigns#campaign-params)",
-                       :id "GooglePlayAnalytics",
-                       :type "object",
-                       :properties {:gclid {:type "string",
-                                            :description "[AdWords autotagging parameter](https://support.google.com/analytics/answer/1033981?hl=en); used to measure Google AdWords ads. This value is generated dynamically and should never be modified."},
-                                    :utmSource {:description "Campaign source; used to identify a search engine, newsletter, or other source.",
+                                             :format "int64",
+                                             :type "string"}},
+                        :id "DynamicLinkEventStat",
+                        :type "object"},
+ :GooglePlayAnalytics {:properties {:utmSource {:description "Campaign source; used to identify a search engine, newsletter, or other source.",
                                                 :type "string"},
-                                    :utmTerm {:description "Campaign term; used with paid search to supply the keywords for ads.",
-                                              :type "string"},
-                                    :utmContent {:description "Campaign content; used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL.",
-                                                 :type "string"},
                                     :utmCampaign {:type "string",
                                                   :description "Campaign name; used for keyword analysis to identify a specific product promotion or strategic campaign."},
-                                    :utmMedium {:description "Campaign medium; used to identify a medium such as email or cost-per-click.",
-                                                :type "string"}}},
- :DynamicLinkInfo {:id "DynamicLinkInfo",
-                   :type "object",
-                   :description "Information about a Dynamic Link.",
-                   :properties {:socialMetaTagInfo {:description "Parameters for social meta tag params. Used to set meta tag data for link previews on social sites.",
+                                    :gclid {:description "Deprecated; FDL SDK does not process nor log it.",
+                                            :type "string",
+                                            :deprecated true},
+                                    :utmTerm {:description "Campaign term; used with paid search to supply the keywords for ads.",
+                                              :type "string"},
+                                    :utmContent {:type "string",
+                                                 :description "Campaign content; used for A/B testing and content-targeted ads to differentiate ads or links that point to the same URL."},
+                                    :utmMedium {:type "string",
+                                                :description "Campaign medium; used to identify a medium such as email or cost-per-click."}},
+                       :type "object",
+                       :description "Parameters for Google Play Campaign Measurements. [Learn more](https://developers.google.com/analytics/devguides/collection/android/v4/campaigns#campaign-params)",
+                       :id "GooglePlayAnalytics"},
+ :DynamicLinkInfo {:properties {:socialMetaTagInfo {:description "Parameters for social meta tag params. Used to set meta tag data for link previews on social sites.",
                                                     :$ref "SocialMetaTagInfo"},
                                 :analyticsInfo {:$ref "AnalyticsInfo",
                                                 :description "Parameters used for tracking. See all tracking parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually)."},
-                                :desktopInfo {:description "Desktop related information. See desktop related parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually).",
-                                              :$ref "DesktopInfo"},
-                                :link {:description "The link your app will open, You can specify any URL your app can handle. This link must be a well-formatted URL, be properly URL-encoded, and use the HTTP or HTTPS scheme. See 'link' parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually). Required.",
-                                       :type "string"},
+                                :desktopInfo {:$ref "DesktopInfo",
+                                              :description "Desktop related information. See desktop related parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually)."},
+                                :link {:type "string",
+                                       :description "The link your app will open, You can specify any URL your app can handle. This link must be a well-formatted URL, be properly URL-encoded, and use the HTTP or HTTPS scheme. See 'link' parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually). Required."},
                                 :navigationInfo {:description "Information of navigation behavior of a Firebase Dynamic Links.",
                                                  :$ref "NavigationInfo"},
                                 :iosInfo {:description "iOS related information. See iOS related parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually).",
                                           :$ref "IosInfo"},
                                 :domainUriPrefix {:type "string",
                                                   :description "E.g. https://maps.app.goo.gl, https://maps.page.link, https://g.co/maps More examples can be found in description of getNormalizedUriPrefix in j/c/g/firebase/dynamiclinks/uri/DdlDomain.java Will fallback to dynamic_link_domain is this field is missing"},
-                                :androidInfo {:description "Android related information. See Android related parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually).",
-                                              :$ref "AndroidInfo"},
+                                :androidInfo {:$ref "AndroidInfo",
+                                              :description "Android related information. See Android related parameters in the [documentation](https://firebase.google.com/docs/dynamic-links/create-manually)."},
                                 :dynamicLinkDomain {:type "string",
-                                                    :description "Dynamic Links domain that the project owns, e.g. abcd.app.goo.gl [Learn more](https://firebase.google.com/docs/dynamic-links/android/receive) on how to set up Dynamic Link domain associated with your Firebase project. Required if missing domain_uri_prefix."}}},
- :DesktopInfo {:description "Desktop related attributes to the Dynamic Link.",
+                                                    :deprecated true,
+                                                    :description "Dynamic Links domain that the project owns, e.g. abcd.app.goo.gl [Learn more](https://firebase.google.com/docs/dynamic-links/android/receive) on how to set up Dynamic Link domain associated with your Firebase project. Required if missing domain_uri_prefix."}},
+                   :description "Information about a Dynamic Link.",
+                   :type "object",
+                   :id "DynamicLinkInfo"},
+ :DesktopInfo {:id "DesktopInfo",
                :type "object",
-               :properties {:desktopFallbackLink {:type "string",
-                                                  :description "Link to open on desktop."}},
-               :id "DesktopInfo"},
+               :properties {:desktopFallbackLink {:description "Link to open on desktop.",
+                                                  :type "string"}},
+               :description "Desktop related attributes to the Dynamic Link."},
  :ManagedShortLink {:id "ManagedShortLink",
-                    :type "object",
-                    :description "Managed Short Link.",
-                    :properties {:link {:type "string",
-                                        :description "Short durable link url, for example, \"https://sample.app.goo.gl/xyz123\". Required."},
-                                 :linkName {:type "string",
-                                            :description "Link name defined by the creator. Required."},
+                    :properties {:flaggedAttribute {:items {:enum ["UNSPECIFIED_ATTRIBUTE"
+                                                                   "SPAM"],
+                                                            :type "string",
+                                                            :enumDescriptions ["Indicates that no attributes were found for this short url."
+                                                                               "Indicates that short url has been flagged by AbuseIAm team as spam."]},
+                                                    :type "array",
+                                                    :description "Attributes that have been flagged about this short url."},
+                                 :link {:description "Short durable link url, for example, \"https://sample.app.goo.gl/xyz123\". Required.",
+                                        :type "string"},
                                  :info {:$ref "DynamicLinkInfo",
                                         :description "Full Dyamic Link info"},
-                                 :creationTime {:description "Creation timestamp of the short link.",
-                                                :format "google-datetime",
-                                                :type "string"},
                                  :visibility {:enumDescriptions ["Visibility of the link is not specified."
                                                                  "Link created in console and should be shown in console."
                                                                  "Link created in console and should not be shown in console (but can be shown in the console again if it is unarchived)."
                                                                  "Link created outside of console and should never be shown in console."],
-                                              :type "string",
-                                              :description "Visibility status of link.",
                                               :enum ["UNSPECIFIED_VISIBILITY"
                                                      "UNARCHIVED"
                                                      "ARCHIVED"
-                                                     "NEVER_SHOWN"]},
-                                 :flaggedAttribute {:items {:type "string",
-                                                            :enumDescriptions ["Indicates that no attributes were found for this short url."
-                                                                               "Indicates that short url has been flagged by AbuseIAm team as spam."],
-                                                            :enum ["UNSPECIFIED_ATTRIBUTE"
-                                                                   "SPAM"]},
-                                                    :type "array",
-                                                    :description "Attributes that have been flagged about this short url."}}},
+                                                     "NEVER_SHOWN"],
+                                              :description "Visibility status of link.",
+                                              :type "string"},
+                                 :linkName {:type "string",
+                                            :description "Link name defined by the creator. Required."},
+                                 :creationTime {:description "Creation timestamp of the short link.",
+                                                :type "string",
+                                                :format "google-datetime"}},
+                    :description "Managed Short Link.",
+                    :type "object"},
  :AnalyticsInfo {:description "Tracking parameters supported by Dynamic Link.",
+                 :type "object",
+                 :id "AnalyticsInfo",
                  :properties {:itunesConnectAnalytics {:$ref "ITunesConnectAnalytics",
                                                        :description "iTunes Connect App Analytics."},
                               :googlePlayAnalytics {:description "Google Play Campaign Measurements.",
-                                                    :$ref "GooglePlayAnalytics"}},
-                 :id "AnalyticsInfo",
-                 :type "object"}}
+                                                    :$ref "GooglePlayAnalytics"}}}}

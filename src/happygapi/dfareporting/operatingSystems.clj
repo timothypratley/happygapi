@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.operatingSystems
   "Campaign Manager 360 API: operatingSystems.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/operatingSystems"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/operatingSystems"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/operatingSystems/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/operatingSystems/get
   
   Required parameters: profileId, dartId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/operatingSystems/{dartId}"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/operatingSystems/{+dartId}"
      #{:dartId :profileId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/operatingSystems/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/operatingSystems/list
   
   Required parameters: profileId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/operatingSystems"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/operatingSystems"
      #{:profileId}
      parameters)
     (merge-with

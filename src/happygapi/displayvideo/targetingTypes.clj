@@ -1,13 +1,13 @@
 (ns happygapi.displayvideo.targetingTypes
   "Display & Video 360 API: targetingTypes.
-  Display & Video 360 API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes"
+  Display & Video 360 API allows users to automate complex Display & Video 360 workflows, such as creating insertion orders and setting targeting options for individual line items.
+  See: https://developers.google.com/display-video/api/reference/rest/v3/targetingTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn targetingOptions-get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/get
+  "https://developers.google.com/display-video/api/reference/rest/v3/targetingTypes/targetingOptions/get
   
   Required parameters: targetingType, targetingOptionId
   
@@ -23,7 +23,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/targetingTypes/{+targetingType}/targetingOptions/{+targetingOptionId}"
+     "v3/targetingTypes/{+targetingType}/targetingOptions/{+targetingOptionId}"
      #{:targetingOptionId :targetingType}
      parameters)
     (merge-with
@@ -35,11 +35,11 @@
      auth))))
 
 (defn targetingOptions-list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/list
+  "https://developers.google.com/display-video/api/reference/rest/v3/targetingTypes/targetingOptions/list
   
   Required parameters: targetingType
   
-  Optional parameters: pageSize, pageToken, orderBy, filter, advertiserId
+  Optional parameters: advertiserId, pageSize, pageToken, orderBy, filter
   
   Lists targeting options of a given type."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -49,7 +49,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/targetingTypes/{+targetingType}/targetingOptions"
+     "v3/targetingTypes/{+targetingType}/targetingOptions"
      #{:targetingType}
      parameters)
     (merge-with
@@ -61,7 +61,7 @@
      auth))))
 
 (defn targetingOptions-search$
-  "https://developers.google.com/display-video/api/reference/rest/v1/targetingTypes/targetingOptions/search
+  "https://developers.google.com/display-video/api/reference/rest/v3/targetingTypes/targetingOptions/search
   
   Required parameters: targetingType
   
@@ -71,8 +71,8 @@
   
   {:advertiserId string,
    :pageSize integer,
-   :poiSearchTerms {:poiQuery string},
    :pageToken string,
+   :poiSearchTerms {:poiQuery string},
    :businessChainSearchTerms {:businessChainQuery string,
                               :regionQuery string},
    :geoRegionSearchTerms {:geoRegionQuery string}}
@@ -85,7 +85,7 @@
    (http/post
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/targetingTypes/{+targetingType}/targetingOptions:search"
+     "v3/targetingTypes/{+targetingType}/targetingOptions:search"
      #{:targetingType}
      parameters)
     (merge-with

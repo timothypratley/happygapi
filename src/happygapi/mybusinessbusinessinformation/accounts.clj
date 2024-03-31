@@ -1,6 +1,6 @@
 (ns happygapi.mybusinessbusinessinformation.accounts
   "My Business Business Information API: accounts.
-  The My Business Business Information API provides an interface for managing business information on Google.
+  The My Business Business Information API provides an interface for managing business information. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
   See: https://developers.google.com/my-business/api/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken, readMask, orderBy
+  Optional parameters: pageSize, pageToken, filter, orderBy, readMask
   
   Lists the locations for the specified account."
   {:scopes nil}
@@ -37,34 +37,34 @@
   
   Required parameters: parent
   
-  Optional parameters: requestId, validateOnly
+  Optional parameters: validateOnly, requestId
   
   Body: 
   
-  {:serviceItems [{:price Money,
-                   :structuredServiceItem StructuredServiceItem,
-                   :freeFormServiceItem FreeFormServiceItem}],
+  {:serviceItems [{:structuredServiceItem StructuredServiceItem,
+                   :freeFormServiceItem FreeFormServiceItem,
+                   :price Money}],
    :labels [string],
    :regularHours {:periods [TimePeriod]},
-   :moreHours [{:periods [TimePeriod], :hoursTypeId string}],
+   :moreHours [{:hoursTypeId string, :periods [TimePeriod]}],
    :name string,
    :specialHours {:specialHourPeriods [SpecialHourPeriod]},
-   :phoneNumbers {:additionalPhones [string], :primaryPhone string},
-   :serviceArea {:regionCode string,
-                 :businessType string,
-                 :places Places},
+   :phoneNumbers {:primaryPhone string, :additionalPhones [string]},
+   :serviceArea {:businessType string,
+                 :places Places,
+                 :regionCode string},
    :title string,
    :categories {:primaryCategory Category,
                 :additionalCategories [Category]},
    :languageCode string,
-   :relationshipData {:childrenLocations [RelevantLocation],
-                      :parentLocation RelevantLocation,
+   :relationshipData {:parentLocation RelevantLocation,
+                      :childrenLocations [RelevantLocation],
                       :parentChain string},
    :websiteUri string,
    :storeCode string,
    :adWordsLocationExtensions {:adPhone string},
-   :openInfo {:canReopen boolean, :status string, :openingDate Date},
-   :latlng {:longitude number, :latitude number},
+   :openInfo {:status string, :canReopen boolean, :openingDate Date},
+   :latlng {:latitude number, :longitude number},
    :metadata {:duplicateLocation string,
               :canDelete boolean,
               :canOperateLocalPost boolean,
@@ -72,11 +72,13 @@
               :newReviewUri string,
               :hasPendingEdits boolean,
               :mapsUri string,
+              :hasVoiceOfMerchant boolean,
               :hasGoogleUpdated boolean,
               :canOperateHealthData boolean,
               :canModifyServiceList boolean,
               :canHaveFoodMenus boolean,
-              :placeId string},
+              :placeId string,
+              :canHaveBusinessCalls boolean},
    :profile {:description string},
    :storefrontAddress {:sortingCode string,
                        :locality string,

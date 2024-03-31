@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a specific domain registered by the client. Returns NOT_FOUND if the domain does not exist."
-  {:scopes ["https://www.googleapis.com/auth/postmaster.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://gmailpostmastertools.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/list
   
@@ -49,6 +23,32 @@
      "https://gmailpostmastertools.googleapis.com/"
      "v1/domains"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/gmail/postmasterapi/reference/rest/v1/domains/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a specific domain registered by the client. Returns NOT_FOUND if the domain does not exist."
+  {:scopes ["https://www.googleapis.com/auth/postmaster.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://gmailpostmastertools.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

@@ -6,47 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/youtube/analyticsapi/reference/rest/v2/groupItems/insert
-  
-  Required parameters: none
-  
-  Optional parameters: onBehalfOfContentOwner
-  
-  Body: 
-  
-  {:id string,
-   :kind string,
-   :groupId string,
-   :errors {:requestId string, :code string, :error [ErrorProto]},
-   :etag string,
-   :resource {:kind string, :id string}}
-  
-  Creates a group item."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.readonly"
-            "https://www.googleapis.com/auth/youtubepartner"
-            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtubeanalytics.googleapis.com/"
-     "v2/groupItems"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/youtube/analyticsapi/reference/rest/v2/groupItems/delete
   
@@ -82,7 +41,7 @@
   
   Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner, groupId
+  Optional parameters: groupId, onBehalfOfContentOwner
   
   Returns a collection of group items that match the API request parameters."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -102,6 +61,47 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/youtube/analyticsapi/reference/rest/v2/groupItems/insert
+  
+  Required parameters: none
+  
+  Optional parameters: onBehalfOfContentOwner
+  
+  Body: 
+  
+  {:resource {:id string, :kind string},
+   :kind string,
+   :groupId string,
+   :errors {:requestId string, :code string, :error [ErrorProto]},
+   :etag string,
+   :id string}
+  
+  Creates a group item."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.readonly"
+            "https://www.googleapis.com/auth/youtubepartner"
+            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+            "https://www.googleapis.com/auth/yt-analytics.readonly"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtubeanalytics.googleapis.com/"
+     "v2/groupItems"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

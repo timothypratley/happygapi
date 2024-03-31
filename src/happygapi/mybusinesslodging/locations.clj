@@ -1,10 +1,36 @@
 (ns happygapi.mybusinesslodging.locations
   "My Business Lodging API: locations.
-  The My Business Lodging API enables managing lodging business information on Google.
+  The My Business Lodging API enables managing lodging business information on Google. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
   See: https://developers.google.com/my-business/api/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn getLodging$
+  "https://developers.google.com/my-business/api/reference/rest/v1/locations/getLodging
+  
+  Required parameters: name
+  
+  Optional parameters: readMask
+  
+  Returns the Lodging of a specific location."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://mybusinesslodging.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn updateLodging$
   "https://developers.google.com/my-business/api/reference/rest/v1/locations/updateLodging
@@ -55,11 +81,11 @@
               :suite boolean,
               :maxOccupantsCount integer,
               :views ViewsFromUnit},
-   :healthAndSafety {:physicalDistancing PhysicalDistancing,
-                     :personalProtection PersonalProtection,
+   :healthAndSafety {:enhancedCleaning EnhancedCleaning,
+                     :increasedFoodSafety IncreasedFoodSafety,
                      :minimizedContact MinimizedContact,
-                     :enhancedCleaning EnhancedCleaning,
-                     :increasedFoodSafety IncreasedFoodSafety},
+                     :personalProtection PersonalProtection,
+                     :physicalDistancing PhysicalDistancing},
    :transportation {:privateCarService boolean,
                     :transferException string,
                     :transfer boolean,
@@ -74,14 +100,14 @@
                     :carRentalOnProperty boolean,
                     :freePrivateCarService boolean,
                     :freeAirportShuttleException string},
-   :accessibility {:mobilityAccessibleParking boolean,
-                   :mobilityAccessiblePoolException string,
-                   :mobilityAccessibleParkingException string,
-                   :mobilityAccessibleElevatorException string,
+   :accessibility {:mobilityAccessible boolean,
                    :mobilityAccessibleException string,
+                   :mobilityAccessibleParking boolean,
+                   :mobilityAccessibleParkingException string,
+                   :mobilityAccessibleElevator boolean,
+                   :mobilityAccessibleElevatorException string,
                    :mobilityAccessiblePool boolean,
-                   :mobilityAccessible boolean,
-                   :mobilityAccessibleElevator boolean},
+                   :mobilityAccessiblePoolException string},
    :policies {:checkinTimeException string,
               :allInclusiveAvailable boolean,
               :kidsStayFree boolean,
@@ -99,14 +125,14 @@
               :maxChildAge integer,
               :maxChildAgeException string,
               :maxKidsStayFreeCount integer},
-   :property {:lastRenovatedYear integer,
-              :roomsCountException string,
-              :floorsCountException string,
+   :property {:builtYear integer,
+              :builtYearException string,
+              :lastRenovatedYear integer,
               :lastRenovatedYearException string,
               :roomsCount integer,
-              :builtYear integer,
+              :roomsCountException string,
               :floorsCount integer,
-              :builtYearException string},
+              :floorsCountException string},
    :name string,
    :wellness {:freeFitnessCenterException string,
               :saunaException string,
@@ -131,18 +157,18 @@
               :treadmill boolean,
               :freeFitnessCenter boolean},
    :commonLivingArea {:layout LivingAreaLayout,
-                      :accessibility LivingAreaAccessibility,
                       :features LivingAreaFeatures,
                       :eating LivingAreaEating,
-                      :sleeping LivingAreaSleeping},
-   :connectivity {:publicInternetTerminalException string,
-                  :publicInternetTerminal boolean,
-                  :publicAreaWifiAvailableException string,
-                  :publicAreaWifiAvailable boolean,
-                  :freeWifiException string,
-                  :wifiAvailable boolean,
+                      :sleeping LivingAreaSleeping,
+                      :accessibility LivingAreaAccessibility},
+   :connectivity {:wifiAvailable boolean,
                   :wifiAvailableException string,
-                  :freeWifi boolean},
+                  :freeWifi boolean,
+                  :freeWifiException string,
+                  :publicAreaWifiAvailable boolean,
+                  :publicAreaWifiAvailableException string,
+                  :publicInternetTerminal boolean,
+                  :publicInternetTerminalException string},
    :pools {:poolsCount integer,
            :adultPool boolean,
            :lazyRiver boolean,
@@ -171,14 +197,14 @@
            :waterslideException string,
            :hotTubException string,
            :adultPoolException string},
-   :pets {:dogsAllowed boolean,
+   :pets {:petsAllowed boolean,
           :petsAllowedException string,
-          :catsAllowedException string,
-          :dogsAllowedException string,
-          :petsAllowed boolean,
           :petsAllowedFree boolean,
           :petsAllowedFreeException string,
-          :catsAllowed boolean},
+          :dogsAllowed boolean,
+          :dogsAllowedException string,
+          :catsAllowed boolean,
+          :catsAllowedException string},
    :parking {:selfParkingAvailableException string,
              :freeSelfParking boolean,
              :freeSelfParkingException string,
@@ -193,12 +219,12 @@
              :valetParkingAvailable boolean,
              :selfParkingAvailable boolean,
              :electricCarChargingStationsException string},
-   :housekeeping {:dailyHousekeeping boolean,
+   :housekeeping {:housekeepingAvailable boolean,
                   :housekeepingAvailableException string,
-                  :turndownService boolean,
+                  :dailyHousekeeping boolean,
                   :dailyHousekeepingException string,
-                  :turndownServiceException string,
-                  :housekeepingAvailable boolean},
+                  :turndownService boolean,
+                  :turndownServiceException string},
    :foodAndDrink {:breakfastAvailable boolean,
                   :restaurantException string,
                   :roomService boolean,
@@ -223,19 +249,19 @@
                   :twentyFourHourRoomServiceException string,
                   :barException string,
                   :twentyFourHourRoomService boolean},
-   :sustainability {:sustainableSourcing SustainableSourcing,
-                    :energyEfficiency EnergyEfficiency,
-                    :sustainabilityCertifications SustainabilityCertifications,
+   :sustainability {:energyEfficiency EnergyEfficiency,
+                    :waterConservation WaterConservation,
                     :wasteReduction WasteReduction,
-                    :waterConservation WaterConservation},
-   :guestUnits [{:features GuestUnitFeatures,
+                    :sustainableSourcing SustainableSourcing,
+                    :sustainabilityCertifications SustainabilityCertifications},
+   :guestUnits [{:codes [string],
                  :label string,
-                 :codes [string]}],
+                 :features GuestUnitFeatures}],
    :business {:businessCenter boolean,
-              :meetingRoomsException string,
-              :meetingRoomsCount integer,
               :businessCenterException string,
               :meetingRooms boolean,
+              :meetingRoomsException string,
+              :meetingRoomsCount integer,
               :meetingRoomsCountException string},
    :activities {:watercraftRentalException string,
                 :beachAccessException string,
@@ -297,12 +323,14 @@
               :giftShop boolean,
               :currencyExchange boolean,
               :socialHourException string},
-   :families {:kidsClub boolean,
-              :babysitting boolean,
-              :kidsActivities boolean,
+   :families {:babysitting boolean,
               :babysittingException string,
+              :kidsActivities boolean,
+              :kidsActivitiesException string,
+              :kidsClub boolean,
               :kidsClubException string,
-              :kidsActivitiesException string}}
+              :kidsFriendly boolean,
+              :kidsFriendlyException string}}
   
   Updates the Lodging of a specific location."
   {:scopes nil}
@@ -320,32 +348,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getLodging$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/getLodging
-  
-  Required parameters: name
-  
-  Optional parameters: readMask
-  
-  Returns the Lodging of a specific location."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://mybusinesslodging.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -11,7 +11,7 @@
   
   Required parameters: date
   
-  Optional parameters: pageToken, customerId, parameters
+  Optional parameters: customerId, pageToken, parameters
   
   Retrieves a report which is a collection of properties and statistics for a specific customer's account. For more information, see the Customers Usage Report guide. For more information about the customer report's parameters, see the Customers Usage parameters reference guides. "
   {:scopes ["https://www.googleapis.com/auth/admin.reports.usage.readonly"]}

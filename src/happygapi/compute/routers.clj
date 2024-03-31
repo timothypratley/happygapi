@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Returns the specified Router resource. Gets a list of available routers by making a list() request."
+  Returns the specified Router resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -44,48 +44,62 @@
   Body: 
   
   {:description string,
-   :interfaces [{:linkedInterconnectAttachment string,
+   :interfaces [{:name string,
+                 :linkedVpnTunnel string,
+                 :linkedInterconnectAttachment string,
+                 :ipRange string,
                  :managementType string,
                  :privateIpAddress string,
-                 :ipRange string,
-                 :linkedVpnTunnel string,
                  :redundantInterface string,
-                 :subnetwork string,
-                 :name string}],
+                 :subnetwork string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
            :name string,
+           :type string,
            :sourceSubnetworkIpRangesToNat string,
+           :rules [RouterNatRule],
            :tcpTransitoryIdleTimeoutSec integer,
            :natIpAllocateOption string,
+           :autoNetworkTier string,
            :udpIdleTimeoutSec integer,
            :subnetworks [RouterNatSubnetworkToNat],
            :natIps [string],
+           :enableDynamicPortAllocation boolean,
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
+           :maxPortsPerVm integer,
            :drainNatIps [string],
+           :endpointTypes [string],
            :enableEndpointIndependentMapping boolean,
+           :tcpTimeWaitTimeoutSec integer,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:bfd RouterBgpPeerBfd,
+   :bgpPeers [{:peerIpv6NexthopAddress string,
+               :bfd RouterBgpPeerBfd,
                :enable string,
+               :md5AuthenticationKeyName string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
                :routerApplianceInstance string,
                :managementType string,
+               :ipv6NexthopAddress string,
                :advertiseMode string,
                :peerAsn integer,
+               :customLearnedRoutePriority integer,
                :interfaceName string,
+               :enableIpv6 boolean,
                :ipAddress string,
-               :advertisedRoutePriority integer}],
+               :advertisedRoutePriority integer,
+               :customLearnedIpRanges [RouterBgpPeerCustomLearnedIpRange]}],
    :selfLink string,
    :bgp {:asn integer,
          :advertiseMode string,
-         :advertisedIpRanges [RouterAdvertisedIpRange],
          :advertisedGroups [string],
+         :advertisedIpRanges [RouterAdvertisedIpRange],
          :keepaliveInterval integer},
+   :md5AuthenticationKeys [{:name string, :key string}],
    :region string,
    :id string,
    :kind string,
@@ -117,55 +131,69 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/patch
   
-  Required parameters: project, router, region
+  Required parameters: project, region, router
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedInterconnectAttachment string,
+   :interfaces [{:name string,
+                 :linkedVpnTunnel string,
+                 :linkedInterconnectAttachment string,
+                 :ipRange string,
                  :managementType string,
                  :privateIpAddress string,
-                 :ipRange string,
-                 :linkedVpnTunnel string,
                  :redundantInterface string,
-                 :subnetwork string,
-                 :name string}],
+                 :subnetwork string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
            :name string,
+           :type string,
            :sourceSubnetworkIpRangesToNat string,
+           :rules [RouterNatRule],
            :tcpTransitoryIdleTimeoutSec integer,
            :natIpAllocateOption string,
+           :autoNetworkTier string,
            :udpIdleTimeoutSec integer,
            :subnetworks [RouterNatSubnetworkToNat],
            :natIps [string],
+           :enableDynamicPortAllocation boolean,
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
+           :maxPortsPerVm integer,
            :drainNatIps [string],
+           :endpointTypes [string],
            :enableEndpointIndependentMapping boolean,
+           :tcpTimeWaitTimeoutSec integer,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:bfd RouterBgpPeerBfd,
+   :bgpPeers [{:peerIpv6NexthopAddress string,
+               :bfd RouterBgpPeerBfd,
                :enable string,
+               :md5AuthenticationKeyName string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
                :routerApplianceInstance string,
                :managementType string,
+               :ipv6NexthopAddress string,
                :advertiseMode string,
                :peerAsn integer,
+               :customLearnedRoutePriority integer,
                :interfaceName string,
+               :enableIpv6 boolean,
                :ipAddress string,
-               :advertisedRoutePriority integer}],
+               :advertisedRoutePriority integer,
+               :customLearnedIpRanges [RouterBgpPeerCustomLearnedIpRange]}],
    :selfLink string,
    :bgp {:asn integer,
          :advertiseMode string,
-         :advertisedIpRanges [RouterAdvertisedIpRange],
          :advertisedGroups [string],
+         :advertisedIpRanges [RouterAdvertisedIpRange],
          :keepaliveInterval integer},
+   :md5AuthenticationKeys [{:name string, :key string}],
    :region string,
    :id string,
    :kind string,
@@ -227,9 +255,9 @@
   
   Required parameters: project
   
-  Optional parameters: filter, includeAllScopes, returnPartialSuccess, maxResults, pageToken, orderBy
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of routers."
+  Retrieves an aggregated list of routers. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -253,55 +281,69 @@
 (defn update$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/update
   
-  Required parameters: project, router, region
+  Required parameters: project, region, router
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedInterconnectAttachment string,
+   :interfaces [{:name string,
+                 :linkedVpnTunnel string,
+                 :linkedInterconnectAttachment string,
+                 :ipRange string,
                  :managementType string,
                  :privateIpAddress string,
-                 :ipRange string,
-                 :linkedVpnTunnel string,
                  :redundantInterface string,
-                 :subnetwork string,
-                 :name string}],
+                 :subnetwork string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
            :name string,
+           :type string,
            :sourceSubnetworkIpRangesToNat string,
+           :rules [RouterNatRule],
            :tcpTransitoryIdleTimeoutSec integer,
            :natIpAllocateOption string,
+           :autoNetworkTier string,
            :udpIdleTimeoutSec integer,
            :subnetworks [RouterNatSubnetworkToNat],
            :natIps [string],
+           :enableDynamicPortAllocation boolean,
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
+           :maxPortsPerVm integer,
            :drainNatIps [string],
+           :endpointTypes [string],
            :enableEndpointIndependentMapping boolean,
+           :tcpTimeWaitTimeoutSec integer,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:bfd RouterBgpPeerBfd,
+   :bgpPeers [{:peerIpv6NexthopAddress string,
+               :bfd RouterBgpPeerBfd,
                :enable string,
+               :md5AuthenticationKeyName string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
                :routerApplianceInstance string,
                :managementType string,
+               :ipv6NexthopAddress string,
                :advertiseMode string,
                :peerAsn integer,
+               :customLearnedRoutePriority integer,
                :interfaceName string,
+               :enableIpv6 boolean,
                :ipAddress string,
-               :advertisedRoutePriority integer}],
+               :advertisedRoutePriority integer,
+               :customLearnedIpRanges [RouterBgpPeerCustomLearnedIpRange]}],
    :selfLink string,
    :bgp {:asn integer,
          :advertiseMode string,
-         :advertisedIpRanges [RouterAdvertisedIpRange],
          :advertisedGroups [string],
+         :advertisedIpRanges [RouterAdvertisedIpRange],
          :keepaliveInterval integer},
+   :md5AuthenticationKeys [{:name string, :key string}],
    :region string,
    :id string,
    :kind string,
@@ -333,7 +375,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/delete
   
-  Required parameters: region, router, project
+  Required parameters: project, region, router
   
   Optional parameters: requestId
   
@@ -360,55 +402,69 @@
 (defn preview$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/preview
   
-  Required parameters: project, router, region
+  Required parameters: project, region, router
   
   Optional parameters: none
   
   Body: 
   
   {:description string,
-   :interfaces [{:linkedInterconnectAttachment string,
+   :interfaces [{:name string,
+                 :linkedVpnTunnel string,
+                 :linkedInterconnectAttachment string,
+                 :ipRange string,
                  :managementType string,
                  :privateIpAddress string,
-                 :ipRange string,
-                 :linkedVpnTunnel string,
                  :redundantInterface string,
-                 :subnetwork string,
-                 :name string}],
+                 :subnetwork string}],
    :creationTimestamp string,
    :nats [{:minPortsPerVm integer,
            :name string,
+           :type string,
            :sourceSubnetworkIpRangesToNat string,
+           :rules [RouterNatRule],
            :tcpTransitoryIdleTimeoutSec integer,
            :natIpAllocateOption string,
+           :autoNetworkTier string,
            :udpIdleTimeoutSec integer,
            :subnetworks [RouterNatSubnetworkToNat],
            :natIps [string],
+           :enableDynamicPortAllocation boolean,
            :icmpIdleTimeoutSec integer,
            :tcpEstablishedIdleTimeoutSec integer,
+           :maxPortsPerVm integer,
            :drainNatIps [string],
+           :endpointTypes [string],
            :enableEndpointIndependentMapping boolean,
+           :tcpTimeWaitTimeoutSec integer,
            :logConfig RouterNatLogConfig}],
    :name string,
-   :bgpPeers [{:bfd RouterBgpPeerBfd,
+   :bgpPeers [{:peerIpv6NexthopAddress string,
+               :bfd RouterBgpPeerBfd,
                :enable string,
+               :md5AuthenticationKeyName string,
                :peerIpAddress string,
                :name string,
                :advertisedIpRanges [RouterAdvertisedIpRange],
                :advertisedGroups [string],
                :routerApplianceInstance string,
                :managementType string,
+               :ipv6NexthopAddress string,
                :advertiseMode string,
                :peerAsn integer,
+               :customLearnedRoutePriority integer,
                :interfaceName string,
+               :enableIpv6 boolean,
                :ipAddress string,
-               :advertisedRoutePriority integer}],
+               :advertisedRoutePriority integer,
+               :customLearnedIpRanges [RouterBgpPeerCustomLearnedIpRange]}],
    :selfLink string,
    :bgp {:asn integer,
          :advertiseMode string,
-         :advertisedIpRanges [RouterAdvertisedIpRange],
          :advertisedGroups [string],
+         :advertisedIpRanges [RouterAdvertisedIpRange],
          :keepaliveInterval integer},
+   :md5AuthenticationKeys [{:name string, :key string}],
    :region string,
    :id string,
    :kind string,
@@ -441,9 +497,9 @@
 (defn getNatMappingInfo$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/getNatMappingInfo
   
-  Required parameters: project, region, router
+  Required parameters: router, region, project
   
-  Optional parameters: filter, orderBy, returnPartialSuccess, maxResults, pageToken
+  Optional parameters: natName, returnPartialSuccess, pageToken, filter, maxResults, orderBy
   
   Retrieves runtime Nat mapping information of VM endpoints."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -469,9 +525,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/routers/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: maxResults, filter, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of Router resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -485,6 +541,34 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/routers"
      #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getNatIpInfo$
+  "https://cloud.google.com/compute/api/reference/rest/v1/routers/getNatIpInfo
+  
+  Required parameters: project, region, router
+  
+  Optional parameters: natName
+  
+  Retrieves runtime NAT IP information."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:router :region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/routers/{router}/getNatIpInfo"
+     #{:router :region :project}
      parameters)
     (merge-with
      merge

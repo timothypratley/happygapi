@@ -9,11 +9,11 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/get
   
-  Required parameters: project, zone, networkEndpointGroup
+  Required parameters: networkEndpointGroup, project, zone
   
   Optional parameters: none
   
-  Returns the specified network endpoint group. Gets a list of available network endpoint groups by making a list() request."
+  Returns the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -50,14 +50,18 @@
    :creationTimestamp string,
    :zone string,
    :name string,
-   :cloudFunction {:urlMask string, :function string},
+   :cloudFunction {:function string, :urlMask string},
    :selfLink string,
-   :cloudRun {:urlMask string, :tag string, :service string},
+   :pscTargetService string,
+   :cloudRun {:service string, :tag string, :urlMask string},
    :size integer,
    :region string,
+   :pscData {:consumerPscAddress string,
+             :pscConnectionId string,
+             :pscConnectionStatus string},
    :id string,
    :kind string,
-   :appEngine {:version string, :urlMask string, :service string},
+   :appEngine {:service string, :version string, :urlMask string},
    :annotations {},
    :network string,
    :defaultPort integer,
@@ -88,7 +92,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/testIamPermissions
   
-  Required parameters: zone, project, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
@@ -124,9 +128,9 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, includeAllScopes, maxResults, pageToken, filter
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves the list of network endpoint groups and sorts them by zone."
+  Retrieves the list of network endpoint groups and sorts them by zone. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -150,17 +154,17 @@
 (defn attachNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/attachNetworkEndpoints
   
-  Required parameters: zone, project, networkEndpointGroup
+  Required parameters: networkEndpointGroup, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:instance string,
-                       :ipAddress string,
-                       :annotations {},
+  {:networkEndpoints [{:ipAddress string,
                        :fqdn string,
-                       :port integer}]}
+                       :port integer,
+                       :instance string,
+                       :annotations {}}]}
   
   Attach a list of network endpoints to the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -189,7 +193,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/delete
   
-  Required parameters: networkEndpointGroup, zone, project
+  Required parameters: networkEndpointGroup, project, zone
   
   Optional parameters: requestId
   
@@ -218,9 +222,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/list
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
-  Optional parameters: maxResults, returnPartialSuccess, filter, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of network endpoint groups that are located in the specified project and zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -246,9 +250,9 @@
 (defn listNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/listNetworkEndpoints
   
-  Required parameters: project, networkEndpointGroup, zone
+  Required parameters: networkEndpointGroup, project, zone
   
-  Optional parameters: pageToken, maxResults, orderBy, filter, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Body: 
   
@@ -282,17 +286,17 @@
 (defn detachNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/networkEndpointGroups/detachNetworkEndpoints
   
-  Required parameters: networkEndpointGroup, zone, project
+  Required parameters: networkEndpointGroup, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:instance string,
-                       :ipAddress string,
-                       :annotations {},
+  {:networkEndpoints [{:ipAddress string,
                        :fqdn string,
-                       :port integer}]}
+                       :port integer,
+                       :instance string,
+                       :annotations {}}]}
   
   Detach a list of network endpoints from the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

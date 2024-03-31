@@ -9,15 +9,17 @@
 (defn bulkInsert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionInstances/bulkInsert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
   Body: 
   
-  {:minCount string,
-   :count string,
+  {:count string,
+   :minCount string,
    :namePattern string,
+   :perInstanceProperties {},
+   :sourceInstanceTemplate string,
    :instanceProperties {:description string,
                         :tags Tags,
                         :labels {},
@@ -26,9 +28,12 @@
                         :resourcePolicies [string],
                         :privateIpv6GoogleAccess string,
                         :canIpForward boolean,
+                        :resourceManagerTags {},
                         :guestAccelerators [AcceleratorConfig],
+                        :networkPerformanceConfig NetworkPerformanceConfig,
                         :machineType string,
                         :confidentialInstanceConfig ConfidentialInstanceConfig,
+                        :keyRevocationActionType string,
                         :advancedMachineFeatures AdvancedMachineFeatures,
                         :disks [AttachedDisk],
                         :reservationAffinity ReservationAffinity,
@@ -36,9 +41,7 @@
                         :metadata Metadata,
                         :serviceAccounts [ServiceAccount],
                         :minCpuPlatform string},
-   :locationPolicy {:locations {}},
-   :perInstanceProperties {},
-   :sourceInstanceTemplate string}
+   :locationPolicy {:locations {}, :targetShape string}}
   
   Creates multiple instances in a given region. Count specifies the number of instances to create."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

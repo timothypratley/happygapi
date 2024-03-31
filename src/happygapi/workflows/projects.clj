@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn locations-list$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists information about the supported locations for this service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://workflows.googleapis.com/"
+     "v1/{+name}/locations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-get$
   "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/get
   
@@ -32,66 +58,14 @@
       :as :json}
      auth))))
 
-(defn locations-list$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://workflows.googleapis.com/"
-     "v1/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-delete$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://workflows.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-operations-list$
   "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/operations/list
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -136,6 +110,129 @@
       :as :json}
      auth))))
 
+(defn locations-operations-delete$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://workflows.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workflows-list$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, orderBy
+  
+  Lists workflows in a given project and location. The default order is not specified."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://workflows.googleapis.com/"
+     "v1/{+parent}/workflows"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workflows-get$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/get
+  
+  Required parameters: name
+  
+  Optional parameters: revisionId
+  
+  Gets details of a single workflow."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://workflows.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-workflows-create$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/create
+  
+  Required parameters: parent
+  
+  Optional parameters: workflowId
+  
+  Body: 
+  
+  {:description string,
+   :serviceAccount string,
+   :labels {},
+   :cryptoKeyName string,
+   :sourceContents string,
+   :revisionCreateTime string,
+   :name string,
+   :createTime string,
+   :revisionId string,
+   :state string,
+   :stateError {:details string, :type string},
+   :updateTime string,
+   :userEnvVars {},
+   :callLogLevel string}
+  
+  Creates a new workflow. If a workflow with the specified name already exists in the specified project and location, the long running operation returns a ALREADY_EXISTS error."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://workflows.googleapis.com/"
+     "v1/{+parent}/workflows"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-workflows-delete$
   "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/delete
   
@@ -162,32 +259,6 @@
       :as :json}
      auth))))
 
-(defn locations-workflows-get$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets details of a single Workflow."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://workflows.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-workflows-patch$
   "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/patch
   
@@ -200,15 +271,19 @@
   {:description string,
    :serviceAccount string,
    :labels {},
+   :cryptoKeyName string,
    :sourceContents string,
    :revisionCreateTime string,
    :name string,
    :createTime string,
    :revisionId string,
    :state string,
-   :updateTime string}
+   :stateError {:details string, :type string},
+   :updateTime string,
+   :userEnvVars {},
+   :callLogLevel string}
   
-  Updates an existing workflow. Running this method has no impact on already running executions of the workflow. A new revision of the workflow may be created as a result of a successful update operation. In that case, such revision will be used in new workflow executions."
+  Updates an existing workflow. Running this method has no impact on already running executions of the workflow. A new revision of the workflow might be created as a result of a successful update operation. In that case, the new revision is used in new workflow executions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -229,64 +304,23 @@
       :as :json}
      auth))))
 
-(defn locations-workflows-create$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/create
+(defn locations-workflows-listRevisions$
+  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/listRevisions
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: workflowId
+  Optional parameters: pageSize, pageToken
   
-  Body: 
-  
-  {:description string,
-   :serviceAccount string,
-   :labels {},
-   :sourceContents string,
-   :revisionCreateTime string,
-   :name string,
-   :createTime string,
-   :revisionId string,
-   :state string,
-   :updateTime string}
-  
-  Creates a new workflow. If a workflow with the specified name already exists in the specified project and location, the long running operation will return ALREADY_EXISTS error."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://workflows.googleapis.com/"
-     "v1/{+parent}/workflows"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-workflows-list$
-  "https://cloud.google.com/workflowsapi/reference/rest/v1/projects/locations/workflows/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, orderBy, pageToken, filter
-  
-  Lists Workflows in a given project and location. The default order is not specified."
+  Lists revisions for a given workflow."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://workflows.googleapis.com/"
-     "v1/{+parent}/workflows"
-     #{:parent}
+     "v1/{+name}:listRevisions"
+     #{:name}
      parameters)
     (merge-with
      merge

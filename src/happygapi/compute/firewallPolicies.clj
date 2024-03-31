@@ -97,16 +97,15 @@
   
   Body: 
   
-  {:policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]},
-   :bindings [{:members [string],
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
                :condition Expr,
-               :bindingId string,
-               :role string}],
+               :bindingId string}],
    :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
@@ -147,14 +146,18 @@
    :displayName string,
    :name string,
    :selfLink string,
-   :associations [{:displayName string,
+   :associations [{:name string,
                    :attachmentTarget string,
-                   :name string,
                    :firewallPolicyId string,
-                   :shortName string}],
+                   :shortName string,
+                   :displayName string}],
    :rules [{:description string,
+            :securityProfileGroup string,
             :ruleTupleCount integer,
             :disabled boolean,
+            :ruleName string,
+            :tlsInspect boolean,
+            :targetSecureTags [FirewallPolicyRuleSecureTag],
             :enableLogging boolean,
             :priority integer,
             :kind string,
@@ -163,6 +166,7 @@
             :action string,
             :direction string,
             :match FirewallPolicyRuleMatcher}],
+   :region string,
    :shortName string,
    :selfLinkWithId string,
    :id string,
@@ -207,14 +211,18 @@
    :displayName string,
    :name string,
    :selfLink string,
-   :associations [{:displayName string,
+   :associations [{:name string,
                    :attachmentTarget string,
-                   :name string,
                    :firewallPolicyId string,
-                   :shortName string}],
+                   :shortName string,
+                   :displayName string}],
    :rules [{:description string,
+            :securityProfileGroup string,
             :ruleTupleCount integer,
             :disabled boolean,
+            :ruleName string,
+            :tlsInspect boolean,
+            :targetSecureTags [FirewallPolicyRuleSecureTag],
             :enableLogging boolean,
             :priority integer,
             :kind string,
@@ -223,6 +231,7 @@
             :action string,
             :direction string,
             :match FirewallPolicyRuleMatcher}],
+   :region string,
    :shortName string,
    :selfLinkWithId string,
    :id string,
@@ -344,7 +353,7 @@
   
   Required parameters: firewallPolicy
   
-  Optional parameters: requestId, name
+  Optional parameters: name, requestId
   
   Removes an association for the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -399,13 +408,17 @@
   
   Required parameters: firewallPolicy
   
-  Optional parameters: requestId, priority
+  Optional parameters: priority, requestId
   
   Body: 
   
   {:description string,
+   :securityProfileGroup string,
    :ruleTupleCount integer,
    :disabled boolean,
+   :ruleName string,
+   :tlsInspect boolean,
+   :targetSecureTags [{:name string, :state string}],
    :enableLogging boolean,
    :priority integer,
    :kind string,
@@ -413,8 +426,17 @@
    :targetServiceAccounts [string],
    :action string,
    :direction string,
-   :match {:layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+   :match {:destFqdns [string],
+           :srcThreatIntelligences [string],
+           :srcSecureTags [FirewallPolicyRuleSecureTag],
+           :srcRegionCodes [string],
+           :srcFqdns [string],
+           :destRegionCodes [string],
+           :layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+           :srcAddressGroups [string],
            :destIpRanges [string],
+           :destThreatIntelligences [string],
+           :destAddressGroups [string],
            :srcIpRanges [string]}}
   
   Patches a rule of the specified priority."
@@ -449,8 +471,12 @@
   Body: 
   
   {:description string,
+   :securityProfileGroup string,
    :ruleTupleCount integer,
    :disabled boolean,
+   :ruleName string,
+   :tlsInspect boolean,
+   :targetSecureTags [{:name string, :state string}],
    :enableLogging boolean,
    :priority integer,
    :kind string,
@@ -458,8 +484,17 @@
    :targetServiceAccounts [string],
    :action string,
    :direction string,
-   :match {:layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+   :match {:destFqdns [string],
+           :srcThreatIntelligences [string],
+           :srcSecureTags [FirewallPolicyRuleSecureTag],
+           :srcRegionCodes [string],
+           :srcFqdns [string],
+           :destRegionCodes [string],
+           :layer4Configs [FirewallPolicyRuleMatcherLayer4Config],
+           :srcAddressGroups [string],
            :destIpRanges [string],
+           :destThreatIntelligences [string],
+           :destAddressGroups [string],
            :srcIpRanges [string]}}
   
   Inserts a rule into a firewall policy."
@@ -489,7 +524,7 @@
   
   Required parameters: none
   
-  Optional parameters: filter, orderBy, returnPartialSuccess, parentId, pageToken, maxResults
+  Optional parameters: filter, maxResults, orderBy, pageToken, parentId, returnPartialSuccess
   
   Lists all the policies that have been configured for the specified folder or organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -549,11 +584,11 @@
   
   Body: 
   
-  {:displayName string,
+  {:name string,
    :attachmentTarget string,
-   :name string,
    :firewallPolicyId string,
-   :shortName string}
+   :shortName string,
+   :displayName string}
   
   Inserts an association for the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

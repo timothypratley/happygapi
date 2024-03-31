@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, maxResults, language
+  Optional parameters: language, maxResults, pageToken
   
   Lists all the achievement definitions for your application."
   {:scopes ["https://www.googleapis.com/auth/games"]}

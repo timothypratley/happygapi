@@ -15,23 +15,25 @@
   
   Body: 
   
-  {:deletions [{:rrdatas [string],
+  {:additions [{:name string,
                 :type string,
                 :ttl integer,
+                :rrdatas [string],
                 :signatureRrdatas [string],
-                :name string,
+                :routingPolicy RRSetRoutingPolicy,
                 :kind string}],
-   :kind string,
-   :startTime string,
-   :isServing boolean,
-   :status string,
-   :id string,
-   :additions [{:rrdatas [string],
+   :deletions [{:name string,
                 :type string,
                 :ttl integer,
+                :rrdatas [string],
                 :signatureRrdatas [string],
-                :name string,
-                :kind string}]}
+                :routingPolicy RRSetRoutingPolicy,
+                :kind string}],
+   :startTime string,
+   :id string,
+   :status string,
+   :isServing boolean,
+   :kind string}
   
   Atomically updates the ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -58,7 +60,7 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/get
   
-  Required parameters: managedZone, changeId, project
+  Required parameters: project, managedZone, changeId
   
   Optional parameters: clientOperationId
   
@@ -89,9 +91,9 @@
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/changes/list
   
-  Required parameters: managedZone, project
+  Required parameters: project, managedZone
   
-  Optional parameters: maxResults, sortBy, pageToken, sortOrder
+  Optional parameters: maxResults, pageToken, sortBy, sortOrder
   
   Enumerates Changes to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

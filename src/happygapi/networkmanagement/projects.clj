@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageSize, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -58,6 +58,116 @@
       :as :json}
      auth))))
 
+(defn locations-global-operations-list$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-get$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-delete$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-cancel$
+  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://networkmanagement.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-connectivityTests-get$
   "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/connectivityTests/get
   
@@ -93,11 +203,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:bindings [Binding],
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :version integer,
-            :etag string}}
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -136,27 +246,51 @@
    :name string,
    :createTime string,
    :relatedProjects [string],
-   :source {:networkType string,
-            :ipAddress string,
-            :cloudSqlInstance string,
-            :gkeMasterCluster string,
-            :network string,
+   :source {:loadBalancerId string,
             :instance string,
+            :forwardingRuleTarget string,
+            :cloudFunction CloudFunctionEndpoint,
+            :gkeMasterCluster string,
+            :appEngineVersion AppEngineVersionEndpoint,
+            :loadBalancerType string,
+            :port integer,
+            :networkType string,
+            :cloudSqlInstance string,
+            :cloudRunRevision CloudRunRevisionEndpoint,
+            :forwardingRule string,
             :projectId string,
-            :port integer},
+            :ipAddress string,
+            :network string},
    :updateTime string,
-   :reachabilityDetails {:verifyTime string,
-                         :result string,
-                         :traces [Trace],
-                         :error Status},
-   :destination {:networkType string,
-                 :ipAddress string,
-                 :cloudSqlInstance string,
-                 :gkeMasterCluster string,
-                 :network string,
+   :reachabilityDetails {:result string,
+                         :verifyTime string,
+                         :error Status,
+                         :traces [Trace]},
+   :probingDetails {:abortCause string,
+                    :endpointInfo EndpointInfo,
+                    :result string,
+                    :successfulProbeCount integer,
+                    :probingLatency LatencyDistribution,
+                    :error Status,
+                    :destinationEgressLocation EdgeLocation,
+                    :sentProbeCount integer,
+                    :verifyTime string},
+   :bypassFirewallChecks boolean,
+   :destination {:loadBalancerId string,
                  :instance string,
+                 :forwardingRuleTarget string,
+                 :cloudFunction CloudFunctionEndpoint,
+                 :gkeMasterCluster string,
+                 :appEngineVersion AppEngineVersionEndpoint,
+                 :loadBalancerType string,
+                 :port integer,
+                 :networkType string,
+                 :cloudSqlInstance string,
+                 :cloudRunRevision CloudRunRevisionEndpoint,
+                 :forwardingRule string,
                  :projectId string,
-                 :port integer}}
+                 :ipAddress string,
+                 :network string}}
   
   Updates the configuration of an existing `ConnectivityTest`. After you update a test, the reachability analysis is performed as part of the long running operation, which completes when the analysis completes. The Reachability state in the test resource is updated with the new result. If the endpoint specifications in `ConnectivityTest` are invalid (for example, they contain non-existent resources in the network, or the user does not have read permissions to the network configurations of listed projects), then the reachability result returns a value of UNKNOWN. If the endpoint specifications in `ConnectivityTest` are incomplete, the reachability result returns a value of `AMBIGUOUS`. See the documentation in `ConnectivityTest` for for more details."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -227,27 +361,51 @@
    :name string,
    :createTime string,
    :relatedProjects [string],
-   :source {:networkType string,
-            :ipAddress string,
-            :cloudSqlInstance string,
-            :gkeMasterCluster string,
-            :network string,
+   :source {:loadBalancerId string,
             :instance string,
+            :forwardingRuleTarget string,
+            :cloudFunction CloudFunctionEndpoint,
+            :gkeMasterCluster string,
+            :appEngineVersion AppEngineVersionEndpoint,
+            :loadBalancerType string,
+            :port integer,
+            :networkType string,
+            :cloudSqlInstance string,
+            :cloudRunRevision CloudRunRevisionEndpoint,
+            :forwardingRule string,
             :projectId string,
-            :port integer},
+            :ipAddress string,
+            :network string},
    :updateTime string,
-   :reachabilityDetails {:verifyTime string,
-                         :result string,
-                         :traces [Trace],
-                         :error Status},
-   :destination {:networkType string,
-                 :ipAddress string,
-                 :cloudSqlInstance string,
-                 :gkeMasterCluster string,
-                 :network string,
+   :reachabilityDetails {:result string,
+                         :verifyTime string,
+                         :error Status,
+                         :traces [Trace]},
+   :probingDetails {:abortCause string,
+                    :endpointInfo EndpointInfo,
+                    :result string,
+                    :successfulProbeCount integer,
+                    :probingLatency LatencyDistribution,
+                    :error Status,
+                    :destinationEgressLocation EdgeLocation,
+                    :sentProbeCount integer,
+                    :verifyTime string},
+   :bypassFirewallChecks boolean,
+   :destination {:loadBalancerId string,
                  :instance string,
+                 :forwardingRuleTarget string,
+                 :cloudFunction CloudFunctionEndpoint,
+                 :gkeMasterCluster string,
+                 :appEngineVersion AppEngineVersionEndpoint,
+                 :loadBalancerType string,
+                 :port integer,
+                 :networkType string,
+                 :cloudSqlInstance string,
+                 :cloudRunRevision CloudRunRevisionEndpoint,
+                 :forwardingRule string,
                  :projectId string,
-                 :port integer}}
+                 :ipAddress string,
+                 :network string}}
   
   Creates a new Connectivity Test. After you create a test, the reachability analysis is performed as part of the long running operation, which completes when the analysis completes. If the endpoint specifications in `ConnectivityTest` are invalid (for example, containing non-existent resources in the network, or you don't have read permissions to the network configurations of listed projects), then the reachability result returns a value of `UNKNOWN`. If the endpoint specifications in `ConnectivityTest` are incomplete, the reachability result returns a value of AMBIGUOUS. For more information, see the Connectivity Test documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -327,7 +485,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, orderBy, filter
+  Optional parameters: pageSize, pageToken, filter, orderBy
   
   Lists all Connectivity Tests owned by a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -368,116 +526,6 @@
     (util/get-url
      "https://networkmanagement.googleapis.com/"
      "v1/{+name}:rerun"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-delete$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-list$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-get$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-cancel$
-  "https://cloud.google.com/api/reference/rest/v1/projects/locations/global/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://networkmanagement.googleapis.com/"
-     "v1/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with

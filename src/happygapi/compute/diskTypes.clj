@@ -6,25 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/diskTypes/get
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/diskTypes/list
   
-  Required parameters: zone, project, diskType
+  Required parameters: project, zone
   
-  Optional parameters: none
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Returns the specified disk type. Gets a list of available disk types by making a list() request."
+  Retrieves a list of disk types available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :project :diskType})]}
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/zones/{zone}/diskTypes/{diskType}"
-     #{:zone :project :diskType}
+     "projects/{project}/zones/{zone}/diskTypes"
+     #{:zone :project}
      parameters)
     (merge-with
      merge
@@ -39,9 +39,9 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, includeAllScopes, orderBy, pageToken, returnPartialSuccess
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of disk types."
+  Retrieves an aggregated list of disk types. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -62,25 +62,25 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/diskTypes/list
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/diskTypes/get
   
-  Required parameters: project, zone
+  Required parameters: diskType, project, zone
   
-  Optional parameters: pageToken, maxResults, orderBy, filter, returnPartialSuccess
+  Optional parameters: none
   
-  Retrieves a list of disk types available to the specified project."
+  Returns the specified disk type."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :project})]}
+  {:pre [(util/has-keys? parameters #{:zone :project :diskType})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/zones/{zone}/diskTypes"
-     #{:zone :project}
+     "projects/{project}/zones/{zone}/diskTypes/{diskType}"
+     #{:zone :project :diskType}
      parameters)
     (merge-with
      merge

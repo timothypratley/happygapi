@@ -6,64 +6,31 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/list
+(defn custombatch$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/custombatch
   
-  Required parameters: merchantId
-  
-  Optional parameters: none
-  
-  Lists the return policies of the Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/returnpolicy"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/insert
-  
-  Required parameters: merchantId
+  Required parameters: none
   
   Optional parameters: none
   
   Body: 
   
-  {:nonFreeReturnReasons [string],
-   :name string,
-   :seasonalOverrides [{:policy ReturnPolicyPolicy,
-                        :startDate string,
-                        :endDate string,
-                        :name string}],
-   :policy {:lastReturnDate string, :numberOfDays string, :type string},
-   :returnPolicyId string,
-   :returnShippingFee {:value string, :currency string},
-   :label string,
-   :kind string,
-   :country string}
+  {:entries [{:batchId integer,
+              :merchantId string,
+              :method string,
+              :returnPolicyId string,
+              :returnPolicy ReturnPolicy}]}
   
-  Inserts a return policy for the Merchant Center account."
+  Batches multiple return policy related calls in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/returnpolicy"
-     #{:merchantId}
+     "returnpolicy/batch"
+     #{}
      parameters)
     (merge-with
      merge
@@ -101,46 +68,10 @@
       :as :json}
      auth))))
 
-(defn custombatch$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/custombatch
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entries [{:batchId integer,
-              :returnPolicyId string,
-              :returnPolicy ReturnPolicy,
-              :method string,
-              :merchantId string}]}
-  
-  Batches multiple return policy related calls in a single request."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "returnpolicy/batch"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/get
   
-  Required parameters: returnPolicyId, merchantId
+  Required parameters: merchantId, returnPolicyId
   
   Optional parameters: none
   
@@ -154,6 +85,75 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/returnpolicy/{returnPolicyId}"
      #{:returnPolicyId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/insert
+  
+  Required parameters: merchantId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:nonFreeReturnReasons [string],
+   :name string,
+   :seasonalOverrides [{:name string,
+                        :startDate string,
+                        :endDate string,
+                        :policy ReturnPolicyPolicy}],
+   :policy {:type string, :numberOfDays string, :lastReturnDate string},
+   :returnPolicyId string,
+   :returnShippingFee {:value string, :currency string},
+   :label string,
+   :kind string,
+   :country string}
+  
+  Inserts a return policy for the Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/returnpolicy"
+     #{:merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/returnpolicy/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: none
+  
+  Lists the return policies of the Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/returnpolicy"
+     #{:merchantId}
      parameters)
     (merge-with
      merge

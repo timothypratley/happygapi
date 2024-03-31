@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: languageCode, account, pageToken, pageSize
+  Optional parameters: account, pageSize, pageToken, languageCode
   
   Lists the Products the reseller is authorized to sell. Possible error codes: * INVALID_ARGUMENT: Required request parameters are missing or invalid."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}
@@ -37,7 +37,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, languageCode, pageSize, account
+  Optional parameters: account, pageSize, pageToken, languageCode
   
   Lists the SKUs for a product the reseller is authorized to sell. Possible error codes: * INVALID_ARGUMENT: Required request parameters are missing or invalid."
   {:scopes ["https://www.googleapis.com/auth/apps.order"]}

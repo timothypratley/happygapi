@@ -1,17 +1,17 @@
 (ns happygapi.domains.projects
   "Cloud Domains API: projects.
   Enables management and configuration of domain names.
-  See: https://cloud.google.com/domains/api/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/domains/api/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn locations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/list
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: pageToken, filter, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -21,7 +21,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}/locations"
+     "v1/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn locations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/get
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/get
   
   Required parameters: name
   
@@ -47,7 +47,59 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -59,7 +111,7 @@
      auth))))
 
 (defn locations-registrations-retrieveRegisterParameters$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/retrieveRegisterParameters
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/retrieveRegisterParameters
   
   Required parameters: location
   
@@ -73,7 +125,33 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+location}/registrations:retrieveRegisterParameters"
+     "v1/{+location}/registrations:retrieveRegisterParameters"
+     #{:location}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-registrations-retrieveTransferParameters$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/retrieveTransferParameters
+  
+  Required parameters: location
+  
+  Optional parameters: domainName
+  
+  Deprecated: For more information, see [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) Gets parameters needed to transfer a domain name from another registrar to Cloud Domains. For domains already managed by [Google Domains](https://domains.google/), use `ImportDomain` instead. Use the returned values to call `TransferDomain`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:location})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1/{+location}/registrations:retrieveTransferParameters"
      #{:location}
      parameters)
     (merge-with
@@ -85,7 +163,7 @@
      auth))))
 
 (defn locations-registrations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/get
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/get
   
   Required parameters: name
   
@@ -99,7 +177,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -111,7 +189,7 @@
      auth))))
 
 (defn locations-registrations-setIamPolicy$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/setIamPolicy
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/setIamPolicy
   
   Required parameters: resource
   
@@ -119,11 +197,11 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
+  {:policy {:version integer,
             :bindings [Binding],
-            :etag string,
-            :version integer}}
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -133,7 +211,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+resource}:setIamPolicy"
+     "v1/{+resource}:setIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -147,7 +225,7 @@
      auth))))
 
 (defn locations-registrations-configureManagementSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureManagementSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/configureManagementSettings
   
   Required parameters: registration
   
@@ -155,9 +233,10 @@
   
   Body: 
   
-  {:updateMask string,
-   :managementSettings {:transferLockState string,
-                        :renewalMethod string}}
+  {:managementSettings {:renewalMethod string,
+                        :preferredRenewalMethod string,
+                        :transferLockState string},
+   :updateMask string}
   
   Updates a `Registration`'s management settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -167,7 +246,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+registration}:configureManagementSettings"
+     "v1/{+registration}:configureManagementSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -181,7 +260,7 @@
      auth))))
 
 (defn locations-registrations-patch$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/patch
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/patch
   
   Required parameters: name
   
@@ -189,27 +268,30 @@
   
   Body: 
   
-  {:labels {},
+  {:transferFailureReason string,
+   :labels {},
    :supportedPrivacy [string],
    :dnsSettings {:customDns CustomDns,
                  :googleDomainsDns GoogleDomainsDns,
                  :glueRecords [GlueRecord]},
    :issues [string],
    :name string,
+   :registerFailureReason string,
    :createTime string,
-   :managementSettings {:transferLockState string,
-                        :renewalMethod string},
-   :contactSettings {:technicalContact Contact,
-                     :adminContact Contact,
+   :managementSettings {:renewalMethod string,
+                        :preferredRenewalMethod string,
+                        :transferLockState string},
+   :contactSettings {:privacy string,
                      :registrantContact Contact,
-                     :privacy string},
+                     :adminContact Contact,
+                     :technicalContact Contact},
    :state string,
    :domainName string,
    :expireTime string,
-   :pendingContactSettings {:technicalContact Contact,
-                            :adminContact Contact,
+   :pendingContactSettings {:privacy string,
                             :registrantContact Contact,
-                            :privacy string}}
+                            :adminContact Contact,
+                            :technicalContact Contact}}
   
   Updates select fields of a `Registration` resource, notably `labels`. To update other fields, use the appropriate custom update method: * To update management settings, see `ConfigureManagementSettings` * To update DNS configuration, see `ConfigureDnsSettings` * To update contact information, see `ConfigureContactSettings`"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -219,7 +301,7 @@
    (http/patch
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -233,7 +315,7 @@
      auth))))
 
 (defn locations-registrations-testIamPermissions$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/testIamPermissions
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/testIamPermissions
   
   Required parameters: resource
   
@@ -251,7 +333,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+resource}:testIamPermissions"
+     "v1/{+resource}:testIamPermissions"
      #{:resource}
      parameters)
     (merge-with
@@ -264,8 +346,57 @@
       :as :json}
      auth))))
 
+(defn locations-registrations-transfer$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/transfer
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:registration {:transferFailureReason string,
+                  :labels {},
+                  :supportedPrivacy [string],
+                  :dnsSettings DnsSettings,
+                  :issues [string],
+                  :name string,
+                  :registerFailureReason string,
+                  :createTime string,
+                  :managementSettings ManagementSettings,
+                  :contactSettings ContactSettings,
+                  :state string,
+                  :domainName string,
+                  :expireTime string,
+                  :pendingContactSettings ContactSettings},
+   :contactNotices [string],
+   :yearlyPrice {:currencyCode string, :units string, :nanos integer},
+   :authorizationCode {:code string},
+   :validateOnly boolean}
+  
+  Deprecated: For more information, see [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) Transfers a domain name from another registrar to Cloud Domains. For domains already managed by [Google Domains](https://domains.google/), use `ImportDomain` instead. Before calling this method, go to the domain's current registrar to unlock the domain for transfer and retrieve the domain's transfer authorization code. Then call `RetrieveTransferParameters` to confirm that the domain is unlocked and to get values needed to build a call to this method. A successful call creates a `Registration` resource in state `TRANSFER_PENDING`. It can take several days to complete the transfer process. The registrant can often speed up this process by approving the transfer through the current registrar, either by clicking a link in an email from the registrar or by visiting the registrar's website. A few minutes after transfer approval, the resource transitions to state `ACTIVE`, indicating that the transfer was successful. If the transfer is rejected or the request expires without being approved, the resource can end up in state `TRANSFER_FAILED`. If transfer fails, you can safely delete the resource and retry the transfer."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1/{+parent}/registrations:transfer"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-registrations-resetAuthorizationCode$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/resetAuthorizationCode
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/resetAuthorizationCode
   
   Required parameters: registration
   
@@ -283,7 +414,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+registration}:resetAuthorizationCode"
+     "v1/{+registration}:resetAuthorizationCode"
      #{:registration}
      parameters)
     (merge-with
@@ -297,7 +428,7 @@
      auth))))
 
 (defn locations-registrations-configureContactSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureContactSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/configureContactSettings
   
   Required parameters: registration
   
@@ -305,13 +436,13 @@
   
   Body: 
   
-  {:contactNotices [string],
-   :updateMask string,
-   :validateOnly boolean,
-   :contactSettings {:technicalContact Contact,
-                     :adminContact Contact,
+  {:contactSettings {:privacy string,
                      :registrantContact Contact,
-                     :privacy string}}
+                     :adminContact Contact,
+                     :technicalContact Contact},
+   :updateMask string,
+   :contactNotices [string],
+   :validateOnly boolean}
   
   Updates a `Registration`'s contact settings. Some changes require confirmation by the domain's registrant contact ."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -321,7 +452,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+registration}:configureContactSettings"
+     "v1/{+registration}:configureContactSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -335,7 +466,7 @@
      auth))))
 
 (defn locations-registrations-configureDnsSettings$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/configureDnsSettings
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/configureDnsSettings
   
   Required parameters: registration
   
@@ -343,11 +474,11 @@
   
   Body: 
   
-  {:validateOnly boolean,
-   :dnsSettings {:customDns CustomDns,
+  {:dnsSettings {:customDns CustomDns,
                  :googleDomainsDns GoogleDomainsDns,
                  :glueRecords [GlueRecord]},
-   :updateMask string}
+   :updateMask string,
+   :validateOnly boolean}
   
   Updates a `Registration`'s DNS settings."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -357,7 +488,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+registration}:configureDnsSettings"
+     "v1/{+registration}:configureDnsSettings"
      #{:registration}
      parameters)
     (merge-with
@@ -371,13 +502,13 @@
      auth))))
 
 (defn locations-registrations-delete$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/delete
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a `Registration` resource. This method only works on resources in one of the following states: * `state` is `EXPORTED` with `expire_time` in the past * `state` is `REGISTRATION_FAILED`"
+  Deletes a `Registration` resource. This method works on any `Registration` resource using [Subscription or Commitment billing](/domains/pricing#billing-models), provided that the resource was created at least 1 day in the past. When an active registration is successfully deleted, you can continue to use the domain in [Google Domains](https://domains.google/) until it expires. The calling user becomes the domain's sole owner in Google Domains, and permissions for the domain are subsequently managed there. The domain does not renew automatically unless the new owner sets up billing in Google Domains. After January 2024 you will only be able to delete `Registration` resources when `state` is one of: `EXPORTED`, `EXPIRED`,`REGISTRATION_FAILED` or `TRANSFER_FAILED`. See [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) for more details."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -385,7 +516,7 @@
    (http/delete
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
@@ -397,7 +528,7 @@
      auth))))
 
 (defn locations-registrations-export$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/export
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/export
   
   Required parameters: name
   
@@ -407,7 +538,7 @@
   
   {}
   
-  Exports a `Registration` that you no longer want to use with Cloud Domains. You can continue to use the domain in [Google Domains](https://domains.google/) until it expires. If the export is successful: * The resource's `state` becomes `EXPORTED`, meaning that it is no longer managed by Cloud Domains * Because individual users can own domains in Google Domains, the calling user becomes the domain's sole owner. Permissions for the domain are subsequently managed in Google Domains. * Without further action, the domain does not renew automatically. The new owner can set up billing in Google Domains to renew the domain if needed."
+  Deprecated: For more information, see [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) Exports a `Registration` resource, such that it is no longer managed by Cloud Domains. When an active domain is successfully exported, you can continue to use the domain in [Google Domains](https://domains.google/) until it expires. The calling user becomes the domain's sole owner in Google Domains, and permissions for the domain are subsequently managed there. The domain does not renew automatically unless the new owner sets up billing in Google Domains."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -415,7 +546,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}:export"
+     "v1/{+name}:export"
      #{:name}
      parameters)
     (merge-with
@@ -429,7 +560,7 @@
      auth))))
 
 (defn locations-registrations-getIamPolicy$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/getIamPolicy
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/getIamPolicy
   
   Required parameters: resource
   
@@ -443,7 +574,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+resource}:getIamPolicy"
+     "v1/{+resource}:getIamPolicy"
      #{:resource}
      parameters)
     (merge-with
@@ -454,8 +585,34 @@
       :as :json}
      auth))))
 
+(defn locations-registrations-retrieveImportableDomains$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/retrieveImportableDomains
+  
+  Required parameters: location
+  
+  Optional parameters: pageSize, pageToken
+  
+  Deprecated: For more information, see [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) Lists domain names from [Google Domains](https://domains.google/) that can be imported to Cloud Domains using the `ImportDomain` method. Since individual users can own domains in Google Domains, the list of domains returned depends on the individual user making the call. Domains already managed by Cloud Domains are not returned."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:location})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://domains.googleapis.com/"
+     "v1/{+location}/registrations:retrieveImportableDomains"
+     #{:location}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-registrations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/list
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/list
   
   Required parameters: parent
   
@@ -469,7 +626,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+parent}/registrations"
+     "v1/{+parent}/registrations"
      #{:parent}
      parameters)
     (merge-with
@@ -481,7 +638,7 @@
      auth))))
 
 (defn locations-registrations-register$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/register
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/register
   
   Required parameters: parent
   
@@ -489,13 +646,13 @@
   
   Body: 
   
-  {:contactNotices [string],
-   :domainNotices [string],
-   :registration {:labels {},
+  {:registration {:transferFailureReason string,
+                  :labels {},
                   :supportedPrivacy [string],
                   :dnsSettings DnsSettings,
                   :issues [string],
                   :name string,
+                  :registerFailureReason string,
                   :createTime string,
                   :managementSettings ManagementSettings,
                   :contactSettings ContactSettings,
@@ -503,6 +660,8 @@
                   :domainName string,
                   :expireTime string,
                   :pendingContactSettings ContactSettings},
+   :domainNotices [string],
+   :contactNotices [string],
    :yearlyPrice {:currencyCode string, :units string, :nanos integer},
    :validateOnly boolean}
   
@@ -514,7 +673,7 @@
    (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+parent}/registrations:register"
+     "v1/{+parent}/registrations:register"
      #{:parent}
      parameters)
     (merge-with
@@ -528,7 +687,7 @@
      auth))))
 
 (defn locations-registrations-retrieveAuthorizationCode$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/retrieveAuthorizationCode
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/retrieveAuthorizationCode
   
   Required parameters: registration
   
@@ -542,7 +701,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+registration}:retrieveAuthorizationCode"
+     "v1/{+registration}:retrieveAuthorizationCode"
      #{:registration}
      parameters)
     (merge-with
@@ -554,7 +713,7 @@
      auth))))
 
 (defn locations-registrations-searchDomains$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/registrations/searchDomains
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/searchDomains
   
   Required parameters: location
   
@@ -568,7 +727,7 @@
    (http/get
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+location}/registrations:searchDomains"
+     "v1/{+location}/registrations:searchDomains"
      #{:location}
      parameters)
     (merge-with
@@ -579,53 +738,33 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/operations/list
+(defn locations-registrations-import$
+  "https://cloud.google.com/domains/api/reference/rest/v1/projects/locations/registrations/import
   
-  Required parameters: name
-  
-  Optional parameters: filter, pageToken, pageSize
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://domains.googleapis.com/"
-     "v1beta1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/domains/api/reference/rest/v1beta1/projects/locations/operations/get
-  
-  Required parameters: name
+  Required parameters: parent
   
   Optional parameters: none
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Body: 
+  
+  {:domainName string, :labels {}}
+  
+  Deprecated: For more information, see [Cloud Domains feature deprecation](https://cloud.google.com/domains/docs/deprecations/feature-deprecations) Imports a domain name from [Google Domains](https://domains.google/) for use in Cloud Domains. To transfer a domain from another registrar, use the `TransferDomain` method instead. Since individual users can own domains in Google Domains, the calling user must have ownership permission on the domain."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://domains.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
+     "v1/{+parent}/registrations:import"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

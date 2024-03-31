@@ -11,7 +11,7 @@
   
   Required parameters: part
   
-  Optional parameters: hl, regionCode, id
+  Optional parameters: regionCode, id, hl
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"

@@ -6,70 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn activate$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/activate
-  
-  Required parameters: merchantId, regionCode
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Reactivates the BoG program in your Merchant Center account. Moves the program to the active state when allowed, e.g. when paused. Important: This method is only whitelisted for selected merchants."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:regionCode :merchantId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/buyongoogleprograms/{regionCode}/activate"
-     #{:regionCode :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn requestreview$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/requestreview
-  
-  Required parameters: merchantId, regionCode
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Requests review and then activates the BoG program in your Merchant Center account for the first time. Moves the program to the REVIEW_PENDING state. Important: This method is only whitelisted for selected merchants."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:regionCode :merchantId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/buyongoogleprograms/{regionCode}/requestreview"
-     #{:regionCode :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/get
   
@@ -99,7 +35,7 @@
 (defn patch$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/patch
   
-  Required parameters: regionCode, merchantId
+  Required parameters: merchantId, regionCode
   
   Optional parameters: updateMask
   
@@ -139,7 +75,7 @@
 (defn onboard$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/onboard
   
-  Required parameters: regionCode, merchantId
+  Required parameters: merchantId, regionCode
   
   Optional parameters: none
   
@@ -168,10 +104,10 @@
       :as :json}
      auth))))
 
-(defn pause$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/pause
+(defn requestreview$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/requestreview
   
-  Required parameters: regionCode, merchantId
+  Required parameters: merchantId, regionCode
   
   Optional parameters: none
   
@@ -179,7 +115,71 @@
   
   {}
   
-  Pauses the BoG program in your Merchant Center account. Important: This method is only whitelisted for selected merchants."
+  Requests review and then activates the BoG program in your Merchant Center account for the first time. Moves the program to the REVIEW_PENDING state. This method is only available to selected merchants."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:regionCode :merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/buyongoogleprograms/{regionCode}/requestreview"
+     #{:regionCode :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn activate$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/activate
+  
+  Required parameters: merchantId, regionCode
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Reactivates the BoG program in your Merchant Center account. Moves the program to the active state when allowed, for example, when paused. This method is only available to selected merchants."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:regionCode :merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/buyongoogleprograms/{regionCode}/activate"
+     #{:regionCode :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn pause$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/buyongoogleprograms/pause
+  
+  Required parameters: merchantId, regionCode
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Pauses the BoG program in your Merchant Center account. This method is only available to selected merchants."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:regionCode :merchantId})]}

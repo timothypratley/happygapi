@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a buyer account by its name."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/list
   
@@ -39,7 +65,7 @@
   
   Optional parameters: none
   
-  Gets remarketing tag for a buyer. A remarketing tag is a piece of JavaScript code that can be placed on a web page. When a user visits a page containing a remarketing tag, Google adds the user to a user list."
+  This has been sunset as of October 2023, and will return an error response if called. For more information, see the release notes: https://developers.google.com/authorized-buyers/apis/relnotes#real-time-bidding-api Gets remarketing tag for a buyer. A remarketing tag is a piece of JavaScript code that can be placed on a web page. When a user visits a page containing a remarketing tag, Google adds the user to a user list."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -58,14 +84,40 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/get
+(defn creatives-list$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, view
+  
+  Lists creatives as they are at the time of the initial request. This call may take multiple hours to complete. For large, paginated requests, this method returns a snapshot of creatives at the time of request for the first page. `lastStatusUpdate` and `creativeServingDecision` may be outdated for creatives on sequential pages. We recommend [Google Cloud Pub/Sub](//cloud.google.com/pubsub/docs/overview) to view the latest status."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+parent}/creatives"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn creatives-get$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/get
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: view
   
-  Gets a buyer account by its name."
+  Gets a creative."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -84,14 +136,174 @@
       :as :json}
      auth))))
 
-(defn userLists-getRemarketingTag$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/getRemarketingTag
+(defn creatives-create$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:dealIds [string],
+   :video {:videoUrl string,
+           :videoVastXml string,
+           :videoMetadata VideoMetadata},
+   :creativeServingDecision {:detectedProductCategories [integer],
+                             :detectedAdvertisers [AdvertiserAndBrand],
+                             :chinaPolicyCompliance PolicyCompliance,
+                             :networkPolicyCompliance PolicyCompliance,
+                             :adTechnologyProviders AdTechnologyProviders,
+                             :detectedClickThroughUrls [string],
+                             :detectedSensitiveCategories [integer],
+                             :dealsPolicyCompliance PolicyCompliance,
+                             :russiaPolicyCompliance PolicyCompliance,
+                             :detectedDomains [string],
+                             :detectedLanguages [string],
+                             :platformPolicyCompliance PolicyCompliance,
+                             :detectedAttributes [string],
+                             :lastStatusUpdate string,
+                             :detectedVendorIds [integer]},
+   :declaredVendorIds [integer],
+   :declaredClickThroughUrls [string],
+   :advertiserName string,
+   :adChoicesDestinationUrl string,
+   :name string,
+   :impressionTrackingUrls [string],
+   :apiUpdateTime string,
+   :restrictedCategories [string],
+   :creativeId string,
+   :declaredAttributes [string],
+   :native {:clickLinkUrl string,
+            :headline string,
+            :starRating number,
+            :logo Image,
+            :advertiserName string,
+            :appIcon Image,
+            :priceDisplayText string,
+            :callToAction string,
+            :clickTrackingUrl string,
+            :videoUrl string,
+            :videoVastXml string,
+            :image Image,
+            :body string},
+   :renderUrl string,
+   :creativeFormat string,
+   :agencyId string,
+   :declaredRestrictedCategories [string],
+   :version integer,
+   :accountId string,
+   :html {:snippet string, :width integer, :height integer}}
+  
+  Creates a creative."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+parent}/creatives"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn creatives-patch$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:dealIds [string],
+   :video {:videoUrl string,
+           :videoVastXml string,
+           :videoMetadata VideoMetadata},
+   :creativeServingDecision {:detectedProductCategories [integer],
+                             :detectedAdvertisers [AdvertiserAndBrand],
+                             :chinaPolicyCompliance PolicyCompliance,
+                             :networkPolicyCompliance PolicyCompliance,
+                             :adTechnologyProviders AdTechnologyProviders,
+                             :detectedClickThroughUrls [string],
+                             :detectedSensitiveCategories [integer],
+                             :dealsPolicyCompliance PolicyCompliance,
+                             :russiaPolicyCompliance PolicyCompliance,
+                             :detectedDomains [string],
+                             :detectedLanguages [string],
+                             :platformPolicyCompliance PolicyCompliance,
+                             :detectedAttributes [string],
+                             :lastStatusUpdate string,
+                             :detectedVendorIds [integer]},
+   :declaredVendorIds [integer],
+   :declaredClickThroughUrls [string],
+   :advertiserName string,
+   :adChoicesDestinationUrl string,
+   :name string,
+   :impressionTrackingUrls [string],
+   :apiUpdateTime string,
+   :restrictedCategories [string],
+   :creativeId string,
+   :declaredAttributes [string],
+   :native {:clickLinkUrl string,
+            :headline string,
+            :starRating number,
+            :logo Image,
+            :advertiserName string,
+            :appIcon Image,
+            :priceDisplayText string,
+            :callToAction string,
+            :clickTrackingUrl string,
+            :videoUrl string,
+            :videoVastXml string,
+            :image Image,
+            :body string},
+   :renderUrl string,
+   :creativeFormat string,
+   :agencyId string,
+   :declaredRestrictedCategories [string],
+   :version integer,
+   :accountId string,
+   :html {:snippet string, :width integer, :height integer}}
+  
+  Updates a creative."
+  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://realtimebidding.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn userLists-get$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets remarketing tag for a buyer. A remarketing tag is a piece of JavaScript code that can be placed on a web page. When a user visits a page containing a remarketing tag, Google adds the user to a user list."
+  Gets a user list by its name."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -99,76 +311,12 @@
    (http/get
     (util/get-url
      "https://realtimebidding.googleapis.com/"
-     "v1/{+name}:getRemarketingTag"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn userLists-close$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/close
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Change the status of a user list to CLOSED. This prevents new users from being added to the user list."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+name}:close"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn userLists-open$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/open
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Change the status of a user list to OPEN. This allows new users to be added to the user list."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+name}:open"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -209,17 +357,17 @@
   
   Body: 
   
-  {:displayName string,
+  {:name string,
+   :displayName string,
    :description string,
    :status string,
-   :membershipDurationDays string,
-   :urlRestriction {:endDate Date,
-                    :url string,
+   :urlRestriction {:url string,
                     :restrictionType string,
-                    :startDate Date},
-   :name string}
+                    :startDate Date,
+                    :endDate Date},
+   :membershipDurationDays string}
   
-  Create a new user list."
+  Creates a new user list."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -240,32 +388,6 @@
       :as :json}
      auth))))
 
-(defn userLists-get$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a user list by its name."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn userLists-update$
   "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/update
   
@@ -275,17 +397,17 @@
   
   Body: 
   
-  {:displayName string,
+  {:name string,
+   :displayName string,
    :description string,
    :status string,
-   :membershipDurationDays string,
-   :urlRestriction {:endDate Date,
-                    :url string,
+   :urlRestriction {:url string,
                     :restrictionType string,
-                    :startDate Date},
-   :name string}
+                    :startDate Date,
+                    :endDate Date},
+   :membershipDurationDays string}
   
-  Update the given user list. Only user lists with URLRestrictions can be updated."
+  Updates the given user list. Only user lists with URLRestrictions can be updated."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -306,74 +428,27 @@
       :as :json}
      auth))))
 
-(defn creatives-create$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/create
+(defn userLists-open$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/open
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
   Body: 
   
-  {:dealIds [string],
-   :video {:videoVastXml string,
-           :videoMetadata VideoMetadata,
-           :videoUrl string},
-   :creativeServingDecision {:detectedProductCategories [integer],
-                             :detectedAdvertisers [AdvertiserAndBrand],
-                             :chinaPolicyCompliance PolicyCompliance,
-                             :networkPolicyCompliance PolicyCompliance,
-                             :adTechnologyProviders AdTechnologyProviders,
-                             :detectedClickThroughUrls [string],
-                             :detectedSensitiveCategories [integer],
-                             :dealsPolicyCompliance PolicyCompliance,
-                             :russiaPolicyCompliance PolicyCompliance,
-                             :detectedDomains [string],
-                             :detectedLanguages [string],
-                             :platformPolicyCompliance PolicyCompliance,
-                             :detectedAttributes [string],
-                             :lastStatusUpdate string,
-                             :detectedVendorIds [integer]},
-   :declaredVendorIds [integer],
-   :declaredClickThroughUrls [string],
-   :advertiserName string,
-   :adChoicesDestinationUrl string,
-   :name string,
-   :impressionTrackingUrls [string],
-   :apiUpdateTime string,
-   :restrictedCategories [string],
-   :creativeId string,
-   :declaredAttributes [string],
-   :native {:clickLinkUrl string,
-            :headline string,
-            :starRating number,
-            :logo Image,
-            :advertiserName string,
-            :appIcon Image,
-            :priceDisplayText string,
-            :callToAction string,
-            :clickTrackingUrl string,
-            :videoUrl string,
-            :videoVastXml string,
-            :image Image,
-            :body string},
-   :creativeFormat string,
-   :agencyId string,
-   :declaredRestrictedCategories [string],
-   :version integer,
-   :accountId string,
-   :html {:height integer, :snippet string, :width integer}}
+  {}
   
-  Creates a creative."
+  Changes the status of a user list to OPEN. This allows new users to be added to the user list."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://realtimebidding.googleapis.com/"
-     "v1/{+parent}/creatives"
-     #{:parent}
+     "v1/{+name}:open"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -385,99 +460,26 @@
       :as :json}
      auth))))
 
-(defn creatives-get$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/get
+(defn userLists-close$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/close
   
   Required parameters: name
   
-  Optional parameters: view
-  
-  Gets a creative."
-  {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://realtimebidding.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn creatives-patch$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
+  Optional parameters: none
   
   Body: 
   
-  {:dealIds [string],
-   :video {:videoVastXml string,
-           :videoMetadata VideoMetadata,
-           :videoUrl string},
-   :creativeServingDecision {:detectedProductCategories [integer],
-                             :detectedAdvertisers [AdvertiserAndBrand],
-                             :chinaPolicyCompliance PolicyCompliance,
-                             :networkPolicyCompliance PolicyCompliance,
-                             :adTechnologyProviders AdTechnologyProviders,
-                             :detectedClickThroughUrls [string],
-                             :detectedSensitiveCategories [integer],
-                             :dealsPolicyCompliance PolicyCompliance,
-                             :russiaPolicyCompliance PolicyCompliance,
-                             :detectedDomains [string],
-                             :detectedLanguages [string],
-                             :platformPolicyCompliance PolicyCompliance,
-                             :detectedAttributes [string],
-                             :lastStatusUpdate string,
-                             :detectedVendorIds [integer]},
-   :declaredVendorIds [integer],
-   :declaredClickThroughUrls [string],
-   :advertiserName string,
-   :adChoicesDestinationUrl string,
-   :name string,
-   :impressionTrackingUrls [string],
-   :apiUpdateTime string,
-   :restrictedCategories [string],
-   :creativeId string,
-   :declaredAttributes [string],
-   :native {:clickLinkUrl string,
-            :headline string,
-            :starRating number,
-            :logo Image,
-            :advertiserName string,
-            :appIcon Image,
-            :priceDisplayText string,
-            :callToAction string,
-            :clickTrackingUrl string,
-            :videoUrl string,
-            :videoVastXml string,
-            :image Image,
-            :body string},
-   :creativeFormat string,
-   :agencyId string,
-   :declaredRestrictedCategories [string],
-   :version integer,
-   :accountId string,
-   :html {:height integer, :snippet string, :width integer}}
+  {}
   
-  Updates a creative."
+  Changes the status of a user list to CLOSED. This prevents new users from being added to the user list."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://realtimebidding.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:close"
      #{:name}
      parameters)
     (merge-with
@@ -490,23 +492,23 @@
       :as :json}
      auth))))
 
-(defn creatives-list$
-  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/creatives/list
+(defn userLists-getRemarketingTag$
+  "https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/buyers/userLists/getRemarketingTag
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: filter, pageSize, view, pageToken
+  Optional parameters: none
   
-  Lists creatives."
+  This has been sunset as of October 2023, and will return an error response if called. For more information, see the release notes: https://developers.google.com/authorized-buyers/apis/relnotes#real-time-bidding-api Gets remarketing tag for a buyer. A remarketing tag is a piece of JavaScript code that can be placed on a web page. When a user visits a page containing a remarketing tag, Google adds the user to a user list."
   {:scopes ["https://www.googleapis.com/auth/realtime-bidding"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://realtimebidding.googleapis.com/"
-     "v1/{+parent}/creatives"
-     #{:parent}
+     "v1/{+name}:getRemarketingTag"
+     #{:name}
      parameters)
     (merge-with
      merge

@@ -11,7 +11,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, projection, provisionalUserProject, userProject
+  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, projection, userProject
   
   Returns metadata for the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -41,7 +41,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Body: 
   
@@ -83,7 +83,7 @@
   
   Required parameters: project
   
-  Optional parameters: predefinedAcl, predefinedDefaultObjectAcl, projection, provisionalUserProject, userProject
+  Optional parameters: predefinedAcl, predefinedDefaultObjectAcl, projection, userProject, enableObjectRetention
   
   Body: 
   
@@ -96,19 +96,27 @@
    :customPlacementConfig {:dataLocations [string]},
    :storageClass string,
    :timeCreated string,
+   :autoclass {:enabled boolean,
+               :toggleTime string,
+               :terminalStorageClass string,
+               :terminalStorageClassUpdateTime string},
    :updated string,
    :name string,
    :billing {:requesterPays boolean},
+   :hierarchicalNamespace {:enabled boolean},
    :selfLink string,
    :etag string,
+   :objectRetention {:mode string},
    :lifecycle {:rule [{:action {:storageClass string, :type string},
                        :condition {:customTimeBefore string,
                                    :age integer,
                                    :createdBefore string,
                                    :daysSinceNoncurrentTime integer,
+                                   :matchesSuffix [string],
                                    :numNewerVersions integer,
                                    :matchesStorageClass [string],
                                    :matchesPattern string,
+                                   :matchesPrefix [string],
                                    :noncurrentTimeBefore string,
                                    :isLive boolean,
                                    :daysSinceCustomTime integer}}]},
@@ -148,6 +156,8 @@
           :entityId string,
           :bucket string}],
    :locationType string,
+   :softDeletePolicy {:retentionDurationSeconds string,
+                      :effectiveTime string},
    :iamConfiguration {:bucketPolicyOnly {:enabled boolean,
                                          :lockedTime string},
                       :uniformBucketLevelAccess {:enabled boolean,
@@ -187,7 +197,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, predefinedAcl, predefinedDefaultObjectAcl, projection, provisionalUserProject, userProject
+  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, predefinedAcl, predefinedDefaultObjectAcl, projection, userProject
   
   Body: 
   
@@ -200,19 +210,27 @@
    :customPlacementConfig {:dataLocations [string]},
    :storageClass string,
    :timeCreated string,
+   :autoclass {:enabled boolean,
+               :toggleTime string,
+               :terminalStorageClass string,
+               :terminalStorageClassUpdateTime string},
    :updated string,
    :name string,
    :billing {:requesterPays boolean},
+   :hierarchicalNamespace {:enabled boolean},
    :selfLink string,
    :etag string,
+   :objectRetention {:mode string},
    :lifecycle {:rule [{:action {:storageClass string, :type string},
                        :condition {:customTimeBefore string,
                                    :age integer,
                                    :createdBefore string,
                                    :daysSinceNoncurrentTime integer,
+                                   :matchesSuffix [string],
                                    :numNewerVersions integer,
                                    :matchesStorageClass [string],
                                    :matchesPattern string,
+                                   :matchesPrefix [string],
                                    :noncurrentTimeBefore string,
                                    :isLive boolean,
                                    :daysSinceCustomTime integer}}]},
@@ -252,6 +270,8 @@
           :entityId string,
           :bucket string}],
    :locationType string,
+   :softDeletePolicy {:retentionDurationSeconds string,
+                      :effectiveTime string},
    :iamConfiguration {:bucketPolicyOnly {:enabled boolean,
                                          :lockedTime string},
                       :uniformBucketLevelAccess {:enabled boolean,
@@ -290,7 +310,7 @@
   
   Required parameters: bucket, permissions
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Tests a set of permissions on the given bucket to see which, if any, are held by the caller."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -320,7 +340,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, predefinedAcl, predefinedDefaultObjectAcl, projection, provisionalUserProject, userProject
+  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, predefinedAcl, predefinedDefaultObjectAcl, projection, userProject
   
   Body: 
   
@@ -333,19 +353,27 @@
    :customPlacementConfig {:dataLocations [string]},
    :storageClass string,
    :timeCreated string,
+   :autoclass {:enabled boolean,
+               :toggleTime string,
+               :terminalStorageClass string,
+               :terminalStorageClassUpdateTime string},
    :updated string,
    :name string,
    :billing {:requesterPays boolean},
+   :hierarchicalNamespace {:enabled boolean},
    :selfLink string,
    :etag string,
+   :objectRetention {:mode string},
    :lifecycle {:rule [{:action {:storageClass string, :type string},
                        :condition {:customTimeBefore string,
                                    :age integer,
                                    :createdBefore string,
                                    :daysSinceNoncurrentTime integer,
+                                   :matchesSuffix [string],
                                    :numNewerVersions integer,
                                    :matchesStorageClass [string],
                                    :matchesPattern string,
+                                   :matchesPrefix [string],
                                    :noncurrentTimeBefore string,
                                    :isLive boolean,
                                    :daysSinceCustomTime integer}}]},
@@ -385,6 +413,8 @@
           :entityId string,
           :bucket string}],
    :locationType string,
+   :softDeletePolicy {:retentionDurationSeconds string,
+                      :effectiveTime string},
    :iamConfiguration {:bucketPolicyOnly {:enabled boolean,
                                          :lockedTime string},
                       :uniformBucketLevelAccess {:enabled boolean,
@@ -423,7 +453,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, provisionalUserProject, userProject
+  Optional parameters: ifMetagenerationMatch, ifMetagenerationNotMatch, userProject
   
   Permanently deletes an empty bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -451,7 +481,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: optionsRequestedPolicyVersion, provisionalUserProject, userProject
+  Optional parameters: optionsRequestedPolicyVersion, userProject
   
   Returns an IAM policy for the specified bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -478,7 +508,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, pageToken, prefix, projection, provisionalUserProject, userProject
+  Optional parameters: maxResults, pageToken, prefix, projection, userProject
   
   Retrieves a list of buckets for a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -508,7 +538,7 @@
   
   Required parameters: bucket, ifMetagenerationMatch
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Locks retention policy on a bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

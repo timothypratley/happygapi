@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn environments-get$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an environment. Returns NOT_FOUND if the environment does not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudshell.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn environments-start$
   "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/start
   
@@ -38,53 +64,27 @@
       :as :json}
      auth))))
 
-(defn environments-get$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/get
+(defn environments-authorize$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets an environment. Returns NOT_FOUND if the environment does not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudshell.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn environments-removePublicKey$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/removePublicKey
-  
-  Required parameters: environment
-  
-  Optional parameters: none
-  
   Body: 
   
-  {:key string}
+  {:accessToken string, :idToken string, :expireTime string}
   
-  Removes a public SSH key from an environment. Clients will no longer be able to connect to the environment using the corresponding private key. If a key with the same content is not present, this will error with NOT_FOUND."
+  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:environment})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudshell.googleapis.com/"
-     "v1/{+environment}:removePublicKey"
-     #{:environment}
+     "v1/{+name}:authorize"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -128,27 +128,27 @@
       :as :json}
      auth))))
 
-(defn environments-authorize$
-  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/authorize
+(defn environments-removePublicKey$
+  "https://cloud.google.com/shell/docs/api/reference/rest/v1/users/environments/removePublicKey
   
-  Required parameters: name
+  Required parameters: environment
   
   Optional parameters: none
   
   Body: 
   
-  {:idToken string, :expireTime string, :accessToken string}
+  {:key string}
   
-  Sends OAuth credentials to a running environment on behalf of a user. When this completes, the environment will be authorized to run various Google Cloud command line tools without requiring the user to manually authenticate."
+  Removes a public SSH key from an environment. Clients will no longer be able to connect to the environment using the corresponding private key. If a key with the same content is not present, this will error with NOT_FOUND."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:environment})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://cloudshell.googleapis.com/"
-     "v1/{+name}:authorize"
-     #{:name}
+     "v1/{+environment}:removePublicKey"
+     #{:environment}
      parameters)
     (merge-with
      merge

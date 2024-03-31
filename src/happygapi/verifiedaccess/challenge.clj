@@ -1,13 +1,13 @@
 (ns happygapi.verifiedaccess.challenge
   "Chrome Verified Access API: challenge.
   API for Verified Access chrome extension to provide credential verification for chrome devices connecting to an enterprise network
-  See: https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge"
+  See: https://developers.google.com/chrome/verified-accessapi/reference/rest/v2/challenge"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn create$
-  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge/create
+(defn generate$
+  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v2/challenge/generate
   
   Required parameters: none
   
@@ -17,7 +17,7 @@
   
   {}
   
-  CreateChallenge API"
+  Generates a new challenge."
   {:scopes ["https://www.googleapis.com/auth/verifiedaccess"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -25,7 +25,7 @@
    (http/post
     (util/get-url
      "https://verifiedaccess.googleapis.com/"
-     "v1/challenge"
+     "v2/challenge:generate"
      #{}
      parameters)
     (merge-with
@@ -39,7 +39,7 @@
      auth))))
 
 (defn verify$
-  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v1/challenge/verify
+  "https://developers.google.com/chrome/verified-accessapi/reference/rest/v2/challenge/verify
   
   Required parameters: none
   
@@ -47,10 +47,9 @@
   
   Body: 
   
-  {:challengeResponse {:data string, :signature string},
-   :expectedIdentity string}
+  {:challengeResponse string, :expectedIdentity string}
   
-  VerifyChallengeResponse API"
+  Verifies the challenge response."
   {:scopes ["https://www.googleapis.com/auth/verifiedaccess"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -58,7 +57,7 @@
    (http/post
     (util/get-url
      "https://verifiedaccess.googleapis.com/"
-     "v1/challenge:verify"
+     "v2/challenge:verify"
      #{}
      parameters)
     (merge-with

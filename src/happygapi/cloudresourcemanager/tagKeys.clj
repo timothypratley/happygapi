@@ -6,33 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageSize, pageToken, parent
-  
-  Lists all TagKeys for a parent resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudresourcemanager.googleapis.com/"
-     "v3/tagKeys"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/get
   
@@ -60,27 +33,37 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/delete
+(defn setIamPolicy$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/setIamPolicy
   
-  Required parameters: name
+  Required parameters: resource
   
-  Optional parameters: validateOnly, etag
+  Optional parameters: none
   
-  Deletes a TagKey. The TagKey cannot be deleted if it has any child TagValues."
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on a TagKey, replacing any existing policy. The `resource` field should be the TagKey's resource name. For example, \"tagKeys/1234\". The caller must have `resourcemanager.tagKeys.setIamPolicy` permission on the identified tagValue."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
-   (http/delete
+   (http/post
     (util/get-url
      "https://cloudresourcemanager.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
+     "v3/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -95,14 +78,16 @@
   
   Body: 
   
-  {:createTime string,
-   :description string,
-   :name string,
-   :updateTime string,
-   :namespacedName string,
+  {:description string,
    :parent string,
+   :purpose string,
+   :name string,
+   :createTime string,
+   :namespacedName string,
    :etag string,
-   :shortName string}
+   :updateTime string,
+   :shortName string,
+   :purposeData {}}
   
   Updates the attributes of the TagKey resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -114,81 +99,6 @@
      "https://cloudresourcemanager.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn create$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/create
-  
-  Required parameters: none
-  
-  Optional parameters: validateOnly
-  
-  Body: 
-  
-  {:createTime string,
-   :description string,
-   :name string,
-   :updateTime string,
-   :namespacedName string,
-   :parent string,
-   :etag string,
-   :shortName string}
-  
-  Creates a new TagKey. If another request with the same parameters is sent while the original request is in process, the second request will receive an error. A maximum of 300 TagKeys can exist under a parent at any given time."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudresourcemanager.googleapis.com/"
-     "v3/tagKeys"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setIamPolicy$
-  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer,
-            :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
-   :updateMask string}
-  
-  Sets the access control policy on a TagKey, replacing any existing policy. The `resource` field should be the TagKey's resource name. For example, \"tagKeys/1234\". The caller must have `resourcemanager.tagKeys.setIamPolicy` permission on the identified tagValue."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudresourcemanager.googleapis.com/"
-     "v3/{+resource}:setIamPolicy"
-     #{:resource}
      parameters)
     (merge-with
      merge
@@ -232,6 +142,100 @@
       :as :json}
      auth))))
 
+(defn create$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/create
+  
+  Required parameters: none
+  
+  Optional parameters: validateOnly
+  
+  Body: 
+  
+  {:description string,
+   :parent string,
+   :purpose string,
+   :name string,
+   :createTime string,
+   :namespacedName string,
+   :etag string,
+   :updateTime string,
+   :shortName string,
+   :purposeData {}}
+  
+  Creates a new TagKey. If another request with the same parameters is sent while the original request is in process, the second request will receive an error. A maximum of 1000 TagKeys can exist under a parent at any given time."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/tagKeys"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn getNamespaced$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/getNamespaced
+  
+  Required parameters: none
+  
+  Optional parameters: name
+  
+  Retrieves a TagKey by its namespaced name. This method will return `PERMISSION_DENIED` if the key does not exist or the user does not have permission to view it."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/tagKeys/namespaced"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/delete
+  
+  Required parameters: name
+  
+  Optional parameters: validateOnly, etag
+  
+  Deletes a TagKey. The TagKey cannot be deleted if it has any child TagValues."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn getIamPolicy$
   "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/getIamPolicy
   
@@ -260,6 +264,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/resource-managerapi/reference/rest/v3/tagKeys/list
+  
+  Required parameters: none
+  
+  Optional parameters: parent, pageSize, pageToken
+  
+  Lists all TagKeys for a parent resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudresourcemanager.googleapis.com/"
+     "v3/tagKeys"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

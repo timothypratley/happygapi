@@ -1,6 +1,6 @@
 (ns happygapi.drive.revisions
-  "Drive API: revisions.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: revisions.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/revisions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -113,10 +113,10 @@
    :exportLinks {},
    :size string,
    :lastModifyingUser {:displayName string,
-                       :emailAddress string,
                        :kind string,
                        :me boolean,
                        :permissionId string,
+                       :emailAddress string,
                        :photoLink string},
    :id string,
    :kind string,

@@ -1,15 +1,15 @@
 (ns happygapi.dfareporting.connectionTypes
   "Campaign Manager 360 API: connectionTypes.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/connectionTypes"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/connectionTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/connectionTypes/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/connectionTypes/get
   
-  Required parameters: id, profileId
+  Required parameters: profileId, id
   
   Optional parameters: none
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/connectionTypes/{id}"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/connectionTypes/{+id}"
      #{:id :profileId}
      parameters)
     (merge-with
@@ -33,7 +33,7 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/connectionTypes/list
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/connectionTypes/list
   
   Required parameters: profileId
   
@@ -46,8 +46,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/connectionTypes"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/connectionTypes"
      #{:profileId}
      parameters)
     (merge-with

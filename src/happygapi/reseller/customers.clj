@@ -83,56 +83,6 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/customers/patch
-  
-  Required parameters: customerId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:alternateEmail string,
-   :postalAddress {:locality string,
-                   :contactName string,
-                   :addressLine1 string,
-                   :organizationName string,
-                   :region string,
-                   :addressLine3 string,
-                   :addressLine2 string,
-                   :kind string,
-                   :postalCode string,
-                   :countryCode string},
-   :resourceUiUrl string,
-   :customerType string,
-   :customerId string,
-   :primaryAdmin {:primaryEmail string},
-   :customerDomain string,
-   :kind string,
-   :customerDomainVerified boolean,
-   :phoneNumber string}
-  
-  Updates a customer account's settings. This method supports patch semantics. You cannot update `customerType` via the Reseller API, but a `\"team\"` customer can verify their domain and become `customerType = \"domain\"`. For more information, see [Verify your domain to unlock Essentials features](https://support.google.com/a/answer/9122284)."
-  {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:customerId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://reseller.googleapis.com/"
-     "apps/reseller/v1/customers/{customerId}"
-     #{:customerId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/customers/update
   
@@ -168,6 +118,56 @@
   {:pre [(util/has-keys? parameters #{:customerId})]}
   (util/get-response
    (http/put
+    (util/get-url
+     "https://reseller.googleapis.com/"
+     "apps/reseller/v1/customers/{customerId}"
+     #{:customerId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/customers/patch
+  
+  Required parameters: customerId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:alternateEmail string,
+   :postalAddress {:locality string,
+                   :contactName string,
+                   :addressLine1 string,
+                   :organizationName string,
+                   :region string,
+                   :addressLine3 string,
+                   :addressLine2 string,
+                   :kind string,
+                   :postalCode string,
+                   :countryCode string},
+   :resourceUiUrl string,
+   :customerType string,
+   :customerId string,
+   :primaryAdmin {:primaryEmail string},
+   :customerDomain string,
+   :kind string,
+   :customerDomainVerified boolean,
+   :phoneNumber string}
+  
+  Updates a customer account's settings. This method supports patch semantics. You cannot update `customerType` via the Reseller API, but a `\"team\"` customer can verify their domain and become `customerType = \"domain\"`. For more information, see [Verify your domain to unlock Essentials features](https://support.google.com/a/answer/9122284)."
+  {:scopes ["https://www.googleapis.com/auth/apps.order"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customerId})]}
+  (util/get-response
+   (http/patch
     (util/get-url
      "https://reseller.googleapis.com/"
      "apps/reseller/v1/customers/{customerId}"

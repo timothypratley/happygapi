@@ -6,23 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/list
+(defn delete$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/delete
   
-  Required parameters: adClientId
+  Required parameters: adClientId, urlChannelId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: none
   
-  List all host URL channels in the host AdSense account."
+  Delete a URL channel from the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:adClientId})]}
+  {:pre [(util/has-keys? parameters #{:urlChannelId :adClientId})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/urlchannels"
-     #{:adClientId}
+     "adclients/{adClientId}/urlchannels/{urlChannelId}"
+     #{:urlChannelId :adClientId}
      parameters)
     (merge-with
      merge
@@ -41,7 +41,7 @@
   
   Body: 
   
-  {:urlPattern string, :id string, :kind string}
+  {:id string, :kind string, :urlPattern string}
   
   Add a new URL channel to the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
@@ -64,23 +64,23 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/delete
+(defn list$
+  "https://developers.google.com/adsense/host/api/reference/rest/v4.1/urlchannels/list
   
-  Required parameters: urlChannelId, adClientId
+  Required parameters: adClientId
   
-  Optional parameters: none
+  Optional parameters: maxResults, pageToken
   
-  Delete a URL channel from the host AdSense account."
+  List all host URL channels in the host AdSense account."
   {:scopes ["https://www.googleapis.com/auth/adsensehost"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:urlChannelId :adClientId})]}
+  {:pre [(util/has-keys? parameters #{:adClientId})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://www.googleapis.com/adsensehost/v4.1/"
-     "adclients/{adClientId}/urlchannels/{urlChannelId}"
-     #{:urlChannelId :adClientId}
+     "adclients/{adClientId}/urlchannels"
+     #{:adClientId}
      parameters)
     (merge-with
      merge

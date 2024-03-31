@@ -16,10 +16,10 @@
   Body: 
   
   {:entries [{:batchId integer,
-              :destinations [string],
-              :accountId string,
+              :merchantId string,
               :method string,
-              :merchantId string}]}
+              :accountId string,
+              :destinations [string]}]}
   
   Retrieves multiple Merchant Center account statuses in a single request."
   {:scopes ["https://www.googleapis.com/auth/content"]}
@@ -42,36 +42,10 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accountstatuses/list
-  
-  Required parameters: merchantId
-  
-  Optional parameters: name, pageToken, destinations, maxResults
-  
-  Lists the statuses of the sub-accounts in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/accountstatuses"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accountstatuses/get
   
-  Required parameters: accountId, merchantId
+  Required parameters: merchantId, accountId
   
   Optional parameters: destinations
   
@@ -85,6 +59,32 @@
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/accountstatuses/{accountId}"
      #{:accountId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/accountstatuses/list
+  
+  Required parameters: merchantId
+  
+  Optional parameters: maxResults, pageToken, destinations, name
+  
+  Lists the statuses of the sub-accounts in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/accountstatuses"
+     #{:merchantId}
      parameters)
     (merge-with
      merge

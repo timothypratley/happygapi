@@ -1,39 +1,10 @@
 (ns happygapi.logging.logs
   "Cloud Logging API: logs.
-  Writes log entries and manages your Cloud Logging configuration. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the documentation at https://cloud.google.com/logging/docs.
+  Writes log entries and manages your Cloud Logging configuration.
   See: https://cloud.google.com/logging/docs/api/reference/rest/v2/logs"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn list$
-  "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, resourceNames
-  
-  Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/logging.admin"
-            "https://www.googleapis.com/auth/logging.read"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://logging.googleapis.com/"
-     "v2/{+parent}/logs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn delete$
   "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/delete
@@ -53,6 +24,35 @@
      "https://logging.googleapis.com/"
      "v2/{+logName}"
      #{:logName}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/logging/docs/api/reference/rest/v2/logs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: resourceNames, pageSize, pageToken
+  
+  Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/logging.admin"
+            "https://www.googleapis.com/auth/logging.read"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://logging.googleapis.com/"
+     "v2/{+parent}/logs"
+     #{:parent}
      parameters)
     (merge-with
      merge

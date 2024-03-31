@@ -11,7 +11,7 @@
   
   Required parameters: bucket, entity, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Permanently deletes the ACL entry for the specified entity on the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -38,7 +38,7 @@
   
   Required parameters: bucket, entity, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Returns the ACL entry for the specified entity on the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -65,7 +65,7 @@
   
   Required parameters: bucket, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Body: 
   
@@ -110,7 +110,7 @@
   
   Required parameters: bucket, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Retrieves ACL entries on the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -137,7 +137,7 @@
   
   Required parameters: bucket, entity, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Body: 
   
@@ -182,7 +182,7 @@
   
   Required parameters: bucket, entity, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Body: 
   

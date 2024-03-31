@@ -1,73 +1,35 @@
 (ns happygapi.doubleclickbidmanager.queries
   "DoubleClick Bid Manager API: queries.
   DoubleClick Bid Manager API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries"
+  See: https://developers.google.com/bid-manager/api/reference/rest/v2/queries"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getquery$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/getquery
-  
-  Required parameters: queryId
-  
-  Optional parameters: none
-  
-  Retrieves a stored query."
-  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:queryId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
-     "query/{queryId}"
-     #{:queryId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn createquery$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/createquery
+(defn create$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/create
   
   Required parameters: none
   
-  Optional parameters: asynchronous
+  Optional parameters: none
   
   Body: 
   
-  {:metadata {:format string,
-              :locale string,
+  {:queryId string,
+   :metadata {:title string,
+              :dataRange DataRange,
+              :format string,
               :sendNotification boolean,
-              :dataRange string,
-              :latestReportRunTimeMs string,
-              :title string,
-              :running boolean,
-              :googleCloudStoragePathForLatestReport string,
-              :reportCount integer,
-              :shareEmailAddress [string],
-              :googleDrivePathForLatestReport string},
-   :reportDataStartTimeMs string,
-   :queryId string,
-   :params {:options Options,
-            :filters [FilterPair],
-            :type string,
-            :metrics [string],
+              :shareEmailAddress [string]},
+   :params {:type string,
             :groupBys [string],
-            :includeInviteData boolean},
-   :kind string,
-   :reportDataEndTimeMs string,
-   :timezoneCode string,
-   :schedule {:nextRunTimezoneCode string,
-              :nextRunMinuteOfDay integer,
-              :startTimeMs string,
+            :filters [FilterPair],
+            :metrics [string],
+            :options Options},
+   :schedule {:startDate Date,
+              :endDate Date,
               :frequency string,
-              :endTimeMs string}}
+              :nextRunTimezoneCode string}}
   
   Creates a query."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
@@ -76,8 +38,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
-     "query"
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries"
      #{}
      parameters)
     (merge-with
@@ -90,57 +52,22 @@
       :as :json}
      auth))))
 
-(defn runquery$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/runquery
-  
-  Required parameters: queryId
-  
-  Optional parameters: asynchronous
-  
-  Body: 
-  
-  {:dataRange string,
-   :timezoneCode string,
-   :reportDataStartTimeMs string,
-   :reportDataEndTimeMs string}
-  
-  Runs a stored query to generate a report."
-  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:queryId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
-     "query/{queryId}"
-     #{:queryId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deletequery$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/deletequery
+(defn delete$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/delete
   
   Required parameters: queryId
   
   Optional parameters: none
   
-  Deletes a stored query as well as the associated stored reports."
+  Deletes a query as well as the associated reports."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:queryId})]}
   (util/get-response
    (http/delete
     (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
-     "query/{queryId}"
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries/{queryId}"
      #{:queryId}
      parameters)
     (merge-with
@@ -151,23 +78,135 @@
       :as :json}
      auth))))
 
-(defn listqueries$
-  "https://developers.google.com/bid-manager/api/reference/rest/v1.1/queries/listqueries
+(defn get$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/get
+  
+  Required parameters: queryId
+  
+  Optional parameters: none
+  
+  Retrieves a query."
+  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries/{queryId}"
+     #{:queryId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/list
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageSize, pageToken, orderBy
   
-  Retrieves stored queries."
+  Lists queries created by the current user."
   {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
-     "https://doubleclickbidmanager.googleapis.com/doubleclickbidmanager/v1.1/"
+     "https://doubleclickbidmanager.googleapis.com/v2/"
      "queries"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn run$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/run
+  
+  Required parameters: queryId
+  
+  Optional parameters: synchronous
+  
+  Body: 
+  
+  {:dataRange {:range string,
+               :customStartDate Date,
+               :customEndDate Date}}
+  
+  Runs a stored query to generate a report."
+  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries/{queryId}:run"
+     #{:queryId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn reports-list$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/reports/list
+  
+  Required parameters: queryId
+  
+  Optional parameters: pageSize, pageToken, orderBy
+  
+  Lists reports associated with a query."
+  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:queryId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries/{queryId}/reports"
+     #{:queryId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn reports-get$
+  "https://developers.google.com/bid-manager/api/reference/rest/v2/queries/reports/get
+  
+  Required parameters: queryId, reportId
+  
+  Optional parameters: none
+  
+  Retrieves a report."
+  {:scopes ["https://www.googleapis.com/auth/doubleclickbidmanager"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:reportId :queryId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://doubleclickbidmanager.googleapis.com/v2/"
+     "queries/{queryId}/reports/{reportId}"
+     #{:reportId :queryId}
      parameters)
     (merge-with
      merge

@@ -1,13 +1,13 @@
 (ns happygapi.displayvideo.googleAudiences
   "Display & Video 360 API: googleAudiences.
-  Display & Video 360 API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/display-video/api/reference/rest/v1/googleAudiences"
+  Display & Video 360 API allows users to automate complex Display & Video 360 workflows, such as creating insertion orders and setting targeting options for individual line items.
+  See: https://developers.google.com/display-video/api/reference/rest/v3/googleAudiences"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/display-video/api/reference/rest/v1/googleAudiences/get
+  "https://developers.google.com/display-video/api/reference/rest/v3/googleAudiences/get
   
   Required parameters: googleAudienceId
   
@@ -21,7 +21,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/googleAudiences/{+googleAudienceId}"
+     "v3/googleAudiences/{+googleAudienceId}"
      #{:googleAudienceId}
      parameters)
     (merge-with
@@ -33,11 +33,11 @@
      auth))))
 
 (defn list$
-  "https://developers.google.com/display-video/api/reference/rest/v1/googleAudiences/list
+  "https://developers.google.com/display-video/api/reference/rest/v3/googleAudiences/list
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken, orderBy, advertiserId, partnerId, filter
+  Optional parameters: partnerId, advertiserId, pageSize, pageToken, orderBy, filter
   
   Lists Google audiences. The order is defined by the order_by parameter."
   {:scopes ["https://www.googleapis.com/auth/display-video"]}
@@ -47,7 +47,7 @@
    (http/get
     (util/get-url
      "https://displayvideo.googleapis.com/"
-     "v1/googleAudiences"
+     "v3/googleAudiences"
      #{}
      parameters)
     (merge-with

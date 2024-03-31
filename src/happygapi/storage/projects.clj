@@ -168,7 +168,7 @@
   
   Required parameters: projectId
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Get the email address of this project's Google Cloud Storage service account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

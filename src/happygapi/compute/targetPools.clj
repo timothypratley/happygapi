@@ -6,6 +6,39 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn setSecurityPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/setSecurityPolicy
+  
+  Required parameters: project, region, targetPool
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:securityPolicy string}
+  
+  Sets the Google Cloud Armor security policy for the specified target pool. For more information, see Google Cloud Armor Overview"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :targetPool})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetPools/{targetPool}/setSecurityPolicy"
+     #{:region :project :targetPool}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn getHealth$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/getHealth
   
@@ -43,11 +76,11 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/get
   
-  Required parameters: project, targetPool, region
+  Required parameters: project, region, targetPool
   
   Optional parameters: none
   
-  Returns the specified target pool. Gets a list of available target pools by making a list() request."
+  Returns the specified target pool."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -71,7 +104,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
@@ -88,7 +121,8 @@
    :id string,
    :kind string,
    :backupPool string,
-   :sessionAffinity string}
+   :sessionAffinity string,
+   :securityPolicy string}
   
   Creates a target pool in the specified project and region using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -117,9 +151,9 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, orderBy, returnPartialSuccess, pageToken, includeAllScopes
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of target pools."
+  Retrieves an aggregated list of target pools. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -143,9 +177,9 @@
 (defn setBackup$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/setBackup
   
-  Required parameters: project, targetPool, region
+  Required parameters: project, region, targetPool
   
-  Optional parameters: requestId, failoverRatio
+  Optional parameters: failoverRatio, requestId
   
   Body: 
   
@@ -176,7 +210,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/delete
   
-  Required parameters: targetPool, region, project
+  Required parameters: project, region, targetPool
   
   Optional parameters: requestId
   
@@ -203,7 +237,7 @@
 (defn removeInstance$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/removeInstance
   
-  Required parameters: project, targetPool, region
+  Required parameters: project, region, targetPool
   
   Optional parameters: requestId
   
@@ -238,7 +272,7 @@
   
   Required parameters: project, region
   
-  Optional parameters: returnPartialSuccess, maxResults, filter, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of target pools available to the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -297,7 +331,7 @@
 (defn addInstance$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addInstance
   
-  Required parameters: region, targetPool, project
+  Required parameters: project, region, targetPool
   
   Optional parameters: requestId
   
@@ -330,7 +364,7 @@
 (defn addHealthCheck$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetPools/addHealthCheck
   
-  Required parameters: region, project, targetPool
+  Required parameters: project, region, targetPool
   
   Optional parameters: requestId
   

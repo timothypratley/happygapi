@@ -1,20 +1,22 @@
 # HappyGAPI
 
-A Clojure library for calling [Google APIs](https://developers.google.com/apis-explorer); gsheets, drive, bigquery and so on.
+A Clojure library for calling [Google APIs](https://developers.google.com/apis-explorer); gsheets, drive, bigquery, and so on.
 
 
 ## Rationale
 
-HappyGAPI defines functions for calling GAPI so you don't have to!
+HappyGAPI is a bunch of generated functions (as code, not macros) for calling GAPI,
+so that your editor can help you (autocomplete, help documentation, and arg checking).
+
 
 HappyGAPI generates source code:
 1. Navigate to source
 2. See all available resources and methods
-3. Clear exceptions on failure
-4. The function doc-strings contain a description, a link to online docs, and example inputs
+3. Clear exception stack traces on failure
+4. The function doc-strings contain a description, a link to online docs, and example inputs (TODO: is this true?)
 5. Needs to be regenerated to discovery API updates
 
-HappyGAPI accepts data instead of an objects.
+HappyGAPI accepts data instead of objects.
 Data composes flexibly and is straight-forward to construct.
 
 Oauth2 works "out of the box" for standalone, and with minimal configuration in a web server.
@@ -37,7 +39,32 @@ Require `happygapi.<<api>>.<<resource>>` in the code:
             [happy.oauth2-credentials :as credentials]))
 ```
 
-Call the api:
+Browse all available endpoints from your editor:
+
+```clojure
+(gsheets/)
+```
+
+Get help documentation in your editor for arguments:
+
+```clojure
+(gsheets/get$)
+```
+
+```
+happygapi.sheets.spreadsheets/get$
+[auth parameters]
+
+https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get
+
+Required parameters: spreadsheetId
+
+Optional parameters: ranges, includeGridData
+
+Returns the spreadsheet at the given ID.
+```
+
+Call it:
 
 ```clojure
 (gsheets/get$ (credentials/auth!) {:spreadsheetId "xyz"})
@@ -70,8 +97,11 @@ The `auth` argument can be one of:
 ```clojure
 {}                                                   ; anonymous
 {:query-params {"key" api-key}}                      ; api-key
+{:headers {"Authorization" (str "Bearer " api-key)}} ; api-key in header is better (TODO: check)
 {:headers {"Authorization" (str "Bearer " token)}}   ; oauth2 token
 ```
+
+
 
 The `auth` argument gets merged into the request.
 You can specify additional request options if you want to.
@@ -79,6 +109,7 @@ You can specify additional request options if you want to.
 To participate in oauth2 you need to fetch and store tokens.
 
 To create an app in the Google Console, follow [Setting up OAuth 2.0](https://support.google.com/googleapi/answer/6158849?hl=en).
+When setting up the app credentials, add http://localhost/redirect to the authorized redirect URIs, and add yourself as a test user.
 
 There are two methods for obtaining a token:
 * User redirects, which prompt a user to authorize your app.
@@ -110,7 +141,7 @@ The [`happy.oauth2`](src/happy/oauth2.clj) namespace provides generic functions 
 ## Retries
 
 HappyGAPI leaves retries up to the consuming application.
-However if you are doing many requests, it is likely you will want to retry failed requests,
+However, if you are doing many requests, it is likely you will want to retry failed requests,
 as failures can happen for a variety of availability reasons.
 
 Providing your own retry strategy can be done by redefining the `happy.util/get-response` behavior:
@@ -134,7 +165,7 @@ Now you can wrap calls using `with-get-response-retries`:
                     {:properties {:title title}}))
 ```
 
-This example uses the [again](https://github.com/liwp/again) library.
+This example uses the "[again](https://github.com/liwp/again)" library.
 
 
 ## Contributing

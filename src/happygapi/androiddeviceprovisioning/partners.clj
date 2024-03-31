@@ -11,7 +11,7 @@
   
   Required parameters: partnerId
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists the customers that are enrolled to the reseller identified by the `partnerId` argument. This list includes customers that the reseller created and customers that enrolled themselves using the portal."
   {:scopes nil}
@@ -41,14 +41,15 @@
   
   Body: 
   
-  {:customer {:companyName string,
-              :companyId string,
-              :name string,
+  {:customer {:companyId string,
               :skipWelcomeEmail boolean,
-              :adminEmails [string],
-              :languageCode string,
               :termsStatus string,
-              :ownerEmails [string]}}
+              :name string,
+              :ownerEmails [string],
+              :googleWorkspaceAccount GoogleWorkspaceAccount,
+              :languageCode string,
+              :companyName string,
+              :adminEmails [string]}}
   
   Creates a customer for zero-touch enrollment. After the method returns successfully, admin and owner roles can manage devices and EMM configs by calling API methods or using their zero-touch enrollment portal. The customer receives an email that welcomes them to zero-touch enrollment and explains how to sign into the portal."
   {:scopes nil}
@@ -66,58 +67,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn vendors-list$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the vendors of the partner."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/vendors"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn vendors-customers-list$
-  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/customers/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the customers of the vendor."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androiddeviceprovisioning.googleapis.com/"
-     "v1/{+parent}/customers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -158,10 +107,11 @@
   
   Body: 
   
-  {:limit string,
-   :customerId [string],
-   :sectionType string,
-   :pageToken string}
+  {:sectionType string,
+   :googleWorkspaceCustomerId [string],
+   :pageToken string,
+   :limit string,
+   :customerId [string]}
   
   Finds devices claimed for customers. The results only contain devices registered to the reseller that's identified by the `partnerId` argument. The customer's devices purchased from other resellers don't appear in the results."
   {:scopes nil}
@@ -184,6 +134,44 @@
       :as :json}
      auth))))
 
+(defn devices-getSimLockState$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/devices/getSimLockState
+  
+  Required parameters: partnerId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:deviceIdentifier {:imei string,
+                      :model string,
+                      :meid string,
+                      :deviceType string,
+                      :chromeOsAttestedDeviceId string,
+                      :manufacturer string,
+                      :serialNumber string}}
+  
+  Gets a device's SIM lock state."
+  {:scopes nil}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:partnerId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/partners/{+partnerId}/devices:getSimLockState"
+     #{:partnerId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn devices-findByIdentifier$
   "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/devices/findByIdentifier
   
@@ -193,13 +181,15 @@
   
   Body: 
   
-  {:pageToken string,
-   :limit string,
-   :deviceIdentifier {:imei string,
-                      :manufacturer string,
-                      :serialNumber string,
+  {:deviceIdentifier {:imei string,
                       :model string,
-                      :meid string}}
+                      :meid string,
+                      :deviceType string,
+                      :chromeOsAttestedDeviceId string,
+                      :manufacturer string,
+                      :serialNumber string},
+   :limit string,
+   :pageToken string}
   
   Finds devices by hardware identifiers, such as IMEI."
   {:scopes nil}
@@ -231,14 +221,16 @@
   
   Body: 
   
-  {:sectionType string,
+  {:vacationModeExpireTime string,
    :vacationModeDays integer,
+   :sectionType string,
    :deviceIdentifier {:imei string,
-                      :manufacturer string,
-                      :serialNumber string,
                       :model string,
-                      :meid string},
-   :vacationModeExpireTime string,
+                      :meid string,
+                      :deviceType string,
+                      :chromeOsAttestedDeviceId string,
+                      :manufacturer string,
+                      :serialNumber string},
    :deviceId string}
   
   Unclaims a device from a customer and removes it from zero-touch enrollment."
@@ -271,10 +263,14 @@
   
   Body: 
   
-  {:claims [{:deviceIdentifier DeviceIdentifier,
-             :deviceMetadata DeviceMetadata,
+  {:claims [{:deviceMetadata DeviceMetadata,
+             :configurationId string,
+             :googleWorkspaceCustomerId string,
              :customerId string,
-             :sectionType string}]}
+             :deviceIdentifier DeviceIdentifier,
+             :simlockProfileId string,
+             :sectionType string,
+             :preProvisioningToken string}]}
   
   Claims a batch of devices for a customer asynchronously. Adds the devices to zero-touch enrollment. To learn more, read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
   {:scopes nil}
@@ -310,7 +306,7 @@
               :deviceMetadata DeviceMetadata,
               :deviceId string}]}
   
-  Updates the reseller metadata attached to a batch of devices. This method updates devices asynchronously and returns an `Operation` that can be used to track progress. Read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
+  Updates the reseller metadata attached to a batch of devices. This method updates devices asynchronously and returns an `Operation` that can be used to track progress. Read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations). Android Devices only."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:partnerId})]}
@@ -340,11 +336,11 @@
   
   Body: 
   
-  {:unclaims [{:sectionType string,
-               :deviceIdentifier DeviceIdentifier,
+  {:unclaims [{:vacationModeExpireTime string,
+               :sectionType string,
                :deviceId string,
                :vacationModeDays integer,
-               :vacationModeExpireTime string}]}
+               :deviceIdentifier DeviceIdentifier}]}
   
   Unclaims a batch of devices for a customer asynchronously. Removes the devices from zero-touch enrollment. To learn more, read [Long‑running batch operations](/zero-touch/guides/how-it-works#operations)."
   {:scopes nil}
@@ -378,7 +374,7 @@
   
   {:deviceMetadata {:entries {}}}
   
-  Updates reseller metadata associated with the device."
+  Updates reseller metadata associated with the device. Android devices only."
   {:scopes nil}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:deviceId :metadataOwnerId})]}
@@ -408,14 +404,20 @@
   
   Body: 
   
-  {:deviceMetadata {:entries {}},
+  {:simlockProfileId string,
    :deviceIdentifier {:imei string,
-                      :manufacturer string,
-                      :serialNumber string,
                       :model string,
-                      :meid string},
+                      :meid string,
+                      :deviceType string,
+                      :chromeOsAttestedDeviceId string,
+                      :manufacturer string,
+                      :serialNumber string},
+   :preProvisioningToken string,
+   :configurationId string,
+   :sectionType string,
+   :deviceMetadata {:entries {}},
    :customerId string,
-   :sectionType string}
+   :googleWorkspaceCustomerId string}
   
   Claims a device for a customer and adds it to zero-touch enrollment. If the device is already claimed by another customer, the call returns an error."
   {:scopes nil}
@@ -433,6 +435,58 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn vendors-list$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the vendors of the partner."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/vendors"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn vendors-customers-list$
+  "https://developers.google.com/zero-touch/api/reference/rest/v1/partners/vendors/customers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists the customers of the vendor."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androiddeviceprovisioning.googleapis.com/"
+     "v1/{+parent}/customers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/get
   
-  Required parameters: zone, project, reservation
+  Required parameters: project, reservation, zone
   
   Optional parameters: none
   
@@ -37,22 +37,21 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/setIamPolicy
   
-  Required parameters: zone, resource, project
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]},
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
    :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
@@ -80,26 +79,35 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/insert
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
+   :resourcePolicies {},
    :creationTimestamp string,
+   :resourceStatus {:specificSkuAllocation AllocationResourceStatusSpecificSKUAllocation},
    :zone string,
    :name string,
+   :shareSettings {:shareType string, :projectMap {}},
    :specificReservationRequired boolean,
    :commitment string,
    :selfLink string,
    :satisfiesPzs boolean,
    :specificReservation {:instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties,
                          :count string,
-                         :inUseCount string},
+                         :inUseCount string,
+                         :assuredCount string,
+                         :sourceInstanceTemplate string},
    :status string,
    :id string,
-   :kind string}
+   :kind string,
+   :aggregateReservation {:vmFamily string,
+                          :reservedResources [AllocationAggregateReservationReservedResourceInfo],
+                          :inUseResources [AllocationAggregateReservationReservedResourceInfo],
+                          :workloadType string}}
   
   Creates a new reservation. For more information, read Reserving zonal resources."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -162,9 +170,9 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, returnPartialSuccess, includeAllScopes, pageToken, orderBy
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of reservations."
+  Retrieves an aggregated list of reservations. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -185,10 +193,65 @@
       :as :json}
      auth))))
 
+(defn update$
+  "https://cloud.google.com/compute/api/reference/rest/v1/reservations/update
+  
+  Required parameters: project, reservation, zone
+  
+  Optional parameters: paths, requestId, updateMask
+  
+  Body: 
+  
+  {:description string,
+   :resourcePolicies {},
+   :creationTimestamp string,
+   :resourceStatus {:specificSkuAllocation AllocationResourceStatusSpecificSKUAllocation},
+   :zone string,
+   :name string,
+   :shareSettings {:shareType string, :projectMap {}},
+   :specificReservationRequired boolean,
+   :commitment string,
+   :selfLink string,
+   :satisfiesPzs boolean,
+   :specificReservation {:instanceProperties AllocationSpecificSKUAllocationReservedInstanceProperties,
+                         :count string,
+                         :inUseCount string,
+                         :assuredCount string,
+                         :sourceInstanceTemplate string},
+   :status string,
+   :id string,
+   :kind string,
+   :aggregateReservation {:vmFamily string,
+                          :reservedResources [AllocationAggregateReservationReservedResourceInfo],
+                          :inUseResources [AllocationAggregateReservationReservedResourceInfo],
+                          :workloadType string}}
+  
+  Update share settings of the reservation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :reservation :project})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/reservations/{reservation}"
+     #{:zone :reservation :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/delete
   
-  Required parameters: zone, reservation, project
+  Required parameters: project, reservation, zone
   
   Optional parameters: requestId
   
@@ -215,7 +278,7 @@
 (defn resize$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/resize
   
-  Required parameters: reservation, zone, project
+  Required parameters: project, reservation, zone
   
   Optional parameters: requestId
   
@@ -248,7 +311,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/getIamPolicy
   
-  Required parameters: zone, resource, project
+  Required parameters: project, resource, zone
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -276,9 +339,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/reservations/list
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
-  Optional parameters: returnPartialSuccess, maxResults, pageToken, filter, orderBy
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   A list of all the reservations that have been configured for the specified project in specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

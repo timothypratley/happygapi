@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Returns the specified network. Gets a list of available networks by making a list() request."
+  Returns the specified network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -43,10 +43,13 @@
   
   Body: 
   
-  {:description string,
+  {:enableUlaInternalIpv6 boolean,
+   :description string,
+   :internalIpv6Range string,
    :peerings [{:exportCustomRoutes boolean,
                :peerMtu integer,
                :importSubnetRoutesWithPublicIp boolean,
+               :stackType string,
                :name string,
                :exchangeSubnetRoutes boolean,
                :state string,
@@ -61,10 +64,13 @@
    :gatewayIPv4 string,
    :routingConfig {:routingMode string},
    :selfLink string,
+   :selfLinkWithId string,
    :autoCreateSubnetworks boolean,
    :id string,
    :subnetworks [string],
    :kind string,
+   :firewallPolicy string,
+   :networkFirewallPolicyEnforcementOrder string,
    :IPv4Range string}
   
   Creates a network in the specified project using the data included in the request."
@@ -92,7 +98,7 @@
 (defn getEffectiveFirewalls$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/getEffectiveFirewalls
   
-  Required parameters: project, network
+  Required parameters: network, project
   
   Optional parameters: none
   
@@ -126,10 +132,13 @@
   
   Body: 
   
-  {:description string,
+  {:enableUlaInternalIpv6 boolean,
+   :description string,
+   :internalIpv6Range string,
    :peerings [{:exportCustomRoutes boolean,
                :peerMtu integer,
                :importSubnetRoutesWithPublicIp boolean,
+               :stackType string,
                :name string,
                :exchangeSubnetRoutes boolean,
                :state string,
@@ -144,10 +153,13 @@
    :gatewayIPv4 string,
    :routingConfig {:routingMode string},
    :selfLink string,
+   :selfLinkWithId string,
    :autoCreateSubnetworks boolean,
    :id string,
    :subnetworks [string],
    :kind string,
+   :firewallPolicy string,
+   :networkFirewallPolicyEnforcementOrder string,
    :IPv4Range string}
   
   Patches the specified network with the data included in the request. Only the following fields can be modified: routingConfig.routingMode."
@@ -203,7 +215,7 @@
 (defn removePeering$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/removePeering
   
-  Required parameters: project, network
+  Required parameters: network, project
   
   Optional parameters: requestId
   
@@ -236,17 +248,19 @@
 (defn addPeering$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/addPeering
   
-  Required parameters: project, network
+  Required parameters: network, project
   
   Optional parameters: requestId
   
   Body: 
   
   {:name string,
+   :peerNetwork string,
    :autoCreateRoutes boolean,
    :networkPeering {:exportCustomRoutes boolean,
                     :peerMtu integer,
                     :importSubnetRoutesWithPublicIp boolean,
+                    :stackType string,
                     :name string,
                     :exchangeSubnetRoutes boolean,
                     :state string,
@@ -254,8 +268,7 @@
                     :autoCreateRoutes boolean,
                     :network string,
                     :exportSubnetRoutesWithPublicIp boolean,
-                    :importCustomRoutes boolean},
-   :peerNetwork string}
+                    :importCustomRoutes boolean}}
   
   Adds a peering to the specified network."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -311,7 +324,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, orderBy, returnPartialSuccess, maxResults, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of networks available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -337,7 +350,7 @@
 (defn switchToCustomMode$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/switchToCustomMode
   
-  Required parameters: project, network
+  Required parameters: network, project
   
   Optional parameters: requestId
   
@@ -364,7 +377,7 @@
 (defn updatePeering$
   "https://cloud.google.com/compute/api/reference/rest/v1/networks/updatePeering
   
-  Required parameters: project, network
+  Required parameters: network, project
   
   Optional parameters: requestId
   
@@ -373,6 +386,7 @@
   {:networkPeering {:exportCustomRoutes boolean,
                     :peerMtu integer,
                     :importSubnetRoutesWithPublicIp boolean,
+                    :stackType string,
                     :name string,
                     :exchangeSubnetRoutes boolean,
                     :state string,

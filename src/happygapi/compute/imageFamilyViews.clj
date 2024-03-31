@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/imageFamilyViews/get
   
-  Required parameters: zone, family, project
+  Required parameters: family, project, zone
   
   Optional parameters: none
   

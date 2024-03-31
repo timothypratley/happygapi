@@ -6,40 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/list
-  
-  Required parameters: part
-  
-  Optional parameters: pageToken, onBehalfOfContentOwner, onBehalfOfContentOwnerChannel, id, mine, maxResults
-  
-  Retrieve the list of streams associated with the given channel. --"
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveStreams"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/delete
   
   Required parameters: id
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
   
   Deletes an existing stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -66,26 +38,26 @@
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
   
   Body: 
   
-  {:contentDetails {:closedCaptionsIngestionUrl string,
-                    :isReusable boolean},
-   :snippet {:description string,
-             :title string,
-             :channelId string,
-             :isDefaultStream boolean,
-             :publishedAt string},
-   :etag string,
-   :status {:streamStatus string, :healthStatus LiveStreamHealthStatus},
-   :id string,
-   :kind string,
-   :cdn {:ingestionType string,
+  {:cdn {:resolution string,
          :ingestionInfo IngestionInfo,
-         :resolution string,
+         :ingestionType string,
          :frameRate string,
-         :format string}}
+         :format string},
+   :snippet {:title string,
+             :publishedAt string,
+             :isDefaultStream boolean,
+             :channelId string,
+             :description string},
+   :status {:streamStatus string, :healthStatus LiveStreamHealthStatus},
+   :kind string,
+   :contentDetails {:closedCaptionsIngestionUrl string,
+                    :isReusable boolean},
+   :id string,
+   :etag string}
   
   Inserts a new stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -109,31 +81,59 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/list
+  
+  Required parameters: part
+  
+  Optional parameters: maxResults, mine, onBehalfOfContentOwner, onBehalfOfContentOwnerChannel, id, pageToken
+  
+  Retrieve the list of streams associated with the given channel. --"
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveStreams"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveStreams/update
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
   
   Body: 
   
-  {:contentDetails {:closedCaptionsIngestionUrl string,
-                    :isReusable boolean},
-   :snippet {:description string,
-             :title string,
-             :channelId string,
-             :isDefaultStream boolean,
-             :publishedAt string},
-   :etag string,
-   :status {:streamStatus string, :healthStatus LiveStreamHealthStatus},
-   :id string,
-   :kind string,
-   :cdn {:ingestionType string,
+  {:cdn {:resolution string,
          :ingestionInfo IngestionInfo,
-         :resolution string,
+         :ingestionType string,
          :frameRate string,
-         :format string}}
+         :format string},
+   :snippet {:title string,
+             :publishedAt string,
+             :isDefaultStream boolean,
+             :channelId string,
+             :description string},
+   :status {:streamStatus string, :healthStatus LiveStreamHealthStatus},
+   :kind string,
+   :contentDetails {:closedCaptionsIngestionUrl string,
+                    :isReusable boolean},
+   :id string,
+   :etag string}
   
   Updates an existing stream for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"

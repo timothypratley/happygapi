@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: fullyQualifiedName, sqlResource, linkedResource
+  Optional parameters: linkedResource, sqlResource, fullyQualifiedName, project, location
   
   Gets an entry by its target resource name. The resource name comes from the source Google Cloud Platform service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

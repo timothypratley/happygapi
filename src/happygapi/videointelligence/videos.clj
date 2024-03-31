@@ -15,8 +15,9 @@
   
   Body: 
   
-  {:inputContent string,
-   :inputUri string,
+  {:inputUri string,
+   :inputContent string,
+   :features [string],
    :videoContext {:explicitContentDetectionConfig GoogleCloudVideointelligenceV1_ExplicitContentDetectionConfig,
                   :personDetectionConfig GoogleCloudVideointelligenceV1_PersonDetectionConfig,
                   :textDetectionConfig GoogleCloudVideointelligenceV1_TextDetectionConfig,
@@ -26,9 +27,8 @@
                   :speechTranscriptionConfig GoogleCloudVideointelligenceV1_SpeechTranscriptionConfig,
                   :faceDetectionConfig GoogleCloudVideointelligenceV1_FaceDetectionConfig,
                   :objectTrackingConfig GoogleCloudVideointelligenceV1_ObjectTrackingConfig},
-   :features [string],
-   :locationId string,
-   :outputUri string}
+   :outputUri string,
+   :locationId string}
   
   Performs asynchronous video annotation. Progress and results can be retrieved through the `google.longrunning.Operations` interface. `Operation.metadata` contains `AnnotateVideoProgress` (progress). `Operation.response` contains `AnnotateVideoResponse` (results)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

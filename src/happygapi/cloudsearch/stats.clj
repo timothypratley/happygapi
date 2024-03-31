@@ -6,68 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn getQuery$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getQuery
-  
-  Required parameters: none
-  
-  Optional parameters: fromDate.year, toDate.year, fromDate.day, fromDate.month, toDate.month, toDate.day
-  
-  Get the query statistics for customer. **Note:** This API requires a standard end user account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.stats"
-            "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/stats/query"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn getSession$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getSession
-  
-  Required parameters: none
-  
-  Optional parameters: toDate.day, fromDate.day, fromDate.year, fromDate.month, toDate.year, toDate.month
-  
-  Get the # of search sessions, % of successful sessions with a click query statistics for customer. **Note:** This API requires a standard end user account to execute."
-  {:scopes ["https://www.googleapis.com/auth/cloud_search"
-            "https://www.googleapis.com/auth/cloud_search.stats"
-            "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudsearch.googleapis.com/"
-     "v1/stats/session"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn getIndex$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getIndex
   
   Required parameters: none
   
-  Optional parameters: toDate.day, toDate.month, fromDate.day, fromDate.year, toDate.year, fromDate.month
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
   
   Gets indexed item statistics aggreggated across all data sources. This API only returns statistics for previous dates; it doesn't return statistics for the current day. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -90,12 +34,40 @@
       :as :json}
      auth))))
 
+(defn getQuery$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getQuery
+  
+  Required parameters: none
+  
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
+  
+  Get the query statistics for customer. **Note:** This API requires a standard end user account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.stats"
+            "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/stats/query"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn getUser$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getUser
   
   Required parameters: none
   
-  Optional parameters: toDate.year, toDate.day, toDate.month, fromDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
   
   Get the users statistics for customer. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -118,25 +90,25 @@
       :as :json}
      auth))))
 
-(defn query-searchapplications-get$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/query/searchapplications/get
+(defn getSession$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getSession
   
-  Required parameters: name
+  Required parameters: none
   
-  Optional parameters: toDate.year, toDate.day, fromDate.month, toDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
   
-  Get the query statistics for search application. **Note:** This API requires a standard end user account to execute."
+  Get the # of search sessions, % of successful sessions with a click query statistics for customer. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.stats"
             "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
-     "v1/stats/query/{+name}"
-     #{:name}
+     "v1/stats/session"
+     #{}
      parameters)
     (merge-with
      merge
@@ -146,25 +118,25 @@
       :as :json}
      auth))))
 
-(defn session-searchapplications-get$
-  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/session/searchapplications/get
+(defn getSearchapplication$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/getSearchapplication
   
-  Required parameters: name
+  Required parameters: none
   
-  Optional parameters: toDate.month, fromDate.day, toDate.day, toDate.year, fromDate.year, fromDate.month
+  Optional parameters: startDate.year, startDate.month, startDate.day, endDate.year, endDate.month, endDate.day
   
-  Get the # of search sessions, % of successful sessions with a click query statistics for search application. **Note:** This API requires a standard end user account to execute."
+  Get search application stats for customer. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
             "https://www.googleapis.com/auth/cloud_search.stats"
             "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://cloudsearch.googleapis.com/"
-     "v1/stats/session/{+name}"
-     #{:name}
+     "v1/stats/searchapplication"
+     #{}
      parameters)
     (merge-with
      merge
@@ -179,7 +151,7 @@
   
   Required parameters: name
   
-  Optional parameters: toDate.month, toDate.day, toDate.year, fromDate.month, fromDate.day, fromDate.year
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
   
   Gets indexed item statistics for a single data source. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -202,12 +174,40 @@
       :as :json}
      auth))))
 
+(defn query-searchapplications-get$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/query/searchapplications/get
+  
+  Required parameters: name
+  
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
+  
+  Get the query statistics for search application. **Note:** This API requires a standard end user account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.stats"
+            "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/stats/query/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn user-searchapplications-get$
   "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/user/searchapplications/get
   
   Required parameters: name
   
-  Optional parameters: toDate.day, fromDate.month, toDate.year, fromDate.day, toDate.month, fromDate.year
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
   
   Get the users statistics for search application. **Note:** This API requires a standard end user account to execute."
   {:scopes ["https://www.googleapis.com/auth/cloud_search"
@@ -220,6 +220,34 @@
     (util/get-url
      "https://cloudsearch.googleapis.com/"
      "v1/stats/user/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn session-searchapplications-get$
+  "https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/stats/session/searchapplications/get
+  
+  Required parameters: name
+  
+  Optional parameters: fromDate.year, fromDate.month, fromDate.day, toDate.year, toDate.month, toDate.day
+  
+  Get the # of search sessions, % of successful sessions with a click query statistics for search application. **Note:** This API requires a standard end user account to execute."
+  {:scopes ["https://www.googleapis.com/auth/cloud_search"
+            "https://www.googleapis.com/auth/cloud_search.stats"
+            "https://www.googleapis.com/auth/cloud_search.stats.indexing"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudsearch.googleapis.com/"
+     "v1/stats/session/{+name}"
      #{:name}
      parameters)
     (merge-with

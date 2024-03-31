@@ -39,23 +39,22 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/setIamPolicy
   
-  Required parameters: resource, project, region
+  Required parameters: project, region, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:etag string,
-   :bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]}}
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
+   :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -82,7 +81,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
@@ -92,17 +91,21 @@
    :natSubnets [string],
    :creationTimestamp string,
    :enableProxyProtocol boolean,
-   :consumerAcceptLists [{:connectionLimit integer,
-                          :projectIdOrNum string}],
+   :consumerAcceptLists [{:projectIdOrNum string,
+                          :networkUrl string,
+                          :connectionLimit integer}],
    :name string,
    :selfLink string,
    :region string,
    :connectionPreference string,
    :connectedEndpoints [{:status string,
+                         :pscConnectionId string,
                          :endpoint string,
-                         :pscConnectionId string}],
+                         :consumerNetwork string}],
    :id string,
    :kind string,
+   :domainNames [string],
+   :reconcileConnections boolean,
    :pscServiceAttachmentId {:high string, :low string},
    :consumerRejectLists [string],
    :producerForwardingRule string,
@@ -134,7 +137,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/patch
   
-  Required parameters: region, serviceAttachment, project
+  Required parameters: project, region, serviceAttachment
   
   Optional parameters: requestId
   
@@ -144,17 +147,21 @@
    :natSubnets [string],
    :creationTimestamp string,
    :enableProxyProtocol boolean,
-   :consumerAcceptLists [{:connectionLimit integer,
-                          :projectIdOrNum string}],
+   :consumerAcceptLists [{:projectIdOrNum string,
+                          :networkUrl string,
+                          :connectionLimit integer}],
    :name string,
    :selfLink string,
    :region string,
    :connectionPreference string,
    :connectedEndpoints [{:status string,
+                         :pscConnectionId string,
                          :endpoint string,
-                         :pscConnectionId string}],
+                         :consumerNetwork string}],
    :id string,
    :kind string,
+   :domainNames [string],
+   :reconcileConnections boolean,
    :pscServiceAttachmentId {:high string, :low string},
    :consumerRejectLists [string],
    :producerForwardingRule string,
@@ -188,7 +195,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/testIamPermissions
   
-  Required parameters: project, resource, region
+  Required parameters: project, region, resource
   
   Optional parameters: none
   
@@ -224,9 +231,9 @@
   
   Required parameters: project
   
-  Optional parameters: filter, returnPartialSuccess, pageToken, orderBy, maxResults, includeAllScopes
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves the list of all ServiceAttachment resources, regional and global, available to the specified project."
+  Retrieves the list of all ServiceAttachment resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -250,7 +257,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/delete
   
-  Required parameters: serviceAttachment, region, project
+  Required parameters: project, region, serviceAttachment
   
   Optional parameters: requestId
   
@@ -279,7 +286,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/getIamPolicy
   
-  Required parameters: region, resource, project
+  Required parameters: project, region, resource
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -307,9 +314,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/serviceAttachments/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: pageToken, maxResults, filter, returnPartialSuccess, orderBy
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists the ServiceAttachments for a project in the given scope."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

@@ -1,13 +1,13 @@
 (ns happygapi.dfareporting.accountActiveAdSummaries
   "Campaign Manager 360 API: accountActiveAdSummaries.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountActiveAdSummaries"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/accountActiveAdSummaries"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn get$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/accountActiveAdSummaries/get
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/accountActiveAdSummaries/get
   
   Required parameters: profileId, summaryAccountId
   
@@ -20,8 +20,8 @@
   (util/get-response
    (http/get
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/accountActiveAdSummaries/{summaryAccountId}"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{+profileId}/accountActiveAdSummaries/{+summaryAccountId}"
      #{:summaryAccountId :profileId}
      parameters)
     (merge-with

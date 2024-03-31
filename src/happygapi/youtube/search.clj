@@ -11,7 +11,7 @@
   
   Required parameters: part
   
-  Optional parameters: publishedBefore, videoDuration, videoSyndicated, eventType, q, forDeveloper, videoCaption, videoEmbeddable, channelId, videoDimension, videoType, topicId, type, safeSearch, locationRadius, pageToken, videoLicense, forContentOwner, regionCode, relevanceLanguage, publishedAfter, order, forMine, videoDefinition, relatedToVideoId, location, onBehalfOfContentOwner, maxResults, channelType, videoCategoryId
+  Optional parameters: publishedBefore, videoDuration, videoSyndicated, eventType, q, forDeveloper, videoCaption, videoEmbeddable, channelId, videoDimension, videoType, topicId, type, videoPaidProductPlacement, safeSearch, locationRadius, pageToken, videoLicense, forContentOwner, regionCode, relevanceLanguage, publishedAfter, order, forMine, videoDefinition, location, onBehalfOfContentOwner, maxResults, channelType, videoCategoryId
   
   Retrieves a list of search resources"
   {:scopes ["https://www.googleapis.com/auth/youtube"

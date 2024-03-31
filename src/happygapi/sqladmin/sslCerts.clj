@@ -6,37 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/list
-  
-  Required parameters: project, instance
-  
-  Optional parameters: none
-  
-  Lists all of the current SSL certificates for the instance."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "v1/projects/{project}/instances/{instance}/sslCerts"
-     #{:instance :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn createEphemeral$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/createEphemeral
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -66,10 +39,39 @@
       :as :json}
      auth))))
 
+(defn delete$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/delete
+  
+  Required parameters: project, instance, sha1Fingerprint
+  
+  Optional parameters: none
+  
+  Deletes the SSL certificate. For First Generation instances, the certificate remains valid until the instance is restarted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:instance :project :sha1Fingerprint})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "v1/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
+     #{:instance :project :sha1Fingerprint}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/get
   
-  Required parameters: instance, project, sha1Fingerprint
+  Required parameters: project, instance, sha1Fingerprint
   
   Optional parameters: none
   
@@ -98,7 +100,7 @@
 (defn insert$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/insert
   
-  Required parameters: instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
@@ -128,26 +130,24 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/delete
+(defn list$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/sslCerts/list
   
-  Required parameters: sha1Fingerprint, instance, project
+  Required parameters: project, instance
   
   Optional parameters: none
   
-  Deletes the SSL certificate. For First Generation instances, the certificate remains valid until the instance is restarted."
+  Lists all of the current SSL certificates for the instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:instance :project :sha1Fingerprint})]}
+  {:pre [(util/has-keys? parameters #{:instance :project})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://sqladmin.googleapis.com/"
-     "v1/projects/{project}/instances/{instance}/sslCerts/{sha1Fingerprint}"
-     #{:instance :project :sha1Fingerprint}
+     "v1/projects/{project}/instances/{instance}/sslCerts"
+     #{:instance :project}
      parameters)
     (merge-with
      merge

@@ -15,12 +15,12 @@
   
   Body: 
   
-  {:filter string,
+  {:itemName string,
+   :ancestorName string,
+   :consolidationStrategy {:none NoConsolidation, :legacy Legacy},
    :pageSize integer,
    :pageToken string,
-   :ancestorName string,
-   :itemName string,
-   :consolidationStrategy {:none NoConsolidation, :legacy Legacy}}
+   :filter string}
   
   Query past activity in Google Drive."
   {:scopes ["https://www.googleapis.com/auth/drive.activity"

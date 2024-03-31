@@ -1,6 +1,6 @@
 (ns happygapi.drive.teamdrives
-  "Drive API: teamdrives.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: teamdrives.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/teamdrives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -26,6 +26,8 @@
                   :canListChildren boolean,
                   :canRename boolean,
                   :canRenameTeamDrive boolean,
+                  :canChangeSharingFoldersRequiresOrganizerPermissionRestriction boolean,
+                  :canResetTeamDriveRestrictions boolean,
                   :canReadRevisions boolean,
                   :canChangeCopyRequiresWriterPermissionRestriction boolean,
                   :canEdit boolean,
@@ -34,23 +36,25 @@
                   :canRemoveChildren boolean,
                   :canAddChildren boolean,
                   :canShare boolean},
-   :restrictions {:adminManagedRestrictions boolean,
-                  :copyRequiresWriterPermission boolean,
+   :restrictions {:copyRequiresWriterPermission boolean,
                   :domainUsersOnly boolean,
-                  :teamMembersOnly boolean},
+                  :teamMembersOnly boolean,
+                  :adminManagedRestrictions boolean,
+                  :sharingFoldersRequiresOrganizerPermission boolean},
    :themeId string,
    :backgroundImageFile {:id string,
-                         :width number,
                          :xCoordinate number,
-                         :yCoordinate number},
+                         :yCoordinate number,
+                         :width number},
    :name string,
+   :orgUnitId string,
    :createdTime string,
    :id string,
    :kind string,
    :colorRgb string,
    :backgroundImageLink string}
   
-  Deprecated use drives.create instead."
+  Deprecated: Use `drives.create` instead."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:requestId})]}
@@ -78,7 +82,7 @@
   
   Optional parameters: none
   
-  Deprecated use drives.delete instead."
+  Deprecated: Use `drives.delete` instead."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:teamDriveId})]}
@@ -104,7 +108,7 @@
   
   Optional parameters: useDomainAdminAccess
   
-  Deprecated use drives.get instead."
+  Deprecated: Use `drives.get` instead."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth parameters]
@@ -131,7 +135,7 @@
   
   Optional parameters: pageSize, pageToken, q, useDomainAdminAccess
   
-  Deprecated use drives.list instead."
+  Deprecated: Use `drives.list` instead."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.readonly"]}
   [auth parameters]
@@ -171,6 +175,8 @@
                   :canListChildren boolean,
                   :canRename boolean,
                   :canRenameTeamDrive boolean,
+                  :canChangeSharingFoldersRequiresOrganizerPermissionRestriction boolean,
+                  :canResetTeamDriveRestrictions boolean,
                   :canReadRevisions boolean,
                   :canChangeCopyRequiresWriterPermissionRestriction boolean,
                   :canEdit boolean,
@@ -179,23 +185,25 @@
                   :canRemoveChildren boolean,
                   :canAddChildren boolean,
                   :canShare boolean},
-   :restrictions {:adminManagedRestrictions boolean,
-                  :copyRequiresWriterPermission boolean,
+   :restrictions {:copyRequiresWriterPermission boolean,
                   :domainUsersOnly boolean,
-                  :teamMembersOnly boolean},
+                  :teamMembersOnly boolean,
+                  :adminManagedRestrictions boolean,
+                  :sharingFoldersRequiresOrganizerPermission boolean},
    :themeId string,
    :backgroundImageFile {:id string,
-                         :width number,
                          :xCoordinate number,
-                         :yCoordinate number},
+                         :yCoordinate number,
+                         :width number},
    :name string,
+   :orgUnitId string,
    :createdTime string,
    :id string,
    :kind string,
    :colorRgb string,
    :backgroundImageLink string}
   
-  Deprecated use drives.update instead"
+  Deprecated: Use `drives.update` instead."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:teamDriveId})]}

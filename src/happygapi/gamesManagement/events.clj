@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn resetForAllPlayers$
-  "https://developers.google.com/games/api/reference/rest/v1management/events/resetForAllPlayers
-  
-  Required parameters: eventId
-  
-  Optional parameters: none
-  
-  Resets the event with the given ID for all players. This method is only available to user accounts for your developer console. Only draft events can be reset."
-  {:scopes ["https://www.googleapis.com/auth/games"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:eventId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://gamesmanagement.googleapis.com/"
-     "games/v1management/events/{eventId}/resetForAllPlayers"
-     #{:eventId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn reset$
   "https://developers.google.com/games/api/reference/rest/v1management/events/reset
   
@@ -49,6 +23,32 @@
      "https://gamesmanagement.googleapis.com/"
      "games/v1management/events/{eventId}/reset"
      #{:eventId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn resetAll$
+  "https://developers.google.com/games/api/reference/rest/v1management/events/resetAll
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Resets all player progress on all events for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
+  {:scopes ["https://www.googleapis.com/auth/games"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://gamesmanagement.googleapis.com/"
+     "games/v1management/events/reset"
+     #{}
      parameters)
     (merge-with
      merge
@@ -84,23 +84,23 @@
       :as :json}
      auth))))
 
-(defn resetAll$
-  "https://developers.google.com/games/api/reference/rest/v1management/events/resetAll
+(defn resetForAllPlayers$
+  "https://developers.google.com/games/api/reference/rest/v1management/events/resetForAllPlayers
   
-  Required parameters: none
+  Required parameters: eventId
   
   Optional parameters: none
   
-  Resets all player progress on all events for the currently authenticated player. This method is only accessible to whitelisted tester accounts for your application."
+  Resets the event with the given ID for all players. This method is only available to user accounts for your developer console. Only draft events can be reset."
   {:scopes ["https://www.googleapis.com/auth/games"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:eventId})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://gamesmanagement.googleapis.com/"
-     "games/v1management/events/reset"
-     #{}
+     "games/v1management/events/{eventId}/resetForAllPlayers"
+     #{:eventId}
      parameters)
     (merge-with
      merge

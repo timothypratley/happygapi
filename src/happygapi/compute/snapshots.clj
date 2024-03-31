@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, returnPartialSuccess, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of Snapshot resources contained within the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -34,25 +34,25 @@
       :as :json}
      auth))))
 
-(defn getIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/getIamPolicy
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/get
   
-  Required parameters: resource, project
+  Required parameters: project, snapshot
   
-  Optional parameters: optionsRequestedPolicyVersion
+  Optional parameters: none
   
-  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
+  Returns the specified Snapshot resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  {:pre [(util/has-keys? parameters #{:snapshot :project})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/snapshots/{resource}/getIamPolicy"
-     #{:project :resource}
+     "projects/{project}/global/snapshots/{snapshot}"
+     #{:snapshot :project}
      parameters)
     (merge-with
      merge
@@ -62,16 +62,96 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :labels {},
+   :autoCreated boolean,
+   :snapshotType string,
+   :locationHint string,
+   :guestOsFeatures [{:type string}],
+   :sourceDiskId string,
+   :architecture string,
+   :downloadBytes string,
+   :creationTimestamp string,
+   :chainName string,
+   :satisfiesPzi boolean,
+   :name string,
+   :sourceDiskForRecoveryCheckpoint string,
+   :sourceDisk string,
+   :sourceSnapshotSchedulePolicy string,
+   :licenses [string],
+   :selfLink string,
+   :sourceInstantSnapshot string,
+   :sourceDiskEncryptionKey {:rawKey string,
+                             :rsaEncryptedKey string,
+                             :kmsKeyName string,
+                             :sha256 string,
+                             :kmsKeyServiceAccount string},
+   :satisfiesPzs boolean,
+   :status string,
+   :id string,
+   :sourceInstantSnapshotId string,
+   :kind string,
+   :sourceInstantSnapshotEncryptionKey {:rawKey string,
+                                        :rsaEncryptedKey string,
+                                        :kmsKeyName string,
+                                        :sha256 string,
+                                        :kmsKeyServiceAccount string},
+   :diskSizeGb string,
+   :licenseCodes [string],
+   :storageBytesStatus string,
+   :snapshotEncryptionKey {:rawKey string,
+                           :rsaEncryptedKey string,
+                           :kmsKeyName string,
+                           :sha256 string,
+                           :kmsKeyServiceAccount string},
+   :creationSizeBytes string,
+   :storageLocations [string],
+   :storageBytes string,
+   :enableConfidentialCompute boolean,
+   :labelFingerprint string,
+   :sourceSnapshotSchedulePolicyId string}
+  
+  Creates a snapshot in the specified project using the data included in the request. For regular snapshot creation, consider using this method instead of disks.createSnapshot, as this method supports more features, such as creating snapshots in a project different from the source disk project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/snapshots"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setLabels$
   "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/setLabels
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
   Body: 
   
-  {:labelFingerprint string, :labels {}}
+  {:labels {}, :labelFingerprint string}
   
   Sets the labels on a snapshot. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -98,7 +178,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/delete
   
-  Required parameters: snapshot, project
+  Required parameters: project, snapshot
   
   Optional parameters: requestId
   
@@ -122,25 +202,25 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/get
+(defn getIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/getIamPolicy
   
-  Required parameters: snapshot, project
+  Required parameters: project, resource
   
-  Optional parameters: none
+  Optional parameters: optionsRequestedPolicyVersion
   
-  Returns the specified Snapshot resource. Gets a list of available snapshots by making a list() request."
+  Gets the access control policy for a resource. May be empty if no such policy or resource exists."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:snapshot :project})]}
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/snapshots/{snapshot}"
-     #{:snapshot :project}
+     "projects/{project}/global/snapshots/{resource}/getIamPolicy"
+     #{:project :resource}
      parameters)
     (merge-with
      merge
@@ -150,10 +230,52 @@
       :as :json}
      auth))))
 
+(defn setIamPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/setIamPolicy
+  
+  Required parameters: project, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :rules [Rule],
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
+   :etag string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/snapshots/{resource}/setIamPolicy"
+     #{:project :resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/testIamPermissions
   
-  Required parameters: resource, project
+  Required parameters: project, resource
   
   Optional parameters: none
   
@@ -172,49 +294,6 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/snapshots/{resource}/testIamPermissions"
-     #{:project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setIamPolicy$
-  "https://cloud.google.com/compute/api/reference/rest/v1/snapshots/setIamPolicy
-  
-  Required parameters: project, resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string,
-            :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
-            :rules [Rule],
-            :bindings [Binding]},
-   :bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :etag string}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/snapshots/{resource}/setIamPolicy"
      #{:project :resource}
      parameters)
     (merge-with

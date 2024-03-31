@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/dnsKeys/get
   
-  Required parameters: managedZone, dnsKeyId, project
+  Required parameters: project, managedZone, dnsKeyId
   
   Optional parameters: clientOperationId, digestType
   
@@ -40,9 +40,9 @@
 (defn list$
   "https://cloud.google.com/dns/docsapi/reference/rest/v1/dnsKeys/list
   
-  Required parameters: managedZone, project
+  Required parameters: project, managedZone
   
-  Optional parameters: pageToken, digestType, maxResults
+  Optional parameters: maxResults, pageToken, digestType
   
   Enumerates DnsKeys to a ResourceRecordSet collection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

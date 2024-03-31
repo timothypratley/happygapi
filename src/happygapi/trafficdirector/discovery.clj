@@ -1,13 +1,13 @@
 (ns happygapi.trafficdirector.discovery
   "Traffic Director API: discovery.
   
-  See: https://cloud.google.com/traffic-directorapi/reference/rest/v2/discovery"
+  See: https://cloud.google.com/traffic-directorapi/reference/rest/v3/discovery"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn client_status$
-  "https://cloud.google.com/traffic-directorapi/reference/rest/v2/discovery/client_status
+  "https://cloud.google.com/traffic-directorapi/reference/rest/v3/discovery/client_status
   
   Required parameters: none
   
@@ -15,8 +15,20 @@
   
   Body: 
   
-  {:nodeMatchers [{:nodeMetadatas [StructMatcher],
-                   :nodeId StringMatcher}]}
+  {:nodeMatchers [{:nodeId StringMatcher,
+                   :nodeMetadatas [StructMatcher]}],
+   :node {:locality Locality,
+          :dynamicParameters {},
+          :userAgentVersion string,
+          :cluster string,
+          :userAgentBuildVersion BuildVersion,
+          :listeningAddresses [Address],
+          :extensions [Extension],
+          :id string,
+          :userAgentName string,
+          :clientFeatures [string],
+          :metadata {}},
+   :excludeResourceContents boolean}
   
   "
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -26,7 +38,7 @@
    (http/post
     (util/get-url
      "https://trafficdirector.googleapis.com/"
-     "v2/discovery:client_status"
+     "v3/discovery:client_status"
      #{}
      parameters)
     (merge-with

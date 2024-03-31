@@ -9,13 +9,13 @@
 (defn invalidateCache$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/invalidateCache
   
-  Required parameters: urlMap, project
+  Required parameters: project, urlMap
   
   Optional parameters: requestId
   
   Body: 
   
-  {:host string, :path string}
+  {:path string, :host string}
   
   Initiates a cache invalidation operation, invalidating the specified path, scoped to the specified UrlMap. For more information, see [Invalidating cached content](/cdn/docs/invalidating-cached-content)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -46,7 +46,7 @@
   
   Optional parameters: none
   
-  Returns the specified UrlMap resource. Gets a list of available URL maps by making a list() request."
+  Returns the specified UrlMap resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -77,49 +77,49 @@
   Body: 
   
   {:description string,
-   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
-                   :routeRules [HttpRouteRule],
-                   :pathRules [PathRule],
+   :pathMatchers [{:name string,
                    :description string,
-                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
+                   :defaultUrlRedirect HttpRedirectAction,
+                   :pathRules [PathRule],
+                   :routeRules [HttpRouteRule],
                    :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:service string,
-            :expectedRedirectResponseCode integer,
-            :expectedOutputUrl string,
+   :tests [{:description string,
             :host string,
-            :description string,
+            :path string,
             :headers [UrlMapTestHeader],
-            :path string}],
+            :service string,
+            :expectedOutputUrl string,
+            :expectedRedirectResponseCode integer}],
    :name string,
-   :defaultUrlRedirect {:redirectResponseCode string,
-                        :prefixRedirect string,
-                        :hostRedirect string,
+   :defaultUrlRedirect {:hostRedirect string,
                         :pathRedirect string,
-                        :stripQuery boolean,
-                        :httpsRedirect boolean},
+                        :prefixRedirect string,
+                        :redirectResponseCode string,
+                        :httpsRedirect boolean,
+                        :stripQuery boolean},
    :selfLink string,
-   :headerAction {:responseHeadersToRemove [string],
-                  :requestHeadersToRemove [string],
+   :headerAction {:requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
+                  :responseHeadersToRemove [string],
                   :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:urlRewrite UrlRewrite,
-                        :corsPolicy CorsPolicy,
+   :defaultRouteAction {:weightedBackendServices [WeightedBackendService],
+                        :urlRewrite UrlRewrite,
                         :timeout Duration,
-                        :maxStreamDuration Duration,
-                        :weightedBackendServices [WeightedBackendService],
+                        :retryPolicy HttpRetryPolicy,
                         :requestMirrorPolicy RequestMirrorPolicy,
+                        :corsPolicy CorsPolicy,
                         :faultInjectionPolicy HttpFaultInjection,
-                        :retryPolicy HttpRetryPolicy},
+                        :maxStreamDuration Duration},
    :defaultService string,
    :id string,
    :kind string,
-   :hostRules [{:pathMatcher string,
-                :description string,
-                :hosts [string]}],
+   :hostRules [{:description string,
+                :hosts [string],
+                :pathMatcher string}],
    :fingerprint string}
   
   Creates a UrlMap resource in the specified project using the data included in the request."
@@ -167,7 +167,8 @@
               :id string,
               :kind string,
               :hostRules [HostRule],
-              :fingerprint string}}
+              :fingerprint string},
+   :loadBalancingSchemes [string]}
   
   Runs static validation for the UrlMap. In particular, the tests of the provided UrlMap will be run. Calling this method does NOT create the UrlMap."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -194,56 +195,56 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/urlMaps/patch
   
-  Required parameters: urlMap, project
+  Required parameters: project, urlMap
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
-                   :routeRules [HttpRouteRule],
-                   :pathRules [PathRule],
+   :pathMatchers [{:name string,
                    :description string,
-                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
+                   :defaultUrlRedirect HttpRedirectAction,
+                   :pathRules [PathRule],
+                   :routeRules [HttpRouteRule],
                    :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:service string,
-            :expectedRedirectResponseCode integer,
-            :expectedOutputUrl string,
+   :tests [{:description string,
             :host string,
-            :description string,
+            :path string,
             :headers [UrlMapTestHeader],
-            :path string}],
+            :service string,
+            :expectedOutputUrl string,
+            :expectedRedirectResponseCode integer}],
    :name string,
-   :defaultUrlRedirect {:redirectResponseCode string,
-                        :prefixRedirect string,
-                        :hostRedirect string,
+   :defaultUrlRedirect {:hostRedirect string,
                         :pathRedirect string,
-                        :stripQuery boolean,
-                        :httpsRedirect boolean},
+                        :prefixRedirect string,
+                        :redirectResponseCode string,
+                        :httpsRedirect boolean,
+                        :stripQuery boolean},
    :selfLink string,
-   :headerAction {:responseHeadersToRemove [string],
-                  :requestHeadersToRemove [string],
+   :headerAction {:requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
+                  :responseHeadersToRemove [string],
                   :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:urlRewrite UrlRewrite,
-                        :corsPolicy CorsPolicy,
+   :defaultRouteAction {:weightedBackendServices [WeightedBackendService],
+                        :urlRewrite UrlRewrite,
                         :timeout Duration,
-                        :maxStreamDuration Duration,
-                        :weightedBackendServices [WeightedBackendService],
+                        :retryPolicy HttpRetryPolicy,
                         :requestMirrorPolicy RequestMirrorPolicy,
+                        :corsPolicy CorsPolicy,
                         :faultInjectionPolicy HttpFaultInjection,
-                        :retryPolicy HttpRetryPolicy},
+                        :maxStreamDuration Duration},
    :defaultService string,
    :id string,
    :kind string,
-   :hostRules [{:pathMatcher string,
-                :description string,
-                :hosts [string]}],
+   :hostRules [{:description string,
+                :hosts [string],
+                :pathMatcher string}],
    :fingerprint string}
   
   Patches the specified UrlMap resource with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
@@ -273,9 +274,9 @@
   
   Required parameters: project
   
-  Optional parameters: includeAllScopes, filter, returnPartialSuccess, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves the list of all UrlMap resources, regional and global, available to the specified project."
+  Retrieves the list of all UrlMap resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -306,49 +307,49 @@
   Body: 
   
   {:description string,
-   :pathMatchers [{:defaultUrlRedirect HttpRedirectAction,
-                   :routeRules [HttpRouteRule],
-                   :pathRules [PathRule],
+   :pathMatchers [{:name string,
                    :description string,
-                   :name string,
                    :defaultService string,
                    :defaultRouteAction HttpRouteAction,
+                   :defaultUrlRedirect HttpRedirectAction,
+                   :pathRules [PathRule],
+                   :routeRules [HttpRouteRule],
                    :headerAction HttpHeaderAction}],
    :creationTimestamp string,
-   :tests [{:service string,
-            :expectedRedirectResponseCode integer,
-            :expectedOutputUrl string,
+   :tests [{:description string,
             :host string,
-            :description string,
+            :path string,
             :headers [UrlMapTestHeader],
-            :path string}],
+            :service string,
+            :expectedOutputUrl string,
+            :expectedRedirectResponseCode integer}],
    :name string,
-   :defaultUrlRedirect {:redirectResponseCode string,
-                        :prefixRedirect string,
-                        :hostRedirect string,
+   :defaultUrlRedirect {:hostRedirect string,
                         :pathRedirect string,
-                        :stripQuery boolean,
-                        :httpsRedirect boolean},
+                        :prefixRedirect string,
+                        :redirectResponseCode string,
+                        :httpsRedirect boolean,
+                        :stripQuery boolean},
    :selfLink string,
-   :headerAction {:responseHeadersToRemove [string],
-                  :requestHeadersToRemove [string],
+   :headerAction {:requestHeadersToRemove [string],
                   :requestHeadersToAdd [HttpHeaderOption],
+                  :responseHeadersToRemove [string],
                   :responseHeadersToAdd [HttpHeaderOption]},
    :region string,
-   :defaultRouteAction {:urlRewrite UrlRewrite,
-                        :corsPolicy CorsPolicy,
+   :defaultRouteAction {:weightedBackendServices [WeightedBackendService],
+                        :urlRewrite UrlRewrite,
                         :timeout Duration,
-                        :maxStreamDuration Duration,
-                        :weightedBackendServices [WeightedBackendService],
+                        :retryPolicy HttpRetryPolicy,
                         :requestMirrorPolicy RequestMirrorPolicy,
+                        :corsPolicy CorsPolicy,
                         :faultInjectionPolicy HttpFaultInjection,
-                        :retryPolicy HttpRetryPolicy},
+                        :maxStreamDuration Duration},
    :defaultService string,
    :id string,
    :kind string,
-   :hostRules [{:pathMatcher string,
-                :description string,
-                :hosts [string]}],
+   :hostRules [{:description string,
+                :hosts [string],
+                :pathMatcher string}],
    :fingerprint string}
   
   Updates the specified UrlMap resource with the data included in the request."
@@ -405,7 +406,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, returnPartialSuccess, maxResults, pageToken, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of UrlMap resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

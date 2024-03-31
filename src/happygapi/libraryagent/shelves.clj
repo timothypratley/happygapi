@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists shelves. The order is unspecified but deterministic. Newly created shelves will not necessarily be added to the end of this list."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -49,6 +49,32 @@
      "https://libraryagent.googleapis.com/"
      "v1/shelves"
      #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn books-return$
+  "https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves/books/return
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Return a book to the library. Returns the book if it is returned to the library successfully. Returns error if the book does not belong to the library or the users didn't borrow before."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://libraryagent.googleapis.com/"
+     "v1/{+name}:return"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -101,32 +127,6 @@
      "https://libraryagent.googleapis.com/"
      "v1/{+parent}/books"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn books-return$
-  "https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves/books/return
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Return a book to the library. Returns the book if it is returned to the library successfully. Returns error if the book does not belong to the library or the users didn't borrow before."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://libraryagent.googleapis.com/"
-     "v1/{+name}:return"
-     #{:name}
      parameters)
     (merge-with
      merge

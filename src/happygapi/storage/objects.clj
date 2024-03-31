@@ -11,7 +11,7 @@
   
   Required parameters: destinationBucket, destinationObject
   
-  Optional parameters: destinationPredefinedAcl, ifGenerationMatch, ifMetagenerationMatch, kmsKeyName, provisionalUserProject, userProject
+  Optional parameters: destinationPredefinedAcl, ifGenerationMatch, ifMetagenerationMatch, kmsKeyName, userProject
   
   Body: 
   
@@ -28,6 +28,7 @@
                  :selfLink string,
                  :contentLanguage string,
                  :etag string,
+                 :retention {:retainUntilTime string, :mode string},
                  :size string,
                  :md5Hash string,
                  :cacheControl string,
@@ -37,12 +38,14 @@
                  :kind string,
                  :mediaLink string,
                  :kmsKeyName string,
+                 :softDeleteTime string,
                  :customTime string,
                  :componentCount integer,
                  :acl [ObjectAccessControl],
                  :customerEncryption {:encryptionAlgorithm string,
                                       :keySha256 string},
                  :contentType string,
+                 :hardDeleteTime string,
                  :metadata {},
                  :crc32c string,
                  :owner {:entity string, :entityId string},
@@ -83,7 +86,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: startOffset, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  Optional parameters: startOffset, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, versions, projection, maxResults
   
   Body: 
   
@@ -128,7 +131,7 @@
   
   Required parameters: object, bucket
   
-  Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
+  Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, softDeleted, projection
   
   Retrieves an object or its metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -158,7 +161,7 @@
   
   Required parameters: destinationBucket, sourceBucket, destinationObject, sourceObject
   
-  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
+  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
   
   Body: 
   
@@ -175,6 +178,7 @@
    :selfLink string,
    :contentLanguage string,
    :etag string,
+   :retention {:retainUntilTime string, :mode string},
    :size string,
    :md5Hash string,
    :cacheControl string,
@@ -184,6 +188,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :softDeleteTime string,
    :customTime string,
    :componentCount integer,
    :acl [{:role string,
@@ -201,6 +206,7 @@
           :bucket string}],
    :customerEncryption {:encryptionAlgorithm string, :keySha256 string},
    :contentType string,
+   :hardDeleteTime string,
    :metadata {},
    :crc32c string,
    :owner {:entity string, :entityId string},
@@ -243,7 +249,7 @@
   
   Required parameters: bucket, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Body: 
   
@@ -286,7 +292,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: contentEncoding, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, name, ifGenerationNotMatch, ifMetagenerationMatch, kmsKeyName, userProject, provisionalUserProject, projection
+  Optional parameters: contentEncoding, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, name, ifGenerationNotMatch, ifMetagenerationMatch, kmsKeyName, userProject, projection
   
   Body: 
   
@@ -303,6 +309,7 @@
    :selfLink string,
    :contentLanguage string,
    :etag string,
+   :retention {:retainUntilTime string, :mode string},
    :size string,
    :md5Hash string,
    :cacheControl string,
@@ -312,6 +319,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :softDeleteTime string,
    :customTime string,
    :componentCount integer,
    :acl [{:role string,
@@ -329,6 +337,7 @@
           :bucket string}],
    :customerEncryption {:encryptionAlgorithm string, :keySha256 string},
    :contentType string,
+   :hardDeleteTime string,
    :metadata {},
    :crc32c string,
    :owner {:entity string, :entityId string},
@@ -363,7 +372,7 @@
   
   Required parameters: object, bucket
   
-  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
+  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, overrideUnlockedRetention, userProject, projection
   
   Body: 
   
@@ -380,6 +389,7 @@
    :selfLink string,
    :contentLanguage string,
    :etag string,
+   :retention {:retainUntilTime string, :mode string},
    :size string,
    :md5Hash string,
    :cacheControl string,
@@ -389,6 +399,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :softDeleteTime string,
    :customTime string,
    :componentCount integer,
    :acl [{:role string,
@@ -406,6 +417,7 @@
           :bucket string}],
    :customerEncryption {:encryptionAlgorithm string, :keySha256 string},
    :contentType string,
+   :hardDeleteTime string,
    :metadata {},
    :crc32c string,
    :owner {:entity string, :entityId string},
@@ -439,7 +451,7 @@
   
   Required parameters: bucket, object, permissions
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Tests a set of permissions on the given object to see which, if any, are held by the caller."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -464,12 +476,39 @@
       :as :json}
      auth))))
 
+(defn restore$
+  "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/objects/restore
+  
+  Required parameters: generation, object, bucket
+  
+  Optional parameters: ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, copySourceAcl, userProject, projection
+  
+  Restores a soft-deleted object."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/devstorage.full_control"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:generation :object :bucket})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://storage.googleapis.com/storage/v1/"
+     "b/{bucket}/o/{object}/restore"
+     #{:generation :object :bucket}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/objects/update
   
   Required parameters: object, bucket
   
-  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject, projection
+  Optional parameters: generation, predefinedAcl, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, overrideUnlockedRetention, userProject, projection
   
   Body: 
   
@@ -486,6 +525,7 @@
    :selfLink string,
    :contentLanguage string,
    :etag string,
+   :retention {:retainUntilTime string, :mode string},
    :size string,
    :md5Hash string,
    :cacheControl string,
@@ -495,6 +535,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :softDeleteTime string,
    :customTime string,
    :componentCount integer,
    :acl [{:role string,
@@ -512,6 +553,7 @@
           :bucket string}],
    :customerEncryption {:encryptionAlgorithm string, :keySha256 string},
    :contentType string,
+   :hardDeleteTime string,
    :metadata {},
    :crc32c string,
    :owner {:entity string, :entityId string},
@@ -543,9 +585,9 @@
 (defn delete$
   "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/objects/delete
   
-  Required parameters: object, bucket
+  Required parameters: bucket, object
   
-  Optional parameters: generation, ifGenerationMatch, ifMetagenerationNotMatch, ifGenerationNotMatch, ifMetagenerationMatch, userProject, provisionalUserProject
+  Optional parameters: generation, ifGenerationMatch, ifGenerationNotMatch, ifMetagenerationMatch, ifMetagenerationNotMatch, userProject
   
   Deletes an object and its metadata. Deletions are permanent if versioning is not enabled for the bucket, or if the generation parameter is used."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -573,7 +615,7 @@
   
   Required parameters: bucket, object
   
-  Optional parameters: generation, provisionalUserProject, userProject
+  Optional parameters: generation, userProject
   
   Returns an IAM policy for the specified object."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -598,12 +640,50 @@
       :as :json}
      auth))))
 
+(defn bulkRestore$
+  "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/objects/bulkRestore
+  
+  Required parameters: bucket
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:allowOverwrite boolean,
+   :softDeletedAfterTime string,
+   :softDeletedBeforeTime string,
+   :matchGlobs [string],
+   :copySourceAcl boolean}
+  
+  Initiates a long-running bulk restore operation on the specified bucket."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/devstorage.full_control"
+            "https://www.googleapis.com/auth/devstorage.read_write"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:bucket})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://storage.googleapis.com/storage/v1/"
+     "b/{bucket}/o/bulkRestore"
+     #{:bucket}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/objects/list
   
   Required parameters: bucket
   
-  Optional parameters: startOffset, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, provisionalUserProject, versions, projection, maxResults
+  Optional parameters: startOffset, includeFoldersAsPrefixes, endOffset, prefix, pageToken, delimiter, userProject, includeTrailingDelimiter, matchGlob, softDeleted, versions, projection, maxResults
   
   Retrieves a list of objects matching the criteria."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -633,7 +713,7 @@
   
   Required parameters: destinationBucket, sourceBucket, destinationObject, sourceObject
   
-  Optional parameters: ifGenerationMatch, maxBytesRewrittenPerCall, ifMetagenerationNotMatch, rewriteToken, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, provisionalUserProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
+  Optional parameters: ifGenerationMatch, maxBytesRewrittenPerCall, ifMetagenerationNotMatch, rewriteToken, ifGenerationNotMatch, ifMetagenerationMatch, destinationPredefinedAcl, userProject, ifSourceMetagenerationNotMatch, destinationKmsKeyName, sourceGeneration, ifSourceGenerationMatch, projection, ifSourceGenerationNotMatch, ifSourceMetagenerationMatch
   
   Body: 
   
@@ -650,6 +730,7 @@
    :selfLink string,
    :contentLanguage string,
    :etag string,
+   :retention {:retainUntilTime string, :mode string},
    :size string,
    :md5Hash string,
    :cacheControl string,
@@ -659,6 +740,7 @@
    :kind string,
    :mediaLink string,
    :kmsKeyName string,
+   :softDeleteTime string,
    :customTime string,
    :componentCount integer,
    :acl [{:role string,
@@ -676,6 +758,7 @@
           :bucket string}],
    :customerEncryption {:encryptionAlgorithm string, :keySha256 string},
    :contentType string,
+   :hardDeleteTime string,
    :metadata {},
    :crc32c string,
    :owner {:entity string, :entityId string},

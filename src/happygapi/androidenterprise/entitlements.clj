@@ -9,11 +9,11 @@
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/list
   
-  Required parameters: userId, enterpriseId
+  Required parameters: enterpriseId, userId
   
   Optional parameters: none
   
-  Lists all entitlements for the specified user. Only the ID is set."
+  Lists all entitlements for the specified user. Only the ID is set. **Note:** This item has been deprecated. New integrations cannot use this method and can refer to our new recommendations."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:enterpriseId :userId})]}
@@ -32,6 +32,34 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/get
+  
+  Required parameters: enterpriseId, userId, entitlementId
+  
+  Optional parameters: none
+  
+  Retrieves details of an entitlement. **Note:** This item has been deprecated. New integrations cannot use this method and can refer to our new recommendations."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :entitlementId :userId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
+     #{:enterpriseId :entitlementId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/update
   
@@ -41,9 +69,9 @@
   
   Body: 
   
-  {:reason string, :productId string}
+  {:productId string, :reason string}
   
-  Adds or updates an entitlement to an app for a user."
+  Adds or updates an entitlement to an app for a user. **Note:** This item has been deprecated. New integrations cannot use this method and can refer to our new recommendations."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys?
@@ -66,42 +94,14 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/get
-  
-  Required parameters: entitlementId, userId, enterpriseId
-  
-  Optional parameters: none
-  
-  Retrieves details of an entitlement."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :entitlementId :userId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/entitlements/{entitlementId}"
-     #{:enterpriseId :entitlementId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/entitlements/delete
   
-  Required parameters: userId, entitlementId, enterpriseId
+  Required parameters: enterpriseId, userId, entitlementId
   
   Optional parameters: none
   
-  Removes an entitlement to an app for a user."
+  Removes an entitlement to an app for a user. **Note:** This item has been deprecated. New integrations cannot use this method and can refer to our new recommendations."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters]
   {:pre [(util/has-keys?

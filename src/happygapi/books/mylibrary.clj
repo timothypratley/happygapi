@@ -6,313 +6,103 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn readingpositions-get$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/readingpositions/get
-  
-  Required parameters: volumeId
-  
-  Optional parameters: contentVersion, source
-  
-  Retrieves my reading position information for a volume."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:volumeId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/readingpositions/{volumeId}"
-     #{:volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn readingpositions-setPosition$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/readingpositions/setPosition
-  
-  Required parameters: volumeId, position, timestamp
-  
-  Optional parameters: deviceCookie, action, source, contentVersion
-  
-  Sets my reading position information for a volume."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:volumeId :position :timestamp})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/readingpositions/{volumeId}/setPosition"
-     #{:volumeId :position :timestamp}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-addVolume$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/addVolume
-  
-  Required parameters: volumeId, shelf
-  
-  Optional parameters: source, reason
-  
-  Adds a volume to a bookshelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}/addVolume"
-     #{:shelf :volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-list$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/list
-  
-  Required parameters: none
-  
-  Optional parameters: source
-  
-  Retrieves a list of bookshelves belonging to the authenticated user."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-removeVolume$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/removeVolume
-  
-  Required parameters: volumeId, shelf
-  
-  Optional parameters: source, reason
-  
-  Removes a volume from a bookshelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}/removeVolume"
-     #{:shelf :volumeId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-moveVolume$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/moveVolume
-  
-  Required parameters: shelf, volumeId, volumePosition
-  
-  Optional parameters: source
-  
-  Moves a volume within a bookshelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:shelf :volumeId :volumePosition})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}/moveVolume"
-     #{:shelf :volumeId :volumePosition}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-get$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/get
-  
-  Required parameters: shelf
-  
-  Optional parameters: source
-  
-  Retrieves metadata for a specific bookshelf belonging to the authenticated user."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:shelf})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}"
-     #{:shelf}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-clearVolumes$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/clearVolumes
-  
-  Required parameters: shelf
-  
-  Optional parameters: source
-  
-  Clears all volumes from a bookshelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:shelf})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}/clearVolumes"
-     #{:shelf}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn bookshelves-volumes-list$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/volumes/list
-  
-  Required parameters: shelf
-  
-  Optional parameters: country, projection, q, startIndex, maxResults, source, showPreorders
-  
-  Gets volume information for volumes on a bookshelf."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:shelf})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/bookshelves/{shelf}/volumes"
-     #{:shelf}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn annotations-update$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/update
+(defn annotations-delete$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/delete
   
   Required parameters: annotationId
   
   Optional parameters: source
+  
+  Deletes an annotation."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:annotationId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/annotations/{annotationId}"
+     #{:annotationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn annotations-insert$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/insert
+  
+  Required parameters: none
+  
+  Optional parameters: annotationId, country, showOnlySummaryInResponse, source
   
   Body: 
   
   {:deleted boolean,
    :volumeId string,
    :selectedText string,
-   :layerSummary {:limitType string,
-                  :remainingCharacterCount integer,
-                  :allowedCharacterCount integer},
+   :layerSummary {:remainingCharacterCount integer,
+                  :allowedCharacterCount integer,
+                  :limitType string},
    :updated string,
    :selfLink string,
    :highlightStyle string,
    :created string,
-   :currentVersionRanges {:gbTextRange {:endPosition string,
-                                        :startOffset string,
-                                        :endOffset string,
-                                        :startPosition string},
-                          :imageCfiRange {:endPosition string,
-                                          :startOffset string,
-                                          :endOffset string,
-                                          :startPosition string},
-                          :cfiRange {:endPosition string,
-                                     :startOffset string,
-                                     :endOffset string,
-                                     :startPosition string},
-                          :gbImageRange {:endPosition string,
+   :currentVersionRanges {:contentVersion string,
+                          :gbImageRange {:startPosition string,
                                          :startOffset string,
-                                         :endOffset string,
-                                         :startPosition string},
-                          :contentVersion string},
+                                         :endPosition string,
+                                         :endOffset string},
+                          :gbTextRange {:startPosition string,
+                                        :startOffset string,
+                                        :endPosition string,
+                                        :endOffset string},
+                          :cfiRange {:startPosition string,
+                                     :startOffset string,
+                                     :endPosition string,
+                                     :endOffset string},
+                          :imageCfiRange {:startPosition string,
+                                          :startOffset string,
+                                          :endPosition string,
+                                          :endOffset string}},
    :afterSelectedText string,
    :id string,
    :kind string,
    :pageIds [string],
-   :clientVersionRanges {:cfiRange {:endPosition string,
-                                    :startOffset string,
-                                    :endOffset string,
-                                    :startPosition string},
-                         :imageCfiRange {:endPosition string,
-                                         :startOffset string,
-                                         :endOffset string,
-                                         :startPosition string},
-                         :gbImageRange {:endPosition string,
+   :clientVersionRanges {:gbImageRange {:startPosition string,
                                         :startOffset string,
-                                        :endOffset string,
-                                        :startPosition string},
-                         :contentVersion string,
-                         :gbTextRange {:endPosition string,
+                                        :endPosition string,
+                                        :endOffset string},
+                         :gbTextRange {:startPosition string,
                                        :startOffset string,
-                                       :endOffset string,
-                                       :startPosition string}},
+                                       :endPosition string,
+                                       :endOffset string},
+                         :cfiRange {:startPosition string,
+                                    :startOffset string,
+                                    :endPosition string,
+                                    :endOffset string},
+                         :contentVersion string,
+                         :imageCfiRange {:startPosition string,
+                                         :startOffset string,
+                                         :endPosition string,
+                                         :endOffset string}},
    :beforeSelectedText string,
    :layerId string,
    :data string}
   
-  Updates an existing annotation."
+  Inserts a new annotation."
   {:scopes ["https://www.googleapis.com/auth/books"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:annotationId})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://books.googleapis.com/"
-     "books/v1/mylibrary/annotations/{annotationId}"
-     #{:annotationId}
+     "books/v1/mylibrary/annotations"
+     #{}
      parameters)
     (merge-with
      merge
@@ -350,120 +140,12 @@
       :as :json}
      auth))))
 
-(defn annotations-insert$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/insert
-  
-  Required parameters: none
-  
-  Optional parameters: showOnlySummaryInResponse, source, country, annotationId
-  
-  Body: 
-  
-  {:deleted boolean,
-   :volumeId string,
-   :selectedText string,
-   :layerSummary {:limitType string,
-                  :remainingCharacterCount integer,
-                  :allowedCharacterCount integer},
-   :updated string,
-   :selfLink string,
-   :highlightStyle string,
-   :created string,
-   :currentVersionRanges {:gbTextRange {:endPosition string,
-                                        :startOffset string,
-                                        :endOffset string,
-                                        :startPosition string},
-                          :imageCfiRange {:endPosition string,
-                                          :startOffset string,
-                                          :endOffset string,
-                                          :startPosition string},
-                          :cfiRange {:endPosition string,
-                                     :startOffset string,
-                                     :endOffset string,
-                                     :startPosition string},
-                          :gbImageRange {:endPosition string,
-                                         :startOffset string,
-                                         :endOffset string,
-                                         :startPosition string},
-                          :contentVersion string},
-   :afterSelectedText string,
-   :id string,
-   :kind string,
-   :pageIds [string],
-   :clientVersionRanges {:cfiRange {:endPosition string,
-                                    :startOffset string,
-                                    :endOffset string,
-                                    :startPosition string},
-                         :imageCfiRange {:endPosition string,
-                                         :startOffset string,
-                                         :endOffset string,
-                                         :startPosition string},
-                         :gbImageRange {:endPosition string,
-                                        :startOffset string,
-                                        :endOffset string,
-                                        :startPosition string},
-                         :contentVersion string,
-                         :gbTextRange {:endPosition string,
-                                       :startOffset string,
-                                       :endOffset string,
-                                       :startPosition string}},
-   :beforeSelectedText string,
-   :layerId string,
-   :data string}
-  
-  Inserts a new annotation."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/annotations"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn annotations-delete$
-  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/delete
-  
-  Required parameters: annotationId
-  
-  Optional parameters: source
-  
-  Deletes an annotation."
-  {:scopes ["https://www.googleapis.com/auth/books"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:annotationId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://books.googleapis.com/"
-     "books/v1/mylibrary/annotations/{annotationId}"
-     #{:annotationId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn annotations-summary$
   "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/summary
   
   Required parameters: layerIds, volumeId
   
-  Optional parameters: none
+  Optional parameters: source
   
   Gets the summary of specified layers."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -475,6 +157,324 @@
      "https://books.googleapis.com/"
      "books/v1/mylibrary/annotations/summary"
      #{:layerIds :volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn annotations-update$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/annotations/update
+  
+  Required parameters: annotationId
+  
+  Optional parameters: source
+  
+  Body: 
+  
+  {:deleted boolean,
+   :volumeId string,
+   :selectedText string,
+   :layerSummary {:remainingCharacterCount integer,
+                  :allowedCharacterCount integer,
+                  :limitType string},
+   :updated string,
+   :selfLink string,
+   :highlightStyle string,
+   :created string,
+   :currentVersionRanges {:contentVersion string,
+                          :gbImageRange {:startPosition string,
+                                         :startOffset string,
+                                         :endPosition string,
+                                         :endOffset string},
+                          :gbTextRange {:startPosition string,
+                                        :startOffset string,
+                                        :endPosition string,
+                                        :endOffset string},
+                          :cfiRange {:startPosition string,
+                                     :startOffset string,
+                                     :endPosition string,
+                                     :endOffset string},
+                          :imageCfiRange {:startPosition string,
+                                          :startOffset string,
+                                          :endPosition string,
+                                          :endOffset string}},
+   :afterSelectedText string,
+   :id string,
+   :kind string,
+   :pageIds [string],
+   :clientVersionRanges {:gbImageRange {:startPosition string,
+                                        :startOffset string,
+                                        :endPosition string,
+                                        :endOffset string},
+                         :gbTextRange {:startPosition string,
+                                       :startOffset string,
+                                       :endPosition string,
+                                       :endOffset string},
+                         :cfiRange {:startPosition string,
+                                    :startOffset string,
+                                    :endPosition string,
+                                    :endOffset string},
+                         :contentVersion string,
+                         :imageCfiRange {:startPosition string,
+                                         :startOffset string,
+                                         :endPosition string,
+                                         :endOffset string}},
+   :beforeSelectedText string,
+   :layerId string,
+   :data string}
+  
+  Updates an existing annotation."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:annotationId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/annotations/{annotationId}"
+     #{:annotationId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-addVolume$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/addVolume
+  
+  Required parameters: shelf, volumeId
+  
+  Optional parameters: reason, source
+  
+  Adds a volume to a bookshelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}/addVolume"
+     #{:shelf :volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-clearVolumes$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/clearVolumes
+  
+  Required parameters: shelf
+  
+  Optional parameters: source
+  
+  Clears all volumes from a bookshelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}/clearVolumes"
+     #{:shelf}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-get$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/get
+  
+  Required parameters: shelf
+  
+  Optional parameters: source
+  
+  Retrieves metadata for a specific bookshelf belonging to the authenticated user."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}"
+     #{:shelf}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-list$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/list
+  
+  Required parameters: none
+  
+  Optional parameters: source
+  
+  Retrieves a list of bookshelves belonging to the authenticated user."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-moveVolume$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/moveVolume
+  
+  Required parameters: shelf, volumeId, volumePosition
+  
+  Optional parameters: source
+  
+  Moves a volume within a bookshelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:shelf :volumeId :volumePosition})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}/moveVolume"
+     #{:shelf :volumeId :volumePosition}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-removeVolume$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/removeVolume
+  
+  Required parameters: shelf, volumeId
+  
+  Optional parameters: reason, source
+  
+  Removes a volume from a bookshelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf :volumeId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}/removeVolume"
+     #{:shelf :volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn bookshelves-volumes-list$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/bookshelves/volumes/list
+  
+  Required parameters: shelf
+  
+  Optional parameters: country, maxResults, projection, q, showPreorders, source, startIndex
+  
+  Gets volume information for volumes on a bookshelf."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:shelf})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/bookshelves/{shelf}/volumes"
+     #{:shelf}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn readingpositions-get$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/readingpositions/get
+  
+  Required parameters: volumeId
+  
+  Optional parameters: contentVersion, source
+  
+  Retrieves my reading position information for a volume."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/readingpositions/{volumeId}"
+     #{:volumeId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn readingpositions-setPosition$
+  "https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary/readingpositions/setPosition
+  
+  Required parameters: volumeId, position, timestamp
+  
+  Optional parameters: action, contentVersion, deviceCookie, source
+  
+  Sets my reading position information for a volume."
+  {:scopes ["https://www.googleapis.com/auth/books"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:volumeId :position :timestamp})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://books.googleapis.com/"
+     "books/v1/mylibrary/readingpositions/{volumeId}/setPosition"
+     #{:volumeId :position :timestamp}
      parameters)
     (merge-with
      merge

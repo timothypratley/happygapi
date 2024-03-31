@@ -6,48 +6,22 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-operations-cancel$
-  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/cancel
+(defn locations-operations-list$
+  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: filter, pageSize, pageToken
   
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://ondemandscanning.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-wait$
-  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/wait
-  
-  Required parameters: name
-  
-  Optional parameters: timeout
-  
-  Waits until the specified long-running operation is done or reaches at most a specified timeout, returning the latest state. If the operation is already done, the latest state is immediately returned. If the timeout specified is greater than the default HTTP/RPC timeout, the HTTP/RPC timeout is used. If the server does not support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Note that this method is on a best-effort basis. It may return the latest state before the specified timeout (including immediately), meaning even an immediate response is no guarantee that the operation is done."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://ondemandscanning.googleapis.com/"
-     "v1/{+name}:wait"
+     "v1/{+name}/operations"
      #{:name}
      parameters)
     (merge-with
@@ -110,22 +84,48 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/list
+(defn locations-operations-cancel$
+  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/cancel
   
   Required parameters: name
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://ondemandscanning.googleapis.com/"
-     "v1/{+name}/operations"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-wait$
+  "https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects/locations/operations/wait
+  
+  Required parameters: name
+  
+  Optional parameters: timeout
+  
+  Waits until the specified long-running operation is done or reaches at most a specified timeout, returning the latest state. If the operation is already done, the latest state is immediately returned. If the timeout specified is greater than the default HTTP/RPC timeout, the HTTP/RPC timeout is used. If the server does not support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Note that this method is on a best-effort basis. It may return the latest state before the specified timeout (including immediately), meaning even an immediate response is no guarantee that the operation is done."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://ondemandscanning.googleapis.com/"
+     "v1/{+name}:wait"
      #{:name}
      parameters)
     (merge-with
@@ -145,15 +145,25 @@
   
   Body: 
   
-  {:includeOsvData boolean,
-   :resourceUri string,
-   :packages [{:osVersion string,
-               :unused string,
-               :os string,
+  {:resourceUri string,
+   :packages [{:maintainer Maintainer,
                :package string,
+               :architecture string,
+               :fileLocation [FileLocation],
+               :licenses [string],
+               :unused string,
                :packageType string,
                :cpeUri string,
-               :version string}]}
+               :sourceVersion PackageVersion,
+               :osVersion string,
+               :dependencyChain [LanguagePackageDependency],
+               :binaryVersion PackageVersion,
+               :os string,
+               :hashDigest string,
+               :version string,
+               :patchedCve [string],
+               :binarySourceInfo [BinarySourceInfo]}],
+   :includeOsvData boolean}
   
   Initiates an analysis of the provided packages."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -181,7 +191,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists vulnerabilities resulting from a successfully completed scan."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

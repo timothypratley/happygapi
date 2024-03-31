@@ -6,65 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/insert
+(defn insertCuepoint$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/insertCuepoint
   
-  Required parameters: part
+  Required parameters: none
   
-  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  Optional parameters: id, onBehalfOfContentOwnerChannel, onBehalfOfContentOwner, part
   
   Body: 
   
-  {:snippet {:description string,
-             :publishedAt string,
-             :scheduledEndTime string,
-             :channelId string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :isDefaultBroadcast boolean,
-             :liveChatId string,
-             :scheduledStartTime string,
-             :actualEndTime string,
-             :actualStartTime string},
-   :contentDetails {:stereoLayout string,
-                    :enableAutoStop boolean,
-                    :enableContentEncryption boolean,
-                    :enableLowLatency boolean,
-                    :enableAutoStart boolean,
-                    :latencyPreference string,
-                    :enableDvr boolean,
-                    :mesh string,
-                    :boundStreamId string,
-                    :enableClosedCaptions boolean,
-                    :boundStreamLastUpdateTimeMs string,
-                    :recordFromStart boolean,
-                    :monitorStream MonitorStreamInfo,
-                    :startWithSlate boolean,
-                    :enableEmbed boolean,
-                    :closedCaptionsType string,
-                    :projection string},
-   :status {:liveBroadcastPriority string,
-            :recordingStatus string,
-            :privacyStatus string,
-            :lifeCycleStatus string,
-            :madeForKids boolean,
-            :selfDeclaredMadeForKids boolean},
-   :id string,
+  {:walltimeMs string,
    :etag string,
-   :statistics {:totalChatCount string},
-   :kind string}
+   :cueType string,
+   :insertionOffsetTimeMs string,
+   :id string,
+   :durationSecs integer}
   
-  Inserts a new stream for the authenticated user."
+  Insert cuepoints in a broadcast"
   {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtubepartner"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:part})]}
+  {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://youtube.googleapis.com/"
-     "youtube/v3/liveBroadcasts"
-     #{:part}
+     "youtube/v3/liveBroadcasts/cuepoint"
+     #{}
      parameters)
     (merge-with
      merge
@@ -103,16 +72,18 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/update
+(defn insert$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/insert
   
   Required parameters: part
   
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
   
   Body: 
   
-  {:snippet {:description string,
+  {:monetizationDetails {:cuepointSchedule CuepointSchedule},
+   :id string,
+   :snippet {:description string,
              :publishedAt string,
              :scheduledEndTime string,
              :channelId string,
@@ -140,16 +111,86 @@
                     :enableEmbed boolean,
                     :closedCaptionsType string,
                     :projection string},
-   :status {:liveBroadcastPriority string,
-            :recordingStatus string,
-            :privacyStatus string,
-            :lifeCycleStatus string,
-            :madeForKids boolean,
-            :selfDeclaredMadeForKids boolean},
-   :id string,
    :etag string,
-   :statistics {:totalChatCount string},
-   :kind string}
+   :statistics {:concurrentViewers string},
+   :kind string,
+   :status {:recordingStatus string,
+            :madeForKids boolean,
+            :liveBroadcastPriority string,
+            :lifeCycleStatus string,
+            :selfDeclaredMadeForKids boolean,
+            :privacyStatus string}}
+  
+  Inserts a new stream for the authenticated user."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:part})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveBroadcasts"
+     #{:part}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/update
+  
+  Required parameters: part
+  
+  Optional parameters: onBehalfOfContentOwner, onBehalfOfContentOwnerChannel
+  
+  Body: 
+  
+  {:monetizationDetails {:cuepointSchedule CuepointSchedule},
+   :id string,
+   :snippet {:description string,
+             :publishedAt string,
+             :scheduledEndTime string,
+             :channelId string,
+             :thumbnails ThumbnailDetails,
+             :title string,
+             :isDefaultBroadcast boolean,
+             :liveChatId string,
+             :scheduledStartTime string,
+             :actualEndTime string,
+             :actualStartTime string},
+   :contentDetails {:stereoLayout string,
+                    :enableAutoStop boolean,
+                    :enableContentEncryption boolean,
+                    :enableLowLatency boolean,
+                    :enableAutoStart boolean,
+                    :latencyPreference string,
+                    :enableDvr boolean,
+                    :mesh string,
+                    :boundStreamId string,
+                    :enableClosedCaptions boolean,
+                    :boundStreamLastUpdateTimeMs string,
+                    :recordFromStart boolean,
+                    :monitorStream MonitorStreamInfo,
+                    :startWithSlate boolean,
+                    :enableEmbed boolean,
+                    :closedCaptionsType string,
+                    :projection string},
+   :etag string,
+   :statistics {:concurrentViewers string},
+   :kind string,
+   :status {:recordingStatus string,
+            :madeForKids boolean,
+            :liveBroadcastPriority string,
+            :lifeCycleStatus string,
+            :selfDeclaredMadeForKids boolean,
+            :privacyStatus string}}
   
   Updates an existing broadcast for the authenticated user."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -173,33 +214,6 @@
       :as :json}
      auth))))
 
-(defn transition$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/transition
-  
-  Required parameters: broadcastStatus, id, part
-  
-  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
-  
-  Transition a broadcast to a given status."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :id :broadcastStatus})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveBroadcasts/transition"
-     #{:part :id :broadcastStatus}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/delete
   
@@ -218,6 +232,33 @@
      "https://youtube.googleapis.com/"
      "youtube/v3/liveBroadcasts"
      #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn transition$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveBroadcasts/transition
+  
+  Required parameters: broadcastStatus, part, id
+  
+  Optional parameters: onBehalfOfContentOwnerChannel, onBehalfOfContentOwner
+  
+  Transition a broadcast to a given status."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part :id :broadcastStatus})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveBroadcasts/transition"
+     #{:part :id :broadcastStatus}
      parameters)
     (merge-with
      merge

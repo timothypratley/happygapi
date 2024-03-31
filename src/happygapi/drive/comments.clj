@@ -1,6 +1,6 @@
 (ns happygapi.drive.comments
-  "Drive API: comments.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: comments.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/comments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -21,10 +21,10 @@
    :content string,
    :resolved boolean,
    :author {:displayName string,
-            :emailAddress string,
             :kind string,
             :me boolean,
             :permissionId string,
+            :emailAddress string,
             :photoLink string},
    :replies [{:htmlContent string,
               :deleted boolean,
@@ -41,7 +41,7 @@
    :kind string,
    :anchor string}
   
-  Creates a new comment on a file."
+  Creates a comment on a file."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth parameters body]
@@ -66,7 +66,7 @@
 (defn delete$
   "https://developers.google.com/drive/api/reference/rest/v3/comments/delete
   
-  Required parameters: commentId, fileId
+  Required parameters: fileId, commentId
   
   Optional parameters: none
   
@@ -93,7 +93,7 @@
 (defn get$
   "https://developers.google.com/drive/api/reference/rest/v3/comments/get
   
-  Required parameters: commentId, fileId
+  Required parameters: fileId, commentId
   
   Optional parameters: includeDeleted
   
@@ -149,7 +149,7 @@
 (defn update$
   "https://developers.google.com/drive/api/reference/rest/v3/comments/update
   
-  Required parameters: commentId, fileId
+  Required parameters: fileId, commentId
   
   Optional parameters: none
   
@@ -161,10 +161,10 @@
    :content string,
    :resolved boolean,
    :author {:displayName string,
-            :emailAddress string,
             :kind string,
             :me boolean,
             :permissionId string,
+            :emailAddress string,
             :photoLink string},
    :replies [{:htmlContent string,
               :deleted boolean,

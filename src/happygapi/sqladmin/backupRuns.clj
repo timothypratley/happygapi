@@ -6,6 +6,60 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn delete$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns/delete
+  
+  Required parameters: project, instance, id
+  
+  Optional parameters: none
+  
+  Deletes the backup taken by a backup run."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "v1/projects/{project}/instances/{instance}/backupRuns/{id}"
+     #{:instance :project :id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns/get
+  
+  Required parameters: project, instance, id
+  
+  Optional parameters: none
+  
+  Retrieves a resource containing information about a backup run."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sqlservice.admin"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://sqladmin.googleapis.com/"
+     "v1/projects/{project}/instances/{instance}/backupRuns/{id}"
+     #{:instance :project :id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns/insert
   
@@ -16,7 +70,8 @@
   Body: 
   
   {:description string,
-   :diskEncryptionConfiguration {:kind string, :kmsKeyName string},
+   :timeZone string,
+   :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
    :instance string,
    :startTime string,
    :windowStartTime string,
@@ -24,7 +79,7 @@
    :enqueuedTime string,
    :selfLink string,
    :type string,
-   :diskEncryptionStatus {:kind string, :kmsKeyVersionName string},
+   :diskEncryptionStatus {:kmsKeyVersionName string, :kind string},
    :status string,
    :id string,
    :kind string,
@@ -72,60 +127,6 @@
      "https://sqladmin.googleapis.com/"
      "v1/projects/{project}/instances/{instance}/backupRuns"
      #{:instance :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns/get
-  
-  Required parameters: id, project, instance
-  
-  Optional parameters: none
-  
-  Retrieves a resource containing information about a backup run."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "v1/projects/{project}/instances/{instance}/backupRuns/{id}"
-     #{:instance :project :id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns/delete
-  
-  Required parameters: instance, id, project
-  
-  Optional parameters: none
-  
-  Deletes the backup taken by a backup run."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sqlservice.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:instance :project :id})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://sqladmin.googleapis.com/"
-     "v1/projects/{project}/instances/{instance}/backupRuns/{id}"
-     #{:instance :project :id}
      parameters)
     (merge-with
      merge

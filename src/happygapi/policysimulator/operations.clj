@@ -6,14 +6,14 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/operations/get
+(defn list$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/operations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: pageToken, filter, pageSize
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -32,23 +32,23 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/operations/list
+(defn get$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/operations/get
   
-  Required parameters: none
+  Required parameters: name
   
-  Optional parameters: name, filter, pageSize, pageToken
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://policysimulator.googleapis.com/"
-     "v1/operations"
-     #{}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

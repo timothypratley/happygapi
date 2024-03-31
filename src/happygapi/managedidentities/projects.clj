@@ -11,7 +11,7 @@
   
   Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: filter, pageSize, pageToken
   
   Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -58,6 +58,116 @@
       :as :json}
      auth))))
 
+(defn locations-global-operations-list$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-get$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-delete$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-operations-cancel$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-domains-get$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/get
   
@@ -79,6 +189,38 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-disableMigration$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/disableMigration
+  
+  Required parameters: domain
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Disable Domain Migration"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:domain})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+domain}:disableMigration"
+     #{:domain}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -212,13 +354,13 @@
   Body: 
   
   {:name string,
+   :certificate {:subject string,
+                 :thumbprint string,
+                 :subjectAlternativeName [string],
+                 :issuingCertificate Certificate,
+                 :expireTime string},
    :state string,
    :certificatePfx string,
-   :certificate {:expireTime string,
-                 :subjectAlternativeName [string],
-                 :thumbprint string,
-                 :issuingCertificate Certificate,
-                 :subject string},
    :certificatePassword string,
    :updateTime string}
   
@@ -231,6 +373,38 @@
     (util/get-url
      "https://managedidentities.googleapis.com/"
      "v1/{+name}/ldapssettings"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-restore$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/restore
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:backupId string}
+  
+  RestoreDomain restores domain backup mentioned in the RestoreDomainRequest"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}:restore"
      #{:name}
      parameters)
     (merge-with
@@ -365,6 +539,38 @@
       :as :json}
      auth))))
 
+(defn locations-global-domains-checkMigrationPermission$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/checkMigrationPermission
+  
+  Required parameters: domain
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  CheckMigrationPermission API gets the current state of DomainMigration"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:domain})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+domain}:checkMigrationPermission"
+     #{:domain}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-domains-delete$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/delete
   
@@ -433,6 +639,38 @@
       :as :json}
      auth))))
 
+(defn locations-global-domains-extendSchema$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/extendSchema
+  
+  Required parameters: domain
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string, :gcsPath string, :fileContents string}
+  
+  Extend Schema for Domain"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:domain})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+domain}:extendSchema"
+     #{:domain}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-domains-getIamPolicy$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/getIamPolicy
   
@@ -464,7 +702,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, orderBy, pageToken
+  Optional parameters: pageSize, pageToken, filter, orderBy
   
   Lists domains in a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -480,6 +718,38 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-domainJoinMachine$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/domainJoinMachine
+  
+  Required parameters: domain
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:vmIdToken string, :ouName string, :force boolean}
+  
+  DomainJoinMachine API joins a Compute Engine VM to the domain"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:domain})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+domain}:domainJoinMachine"
+     #{:domain}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -506,6 +776,38 @@
      "https://managedidentities.googleapis.com/"
      "v1/{+name}:resetAdminPassword"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-enableMigration$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/enableMigration
+  
+  Required parameters: domain
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:migratingDomains [{:domainName string, :disableSidFiltering boolean}]}
+  
+  Enable Domain Migration"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:domain})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+domain}:enableMigration"
+     #{:domain}
      parameters)
     (merge-with
      merge
@@ -591,6 +893,276 @@
       :as :json}
      auth))))
 
+(defn locations-global-domains-backups-create$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/create
+  
+  Required parameters: parent
+  
+  Optional parameters: backupId
+  
+  Body: 
+  
+  {:name string,
+   :labels {},
+   :createTime string,
+   :updateTime string,
+   :type string,
+   :state string,
+   :statusMessage string}
+  
+  Creates a Backup for a domain."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-list$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, orderBy
+  
+  Lists Backup in a given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+parent}/backups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-get$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets details of a single Backup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-patch$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :labels {},
+   :createTime string,
+   :updateTime string,
+   :type string,
+   :state string,
+   :statusMessage string}
+  
+  Updates the labels for specified Backup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-delete$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes identified Backup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-setIamPolicy$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :bindings [Binding], :etag string}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-getIamPolicy$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-backups-testIamPermissions$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/backups/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a `NOT_FOUND` error. Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may \"fail open\" without warning."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-domains-sqlIntegrations-list$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/sqlIntegrations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, orderBy
+  
+  Lists SqlIntegrations in a given domain."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+parent}/sqlIntegrations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-global-domains-sqlIntegrations-get$
   "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/sqlIntegrations/get
   
@@ -617,14 +1189,53 @@
       :as :json}
      auth))))
 
-(defn locations-global-domains-sqlIntegrations-list$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/domains/sqlIntegrations/list
+(defn locations-global-peerings-create$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/create
   
   Required parameters: parent
   
-  Optional parameters: filter, orderBy, pageToken, pageSize
+  Optional parameters: peeringId
   
-  Lists SqlIntegrations in a given domain."
+  Body: 
+  
+  {:name string,
+   :labels {},
+   :authorizedNetwork string,
+   :domainResource string,
+   :createTime string,
+   :updateTime string,
+   :state string,
+   :statusMessage string}
+  
+  Creates a Peering for Managed AD instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+parent}/peerings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-peerings-list$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, orderBy
+  
+  Lists Peerings in a given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -632,8 +1243,99 @@
    (http/get
     (util/get-url
      "https://managedidentities.googleapis.com/"
-     "v1/{+parent}/sqlIntegrations"
+     "v1/{+parent}/peerings"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-peerings-get$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets details of a single Peering."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-peerings-patch$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :labels {},
+   :authorizedNetwork string,
+   :domainResource string,
+   :createTime string,
+   :updateTime string,
+   :state string,
+   :statusMessage string}
+  
+  Updates the labels for specified Peering."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-global-peerings-delete$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes identified Peering."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://managedidentities.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -675,127 +1377,23 @@
       :as :json}
      auth))))
 
-(defn locations-global-peerings-list$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/list
+(defn locations-global-peerings-getIamPolicy$
+  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/getIamPolicy
   
-  Required parameters: parent
+  Required parameters: resource
   
-  Optional parameters: pageToken, orderBy, pageSize, filter
+  Optional parameters: options.requestedPolicyVersion
   
-  Lists Peerings in a given project."
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://managedidentities.googleapis.com/"
-     "v1/{+parent}/peerings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-peerings-create$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/create
-  
-  Required parameters: parent
-  
-  Optional parameters: peeringId
-  
-  Body: 
-  
-  {:statusMessage string,
-   :authorizedNetwork string,
-   :domainResource string,
-   :labels {},
-   :name string,
-   :state string,
-   :updateTime string,
-   :createTime string}
-  
-  Creates a Peering for Managed AD instance."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+parent}/peerings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-peerings-patch$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:statusMessage string,
-   :authorizedNetwork string,
-   :domainResource string,
-   :labels {},
-   :name string,
-   :state string,
-   :updateTime string,
-   :createTime string}
-  
-  Updates the labels for specified Peering."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-peerings-get$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets details of a single Peering."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -832,168 +1430,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-peerings-getIamPolicy$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/getIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: options.requestedPolicyVersion
-  
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+resource}:getIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-peerings-delete$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/peerings/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes identified Peering."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-delete$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-cancel$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-get$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-global-operations-list$
-  "https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects/locations/global/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://managedidentities.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

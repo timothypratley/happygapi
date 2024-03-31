@@ -1,25 +1,25 @@
 (ns happygapi.dfareporting.dimensionValues
   "Campaign Manager 360 API: dimensionValues.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dimensionValues"
+  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/dimensionValues"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn query$
-  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v3.5/dimensionValues/query
+  "https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/dimensionValues/query
   
   Required parameters: profileId
   
-  Optional parameters: pageToken, maxResults
+  Optional parameters: maxResults, pageToken
   
   Body: 
   
-  {:kind string,
+  {:dimensionName string,
+   :filters [{:dimensionName string, :value string, :kind string}],
    :startDate string,
    :endDate string,
-   :dimensionName string,
-   :filters [{:kind string, :dimensionName string, :value string}]}
+   :kind string}
   
   Retrieves list of report dimension values for a list of filters."
   {:scopes ["https://www.googleapis.com/auth/dfareporting"]}
@@ -28,8 +28,8 @@
   (util/get-response
    (http/post
     (util/get-url
-     "https://dfareporting.googleapis.com/"
-     "dfareporting/v3.5/userprofiles/{profileId}/dimensionvalues/query"
+     "https://dfareporting.googleapis.com/dfareporting/v4/"
+     "userprofiles/{profileId}/dimensionvalues/query"
      #{:profileId}
      parameters)
     (merge-with

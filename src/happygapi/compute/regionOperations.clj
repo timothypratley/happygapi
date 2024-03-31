@@ -6,24 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/delete
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/list
   
-  Required parameters: region, project, operation
+  Required parameters: project, region
   
-  Optional parameters: none
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Deletes the specified region-specific Operations resource."
+  Retrieves a list of Operation resources contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:operation :region :project})]}
+  {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/operations/{operation}"
-     #{:operation :region :project}
+     "projects/{project}/regions/{region}/operations"
+     #{:region :project}
      parameters)
     (merge-with
      merge
@@ -36,7 +37,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/get
   
-  Required parameters: region, project, operation
+  Required parameters: operation, project, region
   
   Optional parameters: none
   
@@ -64,7 +65,7 @@
 (defn wait$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/wait
   
-  Required parameters: operation, region, project
+  Required parameters: operation, project, region
   
   Optional parameters: none
   
@@ -89,25 +90,24 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/list
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionOperations/delete
   
-  Required parameters: region, project
+  Required parameters: operation, project, region
   
-  Optional parameters: pageToken, orderBy, maxResults, returnPartialSuccess, filter
+  Optional parameters: none
   
-  Retrieves a list of Operation resources contained within the specified region."
+  Deletes the specified region-specific Operations resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
+            "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
+  {:pre [(util/has-keys? parameters #{:operation :region :project})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/operations"
-     #{:region :project}
+     "projects/{project}/regions/{region}/operations/{operation}"
+     #{:operation :region :project}
      parameters)
     (merge-with
      merge

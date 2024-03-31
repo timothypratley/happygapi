@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, maxResults, returnPartialSuccess, orderBy, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists all the SSL policies that have been configured for the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -77,16 +77,17 @@
    :creationTimestamp string,
    :name string,
    :selfLink string,
-   :warnings [{:data [{:key string, :value string}],
-               :code string,
-               :message string}],
+   :warnings [{:code string,
+               :message string,
+               :data [{:key string, :value string}]}],
    :minTlsVersion string,
+   :region string,
    :id string,
    :kind string,
    :fingerprint string,
    :profile string}
   
-  Returns the specified SSL policy resource. Gets a list of available SSL policies by making a list() request."
+  Returns the specified SSL policy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -97,52 +98,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/sslPolicies"
      #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/sslPolicies/patch
-  
-  Required parameters: sslPolicy, project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :enabledFeatures [string],
-   :customFeatures [string],
-   :creationTimestamp string,
-   :name string,
-   :selfLink string,
-   :warnings [{:data [{:key string, :value string}],
-               :code string,
-               :message string}],
-   :minTlsVersion string,
-   :id string,
-   :kind string,
-   :fingerprint string,
-   :profile string}
-  
-  Patches the specified SSL policy with the data included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :sslPolicy})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/sslPolicies/{sslPolicy}"
-     #{:project :sslPolicy}
      parameters)
     (merge-with
      merge
@@ -181,12 +136,59 @@
       :as :json}
      auth))))
 
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/sslPolicies/patch
+  
+  Required parameters: project, sslPolicy
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :enabledFeatures [string],
+   :customFeatures [string],
+   :creationTimestamp string,
+   :name string,
+   :selfLink string,
+   :warnings [{:code string,
+               :message string,
+               :data [{:key string, :value string}]}],
+   :minTlsVersion string,
+   :region string,
+   :id string,
+   :kind string,
+   :fingerprint string,
+   :profile string}
+  
+  Patches the specified SSL policy with the data included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :sslPolicy})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/sslPolicies/{sslPolicy}"
+     #{:project :sslPolicy}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn listAvailableFeatures$
   "https://cloud.google.com/compute/api/reference/rest/v1/sslPolicies/listAvailableFeatures
   
   Required parameters: project
   
-  Optional parameters: maxResults, filter, returnPartialSuccess, pageToken, orderBy
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists all features that can be specified in the SSL policy when using custom profile."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -199,6 +201,34 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/sslPolicies/listAvailableFeatures"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/sslPolicies/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
+  
+  Retrieves the list of all SslPolicy resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/sslPolicies"
      #{:project}
      parameters)
     (merge-with

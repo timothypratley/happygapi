@@ -6,14 +6,42 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/list
+  
+  Required parameters: project, region
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Retrieves a list of target VPN gateways available to the specified project and region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn aggregatedList$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/aggregatedList
   
   Required parameters: project
   
-  Optional parameters: maxResults, returnPartialSuccess, pageToken, includeAllScopes, filter, orderBy
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves an aggregated list of target VPN gateways."
+  Retrieves an aggregated list of target VPN gateways. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -34,6 +62,36 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/get
+  
+  Required parameters: project, region, targetVpnGateway
+  
+  Optional parameters: none
+  
+  Returns the specified target VPN gateway."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:targetVpnGateway :region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
+     #{:targetVpnGateway :region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/insert
   
@@ -44,6 +102,7 @@
   Body: 
   
   {:description string,
+   :labels {},
    :tunnels [string],
    :creationTimestamp string,
    :name string,
@@ -53,7 +112,8 @@
    :status string,
    :id string,
    :kind string,
-   :network string}
+   :network string,
+   :labelFingerprint string}
   
   Creates a target VPN gateway in the specified project and region using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -106,59 +166,34 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/list
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/setLabels
   
-  Required parameters: region, project
+  Required parameters: project, region, resource
   
-  Optional parameters: filter, pageToken, returnPartialSuccess, orderBy, maxResults
+  Optional parameters: requestId
   
-  Retrieves a list of target VPN gateways available to the specified project and region."
+  Body: 
+  
+  {:labels {}, :labelFingerprint string}
+  
+  Sets the labels on a TargetVpnGateway. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetVpnGateways"
-     #{:region :project}
+     "projects/{project}/regions/{region}/targetVpnGateways/{resource}/setLabels"
+     #{:region :project :resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/targetVpnGateways/get
-  
-  Required parameters: project, region, targetVpnGateway
-  
-  Optional parameters: none
-  
-  Returns the specified target VPN gateway. Gets a list of available target VPN gateways by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:targetVpnGateway :region :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/targetVpnGateways/{targetVpnGateway}"
-     #{:targetVpnGateway :region :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

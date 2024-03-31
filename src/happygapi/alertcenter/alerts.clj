@@ -1,6 +1,6 @@
 (ns happygapi.alertcenter.alerts
   "Google Workspace Alert Center API: alerts.
-  Manages alerts on issues affecting your domain.
+  Manages alerts on issues affecting your domain. Note: The current version of this API (v1beta1) is available to all Google Workspace customers. 
   See: https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, orderBy, pageToken, customerId, filter
+  Optional parameters: customerId, pageSize, pageToken, filter, orderBy
   
   Lists the alerts."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
@@ -27,70 +27,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn batchUndelete$
-  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/batchUndelete
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:alertId [string], :customerId string}
-  
-  Performs batch undelete operation on alerts."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts:batchUndelete"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn batchDelete$
-  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/batchDelete
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:alertId [string], :customerId string}
-  
-  Performs batch delete operation on alerts."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts:batchDelete"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -148,32 +84,6 @@
       :as :json}
      auth))))
 
-(defn getMetadata$
-  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/getMetadata
-  
-  Required parameters: alertId
-  
-  Optional parameters: customerId
-  
-  Returns the metadata of an alert. Attempting to get metadata for a non-existent alert returns `NOT_FOUND` error."
-  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:alertId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://alertcenter.googleapis.com/"
-     "v1beta1/alerts/{alertId}/metadata"
-     #{:alertId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn undelete$
   "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/undelete
   
@@ -206,6 +116,96 @@
       :as :json}
      auth))))
 
+(defn getMetadata$
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/getMetadata
+  
+  Required parameters: alertId
+  
+  Optional parameters: customerId
+  
+  Returns the metadata of an alert. Attempting to get metadata for a non-existent alert returns `NOT_FOUND` error."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:alertId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts/{alertId}/metadata"
+     #{:alertId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn batchDelete$
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/batchDelete
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:customerId string, :alertId [string]}
+  
+  Performs batch delete operation on alerts."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts:batchDelete"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn batchUndelete$
+  "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/batchUndelete
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:customerId string, :alertId [string]}
+  
+  Performs batch undelete operation on alerts."
+  {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://alertcenter.googleapis.com/"
+     "v1beta1/alerts:batchUndelete"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn feedback-create$
   "https://developers.google.com/admin-sdk/alertcenter/api/reference/rest/v1beta1/alerts/feedback/create
   
@@ -215,12 +215,12 @@
   
   Body: 
   
-  {:createTime string,
+  {:customerId string,
    :alertId string,
+   :feedbackId string,
+   :createTime string,
    :type string,
-   :customerId string,
-   :email string,
-   :feedbackId string}
+   :email string}
   
   Creates new feedback for an alert. Attempting to create a feedback for a non-existent alert returns `NOT_FOUND` error. Attempting to create a feedback for an alert that is marked for deletion returns `FAILED_PRECONDITION' error."
   {:scopes ["https://www.googleapis.com/auth/apps.alerts"]}

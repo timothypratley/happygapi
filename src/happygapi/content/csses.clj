@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/csses/list
+  
+  Required parameters: cssGroupId
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists CSS domains affiliated with a CSS group."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:cssGroupId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{cssGroupId}/csses"
+     #{:cssGroupId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/csses/get
   
@@ -35,7 +61,7 @@
 (defn updatelabels$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/csses/updatelabels
   
-  Required parameters: cssDomainId, cssGroupId
+  Required parameters: cssGroupId, cssDomainId
   
   Optional parameters: none
   
@@ -59,32 +85,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/csses/list
-  
-  Required parameters: cssGroupId
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists CSS domains affiliated with a CSS group."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:cssGroupId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{cssGroupId}/csses"
-     #{:cssGroupId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

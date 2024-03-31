@@ -6,71 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/delete
-  
-  Required parameters: clusterId, enterpriseId, pageId
-  
-  Optional parameters: none
-  
-  Deletes a cluster."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :pageId :clusterId})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
-     #{:enterpriseId :pageId :clusterId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/update
-  
-  Required parameters: clusterId, pageId, enterpriseId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:orderInPage string,
-   :name [{:locale string, :text string}],
-   :id string,
-   :productId [string]}
-  
-  Updates a cluster."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :pageId :clusterId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
-     #{:enterpriseId :pageId :clusterId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/list
   
@@ -97,10 +32,45 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/insert
+  
+  Required parameters: enterpriseId, pageId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string,
+   :name [{:locale string, :text string}],
+   :productId [string],
+   :orderInPage string}
+  
+  Inserts a new cluster in a page."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters"
+     #{:enterpriseId :pageId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/get
   
-  Required parameters: pageId, enterpriseId, clusterId
+  Required parameters: enterpriseId, pageId, clusterId
   
   Optional parameters: none
   
@@ -125,36 +95,66 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/insert
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/update
   
-  Required parameters: enterpriseId, pageId
+  Required parameters: enterpriseId, pageId, clusterId
   
   Optional parameters: none
   
   Body: 
   
-  {:orderInPage string,
+  {:id string,
    :name [{:locale string, :text string}],
-   :id string,
-   :productId [string]}
+   :productId [string],
+   :orderInPage string}
   
-  Inserts a new cluster in a page."
+  Updates a cluster."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:enterpriseId :pageId})]}
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :pageId :clusterId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters"
-     #{:enterpriseId :pageId}
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
+     #{:enterpriseId :pageId :clusterId}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/storelayoutclusters/delete
+  
+  Required parameters: enterpriseId, pageId, clusterId
+  
+  Optional parameters: none
+  
+  Deletes a cluster."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :pageId :clusterId})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/storeLayout/pages/{pageId}/clusters/{clusterId}"
+     #{:enterpriseId :pageId :clusterId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

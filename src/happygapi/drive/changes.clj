@@ -1,6 +1,6 @@
 (ns happygapi.drive.changes
-  "Drive API: changes.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: changes.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/changes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -43,7 +43,7 @@
   
   Required parameters: pageToken
   
-  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
+  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeLabels, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
   
   Lists the changes for a user or shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -75,7 +75,7 @@
   
   Required parameters: pageToken
   
-  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
+  Optional parameters: includeRemoved, restrictToMyDrive, includeCorpusRemovals, includePermissionsForView, includeLabels, includeItemsFromAllDrives, supportsAllDrives, teamDriveId, pageSize, spaces, includeTeamDriveItems, driveId, supportsTeamDrives
   
   Body: 
   

@@ -1,0 +1,48 @@
+{:RetryPortabilityArchiveResponse {:properties {:archiveJobId {:description "The archive job ID that is initiated by the retry endpoint. This can be used to get the state of the new job.",
+                                                               :type "string"}},
+                                   :description "Response from retrying a Portability Archive.",
+                                   :type "object",
+                                   :id "RetryPortabilityArchiveResponse"},
+ :InitiatePortabilityArchiveRequest {:description "Request to kick off an Archive job.",
+                                     :properties {:resources {:items {:type "string"},
+                                                              :description "The resources from which you're exporting data. These values have a 1:1 correspondence with the OAuth scopes.",
+                                                              :type "array"}},
+                                     :id "InitiatePortabilityArchiveRequest",
+                                     :type "object"},
+ :ResetAuthorizationRequest {:id "ResetAuthorizationRequest",
+                             :type "object",
+                             :properties {},
+                             :description "Request to reset exhausted OAuth scopes."},
+ :PortabilityArchiveState {:description "Resource that contains the state of an Archive job.",
+                           :properties {:state {:enumDescriptions ["Default value. This value is unused."
+                                                                   "The job is in progress."
+                                                                   "The job is complete."
+                                                                   "The job failed."
+                                                                   "The job is cancelled."],
+                                                :enum ["STATE_UNSPECIFIED"
+                                                       "IN_PROGRESS"
+                                                       "COMPLETE"
+                                                       "FAILED"
+                                                       "CANCELLED"],
+                                                :description "Resource that represents the state of the Archive job.",
+                                                :type "string"},
+                                        :urls {:description "If the state is complete, this method returns the signed URLs of the objects in the Cloud Storage bucket.",
+                                               :items {:type "string"},
+                                               :type "array"},
+                                        :name {:type "string",
+                                               :description "The resource name of ArchiveJob's PortabilityArchiveState singleton. The format is: archiveJobs/{archive_job}/portabilityArchiveState. archive_job is the job ID provided in the request."}},
+                           :id "PortabilityArchiveState",
+                           :type "object"},
+ :InitiatePortabilityArchiveResponse {:id "InitiatePortabilityArchiveResponse",
+                                      :type "object",
+                                      :properties {:archiveJobId {:description "The archive job ID that is initiated in the API. This can be used to get the state of the job.",
+                                                                  :type "string"}},
+                                      :description "Response from initiating an Archive job."},
+ :Empty {:properties {},
+         :id "Empty",
+         :type "object",
+         :description "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }"},
+ :RetryPortabilityArchiveRequest {:description "Request to retry a failed Portability Archive job.",
+                                  :properties {},
+                                  :id "RetryPortabilityArchiveRequest",
+                                  :type "object"}}

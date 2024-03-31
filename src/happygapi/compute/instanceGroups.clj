@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/get
   
-  Required parameters: zone, project, instanceGroup
+  Required parameters: instanceGroup, project, zone
   
   Optional parameters: none
   
@@ -37,7 +37,7 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/insert
   
-  Required parameters: zone, project
+  Required parameters: project, zone
   
   Optional parameters: requestId
   
@@ -82,7 +82,7 @@
 (defn addInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/addInstances
   
-  Required parameters: zone, project, instanceGroup
+  Required parameters: instanceGroup, project, zone
   
   Optional parameters: requestId
   
@@ -117,9 +117,9 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, filter, includeAllScopes, maxResults, orderBy, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves the list of instance groups and sorts them by zone."
+  Retrieves the list of instance groups and sorts them by zone. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -143,7 +143,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/delete
   
-  Required parameters: project, instanceGroup, zone
+  Required parameters: instanceGroup, project, zone
   
   Optional parameters: requestId
   
@@ -205,7 +205,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: pageToken, maxResults, orderBy, returnPartialSuccess, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of zonal instance group resources contained within the specified zone. For managed instance groups, use the instanceGroupManagers or regionInstanceGroupManagers methods instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -231,15 +231,15 @@
 (defn listInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/listInstances
   
-  Required parameters: zone, project, instanceGroup
+  Required parameters: instanceGroup, project, zone
   
-  Optional parameters: orderBy, pageToken, filter, maxResults, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Body: 
   
   {:instanceState string}
   
-  Lists the instances in the specified instance group. The orderBy query parameter is not supported."
+  Lists the instances in the specified instance group. The orderBy query parameter is not supported. The filter query parameter is supported, but only for expressions that use `eq` (equal) or `ne` (not equal) operators."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -265,7 +265,7 @@
 (defn removeInstances$
   "https://cloud.google.com/compute/api/reference/rest/v1/instanceGroups/removeInstances
   
-  Required parameters: zone, instanceGroup, project
+  Required parameters: instanceGroup, project, zone
   
   Optional parameters: requestId
   

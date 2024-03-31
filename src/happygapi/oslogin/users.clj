@@ -6,12 +6,41 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn getLoginProfile$
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/getLoginProfile
+  
+  Required parameters: name
+  
+  Optional parameters: projectId, systemId
+  
+  Retrieves the profile information used for logging in to a virtual machine on Google Compute Engine."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://oslogin.googleapis.com/"
+     "v1/{+name}/loginProfile"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn importSshPublicKey$
   "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/importSshPublicKey
   
   Required parameters: parent
   
-  Optional parameters: projectId
+  Optional parameters: projectId, regions
   
   Body: 
   
@@ -42,30 +71,37 @@
       :as :json}
      auth))))
 
-(defn getLoginProfile$
-  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/getLoginProfile
+(defn sshPublicKeys-create$
+  "https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users/sshPublicKeys/create
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: systemId, projectId
+  Optional parameters: none
   
-  Retrieves the profile information used for logging in to a virtual machine on Google Compute Engine."
+  Body: 
+  
+  {:key string,
+   :expirationTimeUsec string,
+   :fingerprint string,
+   :name string}
+  
+  Create an SSH public key"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://oslogin.googleapis.com/"
-     "v1/{+name}/loginProfile"
-     #{:name}
+     "v1/{+parent}/sshPublicKeys"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

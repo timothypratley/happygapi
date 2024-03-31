@@ -9,11 +9,11 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/get
   
-  Required parameters: project, image
+  Required parameters: image, project
   
   Optional parameters: none
   
-  Returns the specified image. Gets a list of available images by making a list() request."
+  Returns the specified image."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -43,16 +43,15 @@
   
   Body: 
   
-  {:policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]},
-   :bindings [{:members [string],
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
                :condition Expr,
-               :bindingId string,
-               :role string}],
+               :bindingId string}],
    :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
@@ -82,64 +81,67 @@
   
   Required parameters: project
   
-  Optional parameters: requestId, forceCreate
+  Optional parameters: forceCreate, requestId
   
   Body: 
   
   {:description string,
    :labels {},
-   :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
+   :sourceSnapshotEncryptionKey {:rawKey string,
+                                 :rsaEncryptedKey string,
+                                 :kmsKeyName string,
                                  :sha256 string,
-                                 :rawKey string,
-                                 :rsaEncryptedKey string},
+                                 :kmsKeyServiceAccount string},
    :guestOsFeatures [{:type string}],
    :family string,
    :sourceImage string,
    :sourceDiskId string,
+   :architecture string,
    :creationTimestamp string,
-   :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
+   :satisfiesPzi boolean,
+   :sourceImageEncryptionKey {:rawKey string,
+                              :rsaEncryptedKey string,
+                              :kmsKeyName string,
                               :sha256 string,
-                              :rawKey string,
-                              :rsaEncryptedKey string},
-   :imageEncryptionKey {:kmsKeyName string,
-                        :kmsKeyServiceAccount string,
+                              :kmsKeyServiceAccount string},
+   :imageEncryptionKey {:rawKey string,
+                        :rsaEncryptedKey string,
+                        :kmsKeyName string,
                         :sha256 string,
-                        :rawKey string,
-                        :rsaEncryptedKey string},
+                        :kmsKeyServiceAccount string},
    :name string,
    :sourceDisk string,
    :sourceImageId string,
    :licenses [string],
    :selfLink string,
    :sourceSnapshot string,
-   :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
+   :sourceDiskEncryptionKey {:rawKey string,
+                             :rsaEncryptedKey string,
+                             :kmsKeyName string,
                              :sha256 string,
-                             :rawKey string,
-                             :rsaEncryptedKey string},
+                             :kmsKeyServiceAccount string},
    :satisfiesPzs boolean,
    :status string,
-   :deprecated {:deprecated string,
-                :state string,
+   :deprecated {:state string,
                 :replacement string,
-                :deleted string,
-                :obsolete string},
+                :deprecated string,
+                :obsolete string,
+                :deleted string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
-   :rawDisk {:containerType string,
-             :source string,
-             :sha1Checksum string},
+   :rawDisk {:source string,
+             :sha1Checksum string,
+             :containerType string},
    :sourceType string,
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
-   :shieldedInstanceInitialState {:keks [FileContentBuffer],
-                                  :dbxs [FileContentBuffer],
+   :enableConfidentialCompute boolean,
+   :shieldedInstanceInitialState {:pk FileContentBuffer,
+                                  :keks [FileContentBuffer],
                                   :dbs [FileContentBuffer],
-                                  :pk FileContentBuffer},
+                                  :dbxs [FileContentBuffer]},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -175,7 +177,7 @@
   
   Optional parameters: none
   
-  Returns the latest image that is part of an image family and is not deprecated."
+  Returns the latest image that is part of an image family and is not deprecated. For more information on image families, see Public image families documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -199,7 +201,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/patch
   
-  Required parameters: project, image
+  Required parameters: image, project
   
   Optional parameters: requestId
   
@@ -207,58 +209,61 @@
   
   {:description string,
    :labels {},
-   :sourceSnapshotEncryptionKey {:kmsKeyName string,
-                                 :kmsKeyServiceAccount string,
+   :sourceSnapshotEncryptionKey {:rawKey string,
+                                 :rsaEncryptedKey string,
+                                 :kmsKeyName string,
                                  :sha256 string,
-                                 :rawKey string,
-                                 :rsaEncryptedKey string},
+                                 :kmsKeyServiceAccount string},
    :guestOsFeatures [{:type string}],
    :family string,
    :sourceImage string,
    :sourceDiskId string,
+   :architecture string,
    :creationTimestamp string,
-   :sourceImageEncryptionKey {:kmsKeyName string,
-                              :kmsKeyServiceAccount string,
+   :satisfiesPzi boolean,
+   :sourceImageEncryptionKey {:rawKey string,
+                              :rsaEncryptedKey string,
+                              :kmsKeyName string,
                               :sha256 string,
-                              :rawKey string,
-                              :rsaEncryptedKey string},
-   :imageEncryptionKey {:kmsKeyName string,
-                        :kmsKeyServiceAccount string,
+                              :kmsKeyServiceAccount string},
+   :imageEncryptionKey {:rawKey string,
+                        :rsaEncryptedKey string,
+                        :kmsKeyName string,
                         :sha256 string,
-                        :rawKey string,
-                        :rsaEncryptedKey string},
+                        :kmsKeyServiceAccount string},
    :name string,
    :sourceDisk string,
    :sourceImageId string,
    :licenses [string],
    :selfLink string,
    :sourceSnapshot string,
-   :sourceDiskEncryptionKey {:kmsKeyName string,
-                             :kmsKeyServiceAccount string,
+   :sourceDiskEncryptionKey {:rawKey string,
+                             :rsaEncryptedKey string,
+                             :kmsKeyName string,
                              :sha256 string,
-                             :rawKey string,
-                             :rsaEncryptedKey string},
+                             :kmsKeyServiceAccount string},
    :satisfiesPzs boolean,
    :status string,
-   :deprecated {:deprecated string,
-                :state string,
+   :deprecated {:state string,
                 :replacement string,
-                :deleted string,
-                :obsolete string},
+                :deprecated string,
+                :obsolete string,
+                :deleted string},
    :id string,
    :kind string,
    :sourceSnapshotId string,
-   :rawDisk {:containerType string,
-             :source string,
-             :sha1Checksum string},
+   :rawDisk {:source string,
+             :sha1Checksum string,
+             :containerType string},
    :sourceType string,
    :diskSizeGb string,
    :licenseCodes [string],
    :storageLocations [string],
-   :shieldedInstanceInitialState {:keks [FileContentBuffer],
-                                  :dbxs [FileContentBuffer],
+   :enableConfidentialCompute boolean,
+   :shieldedInstanceInitialState {:pk FileContentBuffer,
+                                  :keks [FileContentBuffer],
                                   :dbs [FileContentBuffer],
-                                  :pk FileContentBuffer},
+                                  :dbxs [FileContentBuffer]},
    :archiveSizeBytes string,
    :labelFingerprint string}
   
@@ -327,7 +332,7 @@
   
   Body: 
   
-  {:labelFingerprint string, :labels {}}
+  {:labels {}, :labelFingerprint string}
   
   Sets the labels on an image. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -354,7 +359,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/images/delete
   
-  Required parameters: project, image
+  Required parameters: image, project
   
   Optional parameters: requestId
   
@@ -411,7 +416,7 @@
   
   Required parameters: project
   
-  Optional parameters: orderBy, pageToken, returnPartialSuccess, filter, maxResults
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of custom images available to the specified project. Custom images are images you create that belong to your project. This method does not get any images that belong to other projects, including publicly-available images, like Debian 8. If you want to get a list of publicly-available images, use this method to make a request to the respective image project, such as debian-cloud or windows-cloud."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -443,11 +448,11 @@
   
   Body: 
   
-  {:deprecated string,
-   :state string,
+  {:state string,
    :replacement string,
-   :deleted string,
-   :obsolete string}
+   :deprecated string,
+   :obsolete string,
+   :deleted string}
   
   Sets the deprecation status of an image. If an empty request body is given, clears the deprecation status instead."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

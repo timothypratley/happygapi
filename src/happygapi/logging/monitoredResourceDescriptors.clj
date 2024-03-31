@@ -1,6 +1,6 @@
 (ns happygapi.logging.monitoredResourceDescriptors
   "Cloud Logging API: monitoredResourceDescriptors.
-  Writes log entries and manages your Cloud Logging configuration. The table entries below are presented in alphabetical order, not in order of common use. For explanations of the concepts found in the table entries, read the documentation at https://cloud.google.com/logging/docs.
+  Writes log entries and manages your Cloud Logging configuration.
   See: https://cloud.google.com/logging/docs/api/reference/rest/v2/monitoredResourceDescriptors"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the descriptors for monitored resource types used by Logging."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

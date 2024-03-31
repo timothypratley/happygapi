@@ -1,5 +1,5 @@
 (ns happygapi.blogger.pageViews
-  "Blogger API v3: pageViews.
+  "Blogger API: pageViews.
   The Blogger API provides access to posts, comments and pages of a Blogger blog.
   See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/pageViews"
   (:require [cheshire.core :as json]

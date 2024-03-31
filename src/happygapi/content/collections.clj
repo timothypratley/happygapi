@@ -6,6 +6,32 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn get$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/get
+  
+  Required parameters: merchantId, collectionId
+  
+  Optional parameters: none
+  
+  Retrieves a collection from your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/collections/{collectionId}"
+     #{:collectionId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/list
   
@@ -79,7 +105,7 @@
 (defn delete$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/delete
   
-  Required parameters: collectionId, merchantId
+  Required parameters: merchantId, collectionId
   
   Optional parameters: none
   
@@ -89,32 +115,6 @@
   {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
   (util/get-response
    (http/delete
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/collections/{collectionId}"
-     #{:collectionId :merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/collections/get
-  
-  Required parameters: collectionId, merchantId
-  
-  Optional parameters: none
-  
-  Retrieves a collection from your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:collectionId :merchantId})]}
-  (util/get-response
-   (http/get
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
      "{merchantId}/collections/{collectionId}"

@@ -1,6 +1,6 @@
 (ns happygapi.mybusinessbusinessinformation.chains
   "My Business Business Information API: chains.
-  The My Business Business Information API provides an interface for managing business information on Google.
+  The My Business Business Information API provides an interface for managing business information. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
   See: https://developers.google.com/my-business/api/reference/rest/v1/chains"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, chainName
+  Optional parameters: chainName, pageSize
   
   Searches the chain based on chain name."
   {:scopes nil}

@@ -11,7 +11,7 @@
   
   Required parameters: startDate, endDate, engineAccountId, advertiserId, startRow, agencyId, rowCount
   
-  Optional parameters: adId, adGroupId, campaignId, criterionId
+  Optional parameters: adId, adGroupId, campaignId, criterionId, customerId
   
   Retrieves a list of conversions from a DoubleClick Search engine account."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -46,38 +46,29 @@
       :as :json}
      auth))))
 
-(defn updateAvailability$
-  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/updateAvailability
+(defn getByCustomerId$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/getByCustomerId
   
-  Required parameters: none
+  Required parameters: startDate, customerId, endDate, startRow, rowCount
   
-  Optional parameters: none
+  Optional parameters: adId, adGroupId, campaignId, criterionId, engineAccountId, advertiserId, agencyId
   
-  Body: 
-  
-  {:availabilities [{:segmentationType string,
-                     :advertiserId string,
-                     :availabilityTimestamp string,
-                     :agencyId string,
-                     :segmentationName string,
-                     :segmentationId string}]}
-  
-  Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
+  Retrieves a list of conversions from a DoubleClick Search engine account."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys?
+          parameters
+          #{:startDate :customerId :endDate :startRow :rowCount})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://doubleclicksearch.googleapis.com/"
-     "doubleclicksearch/v2/conversion/updateAvailability"
-     #{}
+     "doubleclicksearch/v2/customer/{customerId}/conversion"
+     #{:startDate :customerId :endDate :startRow :rowCount}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -92,14 +83,14 @@
   
   Body: 
   
-  {:kind string,
-   :conversion [{:productLanguage string,
+  {:conversion [{:productLanguage string,
                  :countMillis string,
                  :segmentationName string,
                  :customDimension [CustomDimension],
                  :conversionTimestamp string,
                  :customMetric [CustomMetric],
                  :adId string,
+                 :adUserDataConsent string,
                  :dsConversionId string,
                  :attributionModel string,
                  :adGroupId string,
@@ -111,6 +102,7 @@
                  :state string,
                  :productId string,
                  :criterionId string,
+                 :customerId string,
                  :engineAccountId string,
                  :advertiserId string,
                  :storeId string,
@@ -125,7 +117,8 @@
                  :inventoryAccountId string,
                  :quantityMillis string,
                  :clickId string,
-                 :floodlightOrderId string}]}
+                 :floodlightOrderId string}],
+   :kind string}
   
   Inserts a batch of new conversions into DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -157,14 +150,14 @@
   
   Body: 
   
-  {:kind string,
-   :conversion [{:productLanguage string,
+  {:conversion [{:productLanguage string,
                  :countMillis string,
                  :segmentationName string,
                  :customDimension [CustomDimension],
                  :conversionTimestamp string,
                  :customMetric [CustomMetric],
                  :adId string,
+                 :adUserDataConsent string,
                  :dsConversionId string,
                  :attributionModel string,
                  :adGroupId string,
@@ -176,6 +169,7 @@
                  :state string,
                  :productId string,
                  :criterionId string,
+                 :customerId string,
                  :engineAccountId string,
                  :advertiserId string,
                  :storeId string,
@@ -190,7 +184,8 @@
                  :inventoryAccountId string,
                  :quantityMillis string,
                  :clickId string,
-                 :floodlightOrderId string}]}
+                 :floodlightOrderId string}],
+   :kind string}
   
   Updates a batch of conversions in DoubleClick Search."
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
@@ -201,6 +196,44 @@
     (util/get-url
      "https://doubleclicksearch.googleapis.com/"
      "doubleclicksearch/v2/conversion"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn updateAvailability$
+  "https://developers.google.com/search-adsapi/reference/rest/v2/conversion/updateAvailability
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:availabilities [{:agencyId string,
+                     :advertiserId string,
+                     :segmentationType string,
+                     :segmentationId string,
+                     :segmentationName string,
+                     :availabilityTimestamp string,
+                     :customerId string}]}
+  
+  Updates the availabilities of a batch of floodlight activities in DoubleClick Search."
+  {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://doubleclicksearch.googleapis.com/"
+     "doubleclicksearch/v2/conversion/updateAvailability"
      #{}
      parameters)
     (merge-with

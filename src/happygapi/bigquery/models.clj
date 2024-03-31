@@ -6,63 +6,10 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn patch$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/patch
-  
-  Required parameters: modelId, projectId, datasetId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :labels {},
-   :modelType string,
-   :expirationTime string,
-   :bestTrialId string,
-   :etag string,
-   :lastModifiedTime string,
-   :friendlyName string,
-   :trainingRuns [{:trainingOptions TrainingOptions,
-                   :results [IterationResult],
-                   :startTime string,
-                   :dataSplitResult DataSplitResult,
-                   :evaluationMetrics EvaluationMetrics}],
-   :featureColumns [{:name string, :type StandardSqlDataType}],
-   :labelColumns [{:name string, :type StandardSqlDataType}],
-   :location string,
-   :encryptionConfiguration {:kmsKeyName string},
-   :modelReference {:projectId string,
-                    :modelId string,
-                    :datasetId string}}
-  
-  Patch specific fields in the specified model."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
-     #{:modelId :datasetId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/models/delete
   
-  Required parameters: projectId, datasetId, modelId
+  Required parameters: datasetId, modelId, projectId
   
   Optional parameters: none
   
@@ -86,10 +33,38 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
+  
+  Required parameters: datasetId, modelId, projectId
+  
+  Optional parameters: none
+  
+  Gets the specified model resource by model ID."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
+     #{:modelId :datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn list$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/models/list
   
-  Required parameters: projectId, datasetId
+  Required parameters: datasetId, projectId
   
   Optional parameters: maxResults, pageToken
   
@@ -114,21 +89,92 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/get
+(defn patch$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/models/patch
   
-  Required parameters: projectId, datasetId, modelId
+  Required parameters: datasetId, modelId, projectId
   
   Optional parameters: none
   
-  Gets the specified model resource by model ID."
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :labels {},
+   :modelType string,
+   :transformColumns [{:name string,
+                       :transformSql string,
+                       :type StandardSqlDataType}],
+   :expirationTime string,
+   :bestTrialId string,
+   :etag string,
+   :optimalTrialIds [string],
+   :lastModifiedTime string,
+   :friendlyName string,
+   :hparamSearchSpaces {:subsample DoubleHparamSearchSpace,
+                        :treeMethod StringHparamSearchSpace,
+                        :maxTreeDepth IntHparamSearchSpace,
+                        :minSplitLoss DoubleHparamSearchSpace,
+                        :dropout DoubleHparamSearchSpace,
+                        :hiddenUnits IntArrayHparamSearchSpace,
+                        :l1Reg DoubleHparamSearchSpace,
+                        :l2Reg DoubleHparamSearchSpace,
+                        :minTreeChildWeight IntHparamSearchSpace,
+                        :colsampleBylevel DoubleHparamSearchSpace,
+                        :numParallelTree IntHparamSearchSpace,
+                        :numClusters IntHparamSearchSpace,
+                        :learnRate DoubleHparamSearchSpace,
+                        :optimizer StringHparamSearchSpace,
+                        :colsampleBynode DoubleHparamSearchSpace,
+                        :dartNormalizeType StringHparamSearchSpace,
+                        :colsampleBytree DoubleHparamSearchSpace,
+                        :batchSize IntHparamSearchSpace,
+                        :boosterType StringHparamSearchSpace,
+                        :numFactors IntHparamSearchSpace,
+                        :activationFn StringHparamSearchSpace,
+                        :walsAlpha DoubleHparamSearchSpace},
+   :hparamTrials [{:evalLoss number,
+                   :errorMessage string,
+                   :trialId string,
+                   :evaluationMetrics EvaluationMetrics,
+                   :endTimeMs string,
+                   :status string,
+                   :hparams TrainingOptions,
+                   :startTimeMs string,
+                   :hparamTuningEvaluationMetrics EvaluationMetrics,
+                   :trainingLoss number}],
+   :trainingRuns [{:vertexAiModelId string,
+                   :trainingOptions TrainingOptions,
+                   :trainingStartTime string,
+                   :classLevelGlobalExplanations [GlobalExplanation],
+                   :startTime string,
+                   :evaluationMetrics EvaluationMetrics,
+                   :modelLevelGlobalExplanation GlobalExplanation,
+                   :dataSplitResult DataSplitResult,
+                   :vertexAiModelVersion string,
+                   :results [IterationResult]}],
+   :defaultTrialId string,
+   :featureColumns [{:name string, :type StandardSqlDataType}],
+   :labelColumns [{:name string, :type StandardSqlDataType}],
+   :remoteModelInfo {:connection string,
+                     :endpoint string,
+                     :maxBatchingRows string,
+                     :remoteModelVersion string,
+                     :remoteServiceType string,
+                     :speechRecognizer string},
+   :location string,
+   :encryptionConfiguration {:kmsKeyName string},
+   :modelReference {:datasetId string,
+                    :modelId string,
+                    :projectId string}}
+  
+  Patch specific fields in the specified model."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:modelId :datasetId :projectId})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
      "projects/{+projectId}/datasets/{+datasetId}/models/{+modelId}"
@@ -136,7 +182,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

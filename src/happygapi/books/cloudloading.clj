@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: drive_document_id, name, upload_client_token, mime_type
+  Optional parameters: drive_document_id, mime_type, name, upload_client_token
   
   Add a user-upload volume and triggers processing."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -69,8 +69,8 @@
   
   {:volumeId string,
    :title string,
-   :processingState string,
-   :author string}
+   :author string,
+   :processingState string}
   
   Updates a user-upload volume."
   {:scopes ["https://www.googleapis.com/auth/books"]}

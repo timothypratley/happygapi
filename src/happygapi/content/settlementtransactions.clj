@@ -9,9 +9,9 @@
 (defn list$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/settlementtransactions/list
   
-  Required parameters: settlementId, merchantId
+  Required parameters: merchantId, settlementId
   
-  Optional parameters: transactionIds, maxResults, pageToken
+  Optional parameters: maxResults, pageToken, transactionIds
   
   Retrieves a list of transactions for the settlement."
   {:scopes ["https://www.googleapis.com/auth/content"]}

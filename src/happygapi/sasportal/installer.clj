@@ -6,38 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn validate$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/installer/validate
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:secret string, :installerId string, :encodedSecret string}
-  
-  Validates the identity of a Certified Professional Installer (CPI)."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/installer:validate"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn generateSecret$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/installer/generateSecret
   
@@ -50,7 +18,8 @@
   {}
   
   Generates a secret to be used with the ValidateInstaller."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
   (util/get-response
@@ -58,6 +27,39 @@
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/installer:generateSecret"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn validate$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/installer/validate
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:secret string, :encodedSecret string, :installerId string}
+  
+  Validates the identity of a Certified Professional Installer (CPI)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/installer:validate"
      #{}
      parameters)
     (merge-with

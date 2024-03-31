@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  Returns the email address of the service account for your project used for interactions with Google Cloud KMS."
+  RPC to get the service account for a project used for interactions with Google Cloud KMS"
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
@@ -23,7 +23,7 @@
    (http/get
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/serviceAccount"
+     "projects/{+projectId}/serviceAccount"
      #{:projectId}
      parameters)
     (merge-with
@@ -41,7 +41,7 @@
   
   Optional parameters: maxResults, pageToken
   
-  Lists all projects to which you have been granted any project role."
+  RPC to list projects to which the user has been granted any project role. Users of this method are encouraged to consider the [Resource Manager](https://cloud.google.com/resource-manager/docs/) API, which provides the underlying data for this method and has more capabilities."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}

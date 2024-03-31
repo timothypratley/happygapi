@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: pageToken, maxResults, returnPartialSuccess, orderBy, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of network endpoint groups that are located in the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -34,10 +34,91 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/get
+  
+  Required parameters: networkEndpointGroup, project
+  
+  Optional parameters: none
+  
+  Returns the specified network endpoint group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:networkEndpointGroup :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networkEndpointGroups/{networkEndpointGroup}"
+     #{:networkEndpointGroup :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/insert
+  
+  Required parameters: project
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:description string,
+   :networkEndpointType string,
+   :creationTimestamp string,
+   :zone string,
+   :name string,
+   :cloudFunction {:function string, :urlMask string},
+   :selfLink string,
+   :pscTargetService string,
+   :cloudRun {:service string, :tag string, :urlMask string},
+   :size integer,
+   :region string,
+   :pscData {:consumerPscAddress string,
+             :pscConnectionId string,
+             :pscConnectionStatus string},
+   :id string,
+   :kind string,
+   :appEngine {:service string, :version string, :urlMask string},
+   :annotations {},
+   :network string,
+   :defaultPort integer,
+   :subnetwork string}
+  
+  Creates a network endpoint group in the specified project using the parameters that are included in the request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/networkEndpointGroups"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/delete
   
-  Required parameters: project, networkEndpointGroup
+  Required parameters: networkEndpointGroup, project
   
   Optional parameters: requestId
   
@@ -70,11 +151,11 @@
   
   Body: 
   
-  {:networkEndpoints [{:instance string,
-                       :ipAddress string,
-                       :annotations {},
+  {:networkEndpoints [{:ipAddress string,
                        :fqdn string,
-                       :port integer}]}
+                       :port integer,
+                       :instance string,
+                       :annotations {}}]}
   
   Attach a network endpoint to the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -101,17 +182,17 @@
 (defn detachNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/detachNetworkEndpoints
   
-  Required parameters: project, networkEndpointGroup
+  Required parameters: networkEndpointGroup, project
   
   Optional parameters: requestId
   
   Body: 
   
-  {:networkEndpoints [{:instance string,
-                       :ipAddress string,
-                       :annotations {},
+  {:networkEndpoints [{:ipAddress string,
                        :fqdn string,
-                       :port integer}]}
+                       :port integer,
+                       :instance string,
+                       :annotations {}}]}
   
   Detach the network endpoint from the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -135,40 +216,12 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/get
-  
-  Required parameters: networkEndpointGroup, project
-  
-  Optional parameters: none
-  
-  Returns the specified network endpoint group. Gets a list of available network endpoint groups by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:networkEndpointGroup :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/networkEndpointGroups/{networkEndpointGroup}"
-     #{:networkEndpointGroup :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn listNetworkEndpoints$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/listNetworkEndpoints
   
   Required parameters: networkEndpointGroup, project
   
-  Optional parameters: filter, returnPartialSuccess, orderBy, pageToken, maxResults
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Lists the network endpoints in the specified network endpoint group."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -186,55 +239,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalNetworkEndpointGroups/insert
-  
-  Required parameters: project
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:description string,
-   :networkEndpointType string,
-   :creationTimestamp string,
-   :zone string,
-   :name string,
-   :cloudFunction {:urlMask string, :function string},
-   :selfLink string,
-   :cloudRun {:urlMask string, :tag string, :service string},
-   :size integer,
-   :region string,
-   :id string,
-   :kind string,
-   :appEngine {:version string, :urlMask string, :service string},
-   :annotations {},
-   :network string,
-   :defaultPort integer,
-   :subnetwork string}
-  
-  Creates a network endpoint group in the specified project using the parameters that are included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/networkEndpointGroups"
-     #{:project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

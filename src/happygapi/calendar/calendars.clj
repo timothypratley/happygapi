@@ -32,123 +32,6 @@
       :as :json}
      auth))))
 
-(defn update$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
-  
-  Required parameters: calendarId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:timeZone string,
-   :description string,
-   :etag string,
-   :location string,
-   :summary string,
-   :kind string,
-   :id string,
-   :conferenceProperties {:allowedConferenceSolutionTypes [string]}}
-  
-  Updates metadata for a calendar."
-  {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:calendarId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}"
-     #{:calendarId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn patch$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
-  
-  Required parameters: calendarId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:timeZone string,
-   :description string,
-   :etag string,
-   :location string,
-   :summary string,
-   :kind string,
-   :id string,
-   :conferenceProperties {:allowedConferenceSolutionTypes [string]}}
-  
-  Updates metadata for a calendar. This method supports patch semantics."
-  {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:calendarId})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://www.googleapis.com/calendar/v3/"
-     "calendars/{calendarId}"
-     #{:calendarId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:timeZone string,
-   :description string,
-   :etag string,
-   :location string,
-   :summary string,
-   :kind string,
-   :id string,
-   :conferenceProperties {:allowedConferenceSolutionTypes [string]}}
-  
-  Creates a secondary calendar."
-  {:scopes ["https://www.googleapis.com/auth/calendar"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://www.googleapis.com/calendar/v3/"
-     "calendars"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/delete
   
@@ -197,6 +80,123 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/insert
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
+  
+  Creates a secondary calendar."
+  {:scopes ["https://www.googleapis.com/auth/calendar"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://www.googleapis.com/calendar/v3/"
+     "calendars"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/patch
+  
+  Required parameters: calendarId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
+  
+  Updates metadata for a calendar. This method supports patch semantics."
+  {:scopes ["https://www.googleapis.com/auth/calendar"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://www.googleapis.com/calendar/v3/"
+     "calendars/{calendarId}"
+     #{:calendarId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendars/update
+  
+  Required parameters: calendarId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:conferenceProperties {:allowedConferenceSolutionTypes [string]},
+   :description string,
+   :etag string,
+   :id string,
+   :kind string,
+   :location string,
+   :summary string,
+   :timeZone string}
+  
+  Updates metadata for a calendar."
+  {:scopes ["https://www.googleapis.com/auth/calendar"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:calendarId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://www.googleapis.com/calendar/v3/"
+     "calendars/{calendarId}"
+     #{:calendarId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

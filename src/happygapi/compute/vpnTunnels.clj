@@ -9,9 +9,9 @@
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/list
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: maxResults, orderBy, returnPartialSuccess, pageToken, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of VpnTunnel resources contained in the specified project and region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -34,10 +34,66 @@
       :as :json}
      auth))))
 
+(defn aggregatedList$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/aggregatedList
+  
+  Required parameters: project
+  
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
+  
+  Retrieves an aggregated list of VPN tunnels. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/aggregated/vpnTunnels"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/get
+  
+  Required parameters: project, region, vpnTunnel
+  
+  Optional parameters: none
+  
+  Returns the specified VpnTunnel resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :vpnTunnel :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/vpnTunnels/{vpnTunnel}"
+     #{:region :vpnTunnel :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
@@ -45,6 +101,7 @@
   
   {:description string,
    :peerIp string,
+   :labels {},
    :peerExternalGateway string,
    :targetVpnGateway string,
    :remoteTrafficSelector [string],
@@ -64,7 +121,8 @@
    :sharedSecretHash string,
    :vpnGateway string,
    :vpnGatewayInterface integer,
-   :peerExternalGatewayInterface integer}
+   :peerExternalGatewayInterface integer,
+   :labelFingerprint string}
   
   Creates a VpnTunnel resource in the specified project and region using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -115,57 +173,34 @@
       :as :json}
      auth))))
 
-(defn aggregatedList$
-  "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/aggregatedList
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/setLabels
   
-  Required parameters: project
+  Required parameters: project, region, resource
   
-  Optional parameters: includeAllScopes, orderBy, returnPartialSuccess, filter, maxResults, pageToken
+  Optional parameters: requestId
   
-  Retrieves an aggregated list of VPN tunnels."
+  Body: 
+  
+  {:labels {}, :labelFingerprint string}
+  
+  Sets the labels on a VpnTunnel. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:region :project :resource})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/aggregated/vpnTunnels"
-     #{:project}
+     "projects/{project}/regions/{region}/vpnTunnels/{resource}/setLabels"
+     #{:region :project :resource}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/vpnTunnels/get
-  
-  Required parameters: vpnTunnel, region, project
-  
-  Optional parameters: none
-  
-  Returns the specified VpnTunnel resource. Gets a list of available VPN tunnels by making a list() request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:region :vpnTunnel :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/vpnTunnels/{vpnTunnel}"
-     #{:region :vpnTunnel :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

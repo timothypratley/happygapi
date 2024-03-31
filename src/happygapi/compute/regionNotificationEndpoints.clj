@@ -6,10 +6,38 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/list
+  
+  Required parameters: project, region
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Lists the NotificationEndpoints for a project in the given region."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/notificationEndpoints"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/get
   
-  Required parameters: project, region, notificationEndpoint
+  Required parameters: notificationEndpoint, project, region
   
   Optional parameters: none
   
@@ -36,21 +64,35 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/list
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/insert
   
   Required parameters: project, region
   
-  Optional parameters: maxResults, pageToken, orderBy, returnPartialSuccess, filter
+  Optional parameters: requestId
   
-  Lists the NotificationEndpoints for a project in the given region."
+  Body: 
+  
+  {:kind string,
+   :id string,
+   :creationTimestamp string,
+   :name string,
+   :description string,
+   :selfLink string,
+   :region string,
+   :grpcSettings {:endpoint string,
+                  :retryDurationSec integer,
+                  :payloadName string,
+                  :authority string,
+                  :resendInterval Duration}}
+  
+  Create a NotificationEndpoint in the specified project in the given region using the parameters that are included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/notificationEndpoints"
@@ -58,7 +100,9 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -67,7 +111,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/delete
   
-  Required parameters: notificationEndpoint, region, project
+  Required parameters: notificationEndpoint, project, region
   
   Optional parameters: requestId
   
@@ -88,50 +132,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints/insert
-  
-  Required parameters: project, region
-  
-  Optional parameters: requestId
-  
-  Body: 
-  
-  {:region string,
-   :grpcSettings {:retryDurationSec integer,
-                  :payloadName string,
-                  :resendInterval Duration,
-                  :authority string,
-                  :endpoint string},
-   :description string,
-   :selfLink string,
-   :creationTimestamp string,
-   :id string,
-   :kind string,
-   :name string}
-  
-  Create a NotificationEndpoint in the specified project in the given region using the parameters that are included in the request."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/notificationEndpoints"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

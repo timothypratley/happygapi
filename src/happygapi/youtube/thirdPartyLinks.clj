@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/thirdPartyLinks/list
-  
-  Required parameters: part
-  
-  Optional parameters: type, externalChannelId, linkingToken
-  
-  Retrieves a list of resources, possibly filtered."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/thirdPartyLinks"
-     #{:part}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://developers.google.com/youtube/api/reference/rest/v3/thirdPartyLinks/insert
   
@@ -41,12 +15,12 @@
   
   Body: 
   
-  {:linkingToken string,
-   :status {:linkStatus string},
-   :etag string,
+  {:etag string,
    :snippet {:channelToStoreLink ChannelToStoreLinkDetails,
              :type string},
-   :kind string}
+   :kind string,
+   :status {:linkStatus string},
+   :linkingToken string}
   
   Inserts a new resource into this collection."
   {:scopes nil}
@@ -69,23 +43,23 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/youtube/api/reference/rest/v3/thirdPartyLinks/delete
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/thirdPartyLinks/list
   
-  Required parameters: type, linkingToken
+  Required parameters: part
   
-  Optional parameters: externalChannelId, part
+  Optional parameters: externalChannelId, type, linkingToken
   
-  Deletes a resource."
+  Retrieves a list of resources, possibly filtered."
   {:scopes nil}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:type :linkingToken})]}
+  {:pre [(util/has-keys? parameters #{:part})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://youtube.googleapis.com/"
      "youtube/v3/thirdPartyLinks"
-     #{:type :linkingToken}
+     #{:part}
      parameters)
     (merge-with
      merge
@@ -104,12 +78,12 @@
   
   Body: 
   
-  {:linkingToken string,
-   :status {:linkStatus string},
-   :etag string,
+  {:etag string,
    :snippet {:channelToStoreLink ChannelToStoreLinkDetails,
              :type string},
-   :kind string}
+   :kind string,
+   :status {:linkStatus string},
+   :linkingToken string}
   
   Updates an existing resource."
   {:scopes nil}
@@ -127,6 +101,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://developers.google.com/youtube/api/reference/rest/v3/thirdPartyLinks/delete
+  
+  Required parameters: linkingToken, type
+  
+  Optional parameters: part, externalChannelId
+  
+  Deletes a resource."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:type :linkingToken})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/thirdPartyLinks"
+     #{:type :linkingToken}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

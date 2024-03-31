@@ -43,9 +43,9 @@
   Body: 
   
   {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :etag string,
-            :bindings [Binding]},
+            :etag string},
    :updateMask string}
   
   Sets the access control policy on a folder, replacing any existing policy. The `resource` field should be the folder's resource name, for example: \"folders/1234\". The caller must have `resourcemanager.folders.setIamPolicy` permission on the identified folder."
@@ -78,13 +78,14 @@
   
   Body: 
   
-  {:parent string,
-   :name string,
-   :state string,
-   :displayName string,
-   :etag string,
+  {:tags {},
    :deleteTime string,
+   :parent string,
+   :displayName string,
+   :name string,
    :createTime string,
+   :etag string,
+   :state string,
    :updateTime string}
   
   Updates a folder, changing its `display_name`. Changes to the folder `display_name` will be rejected if they violate either the `display_name` formatting rules or the naming constraints described in the CreateFolder documentation. The folder's `display_name` must start and end with a letter or digit, may contain letters, digits, spaces, hyphens and underscores and can be between 3 and 30 characters. This is captured by the regular expression: `\\p{L}\\p{N}{1,28}[\\p{L}\\p{N}]`. The caller must have `resourcemanager.folders.update` permission on the identified folder. If the update fails due to the unique name constraint then a `PreconditionFailure` explaining this violation will be returned in the Status.details field."
@@ -149,13 +150,14 @@
   
   Body: 
   
-  {:parent string,
-   :name string,
-   :state string,
-   :displayName string,
-   :etag string,
+  {:tags {},
    :deleteTime string,
+   :parent string,
+   :displayName string,
+   :name string,
    :createTime string,
+   :etag string,
+   :state string,
    :updateTime string}
   
   Creates a folder in the resource hierarchy. Returns an `Operation` which can be used to track the progress of the folder creation workflow. Upon success, the `Operation.response` field will be populated with the created Folder. In order to succeed, the addition of this new folder must not violate the folder naming, height, or fanout constraints. + The folder's `display_name` must be distinct from all other folders that share its parent. + The addition of the folder must not cause the active folder hierarchy to exceed a height of 10. Note, the full active + deleted folder hierarchy is allowed to reach a height of 20; this provides additional headroom when moving folders that contain deleted folders. + The addition of the folder must not cause the total number of folders under its parent to exceed 300. If the operation fails due to a folder constraint violation, some errors may be returned by the `CreateFolder` request, with status code `FAILED_PRECONDITION` and an error description. Other folder constraint violations will be communicated in the `Operation`, with the specific `PreconditionFailure` returned in the details list in the `Operation.error` field. The caller must have `resourcemanager.folders.create` permission on the identified parent."
@@ -334,7 +336,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, parent, pageSize, showDeleted
+  Optional parameters: parent, pageSize, pageToken, showDeleted
   
   Lists the folders that are direct descendants of supplied parent resource. `list()` provides a strongly consistent view of the folders underneath the specified parent resource. `list()` returns folders sorted based upon the (ascending) lexical ordering of their display_name. The caller must have `resourcemanager.folders.list` permission on the identified parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

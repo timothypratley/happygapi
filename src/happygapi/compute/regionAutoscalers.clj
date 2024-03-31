@@ -6,20 +6,49 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/delete
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/list
   
-  Required parameters: region, project, autoscaler
+  Required parameters: project, region
   
-  Optional parameters: requestId
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Deletes the specified autoscaler."
+  Retrieves a list of autoscalers contained within the specified region."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:region :project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/regions/{region}/autoscalers"
+     #{:region :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn get$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/get
+  
+  Required parameters: autoscaler, project, region
+  
+  Optional parameters: none
+  
+  Returns the specified autoscaler."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:region :project :autoscaler})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/autoscalers/{autoscaler}"
@@ -36,14 +65,14 @@
 (defn insert$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/insert
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: requestId
   
   Body: 
   
   {:description string,
-   :statusDetails [{:type string, :message string}],
+   :statusDetails [{:message string, :type string}],
    :creationTimestamp string,
    :zone string,
    :name string,
@@ -87,71 +116,17 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/patch
-  
-  Required parameters: region, project
-  
-  Optional parameters: requestId, autoscaler
-  
-  Body: 
-  
-  {:description string,
-   :statusDetails [{:type string, :message string}],
-   :creationTimestamp string,
-   :zone string,
-   :name string,
-   :selfLink string,
-   :region string,
-   :recommendedSize integer,
-   :scalingScheduleStatus {},
-   :status string,
-   :id string,
-   :kind string,
-   :autoscalingPolicy {:coolDownPeriodSec integer,
-                       :mode string,
-                       :minNumReplicas integer,
-                       :maxNumReplicas integer,
-                       :cpuUtilization AutoscalingPolicyCpuUtilization,
-                       :scaleInControl AutoscalingPolicyScaleInControl,
-                       :scalingSchedules {},
-                       :loadBalancingUtilization AutoscalingPolicyLoadBalancingUtilization,
-                       :customMetricUtilizations [AutoscalingPolicyCustomMetricUtilization]},
-   :target string}
-  
-  Updates an autoscaler in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:region :project})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/regions/{region}/autoscalers"
-     #{:region :project}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn update$
   "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/update
   
-  Required parameters: region, project
+  Required parameters: project, region
   
   Optional parameters: autoscaler, requestId
   
   Body: 
   
   {:description string,
-   :statusDetails [{:type string, :message string}],
+   :statusDetails [{:message string, :type string}],
    :creationTimestamp string,
    :zone string,
    :name string,
@@ -195,21 +170,45 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/list
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/patch
   
-  Required parameters: region, project
+  Required parameters: project, region
   
-  Optional parameters: filter, pageToken, maxResults, orderBy, returnPartialSuccess
+  Optional parameters: autoscaler, requestId
   
-  Retrieves a list of autoscalers contained within the specified region."
+  Body: 
+  
+  {:description string,
+   :statusDetails [{:message string, :type string}],
+   :creationTimestamp string,
+   :zone string,
+   :name string,
+   :selfLink string,
+   :region string,
+   :recommendedSize integer,
+   :scalingScheduleStatus {},
+   :status string,
+   :id string,
+   :kind string,
+   :autoscalingPolicy {:coolDownPeriodSec integer,
+                       :mode string,
+                       :minNumReplicas integer,
+                       :maxNumReplicas integer,
+                       :cpuUtilization AutoscalingPolicyCpuUtilization,
+                       :scaleInControl AutoscalingPolicyScaleInControl,
+                       :scalingSchedules {},
+                       :loadBalancingUtilization AutoscalingPolicyLoadBalancingUtilization,
+                       :customMetricUtilizations [AutoscalingPolicyCustomMetricUtilization]},
+   :target string}
+  
+  Updates an autoscaler in the specified project using the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:region :project})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/autoscalers"
@@ -217,27 +216,28 @@
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/get
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/regionAutoscalers/delete
   
-  Required parameters: region, autoscaler, project
+  Required parameters: autoscaler, project, region
   
-  Optional parameters: none
+  Optional parameters: requestId
   
-  Returns the specified autoscaler."
+  Deletes the specified autoscaler."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
+            "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:region :project :autoscaler})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/regions/{region}/autoscalers/{autoscaler}"

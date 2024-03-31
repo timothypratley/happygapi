@@ -6,25 +6,25 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn wait$
-  "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/wait
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/list
   
-  Required parameters: zone, operation, project
+  Required parameters: project, zone
   
-  Optional parameters: none
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
-  Waits for the specified Operation resource to return as `DONE` or for the request to approach the 2 minute deadline, and retrieves the specified Operation resource. This method waits for no more than the 2 minutes and then returns the current state of the operation, which might be `DONE` or still in progress. This method is called on a best-effort basis. Specifically: - In uncommon cases, when the server is overloaded, the request might return before the default deadline is reached, or might return after zero seconds. - If the default deadline is reached, there is no guarantee that the operation is actually done when the method returns. Be prepared to retry if the operation is not `DONE`. "
+  Retrieves a list of Operation resources contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :operation :project})]}
+  {:pre [(util/has-keys? parameters #{:zone :project})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/zones/{zone}/operations/{operation}/wait"
-     #{:zone :operation :project}
+     "projects/{project}/zones/{zone}/operations"
+     #{:zone :project}
      parameters)
     (merge-with
      merge
@@ -37,7 +37,7 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/get
   
-  Required parameters: project, zone, operation
+  Required parameters: operation, project, zone
   
   Optional parameters: none
   
@@ -62,10 +62,38 @@
       :as :json}
      auth))))
 
+(defn wait$
+  "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/wait
+  
+  Required parameters: operation, project, zone
+  
+  Optional parameters: none
+  
+  Waits for the specified Operation resource to return as `DONE` or for the request to approach the 2 minute deadline, and retrieves the specified Operation resource. This method waits for no more than the 2 minutes and then returns the current state of the operation, which might be `DONE` or still in progress. This method is called on a best-effort basis. Specifically: - In uncommon cases, when the server is overloaded, the request might return before the default deadline is reached, or might return after zero seconds. - If the default deadline is reached, there is no guarantee that the operation is actually done when the method returns. Be prepared to retry if the operation is not `DONE`. "
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:zone :operation :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/operations/{operation}/wait"
+     #{:zone :operation :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/delete
   
-  Required parameters: project, operation, zone
+  Required parameters: operation, project, zone
   
   Optional parameters: none
   
@@ -80,34 +108,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/zones/{zone}/operations/{operation}"
      #{:zone :operation :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/zoneOperations/list
-  
-  Required parameters: zone, project
-  
-  Optional parameters: maxResults, filter, returnPartialSuccess, pageToken, orderBy
-  
-  Retrieves a list of Operation resources contained within the specified zone."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:zone :project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/zones/{zone}/operations"
-     #{:zone :project}
      parameters)
     (merge-with
      merge

@@ -6,10 +6,43 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn setSecurityPolicy$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setSecurityPolicy
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:securityPolicy string, :networkInterfaces [string]}
+  
+  Sets the Google Cloud Armor security policy for the specified instance. For more information, see Google Cloud Armor Overview"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setSecurityPolicy"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn deleteAccessConfig$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/deleteAccessConfig
   
-  Required parameters: accessConfig, zone, project, networkInterface, instance
+  Required parameters: accessConfig, instance, networkInterface, project, zone
   
   Optional parameters: requestId
   
@@ -66,11 +99,11 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/get
   
-  Required parameters: project, instance, zone
+  Required parameters: instance, project, zone
   
   Optional parameters: none
   
-  Returns the specified Instance resource. Gets a list of available instances by making a list() request."
+  Returns the specified Instance resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -94,13 +127,13 @@
 (defn startWithEncryptionKey$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/startWithEncryptionKey
   
-  Required parameters: instance, zone, project
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:disks [{:diskEncryptionKey CustomerEncryptionKey, :source string}]}
+  {:disks [{:source string, :diskEncryptionKey CustomerEncryptionKey}]}
   
   Starts an instance that was stopped using the instances().stop method. For more information, see Restart an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -127,7 +160,7 @@
 (defn updateAccessConfig$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateAccessConfig
   
-  Required parameters: networkInterface, instance, project, zone
+  Required parameters: instance, networkInterface, project, zone
   
   Optional parameters: requestId
   
@@ -141,7 +174,8 @@
    :kind string,
    :networkTier string,
    :setPublicPtr boolean,
-   :externalIpv6PrefixLength integer}
+   :externalIpv6PrefixLength integer,
+   :securityPolicy string}
   
   Updates the specified access config from an instance's network interface with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -170,22 +204,21 @@
 (defn setIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setIamPolicy
   
-  Required parameters: project, zone, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
   Body: 
   
-  {:bindings [{:members [string],
-               :condition Expr,
-               :bindingId string,
-               :role string}],
-   :policy {:etag string,
+  {:policy {:version integer,
+            :bindings [Binding],
             :auditConfigs [AuditConfig],
-            :iamOwned boolean,
-            :version integer,
             :rules [Rule],
-            :bindings [Binding]},
+            :etag string},
+   :bindings [{:role string,
+               :members [string],
+               :condition Expr,
+               :bindingId string}],
    :etag string}
   
   Sets the access control policy on the specified resource. Replaces any existing policy."
@@ -215,7 +248,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: sourceInstanceTemplate, requestId
+  Optional parameters: requestId, sourceInstanceTemplate, sourceMachineImage
   
   Body: 
   
@@ -223,34 +256,50 @@
    :tags {:items [string], :fingerprint string},
    :labels {},
    :startRestricted boolean,
-   :shieldedInstanceConfig {:enableVtpm boolean,
-                            :enableIntegrityMonitoring boolean,
-                            :enableSecureBoot boolean},
+   :shieldedInstanceConfig {:enableSecureBoot boolean,
+                            :enableVtpm boolean,
+                            :enableIntegrityMonitoring boolean},
    :scheduling {:locationHint string,
-                :automaticRestart boolean,
-                :onHostMaintenance string,
                 :preemptible boolean,
+                :automaticRestart boolean,
                 :nodeAffinities [SchedulingNodeAffinity],
-                :minNodeCpus integer},
+                :provisioningModel string,
+                :onHostMaintenance string,
+                :instanceTerminationAction string,
+                :minNodeCpus integer,
+                :localSsdRecoveryTimeout Duration},
    :resourcePolicies [string],
    :lastSuspendedTimestamp string,
    :creationTimestamp string,
+   :resourceStatus {:upcomingMaintenance UpcomingMaintenance,
+                    :physicalHost string},
+   :satisfiesPzi boolean,
    :zone string,
    :privateIpv6GoogleAccess string,
    :name string,
    :canIpForward boolean,
    :statusMessage string,
-   :guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}],
+   :guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}],
+   :params {:resourceManagerTags {}},
    :selfLink string,
+   :networkPerformanceConfig {:totalEgressBandwidthTier string},
    :hostname string,
    :machineType string,
+   :instanceEncryptionKey {:rawKey string,
+                           :rsaEncryptedKey string,
+                           :kmsKeyName string,
+                           :sha256 string,
+                           :kmsKeyServiceAccount string},
    :displayDevice {:enableDisplay boolean},
    :confidentialInstanceConfig {:enableConfidentialCompute boolean},
+   :keyRevocationActionType string,
    :satisfiesPzs boolean,
    :status string,
    :advancedMachineFeatures {:enableNestedVirtualization boolean,
-                             :threadsPerCore integer},
+                             :threadsPerCore integer,
+                             :visibleCoreCount integer,
+                             :enableUefiNetworking boolean},
    :id string,
    :lastStopTimestamp string,
    :kind string,
@@ -258,23 +307,33 @@
             :guestOsFeatures [GuestOsFeature],
             :index integer,
             :deviceName string,
+            :architecture string,
+            :forceAttach boolean,
             :boot boolean,
             :mode string,
             :licenses [string],
             :type string,
             :source string,
             :autoDelete boolean,
+            :savedState string,
             :kind string,
             :initializeParams AttachedDiskInitializeParams,
             :diskSizeGb string,
             :diskEncryptionKey CustomerEncryptionKey,
             :shieldedInstanceInitialState InitialStateConfig}],
    :lastStartTimestamp string,
+   :sourceMachineImageEncryptionKey {:rawKey string,
+                                     :rsaEncryptedKey string,
+                                     :kmsKeyName string,
+                                     :sha256 string,
+                                     :kmsKeyServiceAccount string},
    :cpuPlatform string,
-   :reservationAffinity {:key string,
-                         :consumeReservationType string,
+   :reservationAffinity {:consumeReservationType string,
+                         :key string,
                          :values [string]},
-   :networkInterfaces [{:ipv6AccessType string,
+   :networkInterfaces [{:internalIpv6PrefixLength integer,
+                        :networkAttachment string,
+                        :ipv6AccessType string,
                         :stackType string,
                         :accessConfigs [AccessConfig],
                         :name string,
@@ -289,13 +348,14 @@
                         :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
-   :metadata {:items [{:key string, :value string}],
-              :kind string,
-              :fingerprint string},
+   :metadata {:kind string,
+              :fingerprint string,
+              :items [{:key string, :value string}]},
    :fingerprint string,
+   :sourceMachineImage string,
    :shieldedInstanceIntegrityPolicy {:updateAutoLearnPolicy boolean},
    :labelFingerprint string,
-   :serviceAccounts [{:scopes [string], :email string}],
+   :serviceAccounts [{:email string, :scopes [string]}],
    :minCpuPlatform string}
   
   Creates an instance resource in the specified project using the data included in the request."
@@ -323,14 +383,14 @@
 (defn setMachineResources$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMachineResources
   
-  Required parameters: zone, project, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}]}
+  {:guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}]}
   
   Changes the number and/or type of accelerator for a stopped instance to the values specified in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -357,7 +417,7 @@
 (defn getEffectiveFirewalls$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/getEffectiveFirewalls
   
-  Required parameters: instance, zone, networkInterface, project
+  Required parameters: instance, networkInterface, project, zone
   
   Optional parameters: none
   
@@ -387,7 +447,7 @@
 (defn testIamPermissions$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/testIamPermissions
   
-  Required parameters: zone, project, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: none
   
@@ -421,11 +481,11 @@
 (defn reset$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/reset
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
-  Performs a reset on the instance. This is a hard reset the VM does not do a graceful shutdown. For more information, see Resetting an instance."
+  Performs a reset on the instance. This is a hard reset. The VM does not do a graceful shutdown. For more information, see Resetting an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
@@ -448,13 +508,13 @@
 (defn setLabels$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setLabels
   
-  Required parameters: zone, project, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:labelFingerprint string, :labels {}}
+  {:labels {}, :labelFingerprint string}
   
   Sets labels on an instance. To learn more about labels, read the Labeling Resources documentation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -483,9 +543,9 @@
   
   Required parameters: project
   
-  Optional parameters: includeAllScopes, orderBy, pageToken, returnPartialSuccess, filter, maxResults
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves aggregated list of all of the instances in your project across all regions and zones."
+  Retrieves an aggregated list of all of the instances in your project across all regions and zones. The performance of this method degrades when a filter is specified on a project that has a very large number of instances. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -509,13 +569,15 @@
 (defn updateNetworkInterface$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateNetworkInterface
   
-  Required parameters: zone, project, networkInterface, instance
+  Required parameters: instance, networkInterface, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:ipv6AccessType string,
+  {:internalIpv6PrefixLength integer,
+   :networkAttachment string,
+   :ipv6AccessType string,
    :stackType string,
    :accessConfigs [{:publicPtrDomainName string,
                     :name string,
@@ -525,7 +587,8 @@
                     :kind string,
                     :networkTier string,
                     :setPublicPtr boolean,
-                    :externalIpv6PrefixLength integer}],
+                    :externalIpv6PrefixLength integer,
+                    :securityPolicy string}],
    :name string,
    :aliasIpRanges [{:ipCidrRange string, :subnetworkRangeName string}],
    :nicType string,
@@ -538,7 +601,8 @@
                         :kind string,
                         :networkTier string,
                         :setPublicPtr boolean,
-                        :externalIpv6PrefixLength integer}],
+                        :externalIpv6PrefixLength integer,
+                        :securityPolicy string}],
    :kind string,
    :queueCount integer,
    :network string,
@@ -606,15 +670,15 @@
 (defn updateShieldedInstanceConfig$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateShieldedInstanceConfig
   
-  Required parameters: zone, project, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:enableVtpm boolean,
-   :enableIntegrityMonitoring boolean,
-   :enableSecureBoot boolean}
+  {:enableSecureBoot boolean,
+   :enableVtpm boolean,
+   :enableIntegrityMonitoring boolean}
   
   Updates the Shielded Instance config for an instance. You can only use this method on a stopped instance. This method supports PATCH semantics and uses the JSON merge patch format and processing rules."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -633,6 +697,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn performMaintenance$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/performMaintenance
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: requestId
+  
+  Perform a manual maintenance on the instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/performMaintenance"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -668,7 +759,7 @@
 (defn addAccessConfig$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/addAccessConfig
   
-  Required parameters: project, networkInterface, instance, zone
+  Required parameters: instance, networkInterface, project, zone
   
   Optional parameters: requestId
   
@@ -682,7 +773,8 @@
    :kind string,
    :networkTier string,
    :setPublicPtr boolean,
-   :externalIpv6PrefixLength integer}
+   :externalIpv6PrefixLength integer,
+   :securityPolicy string}
   
   Adds an access config to an instance's network interface."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -711,9 +803,9 @@
 (defn setDeletionProtection$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setDeletionProtection
   
-  Required parameters: zone, resource, project
+  Required parameters: project, resource, zone
   
-  Optional parameters: requestId, deletionProtection
+  Optional parameters: deletionProtection, requestId
   
   Sets deletion protection on the instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -738,9 +830,9 @@
 (defn update$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/update
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
-  Optional parameters: minimalAction, requestId, mostDisruptiveAllowedAction
+  Optional parameters: minimalAction, mostDisruptiveAllowedAction, requestId
   
   Body: 
   
@@ -748,34 +840,50 @@
    :tags {:items [string], :fingerprint string},
    :labels {},
    :startRestricted boolean,
-   :shieldedInstanceConfig {:enableVtpm boolean,
-                            :enableIntegrityMonitoring boolean,
-                            :enableSecureBoot boolean},
+   :shieldedInstanceConfig {:enableSecureBoot boolean,
+                            :enableVtpm boolean,
+                            :enableIntegrityMonitoring boolean},
    :scheduling {:locationHint string,
-                :automaticRestart boolean,
-                :onHostMaintenance string,
                 :preemptible boolean,
+                :automaticRestart boolean,
                 :nodeAffinities [SchedulingNodeAffinity],
-                :minNodeCpus integer},
+                :provisioningModel string,
+                :onHostMaintenance string,
+                :instanceTerminationAction string,
+                :minNodeCpus integer,
+                :localSsdRecoveryTimeout Duration},
    :resourcePolicies [string],
    :lastSuspendedTimestamp string,
    :creationTimestamp string,
+   :resourceStatus {:upcomingMaintenance UpcomingMaintenance,
+                    :physicalHost string},
+   :satisfiesPzi boolean,
    :zone string,
    :privateIpv6GoogleAccess string,
    :name string,
    :canIpForward boolean,
    :statusMessage string,
-   :guestAccelerators [{:acceleratorCount integer,
-                        :acceleratorType string}],
+   :guestAccelerators [{:acceleratorType string,
+                        :acceleratorCount integer}],
+   :params {:resourceManagerTags {}},
    :selfLink string,
+   :networkPerformanceConfig {:totalEgressBandwidthTier string},
    :hostname string,
    :machineType string,
+   :instanceEncryptionKey {:rawKey string,
+                           :rsaEncryptedKey string,
+                           :kmsKeyName string,
+                           :sha256 string,
+                           :kmsKeyServiceAccount string},
    :displayDevice {:enableDisplay boolean},
    :confidentialInstanceConfig {:enableConfidentialCompute boolean},
+   :keyRevocationActionType string,
    :satisfiesPzs boolean,
    :status string,
    :advancedMachineFeatures {:enableNestedVirtualization boolean,
-                             :threadsPerCore integer},
+                             :threadsPerCore integer,
+                             :visibleCoreCount integer,
+                             :enableUefiNetworking boolean},
    :id string,
    :lastStopTimestamp string,
    :kind string,
@@ -783,23 +891,33 @@
             :guestOsFeatures [GuestOsFeature],
             :index integer,
             :deviceName string,
+            :architecture string,
+            :forceAttach boolean,
             :boot boolean,
             :mode string,
             :licenses [string],
             :type string,
             :source string,
             :autoDelete boolean,
+            :savedState string,
             :kind string,
             :initializeParams AttachedDiskInitializeParams,
             :diskSizeGb string,
             :diskEncryptionKey CustomerEncryptionKey,
             :shieldedInstanceInitialState InitialStateConfig}],
    :lastStartTimestamp string,
+   :sourceMachineImageEncryptionKey {:rawKey string,
+                                     :rsaEncryptedKey string,
+                                     :kmsKeyName string,
+                                     :sha256 string,
+                                     :kmsKeyServiceAccount string},
    :cpuPlatform string,
-   :reservationAffinity {:key string,
-                         :consumeReservationType string,
+   :reservationAffinity {:consumeReservationType string,
+                         :key string,
                          :values [string]},
-   :networkInterfaces [{:ipv6AccessType string,
+   :networkInterfaces [{:internalIpv6PrefixLength integer,
+                        :networkAttachment string,
+                        :ipv6AccessType string,
                         :stackType string,
                         :accessConfigs [AccessConfig],
                         :name string,
@@ -814,13 +932,14 @@
                         :fingerprint string,
                         :subnetwork string}],
    :deletionProtection boolean,
-   :metadata {:items [{:key string, :value string}],
-              :kind string,
-              :fingerprint string},
+   :metadata {:kind string,
+              :fingerprint string,
+              :items [{:key string, :value string}]},
    :fingerprint string,
+   :sourceMachineImage string,
    :shieldedInstanceIntegrityPolicy {:updateAutoLearnPolicy boolean},
    :labelFingerprint string,
-   :serviceAccounts [{:scopes [string], :email string}],
+   :serviceAccounts [{:email string, :scopes [string]}],
    :minCpuPlatform string}
   
   Updates an instance only if the necessary resources are available. This method can update only a specific set of instance properties. See Updating a running instance for a list of updatable instance properties."
@@ -875,7 +994,7 @@
 (defn setDiskAutoDelete$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setDiskAutoDelete
   
-  Required parameters: zone, deviceName, project, autoDelete, instance
+  Required parameters: autoDelete, deviceName, instance, project, zone
   
   Optional parameters: requestId
   
@@ -904,7 +1023,7 @@
 (defn getIamPolicy$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/getIamPolicy
   
-  Required parameters: zone, project, resource
+  Required parameters: project, resource, zone
   
   Optional parameters: optionsRequestedPolicyVersion
   
@@ -932,7 +1051,7 @@
 (defn getShieldedInstanceIdentity$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/getShieldedInstanceIdentity
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
   Optional parameters: none
   
@@ -957,12 +1076,39 @@
       :as :json}
      auth))))
 
+(defn suspend$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/suspend
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: discardLocalSsd, requestId
+  
+  This method suspends a running instance, saving its state to persistent storage, and allows you to resume the instance at a later time. Suspended instances have no compute costs (cores or RAM), and incur only storage charges for the saved VM memory and localSSD data. Any charged resources the virtual machine was using, such as persistent disks and static IP addresses, will continue to be charged while the instance is suspended. For more information, see Suspending and resuming an instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/suspend"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn listReferrers$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/listReferrers
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
-  Optional parameters: maxResults, pageToken, orderBy, returnPartialSuccess, filter
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves a list of resources that refer to the VM instance specified in the request. For example, if the VM instance is part of a managed or unmanaged instance group, the referrers list includes the instance group. For more information, read Viewing referrers to VM instances."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -988,7 +1134,7 @@
 (defn detachDisk$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/detachDisk
   
-  Required parameters: instance, project, deviceName, zone
+  Required parameters: deviceName, instance, project, zone
   
   Optional parameters: requestId
   
@@ -1017,7 +1163,7 @@
 (defn setServiceAccount$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setServiceAccount
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
@@ -1050,9 +1196,9 @@
 (defn getSerialPortOutput$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/getSerialPortOutput
   
-  Required parameters: project, instance, zone
+  Required parameters: instance, project, zone
   
-  Optional parameters: start, port
+  Optional parameters: port, start
   
   Returns the last 1 MB of serial port output from the specified instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1080,7 +1226,7 @@
   
   Required parameters: instance, project, zone
   
-  Optional parameters: requestId
+  Optional parameters: discardLocalSsd, requestId
   
   Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time. Stopped instances do not incur VM usage charges while they are stopped. However, resources that the VM is using, such as persistent disks and static IP addresses, will continue to be charged until they are deleted. For more information, see Stopping an instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1105,7 +1251,7 @@
 (defn setMinCpuPlatform$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMinCpuPlatform
   
-  Required parameters: project, instance, zone
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
@@ -1138,7 +1284,7 @@
 (defn addResourcePolicies$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/addResourcePolicies
   
-  Required parameters: zone, project, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
@@ -1173,7 +1319,7 @@
   
   Required parameters: project, zone
   
-  Optional parameters: filter, returnPartialSuccess, maxResults, orderBy, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of instances contained within the specified zone."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1199,7 +1345,7 @@
 (defn getGuestAttributes$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/getGuestAttributes
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
   Optional parameters: queryPath, variableKey
   
@@ -1224,10 +1370,43 @@
       :as :json}
      auth))))
 
+(defn setName$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/setName
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:name string, :currentName string}
+  
+  Sets name of an instance."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/setName"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn sendDiagnosticInterrupt$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/sendDiagnosticInterrupt
   
-  Required parameters: project, zone, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: none
   
@@ -1254,7 +1433,7 @@
 (defn updateDisplayDevice$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/updateDisplayDevice
   
-  Required parameters: instance, zone, project
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
@@ -1294,13 +1473,16 @@
   Body: 
   
   {:locationHint string,
-   :automaticRestart boolean,
-   :onHostMaintenance string,
    :preemptible boolean,
-   :nodeAffinities [{:key string, :values [string], :operator string}],
-   :minNodeCpus integer}
+   :automaticRestart boolean,
+   :nodeAffinities [{:key string, :operator string, :values [string]}],
+   :provisioningModel string,
+   :onHostMaintenance string,
+   :instanceTerminationAction string,
+   :minNodeCpus integer,
+   :localSsdRecoveryTimeout {:seconds string, :nanos integer}}
   
-  Sets an instance's scheduling options. You can only call this method on a stopped instance, that is, a VM instance that is in a `TERMINATED` state. See Instance Life Cycle for more information on the possible instance states."
+  Sets an instance's scheduling options. You can only call this method on a stopped instance, that is, a VM instance that is in a `TERMINATED` state. See Instance Life Cycle for more information on the possible instance states. For more information about setting scheduling options for a VM, see Set VM host maintenance policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -1325,11 +1507,11 @@
 (defn simulateMaintenanceEvent$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/simulateMaintenanceEvent
   
-  Required parameters: instance, zone, project
+  Required parameters: instance, project, zone
   
-  Optional parameters: none
+  Optional parameters: requestId, withExtendedNotifications
   
-  Simulates a maintenance event on the instance."
+  Simulates a host maintenance event on a VM. For more information, see Simulate a host maintenance event."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters]
@@ -1352,9 +1534,9 @@
 (defn attachDisk$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/attachDisk
   
-  Required parameters: project, instance, zone
+  Required parameters: instance, project, zone
   
-  Optional parameters: requestId, forceAttach
+  Optional parameters: forceAttach, requestId
   
   Body: 
   
@@ -1362,35 +1544,45 @@
    :guestOsFeatures [{:type string}],
    :index integer,
    :deviceName string,
+   :architecture string,
+   :forceAttach boolean,
    :boot boolean,
    :mode string,
    :licenses [string],
    :type string,
    :source string,
    :autoDelete boolean,
+   :savedState string,
    :kind string,
    :initializeParams {:description string,
+                      :provisionedThroughput string,
                       :labels {},
                       :sourceSnapshotEncryptionKey CustomerEncryptionKey,
                       :resourcePolicies [string],
                       :sourceImage string,
+                      :architecture string,
                       :sourceImageEncryptionKey CustomerEncryptionKey,
+                      :storagePool string,
+                      :resourceManagerTags {},
+                      :licenses [string],
                       :sourceSnapshot string,
                       :diskType string,
                       :onUpdateAction string,
                       :diskSizeGb string,
                       :diskName string,
+                      :replicaZones [string],
+                      :enableConfidentialCompute boolean,
                       :provisionedIops string},
    :diskSizeGb string,
-   :diskEncryptionKey {:kmsKeyName string,
-                       :kmsKeyServiceAccount string,
+   :diskEncryptionKey {:rawKey string,
+                       :rsaEncryptedKey string,
+                       :kmsKeyName string,
                        :sha256 string,
-                       :rawKey string,
-                       :rsaEncryptedKey string},
-   :shieldedInstanceInitialState {:keks [FileContentBuffer],
-                                  :dbxs [FileContentBuffer],
+                       :kmsKeyServiceAccount string},
+   :shieldedInstanceInitialState {:pk FileContentBuffer,
+                                  :keks [FileContentBuffer],
                                   :dbs [FileContentBuffer],
-                                  :pk FileContentBuffer}}
+                                  :dbxs [FileContentBuffer]}}
   
   Attaches an existing Disk resource to an instance. You must first create the disk before you can attach it. It is not possible to create and attach a disk at the same time. For more information, read Adding a persistent disk to your instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1414,18 +1606,45 @@
       :as :json}
      auth))))
 
+(defn resume$
+  "https://cloud.google.com/compute/api/reference/rest/v1/instances/resume
+  
+  Required parameters: instance, project, zone
+  
+  Optional parameters: requestId
+  
+  Resumes an instance that was suspended using the instances().suspend method."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:instance :zone :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/instances/{instance}/resume"
+     #{:instance :zone :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn setMetadata$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMetadata
   
-  Required parameters: zone, instance, project
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
   Body: 
   
-  {:items [{:key string, :value string}],
-   :kind string,
-   :fingerprint string}
+  {:kind string,
+   :fingerprint string,
+   :items [{:key string, :value string}]}
   
   Sets metadata for the specified instance to the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1485,7 +1704,7 @@
 (defn setMachineType$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setMachineType
   
-  Required parameters: project, zone, instance
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   
@@ -1524,9 +1743,11 @@
   
   Body: 
   
-  {:minCount string,
-   :count string,
+  {:count string,
+   :minCount string,
    :namePattern string,
+   :perInstanceProperties {},
+   :sourceInstanceTemplate string,
    :instanceProperties {:description string,
                         :tags Tags,
                         :labels {},
@@ -1535,9 +1756,12 @@
                         :resourcePolicies [string],
                         :privateIpv6GoogleAccess string,
                         :canIpForward boolean,
+                        :resourceManagerTags {},
                         :guestAccelerators [AcceleratorConfig],
+                        :networkPerformanceConfig NetworkPerformanceConfig,
                         :machineType string,
                         :confidentialInstanceConfig ConfidentialInstanceConfig,
+                        :keyRevocationActionType string,
                         :advancedMachineFeatures AdvancedMachineFeatures,
                         :disks [AttachedDisk],
                         :reservationAffinity ReservationAffinity,
@@ -1545,11 +1769,9 @@
                         :metadata Metadata,
                         :serviceAccounts [ServiceAccount],
                         :minCpuPlatform string},
-   :locationPolicy {:locations {}},
-   :perInstanceProperties {},
-   :sourceInstanceTemplate string}
+   :locationPolicy {:locations {}, :targetShape string}}
   
-  Creates multiple instances. Count specifies the number of instances to create."
+  Creates multiple instances. Count specifies the number of instances to create. For more information, see About bulk creation of VMs."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
@@ -1574,7 +1796,7 @@
 (defn setTags$
   "https://cloud.google.com/compute/api/reference/rest/v1/instances/setTags
   
-  Required parameters: project, instance, zone
+  Required parameters: instance, project, zone
   
   Optional parameters: requestId
   

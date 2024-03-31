@@ -1,6 +1,6 @@
 (ns happygapi.drive.replies
-  "Drive API: replies.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: replies.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/replies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -9,7 +9,7 @@
 (defn create$
   "https://developers.google.com/drive/api/reference/rest/v3/replies/create
   
-  Required parameters: commentId, fileId
+  Required parameters: fileId, commentId
   
   Optional parameters: none
   
@@ -20,17 +20,17 @@
    :modifiedTime string,
    :content string,
    :author {:displayName string,
-            :emailAddress string,
             :kind string,
             :me boolean,
             :permissionId string,
+            :emailAddress string,
             :photoLink string},
    :createdTime string,
    :id string,
    :kind string,
    :action string}
   
-  Creates a new reply to a comment."
+  Creates a reply to a comment."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"]}
   [auth parameters body]
@@ -55,7 +55,7 @@
 (defn delete$
   "https://developers.google.com/drive/api/reference/rest/v3/replies/delete
   
-  Required parameters: commentId, fileId, replyId
+  Required parameters: fileId, commentId, replyId
   
   Optional parameters: none
   
@@ -82,7 +82,7 @@
 (defn get$
   "https://developers.google.com/drive/api/reference/rest/v3/replies/get
   
-  Required parameters: commentId, fileId, replyId
+  Required parameters: fileId, commentId, replyId
   
   Optional parameters: includeDeleted
   
@@ -110,7 +110,7 @@
 (defn list$
   "https://developers.google.com/drive/api/reference/rest/v3/replies/list
   
-  Required parameters: commentId, fileId
+  Required parameters: fileId, commentId
   
   Optional parameters: includeDeleted, pageSize, pageToken
   
@@ -138,7 +138,7 @@
 (defn update$
   "https://developers.google.com/drive/api/reference/rest/v3/replies/update
   
-  Required parameters: commentId, fileId, replyId
+  Required parameters: fileId, commentId, replyId
   
   Optional parameters: none
   
@@ -149,10 +149,10 @@
    :modifiedTime string,
    :content string,
    :author {:displayName string,
-            :emailAddress string,
             :kind string,
             :me boolean,
             :permissionId string,
+            :emailAddress string,
             :photoLink string},
    :createdTime string,
    :id string,

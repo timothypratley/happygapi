@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/get
-  
-  Required parameters: achievementId
-  
-  Optional parameters: none
-  
-  Retrieves the metadata of the achievement configuration with the given ID."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:achievementId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://gamesconfiguration.googleapis.com/"
-     "games/v1configuration/achievements/{achievementId}"
-     #{:achievementId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn delete$
   "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/delete
   
@@ -58,6 +32,32 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/get
+  
+  Required parameters: achievementId
+  
+  Optional parameters: none
+  
+  Retrieves the metadata of the achievement configuration with the given ID."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:achievementId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://gamesconfiguration.googleapis.com/"
+     "games/v1configuration/achievements/{achievementId}"
+     #{:achievementId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn insert$
   "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/insert
   
@@ -69,22 +69,22 @@
   
   {:kind string,
    :token string,
-   :stepsToUnlock integer,
-   :draft {:name LocalizedStringBundle,
-           :pointValue integer,
-           :description LocalizedStringBundle,
-           :sortRank integer,
-           :kind string,
-           :iconUrl string},
-   :initialState string,
-   :achievementType string,
    :id string,
-   :published {:name LocalizedStringBundle,
-               :pointValue integer,
+   :achievementType string,
+   :initialState string,
+   :stepsToUnlock integer,
+   :draft {:kind string,
+           :name LocalizedStringBundle,
+           :description LocalizedStringBundle,
+           :pointValue integer,
+           :iconUrl string,
+           :sortRank integer},
+   :published {:kind string,
+               :name LocalizedStringBundle,
                :description LocalizedStringBundle,
-               :sortRank integer,
-               :kind string,
-               :iconUrl string}}
+               :pointValue integer,
+               :iconUrl string,
+               :sortRank integer}}
   
   Insert a new achievement configuration in this application."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -107,6 +107,32 @@
       :as :json}
      auth))))
 
+(defn list$
+  "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/list
+  
+  Required parameters: applicationId
+  
+  Optional parameters: maxResults, pageToken
+  
+  Returns a list of the achievement configurations in this application."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:applicationId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://gamesconfiguration.googleapis.com/"
+     "games/v1configuration/applications/{applicationId}/achievements"
+     #{:applicationId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/update
   
@@ -118,22 +144,22 @@
   
   {:kind string,
    :token string,
-   :stepsToUnlock integer,
-   :draft {:name LocalizedStringBundle,
-           :pointValue integer,
-           :description LocalizedStringBundle,
-           :sortRank integer,
-           :kind string,
-           :iconUrl string},
-   :initialState string,
-   :achievementType string,
    :id string,
-   :published {:name LocalizedStringBundle,
-               :pointValue integer,
+   :achievementType string,
+   :initialState string,
+   :stepsToUnlock integer,
+   :draft {:kind string,
+           :name LocalizedStringBundle,
+           :description LocalizedStringBundle,
+           :pointValue integer,
+           :iconUrl string,
+           :sortRank integer},
+   :published {:kind string,
+               :name LocalizedStringBundle,
                :description LocalizedStringBundle,
-               :sortRank integer,
-               :kind string,
-               :iconUrl string}}
+               :pointValue integer,
+               :iconUrl string,
+               :sortRank integer}}
   
   Update the metadata of the achievement configuration with the given ID."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -151,32 +177,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations/list
-  
-  Required parameters: applicationId
-  
-  Optional parameters: pageToken, maxResults
-  
-  Returns a list of the achievement configurations in this application."
-  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:applicationId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://gamesconfiguration.googleapis.com/"
-     "games/v1configuration/applications/{applicationId}/achievements"
-     #{:applicationId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

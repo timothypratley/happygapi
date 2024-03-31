@@ -6,41 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn updateConfig$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/updateConfig
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:projectConfig {:pubsubConfigs {},
-                   :enablePrivateKeyCheck boolean,
-                   :name string},
-   :updateMask string}
-  
-  Updates the Cloud Source Repositories configuration of the project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://sourcerepo.googleapis.com/"
-     "v1/{+name}/config"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn getConfig$
   "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/getConfig
   
@@ -62,6 +27,41 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn updateConfig$
+  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/updateConfig
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:projectConfig {:name string,
+                   :pubsubConfigs {},
+                   :enablePrivateKeyCheck boolean},
+   :updateMask string}
+  
+  Updates the Cloud Source Repositories configuration of the project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://sourcerepo.googleapis.com/"
+     "v1/{+name}/config"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -105,13 +105,13 @@
   
   Body: 
   
-  {:updateMask string,
-   :policy {:auditConfigs [AuditConfig],
-            :etag string,
-            :version integer,
-            :bindings [Binding]}}
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
   
-  Sets the access control policy on the specified resource. Replaces any existing policy."
+  Sets the IAM policy on the specified resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"]}
   [auth parameters body]
@@ -142,11 +142,11 @@
   
   Body: 
   
-  {:repo {:url string,
-          :mirrorConfig MirrorConfig,
-          :pubsubConfigs {},
+  {:repo {:name string,
           :size string,
-          :name string},
+          :url string,
+          :mirrorConfig MirrorConfig,
+          :pubsubConfigs {}},
    :updateMask string}
   
   Updates information about a repo."
@@ -214,11 +214,11 @@
   
   Body: 
   
-  {:url string,
-   :mirrorConfig {:url string, :webhookId string, :deployKeyId string},
-   :pubsubConfigs {},
+  {:name string,
    :size string,
-   :name string}
+   :url string,
+   :mirrorConfig {:url string, :webhookId string, :deployKeyId string},
+   :pubsubConfigs {}}
   
   Creates a repo in the given project with the given name. If the named repository already exists, `CreateRepo` returns `ALREADY_EXISTS`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -308,7 +308,7 @@
   
   Optional parameters: options.requestedPolicyVersion
   
-  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  Gets the IAM policy policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/source.full_control"
             "https://www.googleapis.com/auth/source.read_only"

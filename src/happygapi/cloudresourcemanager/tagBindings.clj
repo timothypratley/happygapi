@@ -11,9 +11,9 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, parent, pageSize
+  Optional parameters: parent, pageSize, pageToken
   
-  Lists the TagBindings for the given cloud resource, as specified with `parent`. NOTE: The `parent` field is expected to be a full resource name: https://cloud.google.com/apis/design/resource_names#full_resource_name"
+  Lists the TagBindings for the given Google Cloud resource, as specified with `parent`. NOTE: The `parent` field is expected to be a full resource name: https://cloud.google.com/apis/design/resource_names#full_resource_name"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"]}
   [auth parameters]
@@ -42,9 +42,12 @@
   
   Body: 
   
-  {:name string, :parent string, :tagValue string}
+  {:name string,
+   :parent string,
+   :tagValue string,
+   :tagValueNamespacedName string}
   
-  Creates a TagBinding between a TagValue and a cloud resource (currently project, folder, or organization)."
+  Creates a TagBinding between a TagValue and a Google Cloud resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

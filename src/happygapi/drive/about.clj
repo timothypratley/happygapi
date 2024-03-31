@@ -1,6 +1,6 @@
 (ns happygapi.drive.about
-  "Drive API: about.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: about.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/about"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]

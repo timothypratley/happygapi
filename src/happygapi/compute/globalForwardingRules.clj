@@ -6,6 +6,34 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn list$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/list
+  
+  Required parameters: project
+  
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
+  
+  Retrieves a list of GlobalForwardingRule resources available to the specified project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"
+            "https://www.googleapis.com/auth/compute.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:project})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/forwardingRules"
+     #{:project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/get
   
@@ -34,10 +62,10 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/patch
+(defn insert$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/insert
   
-  Required parameters: project, forwardingRule
+  Required parameters: project
   
   Optional parameters: requestId
   
@@ -45,10 +73,13 @@
   
   {:description string,
    :labels {},
+   :sourceIpRanges [string],
+   :allowPscGlobalAccess boolean,
    :creationTimestamp string,
    :name string,
    :IPProtocol string,
    :pscConnectionId string,
+   :baseForwardingRule string,
    :allowGlobalAccess boolean,
    :backendService string,
    :selfLink string,
@@ -57,11 +88,12 @@
    :region string,
    :serviceLabel string,
    :ports [string],
-   :serviceDirectoryRegistrations [{:service string,
-                                    :namespace string,
+   :serviceDirectoryRegistrations [{:namespace string,
+                                    :service string,
                                     :serviceDirectoryRegion string}],
    :id string,
    :kind string,
+   :noAutomateDnsZone boolean,
    :metadataFilters [{:filterMatchCriteria string,
                       :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
@@ -77,17 +109,17 @@
    :subnetwork string,
    :labelFingerprint string}
   
-  Updates the specified forwarding rule with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules. Currently, you can only patch the network_tier field."
+  Creates a GlobalForwardingRule resource in the specified project using the data included in the request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :forwardingRule})]}
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/forwardingRules/{forwardingRule}"
-     #{:project :forwardingRule}
+     "projects/{project}/global/forwardingRules"
+     #{:project}
      parameters)
     (merge-with
      merge
@@ -117,67 +149,6 @@
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/forwardingRules/{forwardingRule}"
      #{:project :forwardingRule}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn setLabels$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/setLabels
-  
-  Required parameters: resource, project
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labelFingerprint string, :labels {}}
-  
-  Sets the labels on the specified resource. To learn more about labels, read the Labeling resources documentation."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project :resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/forwardingRules/{resource}/setLabels"
-     #{:project :resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/list
-  
-  Required parameters: project
-  
-  Optional parameters: pageToken, returnPartialSuccess, maxResults, filter, orderBy
-  
-  Retrieves a list of GlobalForwardingRule resources available to the specified project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"
-            "https://www.googleapis.com/auth/compute.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:project})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/forwardingRules"
-     #{:project}
      parameters)
     (merge-with
      merge
@@ -220,10 +191,10 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/insert
+(defn patch$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/patch
   
-  Required parameters: project
+  Required parameters: forwardingRule, project
   
   Optional parameters: requestId
   
@@ -231,10 +202,13 @@
   
   {:description string,
    :labels {},
+   :sourceIpRanges [string],
+   :allowPscGlobalAccess boolean,
    :creationTimestamp string,
    :name string,
    :IPProtocol string,
    :pscConnectionId string,
+   :baseForwardingRule string,
    :allowGlobalAccess boolean,
    :backendService string,
    :selfLink string,
@@ -243,11 +217,12 @@
    :region string,
    :serviceLabel string,
    :ports [string],
-   :serviceDirectoryRegistrations [{:service string,
-                                    :namespace string,
+   :serviceDirectoryRegistrations [{:namespace string,
+                                    :service string,
                                     :serviceDirectoryRegion string}],
    :id string,
    :kind string,
+   :noAutomateDnsZone boolean,
    :metadataFilters [{:filterMatchCriteria string,
                       :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
@@ -263,17 +238,50 @@
    :subnetwork string,
    :labelFingerprint string}
   
-  Creates a GlobalForwardingRule resource in the specified project using the data included in the request."
+  Updates the specified forwarding rule with the data included in the request. This method supports PATCH semantics and uses the JSON merge patch format and processing rules. Currently, you can only patch the network_tier field."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  {:pre [(util/has-keys? parameters #{:project :forwardingRule})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/forwardingRules/{forwardingRule}"
+     #{:project :forwardingRule}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setLabels$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalForwardingRules/setLabels
+  
+  Required parameters: project, resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labels {}, :labelFingerprint string}
+  
+  Sets the labels on the specified resource. To learn more about labels, read the Labeling resources documentation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:project :resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/forwardingRules"
-     #{:project}
+     "projects/{project}/global/forwardingRules/{resource}/setLabels"
+     #{:project :resource}
      parameters)
     (merge-with
      merge

@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: threatTypes, hashPrefix
+  Optional parameters: hashPrefix, threatTypes
   
   Gets the full hashes that match the requested hash prefix. This is used after a hash prefix is looked up in a threatList and there is a match. The client side threatList only holds partial hashes so the client must query this method to determine if there is a full hash match of a threat."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

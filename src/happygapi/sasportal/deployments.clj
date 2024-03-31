@@ -14,7 +14,8 @@
   Optional parameters: none
   
   Returns a requested deployment."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -41,10 +42,11 @@
   
   Body: 
   
-  {:installerId string, :encodedDevice string}
+  {:encodedDevice string, :installerId string}
   
   Updates a signed device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -52,6 +54,39 @@
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/{+name}:updateSigned"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn devices-move$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:destination string}
+  
+  Moves a device under another node or customer."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/{+name}:move"
      #{:name}
      parameters)
     (merge-with
@@ -84,22 +119,25 @@
                   :isSigned boolean,
                   :airInterface SasPortalDeviceAirInterface,
                   :model SasPortalDeviceModel},
-   :grantRangeAllowlists [{:lowFrequencyMhz number,
-                           :highFrequencyMhz number}],
+   :grantRangeAllowlists [{:highFrequencyMhz number,
+                           :lowFrequencyMhz number}],
    :displayName string,
    :name string,
    :state string,
-   :deviceMetadata {:commonChannelGroup string,
+   :deviceMetadata {:antennaModel string,
+                    :nrqzValidated boolean,
+                    :commonChannelGroup string,
                     :interferenceCoordinationGroup string,
-                    :antennaModel string},
-   :grants [{:grantId string,
-             :moveList [SasPortalDpaMoveList],
-             :channelType string,
-             :expireTime string,
-             :frequencyRange SasPortalFrequencyRange,
+                    :nrqzValidation SasPortalNrqzValidation},
+   :grants [{:moveList [SasPortalDpaMoveList],
+             :lastHeartbeatTransmitExpireTime string,
              :state string,
+             :grantId string,
+             :frequencyRange SasPortalFrequencyRange,
+             :expireTime string,
              :suspensionReason [string],
-             :maxEirp number}],
+             :maxEirp number,
+             :channelType string}],
    :preloadedConfig {:category string,
                      :installationParams SasPortalInstallationParams,
                      :state string,
@@ -110,12 +148,13 @@
                      :isSigned boolean,
                      :airInterface SasPortalDeviceAirInterface,
                      :model SasPortalDeviceModel},
-   :currentChannels [{:score number,
-                      :frequencyRange SasPortalFrequencyRange}],
+   :currentChannels [{:frequencyRange SasPortalFrequencyRange,
+                      :score number}],
    :fccId string}
   
   Updates a device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -157,7 +196,8 @@
             :fccId string}}
   
   Signs a device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -185,7 +225,8 @@
   Optional parameters: none
   
   Deletes a device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
@@ -203,38 +244,6 @@
       :as :json}
      auth))))
 
-(defn devices-move$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/move
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:destination string}
-  
-  Moves a device under another node or customer."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/{+name}:move"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn devices-get$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/deployments/devices/get
   
@@ -243,7 +252,8 @@
   Optional parameters: none
   
   Gets details about a device."
-  {:scopes ["https://www.googleapis.com/auth/userinfo.email"]}
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response

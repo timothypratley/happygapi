@@ -42,7 +42,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageToken, pageSize
   
   Lists workspaces for the user."
   {:scopes ["https://www.googleapis.com/auth/drive"

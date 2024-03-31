@@ -1,13 +1,85 @@
 (ns happygapi.storagetransfer.transferJobs
   "Storage Transfer API: transferJobs.
-  Transfers data from external data sources to a Google Cloud Storage bucket or between Google Cloud Storage buckets.
+  Transfers data from external data sources to a Google Cloud Storage bucket or between Google Cloud Storage buckets. 
   See: https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn run$
-  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/run
+(defn create$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/create
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:creationTime string,
+   :description string,
+   :schedule {:scheduleStartDate Date,
+              :scheduleEndDate Date,
+              :startTimeOfDay TimeOfDay,
+              :endTimeOfDay TimeOfDay,
+              :repeatInterval string},
+   :loggingConfig {:logActions [string],
+                   :logActionStates [string],
+                   :enableOnpremGcsTransferLogs boolean},
+   :name string,
+   :lastModificationTime string,
+   :eventStream {:name string,
+                 :eventStreamStartTime string,
+                 :eventStreamExpirationTime string},
+   :latestOperationName string,
+   :deletionTime string,
+   :replicationSpec {:gcsDataSource GcsData,
+                     :gcsDataSink GcsData,
+                     :objectConditions ObjectConditions,
+                     :transferOptions TransferOptions},
+   :status string,
+   :notificationConfig {:pubsubTopic string,
+                        :eventTypes [string],
+                        :payloadFormat string},
+   :projectId string,
+   :transferSpec {:awsS3CompatibleDataSource AwsS3CompatibleData,
+                  :sourceAgentPoolName string,
+                  :transferOptions TransferOptions,
+                  :posixDataSink PosixFilesystem,
+                  :gcsDataSource GcsData,
+                  :transferManifest TransferManifest,
+                  :hdfsDataSource HdfsData,
+                  :sinkAgentPoolName string,
+                  :httpDataSource HttpData,
+                  :posixDataSource PosixFilesystem,
+                  :objectConditions ObjectConditions,
+                  :awsS3DataSource AwsS3Data,
+                  :gcsDataSink GcsData,
+                  :gcsIntermediateDataLocation GcsData,
+                  :azureBlobStorageDataSource AzureBlobStorageData}}
+  
+  Creates a transfer job that runs periodically."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://storagetransfer.googleapis.com/"
+     "v1/transferJobs"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn patch$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/patch
   
   Required parameters: jobName
   
@@ -15,17 +87,32 @@
   
   Body: 
   
-  {:projectId string}
+  {:projectId string,
+   :transferJob {:creationTime string,
+                 :description string,
+                 :schedule Schedule,
+                 :loggingConfig LoggingConfig,
+                 :name string,
+                 :lastModificationTime string,
+                 :eventStream EventStream,
+                 :latestOperationName string,
+                 :deletionTime string,
+                 :replicationSpec ReplicationSpec,
+                 :status string,
+                 :notificationConfig NotificationConfig,
+                 :projectId string,
+                 :transferSpec TransferSpec},
+   :updateTransferJobFieldMask string}
   
-  Attempts to start a new TransferOperation for the current TransferJob. A TransferJob has a maximum of one active TransferOperation. If this method is called while a TransferOperation is active, an error wil be returned."
+  Updates a transfer job. Updating a job's transfer spec does not affect transfer operations that are running already. **Note:** The job's status field can be modified using this RPC (for example, to set a job's status to DELETED, DISABLED, or ENABLED)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:jobName})]}
   (util/get-response
-   (http/post
+   (http/patch
     (util/get-url
      "https://storagetransfer.googleapis.com/"
-     "v1/{+jobName}:run"
+     "v1/{+jobName}"
      #{:jobName}
      parameters)
     (merge-with
@@ -69,7 +156,7 @@
   
   Required parameters: filter
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists transfer jobs."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -90,8 +177,8 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/patch
+(defn run$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/run
   
   Required parameters: jobName
   
@@ -99,30 +186,17 @@
   
   Body: 
   
-  {:updateTransferJobFieldMask string,
-   :projectId string,
-   :transferJob {:creationTime string,
-                 :description string,
-                 :schedule Schedule,
-                 :loggingConfig LoggingConfig,
-                 :name string,
-                 :lastModificationTime string,
-                 :latestOperationName string,
-                 :deletionTime string,
-                 :status string,
-                 :notificationConfig NotificationConfig,
-                 :projectId string,
-                 :transferSpec TransferSpec}}
+  {:projectId string}
   
-  Updates a transfer job. Updating a job's transfer spec does not affect transfer operations that are running already. **Note:** The job's status field can be modified using this RPC (for example, to set a job's status to DELETED, DISABLED, or ENABLED)."
+  Starts a new operation for the specified transfer job. A `TransferJob` has a maximum of one active `TransferOperation`. If this method is called while a `TransferOperation` is active, an error is returned."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:jobName})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://storagetransfer.googleapis.com/"
-     "v1/{+jobName}"
+     "v1/{+jobName}:run"
      #{:jobName}
      parameters)
     (merge-with
@@ -135,57 +209,27 @@
       :as :json}
      auth))))
 
-(defn create$
-  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/create
+(defn delete$
+  "https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferJobs/delete
   
-  Required parameters: none
+  Required parameters: jobName, projectId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:creationTime string,
-   :description string,
-   :schedule {:repeatInterval string,
-              :scheduleEndDate Date,
-              :startTimeOfDay TimeOfDay,
-              :scheduleStartDate Date,
-              :endTimeOfDay TimeOfDay},
-   :loggingConfig {:enableOnpremGcsTransferLogs boolean},
-   :name string,
-   :lastModificationTime string,
-   :latestOperationName string,
-   :deletionTime string,
-   :status string,
-   :notificationConfig {:eventTypes [string],
-                        :pubsubTopic string,
-                        :payloadFormat string},
-   :projectId string,
-   :transferSpec {:httpDataSource HttpData,
-                  :posixDataSource PosixFilesystem,
-                  :gcsDataSource GcsData,
-                  :transferOptions TransferOptions,
-                  :awsS3DataSource AwsS3Data,
-                  :gcsDataSink GcsData,
-                  :azureBlobStorageDataSource AzureBlobStorageData,
-                  :objectConditions ObjectConditions}}
-  
-  Creates a transfer job that runs periodically."
+  Deletes a transfer job. Deleting a transfer job sets its status to DELETED."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:jobName :projectId})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://storagetransfer.googleapis.com/"
-     "v1/transferJobs"
-     #{}
+     "v1/{+jobName}"
+     #{:jobName :projectId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

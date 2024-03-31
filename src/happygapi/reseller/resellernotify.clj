@@ -6,32 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn unregister$
-  "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/resellernotify/unregister
-  
-  Required parameters: none
-  
-  Optional parameters: serviceAccountEmailAddress
-  
-  Unregisters a Reseller for receiving notifications."
-  {:scopes ["https://www.googleapis.com/auth/apps.order"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://reseller.googleapis.com/"
-     "apps/reseller/v1/resellernotify/unregister"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn getwatchdetails$
   "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/resellernotify/getwatchdetails
   
@@ -75,6 +49,32 @@
     (util/get-url
      "https://reseller.googleapis.com/"
      "apps/reseller/v1/resellernotify/register"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn unregister$
+  "https://developers.google.com/google-apps/reseller/api/reference/rest/v1/resellernotify/unregister
+  
+  Required parameters: none
+  
+  Optional parameters: serviceAccountEmailAddress
+  
+  Unregisters a Reseller for receiving notifications."
+  {:scopes ["https://www.googleapis.com/auth/apps.order"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://reseller.googleapis.com/"
+     "apps/reseller/v1/resellernotify/unregister"
      #{}
      parameters)
     (merge-with

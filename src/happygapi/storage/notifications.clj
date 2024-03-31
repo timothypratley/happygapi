@@ -11,7 +11,7 @@
   
   Required parameters: bucket, notification
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Permanently deletes a notification subscription."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -39,7 +39,7 @@
   
   Required parameters: bucket, notification
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   View a notification configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -69,7 +69,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Body: 
   
@@ -111,7 +111,7 @@
   
   Required parameters: bucket
   
-  Optional parameters: provisionalUserProject, userProject
+  Optional parameters: userProject
   
   Retrieves a list of notification subscriptions for a given bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

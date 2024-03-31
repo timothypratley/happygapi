@@ -1,6 +1,6 @@
 (ns happygapi.drive.channels
-  "Drive API: channels.
-  Manages files in Drive including uploading, downloading, searching, detecting changes, and updating sharing permissions.
+  "Google Drive API: channels.
+  The Google Drive API allows clients to access resources from Google Drive.
   See: https://developers.google.com/drive/api/reference/rest/v3/channels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
@@ -26,7 +26,7 @@
    :id string,
    :kind string}
   
-  Stop watching resources through this channel"
+  Stops watching resources through this channel."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.appdata"
             "https://www.googleapis.com/auth/drive.file"

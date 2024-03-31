@@ -37,7 +37,7 @@
   
   Required parameters: none
   
-  Optional parameters: volumeId, source, docId
+  Optional parameters: docId, source, volumeId
   
   Initiates sharing of the content with the user's family. Empty response indicates success."
   {:scopes ["https://www.googleapis.com/auth/books"]}
@@ -63,7 +63,7 @@
   
   Required parameters: none
   
-  Optional parameters: source, volumeId, docId
+  Optional parameters: docId, source, volumeId
   
   Initiates revoking content that has already been shared with the user's family. Empty response indicates success."
   {:scopes ["https://www.googleapis.com/auth/books"]}

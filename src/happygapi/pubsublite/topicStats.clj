@@ -6,6 +6,40 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
+(defn projects-locations-topics-computeMessageStats$
+  "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeMessageStats
+  
+  Required parameters: topic
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:partition string,
+   :startCursor {:offset string},
+   :endCursor {:offset string}}
+  
+  Compute statistics about a range of messages in a given topic and partition."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:topic})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://pubsublite.googleapis.com/"
+     "v1/topicStats/{+topic}:computeMessageStats"
+     #{:topic}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn projects-locations-topics-computeHeadCursor$
   "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeHeadCursor
   
@@ -47,7 +81,7 @@
   
   Body: 
   
-  {:target {:eventTime string, :publishTime string}, :partition string}
+  {:partition string, :target {:publishTime string, :eventTime string}}
   
   Compute the corresponding cursor for a publish or event time in a topic partition."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -58,40 +92,6 @@
     (util/get-url
      "https://pubsublite.googleapis.com/"
      "v1/topicStats/{+topic}:computeTimeCursor"
-     #{:topic}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn projects-locations-topics-computeMessageStats$
-  "https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats/projects/locations/topics/computeMessageStats
-  
-  Required parameters: topic
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:partition string,
-   :endCursor {:offset string},
-   :startCursor {:offset string}}
-  
-  Compute statistics about a range of messages in a given topic and partition."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:topic})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://pubsublite.googleapis.com/"
-     "v1/topicStats/{+topic}:computeMessageStats"
      #{:topic}
      parameters)
     (merge-with

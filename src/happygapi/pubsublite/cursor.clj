@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:cursor {:offset string}, :partition string}
+  {:partition string, :cursor {:offset string}}
   
   Updates the committed cursor."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -43,7 +43,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Returns all committed cursor information for a subscription."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

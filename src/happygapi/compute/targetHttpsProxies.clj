@@ -9,11 +9,11 @@
 (defn get$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/get
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: none
   
-  Returns the specified TargetHttpsProxy resource. Gets a list of available target HTTPS proxies by making a list() request."
+  Returns the specified TargetHttpsProxy resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -47,10 +47,12 @@
    :creationTimestamp string,
    :urlMap string,
    :name string,
+   :httpKeepAliveTimeoutSec integer,
    :quicOverride string,
    :selfLink string,
    :serverTlsPolicy string,
    :region string,
+   :certificateMap string,
    :id string,
    :kind string,
    :sslPolicy string,
@@ -150,7 +152,7 @@
 (defn patch$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/patch
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -160,10 +162,12 @@
    :creationTimestamp string,
    :urlMap string,
    :name string,
+   :httpKeepAliveTimeoutSec integer,
    :quicOverride string,
    :selfLink string,
    :serverTlsPolicy string,
    :region string,
+   :certificateMap string,
    :id string,
    :kind string,
    :sslPolicy string,
@@ -232,9 +236,9 @@
   
   Required parameters: project
   
-  Optional parameters: filter, orderBy, includeAllScopes, maxResults, returnPartialSuccess, pageToken
+  Optional parameters: filter, includeAllScopes, maxResults, orderBy, pageToken, returnPartialSuccess, serviceProjectNumber
   
-  Retrieves the list of all TargetHttpsProxy resources, regional and global, available to the specified project."
+  Retrieves the list of all TargetHttpsProxy resources, regional and global, available to the specified project. To prevent failure, Google recommends that you set the `returnPartialSuccess` parameter to `true`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -258,7 +262,7 @@
 (defn setSslCertificates$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setSslCertificates
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -291,7 +295,7 @@
 (defn delete$
   "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/delete
   
-  Required parameters: targetHttpsProxy, project
+  Required parameters: project, targetHttpsProxy
   
   Optional parameters: requestId
   
@@ -320,7 +324,7 @@
   
   Required parameters: project
   
-  Optional parameters: filter, pageToken, maxResults, returnPartialSuccess, orderBy
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of TargetHttpsProxy resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -338,6 +342,39 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn setCertificateMap$
+  "https://cloud.google.com/compute/api/reference/rest/v1/targetHttpsProxies/setCertificateMap
+  
+  Required parameters: project, targetHttpsProxy
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:certificateMap string}
+  
+  Changes the Certificate Map for TargetHttpsProxy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:targetHttpsProxy :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/targetHttpsProxies/{targetHttpsProxy}/setCertificateMap"
+     #{:targetHttpsProxy :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

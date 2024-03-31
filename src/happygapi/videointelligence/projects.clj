@@ -6,22 +6,22 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-operations-delete$
-  "https://cloud.google.com/video-intelligence/docs/api/reference/rest/v1/projects/locations/operations/delete
+(defn locations-operations-list$
+  "https://cloud.google.com/video-intelligence/docs/api/reference/rest/v1/projects/locations/operations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: filter, pageSize, pageToken
   
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://videointelligence.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}/operations"
      #{:name}
      parameters)
     (merge-with
@@ -58,22 +58,22 @@
       :as :json}
      auth))))
 
-(defn locations-operations-list$
-  "https://cloud.google.com/video-intelligence/docs/api/reference/rest/v1/projects/locations/operations/list
+(defn locations-operations-delete$
+  "https://cloud.google.com/video-intelligence/docs/api/reference/rest/v1/projects/locations/operations/delete
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://videointelligence.googleapis.com/"
-     "v1/{+name}/operations"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with

@@ -15,42 +15,42 @@
   
   Body: 
   
-  {:contentOwnerDetails {:contentOwner string, :timeLinked string},
+  {:contentOwnerDetails {:timeLinked string, :contentOwner string},
    :localizations {},
-   :brandingSettings {:channel ChannelSettings,
-                      :image ImageSettings,
+   :brandingSettings {:image ImageSettings,
                       :hints [PropertyValue],
+                      :channel ChannelSettings,
                       :watch WatchSettings},
-   :snippet {:country string,
-             :publishedAt string,
-             :thumbnails ThumbnailDetails,
-             :title string,
-             :localized ChannelLocalization,
-             :description string,
+   :snippet {:publishedAt string,
              :defaultLanguage string,
-             :customUrl string},
+             :customUrl string,
+             :description string,
+             :title string,
+             :thumbnails ThumbnailDetails,
+             :localized ChannelLocalization,
+             :country string},
    :etag string,
    :auditDetails {:contentIdClaimsGoodStanding boolean,
-                  :communityGuidelinesGoodStanding boolean,
-                  :copyrightStrikesGoodStanding boolean},
+                  :copyrightStrikesGoodStanding boolean,
+                  :communityGuidelinesGoodStanding boolean},
    :conversionPings {:pings [ChannelConversionPing]},
-   :statistics {:hiddenSubscriberCount boolean,
+   :statistics {:commentCount string,
                 :viewCount string,
-                :videoCount string,
                 :subscriberCount string,
-                :commentCount string},
+                :hiddenSubscriberCount boolean,
+                :videoCount string},
    :status {:longUploadsStatus string,
-            :isLinked boolean,
-            :madeForKids boolean,
             :selfDeclaredMadeForKids boolean,
-            :privacyStatus string},
+            :madeForKids boolean,
+            :privacyStatus string,
+            :isLinked boolean},
    :id string,
    :kind string,
-   :contentDetails {:relatedPlaylists {:favorites string,
-                                       :likes string,
+   :contentDetails {:relatedPlaylists {:likes string,
+                                       :watchLater string,
                                        :uploads string,
                                        :watchHistory string,
-                                       :watchLater string}},
+                                       :favorites string}},
    :topicDetails {:topicIds [string], :topicCategories [string]}}
   
   Updates an existing resource."
@@ -81,7 +81,7 @@
   
   Required parameters: part
   
-  Optional parameters: managedByMe, categoryId, forUsername, pageToken, mine, hl, id, mySubscribers, onBehalfOfContentOwner, maxResults
+  Optional parameters: managedByMe, categoryId, forUsername, pageToken, mine, hl, id, forHandle, mySubscribers, onBehalfOfContentOwner, maxResults
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"

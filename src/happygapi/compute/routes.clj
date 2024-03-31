@@ -11,7 +11,7 @@
   
   Required parameters: project
   
-  Optional parameters: returnPartialSuccess, filter, orderBy, maxResults, pageToken
+  Optional parameters: filter, maxResults, orderBy, pageToken, returnPartialSuccess
   
   Retrieves the list of Route resources available to the specified project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -41,7 +41,7 @@
   
   Optional parameters: none
   
-  Returns the specified Route resource. Gets a list of available routes by making a list() request."
+  Returns the specified Route resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/compute"
             "https://www.googleapis.com/auth/compute.readonly"]}
@@ -49,33 +49,6 @@
   {:pre [(util/has-keys? parameters #{:route :project})]}
   (util/get-response
    (http/get
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "projects/{project}/global/routes/{route}"
-     #{:route :project}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/routes/delete
-  
-  Required parameters: route, project
-  
-  Optional parameters: requestId
-  
-  Deletes the specified Route resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:route :project})]}
-  (util/get-response
-   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/global/routes/{route}"
@@ -106,17 +79,21 @@
    :creationTimestamp string,
    :nextHopPeering string,
    :nextHopIlb string,
+   :routeStatus string,
    :name string,
    :selfLink string,
    :warnings [{:code string,
                :message string,
-               :data [{:value string, :key string}]}],
+               :data [{:key string, :value string}]}],
    :nextHopVpnTunnel string,
    :priority integer,
    :id string,
    :kind string,
+   :nextHopHub string,
    :network string,
+   :asPaths [{:pathSegmentType string, :asLists [integer]}],
    :nextHopGateway string,
+   :routeType string,
    :destRange string}
   
   Creates a Route resource in the specified project using the data included in the request."
@@ -136,6 +113,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/routes/delete
+  
+  Required parameters: project, route
+  
+  Optional parameters: requestId
+  
+  Deletes the specified Route resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:route :project})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/global/routes/{route}"
+     #{:route :project}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

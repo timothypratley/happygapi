@@ -15,10 +15,11 @@
   
   Body: 
   
-  {:parent string,
-   :requests [{:imageContext ImageContext,
+  {:requests [{:image Image,
                :features [Feature],
-               :image Image}]}
+               :imageContext ImageContext}],
+   :parent string,
+   :labels {}}
   
   Run image detection and annotation for a batch of images."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -51,11 +52,12 @@
   
   Body: 
   
-  {:requests [{:imageContext ImageContext,
+  {:requests [{:image Image,
                :features [Feature],
-               :image Image}],
+               :imageContext ImageContext}],
+   :outputConfig {:gcsDestination GcsDestination, :batchSize integer},
    :parent string,
-   :outputConfig {:batchSize integer, :gcsDestination GcsDestination}}
+   :labels {}}
   
   Run asynchronous image detection and annotation for a list of images. Progress and results can be retrieved through the `google.longrunning.Operations` interface. `Operation.metadata` contains `OperationMetadata` (metadata). `Operation.response` contains `AsyncBatchAnnotateImagesResponse` (results). This service will write image annotation outputs to json files in customer GCS bucket, each json file containing BatchAnnotateImagesResponse proto."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

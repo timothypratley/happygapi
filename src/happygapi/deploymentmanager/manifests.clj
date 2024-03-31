@@ -9,7 +9,7 @@
 (defn get$
   "https://cloud.google.com/deployment-managerapi/reference/rest/v2/manifests/get
   
-  Required parameters: deployment, manifest, project
+  Required parameters: project, deployment, manifest
   
   Optional parameters: none
   
@@ -40,7 +40,7 @@
   
   Required parameters: project, deployment
   
-  Optional parameters: pageToken, filter, maxResults, orderBy
+  Optional parameters: maxResults, pageToken, filter, orderBy
   
   Lists all manifests for a given deployment."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

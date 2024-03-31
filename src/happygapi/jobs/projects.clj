@@ -33,78 +33,24 @@
       :as :json}
      auth))))
 
-(defn tenants-get$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/get
+(defn tenants-completeQuery$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/completeQuery
   
-  Required parameters: name
+  Required parameters: tenant
   
-  Optional parameters: none
+  Optional parameters: query, languageCodes, pageSize, company, scope, type
   
-  Retrieves specified tenant."
+  Completes the specified prefix with keyword suggestions. Intended for use by a job search auto-complete search box."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/jobs"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:tenant})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://jobs.googleapis.com/"
-     "v4/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn tenants-list$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists all tenants associated with the project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/jobs"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://jobs.googleapis.com/"
-     "v4/{+parent}/tenants"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn tenants-delete$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes specified tenant."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/jobs"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://jobs.googleapis.com/"
-     "v4/{+name}"
-     #{:name}
+     "v4/{+tenant}:completeQuery"
+     #{:tenant}
      parameters)
     (merge-with
      merge
@@ -147,6 +93,33 @@
       :as :json}
      auth))))
 
+(defn tenants-get$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves specified tenant."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/jobs"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://jobs.googleapis.com/"
+     "v4/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn tenants-patch$
   "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/patch
   
@@ -180,24 +153,24 @@
       :as :json}
      auth))))
 
-(defn tenants-completeQuery$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/completeQuery
+(defn tenants-delete$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/delete
   
-  Required parameters: tenant
+  Required parameters: name
   
-  Optional parameters: scope, company, pageSize, query, type, languageCodes
+  Optional parameters: none
   
-  Completes the specified prefix with keyword suggestions. Intended for use by a job search auto-complete search box."
+  Deletes specified tenant."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/jobs"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:tenant})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/delete
     (util/get-url
      "https://jobs.googleapis.com/"
-     "v4/{+tenant}:completeQuery"
-     #{:tenant}
+     "v4/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -207,38 +180,28 @@
       :as :json}
      auth))))
 
-(defn tenants-clientEvents-create$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/clientEvents/create
+(defn tenants-list$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize
   
-  Body: 
-  
-  {:eventNotes string,
-   :requestId string,
-   :jobEvent {:type string, :jobs [string]},
-   :eventId string,
-   :createTime string}
-  
-  Report events issued when end user interacts with customer's application that uses Cloud Talent Solution. You may inspect the created events in [self service tools](https://console.cloud.google.com/talent-solution/overview). [Learn more](https://cloud.google.com/talent-solution/docs/management-tools) about self service tools."
+  Lists all tenants associated with the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/jobs"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://jobs.googleapis.com/"
-     "v4/{+parent}/clientEvents"
+     "v4/{+parent}/tenants"
      #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -289,24 +252,24 @@
       :as :json}
      auth))))
 
-(defn tenants-companies-list$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/companies/list
+(defn tenants-companies-get$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/companies/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageToken, requireOpenJobs, pageSize
+  Optional parameters: none
   
-  Lists all companies associated with the project."
+  Retrieves specified company."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/jobs"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://jobs.googleapis.com/"
-     "v4/{+parent}/companies"
-     #{:parent}
+     "v4/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -388,28 +351,65 @@
       :as :json}
      auth))))
 
-(defn tenants-companies-get$
-  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/companies/get
+(defn tenants-companies-list$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/companies/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, pageSize, requireOpenJobs
   
-  Retrieves specified company."
+  Lists all companies associated with the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/jobs"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://jobs.googleapis.com/"
-     "v4/{+name}"
-     #{:name}
+     "v4/{+parent}/companies"
+     #{:parent}
      parameters)
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn tenants-clientEvents-create$
+  "https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects/tenants/clientEvents/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requestId string,
+   :eventId string,
+   :createTime string,
+   :jobEvent {:type string, :jobs [string]},
+   :eventNotes string}
+  
+  Report events issued when end user interacts with customer's application that uses Cloud Talent Solution. You may inspect the created events in [self service tools](https://console.cloud.google.com/talent-solution/overview). [Learn more](https://cloud.google.com/talent-solution/docs/management-tools) about self service tools."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/jobs"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://jobs.googleapis.com/"
+     "v4/{+parent}/clientEvents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -464,7 +464,7 @@
    :name string,
    :customAttributes {},
    :jobEndTime string,
-   :derivedInfo {:jobCategories [string], :locations [Location]},
+   :derivedInfo {:locations [Location], :jobCategories [string]},
    :responsibilities string,
    :companyDisplayName string,
    :title string,
@@ -474,12 +474,12 @@
    :languageCode string,
    :postingUpdateTime string,
    :postingRegion string,
-   :applicationInfo {:instruction string,
-                     :uris [string],
-                     :emails [string]},
+   :applicationInfo {:emails [string],
+                     :instruction string,
+                     :uris [string]},
    :jobStartTime string,
-   :compensationInfo {:annualizedBaseCompensationRange CompensationRange,
-                      :entries [CompensationEntry],
+   :compensationInfo {:entries [CompensationEntry],
+                      :annualizedBaseCompensationRange CompensationRange,
                       :annualizedTotalCompensationRange CompensationRange},
    :employmentTypes [string],
    :visibility string,
@@ -518,8 +518,7 @@
   
   Body: 
   
-  {:updateMask string,
-   :jobs [{:processingOptions ProcessingOptions,
+  {:jobs [{:processingOptions ProcessingOptions,
            :description string,
            :department string,
            :addresses [string],
@@ -548,7 +547,8 @@
            :visibility string,
            :company string,
            :incentives string,
-           :jobLevel string}]}
+           :jobLevel string}],
+   :updateMask string}
   
   Begins executing a batch update jobs operation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -594,7 +594,7 @@
    :name string,
    :customAttributes {},
    :jobEndTime string,
-   :derivedInfo {:jobCategories [string], :locations [Location]},
+   :derivedInfo {:locations [Location], :jobCategories [string]},
    :responsibilities string,
    :companyDisplayName string,
    :title string,
@@ -604,12 +604,12 @@
    :languageCode string,
    :postingUpdateTime string,
    :postingRegion string,
-   :applicationInfo {:instruction string,
-                     :uris [string],
-                     :emails [string]},
+   :applicationInfo {:emails [string],
+                     :instruction string,
+                     :uris [string]},
    :jobStartTime string,
-   :compensationInfo {:annualizedBaseCompensationRange CompensationRange,
-                      :entries [CompensationEntry],
+   :compensationInfo {:entries [CompensationEntry],
+                      :annualizedBaseCompensationRange CompensationRange,
                       :annualizedTotalCompensationRange CompensationRange},
    :employmentTypes [string],
    :visibility string,
@@ -737,17 +737,17 @@
   
   Body: 
   
-  {:customRankingInfo {:rankingExpression string,
-                       :importanceLevel string},
+  {:customRankingInfo {:importanceLevel string,
+                       :rankingExpression string},
    :searchMode string,
    :maxPageSize integer,
    :offset integer,
    :disableKeywordMatch boolean,
    :histogramQueries [{:histogramQuery string}],
-   :requestMetadata {:userId string,
-                     :allowMissingIds boolean,
+   :requestMetadata {:domain string,
                      :sessionId string,
-                     :domain string,
+                     :userId string,
+                     :allowMissingIds boolean,
                      :deviceInfo DeviceInfo},
    :enableBroadening boolean,
    :diversificationLevel string,
@@ -830,7 +830,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, jobView, pageSize, filter
+  Optional parameters: filter, pageToken, pageSize, jobView
   
   Lists jobs by filter."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -861,17 +861,17 @@
   
   Body: 
   
-  {:customRankingInfo {:rankingExpression string,
-                       :importanceLevel string},
+  {:customRankingInfo {:importanceLevel string,
+                       :rankingExpression string},
    :searchMode string,
    :maxPageSize integer,
    :offset integer,
    :disableKeywordMatch boolean,
    :histogramQueries [{:histogramQuery string}],
-   :requestMetadata {:userId string,
-                     :allowMissingIds boolean,
+   :requestMetadata {:domain string,
                      :sessionId string,
-                     :domain string,
+                     :userId string,
+                     :allowMissingIds boolean,
                      :deviceInfo DeviceInfo},
    :enableBroadening boolean,
    :diversificationLevel string,

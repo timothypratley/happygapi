@@ -1,174 +1,19 @@
 (ns happygapi.dlp.organizations
-  "Cloud Data Loss Prevention (DLP) API: organizations.
-  Provides methods for detection, risk analysis, and de-identification of privacy-sensitive fragments in text, images, and Google Cloud Platform storage repositories.
-  See: https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations"
+  "Sensitive Data Protection (DLP): organizations.
+  Discover and protect your sensitive data. A fully managed service designed to help you discover, classify, and protect your valuable data assets with ease.
+  See: https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn deidentifyTemplates-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/deidentifyTemplates/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:deidentifyTemplate {:displayName string,
-                        :createTime string,
-                        :name string,
-                        :updateTime string,
-                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
-                        :description string},
-   :locationId string,
-   :templateId string}
-  
-  Creates a DeidentifyTemplate for re-using frequently used configuration for de-identifying content, images, and storage. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/deidentifyTemplates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deidentifyTemplates-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/deidentifyTemplates/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deidentifyTemplates-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/deidentifyTemplates/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deidentifyTemplates-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/deidentifyTemplates/patch
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:deidentifyTemplate {:displayName string,
-                        :createTime string,
-                        :name string,
-                        :updateTime string,
-                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
-                        :description string},
-   :updateMask string}
-  
-  Updates the DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn deidentifyTemplates-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/deidentifyTemplates/list
-  
-  Required parameters: parent
-  
-  Optional parameters: orderBy, pageSize, locationId, pageToken
-  
-  Lists DeidentifyTemplates. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/deidentifyTemplates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn storedInfoTypes-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/storedInfoTypes/delete
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/storedInfoTypes/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes a stored infoType. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Deletes a stored infoType. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -182,50 +27,13 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn storedInfoTypes-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/storedInfoTypes/patch
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:updateMask string,
-   :config {:displayName string,
-            :dictionary GooglePrivacyDlpV2Dictionary,
-            :description string,
-            :largeCustomDictionary GooglePrivacyDlpV2LargeCustomDictionaryConfig,
-            :regex GooglePrivacyDlpV2Regex}}
-  
-  Updates the stored infoType by creating a new version. The existing version will continue to be used until the new version is ready. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
      auth))))
 
 (defn storedInfoTypes-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/storedInfoTypes/create
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/storedInfoTypes/create
   
   Required parameters: parent
   
@@ -233,15 +41,15 @@
   
   Body: 
   
-  {:locationId string,
-   :storedInfoTypeId string,
-   :config {:displayName string,
-            :dictionary GooglePrivacyDlpV2Dictionary,
-            :description string,
+  {:config {:displayName string,
+            :regex GooglePrivacyDlpV2Regex,
             :largeCustomDictionary GooglePrivacyDlpV2LargeCustomDictionaryConfig,
-            :regex GooglePrivacyDlpV2Regex}}
+            :dictionary GooglePrivacyDlpV2Dictionary,
+            :description string},
+   :storedInfoTypeId string,
+   :locationId string}
   
-  Creates a pre-built stored infoType to be used for inspection. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Creates a pre-built stored infoType to be used for inspection. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -263,13 +71,13 @@
      auth))))
 
 (defn storedInfoTypes-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/storedInfoTypes/list
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/storedInfoTypes/list
   
   Required parameters: parent
   
   Optional parameters: locationId, pageSize, orderBy, pageToken
   
-  Lists stored infoTypes. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Lists stored infoTypes. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -289,13 +97,13 @@
      auth))))
 
 (defn storedInfoTypes-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/storedInfoTypes/get
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/storedInfoTypes/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets a stored infoType. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Gets a stored infoType. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -314,14 +122,89 @@
       :as :json}
      auth))))
 
-(defn inspectTemplates-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/inspectTemplates/get
+(defn storedInfoTypes-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/storedInfoTypes/patch
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets an InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Body: 
+  
+  {:config {:displayName string,
+            :regex GooglePrivacyDlpV2Regex,
+            :largeCustomDictionary GooglePrivacyDlpV2LargeCustomDictionaryConfig,
+            :dictionary GooglePrivacyDlpV2Dictionary,
+            :description string},
+   :updateMask string}
+  
+  Updates the stored infoType by creating a new version. The existing version will continue to be used until the new version is ready. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn inspectTemplates-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/inspectTemplates/patch
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateMask string,
+   :inspectTemplate {:displayName string,
+                     :updateTime string,
+                     :name string,
+                     :description string,
+                     :createTime string,
+                     :inspectConfig GooglePrivacyDlpV2InspectConfig}}
+  
+  Updates the InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn inspectTemplates-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/inspectTemplates/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -341,13 +224,13 @@
      auth))))
 
 (defn inspectTemplates-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/inspectTemplates/delete
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/inspectTemplates/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes an InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Deletes an InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -367,13 +250,13 @@
      auth))))
 
 (defn inspectTemplates-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/inspectTemplates/list
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/inspectTemplates/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, locationId, pageSize, orderBy
+  Optional parameters: orderBy, pageToken, pageSize, locationId
   
-  Lists InspectTemplates. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Lists InspectTemplates. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -393,7 +276,7 @@
      auth))))
 
 (defn inspectTemplates-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/inspectTemplates/create
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/inspectTemplates/create
   
   Required parameters: parent
   
@@ -401,16 +284,16 @@
   
   Body: 
   
-  {:inspectTemplate {:description string,
-                     :inspectConfig GooglePrivacyDlpV2InspectConfig,
-                     :createTime string,
-                     :displayName string,
+  {:inspectTemplate {:displayName string,
                      :updateTime string,
-                     :name string},
-   :templateId string,
-   :locationId string}
+                     :name string,
+                     :description string,
+                     :createTime string,
+                     :inspectConfig GooglePrivacyDlpV2InspectConfig},
+   :locationId string,
+   :templateId string}
   
-  Creates an InspectTemplate for re-using frequently used configuration for inspecting content, images, and storage. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Creates an InspectTemplate for reusing frequently used configuration for inspecting content, images, and storage. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -431,8 +314,8 @@
       :as :json}
      auth))))
 
-(defn inspectTemplates-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/inspectTemplates/patch
+(defn deidentifyTemplates-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/deidentifyTemplates/patch
   
   Required parameters: name
   
@@ -441,14 +324,14 @@
   Body: 
   
   {:updateMask string,
-   :inspectTemplate {:description string,
-                     :inspectConfig GooglePrivacyDlpV2InspectConfig,
-                     :createTime string,
-                     :displayName string,
-                     :updateTime string,
-                     :name string}}
+   :deidentifyTemplate {:name string,
+                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
+                        :createTime string,
+                        :description string,
+                        :updateTime string,
+                        :displayName string}}
   
-  Updates the InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Updates the DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -469,14 +352,14 @@
       :as :json}
      auth))))
 
-(defn locations-deidentifyTemplates-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/get
+(defn deidentifyTemplates-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/deidentifyTemplates/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets a DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
+  Gets a DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -495,117 +378,14 @@
       :as :json}
      auth))))
 
-(defn locations-deidentifyTemplates-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-deidentifyTemplates-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/patch
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:deidentifyTemplate {:displayName string,
-                        :createTime string,
-                        :name string,
-                        :updateTime string,
-                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
-                        :description string},
-   :updateMask string}
-  
-  Updates the DeidentifyTemplate. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-deidentifyTemplates-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/create
+(defn deidentifyTemplates-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/deidentifyTemplates/list
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageToken, orderBy, locationId, pageSize
   
-  Body: 
-  
-  {:deidentifyTemplate {:displayName string,
-                        :createTime string,
-                        :name string,
-                        :updateTime string,
-                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
-                        :description string},
-   :locationId string,
-   :templateId string}
-  
-  Creates a DeidentifyTemplate for re-using frequently used configuration for de-identifying content, images, and storage. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/deidentifyTemplates"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-deidentifyTemplates-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/list
-  
-  Required parameters: parent
-  
-  Optional parameters: locationId, orderBy, pageSize, pageToken
-  
-  Lists DeidentifyTemplates. See https://cloud.google.com/dlp/docs/creating-templates-deid to learn more."
+  Lists DeidentifyTemplates. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -624,86 +404,8 @@
       :as :json}
      auth))))
 
-(defn locations-dlpJobs-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/dlpJobs/list
-  
-  Required parameters: parent
-  
-  Optional parameters: filter, pageSize, orderBy, pageToken, locationId, type
-  
-  Lists DlpJobs that match the specified filter in the request. See https://cloud.google.com/dlp/docs/inspecting-storage and https://cloud.google.com/dlp/docs/compute-risk-analysis to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/dlpJobs"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobTriggers-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/jobTriggers/list
-  
-  Required parameters: parent
-  
-  Optional parameters: locationId, orderBy, type, pageToken, pageSize, filter
-  
-  Lists job triggers. See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+parent}/jobTriggers"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobTriggers-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/jobTriggers/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a job trigger. See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-jobTriggers-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/jobTriggers/create
+(defn deidentifyTemplates-create$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/deidentifyTemplates/create
   
   Required parameters: parent
   
@@ -712,19 +414,15 @@
   Body: 
   
   {:locationId string,
-   :jobTrigger {:description string,
-                :errors [GooglePrivacyDlpV2Error],
-                :displayName string,
-                :inspectJob GooglePrivacyDlpV2InspectJobConfig,
-                :name string,
-                :createTime string,
-                :triggers [GooglePrivacyDlpV2Trigger],
-                :updateTime string,
-                :status string,
-                :lastRunTime string},
-   :triggerId string}
+   :templateId string,
+   :deidentifyTemplate {:name string,
+                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
+                        :createTime string,
+                        :description string,
+                        :updateTime string,
+                        :displayName string}}
   
-  Creates a job trigger to run DLP actions such as scanning storage for sensitive information on a set schedule. See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  Creates a DeidentifyTemplate for reusing frequently used configuration for de-identifying content, images, and storage. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -732,7 +430,7 @@
    (http/post
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+parent}/jobTriggers"
+     "v2/{+parent}/deidentifyTemplates"
      #{:parent}
      parameters)
     (merge-with
@@ -745,8 +443,34 @@
       :as :json}
      auth))))
 
-(defn locations-jobTriggers-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/jobTriggers/patch
+(defn deidentifyTemplates-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/deidentifyTemplates/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-inspectTemplates-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/patch
   
   Required parameters: name
   
@@ -755,18 +479,14 @@
   Body: 
   
   {:updateMask string,
-   :jobTrigger {:description string,
-                :errors [GooglePrivacyDlpV2Error],
-                :displayName string,
-                :inspectJob GooglePrivacyDlpV2InspectJobConfig,
-                :name string,
-                :createTime string,
-                :triggers [GooglePrivacyDlpV2Trigger],
-                :updateTime string,
-                :status string,
-                :lastRunTime string}}
+   :inspectTemplate {:displayName string,
+                     :updateTime string,
+                     :name string,
+                     :description string,
+                     :createTime string,
+                     :inspectConfig GooglePrivacyDlpV2InspectConfig}}
   
-  Updates a job trigger. See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  Updates the InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -787,14 +507,209 @@
       :as :json}
      auth))))
 
-(defn locations-jobTriggers-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/jobTriggers/get
+(defn locations-inspectTemplates-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageToken, pageSize, locationId
+  
+  Lists InspectTemplates. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/inspectTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-inspectTemplates-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets a job trigger. See https://cloud.google.com/dlp/docs/creating-job-triggers to learn more."
+  Deletes an InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-inspectTemplates-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an InspectTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-inspectTemplates-create$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:inspectTemplate {:displayName string,
+                     :updateTime string,
+                     :name string,
+                     :description string,
+                     :createTime string,
+                     :inspectConfig GooglePrivacyDlpV2InspectConfig},
+   :locationId string,
+   :templateId string}
+  
+  Creates an InspectTemplate for reusing frequently used configuration for inspecting content, images, and storage. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/inspectTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-tableDataProfiles-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/tableDataProfiles/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageSize, pageToken, filter
+  
+  Lists table data profiles for an organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/tableDataProfiles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-tableDataProfiles-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/tableDataProfiles/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a table data profile."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-storedInfoTypes-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a stored infoType. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-storedInfoTypes-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a stored infoType. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -814,7 +729,7 @@
      auth))))
 
 (defn locations-storedInfoTypes-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/patch
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/patch
   
   Required parameters: name
   
@@ -822,14 +737,14 @@
   
   Body: 
   
-  {:updateMask string,
-   :config {:displayName string,
-            :dictionary GooglePrivacyDlpV2Dictionary,
-            :description string,
+  {:config {:displayName string,
+            :regex GooglePrivacyDlpV2Regex,
             :largeCustomDictionary GooglePrivacyDlpV2LargeCustomDictionaryConfig,
-            :regex GooglePrivacyDlpV2Regex}}
+            :dictionary GooglePrivacyDlpV2Dictionary,
+            :description string},
+   :updateMask string}
   
-  Updates the stored infoType by creating a new version. The existing version will continue to be used until the new version is ready. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Updates the stored infoType by creating a new version. The existing version will continue to be used until the new version is ready. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -851,7 +766,7 @@
      auth))))
 
 (defn locations-storedInfoTypes-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/create
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/create
   
   Required parameters: parent
   
@@ -859,15 +774,15 @@
   
   Body: 
   
-  {:locationId string,
-   :storedInfoTypeId string,
-   :config {:displayName string,
-            :dictionary GooglePrivacyDlpV2Dictionary,
-            :description string,
+  {:config {:displayName string,
+            :regex GooglePrivacyDlpV2Regex,
             :largeCustomDictionary GooglePrivacyDlpV2LargeCustomDictionaryConfig,
-            :regex GooglePrivacyDlpV2Regex}}
+            :dictionary GooglePrivacyDlpV2Dictionary,
+            :description string},
+   :storedInfoTypeId string,
+   :locationId string}
   
-  Creates a pre-built stored infoType to be used for inspection. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Creates a pre-built stored infoType to be used for inspection. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -888,66 +803,14 @@
       :as :json}
      auth))))
 
-(defn locations-storedInfoTypes-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a stored infoType. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-storedInfoTypes-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a stored infoType. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dlp.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-storedInfoTypes-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/list
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/storedInfoTypes/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, orderBy, locationId, pageSize
+  Optional parameters: pageToken, pageSize, locationId, orderBy
   
-  Lists stored infoTypes. See https://cloud.google.com/dlp/docs/creating-stored-infotypes to learn more."
+  Lists stored infoTypes. See https://cloud.google.com/sensitive-data-protection/docs/creating-stored-infotypes to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -966,19 +829,19 @@
       :as :json}
      auth))))
 
-(defn locations-inspectTemplates-delete$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/delete
+(defn locations-columnDataProfiles-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/columnDataProfiles/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes an InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Gets a column data profile."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
      "v2/{+name}"
@@ -992,14 +855,14 @@
       :as :json}
      auth))))
 
-(defn locations-inspectTemplates-list$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/list
+(defn locations-columnDataProfiles-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/columnDataProfiles/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, orderBy, pageToken, locationId
+  Optional parameters: pageToken, pageSize, filter, orderBy
   
-  Lists InspectTemplates. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Lists column data profiles for an organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1007,7 +870,7 @@
    (http/get
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+parent}/inspectTemplates"
+     "v2/{+parent}/columnDataProfiles"
      #{:parent}
      parameters)
     (merge-with
@@ -1018,8 +881,34 @@
       :as :json}
      auth))))
 
-(defn locations-inspectTemplates-patch$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/patch
+(defn locations-dlpJobs-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/dlpJobs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize, locationId, orderBy, type
+  
+  Lists DlpJobs that match the specified filter in the request. See https://cloud.google.com/sensitive-data-protection/docs/inspecting-storage and https://cloud.google.com/sensitive-data-protection/docs/compute-risk-analysis to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/dlpJobs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-deidentifyTemplates-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/patch
   
   Required parameters: name
   
@@ -1028,14 +917,14 @@
   Body: 
   
   {:updateMask string,
-   :inspectTemplate {:description string,
-                     :inspectConfig GooglePrivacyDlpV2InspectConfig,
-                     :createTime string,
-                     :displayName string,
-                     :updateTime string,
-                     :name string}}
+   :deidentifyTemplate {:name string,
+                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
+                        :createTime string,
+                        :description string,
+                        :updateTime string,
+                        :displayName string}}
   
-  Updates the InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Updates the DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1056,14 +945,105 @@
       :as :json}
      auth))))
 
-(defn locations-inspectTemplates-get$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/get
+(defn locations-deidentifyTemplates-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets an InspectTemplate. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Deletes a DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-deidentifyTemplates-create$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:locationId string,
+   :templateId string,
+   :deidentifyTemplate {:name string,
+                        :deidentifyConfig GooglePrivacyDlpV2DeidentifyConfig,
+                        :createTime string,
+                        :description string,
+                        :updateTime string,
+                        :displayName string}}
+  
+  Creates a DeidentifyTemplate for reusing frequently used configuration for de-identifying content, images, and storage. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/deidentifyTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-deidentifyTemplates-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/list
+  
+  Required parameters: parent
+  
+  Optional parameters: locationId, pageToken, pageSize, orderBy
+  
+  Lists DeidentifyTemplates. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/deidentifyTemplates"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-deidentifyTemplates-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/deidentifyTemplates/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a DeidentifyTemplate. See https://cloud.google.com/sensitive-data-protection/docs/creating-templates-deid to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1082,8 +1062,76 @@
       :as :json}
      auth))))
 
-(defn locations-inspectTemplates-create$
-  "https://cloud.google.com/dlp/docs/api/reference/rest/v2/organizations/locations/inspectTemplates/create
+(defn locations-jobTriggers-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/jobTriggers/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a job trigger. See https://cloud.google.com/sensitive-data-protection/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobTriggers-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/jobTriggers/patch
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:updateMask string,
+   :jobTrigger {:description string,
+                :errors [GooglePrivacyDlpV2Error],
+                :displayName string,
+                :inspectJob GooglePrivacyDlpV2InspectJobConfig,
+                :name string,
+                :createTime string,
+                :triggers [GooglePrivacyDlpV2Trigger],
+                :updateTime string,
+                :status string,
+                :lastRunTime string}}
+  
+  Updates a job trigger. See https://cloud.google.com/sensitive-data-protection/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobTriggers-create$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/jobTriggers/create
   
   Required parameters: parent
   
@@ -1091,16 +1139,20 @@
   
   Body: 
   
-  {:inspectTemplate {:description string,
-                     :inspectConfig GooglePrivacyDlpV2InspectConfig,
-                     :createTime string,
-                     :displayName string,
-                     :updateTime string,
-                     :name string},
-   :templateId string,
-   :locationId string}
+  {:jobTrigger {:description string,
+                :errors [GooglePrivacyDlpV2Error],
+                :displayName string,
+                :inspectJob GooglePrivacyDlpV2InspectJobConfig,
+                :name string,
+                :createTime string,
+                :triggers [GooglePrivacyDlpV2Trigger],
+                :updateTime string,
+                :status string,
+                :lastRunTime string},
+   :locationId string,
+   :triggerId string}
   
-  Creates an InspectTemplate for re-using frequently used configuration for inspecting content, images, and storage. See https://cloud.google.com/dlp/docs/creating-templates to learn more."
+  Creates a job trigger to run DLP actions such as scanning storage for sensitive information on a set schedule. See https://cloud.google.com/sensitive-data-protection/docs/creating-job-triggers to learn more."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1108,7 +1160,7 @@
    (http/post
     (util/get-url
      "https://dlp.googleapis.com/"
-     "v2/{+parent}/inspectTemplates"
+     "v2/{+parent}/jobTriggers"
      #{:parent}
      parameters)
     (merge-with
@@ -1116,6 +1168,274 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobTriggers-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/jobTriggers/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a job trigger. See https://cloud.google.com/sensitive-data-protection/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-jobTriggers-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/jobTriggers/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, filter, pageToken, locationId, type, orderBy
+  
+  Lists job triggers. See https://cloud.google.com/sensitive-data-protection/docs/creating-job-triggers to learn more."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/jobTriggers"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-projectDataProfiles-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/projectDataProfiles/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a project data profile."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-projectDataProfiles-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/projectDataProfiles/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageToken, filter, pageSize
+  
+  Lists project data profiles for an organization."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/projectDataProfiles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryConfigs-patch$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/discoveryConfigs/patch
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:discoveryConfig {:inspectTemplates [string],
+                     :errors [GooglePrivacyDlpV2Error],
+                     :displayName string,
+                     :name string,
+                     :createTime string,
+                     :orgConfig GooglePrivacyDlpV2OrgConfig,
+                     :targets [GooglePrivacyDlpV2DiscoveryTarget],
+                     :actions [GooglePrivacyDlpV2DataProfileAction],
+                     :updateTime string,
+                     :status string,
+                     :lastRunTime string},
+   :updateMask string}
+  
+  Updates a discovery configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryConfigs-get$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/discoveryConfigs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a discovery configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryConfigs-list$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/discoveryConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: orderBy, pageToken, pageSize
+  
+  Lists discovery configurations."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/discoveryConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryConfigs-create$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/discoveryConfigs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:discoveryConfig {:inspectTemplates [string],
+                     :errors [GooglePrivacyDlpV2Error],
+                     :displayName string,
+                     :name string,
+                     :createTime string,
+                     :orgConfig GooglePrivacyDlpV2OrgConfig,
+                     :targets [GooglePrivacyDlpV2DiscoveryTarget],
+                     :actions [GooglePrivacyDlpV2DataProfileAction],
+                     :updateTime string,
+                     :status string,
+                     :lastRunTime string},
+   :configId string}
+  
+  Creates a config for discovery to scan and profile storage."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+parent}/discoveryConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryConfigs-delete$
+  "https://cloud.google.com/sensitive-data-protection/docs/api/reference/rest/v2/organizations/locations/discoveryConfigs/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a discovery configuration."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dlp.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -18,6 +18,7 @@
   {:searchType string,
    :startDate string,
    :dataState string,
+   :type string,
    :rowLimit integer,
    :dimensions [string],
    :endDate string,

@@ -6,50 +6,23 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn list$
-  "https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata/list
-  
-  Required parameters: projectId, datasetId, tableId
-  
-  Optional parameters: maxResults, selectedFields, pageToken, startIndex
-  
-  Retrieves table data from a specified set of rows. Requires the READER dataset role."
-  {:scopes ["https://www.googleapis.com/auth/bigquery"
-            "https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:tableId :datasetId :projectId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/data"
-     #{:tableId :datasetId :projectId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insertAll$
   "https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata/insertAll
   
-  Required parameters: projectId, datasetId, tableId
+  Required parameters: datasetId, projectId, tableId
   
   Optional parameters: none
   
   Body: 
   
-  {:kind string,
-   :ignoreUnknownValues boolean,
-   :templateSuffix string,
+  {:ignoreUnknownValues boolean,
+   :kind string,
+   :rows [{:insertId string, :json {}}],
    :skipInvalidRows boolean,
-   :rows [{:json {}, :insertId string}]}
+   :templateSuffix string,
+   :traceId string}
   
-  Streams data into BigQuery one record at a time without needing to run a load job. Requires the WRITER dataset role."
+  Streams data into BigQuery one record at a time without needing to run a load job."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
             "https://www.googleapis.com/auth/bigquery.insertdata"
             "https://www.googleapis.com/auth/cloud-platform"]}
@@ -59,7 +32,7 @@
    (http/post
     (util/get-url
      "https://bigquery.googleapis.com/bigquery/v2/"
-     "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/insertAll"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/insertAll"
      #{:tableId :datasetId :projectId}
      parameters)
     (merge-with
@@ -67,6 +40,34 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata/list
+  
+  Required parameters: datasetId, projectId, tableId
+  
+  Optional parameters: formatOptions.useInt64Timestamp, maxResults, pageToken, selectedFields, startIndex
+  
+  List the content of a table in rows."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:tableId :datasetId :projectId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://bigquery.googleapis.com/bigquery/v2/"
+     "projects/{+projectId}/datasets/{+datasetId}/tables/{+tableId}/data"
+     #{:tableId :datasetId :projectId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

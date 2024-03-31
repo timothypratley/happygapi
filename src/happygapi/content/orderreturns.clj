@@ -6,8 +6,8 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn process$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/process
+(defn acknowledge$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/acknowledge
   
   Required parameters: merchantId, returnId
   
@@ -15,18 +15,9 @@
   
   Body: 
   
-  {:operationId string,
-   :returnItems [{:reject OrderreturnsRejectOperation,
-                  :refund OrderreturnsRefundOperation,
-                  :returnItemId string}],
-   :refundShippingFee {:returnRefundReason string,
-                       :paymentType string,
-                       :partialRefund OrderreturnsPartialRefund,
-                       :reasonText string,
-                       :fullRefund boolean},
-   :fullChargeReturnShippingCost boolean}
+  {:operationId string}
   
-  Processes return in your Merchant Center account."
+  Acks an order return in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:returnId :merchantId})]}
@@ -34,8 +25,45 @@
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreturns/{returnId}/process"
+     "{merchantId}/orderreturns/{returnId}/acknowledge"
      #{:returnId :merchantId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn createorderreturn$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/createorderreturn
+  
+  Required parameters: merchantId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:orderId string,
+   :operationId string,
+   :lineItems [{:lineItemId string,
+                :productId string,
+                :quantity integer}],
+   :returnMethodType string}
+  
+  Create return in your Merchant Center account."
+  {:scopes ["https://www.googleapis.com/auth/content"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:merchantId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://shoppingcontent.googleapis.com/content/v2.1/"
+     "{merchantId}/orderreturns/createOrderReturn"
+     #{:merchantId}
      parameters)
     (merge-with
      merge
@@ -73,43 +101,6 @@
       :as :json}
      auth))))
 
-(defn createorderreturn$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/createorderreturn
-  
-  Required parameters: merchantId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:lineItems [{:quantity integer,
-                :lineItemId string,
-                :productId string}],
-   :operationId string,
-   :returnMethodType string,
-   :orderId string}
-  
-  Create return in your Merchant Center account."
-  {:scopes ["https://www.googleapis.com/auth/content"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:merchantId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreturns/createOrderReturn"
-     #{:merchantId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/list
   
@@ -136,8 +127,8 @@
       :as :json}
      auth))))
 
-(defn acknowledge$
-  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/acknowledge
+(defn process$
+  "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/process
   
   Required parameters: merchantId, returnId
   
@@ -145,9 +136,18 @@
   
   Body: 
   
-  {:operationId string}
+  {:operationId string,
+   :returnItems [{:returnItemId string,
+                  :refund OrderreturnsRefundOperation,
+                  :reject OrderreturnsRejectOperation}],
+   :fullChargeReturnShippingCost boolean,
+   :refundShippingFee {:returnRefundReason string,
+                       :fullRefund boolean,
+                       :partialRefund OrderreturnsPartialRefund,
+                       :reasonText string,
+                       :paymentType string}}
   
-  Acks an order return in your Merchant Center account."
+  Processes return in your Merchant Center account."
   {:scopes ["https://www.googleapis.com/auth/content"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:returnId :merchantId})]}
@@ -155,7 +155,7 @@
    (http/post
     (util/get-url
      "https://shoppingcontent.googleapis.com/content/v2.1/"
-     "{merchantId}/orderreturns/{returnId}/acknowledge"
+     "{merchantId}/orderreturns/{returnId}/process"
      #{:returnId :merchantId}
      parameters)
     (merge-with
@@ -171,7 +171,7 @@
 (defn labels-create$
   "https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderreturns/labels/create
   
-  Required parameters: returnId, merchantId
+  Required parameters: merchantId, returnId
   
   Optional parameters: none
   

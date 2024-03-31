@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:lookupStrategy string, :urls [string]}
+  {:urls [string], :lookupStrategy string}
   
   Returns AMP URL(s) and equivalent [AMP Cache URL(s)](/amp/cache/overview#amp-cache-url-format)."
   {:scopes nil}

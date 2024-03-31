@@ -1,36 +1,10 @@
 (ns happygapi.mybusinessbusinessinformation.locations
   "My Business Business Information API: locations.
-  The My Business Business Information API provides an interface for managing business information on Google.
+  The My Business Business Information API provides an interface for managing business information. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
   See: https://developers.google.com/my-business/api/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn getAttributes$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/getAttributes
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Looks up all the attributes set for a given location."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://mybusinessbusinessinformation.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn updateAttributes$
   "https://developers.google.com/my-business/api/reference/rest/v1/locations/updateAttributes
@@ -41,12 +15,12 @@
   
   Body: 
   
-  {:attributes [{:values [any],
-                 :name string,
+  {:name string,
+   :attributes [{:name string,
+                 :valueType string,
+                 :values [any],
                  :repeatedEnumValue RepeatedEnumAttributeValue,
-                 :uriValues [UriAttributeValue],
-                 :valueType string}],
-   :name string}
+                 :uriValues [UriAttributeValue]}]}
   
   Update attributes for a given location."
   {:scopes nil}
@@ -69,33 +43,27 @@
       :as :json}
      auth))))
 
-(defn clearLocationAssociation$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/clearLocationAssociation
+(defn getAttributes$
+  "https://developers.google.com/my-business/api/reference/rest/v1/locations/getAttributes
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {}
-  
-  Clears an association between a location and its place ID. This operation is only valid if the location is unverified."
+  Looks up all the attributes set for a given location."
   {:scopes nil}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://mybusinessbusinessinformation.googleapis.com/"
-     "v1/{+name}:clearLocationAssociation"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -153,32 +121,6 @@
       :as :json}
      auth))))
 
-(defn delete$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a location. If this location cannot be deleted using the API and it is marked so in the `google.mybusiness.businessinformation.v1.LocationState`, use the [Google My Business](https://business.google.com/manage/) website."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://mybusinessbusinessinformation.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/my-business/api/reference/rest/v1/locations/patch
   
@@ -188,30 +130,30 @@
   
   Body: 
   
-  {:serviceItems [{:price Money,
-                   :structuredServiceItem StructuredServiceItem,
-                   :freeFormServiceItem FreeFormServiceItem}],
+  {:serviceItems [{:structuredServiceItem StructuredServiceItem,
+                   :freeFormServiceItem FreeFormServiceItem,
+                   :price Money}],
    :labels [string],
    :regularHours {:periods [TimePeriod]},
-   :moreHours [{:periods [TimePeriod], :hoursTypeId string}],
+   :moreHours [{:hoursTypeId string, :periods [TimePeriod]}],
    :name string,
    :specialHours {:specialHourPeriods [SpecialHourPeriod]},
-   :phoneNumbers {:additionalPhones [string], :primaryPhone string},
-   :serviceArea {:regionCode string,
-                 :businessType string,
-                 :places Places},
+   :phoneNumbers {:primaryPhone string, :additionalPhones [string]},
+   :serviceArea {:businessType string,
+                 :places Places,
+                 :regionCode string},
    :title string,
    :categories {:primaryCategory Category,
                 :additionalCategories [Category]},
    :languageCode string,
-   :relationshipData {:childrenLocations [RelevantLocation],
-                      :parentLocation RelevantLocation,
+   :relationshipData {:parentLocation RelevantLocation,
+                      :childrenLocations [RelevantLocation],
                       :parentChain string},
    :websiteUri string,
    :storeCode string,
    :adWordsLocationExtensions {:adPhone string},
-   :openInfo {:canReopen boolean, :status string, :openingDate Date},
-   :latlng {:longitude number, :latitude number},
+   :openInfo {:status string, :canReopen boolean, :openingDate Date},
+   :latlng {:latitude number, :longitude number},
    :metadata {:duplicateLocation string,
               :canDelete boolean,
               :canOperateLocalPost boolean,
@@ -219,11 +161,13 @@
               :newReviewUri string,
               :hasPendingEdits boolean,
               :mapsUri string,
+              :hasVoiceOfMerchant boolean,
               :hasGoogleUpdated boolean,
               :canOperateHealthData boolean,
               :canModifyServiceList boolean,
               :canHaveFoodMenus boolean,
-              :placeId string},
+              :placeId string,
+              :canHaveBusinessCalls boolean},
    :profile {:description string},
    :storefrontAddress {:sortingCode string,
                        :locality string,
@@ -258,33 +202,27 @@
       :as :json}
      auth))))
 
-(defn associate$
-  "https://developers.google.com/my-business/api/reference/rest/v1/locations/associate
+(defn delete$
+  "https://developers.google.com/my-business/api/reference/rest/v1/locations/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:placeId string}
-  
-  Associates a location to a place ID. Any previous association is overwritten. This operation is only valid if the location is unverified. The association must be valid, that is, it appears in the list of `SearchGoogleLocations`."
+  Deletes a location. If this location cannot be deleted using the API and it is marked so in the `google.mybusiness.businessinformation.v1.LocationState`, use the [Google Business Profile](https://business.google.com/manage/) website."
   {:scopes nil}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://mybusinessbusinessinformation.googleapis.com/"
-     "v1/{+name}:associate"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

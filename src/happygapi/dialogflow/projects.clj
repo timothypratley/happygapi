@@ -11,9 +11,9 @@
   
   Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: filter, pageSize, pageToken
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -23,33 +23,6 @@
     (util/get-url
      "https://dialogflow.googleapis.com/"
      "v3/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn operations-cancel$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -77,6 +50,33 @@
     (util/get-url
      "https://dialogflow.googleapis.com/"
      "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn operations-cancel$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -146,9 +146,9 @@
   
   Required parameters: name
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: filter, pageSize, pageToken
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`. NOTE: the `name` binding allows API services to override the binding to use different resource name schemes, such as `users/*/operations`. To override the binding, API services can add a binding such as `\"/v1/{name=users/*}/operations\"` to their service configuration. For backwards compatibility, the default name includes the operations collection id, however overriding users must ensure the name binding is the parent resource, without the operations collection id."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -158,33 +158,6 @@
     (util/get-url
      "https://dialogflow.googleapis.com/"
      "v3/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}:cancel"
      #{:name}
      parameters)
     (merge-with
@@ -222,6 +195,33 @@
       :as :json}
      auth))))
 
+(defn locations-operations-cancel$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-securitySettings-create$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/securitySettings/create
   
@@ -231,10 +231,15 @@
   
   Body: 
   
-  {:displayName string,
+  {:audioExportSettings {:gcsBucket string,
+                         :audioExportPattern string,
+                         :enableAudioRedaction boolean,
+                         :audioFormat string},
+   :displayName string,
    :redactionStrategy string,
    :name string,
    :purgeDataTypes [string],
+   :retentionStrategy string,
    :retentionWindowDays integer,
    :insightsExportSettings {:enableInsightsExport boolean},
    :inspectTemplate string,
@@ -258,33 +263,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-securitySettings-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/securitySettings/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns the list of all security settings in the specified location."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/securitySettings"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -326,10 +304,15 @@
   
   Body: 
   
-  {:displayName string,
+  {:audioExportSettings {:gcsBucket string,
+                         :audioExportPattern string,
+                         :enableAudioRedaction boolean,
+                         :audioFormat string},
+   :displayName string,
    :redactionStrategy string,
    :name string,
    :purgeDataTypes [string],
+   :retentionStrategy string,
    :retentionWindowDays integer,
    :insightsExportSettings {:enableInsightsExport boolean},
    :inspectTemplate string,
@@ -353,6 +336,33 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-securitySettings-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/securitySettings/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all security settings in the specified location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/securitySettings"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -454,17 +464,26 @@
   
   Body: 
   
-  {:advancedSettings {:loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :answerFeedbackSettings {:enableAnswerFeedback boolean},
    :description string,
    :securitySettings string,
    :timeZone string,
    :startFlow string,
    :defaultLanguageCode string,
+   :genAppBuilderSettings {:engine string},
    :displayName string,
    :speechToTextSettings {:enableSpeechAdaptation boolean},
    :name string,
+   :textToSpeechSettings {:synthesizeSpeechConfigs {}},
    :supportedLanguageCodes [string],
    :enableSpellCorrection boolean,
+   :gitIntegrationSettings {:githubSettings GoogleCloudDialogflowCxV3AgentGitIntegrationSettingsGithubSettings},
+   :locked boolean,
+   :personalizationSettings {:defaultEndUserMetadata {}},
    :enableStackdriverLogging boolean,
    :avatarUri string}
   
@@ -490,6 +509,33 @@
       :as :json}
      auth))))
 
+(defn locations-agents-getGenerativeSettings$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/getGenerativeSettings
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode
+  
+  Gets the generative settings for the agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-agents-restore$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/restore
   
@@ -499,7 +545,10 @@
   
   Body: 
   
-  {:restoreOption string, :agentContent string, :agentUri string}
+  {:agentUri string,
+   :agentContent string,
+   :gitSource {:trackingBranch string},
+   :restoreOption string}
   
   Restores the specified agent from a binary file. Replaces the current agent with a new one. Note that all existing resources in agent (e.g. intents, entity types, flows) will be removed. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: An [Empty message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#empty) Note: You should always train flows prior to sending them queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -532,17 +581,26 @@
   
   Body: 
   
-  {:advancedSettings {:loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :answerFeedbackSettings {:enableAnswerFeedback boolean},
    :description string,
    :securitySettings string,
    :timeZone string,
    :startFlow string,
    :defaultLanguageCode string,
+   :genAppBuilderSettings {:engine string},
    :displayName string,
    :speechToTextSettings {:enableSpeechAdaptation boolean},
    :name string,
+   :textToSpeechSettings {:synthesizeSpeechConfigs {}},
    :supportedLanguageCodes [string],
    :enableSpellCorrection boolean,
+   :gitIntegrationSettings {:githubSettings GoogleCloudDialogflowCxV3AgentGitIntegrationSettingsGithubSettings},
+   :locked boolean,
+   :personalizationSettings {:defaultEndUserMetadata {}},
    :enableStackdriverLogging boolean,
    :avatarUri string}
   
@@ -604,7 +662,11 @@
   
   Body: 
   
-  {:environment string, :agentUri string}
+  {:agentUri string,
+   :dataFormat string,
+   :environment string,
+   :gitDestination {:trackingBranch string, :commitMessage string},
+   :includeBigqueryExportSettings boolean}
   
   Exports the specified agent to a binary file. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: ExportAgentResponse"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -633,7 +695,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Returns the list of all agents in the specified location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -682,8 +744,105 @@
       :as :json}
      auth))))
 
-(defn locations-agents-intents-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/create
+(defn locations-agents-updateGenerativeSettings$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/updateGenerativeSettings
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :fallbackSettings {:selectedPrompt string,
+                      :promptTemplates [GoogleCloudDialogflowCxV3GenerativeSettingsFallbackSettingsPromptTemplate]},
+   :generativeSafetySettings {:bannedPhrases [GoogleCloudDialogflowCxV3SafetySettingsPhrase]},
+   :knowledgeConnectorSettings {:business string,
+                                :agent string,
+                                :agentIdentity string,
+                                :businessDescription string,
+                                :agentScope string,
+                                :disableDataStoreFallback boolean},
+   :languageCode string}
+  
+  Updates the generative settings for the agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-transitionRouteGroups-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/transitionRouteGroups/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, languageCode
+  
+  Returns the list of all transition route groups in the specified flow."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/transitionRouteGroups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-transitionRouteGroups-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/transitionRouteGroups/get
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode
+  
+  Retrieves the specified TransitionRouteGroup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-transitionRouteGroups-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/transitionRouteGroups/create
   
   Required parameters: parent
   
@@ -691,21 +850,17 @@
   
   Body: 
   
-  {:isFallback boolean,
+  {:name string,
    :displayName string,
-   :parameters [{:isList boolean,
-                 :id string,
-                 :redact boolean,
-                 :entityType string}],
-   :priority integer,
-   :labels {},
-   :description string,
-   :trainingPhrases [{:parts [GoogleCloudDialogflowCxV3IntentTrainingPhrasePart],
-                      :id string,
-                      :repeatCount integer}],
-   :name string}
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}]}
   
-  Creates an intent in the specified agent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  Creates an TransitionRouteGroup in the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
@@ -714,7 +869,7 @@
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/intents"
+     "v3/{+parent}/transitionRouteGroups"
      #{:parent}
      parameters)
     (merge-with
@@ -727,14 +882,55 @@
       :as :json}
      auth))))
 
-(defn locations-agents-intents-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/delete
+(defn locations-agents-transitionRouteGroups-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/transitionRouteGroups/patch
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: updateMask, languageCode
   
-  Deletes the specified intent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}]}
+  
+  Updates the specified TransitionRouteGroup. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-transitionRouteGroups-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/transitionRouteGroups/delete
+  
+  Required parameters: name
+  
+  Optional parameters: force
+  
+  Deletes the specified TransitionRouteGroup. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -759,7 +955,7 @@
   
   Required parameters: parent
   
-  Optional parameters: languageCode, pageToken, intentView, pageSize
+  Optional parameters: languageCode, intentView, pageSize, pageToken
   
   Returns the list of all intents in the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -808,6 +1004,51 @@
       :as :json}
      auth))))
 
+(defn locations-agents-intents-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/create
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :trainingPhrases [{:id string,
+                      :parts [GoogleCloudDialogflowCxV3IntentTrainingPhrasePart],
+                      :repeatCount integer}],
+   :parameters [{:id string,
+                 :entityType string,
+                 :isList boolean,
+                 :redact boolean}],
+   :priority integer,
+   :isFallback boolean,
+   :labels {},
+   :description string}
+  
+  Creates an intent in the specified agent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/intents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-agents-intents-patch$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/patch
   
@@ -817,19 +1058,19 @@
   
   Body: 
   
-  {:isFallback boolean,
+  {:name string,
    :displayName string,
-   :parameters [{:isList boolean,
-                 :id string,
-                 :redact boolean,
-                 :entityType string}],
-   :priority integer,
-   :labels {},
-   :description string,
-   :trainingPhrases [{:parts [GoogleCloudDialogflowCxV3IntentTrainingPhrasePart],
-                      :id string,
+   :trainingPhrases [{:id string,
+                      :parts [GoogleCloudDialogflowCxV3IntentTrainingPhrasePart],
                       :repeatCount integer}],
-   :name string}
+   :parameters [{:id string,
+                 :entityType string,
+                 :isList boolean,
+                 :redact boolean}],
+   :priority integer,
+   :isFallback boolean,
+   :labels {},
+   :description string}
   
   Updates the specified intent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -853,41 +1094,14 @@
       :as :json}
      auth))))
 
-(defn locations-agents-environments-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns the list of all environments in the specified Agent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/environments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/delete
+(defn locations-agents-intents-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/delete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Deletes the specified Environment."
+  Deletes the specified intent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -907,141 +1121,8 @@
       :as :json}
      auth))))
 
-(defn locations-agents-environments-runContinuousTest$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/runContinuousTest
-  
-  Required parameters: environment
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Kicks off a continuous test under the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: RunContinuousTestMetadata - `response`: RunContinuousTestResponse"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:environment})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+environment}:runContinuousTest"
-     #{:environment}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:displayName string,
-   :updateTime string,
-   :testCasesConfig {:enablePredeploymentRun boolean,
-                     :testCases [string],
-                     :enableContinuousRun boolean},
-   :description string,
-   :versionConfigs [{:version string}],
-   :name string}
-  
-  Updates the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: Environment"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-deployFlow$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployFlow
-  
-  Required parameters: environment
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:flowVersion string}
-  
-  Deploys a flow to the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: DeployFlowMetadata - `response`: DeployFlowResponse"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:environment})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+environment}:deployFlow"
-     #{:environment}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-lookupEnvironmentHistory$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/lookupEnvironmentHistory
-  
-  Required parameters: name
-  
-  Optional parameters: pageToken, pageSize
-  
-  Looks up the history of the specified Environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}:lookupEnvironmentHistory"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/create
+(defn locations-agents-intents-import$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/import
   
   Required parameters: parent
   
@@ -1049,16 +1130,11 @@
   
   Body: 
   
-  {:displayName string,
-   :updateTime string,
-   :testCasesConfig {:enablePredeploymentRun boolean,
-                     :testCases [string],
-                     :enableContinuousRun boolean},
-   :description string,
-   :versionConfigs [{:version string}],
-   :name string}
+  {:intentsUri string,
+   :intentsContent {:content string},
+   :mergeOption string}
   
-  Creates an Environment in the specified Agent. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: Environment"
+  Imports the specified intents into the agent. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: ImportIntentsMetadata - `response`: ImportIntentsResponse"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
@@ -1067,7 +1143,7 @@
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/environments"
+     "v3/{+parent}/intents:import"
      #{:parent}
      parameters)
     (merge-with
@@ -1080,228 +1156,8 @@
       :as :json}
      auth))))
 
-(defn locations-agents-environments-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified Environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-deployments-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployments/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified Deployment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-deployments-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Returns the list of all deployments in the specified Environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/deployments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-stop$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/stop
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Stops the specified Experiment. This rpc only changes the state of experiment from RUNNING to DONE."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}:stop"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified Experiment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Returns the list of all experiments in the specified Environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/experiments"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:description string,
-   :variantsHistory [{:versionVariants GoogleCloudDialogflowCxV3VersionVariants,
-                      :updateTime string}],
-   :definition {:condition string,
-                :versionVariants GoogleCloudDialogflowCxV3VersionVariants},
-   :rolloutState {:stepIndex integer, :startTime string, :step string},
-   :startTime string,
-   :displayName string,
-   :name string,
-   :endTime string,
-   :createTime string,
-   :rolloutFailureReason string,
-   :state string,
-   :rolloutConfig {:failureCondition string,
-                   :rolloutCondition string,
-                   :rolloutSteps [GoogleCloudDialogflowCxV3RolloutConfigRolloutStep]},
-   :result {:lastUpdateTime string,
-            :versionMetrics [GoogleCloudDialogflowCxV3ExperimentResultVersionMetrics]},
-   :lastUpdateTime string,
-   :experimentLength string}
-  
-  Updates the specified Experiment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/create
+(defn locations-agents-intents-export$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/intents/export
   
   Required parameters: parent
   
@@ -1309,28 +1165,12 @@
   
   Body: 
   
-  {:description string,
-   :variantsHistory [{:versionVariants GoogleCloudDialogflowCxV3VersionVariants,
-                      :updateTime string}],
-   :definition {:condition string,
-                :versionVariants GoogleCloudDialogflowCxV3VersionVariants},
-   :rolloutState {:stepIndex integer, :startTime string, :step string},
-   :startTime string,
-   :displayName string,
-   :name string,
-   :endTime string,
-   :createTime string,
-   :rolloutFailureReason string,
-   :state string,
-   :rolloutConfig {:failureCondition string,
-                   :rolloutCondition string,
-                   :rolloutSteps [GoogleCloudDialogflowCxV3RolloutConfigRolloutStep]},
-   :result {:lastUpdateTime string,
-            :versionMetrics [GoogleCloudDialogflowCxV3ExperimentResultVersionMetrics]},
-   :lastUpdateTime string,
-   :experimentLength string}
+  {:intents [string],
+   :intentsUri string,
+   :intentsContentInline boolean,
+   :dataFormat string}
   
-  Creates an Experiment in the specified Environment."
+  Exports the selected intents. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: ExportIntentsMetadata - `response`: ExportIntentsResponse"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
@@ -1339,7 +1179,7 @@
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/experiments"
+     "v3/{+parent}/intents:export"
      #{:parent}
      parameters)
     (merge-with
@@ -1347,679 +1187,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified Experiment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-experiments-start$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/start
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Starts the specified Experiment. This rpc only changes the state of experiment from PENDING to RUNNING."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}:start"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-matchIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/matchIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:queryInput {:event GoogleCloudDialogflowCxV3EventInput,
-                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
-                :intent GoogleCloudDialogflowCxV3IntentInput,
-                :text GoogleCloudDialogflowCxV3TextInput,
-                :languageCode string,
-                :audio GoogleCloudDialogflowCxV3AudioInput},
-   :queryParams {:currentPage string,
-                 :timeZone string,
-                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
-                 :payload {},
-                 :webhookHeaders {},
-                 :disableWebhook boolean,
-                 :analyzeQueryTextSentiment boolean,
-                 :flowVersions [string],
-                 :geoLocation GoogleTypeLatLng,
-                 :parameters {}}}
-  
-  Returns preliminary intent match results, doesn't change the session status."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:matchIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-fulfillIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/fulfillIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:match {:parameters {},
-           :intent GoogleCloudDialogflowCxV3Intent,
-           :event string,
-           :confidence number,
-           :resolvedInput string,
-           :matchType string},
-   :matchIntentRequest {:queryInput GoogleCloudDialogflowCxV3QueryInput,
-                        :queryParams GoogleCloudDialogflowCxV3QueryParameters},
-   :outputAudioConfig {:audioEncoding string,
-                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig,
-                       :sampleRateHertz integer}}
-  
-  Fulfills a matched intent returned by MatchIntent. Must be called after MatchIntent, with input from MatchIntentResponse. Otherwise, the behavior is undefined."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:fulfillIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-detectIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/detectIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:queryInput {:event GoogleCloudDialogflowCxV3EventInput,
-                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
-                :intent GoogleCloudDialogflowCxV3IntentInput,
-                :text GoogleCloudDialogflowCxV3TextInput,
-                :languageCode string,
-                :audio GoogleCloudDialogflowCxV3AudioInput},
-   :outputAudioConfig {:audioEncoding string,
-                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig,
-                       :sampleRateHertz integer},
-   :queryParams {:currentPage string,
-                 :timeZone string,
-                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
-                 :payload {},
-                 :webhookHeaders {},
-                 :disableWebhook boolean,
-                 :analyzeQueryTextSentiment boolean,
-                 :flowVersions [string],
-                 :geoLocation GoogleTypeLatLng,
-                 :parameters {}}}
-  
-  Processes a natural language query and returns structured, actionable data as a result. This method is not idempotent, because it may cause session entity types to be updated, which in turn might affect results of future queries. Note: Always use agent versions for production traffic. See [Versions and environments](https://cloud.google.com/dialogflow/cx/docs/concept/version)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:detectIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-entityTypes-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-entityTypes-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-entityTypes-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns the list of all session entity types in the specified session."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-entityTypes-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:entityOverrideMode string,
-   :name string,
-   :entities [{:value string, :synonyms [string]}]}
-  
-  Updates the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-sessions-entityTypes-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entityOverrideMode string,
-   :name string,
-   :entities [{:value string, :synonyms [string]}]}
-  
-  Creates a session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-environments-continuousTestResults-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/continuousTestResults/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Fetches a list of continuous test results for a given environment."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/continuousTestResults"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-fulfillIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/fulfillIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:match {:parameters {},
-           :intent GoogleCloudDialogflowCxV3Intent,
-           :event string,
-           :confidence number,
-           :resolvedInput string,
-           :matchType string},
-   :matchIntentRequest {:queryInput GoogleCloudDialogflowCxV3QueryInput,
-                        :queryParams GoogleCloudDialogflowCxV3QueryParameters},
-   :outputAudioConfig {:audioEncoding string,
-                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig,
-                       :sampleRateHertz integer}}
-  
-  Fulfills a matched intent returned by MatchIntent. Must be called after MatchIntent, with input from MatchIntentResponse. Otherwise, the behavior is undefined."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:fulfillIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-matchIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/matchIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:queryInput {:event GoogleCloudDialogflowCxV3EventInput,
-                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
-                :intent GoogleCloudDialogflowCxV3IntentInput,
-                :text GoogleCloudDialogflowCxV3TextInput,
-                :languageCode string,
-                :audio GoogleCloudDialogflowCxV3AudioInput},
-   :queryParams {:currentPage string,
-                 :timeZone string,
-                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
-                 :payload {},
-                 :webhookHeaders {},
-                 :disableWebhook boolean,
-                 :analyzeQueryTextSentiment boolean,
-                 :flowVersions [string],
-                 :geoLocation GoogleTypeLatLng,
-                 :parameters {}}}
-  
-  Returns preliminary intent match results, doesn't change the session status."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:matchIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-detectIntent$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/detectIntent
-  
-  Required parameters: session
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:queryInput {:event GoogleCloudDialogflowCxV3EventInput,
-                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
-                :intent GoogleCloudDialogflowCxV3IntentInput,
-                :text GoogleCloudDialogflowCxV3TextInput,
-                :languageCode string,
-                :audio GoogleCloudDialogflowCxV3AudioInput},
-   :outputAudioConfig {:audioEncoding string,
-                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig,
-                       :sampleRateHertz integer},
-   :queryParams {:currentPage string,
-                 :timeZone string,
-                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
-                 :payload {},
-                 :webhookHeaders {},
-                 :disableWebhook boolean,
-                 :analyzeQueryTextSentiment boolean,
-                 :flowVersions [string],
-                 :geoLocation GoogleTypeLatLng,
-                 :parameters {}}}
-  
-  Processes a natural language query and returns structured, actionable data as a result. This method is not idempotent, because it may cause session entity types to be updated, which in turn might affect results of future queries. Note: Always use agent versions for production traffic. See [Versions and environments](https://cloud.google.com/dialogflow/cx/docs/concept/version)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:session})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+session}:detectIntent"
-     #{:session}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-entityTypes-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-entityTypes-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:entityOverrideMode string,
-   :name string,
-   :entities [{:value string, :synonyms [string]}]}
-  
-  Creates a session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-entityTypes-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:entityOverrideMode string,
-   :name string,
-   :entities [{:value string, :synonyms [string]}]}
-  
-  Updates the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-entityTypes-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Returns the list of all session entity types in the specified session."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-sessions-entityTypes-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified session entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -2094,19 +1261,21 @@
   
   Body: 
   
-  {:displayName string,
-   :testConfig {:trackingParameters [string], :flow string},
-   :lastTestResult {:testResult string,
-                    :conversationTurns [GoogleCloudDialogflowCxV3ConversationTurn],
-                    :environment string,
-                    :testTime string,
-                    :name string},
+  {:name string,
    :tags [string],
-   :name string,
+   :displayName string,
    :notes string,
-   :testCaseConversationTurns [{:virtualAgentOutput GoogleCloudDialogflowCxV3ConversationTurnVirtualAgentOutput,
-                                :userInput GoogleCloudDialogflowCxV3ConversationTurnUserInput}],
-   :creationTime string}
+   :testConfig {:trackingParameters [string],
+                :flow string,
+                :page string},
+   :testCaseConversationTurns [{:userInput GoogleCloudDialogflowCxV3ConversationTurnUserInput,
+                                :virtualAgentOutput GoogleCloudDialogflowCxV3ConversationTurnVirtualAgentOutput}],
+   :creationTime string,
+   :lastTestResult {:name string,
+                    :environment string,
+                    :conversationTurns [GoogleCloudDialogflowCxV3ConversationTurn],
+                    :testResult string,
+                    :testTime string}}
   
   Updates the specified test case."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2139,19 +1308,21 @@
   
   Body: 
   
-  {:displayName string,
-   :testConfig {:trackingParameters [string], :flow string},
-   :lastTestResult {:testResult string,
-                    :conversationTurns [GoogleCloudDialogflowCxV3ConversationTurn],
-                    :environment string,
-                    :testTime string,
-                    :name string},
+  {:name string,
    :tags [string],
-   :name string,
+   :displayName string,
    :notes string,
-   :testCaseConversationTurns [{:virtualAgentOutput GoogleCloudDialogflowCxV3ConversationTurnVirtualAgentOutput,
-                                :userInput GoogleCloudDialogflowCxV3ConversationTurnUserInput}],
-   :creationTime string}
+   :testConfig {:trackingParameters [string],
+                :flow string,
+                :page string},
+   :testCaseConversationTurns [{:userInput GoogleCloudDialogflowCxV3ConversationTurnUserInput,
+                                :virtualAgentOutput GoogleCloudDialogflowCxV3ConversationTurnVirtualAgentOutput}],
+   :creationTime string,
+   :lastTestResult {:name string,
+                    :environment string,
+                    :conversationTurns [GoogleCloudDialogflowCxV3ConversationTurn],
+                    :testResult string,
+                    :testTime string}}
   
   Creates a test case for the given agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2246,7 +1417,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, view, pageSize
+  Optional parameters: pageSize, pageToken, view
   
   Fetches a list of test cases for a given agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2306,7 +1477,7 @@
   
   {:gcsUri string, :content string}
   
-  Imports the test cases from a Cloud Storage bucket or a local file. It always creates new test cases and won't overwite any existing ones. The provided ID in the imported test case is neglected. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: ImportTestCasesMetadata - `response`: ImportTestCasesResponse"
+  Imports the test cases from a Cloud Storage bucket or a local file. It always creates new test cases and won't overwrite any existing ones. The provided ID in the imported test case is neglected. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: ImportTestCasesMetadata - `response`: ImportTestCasesResponse"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
@@ -2337,7 +1508,7 @@
   
   Body: 
   
-  {:testCases [string], :environment string}
+  {:environment string, :testCases [string]}
   
   Kicks off a batch run of test cases. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: BatchRunTestCasesMetadata - `response`: BatchRunTestCasesResponse"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2366,9 +1537,9 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
-  Fetches a list of results for a given test case."
+  Fetches the list of run results for the given test case. A maximum of 100 results are kept for each test case."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -2406,167 +1577,6 @@
      "https://dialogflow.googleapis.com/"
      "v3/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-entityTypes-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/get
-  
-  Required parameters: name
-  
-  Optional parameters: languageCode
-  
-  Retrieves the specified entity type."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-entityTypes-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/create
-  
-  Required parameters: parent
-  
-  Optional parameters: languageCode
-  
-  Body: 
-  
-  {:redact boolean,
-   :name string,
-   :excludedPhrases [{:value string}],
-   :entities [{:value string, :synonyms [string]}],
-   :displayName string,
-   :autoExpansionMode string,
-   :kind string,
-   :enableFuzzyExtraction boolean}
-  
-  Creates an entity type in the specified agent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-entityTypes-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/delete
-  
-  Required parameters: name
-  
-  Optional parameters: force
-  
-  Deletes the specified entity type. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-entityTypes-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/patch
-  
-  Required parameters: name
-  
-  Optional parameters: languageCode, updateMask
-  
-  Body: 
-  
-  {:redact boolean,
-   :name string,
-   :excludedPhrases [{:value string}],
-   :entities [{:value string, :synonyms [string]}],
-   :displayName string,
-   :autoExpansionMode string,
-   :kind string,
-   :enableFuzzyExtraction boolean}
-  
-  Updates the specified entity type. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-entityTypes-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, languageCode, pageToken
-  
-  Returns the list of all entity types in the specified agent."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/entityTypes"
-     #{:parent}
      parameters)
     (merge-with
      merge
@@ -2641,28 +1651,38 @@
   
   Required parameters: name
   
-  Optional parameters: languageCode, updateMask
+  Optional parameters: updateMask, languageCode
   
   Body: 
   
-  {:description string,
-   :transitionRoutes [{:targetFlow string,
-                       :condition string,
-                       :targetPage string,
-                       :name string,
-                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}],
-   :displayName string,
-   :eventHandlers [{:triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                    :name string,
-                    :targetFlow string,
-                    :event string,
-                    :targetPage string}],
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :description string,
    :transitionRouteGroups [string],
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}],
+   :displayName string,
    :name string,
-   :nluSettings {:classificationThreshold number,
-                 :modelTrainingMode string,
-                 :modelType string}}
+   :knowledgeConnectorSettings {:enabled boolean,
+                                :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                                :targetPage string,
+                                :targetFlow string,
+                                :dataStoreConnections [GoogleCloudDialogflowCxV3DataStoreConnection]},
+   :eventHandlers [{:name string,
+                    :event string,
+                    :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                    :targetPage string,
+                    :targetFlow string}],
+   :nluSettings {:modelType string,
+                 :classificationThreshold number,
+                 :modelTrainingMode string}}
   
   Updates the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2695,24 +1715,34 @@
   
   Body: 
   
-  {:description string,
-   :transitionRoutes [{:targetFlow string,
-                       :condition string,
-                       :targetPage string,
-                       :name string,
-                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}],
-   :displayName string,
-   :eventHandlers [{:triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                    :name string,
-                    :targetFlow string,
-                    :event string,
-                    :targetPage string}],
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :description string,
    :transitionRouteGroups [string],
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}],
+   :displayName string,
    :name string,
-   :nluSettings {:classificationThreshold number,
-                 :modelTrainingMode string,
-                 :modelType string}}
+   :knowledgeConnectorSettings {:enabled boolean,
+                                :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                                :targetPage string,
+                                :targetFlow string,
+                                :dataStoreConnections [GoogleCloudDialogflowCxV3DataStoreConnection]},
+   :eventHandlers [{:name string,
+                    :event string,
+                    :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                    :targetPage string,
+                    :targetFlow string}],
+   :nluSettings {:modelType string,
+                 :classificationThreshold number,
+                 :modelTrainingMode string}}
   
   Creates a flow in the specified agent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2834,7 +1864,7 @@
   
   Required parameters: parent
   
-  Optional parameters: languageCode, pageToken, pageSize
+  Optional parameters: pageSize, pageToken, languageCode
   
   Returns the list of all flows in the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2892,7 +1922,10 @@
   
   Body: 
   
-  {:flowUri string, :flowContent string, :importOption string}
+  {:flowUri string,
+   :flowContent string,
+   :importOption string,
+   :flowImportStrategy {:globalImportStrategy string}}
   
   Imports the specified flow to the specified agent from a binary file. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: ImportFlowResponse Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2916,65 +1949,12 @@
       :as :json}
      auth))))
 
-(defn locations-agents-flows-pages-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/create
-  
-  Required parameters: parent
-  
-  Optional parameters: languageCode
-  
-  Body: 
-  
-  {:eventHandlers [{:triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                    :name string,
-                    :targetFlow string,
-                    :event string,
-                    :targetPage string}],
-   :form {:parameters [GoogleCloudDialogflowCxV3FormParameter]},
-   :transitionRouteGroups [string],
-   :displayName string,
-   :entryFulfillment {:returnPartialResponses boolean,
-                      :webhook string,
-                      :setParameterActions [GoogleCloudDialogflowCxV3FulfillmentSetParameterAction],
-                      :tag string,
-                      :conditionalCases [GoogleCloudDialogflowCxV3FulfillmentConditionalCases],
-                      :messages [GoogleCloudDialogflowCxV3ResponseMessage]},
-   :name string,
-   :transitionRoutes [{:targetFlow string,
-                       :condition string,
-                       :targetPage string,
-                       :name string,
-                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}]}
-  
-  Creates a page in the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/pages"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-agents-flows-pages-list$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, languageCode, pageToken
+  Optional parameters: languageCode, pageSize, pageToken
   
   Returns the list of all pages in the specified flow."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2991,59 +1971,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-pages-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask, languageCode
-  
-  Body: 
-  
-  {:eventHandlers [{:triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                    :name string,
-                    :targetFlow string,
-                    :event string,
-                    :targetPage string}],
-   :form {:parameters [GoogleCloudDialogflowCxV3FormParameter]},
-   :transitionRouteGroups [string],
-   :displayName string,
-   :entryFulfillment {:returnPartialResponses boolean,
-                      :webhook string,
-                      :setParameterActions [GoogleCloudDialogflowCxV3FulfillmentSetParameterAction],
-                      :tag string,
-                      :conditionalCases [GoogleCloudDialogflowCxV3FulfillmentConditionalCases],
-                      :messages [GoogleCloudDialogflowCxV3ResponseMessage]},
-   :name string,
-   :transitionRoutes [{:targetFlow string,
-                       :condition string,
-                       :targetPage string,
-                       :name string,
-                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}]}
-  
-  Updates the specified page. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -3076,6 +2003,138 @@
       :as :json}
      auth))))
 
+(defn locations-agents-flows-pages-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/create
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Body: 
+  
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :description string,
+   :transitionRouteGroups [string],
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}],
+   :displayName string,
+   :name string,
+   :knowledgeConnectorSettings {:enabled boolean,
+                                :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                                :targetPage string,
+                                :targetFlow string,
+                                :dataStoreConnections [GoogleCloudDialogflowCxV3DataStoreConnection]},
+   :eventHandlers [{:name string,
+                    :event string,
+                    :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                    :targetPage string,
+                    :targetFlow string}],
+   :entryFulfillment {:messages [GoogleCloudDialogflowCxV3ResponseMessage],
+                      :webhook string,
+                      :returnPartialResponses boolean,
+                      :tag string,
+                      :setParameterActions [GoogleCloudDialogflowCxV3FulfillmentSetParameterAction],
+                      :conditionalCases [GoogleCloudDialogflowCxV3FulfillmentConditionalCases],
+                      :advancedSettings GoogleCloudDialogflowCxV3AdvancedSettings,
+                      :enableGenerativeFallback boolean},
+   :form {:parameters [GoogleCloudDialogflowCxV3FormParameter]}}
+  
+  Creates a page in the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/pages"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-pages-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/patch
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode, updateMask
+  
+  Body: 
+  
+  {:advancedSettings {:audioExportGcsDestination GoogleCloudDialogflowCxV3GcsDestination,
+                      :speechSettings GoogleCloudDialogflowCxV3AdvancedSettingsSpeechSettings,
+                      :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
+                      :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
+   :description string,
+   :transitionRouteGroups [string],
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}],
+   :displayName string,
+   :name string,
+   :knowledgeConnectorSettings {:enabled boolean,
+                                :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                                :targetPage string,
+                                :targetFlow string,
+                                :dataStoreConnections [GoogleCloudDialogflowCxV3DataStoreConnection]},
+   :eventHandlers [{:name string,
+                    :event string,
+                    :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                    :targetPage string,
+                    :targetFlow string}],
+   :entryFulfillment {:messages [GoogleCloudDialogflowCxV3ResponseMessage],
+                      :webhook string,
+                      :returnPartialResponses boolean,
+                      :tag string,
+                      :setParameterActions [GoogleCloudDialogflowCxV3FulfillmentSetParameterAction],
+                      :conditionalCases [GoogleCloudDialogflowCxV3FulfillmentConditionalCases],
+                      :advancedSettings GoogleCloudDialogflowCxV3AdvancedSettings,
+                      :enableGenerativeFallback boolean},
+   :form {:parameters [GoogleCloudDialogflowCxV3FormParameter]}}
+  
+  Updates the specified page. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-agents-flows-pages-delete$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/pages/delete
   
@@ -3103,6 +2162,101 @@
       :as :json}
      auth))))
 
+(defn locations-agents-flows-transitionRouteGroups-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, languageCode
+  
+  Returns the list of all transition route groups in the specified flow."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/transitionRouteGroups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-transitionRouteGroups-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/get
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode
+  
+  Retrieves the specified TransitionRouteGroup."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-transitionRouteGroups-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/create
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
+                       :condition string,
+                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
+                       :targetPage string,
+                       :targetFlow string}]}
+  
+  Creates an TransitionRouteGroup in the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/transitionRouteGroups"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-agents-flows-transitionRouteGroups-patch$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/patch
   
@@ -3114,12 +2268,13 @@
   
   {:name string,
    :displayName string,
-   :transitionRoutes [{:targetFlow string,
+   :transitionRoutes [{:name string,
+                       :description string,
+                       :intent string,
                        :condition string,
-                       :targetPage string,
-                       :name string,
                        :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}]}
+                       :targetPage string,
+                       :targetFlow string}]}
   
   Updates the specified TransitionRouteGroup. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -3170,14 +2325,41 @@
       :as :json}
      auth))))
 
-(defn locations-agents-flows-transitionRouteGroups-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/get
+(defn locations-agents-flows-versions-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all versions in the specified Flow."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/versions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-versions-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/get
   
   Required parameters: name
   
-  Optional parameters: languageCode
+  Optional parameters: none
   
-  Retrieves the specified TransitionRouteGroup."
+  Retrieves the specified Version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
@@ -3197,52 +2379,25 @@
       :as :json}
      auth))))
 
-(defn locations-agents-flows-transitionRouteGroups-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/list
+(defn locations-agents-flows-versions-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/create
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, languageCode
-  
-  Returns the list of all transition route groups in the specified flow."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/transitionRouteGroups"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-transitionRouteGroups-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/transitionRouteGroups/create
-  
-  Required parameters: parent
-  
-  Optional parameters: languageCode
+  Optional parameters: none
   
   Body: 
   
   {:name string,
    :displayName string,
-   :transitionRoutes [{:targetFlow string,
-                       :condition string,
-                       :targetPage string,
-                       :name string,
-                       :triggerFulfillment GoogleCloudDialogflowCxV3Fulfillment,
-                       :intent string}]}
+   :description string,
+   :nluSettings {:modelType string,
+                 :classificationThreshold number,
+                 :modelTrainingMode string},
+   :createTime string,
+   :state string}
   
-  Creates an TransitionRouteGroup in the specified flow. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  Creates a Version in the specified Flow. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: CreateVersionOperationMetadata - `response`: Version"
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
@@ -3251,7 +2406,7 @@
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/transitionRouteGroups"
+     "v3/{+parent}/versions"
      #{:parent}
      parameters)
     (merge-with
@@ -3259,6 +2414,73 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-versions-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :description string,
+   :nluSettings {:modelType string,
+                 :classificationThreshold number,
+                 :modelTrainingMode string},
+   :createTime string,
+   :state string}
+  
+  Updates the specified Version."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-flows-versions-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified Version."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -3297,198 +2519,28 @@
       :as :json}
      auth))))
 
-(defn locations-agents-flows-versions-create$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/create
+(defn locations-agents-flows-versions-compareVersions$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/compareVersions
   
-  Required parameters: parent
+  Required parameters: baseVersion
   
   Optional parameters: none
   
   Body: 
   
-  {:description string,
-   :displayName string,
-   :state string,
-   :nluSettings {:classificationThreshold number,
-                 :modelTrainingMode string,
-                 :modelType string},
-   :name string,
-   :createTime string}
+  {:targetVersion string, :languageCode string}
   
-  Creates a Version in the specified Flow. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: CreateVersionOperationMetadata - `response`: Version"
+  Compares the specified base version with target version."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:baseVersion})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/versions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-versions-list$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Returns the list of all versions in the specified Flow."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+parent}/versions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-versions-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:description string,
-   :displayName string,
-   :state string,
-   :nluSettings {:classificationThreshold number,
-                 :modelTrainingMode string,
-                 :modelType string},
-   :name string,
-   :createTime string}
-  
-  Updates the specified Version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-versions-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieves the specified Version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-flows-versions-delete$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/flows/versions/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified Version."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-agents-webhooks-patch$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/webhooks/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:timeout string,
-   :disabled boolean,
-   :genericWebService {:requestHeaders {},
-                       :username string,
-                       :password string,
-                       :uri string},
-   :name string,
-   :displayName string,
-   :serviceDirectory {:service string,
-                      :genericWebService GoogleCloudDialogflowCxV3WebhookGenericWebService}}
-  
-  Updates the specified webhook."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/dialogflow"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://dialogflow.googleapis.com/"
-     "v3/{+name}"
-     #{:name}
+     "v3/{+baseVersion}:compareVersions"
+     #{:baseVersion}
      parameters)
     (merge-with
      merge
@@ -3527,6 +2579,33 @@
       :as :json}
      auth))))
 
+(defn locations-agents-webhooks-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/webhooks/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified webhook."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-agents-webhooks-create$
   "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/webhooks/create
   
@@ -3536,16 +2615,23 @@
   
   Body: 
   
-  {:timeout string,
-   :disabled boolean,
-   :genericWebService {:requestHeaders {},
-                       :username string,
-                       :password string,
-                       :uri string},
-   :name string,
+  {:name string,
    :displayName string,
+   :genericWebService {:password string,
+                       :requestHeaders {},
+                       :webhookType string,
+                       :allowedCaCerts [string],
+                       :requestBody string,
+                       :username string,
+                       :oauthConfig GoogleCloudDialogflowCxV3WebhookGenericWebServiceOAuthConfig,
+                       :serviceAgentAuth string,
+                       :uri string,
+                       :httpMethod string,
+                       :parameterMapping {}},
    :serviceDirectory {:service string,
-                      :genericWebService GoogleCloudDialogflowCxV3WebhookGenericWebService}}
+                      :genericWebService GoogleCloudDialogflowCxV3WebhookGenericWebService},
+   :timeout string,
+   :disabled boolean}
   
   Creates a webhook in the specified agent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -3558,6 +2644,55 @@
      "https://dialogflow.googleapis.com/"
      "v3/{+parent}/webhooks"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-webhooks-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/webhooks/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :genericWebService {:password string,
+                       :requestHeaders {},
+                       :webhookType string,
+                       :allowedCaCerts [string],
+                       :requestBody string,
+                       :username string,
+                       :oauthConfig GoogleCloudDialogflowCxV3WebhookGenericWebServiceOAuthConfig,
+                       :serviceAgentAuth string,
+                       :uri string,
+                       :httpMethod string,
+                       :parameterMapping {}},
+   :serviceDirectory {:service string,
+                      :genericWebService GoogleCloudDialogflowCxV3WebhookGenericWebService},
+   :timeout string,
+   :disabled boolean}
+  
+  Updates the specified webhook."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -3596,20 +2731,1781 @@
       :as :json}
      auth))))
 
-(defn locations-agents-webhooks-get$
-  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/webhooks/get
+(defn locations-agents-entityTypes-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/get
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: languageCode
   
-  Retrieves the specified webhook."
+  Retrieves the specified entity type."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/dialogflow"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :kind string,
+   :autoExpansionMode string,
+   :entities [{:value string, :synonyms [string]}],
+   :excludedPhrases [{:value string}],
+   :enableFuzzyExtraction boolean,
+   :redact boolean}
+  
+  Creates an entity type in the specified agent. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/patch
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode, updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :kind string,
+   :autoExpansionMode string,
+   :entities [{:value string, :synonyms [string]}],
+   :excludedPhrases [{:value string}],
+   :enableFuzzyExtraction boolean,
+   :redact boolean}
+  
+  Updates the specified entity type. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: force
+  
+  Deletes the specified entity type. Note: You should always train a flow prior to sending it queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode, pageSize, pageToken
+  
+  Returns the list of all entity types in the specified agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-export$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/export
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entityTypes [string],
+   :entityTypesUri string,
+   :entityTypesContentInline boolean,
+   :dataFormat string,
+   :languageCode string}
+  
+  Exports the selected entity types."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes:export"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-entityTypes-import$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/entityTypes/import
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:entityTypesUri string,
+   :entityTypesContent {:content string},
+   :mergeOption string,
+   :targetEntityType string}
+  
+  Imports the specified entitytypes into the agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes:import"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all environments in the specified Agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/environments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :description string,
+   :versionConfigs [{:version string}],
+   :updateTime string,
+   :testCasesConfig {:testCases [string],
+                     :enableContinuousRun boolean,
+                     :enablePredeploymentRun boolean},
+   :webhookConfig {:webhookOverrides [GoogleCloudDialogflowCxV3Webhook]}}
+  
+  Creates an Environment in the specified Agent. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: Environment"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/environments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :description string,
+   :versionConfigs [{:version string}],
+   :updateTime string,
+   :testCasesConfig {:testCases [string],
+                     :enableContinuousRun boolean,
+                     :enablePredeploymentRun boolean},
+   :webhookConfig {:webhookOverrides [GoogleCloudDialogflowCxV3Webhook]}}
+  
+  Updates the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: An empty [Struct message](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) - `response`: Environment"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-lookupEnvironmentHistory$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/lookupEnvironmentHistory
+  
+  Required parameters: name
+  
+  Optional parameters: pageSize, pageToken
+  
+  Looks up the history of the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}:lookupEnvironmentHistory"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-runContinuousTest$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/runContinuousTest
+  
+  Required parameters: environment
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Kicks off a continuous test under the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: RunContinuousTestMetadata - `response`: RunContinuousTestResponse"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:environment})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+environment}:runContinuousTest"
+     #{:environment}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-deployFlow$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployFlow
+  
+  Required parameters: environment
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:flowVersion string}
+  
+  Deploys a flow to the specified Environment. This method is a [long-running operation](https://cloud.google.com/dialogflow/cx/docs/how/long-running-operation). The returned `Operation` type has the following method-specific fields: - `metadata`: DeployFlowMetadata - `response`: DeployFlowResponse"
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:environment})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+environment}:deployFlow"
+     #{:environment}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-deployments-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all deployments in the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/deployments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-deployments-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/deployments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified Deployment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-detectIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/detectIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Processes a natural language query and returns structured, actionable data as a result. This method is not idempotent, because it may cause session entity types to be updated, which in turn might affect results of future queries. Note: Always use agent versions for production traffic. See [Versions and environments](https://cloud.google.com/dialogflow/cx/docs/concept/version)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:detectIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-serverStreamingDetectIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/serverStreamingDetectIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Processes a natural language query and returns structured, actionable data as a result through server-side streaming. Server-side streaming allows Dialogflow to send [partial responses](https://cloud.google.com/dialogflow/cx/docs/concept/fulfillment#partial-response) earlier in a single request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:serverStreamingDetectIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-matchIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/matchIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :persistParameterChanges boolean}
+  
+  Returns preliminary intent match results, doesn't change the session status."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:matchIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-fulfillIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/fulfillIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:matchIntentRequest {:queryParams GoogleCloudDialogflowCxV3QueryParameters,
+                        :queryInput GoogleCloudDialogflowCxV3QueryInput,
+                        :persistParameterChanges boolean},
+   :match {:intent GoogleCloudDialogflowCxV3Intent,
+           :event string,
+           :parameters {},
+           :resolvedInput string,
+           :matchType string,
+           :confidence number},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Fulfills a matched intent returned by MatchIntent. Must be called after MatchIntent, with input from MatchIntentResponse. Otherwise, the behavior is undefined."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:fulfillIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-entityTypes-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all session entity types in the specified session."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-entityTypes-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-entityTypes-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :entityOverrideMode string,
+   :entities [{:value string, :synonyms [string]}]}
+  
+  Creates a session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-entityTypes-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :entityOverrideMode string,
+   :entities [{:value string, :synonyms [string]}]}
+  
+  Updates the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-sessions-entityTypes-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/sessions/entityTypes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-continuousTestResults-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/continuousTestResults/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Fetches a list of continuous test results for a given environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/continuousTestResults"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all experiments in the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/experiments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified Experiment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:description string,
+   :variantsHistory [{:versionVariants GoogleCloudDialogflowCxV3VersionVariants,
+                      :updateTime string}],
+   :definition {:condition string,
+                :versionVariants GoogleCloudDialogflowCxV3VersionVariants},
+   :rolloutState {:step string, :stepIndex integer, :startTime string},
+   :startTime string,
+   :displayName string,
+   :name string,
+   :endTime string,
+   :createTime string,
+   :rolloutFailureReason string,
+   :state string,
+   :rolloutConfig {:rolloutSteps [GoogleCloudDialogflowCxV3RolloutConfigRolloutStep],
+                   :rolloutCondition string,
+                   :failureCondition string},
+   :result {:versionMetrics [GoogleCloudDialogflowCxV3ExperimentResultVersionMetrics],
+            :lastUpdateTime string},
+   :lastUpdateTime string,
+   :experimentLength string}
+  
+  Creates an Experiment in the specified Environment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/experiments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:description string,
+   :variantsHistory [{:versionVariants GoogleCloudDialogflowCxV3VersionVariants,
+                      :updateTime string}],
+   :definition {:condition string,
+                :versionVariants GoogleCloudDialogflowCxV3VersionVariants},
+   :rolloutState {:step string, :stepIndex integer, :startTime string},
+   :startTime string,
+   :displayName string,
+   :name string,
+   :endTime string,
+   :createTime string,
+   :rolloutFailureReason string,
+   :state string,
+   :rolloutConfig {:rolloutSteps [GoogleCloudDialogflowCxV3RolloutConfigRolloutStep],
+                   :rolloutCondition string,
+                   :failureCondition string},
+   :result {:versionMetrics [GoogleCloudDialogflowCxV3ExperimentResultVersionMetrics],
+            :lastUpdateTime string},
+   :lastUpdateTime string,
+   :experimentLength string}
+  
+  Updates the specified Experiment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified Experiment."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-start$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/start
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Starts the specified Experiment. This rpc only changes the state of experiment from PENDING to RUNNING."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}:start"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-environments-experiments-stop$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/environments/experiments/stop
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Stops the specified Experiment. This rpc only changes the state of experiment from RUNNING to DONE."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}:stop"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-changelogs-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/changelogs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter, pageSize, pageToken
+  
+  Returns the list of Changelogs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/changelogs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-changelogs-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/changelogs/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified Changelog."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-detectIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/detectIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Processes a natural language query and returns structured, actionable data as a result. This method is not idempotent, because it may cause session entity types to be updated, which in turn might affect results of future queries. Note: Always use agent versions for production traffic. See [Versions and environments](https://cloud.google.com/dialogflow/cx/docs/concept/version)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:detectIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-serverStreamingDetectIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/serverStreamingDetectIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Processes a natural language query and returns structured, actionable data as a result through server-side streaming. Server-side streaming allows Dialogflow to send [partial responses](https://cloud.google.com/dialogflow/cx/docs/concept/fulfillment#partial-response) earlier in a single request."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:serverStreamingDetectIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-matchIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/matchIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:queryParams {:currentPage string,
+                 :timeZone string,
+                 :sessionEntityTypes [GoogleCloudDialogflowCxV3SessionEntityType],
+                 :payload {},
+                 :searchConfig GoogleCloudDialogflowCxV3SearchConfig,
+                 :channel string,
+                 :webhookHeaders {},
+                 :endUserMetadata {},
+                 :sessionTtl string,
+                 :disableWebhook boolean,
+                 :analyzeQueryTextSentiment boolean,
+                 :flowVersions [string],
+                 :geoLocation GoogleTypeLatLng,
+                 :parameters {},
+                 :populateDataStoreConnectionSignals boolean},
+   :queryInput {:text GoogleCloudDialogflowCxV3TextInput,
+                :intent GoogleCloudDialogflowCxV3IntentInput,
+                :audio GoogleCloudDialogflowCxV3AudioInput,
+                :event GoogleCloudDialogflowCxV3EventInput,
+                :dtmf GoogleCloudDialogflowCxV3DtmfInput,
+                :languageCode string},
+   :persistParameterChanges boolean}
+  
+  Returns preliminary intent match results, doesn't change the session status."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:matchIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-fulfillIntent$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/fulfillIntent
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:matchIntentRequest {:queryParams GoogleCloudDialogflowCxV3QueryParameters,
+                        :queryInput GoogleCloudDialogflowCxV3QueryInput,
+                        :persistParameterChanges boolean},
+   :match {:intent GoogleCloudDialogflowCxV3Intent,
+           :event string,
+           :parameters {},
+           :resolvedInput string,
+           :matchType string,
+           :confidence number},
+   :outputAudioConfig {:audioEncoding string,
+                       :sampleRateHertz integer,
+                       :synthesizeSpeechConfig GoogleCloudDialogflowCxV3SynthesizeSpeechConfig}}
+  
+  Fulfills a matched intent returned by MatchIntent. Must be called after MatchIntent, with input from MatchIntentResponse. Otherwise, the behavior is undefined."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:fulfillIntent"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-submitAnswerFeedback$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/submitAnswerFeedback
+  
+  Required parameters: session
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:responseId string,
+   :answerFeedback {:rating string,
+                    :ratingReason GoogleCloudDialogflowCxV3AnswerFeedbackRatingReason,
+                    :customRating string},
+   :updateMask string}
+  
+  Updates the feedback received from the user for a single turn of the bot response."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:session})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+session}:submitAnswerFeedback"
+     #{:session}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-entityTypes-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all session entity types in the specified session."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-entityTypes-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieves the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-entityTypes-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :entityOverrideMode string,
+   :entities [{:value string, :synonyms [string]}]}
+  
+  Creates a session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/entityTypes"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-entityTypes-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:name string,
+   :entityOverrideMode string,
+   :entities [{:value string, :synonyms [string]}]}
+  
+  Updates the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-sessions-entityTypes-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/sessions/entityTypes/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes the specified session entity type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-generators-list$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/generators/list
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode, pageSize, pageToken
+  
+  Returns the list of all generators in the specified agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/generators"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-generators-get$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/generators/get
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode
+  
+  Retrieves the specified generator."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-generators-create$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/generators/create
+  
+  Required parameters: parent
+  
+  Optional parameters: languageCode
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :promptText {:text string},
+   :placeholders [{:id string, :name string}]}
+  
+  Creates a generator in the specified agent."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+parent}/generators"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-generators-patch$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/generators/patch
+  
+  Required parameters: name
+  
+  Optional parameters: languageCode, updateMask
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :promptText {:text string},
+   :placeholders [{:id string, :name string}]}
+  
+  Update the specified generator."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://dialogflow.googleapis.com/"
+     "v3/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-agents-generators-delete$
+  "https://cloud.google.com/dialogflow/api/reference/rest/v3/projects/locations/agents/generators/delete
+  
+  Required parameters: name
+  
+  Optional parameters: force
+  
+  Deletes the specified generators."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/dialogflow"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://dialogflow.googleapis.com/"
      "v3/{+name}"

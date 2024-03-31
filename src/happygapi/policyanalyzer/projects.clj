@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, filter
+  Optional parameters: filter, pageSize, pageToken
   
   Queries policy activities on Google Cloud resources."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

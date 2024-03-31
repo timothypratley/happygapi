@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageSize, filter, pageToken
   
   Gets a list of policy schemas that match a specified filter value for a given customer."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"
@@ -69,10 +69,10 @@
   
   Body: 
   
-  {:policyTargetKey {:targetResource string, :additionalTargetKeys {}},
+  {:pageToken string,
    :policySchemaFilter string,
    :pageSize integer,
-   :pageToken string}
+   :policyTargetKey {:targetResource string, :additionalTargetKeys {}}}
   
   Gets the resolved policy values for a list of policies that match a search query."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"
@@ -96,8 +96,8 @@
       :as :json}
      auth))))
 
-(defn policies-orgunits-batchInherit$
-  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchInherit
+(defn policies-networks-defineNetwork$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/networks/defineNetwork
   
   Required parameters: customer
   
@@ -105,10 +105,11 @@
   
   Body: 
   
-  {:requests [{:policyTargetKey GoogleChromePolicyV1PolicyTargetKey,
-               :policySchema string}]}
+  {:targetResource string,
+   :name string,
+   :settings [{:policySchema string, :value {}}]}
   
-  Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
+  Define a new network."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customer})]}
@@ -116,7 +117,106 @@
    (http/post
     (util/get-url
      "https://chromepolicy.googleapis.com/"
-     "v1/{+customer}/policies/orgunits:batchInherit"
+     "v1/{+customer}/policies/networks:defineNetwork"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-networks-defineCertificate$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/networks/defineCertificate
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:targetResource string,
+   :ceritificateName string,
+   :certificate string,
+   :settings [{:policySchema string, :value {}}]}
+  
+  Creates a certificate at a specified OU for a customer."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/networks:defineCertificate"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-networks-removeCertificate$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/networks/removeCertificate
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:networkId string, :targetResource string}
+  
+  Remove an existing certificate by guid."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/networks:removeCertificate"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-networks-removeNetwork$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/networks/removeNetwork
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:networkId string, :targetResource string}
+  
+  Remove an existing network by guid."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/networks:removeNetwork"
      #{:customer}
      parameters)
     (merge-with
@@ -138,11 +238,11 @@
   
   Body: 
   
-  {:requests [{:policyTargetKey GoogleChromePolicyV1PolicyTargetKey,
-               :policyValue GoogleChromePolicyV1PolicyValue,
-               :updateMask string}]}
+  {:requests [{:updateMask string,
+               :policyTargetKey GoogleChromePolicyVersionsV1PolicyTargetKey,
+               :policyValue GoogleChromePolicyVersionsV1PolicyValue}]}
   
-  Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`. On failure the request will return the error details as part of the google.rpc.Status."
+  Modify multiple policy values that are applied to a specific org unit. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:customer})]}
@@ -151,6 +251,176 @@
     (util/get-url
      "https://chromepolicy.googleapis.com/"
      "v1/{+customer}/policies/orgunits:batchModify"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-orgunits-batchInherit$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/orgunits/batchInherit
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:policyTargetKey GoogleChromePolicyVersionsV1PolicyTargetKey,
+               :policySchema string}]}
+  
+  Modify multiple policy values that are applied to a specific org unit so that they now inherit the value from a parent (if applicable). All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/orgunits:batchInherit"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-groups-batchDelete$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/groups/batchDelete
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:policyTargetKey GoogleChromePolicyVersionsV1PolicyTargetKey,
+               :policySchema string}]}
+  
+  Delete multiple policy values that are applied to a specific group. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/groups:batchDelete"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-groups-listGroupPriorityOrdering$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/groups/listGroupPriorityOrdering
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policyTargetKey {:targetResource string, :additionalTargetKeys {}},
+   :policyNamespace string,
+   :policySchema string}
+  
+  Retrieve a group priority ordering for an app. The target app must be supplied in `additionalTargetKeyNames` in the PolicyTargetKey. On failure the request will return the error details as part of the google.rpc.Status."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"
+            "https://www.googleapis.com/auth/chrome.management.policy.readonly"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/groups:listGroupPriorityOrdering"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-groups-batchModify$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/groups/batchModify
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:updateMask string,
+               :policyValue GoogleChromePolicyVersionsV1PolicyValue,
+               :policyTargetKey GoogleChromePolicyVersionsV1PolicyTargetKey}]}
+  
+  Modify multiple policy values that are applied to a specific group. All targets must have the same target format. That is to say that they must point to the same target resource and must have the same keys specified in `additionalTargetKeyNames`, though the values for those keys may be different. On failure the request will return the error details as part of the google.rpc.Status."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/groups:batchModify"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-groups-updateGroupPriorityOrdering$
+  "http://developers.google.com/chrome/policyapi/reference/rest/v1/customers/policies/groups/updateGroupPriorityOrdering
+  
+  Required parameters: customer
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policyNamespace string,
+   :policySchema string,
+   :policyTargetKey {:targetResource string, :additionalTargetKeys {}},
+   :groupIds [string]}
+  
+  Update a group priority ordering for an app. The target app must be supplied in `additionalTargetKeyNames` in the PolicyTargetKey. On failure the request will return the error details as part of the google.rpc.Status."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.policy"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://chromepolicy.googleapis.com/"
+     "v1/{+customer}/policies/groups:updateGroupPriorityOrdering"
      #{:customer}
      parameters)
     (merge-with

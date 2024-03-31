@@ -15,13 +15,13 @@
   
   Body: 
   
-  {:sessionInfo string,
-   :phoneNumber string,
-   :verificationProof string,
-   :temporaryProof string,
+  {:code string,
+   :idToken string,
    :operation string,
-   :code string,
-   :idToken string}
+   :phoneNumber string,
+   :sessionInfo string,
+   :temporaryProof string,
+   :verificationProof string}
   
   Verifies ownership of a phone number and creates/updates the user account accordingly."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -132,39 +132,39 @@
   
   {:allowPasswordUser boolean,
    :authorizedDomains [string],
-   :legacyResetPasswordTemplate {:from string,
-                                 :body string,
-                                 :replyTo string,
-                                 :fromDisplayName string,
+   :legacyResetPasswordTemplate {:body string,
                                  :format string,
+                                 :from string,
+                                 :fromDisplayName string,
+                                 :replyTo string,
                                  :subject string},
-   :changeEmailTemplate {:from string,
-                         :body string,
-                         :replyTo string,
-                         :fromDisplayName string,
+   :changeEmailTemplate {:body string,
                          :format string,
+                         :from string,
+                         :fromDisplayName string,
+                         :replyTo string,
                          :subject string},
-   :idpConfig [{:enabled boolean,
-                :whitelistedAudiences [string],
+   :idpConfig [{:clientId string,
+                :enabled boolean,
                 :experimentPercent integer,
                 :provider string,
                 :secret string,
-                :clientId string}],
+                :whitelistedAudiences [string]}],
    :apiKey string,
    :enableAnonymousUser boolean,
-   :verifyEmailTemplate {:from string,
-                         :body string,
-                         :replyTo string,
-                         :fromDisplayName string,
+   :verifyEmailTemplate {:body string,
                          :format string,
+                         :from string,
+                         :fromDisplayName string,
+                         :replyTo string,
                          :subject string},
    :useEmailSending boolean,
    :delegatedProjectNumber string,
-   :resetPasswordTemplate {:from string,
-                           :body string,
-                           :replyTo string,
-                           :fromDisplayName string,
+   :resetPasswordTemplate {:body string,
                            :format string,
+                           :from string,
+                           :fromDisplayName string,
+                           :replyTo string,
                            :subject string}}
   
   Set project configuration."
@@ -301,9 +301,9 @@
   Body: 
   
   {:delegatedProjectNumber string,
-   :token string,
    :instanceId string,
-   :returnSecureToken boolean}
+   :returnSecureToken boolean,
+   :token string}
   
   Verifies the developer asserted ID token."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -379,7 +379,7 @@
   
   Body: 
   
-  {:idToken string, :email string, :oobCode string}
+  {:email string, :idToken string, :oobCode string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -411,11 +411,11 @@
   
   Body: 
   
-  {:email [string],
-   :phoneNumber [string],
-   :delegatedProjectNumber string,
+  {:delegatedProjectNumber string,
+   :email [string],
+   :idToken string,
    :localId [string],
-   :idToken string}
+   :phoneNumber [string]}
   
   Returns the account info."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -447,10 +447,10 @@
   
   Body: 
   
-  {:oobCode string,
+  {:email string,
    :newPassword string,
-   :email string,
-   :oldPassword string}
+   :oldPassword string,
+   :oobCode string}
   
   Reset password for a user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -528,7 +528,7 @@
   
   Body: 
   
-  {:localId string, :instanceId string}
+  {:instanceId string, :localId string}
   
   Sign out user."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -658,13 +658,13 @@
             :validSince string,
             :disabled boolean,
             :displayName string,
-            :providerUserInfo [{:email string,
-                                :displayName string,
-                                :providerId string,
-                                :phoneNumber string,
-                                :rawId string,
+            :providerUserInfo [{:displayName string,
+                                :email string,
                                 :federatedId string,
+                                :phoneNumber string,
                                 :photoUrl string,
+                                :providerId string,
+                                :rawId string,
                                 :screenName string}],
             :customAttributes string,
             :createdAt string,
@@ -711,10 +711,10 @@
   
   Body: 
   
-  {:targetProjectId string,
+  {:delegatedProjectNumber string,
+   :maxResults integer,
    :nextPageToken string,
-   :delegatedProjectNumber string,
-   :maxResults integer}
+   :targetProjectId string}
   
   Batch download user accounts."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"

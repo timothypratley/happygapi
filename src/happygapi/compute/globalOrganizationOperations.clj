@@ -6,39 +6,12 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://cloud.google.com/compute/api/reference/rest/v1/globalOrganizationOperations/delete
-  
-  Required parameters: operation
-  
-  Optional parameters: parentId
-  
-  Deletes the specified Operations resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/compute"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:operation})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://compute.googleapis.com/compute/v1/"
-     "locations/global/operations/{operation}"
-     #{:operation}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://cloud.google.com/compute/api/reference/rest/v1/globalOrganizationOperations/list
   
   Required parameters: none
   
-  Optional parameters: parentId, orderBy, filter, maxResults, pageToken, returnPartialSuccess
+  Optional parameters: filter, maxResults, orderBy, pageToken, parentId, returnPartialSuccess
   
   Retrieves a list of Operation resources contained within the specified organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -76,6 +49,33 @@
   {:pre [(util/has-keys? parameters #{:operation})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "locations/global/operations/{operation}"
+     #{:operation}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn delete$
+  "https://cloud.google.com/compute/api/reference/rest/v1/globalOrganizationOperations/delete
+  
+  Required parameters: operation
+  
+  Optional parameters: parentId
+  
+  Deletes the specified Operations resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:operation})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "locations/global/operations/{operation}"

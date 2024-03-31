@@ -7,7 +7,7 @@
             [happy.util :as util]))
 
 (defn $
-  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/reopenAttribution
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/installAttribution
   
   Required parameters: none
   
@@ -15,9 +15,22 @@
   
   Body: 
   
-  {:bundleId string, :requestedLink string, :sdkVersion string}
+  {:iosVersion string,
+   :uniqueMatchLinkToCheck string,
+   :retrievalMethod string,
+   :sdkVersion string,
+   :device {:screenResolutionHeight string,
+            :timezone string,
+            :deviceModelName string,
+            :languageCode string,
+            :screenResolutionWidth string,
+            :languageCodeRaw string,
+            :languageCodeFromWebview string},
+   :visualStyle string,
+   :appInstallationTime string,
+   :bundleId string}
   
-  Get iOS reopen attribution for app universal link open deeplinking."
+  Get iOS strong/weak-match info for post-install attribution."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -25,7 +38,7 @@
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
-     "v1/reopenAttribution"
+     "v1/installAttribution"
      #{}
      parameters)
     (merge-with
@@ -43,7 +56,7 @@
   
   Required parameters: dynamicLink
   
-  Optional parameters: durationDays, sdkVersion
+  Optional parameters: sdkVersion, durationDays
   
   Fetches analytics stats of a short Dynamic Link for a given duration. Metrics include number of clicks, redirects, installs, app first opens, and app reopens."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
@@ -65,7 +78,7 @@
      auth))))
 
 (defn $
-  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/installAttribution
+  "https://firebase.google.com/docs/dynamic-links/api/reference/rest/v1/reopenAttribution
   
   Required parameters: none
   
@@ -73,22 +86,9 @@
   
   Body: 
   
-  {:visualStyle string,
-   :appInstallationTime string,
-   :uniqueMatchLinkToCheck string,
-   :bundleId string,
-   :device {:languageCodeFromWebview string,
-            :languageCodeRaw string,
-            :languageCode string,
-            :screenResolutionWidth string,
-            :timezone string,
-            :deviceModelName string,
-            :screenResolutionHeight string},
-   :retrievalMethod string,
-   :iosVersion string,
-   :sdkVersion string}
+  {:sdkVersion string, :requestedLink string, :bundleId string}
   
-  Get iOS strong/weak-match info for post-install attribution."
+  Get iOS reopen attribution for app universal link open deeplinking."
   {:scopes ["https://www.googleapis.com/auth/firebase"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -96,7 +96,7 @@
    (http/post
     (util/get-url
      "https://firebasedynamiclinks.googleapis.com/"
-     "v1/installAttribution"
+     "v1/reopenAttribution"
      #{}
      parameters)
     (merge-with

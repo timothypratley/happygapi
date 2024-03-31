@@ -48,11 +48,13 @@
    :projectId string,
    :projectNumber string,
    :displayName string,
-   :state string,
    :resources {:hostingSite string,
-               :locationId string,
                :realtimeDatabaseInstance string,
-               :storageBucket string}}
+               :storageBucket string,
+               :locationId string},
+   :state string,
+   :annotations {},
+   :etag string}
   
   Updates the attributes of the specified FirebaseProject. All [query parameters](#query-parameters) are required."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -176,7 +178,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: pageToken, pageSize, filter, showDeleted
   
   Lists all available Apps for the specified FirebaseProject. This is a convenience method. Typically, interaction with an App should be done using the platform-specific service, but some tool use-cases require a summary of all known Apps (such as for App selector interfaces)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -205,7 +207,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageToken, pageSize, showDeleted
   
   Lists each FirebaseProject accessible to the caller. The elements are returned in no particular order, but they will be a consistent view of the Projects when additional requests are made with a `pageToken`. This method is eventually consistent with Project mutations, which means newly provisioned Projects and recent modifications to existing Projects might not be reflected in the set of Projects. The list will include only ACTIVE Projects. Use GetFirebaseProject for consistent reads as well as for additional Project details."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -291,43 +293,6 @@
       :as :json}
      auth))))
 
-(defn androidApps-create$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:appId string,
-   :displayName string,
-   :name string,
-   :packageName string,
-   :projectId string}
-  
-  Requests the creation of a new AndroidApp in the specified FirebaseProject. The result of this call is an `Operation` which can be used to track the provisioning process. The `Operation` is automatically deleted after completion, so there is no need to call `DeleteOperation`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/androidApps"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn androidApps-get$
   "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/get
   
@@ -357,6 +322,78 @@
       :as :json}
      auth))))
 
+(defn androidApps-list$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, showDeleted
+  
+  Lists each AndroidApp associated with the specified FirebaseProject. The elements are returned in no particular order, but will be a consistent view of the Apps when additional requests are made with a `pageToken`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/androidApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-create$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:packageName string,
+   :apiKeyId string,
+   :displayName string,
+   :name string,
+   :etag string,
+   :state string,
+   :sha256Hashes [string],
+   :sha1Hashes [string],
+   :appId string,
+   :projectId string,
+   :expireTime string}
+  
+  Requests the creation of a new AndroidApp in the specified FirebaseProject. The result of this call is an `Operation` which can be used to track the provisioning process. The `Operation` is automatically deleted after completion, so there is no need to call `DeleteOperation`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/androidApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn androidApps-patch$
   "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/patch
   
@@ -366,11 +403,17 @@
   
   Body: 
   
-  {:appId string,
+  {:packageName string,
+   :apiKeyId string,
    :displayName string,
    :name string,
-   :packageName string,
-   :projectId string}
+   :etag string,
+   :state string,
+   :sha256Hashes [string],
+   :sha1Hashes [string],
+   :appId string,
+   :projectId string,
+   :expireTime string}
   
   Updates the attributes of the specified AndroidApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -394,30 +437,70 @@
       :as :json}
      auth))))
 
-(defn androidApps-list$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/list
+(defn androidApps-remove$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/remove
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: none
   
-  Lists each AndroidApp associated with the specified FirebaseProject. The elements are returned in no particular order, but will be a consistent view of the Apps when additional requests are made with a `pageToken`."
+  Body: 
+  
+  {:allowMissing boolean,
+   :validateOnly boolean,
+   :etag string,
+   :immediate boolean}
+  
+  Removes the specified AndroidApp from the FirebaseProject."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/androidApps"
-     #{:parent}
+     "v1beta1/{+name}:remove"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn androidApps-undelete$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/androidApps/undelete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:validateOnly boolean, :etag string}
+  
+  Restores the specified AndroidApp to the FirebaseProject."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -490,7 +573,7 @@
   
   Body: 
   
-  {:certType string, :shaHash string, :name string}
+  {:name string, :shaHash string, :certType string}
   
   Adds a ShaCertificate to the specified AndroidApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -541,14 +624,14 @@
       :as :json}
      auth))))
 
-(defn webApps-getConfig$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/getConfig
+(defn iosApps-get$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the configuration artifact associated with the specified WebApp."
+  Gets the specified IosApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
@@ -565,6 +648,281 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-list$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize, showDeleted
+  
+  Lists each IosApp associated with the specified FirebaseProject. The elements are returned in no particular order, but will be a consistent view of the Apps when additional requests are made with a `pageToken`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/iosApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-create$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:teamId string,
+   :apiKeyId string,
+   :displayName string,
+   :name string,
+   :etag string,
+   :state string,
+   :appStoreId string,
+   :bundleId string,
+   :appId string,
+   :projectId string,
+   :expireTime string}
+  
+  Requests the creation of a new IosApp in the specified FirebaseProject. The result of this call is an `Operation` which can be used to track the provisioning process. The `Operation` is automatically deleted after completion, so there is no need to call `DeleteOperation`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/iosApps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-patch$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:teamId string,
+   :apiKeyId string,
+   :displayName string,
+   :name string,
+   :etag string,
+   :state string,
+   :appStoreId string,
+   :bundleId string,
+   :appId string,
+   :projectId string,
+   :expireTime string}
+  
+  Updates the attributes of the specified IosApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-remove$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/remove
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:allowMissing boolean,
+   :validateOnly boolean,
+   :etag string,
+   :immediate boolean}
+  
+  Removes the specified IosApp from the FirebaseProject."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}:remove"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-undelete$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/undelete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:validateOnly boolean, :etag string}
+  
+  Restores the specified IosApp to the FirebaseProject."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn iosApps-getConfig$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/getConfig
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified IosApp."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn availableLocations-list$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/availableLocations/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  **DEPRECATED.** _Instead, use the applicable resource-specific REST API (or associated documentation, as needed) to determine valid locations for each resource used in your Project._ Lists the valid Google Cloud Platform (GCP) resource locations for the specified Project (including a FirebaseProject). One of these locations can be selected as the Project's [_default_ GCP resource location](https://firebase.google.com/docs/projects/locations), which is the geographical location where the Project's resources, such as Cloud Firestore, will be provisioned by default. However, if the default GCP resource location has already been set for the Project, then this setting cannot be changed. This call checks for any possible [location restrictions](https://cloud.google.com/resource-manager/docs/organization-policy/defining-locations) for the specified Project and, thus, might return a subset of all possible GCP resource locations. To list all GCP resource locations (regardless of any restrictions), call the endpoint without specifying a unique project identifier (that is, `/v1beta1/{parent=projects/-}/listAvailableLocations`). To call `ListAvailableLocations` with a specified project, a member must be at minimum a Viewer of the Project. Calls without a specified project do not require any specific project permissions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/firebase.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/availableLocations"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn defaultLocation-finalize$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/defaultLocation/finalize
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:locationId string}
+  
+  **DEPRECATED.** _Instead, use the applicable resource-specific REST API to set the location for each resource used in your Project._ Sets the default Google Cloud Platform (GCP) resource location for the specified FirebaseProject. This method creates an App Engine application with a [default Cloud Storage bucket](https://cloud.google.com/appengine/docs/standard/python/googlecloudstorageclient/setting-up-cloud-storage#activating_a_cloud_storage_bucket), located in the specified [`locationId`](#body.request_body.FIELDS.location_id). This location must be one of the available [GCP resource locations](https://firebase.google.com/docs/projects/locations). After the default GCP resource location is finalized, or if it was already set, it cannot be changed. The default GCP resource location for the specified `FirebaseProject` might already be set because either the underlying GCP `Project` already has an App Engine application or `FinalizeDefaultLocation` was previously called with a specified `locationId`. Any new calls to `FinalizeDefaultLocation` with a *different* specified `locationId` will return a 409 error. The result of this call is an [`Operation`](../../v1beta1/operations), which can be used to track the provisioning process. The [`response`](../../v1beta1/operations#Operation.FIELDS.response) type of the `Operation` is google.protobuf.Empty. The `Operation` can be polled by its `name` using GetOperation until `done` is true. When `done` is true, the `Operation` has either succeeded or failed. If the `Operation` has succeeded, its [`response`](../../v1beta1/operations#Operation.FIELDS.response) will be set to a google.protobuf.Empty; if the `Operation` has failed, its `error` will be set to a google.rpc.Status. The `Operation` is automatically deleted after completion, so there is no need to call DeleteOperation. All fields listed in the [request body](#request-body) are required. To call `FinalizeDefaultLocation`, a member must be an Owner of the Project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+parent}/defaultLocation:finalize"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -604,7 +962,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageToken, pageSize, showDeleted
   
   Lists each WebApp associated with the specified FirebaseProject. The elements are returned in no particular order, but will be a consistent view of the Apps when additional requests are made with a `pageToken`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -628,44 +986,6 @@
       :as :json}
      auth))))
 
-(defn webApps-patch$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:displayName string,
-   :name string,
-   :appUrls [string],
-   :webId string,
-   :appId string,
-   :projectId string}
-  
-  Updates the attributes of the specified WebApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn webApps-create$
   "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/create
   
@@ -675,12 +995,16 @@
   
   Body: 
   
-  {:displayName string,
+  {:apiKeyId string,
+   :displayName string,
    :name string,
-   :appUrls [string],
+   :etag string,
+   :state string,
    :webId string,
    :appId string,
-   :projectId string}
+   :projectId string,
+   :expireTime string,
+   :appUrls [string]}
   
   Requests the creation of a new WebApp in the specified FirebaseProject. The result of this call is an `Operation` which can be used to track the provisioning process. The `Operation` is automatically deleted after completion, so there is no need to call `DeleteOperation`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -704,41 +1028,8 @@
       :as :json}
      auth))))
 
-(defn defaultLocation-finalize$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/defaultLocation/finalize
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:locationId string}
-  
-  Sets the default Google Cloud Platform (GCP) resource location for the specified FirebaseProject. This method creates an App Engine application with a [default Cloud Storage bucket](https://cloud.google.com/appengine/docs/standard/python/googlecloudstorageclient/setting-up-cloud-storage#activating_a_cloud_storage_bucket), located in the specified [`locationId`](#body.request_body.FIELDS.location_id). This location must be one of the available [GCP resource locations](https://firebase.google.com/docs/projects/locations). After the default GCP resource location is finalized, or if it was already set, it cannot be changed. The default GCP resource location for the specified `FirebaseProject` might already be set because either the underlying GCP `Project` already has an App Engine application or `FinalizeDefaultLocation` was previously called with a specified `locationId`. Any new calls to `FinalizeDefaultLocation` with a *different* specified `locationId` will return a 409 error. The result of this call is an [`Operation`](../../v1beta1/operations), which can be used to track the provisioning process. The [`response`](../../v1beta1/operations#Operation.FIELDS.response) type of the `Operation` is google.protobuf.Empty. The `Operation` can be polled by its `name` using GetOperation until `done` is true. When `done` is true, the `Operation` has either succeeded or failed. If the `Operation` has succeeded, its [`response`](../../v1beta1/operations#Operation.FIELDS.response) will be set to a google.protobuf.Empty; if the `Operation` has failed, its `error` will be set to a google.rpc.Status. The `Operation` is automatically deleted after completion, so there is no need to call DeleteOperation. All fields listed in the [request body](#request-body) are required. To call `FinalizeDefaultLocation`, a member must be an Owner of the Project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/firebase"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/defaultLocation:finalize"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn iosApps-patch$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/patch
+(defn webApps-patch$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/patch
   
   Required parameters: name
   
@@ -746,14 +1037,18 @@
   
   Body: 
   
-  {:projectId string,
-   :appId string,
+  {:apiKeyId string,
    :displayName string,
-   :bundleId string,
-   :appStoreId string,
-   :name string}
+   :name string,
+   :etag string,
+   :state string,
+   :webId string,
+   :appId string,
+   :projectId string,
+   :expireTime string,
+   :appUrls [string]}
   
-  Updates the attributes of the specified IosApp."
+  Updates the attributes of the specified WebApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth parameters body]
@@ -775,33 +1070,31 @@
       :as :json}
      auth))))
 
-(defn iosApps-create$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/create
+(defn webApps-remove$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/remove
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
   Body: 
   
-  {:projectId string,
-   :appId string,
-   :displayName string,
-   :bundleId string,
-   :appStoreId string,
-   :name string}
+  {:allowMissing boolean,
+   :validateOnly boolean,
+   :etag string,
+   :immediate boolean}
   
-  Requests the creation of a new IosApp in the specified FirebaseProject. The result of this call is an `Operation` which can be used to track the provisioning process. The `Operation` is automatically deleted after completion, so there is no need to call `DeleteOperation`."
+  Removes the specified WebApp from the FirebaseProject."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/firebase"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/iosApps"
-     #{:parent}
+     "v1beta1/{+name}:remove"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -813,43 +1106,47 @@
       :as :json}
      auth))))
 
-(defn iosApps-list$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists each IosApp associated with the specified FirebaseProject. The elements are returned in no particular order, but will be a consistent view of the Apps when additional requests are made with a `pageToken`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/iosApps"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn iosApps-getConfig$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/getConfig
+(defn webApps-undelete$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/undelete
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets the configuration artifact associated with the specified IosApp."
+  Body: 
+  
+  {:validateOnly boolean, :etag string}
+  
+  Restores the specified WebApp to the FirebaseProject."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/firebase"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://firebase.googleapis.com/"
+     "v1beta1/{+name}:undelete"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn webApps-getConfig$
+  "https://firebase.google.comapi/reference/rest/v1beta1/projects/webApps/getConfig
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the configuration artifact associated with the specified WebApp."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/cloud-platform.read-only"
             "https://www.googleapis.com/auth/firebase"
@@ -862,64 +1159,6 @@
      "https://firebase.googleapis.com/"
      "v1beta1/{+name}"
      #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn iosApps-get$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/iosApps/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the specified IosApp."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn availableLocations-list$
-  "https://firebase.google.comapi/reference/rest/v1beta1/projects/availableLocations/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists the valid Google Cloud Platform (GCP) resource locations for the specified Project (including a FirebaseProject). One of these locations can be selected as the Project's [_default_ GCP resource location](https://firebase.google.com/docs/projects/locations), which is the geographical location where the Project's resources, such as Cloud Firestore, will be provisioned by default. However, if the default GCP resource location has already been set for the Project, then this setting cannot be changed. This call checks for any possible [location restrictions](https://cloud.google.com/resource-manager/docs/organization-policy/defining-locations) for the specified Project and, thus, might return a subset of all possible GCP resource locations. To list all GCP resource locations (regardless of any restrictions), call the endpoint without specifying a unique project identifier (that is, `/v1beta1/{parent=projects/-}/listAvailableLocations`). To call `ListAvailableLocations` with a specified project, a member must be at minimum a Viewer of the Project. Calls without a specified project do not require any specific project permissions."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
-            "https://www.googleapis.com/auth/firebase"
-            "https://www.googleapis.com/auth/firebase.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://firebase.googleapis.com/"
-     "v1beta1/{+parent}/availableLocations"
-     #{:parent}
      parameters)
     (merge-with
      merge

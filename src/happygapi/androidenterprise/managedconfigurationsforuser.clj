@@ -6,49 +6,6 @@
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn update$
-  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/update
-  
-  Required parameters: enterpriseId, userId, managedConfigurationForUserId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:managedProperty [{:valueBool boolean,
-                      :valueBundle ManagedPropertyBundle,
-                      :valueStringArray [string],
-                      :key string,
-                      :valueString string,
-                      :valueInteger integer,
-                      :valueBundleArray [ManagedPropertyBundle]}],
-   :configurationVariables {:mcmId string, :variableSet [VariableSet]},
-   :kind string,
-   :productId string}
-  
-  Adds or updates the managed configuration settings for an app for the specified user. If you support the Managed configurations iframe, you can apply managed configurations to a user by specifying an mcmId and its associated configuration variables (if any) in the request. Alternatively, all EMMs can apply managed configurations by passing a list of managed properties."
-  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
-  [auth parameters body]
-  {:pre [(util/has-keys?
-          parameters
-          #{:enterpriseId :managedConfigurationForUserId :userId})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://androidenterprise.googleapis.com/"
-     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
-     #{:enterpriseId :managedConfigurationForUserId :userId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn list$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/list
   
@@ -78,7 +35,7 @@
 (defn get$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/get
   
-  Required parameters: managedConfigurationForUserId, enterpriseId, userId
+  Required parameters: enterpriseId, userId, managedConfigurationForUserId
   
   Optional parameters: none
   
@@ -103,10 +60,53 @@
       :as :json}
      auth))))
 
+(defn update$
+  "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/update
+  
+  Required parameters: enterpriseId, userId, managedConfigurationForUserId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:kind string,
+   :productId string,
+   :managedProperty [{:key string,
+                      :valueBool boolean,
+                      :valueInteger integer,
+                      :valueString string,
+                      :valueStringArray [string],
+                      :valueBundle ManagedPropertyBundle,
+                      :valueBundleArray [ManagedPropertyBundle]}],
+   :configurationVariables {:mcmId string, :variableSet [VariableSet]}}
+  
+  Adds or updates the managed configuration settings for an app for the specified user. If you support the Managed configurations iframe, you can apply managed configurations to a user by specifying an mcmId and its associated configuration variables (if any) in the request. Alternatively, all EMMs can apply managed configurations by passing a list of managed properties."
+  {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
+  [auth parameters body]
+  {:pre [(util/has-keys?
+          parameters
+          #{:enterpriseId :managedConfigurationForUserId :userId})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://androidenterprise.googleapis.com/"
+     "androidenterprise/v1/enterprises/{enterpriseId}/users/{userId}/managedConfigurationsForUser/{managedConfigurationForUserId}"
+     #{:enterpriseId :managedConfigurationForUserId :userId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn delete$
   "https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/managedconfigurationsforuser/delete
   
-  Required parameters: managedConfigurationForUserId, enterpriseId, userId
+  Required parameters: enterpriseId, userId, managedConfigurationForUserId
   
   Optional parameters: none
   
