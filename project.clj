@@ -1,4 +1,4 @@
-(defproject happygapi "0.4.9-SNAPSHOT"
+(defproject happygapi "0.4.9"
   :description "A Clojure library with source generated functions for using Google APIs."
   :url "http://github.com/timothypratley/happygapi"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
