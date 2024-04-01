@@ -8,7 +8,7 @@
 
 (deftest get$-test
   (credentials/init!)
-  #_(testing "Youtube API calls"
+  (testing "Youtube API calls"
     (let [channels (channels/list$ (credentials/auth!)
                                    {:part        "contentDetails,statistics"
                                     :forUsername "ClojureTV"})

@@ -136,7 +136,7 @@
      ((ns ~(symbol (str out-ns \. ?api-name \. ?resource-name))
         ~(str ?title ": " ?resource-name "." \newline
               ?description \newline
-              "See: " ?documentationLink "api/reference/rest/" ?version "/" ?resource-name)
+              "See: " ?documentationLink "docs/reference/rest/" ?version "/" ?resource-name)
         (:require
           [cheshire.core ~:as json]
           [clj-http.client ~:as http]

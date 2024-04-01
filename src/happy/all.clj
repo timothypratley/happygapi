@@ -2,7 +2,7 @@
   (:require [happy.util :as util]
             [clj-http.client :as http]))
 
-(defn request' [method url parameters]
+#_(defn request' [method url parameters]
   (http/request (merge-with merge
                             {:method       method
                              :url          url
@@ -13,7 +13,7 @@
 
 ;; TODO: does every call that has nextPageToken have items?
 ;; TODO: what should the interface be? basically we want to add a parameter to a call
-(defn all [req]
+#_(defn all [req]
   (let [url (util/get-url base-url path params args)]
     (loop [acc []
            {:keys [nextPageToken items]} (http/request req)]
@@ -23,7 +23,7 @@
           (recur all-items (http/request (assoc req :nextPageToken nextPageToken)))
           all-items)))))
 
-(defn all2 []
+#_(defn all2 []
   (util/get-response
 
 
