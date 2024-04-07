@@ -97,7 +97,7 @@ The `auth` argument can be one of:
 ```clojure
 {}                                                   ; anonymous
 {:query-params {"key" api-key}}                      ; api-key
-{:headers {"Authorization" (str "Bearer " api-key)}} ; api-key in header is better (TODO: check)
+{:headers {"x-goog-api-key" api-key}}                ; api-key in header is better
 {:headers {"Authorization" (str "Bearer " token)}}   ; oauth2 token
 ```
 
