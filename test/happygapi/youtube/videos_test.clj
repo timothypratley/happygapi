@@ -1,4 +1,4 @@
-(ns happygapi.youtube.videos
+(ns happygapi.youtube.videos-test
   (:require [clojure.string :as str]
             [clojure.test :refer :all]
             [happygapi.youtube.videos :as videos]
