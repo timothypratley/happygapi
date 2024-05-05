@@ -35,6 +35,8 @@
 (def *save (atom save-credentials))
 
 (defn auth!
+  "The default implementation of auth! relies on starting an ephemeral
+  local jetty server to receive the OAuth 2.0 token code."
   ([] (auth! "user"))
   ([user]
    (let [credentials (@*fetch user)
