@@ -8,7 +8,7 @@
   (credentials/init!)
   (let [config @credentials/*secret
         scopes @credentials/*scopes]
-    (let [code (r/request-code config scopes nil)]
+    (let [code (r/fresh-credentials config scopes nil)]
       (is code)
       (let [credentials (oauth2/exchange-code config code)]
         (is credentials)))))
