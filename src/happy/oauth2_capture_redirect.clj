@@ -39,15 +39,19 @@
         port (get-port server)
         config (assoc config :redirect_uri (str protocol host ":" port path))]
     (try
+      ;; send the user to the provider to login
+      ;; this url includes the redirect_uri as a query param,
+      ;; so we must provide port chosen by our local server
       (-> (oauth2/provider-login-url config scopes optional)
-          ;; send the user to the provider to login
           (browse/browse-url))
+
       ;; when the user is redirected to our local service, which receives a code,
       ;; we now exchange that code with the provider for credentials
       (if-let [code (deref p login-timeout nil)]
         (oauth2/exchange-code config code)
         (throw (ex-info "Login timeout, no code received."
                         {:id ::login-timeout})))
+
       (finally
         (.stop server)))))
 

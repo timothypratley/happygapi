@@ -6,7 +6,19 @@
             [clojure.set :as set]
             [buddy.sign.jwt :as jwt]
             [buddy.core.keys :as keys])
-  (:import (java.util Date)))
+  (:import (java.util Date)
+           (java.net URLEncoder)))
+
+(set! *warn-on-reflection* true)
+
+(defn url-encode [^String s]
+  (URLEncoder/encode s "UTF-8"))
+
+(defn query-string
+  "If you have clj-http as a dependency, prefer http.client/generate-query-string instead."
+  [query-params]
+  (str/join "&" (for [[k v] query-params]
+                  (str (url-encode (name k)) "=" (url-encode (str v))))))
 
 (defn provider-login-url
   "Step 1: Set authorization parameters.
@@ -16,13 +28,14 @@
   In your app you need to send your user to this URL, usually with a redirect response."
   [{:as config :keys [auth_uri client_id redirect_uri redirect_uris]} scopes {:as optional :keys [state login_hint]}]
   {:pre [auth_uri client_id (or redirect_uri redirect_uris) scopes]}
-  (str auth_uri
-       "?client_id=" client_id
-       "&state=" state
-       "&response_type=code"
-       "&access_type=offline"
-       "&scope=" (str/join "%20" scopes)
-       "&redirect_uri=" (or redirect_uri (last redirect_uris))))
+  (str auth_uri "?"
+       (query-string (merge {:client_id     client_id
+                             :response_type "code"
+                             :redirect_uri  (or redirect_uri (last redirect_uris))
+                             ;; TODO: Not everyone wants offline
+                             :access_type   "offline"
+                             :scope         (str/join " " scopes)}
+                            optional))))
 
 ;; Step 2: Redirect to Google's OAuth 2.0 server.
 
@@ -92,14 +105,8 @@
                          :accept           :json
                          :as               :json
                          :throw-exceptions false})]
-    (if (http/success? resp)
-      (do
-        ;; TODO: doesn't seem to work
-        (println "REFRESH WORKED")
-        (with-timestamp (:body resp)))
-      (do
-        ;; TODO: remove cached credentials
-        (println "REFRESH FAILED")))))
+    (when (http/success? resp)
+      (with-timestamp (:body resp)))))
 
 (defn revoke-token
   "Given a credentials map containing either an access token or refresh token, revokes them."
