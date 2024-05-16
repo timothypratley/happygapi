@@ -18,6 +18,10 @@
   "If the user doesn't log in after 2 minutes, stop waiting."
   (* 2 60 1000))
 
+(defn browse-to-provider [config scopes optional]
+  (-> (oauth2/provider-login-url config scopes optional)
+      (browse/browse-url)))
+
 (defn fresh-credentials
   "Opens a browser to authenticate, waits for a redirect, and returns a code."
   [{:as config :keys [redirect_uri redirect_uris]} scopes optional]
@@ -41,13 +45,13 @@
         ;; send the user to the provider to authenticate and authorize.
         ;; this url includes the redirect_uri as a query param,
         ;; so we must provide port chosen by our local server
-        url (oauth2/provider-login-url config scopes optional)
-        _ (browse/browse-url url)
+        _ (browse-to-provider config scopes optional)
         ;; wait for the user to get redirected to localhost with a code
         code (deref p login-timeout nil)]
     (.stop server)
     (if code
       ;; exchange the code with the provider for credentials
+      ;; (must have the same config as browse, the redirect_uri needs the correct port)
       (oauth2/exchange-code config code)
       (throw (ex-info "Login timeout, no code received."
                       {:id ::login-timeout})))))
