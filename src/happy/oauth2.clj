@@ -72,7 +72,7 @@
 (defn refresh-credentials
   "Given a config map, and a credentials map containing either a refresh_token or private_key,
   fetches a new access token.
-  Returns the response if successful, which is a map of credentials containing an access token.
+  Returns credentials if successful (a map containing an access token).
   Refresh tokens eventually expire, and attempts to refresh will fail with 401.
   Therefore, calls that could cause a refresh should catch 401 exceptions,
   call set-authorization-parameters and redirect."
@@ -108,13 +108,14 @@
       (with-timestamp (:body resp)))))
 
 (defn revoke-token
-  "Given a credentials map containing either an access token or refresh token, revokes them."
-  [{:keys [access_token refresh_token]}]
-  {:pre [(or access_token refresh_token)]}
-  (http/post "https://oauth2.googleapis.com/revoke"
-             {:accept      :json
-              :as          :json
-              :form-params {"token" (or access_token refresh_token)}}))
+  "Given a credentials map containing either an access token or refresh token, revokes it."
+  [{:as config :keys [token_uri]} {:keys [access_token refresh_token]}]
+  {:pre [token_uri (or access_token refresh_token)]}
+  (http/success?
+    (http/post (str/replace token_uri "token" "revoke")
+               {:accept      :json
+                :as          :json
+                :form-params {"token" (or access_token refresh_token)}})))
 
 (defn valid? [{:as credentials :keys [expires_at access_token]}]
   (boolean

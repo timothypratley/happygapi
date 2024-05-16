@@ -44,16 +44,6 @@
 (def *fetch (atom fetch-credentials))
 (def *save (atom save-credentials))
 
-(defn auth!
-  "The default implementation of auth! relies on starting an ephemeral
-  local jetty server to receive the OAuth 2.0 token code."
-  ([] (auth! "user"))
-  ([user]
-   (let [credentials (@*fetch user)
-         new-credentials (ocr/update-credentials @*secret credentials @*scopes nil)]
-     (@*save user new-credentials)
-     (oauth2/auth-header new-credentials))))
-
 (defn init!
   ([]
    ;; TODO: shouldn't have these defaults
@@ -79,3 +69,15 @@
    (reset! *scopes scopes)
    (reset! *fetch fetch-credentials)
    (reset! *save save-credentials)))
+
+(defn auth!
+  "The default implementation of auth! relies on starting an ephemeral
+  local jetty server to receive the OAuth 2.0 token code."
+  ([] (auth! "user"))
+  ([user]
+   (when (empty? @*secret)
+     (init!))
+   (let [credentials (@*fetch user)
+         new-credentials (ocr/update-credentials @*secret credentials @*scopes nil)]
+     (@*save user new-credentials)
+     (oauth2/auth-header new-credentials))))

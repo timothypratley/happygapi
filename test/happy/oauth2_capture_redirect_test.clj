@@ -2,7 +2,8 @@
   (:require [clj-http.client :as http]
             [clojure.test :refer [deftest is testing]]
             [happy.oauth2-capture-redirect :as r]
-            [happy.oauth2 :as oauth2]))
+            [happy.oauth2 :as oauth2]
+            [happy.oauth2-credentials :as credentials]))
 
 (deftest wait-for-redirect-test
   (with-redefs [r/browse-to-provider (fn [{:keys [redirect_uri]} scopes optional]
