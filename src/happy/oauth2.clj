@@ -32,7 +32,6 @@
        (query-string (merge {:client_id     client_id
                              :response_type "code"
                              :redirect_uri  (or redirect_uri (last redirect_uris))
-                             ;; TODO: Not everyone wants offline
                              :access_type   "offline"
                              :scope         (str/join " " scopes)}
                             optional))))
@@ -119,7 +118,7 @@
 
 (defn valid? [{:as credentials :keys [expires_at access_token]}]
   (boolean
-    (and access_token expires_at
+    (and expires_at access_token
          (neg? (.compareTo (Date.) expires_at)))))
 
 (defn refreshable? [{:as config :keys [private_key]} {:as credentials :keys [refresh_token]}]

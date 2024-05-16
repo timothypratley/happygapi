@@ -37,43 +37,36 @@
         server (jetty/run-jetty (params/wrap-params http-redirect-handler)
                                 {:port port :join? false})
         port (get-port server)
-        config (assoc config :redirect_uri (str protocol host ":" port path))]
-    (try
-      ;; send the user to the provider to login
-      ;; this url includes the redirect_uri as a query param,
-      ;; so we must provide port chosen by our local server
-      (-> (oauth2/provider-login-url config scopes optional)
-          (browse/browse-url))
+        config (assoc config :redirect_uri (str protocol host ":" port path))
+        ;; send the user to the provider to authenticate and authorize.
+        ;; this url includes the redirect_uri as a query param,
+        ;; so we must provide port chosen by our local server
+        url (oauth2/provider-login-url config scopes optional)
+        _ (browse/browse-url url)
+        ;; wait for the user to get redirected to localhost with a code
+        code (deref p login-timeout nil)]
+    (.stop server)
+    (if code
+      ;; exchange the code with the provider for credentials
+      (oauth2/exchange-code config code)
+      (throw (ex-info "Login timeout, no code received."
+                      {:id ::login-timeout})))))
 
-      ;; when the user is redirected to our local service, which receives a code,
-      ;; we now exchange that code with the provider for credentials
-      (if-let [code (deref p login-timeout nil)]
-        (oauth2/exchange-code config code)
-        (throw (ex-info "Login timeout, no code received."
-                        {:id ::login-timeout})))
-
-      (finally
-        (.stop server)))))
-
-(defn update-credentials [config credentials scopes optional]
+(defn update-credentials
+  "Use credentials if valid, refresh if necessary, or get new credentials"
+  [config credentials scopes optional]
   ;; scopes can grow
   (let [scopes (set/union (oauth2/credential-scopes credentials) (set scopes))]
     ;; merge to retain refresh token
     (merge credentials
-           (cond
+           (or
              ;; already have valid credentials
              (and (oauth2/valid? credentials)
-                  (oauth2/has-scopes? credentials scopes))
-             ;>
-             credentials
-
+                  (oauth2/has-scopes? credentials scopes)
+                  credentials)
              ;; try to refresh existing credentials
              (and (oauth2/refreshable? config credentials)
-                  (oauth2/has-scopes? credentials scopes))
-             ;>
-             (or (oauth2/refresh-credentials config scopes credentials)
-                 (fresh-credentials config scopes optional))
-
-             :else
-             ;>
+                  (oauth2/has-scopes? credentials scopes)
+                  (oauth2/refresh-credentials config scopes credentials))
+             ;; new credentials required
              (fresh-credentials config scopes optional)))))
