@@ -32,7 +32,10 @@
   (let [p (promise)
         uri (or redirect_uri (last redirect_uris))
         [match protocol host _ port path] (re-find #"^(http://)(localhost|127.0.0.1)(:(\d+))?(/.*)?$" uri)
-        _ (assert match "redirect_uri should be http://localhost/redirect")
+        _ (or match
+              (throw (ex-info "redirect_uri should be http://localhost"
+                              {:id     ::bad-redirect-uri
+                               :config config})))
         port (if port
                (Integer/parseInt port)
                0)
@@ -54,9 +57,14 @@
         ;; so we must provide port chosen by our local server
         _ (browse-to-provider config scopes optional)
         ;; wait for the user to get redirected to localhost with a code
-        {:keys [code state]} (deref p login-timeout nil)]
+        {:keys [code state] :as return-params} (deref p login-timeout nil)]
     (.stop server)
-    (assert (= (:state optional) state))
+
+    (or (= (:state optional) state)
+        (throw (ex-info "Return state does not match redirect state"
+                        {:id            ::state-mismatch
+                         :optional      optional
+                         :return-params return-params})))
     (if code
       ;; exchange the code with the provider for credentials
       ;; (must have the same config as browse, the redirect_uri needs the correct port)

@@ -113,7 +113,7 @@
   [{:as config :keys [token_uri]} {:keys [access_token refresh_token]}]
   {:pre [token_uri (or access_token refresh_token)]}
   (http/success?
-    (http/post (str/replace token_uri "token" "revoke")
+    (http/post (str/replace token_uri "/token$" "revoke")
                {:accept      :json
                 :as          :json
                 :form-params {"token" (or access_token refresh_token)}})))
