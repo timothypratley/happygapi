@@ -41,7 +41,7 @@
                0)
         http-redirect-handler (fn [request]
                                 {:status 200
-                                 :body   (if (:code @(deliver p (get request :params)))
+                                 :body   (if (get @(deliver p (get request :params)) "code")
                                            "Code received, authentication successful."
                                            "No code in response")})
         server (jetty/run-jetty (params/wrap-params http-redirect-handler)
@@ -49,7 +49,7 @@
         port (get-port server)
         config (assoc config :redirect_uri (str protocol host ":" port path))
         optional (merge {:access_type            "offline"
-                         :state                  (random-uuid)
+                         :state                  (str (random-uuid))
                          :include_granted_scopes true}
                         optional)
         ;; send the user to the provider to authenticate and authorize.
@@ -57,7 +57,9 @@
         ;; so we must provide port chosen by our local server
         _ (browse-to-provider config scopes optional)
         ;; wait for the user to get redirected to localhost with a code
-        {:keys [code state] :as return-params} (deref p login-timeout nil)]
+        {:strs [code state] :as return-params} (deref p login-timeout nil)]
+    ;; allow a bit of time to deliver the response before shutting down the server
+    (.setStopTimeout server 1000)
     (.stop server)
 
     (or (= (:state optional) state)

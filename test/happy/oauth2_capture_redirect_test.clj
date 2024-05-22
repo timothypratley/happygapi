@@ -7,7 +7,7 @@
 
 (deftest wait-for-redirect-test
   (with-redefs [r/browse-to-provider (fn [{:keys [redirect_uri]} scopes optional]
-                                       (http/get (str redirect_uri "?code=CODE")))
+                                       (http/get (str redirect_uri "?code=CODE&state=" (:state optional))))
                 oauth2/exchange-code (fn [config code]
                                        (is (= "CODE" code))
                                        {:access_token "TOKEN"})]
