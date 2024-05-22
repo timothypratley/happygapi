@@ -3,6 +3,7 @@
             [happy.oauth2 :as oauth2]
             [happy.oauth2-credentials :as credentials]))
 
+;; To run the tests you need to download `secret.json` from the Google console.
 (deftest refresh-test
   (credentials/auth!)
   (let [credentials (credentials/fetch-credentials "user")
