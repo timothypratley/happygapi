@@ -24,7 +24,7 @@
   "Step 1: Set authorization parameters.
   Builds the URL to send the user to for them to authorize your app.
   For local testing you can paste this URL into your browser,
-  or call (clojure.java.browse/browse-url (redirect-to-google my-config)).
+  or call (clojure.java.browse/browse-url (provider-login-url my-config)).
   In your app you need to send your user to this URL, usually with a redirect response."
   [{:as config :keys [auth_uri client_id redirect_uri redirect_uris]} scopes {:as optional :keys [state login_hint]}]
   {:pre [auth_uri client_id (or redirect_uri redirect_uris) scopes]}
