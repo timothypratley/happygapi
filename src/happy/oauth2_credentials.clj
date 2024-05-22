@@ -78,6 +78,6 @@
    (when (empty? @*secret)
      (init!))
    (let [credentials (@*fetch user)
-         new-credentials (ocr/update-credentials @*secret credentials @*scopes nil)]
+         new-credentials (ocr/update-credentials @*secret credentials @*scopes)]
      (@*save user new-credentials)
      (oauth2/auth-header new-credentials))))

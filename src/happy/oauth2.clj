@@ -24,17 +24,18 @@
   "Step 1: Set authorization parameters.
   Builds the URL to send the user to for them to authorize your app.
   For local testing you can paste this URL into your browser,
-  or call (clojure.java.browse/browse-url (provider-login-url my-config)).
-  In your app you need to send your user to this URL, usually with a redirect response."
-  [{:as config :keys [auth_uri client_id redirect_uri redirect_uris]} scopes {:as optional :keys [state login_hint]}]
-  {:pre [auth_uri client_id (or redirect_uri redirect_uris) scopes]}
-  (str auth_uri "?"
-       (query-string (merge {:client_id     client_id
-                             :response_type "code"
-                             :redirect_uri  (or redirect_uri (last redirect_uris))
-                             :access_type   "offline"
-                             :scope         (str/join " " scopes)}
-                            optional))))
+  or call (clojure.java.browse/browse-url (provider-login-url my-config scopes optional)).
+  In your app you need to send your user to this URL, usually with a redirect response.
+  For valid optional params, see https://developers.google.com/identity/protocols/oauth2/web-server#httprest_1"
+  ([config scopes] (provider-login-url config scopes nil))
+  ([{:as config :keys [auth_uri client_id redirect_uri redirect_uris]} scopes optional]
+   {:pre [auth_uri client_id (or redirect_uri redirect_uris) scopes]}
+   (str auth_uri "?"
+        (query-string (merge {:client_id     client_id
+                              :response_type "code"
+                              :redirect_uri  (or redirect_uri (last redirect_uris))
+                              :scope         (str/join " " scopes)}
+                             optional)))))
 
 ;; Step 2: Redirect to Google's OAuth 2.0 server.
 

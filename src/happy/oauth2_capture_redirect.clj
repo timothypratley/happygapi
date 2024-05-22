@@ -23,7 +23,10 @@
       (browse/browse-url)))
 
 (defn fresh-credentials
-  "Opens a browser to authenticate, waits for a redirect, and returns a code."
+  "Opens a browser to authenticate, waits for a redirect, and returns a code.
+  Defaults access_type to offline,
+  state to a random uuid which is checked when redirected back,
+  and include_granted_scopes true."
   [{:as config :keys [redirect_uri redirect_uris]} scopes optional]
   {:pre [(or redirect_uri redirect_uris)]}
   (let [p (promise)
@@ -35,20 +38,25 @@
                0)
         http-redirect-handler (fn [request]
                                 {:status 200
-                                 :body   (if @(deliver p (get-in request [:params "code"]))
+                                 :body   (if (:code @(deliver p (get request :params)))
                                            "Code received, authentication successful."
                                            "No code in response")})
         server (jetty/run-jetty (params/wrap-params http-redirect-handler)
                                 {:port port :join? false})
         port (get-port server)
         config (assoc config :redirect_uri (str protocol host ":" port path))
+        optional (merge {:access_type            "offline"
+                         :state                  (random-uuid)
+                         :include_granted_scopes true}
+                        optional)
         ;; send the user to the provider to authenticate and authorize.
         ;; this url includes the redirect_uri as a query param,
         ;; so we must provide port chosen by our local server
         _ (browse-to-provider config scopes optional)
         ;; wait for the user to get redirected to localhost with a code
-        code (deref p login-timeout nil)]
+        {:keys [code state]} (deref p login-timeout nil)]
     (.stop server)
+    (assert (= (:state optional) state))
     (if code
       ;; exchange the code with the provider for credentials
       ;; (must have the same config as browse, the redirect_uri needs the correct port)
@@ -57,20 +65,22 @@
                       {:id ::login-timeout})))))
 
 (defn update-credentials
-  "Use credentials if valid, refresh if necessary, or get new credentials"
-  [config credentials scopes optional]
-  ;; scopes can grow
-  (let [scopes (set/union (oauth2/credential-scopes credentials) (set scopes))]
-    ;; merge to retain refresh token
-    (merge credentials
-           (or
-             ;; already have valid credentials
-             (and (oauth2/valid? credentials)
-                  (oauth2/has-scopes? credentials scopes)
-                  credentials)
-             ;; try to refresh existing credentials
-             (and (oauth2/refreshable? config credentials)
-                  (oauth2/has-scopes? credentials scopes)
-                  (oauth2/refresh-credentials config scopes credentials))
-             ;; new credentials required
-             (fresh-credentials config scopes optional)))))
+  "Use credentials if valid, refresh if necessary, or get new credentials.
+  For valid optional params, see https://developers.google.com/identity/protocols/oauth2/web-server#httprest_1"
+  ([config credentials scopes] (update-credentials config credentials scopes nil))
+  ([config credentials scopes optional]
+   ;; scopes can grow
+   (let [scopes (set/union (oauth2/credential-scopes credentials) (set scopes))]
+     ;; merge to retain refresh token
+     (merge credentials
+            (or
+              ;; already have valid credentials
+              (and (oauth2/valid? credentials)
+                   (oauth2/has-scopes? credentials scopes)
+                   credentials)
+              ;; try to refresh existing credentials
+              (and (oauth2/refreshable? config credentials)
+                   (oauth2/has-scopes? credentials scopes)
+                   (oauth2/refresh-credentials config scopes credentials))
+              ;; new credentials required
+              (fresh-credentials config scopes optional))))))
