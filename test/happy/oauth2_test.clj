@@ -1,27 +1,24 @@
 (ns happy.oauth2-test
   (:require [clojure.test :refer [deftest is]]
             [happy.oauth2 :as oauth2]
-            [happy.oauth2-capture-redirect :as r]
             [happy.oauth2-credentials :as credentials]))
-#_
-(deftest oauth2-exchange-code-test
-  (credentials/init!)
-  (let [config @credentials/*secret
-        scopes @credentials/*scopes]
-    (let [code (r/request-code config scopes nil)]
-      (is code)
-      (let [credentials (oauth2/exchange-code config code)]
-        (is credentials)))))
 
-#_
-(deftest refresh-revoke-test
-  (credentials/init!)
+;; To run the tests you need to download `secret.json` from the Google console.
+(deftest refresh-test
   (credentials/auth!)
-  (let [config @credentials/*secret
-        scopes @credentials/*scopes
-        credentials (credentials/fetch-credentials "user")]
+  (let [credentials (credentials/fetch-credentials "user")
+        config @credentials/*secret
+        scopes @credentials/*scopes]
     (and
-      (is (oauth2/refreshable? config credentials))
-      (let [new-credentials (oauth2/refresh-credentials config scopes credentials)]
-        (is new-credentials)
-        (is (= 200 (:status (oauth2/revoke-token new-credentials))))))))
+      (is credentials)
+      (is (oauth2/refreshable? {} credentials))
+      (is (oauth2/refresh-credentials config scopes credentials)))))
+
+(deftest revoke-test
+  (credentials/auth!)
+  (let [credentials (credentials/fetch-credentials "user")
+        config @credentials/*secret]
+    (and
+      (is credentials)
+      (is (oauth2/revoke-token config credentials))
+      (credentials/delete-credentials "user"))))

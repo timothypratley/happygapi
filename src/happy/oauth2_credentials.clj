@@ -24,25 +24,25 @@
         (when (.exists credentials-file)
           (edn/read-string (slurp credentials-file))))))
 
+(defn delete-credentials [user]
+  (swap! *credentials-cache dissoc user)
+  (.delete (io/file (io/file "tokens")
+                    (str user ".edn"))))
+
+(defn write-credentials [user credentials]
+  (swap! *credentials-cache assoc user credentials)
+  (spit (io/file (doto (io/file "tokens") (.mkdirs))
+                 (str user ".edn"))
+        credentials))
+
 (defn save-credentials [user new-credentials]
   (when (not= @*credentials-cache new-credentials)
-    (swap! *credentials-cache assoc user new-credentials)
-    (spit (io/file (doto (io/file "tokens") (.mkdirs))
-                   (str user ".edn"))
-          new-credentials)))
+    (if new-credentials
+      (write-credentials user new-credentials)
+      (delete-credentials user))))
 
 (def *fetch (atom fetch-credentials))
 (def *save (atom save-credentials))
-
-(defn auth!
-  "The default implementation of auth! relies on starting an ephemeral
-  local jetty server to receive the OAuth 2.0 token code."
-  ([] (auth! "user"))
-  ([user]
-   (let [credentials (@*fetch user)
-         new-credentials (ocr/update-credentials @*secret credentials @*scopes nil)]
-     (@*save user new-credentials)
-     (oauth2/auth-header new-credentials))))
 
 (defn init!
   ([]
@@ -69,3 +69,15 @@
    (reset! *scopes scopes)
    (reset! *fetch fetch-credentials)
    (reset! *save save-credentials)))
+
+(defn auth!
+  "The default implementation of auth! relies on starting an ephemeral
+  local jetty server to receive the OAuth 2.0 token code."
+  ([] (auth! "user"))
+  ([user]
+   (when (empty? @*secret)
+     (init!))
+   (let [credentials (@*fetch user)
+         new-credentials (ocr/update-credentials @*secret credentials @*scopes)]
+     (@*save user new-credentials)
+     (oauth2/auth-header new-credentials))))
